@@ -7,8 +7,9 @@ gate. No default changed; see §11 Findings.
 **Preceded by:** Phase 42 (Table-Structure-Aware Serialization) — `docs/PHASE42_REQUIREMENTS.md`,
 complete. This phase picks up the reranker recommendation carried forward from Phase 40's §8
 Backlog and reaffirmed in Phase 41 and Phase 42's own backlog notes — see §1 below.
-**Followed by:** Not decided. §11's Backlog names one remaining concrete next step (escalate to a
-full cross-encoder — a new dependency, its own stop-and-ask conversation) plus the pre-existing
+**Followed by:** Not decided. §11's Backlog names one bounded follow-up experiment (§11.5: capture
+the actual pre-rerank candidate pools and test the reranker's input text on identical pools — no
+new dependency; note both models tested here are already cross-encoders) plus the pre-existing
 Evidence/Compare and WP-15.9 items from §3/§7 — none started, no decision made on which (if any)
 to pick up next.
 
@@ -303,9 +304,11 @@ against the same, unchanged corpus (confirmed via `reqbot status` — same colle
 (MiniLM-L-12 is a separate model/config — see §11.6, not folded into this table.)
 
 **Precision@5 — the primary gate metric — never beat baseline**: pool=50 regresses, pool=100 ties
-exactly (0.2629 both). **Recall@5 and Recall@10 regress at both pool sizes** — the single most
-consistent finding in this spike, reproduced identically on the confirmatory rerun described below.
-Recall@20 also regresses at both pool sizes in the current code (this reverses what an earlier draft
+exactly (0.2629 both). **For TinyBERT, Recall@5 and Recall@10 are below baseline at both pool
+sizes**, reproduced identically on the confirmatory rerun described below (MiniLM-L-12, §11.6, is
+different: its Recall@5 is slightly above baseline). These are small differences on 35 scored
+queries — see §11.7 for what they can and can't support. Recall@20 is also below baseline at both
+pool sizes in the current code (this reverses what an earlier draft
 of this document reported — see the correction immediately below). Latency increased by roughly 17%
 at pool=100 (1737ms → 2034ms mean) — not itself gating (WP-15.5's "measure, don't hard-gate"
 criterion) but a real cost for zero benefit on the gate's primary metric.
@@ -328,8 +331,9 @@ HyDE sampling and non-deterministic rewrite as sources; the remaining source for
 smaller noise is most likely Qdrant's HNSW dense-vector search breaking near-ties differently
 between runs.
 
-**Practical takeaway, unchanged**: Precision@5 and Recall@5/10 regressed in every measurement of the
-final code, with no exceptions — this doesn't depend on the noise/code-effect distinction above.
+**Practical takeaway**: for TinyBERT, Precision@5 was never above baseline and Recall@5/10 were
+below it in every measurement of the final code — this doesn't depend on the noise/code-effect
+distinction above, though the size of the differences is small (§11.7).
 For anything closer than that (e.g. comparing two pool sizes a few hundredths apart), a rigorous
 future comparison should still run N≥3 repeats of *identical, unchanged* code and compare
 distributions — the same discipline WP-37.2's original HyDE caution recommended for a different
@@ -386,7 +390,7 @@ worth knowing before anyone designs a corrective gate around a fixed threshold. 
 scoping conversation needs its own careful, multi-run, multi-input-variant measurement before
 treating either "a threshold exists" or "the boundary case is thin" as settled.
 
-### 11.3 Flagship case (Q-T02) — still not fixed, and why
+### 11.3 Flagship case (Q-T02) — still not fixed; cause not yet isolated
 
 Phase 42's motivating example was checked directly rather than assumed. Live, fresh check today
 (not relying on Phase 42's original numbers, since the corpus has re-indexed since):
@@ -398,8 +402,13 @@ nomination approval"`) places Q-T02's three gold-labelled records at:
 - `REQ-7758064f03f2` — rank 116 (RRF score 0.0170)
 - `REQ-8864b3fc4a01` — **not present in the top 200 at all**
 
-At `rerank_pool_size=100`, only the first of the three ever enters the candidate pool — the other
-two are unreachable at any pool size in the range this spike tested. Inspecting the pool=100 run's
+**Caveat on this diagnostic (Codex review, PR #191):** `top_k` also sets each retrieval leg's
+prefetch depth (`prefetch_limit = max(100, top_k*5, fusion_limit)` in `core/ask.py`) — so this
+`top_k=200` check fetched 1,000 candidates per leg, while the real pool=100 runs (`top_k=20`) fetched
+100 per leg. The RRF inputs differ, so these ranks do not establish which records were in the actual
+pool=100 candidate list. Q-T02's gold records were absent from the final top 20; their membership in
+the actual pre-rerank pool was not recorded, so candidate-generation failure cannot yet be separated
+from reranking failure (§11.5 proposes recording the real pools). Inspecting the pool=100 run's
 actual output for Q-T02: the reachable one (`REQ-2d5b8006ec40`, "HAF, MAJCOM/DRUs, FOAs... review/
 validate nominated TCAs" — squarely on-topic for the query's "approving" half) still didn't crack
 the reranked top 20. FlashRank instead gave near-maximum confidence (0.99, 0.99, 0.99, 0.98, 0.98,
@@ -408,17 +417,20 @@ role — topically adjacent, plausible-sounding, but not the specific process-st
 actually asks for. This is a precise, concrete instance of the aggregate Precision@5 regression:
 the reranker is confidently promoting near-miss generalities over an on-topic specific.
 
-**Conclusion: reranking with FlashRank's default model does not fix the case that motivated this
-WP.** Two-thirds of the failure is a pool-depth problem no tested pool size reaches; the reachable
-third is a precision problem the default model doesn't solve.
+**Conclusion: reranking with FlashRank's default model did not fix the case that motivated this
+WP.** Whether the missing gold records ever reached the reranker is unresolved (see caveat above);
+the on-topic record that likely did reach it (`REQ-2d5b8006ec40`) was outranked by generic
+CARM-program candidates.
 
 ### 11.4 Go/No-Go decision
 
 Against §9's gate (final code, confirmed reproducible via a same-code rerun — §11.1):
 - ❌ Precision@5 improves — **failed** (pool=50 regresses, pool=100 ties baseline exactly — never
   an improvement at either pool size — §11.1).
-- ❌ No regression on Recall@5/10/20/MRR — **failed** (Recall@5 and Recall@10 regress at both pool
-  sizes, reproducibly — the single most consistent finding in this WP).
+- ❌ No regression on Recall@5/10/20/MRR — **failed** (TinyBERT: Recall@5/10/20 below baseline at
+  both pool sizes, reproducibly; MiniLM: Recall@10/20 below baseline — §11.6. The differences are
+  small relative to sampling uncertainty — §11.7 — but the gate was written as a strict
+  no-regression rule).
 - ✅ Zero-truth score-separation evidence reported — **met** (the gate only requires reporting the
   evidence, not a clean result): the mean-level separation is real and stable, but the specific
   boundary-case claim (does the worst real query beat the best zero-truth query) is demonstrably
@@ -427,8 +439,10 @@ Against §9's gate (final code, confirmed reproducible via a same-code rerun —
 - ✅ Latency measured and reported, not hard-gated — **met** (a real, repeatable ~17% increase at
   pool=100, moot given the precision/recall gate failure).
 
-**Decision: No-Go.** FlashRank's default `ms-marco-TinyBERT-L-2-v2` model, over either candidate
-pool size tested, does not clear the bar this WP set before implementation started. Per §9 and
+**Decision: No-Go**, meaning *no demonstrated deployment benefit under the tested configurations*
+— not a finding that reranking cannot help ReqBot (§11.7). FlashRank's default
+`ms-marco-TinyBERT-L-2-v2` model, over either candidate pool size tested, does not clear the bar
+this WP set before implementation started. Per §9 and
 Tyler's explicit framing throughout this WP, **no default changes** — `rerank` stays `False`
 everywhere; production Ask/Search behavior is exactly what it was before this WP, byte-for-byte
 (confirmed by `test_rerank_false_default_never_calls_reranker` and this run's own baseline column
@@ -448,8 +462,19 @@ which model `core/reranker.py`'s `Ranker()` construction points at.
   stable zero-truth overlap (worse than TinyBERT's own narrower, code-sensitive boundary case). Not
   worth testing FlashRank's other remaining bundled models (`ms-marco-MultiBERT-L-12`,
   `rank-T5-flan`) on the strength of this trend without a specific reason to expect otherwise.
-- **Escalate to a full cross-encoder** (e.g. via `sentence-transformers`) per the original WP-15.5/
-  `docs/TODO_future_improvements.txt` guidance's explicit fallback path — a new, heavier dependency,
+- **Bounded follow-up experiment (proposed, not started; separate WP):** (1) record each query's
+  actual pre-rerank candidate pool at the real `top_k=20`/pool=100 settings, and measure pool recall
+  — the ceiling any reranker could reach; (2) compare RRF order against both models on those
+  identical frozen pools; (3) vary the reranker's query input: the original question vs. the current
+  `dense_query` (the acronym-expanded retrieval rewrite). `dense_query` is an untested experimental
+  choice, not a known defect — it may help or hurt a cross-encoder; (4) add passage-format variants
+  only if (1)–(3) justify it; (5) audit labels for newly promoted results, since gold lists can be
+  incomplete (Q-T02's notes list nine process-step records but only three are labelled). A low pool
+  recall for Q-T02 would explain why no reranker recovers *its* records; it would not answer whether
+  reranking helps other queries, so it should not by itself end the experiment.
+- **A different cross-encoder runtime** (e.g. `sentence-transformers`) is a possible later step, but
+  note it is not "escalating to a cross-encoder": TinyBERT and MiniLM via FlashRank are already
+  cross-encoders. It would change the runtime and possibly the model — a new, heavier dependency,
   its own stop-and-ask conversation. Any such follow-up should budget for same-code confirmatory
   reruns before attributing any observed delta to noise, given §11.1's correction, and N≥3-repeat
   measurement for fine-grained comparisons specifically.
@@ -478,8 +503,10 @@ same 45-query gold set, same live corpus.
 (All figures are from the final, current code — §11.1's confirmatory rerun found the current
 TinyBERT numbers reproducible; MiniLM was measured once at the same final code, not separately
 re-confirmed, but uses the identical harness and methodology.) MiniLM-L-12 is the best-performing
-configuration on Recall@5 and MRR — Recall@5 clears baseline (0.5456 vs. 0.5402, a modest but real
-margin) and MRR improves meaningfully (0.6778 vs. 0.6267). Precision@5 (0.2514) is below both
+configuration on Recall@5 and MRR — Recall@5 is slightly above baseline (0.5456 vs. 0.5402) and MRR
+is higher (0.6778 vs. 0.6267); neither difference is distinguishable from sampling noise at n=35
+(§11.7). Higher MRR alongside lower Precision@5 is a plausible pattern, not an anomaly: a model can
+move the first relevant answer up while pushing other relevant answers out of the top five. Precision@5 (0.2514) is below both
 baseline and TinyBERT's tie, and Recall@10/20 both regress versus baseline — so this still does not
 clear §9's gate as written (a regression on any one of Recall@5/10/20/MRR disqualifies, not a net
 average).
@@ -493,10 +520,9 @@ tolerable; this isn't, for interactive CLI/GUI use.
 the same plausible-but-generic CARM-program candidates seen under TinyBERT (`REQ-9a1f01a2d295`,
 `REQ-f78038d96493`, `REQ-95cbb901f073`, `REQ-70f62fcdd0cf` — reordered among themselves, but the
 same small set), and the one reachable target (`REQ-2d5b8006ec40`, rank 40 in the RRF pool) never
-cracks the reranked top 20 under either model, in any measurement taken. Confirms the failure is
-about which candidates reach the reranker at all (pool depth) and this specific query/corpus
-content, not about either model's precision ceiling — the single most robust finding in this
-document.
+cracks the reranked top 20 under either model, in any measurement taken. Whether this
+reflects which candidates reach the reranker (pool depth) or the models' ranking behavior on this
+query is not established (§11.3 caveat); the reranked output is consistent across both models.
 
 **Zero-truth separation**: MiniLM's zero-truth ceiling is `Q-Z06` ("parking and traffic enforcement
 on a military installation" — deliberately off-topic, keyword-overlapping on "military
@@ -511,3 +537,36 @@ more consistently worse, not better.
 and Recall@5 in the right direction but trades away both latency and zero-truth calibration to get
 there, doesn't actually beat TinyBERT on Precision@5, and still doesn't fix the motivating case.
 This backlog question now has a real, measured answer rather than remaining open speculation.
+
+### 11.7 Limitations on interpreting these results
+
+- **Sample size.** 45 gold queries, but precision/recall/MRR are averaged over the **35** with
+  scoreable relevant records. Per-query paired changes versus baseline (reproduced from the committed
+  `results.json` files; paired bootstrap, 10,000 resamples, seed 0):
+
+  | Run | Metric | Mean Δ | Queries up / down / tied | 95% interval |
+  |---|---|---|---|---|
+  | TinyBERT pool=100 | Precision@5 | +0.0000 | 3 / 4 / 28 | [−0.034, +0.040] |
+  | TinyBERT pool=100 | Recall@5 | −0.0088 | 3 / 4 / 28 | [−0.096, +0.079] |
+  | MiniLM pool=100 | Precision@5 | −0.0114 | 3 / 6 / 26 | [−0.046, +0.029] |
+  | MiniLM pool=100 | Recall@5 | +0.0054 | 3 / 6 / 26 | [−0.064, +0.088] |
+  | MiniLM pool=100 | MRR | +0.0512 | 7 / 5 / 23 | [−0.057, +0.163] |
+
+  Every interval, for every metric and run (including those not shown), includes zero. Re-running the
+  same queries checks reproducibility (§11.1); it does not measure how the models would perform on
+  other queries. The No-Go is a conservative reading of a strict pre-agreed gate, not evidence of a
+  statistically established regression or of established harm.
+- **Gold-label completeness.** Every returned ID outside a query's gold list counts as irrelevant.
+  That holds only if the lists are complete, and at least one (Q-T02) is known not to be. A
+  reranker that promotes a genuinely relevant but unlabelled record is scored as worse.
+- **Known extraction gaps stay in the scored set.** Keeping them as misses is appropriate for overall
+  system quality but mixes retrieval failure with extraction failure; a separate view restricted to
+  queries whose relevant records are actually present in the candidate pool would isolate the
+  reranker's opportunity to help (§11.5).
+- **Two models, one input format.** Only FlashRank's TinyBERT and MiniLM-L-12 were tested, with one
+  passage format (description + context + `source_ref`) scored against `dense_query`. Nothing here
+  speaks to other models or other inputs.
+
+**Accurate summary:** these two configurations show no demonstrated deployment benefit and fail the
+pre-agreed gate; the infrastructure is retained; the broader question of whether reranking can help
+ReqBot remains open.
