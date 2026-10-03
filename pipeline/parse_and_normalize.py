@@ -65,6 +65,32 @@ PIPELINE_VERSION = "1.0"
 QUOTE_GROUNDING_THRESHOLD = 60
 
 
+# WP-44.1: minimum share of a source_quote's word occurrences that must appear
+# somewhere in its own chunk's text. QUOTE_GROUNDING_THRESHOLD's fuzzy
+# partial_ratio accepted 5 invented quotes (scores 62-76) out of 1,991 in the
+# measured corpus; all 5 had word coverage 0.19-0.65 while every other
+# classified quote scored >= 0.857 (eval/spike_results/wp_44/report.md). 0.8 sits
+# in that gap. It was selected on that same corpus, so it is a measured
+# threshold, not a generalization guarantee. This is a bag-of-words check: it
+# cannot detect real words rearranged to change meaning, and it adds no
+# punctuation/ligature handling (docs/PHASE44_REQUIREMENTS.md section 4).
+QUOTE_WORD_COVERAGE_THRESHOLD = 0.8
+
+
+def quote_word_coverage(source_quote: str, chunk_text: str) -> float:
+    """Share of source_quote's word occurrences whose word appears in chunk_text.
+
+    Words are lowercase [a-z0-9]+ runs of normalize_text(); membership is
+    whole-word against the chunk's word set. Punctuation is ignored for this
+    calculation only -- no text is rewritten. A quote with no words scores 0.0.
+    """
+    quote_words = re.findall(r"[a-z0-9]+", normalize_text(source_quote))
+    if not quote_words:
+        return 0.0
+    chunk_words = set(re.findall(r"[a-z0-9]+", normalize_text(chunk_text)))
+    return sum(w in chunk_words for w in quote_words) / len(quote_words)
+
+
 # WP-34.2: minimum fuzz.ratio (0-100, whole-string similarity) between a
 # normalized source_quote and its chunk's own heading before treating it as a
 # heading echo rather than real body content. ratio (not partial_ratio, which
@@ -728,6 +754,22 @@ def run(
                     "requirement_id": req.get("requirement_id", "UNKNOWN"),
                     "chunk_id": chunk_id,
                     "error": "quote_not_grounded_in_chunk",
+                    "grounding_score": round(grounding_score, 1),
+                    "raw": req,
+                })
+                continue
+
+            # WP-44.1: the fuzzy check above can pass a quote made mostly of words
+            # that aren't in the chunk. Runs after it, so already-rejected records
+            # keep their original failure code.
+            word_coverage = quote_word_coverage(source_quote, chunk_text)
+            if word_coverage < QUOTE_WORD_COVERAGE_THRESHOLD:
+                failures.append({
+                    "requirement_id": req.get("requirement_id", "UNKNOWN"),
+                    "chunk_id": chunk_id,
+                    "error": "quote_words_not_in_chunk",
+                    "word_coverage": round(word_coverage, 3),
+                    "word_coverage_threshold": QUOTE_WORD_COVERAGE_THRESHOLD,
                     "grounding_score": round(grounding_score, 1),
                     "raw": req,
                 })
