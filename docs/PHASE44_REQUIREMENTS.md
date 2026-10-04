@@ -1,7 +1,7 @@
 # ReqBot Phase 44 — Source-Quote Integrity and Junk Requirements
 
-**Status:** WP-44.1 complete (merged, PR #196). The 3 invented-quote records that were live in the
-index were removed on 2026-10-04 (§11). WP-44.2 not started.
+**Status:** Complete. WP-44.1 merged (PR #196) and its live-data cleanup done (§11). WP-44.2 closed as
+measurement only, with no production change (§12); the follow-on work moves to Phase 45.
 **Date:** 2026-10-03
 **Preceded by:** Phase 43 (Reranker Spike) — `docs/PHASE43_REQUIREMENTS.md`, complete (measured
 No-Go, no default changed). This phase is unrelated to retrieval; it hardens Step D's quote
@@ -15,7 +15,7 @@ grounding, which Phase 43's docling-upgrade check (PR #159) happened to surface.
 | WP | Status |
 |---|---|
 | WP-44.1 — Close the invented-quote leak (Step D word-coverage check) | Complete — merged (#196); live-data cleanup done 2026-10-04 (§11) |
-| WP-44.2 — Junk inputs (measure first; code only if the measurement supports it) | Planned — not started; WP-44.1 has merged, so a production change is no longer blocked |
+| WP-44.2 — Junk inputs (measure first; code only if the measurement supports it) | Closed — measured, no production change; findings in §12, follow-on in Phase 45 |
 
 ---
 
@@ -352,3 +352,57 @@ no longer returns it; `pytest`/`ruff` unaffected (no repo code changed).
 selected by the resolver); the `*_final_output.json` Step E exports, which still contain the
 records but have no consumer in the code (regenerating them would be a Step E re-run, not done);
 and the context collection, which holds chunk text only and never referenced these records.
+
+---
+
+## 12. Findings — WP-44.2 (measurement only; no production change)
+
+WP-44.2 was scoped measure-first. It measured, found that the leaks were already closed at Step D by
+WP-44.1, and found that the larger remaining problems are of a different kind. It closes with **no code
+change**. Evidence: `eval/wp_44_2_audit.py` (reproduces the tables), `eval/spike_results/wp_44_2/`
+(`report.md`, `sample_labels.md`, `fragments_and_retrieval_probe.md`).
+
+**1. Where the 69 invented quotes came from (13 documents, 839 chunks).**
+- 47 of 69 came from the 34 chunks under 150 characters: cover pages, page headers, "(INTENTIONALLY
+  BLANK)", bare glossary terms. Chunks under 60 characters yielded **0** real quotes and 16 inventions.
+- A narrow pre-filter (chunk under 150 characters, no obligation verb in the body, none in the parent
+  header, no list marker) would skip 25 chunks (3%), avoid 45 of the 69 inventions and lose 1 real
+  quote. Because skipped chunks contribute only what they already contributed, this was computed from
+  existing data, with no LLM run. It was **deferred as low value**: WP-44.1 already rejects those
+  inventions at Step D, so the filter would mainly save about 3% of LLM calls. About 20% of inventions
+  (14 of 69) near-copy the prompt's own few-shot examples; changing them needs noisy LLM runs for the
+  same marginal benefit, so it was not pursued.
+- A plain length filter is **not** safe: 7 of the 26 chunks in the 60-150 band yield real list-item
+  requirements.
+
+**2. The junk that actually reaches the index is mostly not invention.** A hand-labeled random sample
+of 60 of the 1,845 survivors (one reviewer, unaudited, seed 2026): 46 real (77%), 6 borderline
+descriptive or permissive (10%), 3 fragments (5%), 5 pure junk (8%; roughly 3-18% at 95% confidence).
+Junk shapes: glossary preambles, signature-block acknowledgement text, descriptive facts ("Most bare
+metal hypervisors have access controls to the system."), cross-references ("Refer to paragraph 4 for
+guidance on..."). No simple text rule separates these from real requirements: "no obligation verb" was
+true of 767 survivors, most of them ordinary imperative list items that inherit their obligation from a
+list stem. It is a sampling hint, not a rule.
+
+**3. Dangling fragments should be attached, not discarded (Tyler).** Quotes under 40 characters that
+start lowercase were 9 of 9 clause fragments in this corpus ("then take the indicated Actions",
+"enforce security requirements"), and a rule rejecting them was drafted and **withdrawn**: they carry
+real obligations and belong attached to their parent clause. Of 16 fragment-type survivors in the live
+artifacts, 10 have a parent stem embedded with them (`embedding_text`, used by both the dense and BM25
+vectors, so the attachment does happen before embedding) -- but at least 2 attachments look wrong (a
+previous sibling used as the stem; a chain of fragments from one sentence docling split), and **6 are
+embedded bare**. Their `description` is empty or merely repeats the fragment, so even a correctly
+attached fragment ("This section will define for all parties: Required NM data update rates.") is not a
+usable standalone requirement. A crude 6-query retrieval probe was directionally consistent with bare
+fragments being findable only when a query reuses their words, but it was too weak to count as evidence
+(see the evidence note).
+
+**4. Principles recorded (Tyler, 2026-10-04).** The strength of the extracted requirements is the
+cornerstone of ReqBot; everything downstream inherits it. Dangling fragments are attached, never
+discarded. Junk is **flagged, not deleted**: a recoverable review state, validated against a labeled set
+with a recall floor, because missing a real requirement is worse than keeping a questionable one.
+
+**Handoff.** Phase 45 (extraction quality) takes fragment attachment and junk detection, starting with
+measurement and a fair retrieval test. HyPE (index-side hypothetical questions) is a separate
+retrieval-side package that should be pursued and tested in its own phase
+(`docs/TODO_future_improvements.txt`, Retrieval Experiments item 3).
