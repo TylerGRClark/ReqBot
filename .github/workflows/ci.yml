@@ -132,6 +132,14 @@ jobs:
       - name: Verify the packaged frontend/dist is served
         run: curl -sf http://127.0.0.1:8000/ | grep -qi '<div id="root"'
 
+      - name: Verify Docling can parse and chunk a PDF inside the image
+        # The steps above never load Docling, whose native dependencies (OpenCV needs libGL)
+        # are first imported on the first conversion -- so a missing system library in the
+        # slim base image would pass this whole job and fail on a user's first ingest. This runs
+        # Steps A and B (no Ollama/Qdrant needed) on a generated PDF using the image's own Python.
+        # It downloads Docling's models from Hugging Face (about 0.5 GB) on every run.
+        run: docker compose -f docker-compose.example.yml exec -T reqbot python - < build/smoke_parse_chunk.py
+
       - name: Show container logs on failure
         if: failure()
         run: docker compose -f docker-compose.example.yml logs
