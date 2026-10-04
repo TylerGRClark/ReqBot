@@ -101,20 +101,18 @@ def record_signals(quote, chunk_text, verb_re):
     }
 
 
+def _read_jsonl(path):
+    with open(path, encoding="utf-8") as f:
+        return [json.loads(line) for line in f if line.strip()]
+
+
 def collect(inputs, verb_re):
     rows = []
     for doc, files in inputs.items():
         norm = files["normalized"]
         step_c, chunks_by_id = E._load_reconstruction_sources(norm)
-        chunk_text = {}
-        for line in open(files["chunks"], encoding="utf-8"):
-            if line.strip():
-                c = json.loads(line)
-                chunk_text[c["chunk_id"]] = c.get("text", "")
-        for line in open(norm, encoding="utf-8"):
-            if not line.strip():
-                continue
-            r = json.loads(line)
+        chunk_text = {c["chunk_id"]: c.get("text", "") for c in _read_jsonl(files["chunks"])}
+        for r in _read_jsonl(norm):
             quote = (r.get("source_quote") or "").strip()
             cid = r.get("chunk_id")
             method, stem = ("not-a-candidate", None)
@@ -265,9 +263,15 @@ def build_manifest(inputs):
         except importlib.metadata.PackageNotFoundError:
             return None
 
-    rev = subprocess.run(
-        ["git", "-C", str(_ROOT), "rev-parse", "HEAD"], capture_output=True, text=True
-    ).stdout.strip()
+    try:
+        rev = (
+            subprocess.run(
+                ["git", "-C", str(_ROOT), "rev-parse", "HEAD"], capture_output=True, text=True
+            ).stdout.strip()
+            or "unavailable"
+        )
+    except (FileNotFoundError, subprocess.SubprocessError):
+        rev = "unavailable"  # no git on PATH: say so, rather than crash or guess
     profile = default_profile()
     template = L.PASS1_PROMPT_TEMPLATE.replace(
         "{obligation_verbs}", ", ".join(profile["obligation_verbs"])
