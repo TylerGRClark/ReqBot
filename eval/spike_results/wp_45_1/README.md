@@ -5,8 +5,8 @@ Part of Phase 45. No production code changes; scripts here only read the 13 docu
 
 | Sub-step | What | Status |
 |---|---|---|
-| (a) | Fragment census: documented text signals over every record, crossed with the attachment method | this directory |
-| (b) | Attachment audit: two independent labelers, Tyler adjudicates | not started (needs a sample size and labeling time) |
+| (a) | Fragment census: documented text signals over every record, crossed with the attachment method | merged (#204) |
+| (b) | Attachment audit: two independent labelers, Tyler adjudicates | pack built (below); labels and analysis land in the next PR |
 | (c) | Fair retrieval test (queries written from meaning, frozen configuration) | after (b) |
 | (d) | Does a wrong stem hurt retrieval? | after (c) |
 | (e) | Small source-based sample (obligations labeled in the PDF, traced to first loss point) | not started |
@@ -66,3 +66,55 @@ The signals are lexical. A fragment written as a capitalised imperative sentence
 visitor logs.") fires none of them, so the counts above are a floor on fragment-shaped records, not a prevalence, and
 "attached to a quote that does not look like a fragment" does not mean the attachment is wrong. Prevalence and
 attachment correctness come from the labeled audit, (b) and (e). Nothing here estimates an error rate.
+
+## (b) Attachment audit pack: `audit_pack.py`, `audit_pack/`
+
+```bash
+python3 eval/spike_results/wp_45_1/audit_pack.py --out-dir eval/spike_results/wp_45_1/audit_pack \
+    --key-out PATH_OUTSIDE_THE_PACK/key.json --manifest-out eval/spike_results/wp_45_1/outputs/audit_pack_manifest.json
+```
+
+Same pinned inputs and no LLM or Qdrant, as in (a). The run stops if a stratum's population differs from the table
+below. Two runs are byte-identical (pack files and key).
+
+**What the labelers do** (full rules in `audit_pack/RUBRIC.md`). Pass A shows only source text: the quote, its chunk
+and the previous chunk. The labeler says whether the quote needs a lead-in (`complete` / `needs_lead_in` /
+`not_a_requirement`), where the governing text is (`same_chunk` / `previous_chunk` / `section_heading` /
+`not_shown`) and copies it. Only then does pass B show the stem the pipeline attached, for the 66 sampled records that
+have one, and the labeler rules on it (`right` / `wrong_sibling` / `fragment_chain` / `not_needed` / `wrong_other`).
+Two passes so that the labeler forms their own view before seeing the pipeline's answer; asking "is this stem right?"
+first would anchor on it. Claude and Codex label independently; Tyler adjudicates the disagreements and spot-checks
+about 10 agreements (the shared-mistake check). `audit_pack/check_labels.py` validates a label file (standard library
+only, so it runs in a directory holding just the pack). `tests/unit/test_wp45_audit_pack.py` covers the checker and the builder's pure parts (card rendering, the seeded draw).
+
+**Sample.** 130 records, ids `R001`..`R130` in random order; the ids and card order carry no stratum information. The
+answer key (id to record, stratum, attachment method) is written only to `--key-out`, not into the repository. It is
+reproduced byte for byte by rerunning the script, and the manifest records its sha256.
+
+| Stratum | Population | Frame | Sampled | Why |
+|---|---|---|---|---|
+| same-chunk stem | 142 | 126 | 36 | precision of the largest attached group (the 16 hand-labeled in audit F04 are left out of the frame) |
+| cross-chunk stem | 59 | 59 | 28 | precision of the cross-chunk lookup |
+| heading stem | 2 | 2 | 2 | all of them |
+| no stem, fragment signal | 90 | 90 | 28 | fragment-shaped records that got nothing: the misses we can see |
+| no stem, no signal | 546 | 546 | 20 | the census's blind spot (capitalised imperative fragments) |
+| not a candidate, signal | 54 | 54 | 8 | check that the 20-word candidacy cut is not hiding fragments |
+| not a candidate, no signal | 954 | 954 | 8 | same, unsignalled |
+
+Each stratum is the first n of a seeded shuffle, so it can be extended later without a redraw. Estimates are weighted
+by stratum (frame size over sample size). **Expected precision is modest.** Worst-case 95% half-widths (a rate near 50%, finite-population corrected):
++/-14 points for same-chunk, +/-13.5 cross-chunk, +/-15.5 for no-stem with a signal, +/-21.5 for no-stem without a
+signal, and +/-32 to +/-35 for the two not-a-candidate strata, which only bound a rate. That is enough to say whether
+a problem is large (the lead is 7 of 16 wrong), not to rank a 5-point difference. The fix WPs are checked by replay
+on all 142 and 59 attachments, not by this sample.
+
+**Limits.**
+- Both main labelers are language models and can share mistakes; Tyler's agreement spot-check is the only guard.
+- Labelers read the text, not the Docling item tree, so root cause (2) "hierarchy missing or wrong" cannot be
+  established here. Causes (1) different chunk, (3) rules do not cover the shape and (4) sibling accepted as the
+  stem are read from the labels; (2) is reported as not separable from this evidence.
+- Blinding is by instruction plus a pack folder that holds only the labelers' files. Run a labeler in a copy of
+  `audit_pack/` in an empty directory, not in this checkout (where the census and audit outputs are readable).
+- The first main labeler (Claude) authored the pack and had seen the F04 hand labels and the census totals; the 16
+  F04 records are excluded for that reason.
+- 8 of 130 quotes are not verbatim in their chunk (audit F07); each such card says so and is judged as written.
