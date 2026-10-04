@@ -14,7 +14,7 @@ services:
     build: .
     # Tagging the build output lets `docker compose up` reuse a pre-built/pre-loaded image
     # instead of always rebuilding from source — Compose only builds when no image with this
-    # name:tag exists locally yet. This is what makes the air-gapped transfer path (README.md)
+    # name:tag exists locally yet. This is what makes the air-gapped transfer path (docs/DEPLOYMENT.md)
     # actually work: `docker load` on the offline machine populates this exact tag, so the
     # subsequent `docker compose up -d` there runs the loaded image rather than trying (and
     # failing, with no source checkout or build tools) to build it (Codex review, PR #109).
