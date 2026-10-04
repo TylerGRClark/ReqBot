@@ -23,7 +23,8 @@ print(
     "probe: coverage('Users shall share passwords.' vs 'Users shall not share passwords.') =",
     quote_word_coverage("Users shall share passwords.", "Users shall not share passwords."),
 )
-NEG = re.compile(r"\b(not|no|never|cannot|neither|nor|without|prohibited|n't)\b")
+# contractions ("isn't") need their own branch: a leading \b cannot match before the "n"
+NEG = re.compile(r"\b(?:not|no|never|cannot|neither|nor|without|prohibited)\b|(?<=\w)n['’]t\b")
 man = json.load(open(str(_ROOT / "eval/spike_results/wp_44/manifest.json")))["documents"]
 P = os.path.expanduser("~/documents/processed")
 tot = noncontig = neg_dropped = 0
