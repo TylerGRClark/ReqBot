@@ -1,0 +1,2070 @@
+{
+ "Can restricted data appear in the same unclassified document as controlled unclassified information?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "unclassified documents restricted data controlled unclassified information",
+  "hypothesis": "\"Sensitive but Unclassified (SBU) information and classified information shall not be co-mingled in the same document unless explicitly authorized by applicable regulations or directives, and any such authorization is documented and maintained.\"",
+  "sparse_query": "unclassified documents restricted data controlled unclassified information AC-3 IA-5(1) AU-9"
+ },
+ "How are asks to analyze threats against critical-component suppliers decided and ranked, and are the results shared?": {
+  "control_ids": [],
+  "dense_query": "threat analysis critical component supplier ranking decision sharing",
+  "hypothesis": "The organization shall establish a process for identifying and prioritizing requests to analyze potential security risks associated with critical-component suppliers, based on factors such as supplier criticality, risk likelihood, and potential impact. The results of these analyses shall be documented and disseminated to relevant stakeholders in a timely manner, facilitating informed decision-making regarding supply chain management and mitigation strategies.",
+  "sparse_query": "threat analysis critical component supplier ranking decision sharing"
+ },
+ "How are control correlation identifiers and STIGs kept consistent with the controls and assessment methods DoD relies on?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "control correlation identifier consistency STIG DoD reliance",
+  "hypothesis": "\"The organization shall ensure that control correlation identifiers and Security Technical Implementation Guides (STIGs) are accurately synchronized with the corresponding security controls and assessment methodologies utilized by the Department of Defense, thereby maintaining consistency across all relevant frameworks and standards.\"",
+  "sparse_query": "control correlation identifier consistency STIG DoD reliance AC-3 IA-5(1) AU-9"
+ },
+ "How are cryptographic problems that affect joint or coalition secure interoperability to be resolved?": {
+  "control_ids": [],
+  "dense_query": "cryptographic-problems joint-coalition-secure-interoperability resolution",
+  "hypothesis": "Cryptographic problems affecting joint or coalition secure interoperability shall be identified and resolved through collaborative efforts among participating organizations, utilizing established communication channels and procedures for coordination and issue resolution.",
+  "sparse_query": "cryptographic-problems joint-coalition-secure-interoperability resolution"
+ },
+ "How are facility upgrades to fix electromagnetic pulse hardness gaps at nuclear command and control sites funded and carried out?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "facility-upgrades funding electromagnetic-pulse-hardness-gaps nuclear-command-control-sites",
+  "hypothesis": "\"Facility upgrades to address electromagnetic pulse (EMP) hardness gaps at nuclear command and control sites shall be funded and implemented in accordance with established procedures, ensuring that such upgrades do not compromise the operational integrity or security of the site.\"",
+  "sparse_query": "facility-upgrades funding electromagnetic-pulse-hardness-gaps nuclear-command-control-sites IA-5(1) AU-9"
+ },
+ "How are protections for mission-critical functions and components built into acquisition and logistics policy?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "mission critical function component protection acquisition logistics policy",
+  "hypothesis": "\"Mission-critical functions and components shall be identified and incorporated into acquisition and logistics policies to ensure their protection from unauthorized access, use, disclosure, disruption, modification, or destruction throughout the system lifecycle.\"",
+  "sparse_query": "mission critical function component protection acquisition logistics policy AC-3 IA-5(1) AU-9"
+ },
+ "How are requests to extend the use of decertified products handled for partner nations?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "decertified-products extension use partner-nations handling procedures",
+  "hypothesis": "\"Requests from partner nations to continue using equipment or software that has been previously certified but is no longer deemed secure due to changes in the threat environment, vulnerabilities discovered, or other security concerns must be evaluated and approved on a case-by-case basis by the relevant authorities, considering factors such as the potential risk to national security, the availability of alternative solutions, and any applicable agreements or arrangements with the partner nation.\"",
+  "sparse_query": "decertified-products extension use partner-nations handling procedures AC-3 IA-5(1) AU-9"
+ },
+ "How are requests to use supply chain risk management experts and tools prioritized?": {
+  "control_ids": [],
+  "dense_query": "supply chain risk management expert tool prioritization",
+  "hypothesis": "The organization shall establish a process for evaluating and prioritizing requests to utilize supply chain risk management expertise and tools in accordance with organizational risk tolerance and mitigation objectives, ensuring timely and effective application of these resources to address identified risks.",
+  "sparse_query": "supply chain risk management expert tool prioritization"
+ },
+ "How are unit-level reports on the cyberspace workforce combined?": {
+  "control_ids": [],
+  "dense_query": "cyberspace-workforce reporting unit-level",
+  "hypothesis": "\"Unit-level reports on the cyberspace workforce shall be aggregated and consolidated to provide a comprehensive view of personnel with relevant skills and certifications across the organization, facilitating informed decision-making and resource allocation.\"",
+  "sparse_query": "cyberspace-workforce reporting unit-level"
+ },
+ "How can modifications by a single virtual desktop user be prevented from leaking into the base image others use?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "virtual-desktop-user-modifications-prevention-base-image-leakage",
+  "hypothesis": "Modifications made to the virtual desktop environment by one authorized user shall not inadvertently persist and become accessible to other users sharing the same base image, thereby maintaining the integrity of the shared operating environment.",
+  "sparse_query": "virtual-desktop-user-modifications-prevention-base-image-leakage AC-3 IA-5(1) AU-9"
+ },
+ "How does AFI 17-203 address exercise-related incidents and events for reporting purposes?": {
+  "control_ids": [],
+  "dense_query": "AFI 17-203 incident reporting exercise-related events",
+  "hypothesis": "The following regulatory requirement statement addresses the semantic intent:\n\n\"The organization shall document and report all exercise-related incidents and events in accordance with established procedures, to ensure timely notification and dissemination of information to relevant stakeholders.\"",
+  "sparse_query": "AFI 17-203 incident reporting exercise-related events"
+ },
+ "How does AFI 17-203 define an incident category involving malicious code that provides remote interactive control, or unauthorized non-privileged access to an information system?": {
+  "control_ids": [],
+  "dense_query": "AFI 17-203 incident category malicious code remote interactive control unauthorized non-privileged access",
+  "hypothesis": "\"An incident category involving malicious code is defined as a type of security incident where software or firmware intentionally designed to cause harm or exploit vulnerabilities in an information system has provided the attacker with remote interactive control over the system, or has granted unauthorized users non-privileged access to the system.\"",
+  "sparse_query": "AFI 17-203 incident category malicious code remote interactive control unauthorized non-privileged access"
+ },
+ "How is a request to keep using decertified products coordinated and reviewed?": {
+  "control_ids": [
+   "CM-2",
+   "CA-7"
+  ],
+  "dense_query": "decertified product usage coordination review process",
+  "hypothesis": "\"Requests for continued use of decertified products must be subject to formal review and approval by designated personnel to ensure that such usage does not compromise system security or operational effectiveness.\"",
+  "sparse_query": "decertified product usage coordination review process CM-2 CA-7"
+ },
+ "How is demand prioritized when there are more requests for threat assessments than available capacity?": {
+  "control_ids": [],
+  "dense_query": "demand-prioritization threat-assessment request-capacity management",
+  "hypothesis": "\"Threat assessment requests shall be prioritized based on a risk-based methodology that considers the potential impact and likelihood of each request, ensuring that high-priority threats are addressed in a timely manner while minimizing delays for lower-priority requests.\"",
+  "sparse_query": "demand-prioritization threat-assessment request-capacity management"
+ },
+ "How is nuclear command, control and communications built into long-range planning and the budget cycle?": {
+  "control_ids": [],
+  "dense_query": "nuclear command control systems integration long range planning budget cycle",
+  "hypothesis": "The organization shall incorporate nuclear command, control, and communication capabilities into its strategic planning processes to ensure alignment with overall mission objectives and resource allocation decisions.",
+  "sparse_query": "nuclear command control systems integration long range planning budget cycle"
+ },
+ "How is resourcing for risk-management work on TCAs advocated within headquarters working and steering groups?": {
+  "control_ids": [],
+  "dense_query": "risk management resource allocation TCA headquarters working group steering committee",
+  "hypothesis": "\"Risk management activities related to Technical Controls (TCAs) shall be adequately resourced by HQ working and steering groups, ensuring sufficient personnel and resources are allocated to effectively identify, assess, and mitigate risks associated with TCAs.\"",
+  "sparse_query": "risk management resource allocation TCA headquarters working group steering committee"
+ },
+ "How is the latest approved yearly cyber awareness training made available to the Air Force's education and training command?": {
+  "control_ids": [],
+  "dense_query": "cyber awareness training availability Air Force education training command",
+  "hypothesis": "The organization shall ensure that the most current approved annual cybersecurity awareness training program is readily accessible to all personnel within the Air Force's education and training command, facilitating their participation in the required training.",
+  "sparse_query": "cyber awareness training availability Air Force education training command"
+ },
+ "How is usage of ports, protocols and services to be standardized to support interoperability?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "port standardization protocols services interoperability",
+  "hypothesis": "\"Standardize the utilization of ports, protocols, and services across all systems and applications to ensure consistent and predictable behavior, thereby facilitating seamless communication and integration among disparate components.\"",
+  "sparse_query": "port standardization protocols services interoperability AC-3 IA-5(1) AU-9"
+ },
+ "How long and complex must SNMP community strings be under the applicable security controls?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)"
+  ],
+  "dense_query": "SNMP community string length complexity security controls",
+  "hypothesis": "\"SNMP community strings shall be randomly generated and of sufficient length to prevent unauthorized access, taking into account the risk associated with the networked devices they are used to manage.\"",
+  "sparse_query": "SNMP community string length complexity security controls AC-3 IA-5(1)"
+ },
+ "How long must proxy, firewall, and DNS audit logs be retained to support incident investigation?": {
+  "control_ids": [
+   "AU-9",
+   "AC-2(1)"
+  ],
+  "dense_query": "proxy-firewall-DNS-audit-logs-retention-period-incident-investigation",
+  "hypothesis": "Audit records for systems that provide network traffic filtering and routing functions (e.g., proxies, firewalls, and DNS servers) shall be retained in a secure manner for a period sufficient to support the investigation of security incidents.",
+  "sparse_query": "proxy-firewall-DNS-audit-logs-retention-period-incident-investigation AU-9 AC-2(1)"
+ },
+ "How must DoD CUI be controlled under DoDI 5200.48?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "DoD Controlled Unclassified Information control DoDI 5200.48",
+  "hypothesis": "\"Sensitive information, including DoD Controlled Unclassified Information (CUI), shall be protected in accordance with applicable laws and regulations to prevent unauthorized access, use, disclosure, modification, or destruction.\"",
+  "sparse_query": "DoD Controlled Unclassified Information control DoDI 5200.48 AC-3 IA-5(1) AU-9"
+ },
+ "How must cyberspace requirements for non-citizen personnel and contractors be recorded and tracked?": {
+  "control_ids": [
+   "AC-2",
+   "IA-4(1)",
+   "AU-6"
+  ],
+  "dense_query": "cybersecurity requirements tracking non-citizen personnel contractors access control identity management",
+  "hypothesis": "\"Authorized personnel shall accurately document and maintain records of all cyberspace access and privileges granted to non-citizen personnel and contractors, including their roles, responsibilities, and clearance levels, to ensure accountability and auditability.\"",
+  "sparse_query": "cybersecurity requirements tracking non-citizen personnel contractors access control identity management AC-2 IA-4(1) AU-6"
+ },
+ "How must cyberspace spending be catalogued and entered in a central management control system?": {
+  "control_ids": [
+   "CM-2",
+   "AC-3"
+  ],
+  "dense_query": "cybersecurity budget tracking financial management accounting software asset management",
+  "hypothesis": "\"Cyberspace expenditures shall be accurately documented and recorded within a centralized management control system to facilitate transparent tracking, reporting, and auditing of all financial transactions related to information technology investments.\"",
+  "sparse_query": "cybersecurity budget tracking financial management accounting software asset management CM-2 AC-3"
+ },
+ "How must funding officials be designated for organizations paying for DISN long haul communications services?": {
+  "control_ids": [
+   "IA-5(1)"
+  ],
+  "dense_query": "funding official designation DISN long haul communications service",
+  "hypothesis": "\"Funding officials shall be formally designated and authorized to approve payments for DISN long haul communications services on behalf of their respective organizations, ensuring that such designations are documented and communicated to the relevant service providers.\"",
+  "sparse_query": "funding official designation DISN long haul communications service IA-5(1)"
+ },
+ "How must maintenance work on the AN/USQ-225 be documented?": {
+  "control_ids": [],
+  "dense_query": "AN/USQ-225 maintenance documentation procedures",
+  "hypothesis": "Maintenance work on the AN/USQ-225 shall be thoroughly and accurately recorded in a manner that enables tracking of all activities performed, including but not limited to, repairs, replacements, and adjustments. The documentation shall include relevant details such as date, time, personnel involved, actions taken, and any materials or components used.",
+  "sparse_query": "AN/USQ-225 maintenance documentation procedures"
+ },
+ "How must sensitive compartmented information security programs be run and coordinated with national intelligence security policy?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "sensitive-compartmented-information-security-programs coordination national-intelligence-security-policy",
+  "hypothesis": "Sensitive compartmented information security programs shall be operated in accordance with applicable national intelligence security policies, ensuring coordination and alignment with established standards for protecting classified information.",
+  "sparse_query": "sensitive-compartmented-information-security-programs coordination national-intelligence-security-policy AC-3 IA-5(1) AU-9"
+ },
+ "How must unauthorized disclosures of CUI be reported and accounted for?": {
+  "control_ids": [
+   "AC-2",
+   "AR-1(3)",
+   "AU-6"
+  ],
+  "dense_query": "unauthorized disclosure reporting CUI accounting",
+  "hypothesis": "The following regulatory requirement statement answers the question:\n\n\"Unauthorized disclosures of Controlled Unclassified Information (CUI) shall be promptly reported to designated authorities, documented in a manner that maintains an accurate record of incidents, and subject to subsequent review and analysis to identify root causes and implement corrective actions.\"",
+  "sparse_query": "unauthorized disclosure reporting CUI accounting AC-2 AR-1(3) AU-6"
+ },
+ "How often must SNMP community strings and management passwords be changed?": {
+  "control_ids": [
+   "AC-2",
+   "IA-4(1)"
+  ],
+  "dense_query": "SNMP community string change frequency management password rotation",
+  "hypothesis": "SNMP community strings and management passwords shall be changed at regular intervals to prevent unauthorized access and maintain confidentiality.",
+  "sparse_query": "SNMP community string change frequency management password rotation AC-2 IA-4(1)"
+ },
+ "How often should virtualization security policies be reviewed again?": {
+  "control_ids": [],
+  "dense_query": "virtualization security policy review frequency",
+  "hypothesis": "Virtualization security policies shall be regularly reviewed and updated to ensure their continued effectiveness in protecting virtualized assets and preventing unauthorized access or malicious activity.",
+  "sparse_query": "virtualization security policy review frequency"
+ },
+ "How should Air Force funded connections carrying sensitive-but-unclassified and secret data be terminated once they are idle?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "sensitive-but-unclassified secret data termination air force funded connections idle",
+  "hypothesis": "Connections carrying sensitive but unclassified and secret data shall be terminated in a manner that ensures their secure deactivation, preventing unauthorized access or continued transmission of classified information when no longer required for official use.",
+  "sparse_query": "sensitive-but-unclassified secret data termination air force funded connections idle AC-3 IA-5(1) AU-9"
+ },
+ "How should remote administration traffic for a virtualization system be protected?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "virtualization system remote administration traffic protection",
+  "hypothesis": "\"Remote administration traffic for virtualization systems shall be protected from unauthorized access and eavesdropping by implementing measures that ensure confidentiality, integrity, and authenticity of such communications.\"",
+  "sparse_query": "virtualization system remote administration traffic protection AC-3 IA-5(1) AU-9"
+ },
+ "How should the management interfaces of a virtualization platform be secured?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "virtualization-platform security management-interfaces access-control authentication-and-identity network-security",
+  "hypothesis": "\"The virtualization platform's management interfaces shall be designed and implemented to prevent unauthorized access and ensure confidentiality, integrity, and availability of management functions and data.\"",
+  "sparse_query": "virtualization-platform security management-interfaces access-control authentication-and-identity network-security AC-3 IA-5(1) AU-9"
+ },
+ "How should the way a network management agreement is amended or brought to a close be described?": {
+  "control_ids": [],
+  "dense_query": "network-management-agreement amendment termination description",
+  "hypothesis": "The amendment or termination of a network management agreement shall be documented in a manner that clearly reflects the changes made or the reason for its closure, and such documentation shall be maintained in accordance with applicable records retention requirements.",
+  "sparse_query": "network-management-agreement amendment termination description"
+ },
+ "How should unauthorized ports, protocols and services be blocked at the network boundary?": {
+  "control_ids": [
+   "AC-17",
+   "IA-4(1)"
+  ],
+  "dense_query": "unauthorized port blocking network boundary access control",
+  "hypothesis": "\"Unauthorized ports, protocols, and services shall be denied access to the network by blocking them at the external network boundary to prevent unauthorized communication.\"",
+  "sparse_query": "unauthorized port blocking network boundary access control AC-17 IA-4(1)"
+ },
+ "How should virtual machine images be protected given how easily they are copied and stored?": {
+  "control_ids": [
+   "AC-3",
+   "AU-9"
+  ],
+  "dense_query": "virtual-machine-image-protection data-protection copy-prevention storage-security",
+  "hypothesis": "\"Virtual machine images shall be protected against unauthorized copying and storage by implementing mechanisms to ensure that copies of such images can be uniquely identified, tracked, and accounted for.\"",
+  "sparse_query": "virtual-machine-image-protection data-protection copy-prevention storage-security AC-3 AU-9"
+ },
+ "How should vulnerabilities in hardware and software, both bespoke and off-the-shelf, be assessed through testing?": {
+  "control_ids": [
+   "AC-2",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "hardware-software-vulnerability-assessment-testing",
+  "hypothesis": "\"Hardware and software components, including those that are custom-developed (bespoke) and commercially available (off-the-shelf), shall be periodically evaluated for potential vulnerabilities through thorough testing methodologies to identify any weaknesses or flaws that could be exploited by malicious actors.\"",
+  "sparse_query": "hardware-software-vulnerability-assessment-testing AC-2 IA-5(1) AU-9"
+ },
+ "How widely may a single SNMP community string be reused across managed network elements?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)"
+  ],
+  "dense_query": "snmp community string reuse management network elements",
+  "hypothesis": "A unique SNMP community string shall not be shared among multiple managed network elements to prevent unauthorized access and maintain confidentiality.",
+  "sparse_query": "snmp community string reuse management network elements AC-3 IA-5(1)"
+ },
+ "In coordination with the DoD CIO, what procedures must USD(A&S) establish and maintain to implement its Title 10 U.S.C. 3252 authorities?": {
+  "control_ids": [],
+  "dense_query": "DoD CIO compliance USD A&S Title 10 U.S.C. 3252 authorities implementation procedures",
+  "hypothesis": "The Under Secretary of Defense for Acquisition and Sustainment (USD(A&S)) shall establish and maintain procedures that define the implementation of its statutory authorities as specified in Title 10, United States Code, Section 3252, in accordance with guidance provided by the Department of Defense Chief Information Officer. These procedures shall ensure the effective exercise of USD(A&S) responsibilities and obligations related to information technology acquisition and management.",
+  "sparse_query": "DoD CIO compliance USD A&S Title 10 U.S.C. 3252 authorities implementation procedures"
+ },
+ "In coordination with the Joint Staff, what must the Director of the NSA do about cryptographic issues that affect joint or coalition secure interoperability?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AC-3"
+  ],
+  "dense_query": "cryptographic issues joint coalition secure interoperability NSA Director",
+  "hypothesis": "The Director of the NSA shall ensure that cryptographic issues affecting joint or coalition secure interoperability are addressed in a manner that maintains compatibility and facilitates secure communication among participating entities.",
+  "sparse_query": "cryptographic issues joint coalition secure interoperability NSA Director IA-5(1) AC-3"
+ },
+ "Is it permitted to mix formerly restricted data with CUI inside an unclassified document?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "CUI mixing formerly restricted data unclassified documents",
+  "hypothesis": "The following regulatory requirement statement addresses the compliance question:\n\n\"Sensitive information, including Controlled Unclassified Information (CUI) and Formerly Restricted Data, shall not be commingled within a single document unless explicitly authorized by applicable regulations or directives.\"",
+  "sparse_query": "CUI mixing formerly restricted data unclassified documents AC-3 IA-5(1) AU-9"
+ },
+ "May DoD Component officials share CUI with outside contractors, advisers and grantees, and what limits apply?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "CUI sharing DoD Component officials outside contractors advisers grantees limits",
+  "hypothesis": "\"Authorized personnel shall limit the disclosure of Controlled Unclassified Information (CUI) to only those individuals or entities having a legitimate need-to-know for official business purposes, ensuring that such disclosures are made in accordance with applicable laws, regulations, and DoD policies.\"",
+  "sparse_query": "CUI sharing DoD Component officials outside contractors advisers grantees limits AC-3 IA-5(1) AU-9"
+ },
+ "Should SNMP community strings be unique per device, or at least per managed network area?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)"
+  ],
+  "dense_query": "SNMP community string uniqueness best practices security risk management",
+  "hypothesis": "SNMP community strings shall be uniquely assigned to each device or, alternatively, to a distinct managed network area, to prevent unauthorized access and ensure secure management operations.",
+  "sparse_query": "SNMP community string uniqueness best practices security risk management AC-3 IA-5(1)"
+ },
+ "Under DoD policy, what are the prohibited or improper reasons for classifying, continuing to classify, or designating information as CUI?": {
+  "control_ids": [
+   "AC-2",
+   "IA-4(1)"
+  ],
+  "dense_query": "DoD policy classification CUI prohibited reasons",
+  "hypothesis": "Information shall not be classified, continued to be classified, or designated as Controlled Unclassified Information (CUI) based on reasons that are arbitrary, capricious, or unrelated to the national security, law enforcement, or other legitimate interests of the United States.",
+  "sparse_query": "DoD policy classification CUI prohibited reasons AC-2 IA-4(1)"
+ },
+ "Under DoD policy, what governs how SCI must be safeguarded?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "DoD policy safeguarding SCI",
+  "hypothesis": "The handling and protection of Sensitive Compartmented Information (SCI) shall be governed by applicable laws, regulations, and directives that prescribe specific security requirements to prevent unauthorized access or disclosure.",
+  "sparse_query": "DoD policy safeguarding SCI AC-3 IA-5(1) AU-9"
+ },
+ "Under DoD policy, what must CUI handling be consistent with when it is identified and safeguarded?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "CUI handling consistency DoD policy NIST SP 800-171",
+  "hypothesis": "The Controlled Unclassified Information (CUI) shall be handled in accordance with its assigned categorization and applicable handling instructions.",
+  "sparse_query": "CUI handling consistency DoD policy NIST SP 800-171 AC-3 IA-5(1) AU-9"
+ },
+ "Under DoD policy, what must documents containing CUI display?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "DoD policy CUI marking requirements",
+  "hypothesis": "\"Documents containing Controlled Unclassified Information (CUI) shall prominently and clearly display a notice indicating that the information is classified under DoD policy.\"",
+  "sparse_query": "DoD policy CUI marking requirements AC-3 IA-5(1) AU-9"
+ },
+ "Under what conditions can controlled unclassified information be shared with contractors and grantees for official DoD business?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "controlled unclassified information sharing contractors grantees DoD business",
+  "hypothesis": "\"Controlled Unclassified Information (CUI) may be shared with contractors and grantees when necessary to accomplish official Department of Defense (DoD) business, provided that the sharing is in accordance with applicable laws, regulations, and policies governing CUI, and adequate measures are taken to protect its confidentiality, integrity, and availability.\"",
+  "sparse_query": "controlled unclassified information sharing contractors grantees DoD business AC-3 IA-5(1) AU-9"
+ },
+ "Under what conditions may CUI not controlled as NOFORN be released or disclosed to non-U.S. citizens employed by DoD?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "CUI release disclosure non-US citizens DoD personnel",
+  "hypothesis": "\"Sensitive but Unclassified (SBU) Controlled Unclassified Information (CUI), specifically that which is not designated as 'NOFORN' (Not Releasable to Foreign Nationals), may only be released or disclosed to non-U.S. citizen employees of the Department of Defense when such release or disclosure is authorized by a senior DoD official, in accordance with applicable laws and regulations governing the protection of CUI.\"",
+  "sparse_query": "CUI release disclosure non-US citizens DoD personnel AC-3 IA-5(1) AU-9"
+ },
+ "What CNDSP (Computer Network Defense Service Provider) certification authority responsibilities does SAF/AAZ hold under AFI 17-203?": {
+  "control_ids": [],
+  "dense_query": "CNDSP certification authority responsibilities SAF AAZ AFI 17-203",
+  "hypothesis": "\"The SAF/A2Z organization shall be responsible for exercising oversight and management of the certification process for Computer Network Defense Service Providers, ensuring that such providers meet established security standards and requirements.\"",
+  "sparse_query": "CNDSP certification authority responsibilities SAF AAZ AFI 17-203"
+ },
+ "What Mission Assurance program areas does AFI 10-2402 define as part of the CARM and MA Integration Strategy, including Force Health Protection, Readiness Reporting, and Insider Threat?": {
+  "control_ids": [],
+  "dense_query": "AFI 10-2402 mission assurance program areas CARM MA integration strategy force health protection readiness reporting insider threat",
+  "hypothesis": "The Mission Assurance program areas defined by AFI 10-2402 as part of the CARM and MA Integration Strategy include those that support the protection of personnel, equipment, and resources from harm or compromise, as well as those related to the readiness and preparedness of forces for operational missions.",
+  "sparse_query": "AFI 10-2402 mission assurance program areas CARM MA integration strategy force health protection readiness reporting insider threat"
+ },
+ "What action is taken when compiled information is found improperly classified on a website or in documents?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "improperly classified information remediation website document",
+  "hypothesis": "\"Information classified at a particular level shall be handled and stored accordingly, and any unauthorized disclosure or exposure thereof shall be immediately corrected by reclassifying the information to its proper classification level.\"",
+  "sparse_query": "improperly classified information remediation website document AC-3 IA-5(1) AU-9"
+ },
+ "What agreements must DoD Components operating network management systems establish to ensure quality of service and interoperability?": {
+  "control_ids": [
+   "AC-2",
+   "IA-4(1)"
+  ],
+  "dense_query": "DoD Component network management system agreement quality of service interoperability",
+  "hypothesis": "DoD Components operating network management systems shall establish agreements with other organizations and stakeholders as necessary to ensure the provision of consistent and reliable quality of service, and to facilitate interoperability between disparate systems and networks.",
+  "sparse_query": "DoD Component network management system agreement quality of service interoperability AC-2 IA-4(1)"
+ },
+ "What are the configuration management and change control requirements for information and network management systems?": {
+  "control_ids": [
+   "CM-2",
+   "CM-3(1)",
+   "CM-6"
+  ],
+  "dense_query": "configuration-management change-control information-systems network-management-systems",
+  "hypothesis": "\"Information and network management systems shall be configured and modified in accordance with a documented process that ensures changes are reviewed, approved, tested, and implemented in a controlled manner to maintain system integrity and prevent unauthorized modifications.\"",
+  "sparse_query": "configuration-management change-control information-systems network-management-systems CM-2 CM-3(1) CM-6"
+ },
+ "What are the encryption requirements for protecting data and communications?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AC-3"
+  ],
+  "dense_query": "data-protection encryption requirements communication security",
+  "hypothesis": "\"Sensitive information shall be protected through the use of cryptographic techniques to ensure confidentiality, integrity, and authenticity of data in transit and at rest.\"",
+  "sparse_query": "data-protection encryption requirements communication security IA-5(1) AC-3"
+ },
+ "What are the incident reporting requirements and timelines for security incidents?": {
+  "control_ids": [
+   "IR-1",
+   "IR-2"
+  ],
+  "dense_query": "incident reporting requirements timelines security incident response",
+  "hypothesis": "\"Organizations shall report all security-related incidents to designated authorities in a timely manner, including but not limited to, unauthorized access attempts, data breaches, system compromises, or other events that may compromise the confidentiality, integrity, or availability of organizational information systems.\"",
+  "sparse_query": "incident reporting requirements timelines security incident response IR-1 IR-2"
+ },
+ "What are the requirements for destroying or sanitizing media containing classified information or CUI?": {
+  "control_ids": [
+   "AC-3",
+   "AU-9"
+  ],
+  "dense_query": "media destruction sanitization classified information CUI NIST SP 800-53 AC-3 AU-9",
+  "hypothesis": "Media containing classified information or Controlled Unclassified Information (CUI) must be destroyed or sanitized in accordance with applicable laws and regulations to prevent unauthorized access, disclosure, or compromise of sensitive information.",
+  "sparse_query": "media destruction sanitization classified information CUI NIST SP 800-53 AC-3 AU-9 AC-3 AU-9"
+ },
+ "What are the requirements for firewalls and boundary protection devices?": {
+  "control_ids": [
+   "AC-2",
+   "IA-4(1)"
+  ],
+  "dense_query": "firewall configuration management risk assessment network security access control",
+  "hypothesis": "\"Firewalls and boundary protection devices shall be implemented to prevent unauthorized access to and from organizational information systems by establishing a barrier between internal networks and external networks, thereby protecting against malicious activity and ensuring the confidentiality, integrity, and availability of organizational data.\"",
+  "sparse_query": "firewall configuration management risk assessment network security access control AC-2 IA-4(1)"
+ },
+ "What are the requirements for procuring custom-designed or custom-manufactured integrated circuits from a trusted supplier?": {
+  "control_ids": [
+   "SC-12",
+   "SC-18"
+  ],
+  "dense_query": "procurement trusted suppliers custom-designed custom-manufactured integrated circuits risk management supply chain security",
+  "hypothesis": "The organization shall ensure that all custom-designed or custom-manufactured integrated circuits procured from a trusted supplier meet the required specifications and security standards, and undergo thorough evaluation and validation to verify their authenticity, functionality, and compliance with organizational security policies.",
+  "sparse_query": "procurement trusted suppliers custom-designed custom-manufactured integrated circuits risk management supply chain security SC-12 SC-18"
+ },
+ "What are the requirements for protecting administrative and root account passwords?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AC-2",
+   "AU-9"
+  ],
+  "dense_query": "password protection administrative accounts root access control password management",
+  "hypothesis": "\"Administrative and root account passwords shall be protected in accordance with established security policies and procedures to prevent unauthorized access, use, disclosure, modification, or destruction.\"",
+  "sparse_query": "password protection administrative accounts root access control password management IA-5(1) AC-2 AU-9"
+ },
+ "What are the requirements for reporting a suspected security incident involving classified information or data spillage?": {
+  "control_ids": [
+   "IR-1",
+   "CA-7"
+  ],
+  "dense_query": "incident reporting classified information data spillage security breach",
+  "hypothesis": "\"An organization shall immediately notify designated authorities upon discovering a suspected security incident that involves unauthorized access to, disclosure of, or compromise of classified information, or any unauthorized release or exfiltration of sensitive data.\"",
+  "sparse_query": "incident reporting classified information data spillage security breach IR-1 CA-7"
+ },
+ "What are the requirements for vulnerability scanning and patch management on Air Force weapon system networks?": {
+  "control_ids": [
+   "AC-2",
+   "CM-6(1)",
+   "SI-3"
+  ],
+  "dense_query": "vulnerability scanning patch management air force weapon systems networks",
+  "hypothesis": "\"Network administrators shall conduct regular vulnerability scans to identify and remediate security vulnerabilities in all network-connected systems, devices, and applications, and implement timely patches or updates to address identified vulnerabilities.\"",
+  "sparse_query": "vulnerability scanning patch management air force weapon systems networks AC-2 CM-6(1) SI-3"
+ },
+ "What are the risk assessment and risk management process requirements?": {
+  "control_ids": [
+   "RMF-3",
+   "IA-2(1)",
+   "AC-2"
+  ],
+  "dense_query": "risk assessment risk management process requirements",
+  "hypothesis": "The organization shall conduct a systematic and ongoing risk assessment to identify potential security vulnerabilities and threats, and implement a risk management process to mitigate or accept identified risks in accordance with organizational policies and procedures. This process shall be based on a thorough analysis of the organization's mission, operations, and environment, and shall involve the identification, categorization, prioritization, and treatment of risks.",
+  "sparse_query": "risk assessment risk management process requirements RMF-3 IA-2(1) AC-2"
+ },
+ "What backup, recovery, and continuity of operations requirements apply to mission-critical information systems?": {
+  "control_ids": [
+   "CP-2",
+   "CP-3",
+   "CP-4"
+  ],
+  "dense_query": "backup recovery continuity of operations mission critical information systems",
+  "hypothesis": "\"Mission-critical information systems shall be designed and implemented with adequate backup, recovery, and continuity of operations capabilities to ensure their availability and functionality in the event of disruptions or failures.\"",
+  "sparse_query": "backup recovery continuity of operations mission critical information systems CP-2 CP-3 CP-4"
+ },
+ "What care should organizations managing guest operating systems for many users take over changes spreading to a shared master image?": {
+  "control_ids": [
+   "CM-2",
+   "AC-3"
+  ],
+  "dense_query": "guest operating system management shared master image change control configuration drift risk mitigation",
+  "hypothesis": "Organizations managing guest operating systems for multiple users shall implement controls to prevent unauthorized modifications to the shared master image from propagating to other user environments, thereby maintaining the integrity and consistency of the guest operating system configurations.",
+  "sparse_query": "guest operating system management shared master image change control configuration drift risk mitigation CM-2 AC-3"
+ },
+ "What charter must exist for governing the Air Force's national leadership command capabilities and nuclear command and control?": {
+  "control_ids": [],
+  "dense_query": "governance charter national leadership command capabilities nuclear command control",
+  "hypothesis": "The National Command Authority (NCA) shall establish a charter that defines the roles, responsibilities, and authorities for governing the national leadership command capabilities and nuclear command and control functions within the Department of the Air Force.",
+  "sparse_query": "governance charter national leadership command capabilities nuclear command control"
+ },
+ "What coordination is required between an organization's top information-security official and its top intelligence official?": {
+  "control_ids": [],
+  "dense_query": "information security official coordination intelligence official",
+  "hypothesis": "The top information-security official shall maintain effective communication and coordination with the top intelligence official to ensure that security controls are aligned with intelligence gathering and analysis activities, and that potential security risks associated with intelligence operations are identified and mitigated.",
+  "sparse_query": "information security official coordination intelligence official"
+ },
+ "What cryptographic protection is recommended for communications used to administer virtualization remotely?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "cryptographic protection remote administration virtualization",
+  "hypothesis": "\"Virtualized systems shall employ cryptographic mechanisms to protect remote administration communications against unauthorized access and eavesdropping.\"",
+  "sparse_query": "cryptographic protection remote administration virtualization AC-3 IA-5(1) AU-9"
+ },
+ "What cyber training and credential rules must NM system users meet?": {
+  "control_ids": [
+   "AU-9",
+   "IA-5(1)"
+  ],
+  "dense_query": "cyber security training requirements for NM system users",
+  "hypothesis": "\"NM system users shall complete periodic cybersecurity awareness training and obtain relevant certifications or credentials as required by their role and responsibilities to ensure they possess the necessary knowledge and skills to operate securely within the network.\"",
+  "sparse_query": "cyber security training requirements for NM system users AU-9 IA-5(1)"
+ },
+ "What cybersecurity policy must be implemented for nuclear command and control and intelligence systems?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "cybersecurity policy implementation nuclear command control intelligence systems",
+  "hypothesis": "\"The organization shall implement a cybersecurity policy that ensures the confidentiality, integrity, and availability of nuclear command and control and intelligence systems, in accordance with applicable laws, regulations, and standards.\"",
+  "sparse_query": "cybersecurity policy implementation nuclear command control intelligence systems AC-3 IA-5(1) AU-9"
+ },
+ "What defensive actions are required after a security incident to stop it from happening again?": {
+  "control_ids": [
+   "AU-9",
+   "AC-3"
+  ],
+  "dense_query": "incident response post-incident activities risk mitigation security controls",
+  "hypothesis": "\"An organization shall implement corrective and preventive measures to mitigate the impact of a security incident and prevent recurrence, including but not limited to, re-configuration of affected systems, revision of security policies and procedures, and implementation of additional controls as necessary.\"",
+  "sparse_query": "incident response post-incident activities risk mitigation security controls AU-9 AC-3"
+ },
+ "What distribution markings must controlled technical information carry?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "distribution markings controlled technical information",
+  "hypothesis": "\"Controlled technical information shall be clearly marked with applicable distribution restrictions to ensure authorized personnel access and prevent unauthorized disclosure.\"",
+  "sparse_query": "distribution markings controlled technical information AC-3 IA-5(1) AU-9"
+ },
+ "What do all parties to an NM SLA have to define about any local event storage needs?": {
+  "control_ids": [
+   "AU-9"
+  ],
+  "dense_query": "NM SLA local event storage needs definition",
+  "hypothesis": "All parties to a Non-Material (NM) Service Level Agreement (SLA) shall clearly define and document their respective requirements for storing events generated by or related to the services being provided, including the types of events to be stored, retention periods, and any applicable data disposal procedures.",
+  "sparse_query": "NM SLA local event storage needs definition AU-9"
+ },
+ "What do all parties to an NM service level agreement need to define for enforcing, auditing and assuring compliance?": {
+  "control_ids": [
+   "AU-9",
+   "AC-2"
+  ],
+  "dense_query": "NM service level agreement enforcement auditing assurance compliance definition",
+  "hypothesis": "All parties to a Non-Material (NM) service level agreement shall clearly define measurable objectives, metrics, and procedures for monitoring, reporting, and verifying compliance with the agreed-upon terms.",
+  "sparse_query": "NM service level agreement enforcement auditing assurance compliance definition AU-9 AC-2"
+ },
+ "What do technical control facilities have to do for controlling and reconfiguring the network?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "network configuration management technical controls",
+  "hypothesis": "Technical control facilities shall implement mechanisms to dynamically manage and reconfigure network settings in response to changes in system configuration, user access requirements, or security threats, ensuring that network controls are consistently applied and maintained across all connected systems.",
+  "sparse_query": "network configuration management technical controls AC-3 IA-5(1) AU-9"
+ },
+ "What documentation and reporting actions are required during the Post-Incident Analysis phase of AFI 17-203's incident handling process?": {
+  "control_ids": [],
+  "dense_query": "AFI 17-203 incident handling post-incident analysis documentation reporting",
+  "hypothesis": "The organization shall document all relevant details regarding the incident, including its root cause, impact, and any subsequent corrective actions taken, in a manner that facilitates future analysis and improvement of the incident response process. Furthermore, the organization shall provide regular reporting to stakeholders on the status of the post-incident activities, including lessons learned and recommendations for process enhancements.",
+  "sparse_query": "AFI 17-203 incident handling post-incident analysis documentation reporting"
+ },
+ "What does the Air Force Deputy Chief of Staff, Operations (AF/A3) need to align the CARM program with?": {
+  "control_ids": [],
+  "dense_query": "Air Force Deputy Chief of Staff Operations AF A3 CARM program alignment",
+  "hypothesis": "The Air Force Deputy Chief of Staff, Operations (AF/A3) shall ensure that the Cybersecurity and Risk Management (CARM) program is aligned with established Department of Defense cybersecurity policies and procedures.",
+  "sparse_query": "Air Force Deputy Chief of Staff Operations AF A3 CARM program alignment"
+ },
+ "What does the DDI(CL&S), working with the Military Departments and Component heads, provide on Component CUI implementation policy?": {
+  "control_ids": [],
+  "dense_query": "DDI CLS Component CUI implementation policy military departments component heads",
+  "hypothesis": "The Department of Defense (DoD) Information Technology (IT) standards require that the Chief Information Officer for Cybersecurity (DDI(CL&S)) collaborates with Military Departments and Component heads to establish a unified policy framework for implementing Controlled Unclassified Information (CUI) within each Component, ensuring consistency in CUI management practices across the DoD enterprise.",
+  "sparse_query": "DDI CLS Component CUI implementation policy military departments component heads"
+ },
+ "What does the Joint Staff do with a petition to extend decertified products that affects several Services?": {
+  "control_ids": [],
+  "dense_query": "Joint Staff petition decertified products extension multiple Services",
+  "hypothesis": "The Joint Staff shall coordinate and facilitate a unified response to petitions for extension of certification for products that have been decertified, ensuring that all affected Services are consulted and their interests represented in the decision-making process.",
+  "sparse_query": "Joint Staff petition decertified products extension multiple Services"
+ },
+ "What expert support is available for identifying and managing cyber issues affecting TCAs?": {
+  "control_ids": [
+   "AU-9",
+   "IA-5(1)"
+  ],
+  "dense_query": "cyber risk management expert support TCA incident response",
+  "hypothesis": "The organization shall provide access to qualified personnel with expertise in cybersecurity and TCAs to assist in identifying and mitigating potential security vulnerabilities and incidents affecting TCAs, as well as to provide guidance on implementing effective security measures.",
+  "sparse_query": "cyber risk management expert support TCA incident response AU-9 IA-5(1)"
+ },
+ "What governance bodies sit below the council for national leadership command capabilities, and under what policy are they run?": {
+  "control_ids": [],
+  "dense_query": "governance bodies council national leadership command capabilities policy",
+  "hypothesis": "The following regulatory requirement statement addresses the question:\n\n\"The organization shall establish subordinate governance bodies to support the implementation and oversight of national leadership command capabilities. These governance bodies shall be established in accordance with applicable federal policies and guidelines.\"",
+  "sparse_query": "governance bodies council national leadership command capabilities policy"
+ },
+ "What groups does the DoD CIO chair beneath the council for Defense and National Leadership Command Capability, and under which governance policy?": {
+  "control_ids": [],
+  "dense_query": "DoD CIO governance policy council Defense National Leadership Command Capability",
+  "hypothesis": "\"The Director of the Office of the Department of Defense Chief Information Officer shall establish and chair a group or organization that oversees the Defense and National Leadership Command Capability, and this group shall be governed by a policy that outlines its responsibilities, authorities, and operating procedures.\"",
+  "sparse_query": "DoD CIO governance policy council Defense National Leadership Command Capability"
+ },
+ "What guidance is developed for protecting signals intelligence?": {
+  "control_ids": [],
+  "dense_query": "signals intelligence protection guidelines",
+  "hypothesis": "The organization shall develop and implement guidance to protect signals intelligence from unauthorized access, disclosure, use, modification, or disruption by ensuring that adequate technical and administrative controls are in place to safeguard sensitive information.",
+  "sparse_query": "signals intelligence protection guidelines"
+ },
+ "What identification and authentication measures, such as managing user certificates, are used to protect systems hosting CUI?": {
+  "control_ids": [
+   "AC-2",
+   "IA-4(1)",
+   "AU-6"
+  ],
+  "dense_query": "identification authentication measures user certificate management CUI protection",
+  "hypothesis": "The organization shall implement identification and authentication controls to ensure that access to systems containing Controlled Unclassified Information (CUI) is restricted to authorized personnel, using secure methods for authenticating and verifying the identity of users, including management of digital certificates.",
+  "sparse_query": "identification authentication measures user certificate management CUI protection AC-2 IA-4(1) AU-6"
+ },
+ "What information about the participating organizations and their points of contact must NM SLAs include?": {
+  "control_ids": [],
+  "dense_query": "NM SLA organization participation point of contact",
+  "hypothesis": "The System Security Plan shall include identification and contact information for all participating organizations involved in the system's operation, maintenance, and support, to facilitate communication and collaboration among stakeholders.",
+  "sparse_query": "NM SLA organization participation point of contact"
+ },
+ "What is AF/A10 required to do for NLCC issues that do not relate to NC3, and to whom does it defer?": {
+  "control_ids": [],
+  "dense_query": "AF A10 NLCC NC3 compliance requirements delegation",
+  "hypothesis": "AF/A10 shall identify and report NLCC-related issues that do not pertain to NC3 systems to the applicable authority, deferring to their expertise and guidance as necessary.",
+  "sparse_query": "AF A10 NLCC NC3 compliance requirements delegation"
+ },
+ "What is DISA responsible for regarding the registry of MIBs and their descriptions?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "DISA MIB registry management description control",
+  "hypothesis": "\"DISA shall maintain a centralized registry of Management Information Bases (MIBs) and their associated descriptive information to ensure accurate identification, documentation, and tracking of all MIBs used within DoD systems.\"",
+  "sparse_query": "DISA MIB registry management description control IA-5(1) AU-9"
+ },
+ "What is the AF Critical Asset Identification Process for nominating and approving Task Critical Assets?": {
+  "control_ids": [],
+  "dense_query": "AF critical asset identification process task critical assets nomination approval",
+  "hypothesis": "Here is a regulatory requirement statement that answers the question:\n\n\"The organization shall establish and maintain a process to identify and nominate critical assets, including task-critical assets, through a formal approval mechanism that ensures all nominated assets are properly documented and authorized by designated personnel.\"",
+  "sparse_query": "AF critical asset identification process task critical assets nomination approval"
+ },
+ "What is the AF Long Haul Communications Flight, as the Air Force's DISN long haul program manager, required to do about the statistical sampling report?": {
+  "control_ids": [],
+  "dense_query": "AF Long Haul Communications Flight DISN long haul program manager statistical sampling report",
+  "hypothesis": "The AF Long Haul Communications Flight, as the Air Force's DISN long haul program manager, shall ensure that the statistical sampling report is reviewed and evaluated for accuracy and completeness prior to its submission.",
+  "sparse_query": "AF Long Haul Communications Flight DISN long haul program manager statistical sampling report"
+ },
+ "What is the Air Force Office of Special Investigations' unique responsibility in cyberspace?": {
+  "control_ids": [],
+  "dense_query": "cybersecurity air force office special investigations unique responsibility",
+  "hypothesis": "The organization shall conduct investigations and operations to detect, identify, and disrupt cyber threats and adversaries that pose a risk to national security, Department of Defense (DoD) information systems, and DoD personnel.",
+  "sparse_query": "cybersecurity air force office special investigations unique responsibility"
+ },
+ "What is the CARM training and outreach supposed to accomplish for field personnel?": {
+  "control_ids": [],
+  "dense_query": "CARM training outreach field personnel access control authentication identity management",
+  "hypothesis": "The organization shall ensure that all field personnel receive comprehensive training and awareness on the Counterfeit Avoidance and Risk Management (CARM) program, including its policies, procedures, and guidelines, in order to enable them to effectively identify, report, and prevent the introduction of counterfeit or suspect components into supply chains.",
+  "sparse_query": "CARM training outreach field personnel access control authentication identity management"
+ },
+ "What is the DoD Insider Threat Program and what policy defines it?": {
+  "control_ids": [
+   "AR-1",
+   "AU-2"
+  ],
+  "dense_query": "DoD insider threat program policy definition",
+  "hypothesis": "The Department shall establish an insider threat program to detect, deter, and mitigate actions by employees, contractors, or other insiders who may use their access, privileges, or position within the organization for unauthorized purposes that could compromise national security information, classified information, or sensitive unclassified information. This program shall be defined by policy that outlines procedures for identifying, reporting, investigating, and mitigating insider threats, as well as providing training and awareness to personnel on recognizing and preventing such threats.",
+  "sparse_query": "DoD insider threat program policy definition AR-1 AU-2"
+ },
+ "What is the Under Secretary of Defense for Research and Engineering responsible for regarding the Joint Federated Assurance Center?": {
+  "control_ids": [],
+  "dense_query": "Joint Federated Assurance Center governance risk management compliance audit logging access control authentication identity",
+  "hypothesis": "The Under Secretary of Defense for Research and Engineering shall ensure that the Joint Federated Assurance Center maintains a centralized, authoritative repository of assurance information to facilitate the sharing and correlation of security-related data across the Department of Defense.",
+  "sparse_query": "Joint Federated Assurance Center governance risk management compliance audit logging access control authentication identity"
+ },
+ "What is the minimum length and composition requirement for SNMP community strings?": {
+  "control_ids": [],
+  "dense_query": "snmp community string length composition requirement",
+  "hypothesis": "The system shall employ SNMP community strings that are composed of alphanumeric characters, with a minimum length sufficient to prevent unauthorized access through brute-force guessing attacks.",
+  "sparse_query": "snmp community string length composition requirement"
+ },
+ "What is the process for requesting a waiver from a CUI Program requirement under DoDI 5200.48?": {
+  "control_ids": [],
+  "dense_query": "CUI program waiver request process DoDI 5200.48",
+  "hypothesis": "\"The CUI Program Manager or designee shall establish and document a clear and transparent process for requesting waivers to CUI Program requirements, which includes submitting a formal request to the cognizant authority, providing justification for the waiver, and obtaining approval prior to implementation.\"",
+  "sparse_query": "CUI program waiver request process DoDI 5200.48"
+ },
+ "What is the role of the AFMAA team during a Mission Assurance assessment?": {
+  "control_ids": [],
+  "dense_query": "AFMAA team role Mission Assurance assessment",
+  "hypothesis": "The AFMAA team shall provide subject matter expertise and support to ensure that the organization's mission assurance posture is accurately represented and validated during the assessment, including providing context and guidance on organizational policies, procedures, and risk management practices.",
+  "sparse_query": "AFMAA team role Mission Assurance assessment"
+ },
+ "What justification must someone have to access controlled unclassified information even when no need-to-know is demanded?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)"
+  ],
+  "dense_query": "access-controlled-unclassified-information justification need-to-know",
+  "hypothesis": "Authorized personnel shall be granted access to Controlled Unclassified Information (CUI) only upon a demonstrated need for such access, which may include official duties or responsibilities that require knowledge of the CUI.",
+  "sparse_query": "access-controlled-unclassified-information justification need-to-know AC-3 IA-5(1)"
+ },
+ "What justifies requiring common network management standards for tactical edge equipment and spectrum-dependent systems?": {
+  "control_ids": [],
+  "dense_query": "network-management-standards edge-equipment spectrum-dependent-systems",
+  "hypothesis": "\"Network management standards shall be implemented uniformly across all tactical edge equipment and spectrum-dependent systems to ensure interoperability, facilitate centralized monitoring and control, and enable efficient resource allocation in support of mission objectives.\"",
+  "sparse_query": "network-management-standards edge-equipment spectrum-dependent-systems"
+ },
+ "What marking is required on documents that contain controlled unclassified information?": {
+  "control_ids": [
+   "AR-3(1)",
+   "AR-3(2)"
+  ],
+  "dense_query": "controlled unclassified information marking requirements",
+  "hypothesis": "\"Sensitive but Unclassified (SBU) and other Controlled Unclassified Information (CUI) must be clearly marked to indicate its classification status, including any applicable handling instructions or caveats.\"",
+  "sparse_query": "controlled unclassified information marking requirements AR-3(1) AR-3(2)"
+ },
+ "What mission needs should the CARM program be aligned to?": {
+  "control_ids": [],
+  "dense_query": "mission alignment governance risk compliance framework",
+  "hypothesis": "The CARM program shall be aligned with and support the Department's mission requirements for cybersecurity risk management, ensuring that its activities and deliverables are directly responsive to the organization's critical security needs.",
+  "sparse_query": "mission alignment governance risk compliance framework"
+ },
+ "What mitigation planning coordination is required of the remaining MAJCOMs, the ANG, FOAs and DRUs?": {
+  "control_ids": [],
+  "dense_query": "mitigation planning coordination MAJCOMs ANG FOAs DRUs",
+  "hypothesis": "\"The organization shall coordinate with other organizations to develop and implement a comprehensive plan to mitigate identified vulnerabilities and threats in accordance with established policies and procedures.\"",
+  "sparse_query": "mitigation planning coordination MAJCOMs ANG FOAs DRUs"
+ },
+ "What motives make it improper to classify information or designate it CUI?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "improper classification motives CUI designation",
+  "hypothesis": "The following regulatory requirement statement answers the question:\n\n\"Information shall be classified and designated as Controlled Unclassified Information (CUI) based on its sensitivity, potential impact, and need-to-know, rather than for purposes of concealment, suppression, or unauthorized control.\"",
+  "sparse_query": "improper classification motives CUI designation AC-3 IA-5(1) AU-9"
+ },
+ "What must AF/A2 implement regarding cybersecurity policy for NC3 and intelligence?": {
+  "control_ids": [],
+  "dense_query": "cybersecurity policy implementation AF A2 NC3 intelligence",
+  "hypothesis": "\"The Department of Defense (DoD) Component shall establish and maintain a comprehensive cybersecurity policy that addresses the unique requirements and risks associated with National Command Authority (NCA) systems, including those supporting Nuclear Command and Control Systems (NC3), to ensure the confidentiality, integrity, and availability of sensitive information and mission-critical functions.\"",
+  "sparse_query": "cybersecurity policy implementation AF A2 NC3 intelligence"
+ },
+ "What must AF/A5/8 do to include AF NC3 in long-range strategy, resourcing plans and POM builds?": {
+  "control_ids": [],
+  "dense_query": "AF A5 strategy planning resource allocation POM build inclusion",
+  "hypothesis": "The Department of the Air Force's (AF) acquisition organization shall incorporate the National Capital Power Grid (NC3) into its strategic planning processes, including long-range strategy documents, resource allocation plans, and Program Objective Memoranda (POM) development activities.",
+  "sparse_query": "AF A5 strategy planning resource allocation POM build inclusion"
+ },
+ "What must AFGSC publish and keep current regarding the governance of AF NLCC and NC3?": {
+  "control_ids": [],
+  "dense_query": "AFGSC publication governance AF NLCC NC3",
+  "hypothesis": "\"The Air Force Global Strike Command shall maintain publicly accessible documentation that describes its policies, procedures, and standards for governing the Air Force Network Logistics Control Center (AF NLCC) and National Capital Region's command, control, communications, and cyber operations (NC3).\"",
+  "sparse_query": "AFGSC publication governance AF NLCC NC3"
+ },
+ "What must AFGSC set up and maintain to surface and fix maintenance issues with the AN/USQ-225 system?": {
+  "control_ids": [
+   "CM-2",
+   "CM-3"
+  ],
+  "dense_query": "AFGSC maintenance issue tracking AN/USQ-225 system configuration management asset inventory CM-2 CM-3",
+  "hypothesis": "The Air Force Global Strike Command (AFGSC) shall establish and sustain a mechanism for identifying, reporting, tracking, and resolving maintenance-related issues associated with the AN/USQ-225 system, ensuring timely resolution of problems to minimize operational disruptions.",
+  "sparse_query": "AFGSC maintenance issue tracking AN/USQ-225 system configuration management asset inventory CM-2 CM-3 CM-2 CM-3"
+ },
+ "What must AFMC coordinate with AFIMSC so facility changes that close electromagnetic-pulse hardness gaps at NC3 nodes can be paid for and done?": {
+  "control_ids": [],
+  "dense_query": "AFMC coordination AFIMSC facility changes electromagnetic pulse hardness gaps NC3 nodes funding",
+  "hypothesis": "AFMC shall ensure that modifications to facilities at NC3 nodes are coordinated with AFIMSC to facilitate funding and implementation, thereby addressing electromagnetic-pulse hardness vulnerabilities.",
+  "sparse_query": "AFMC coordination AFIMSC facility changes electromagnetic pulse hardness gaps NC3 nodes funding"
+ },
+ "What must AFNC3C do to make sure all NC3 mission systems can interoperate across the fleet?": {
+  "control_ids": [],
+  "dense_query": "interoperability standards NC3 mission systems fleet-wide integration AFNC3C",
+  "hypothesis": "The organization shall ensure that all NC3 mission systems are capable of interoperating seamlessly with one another across the fleet, thereby facilitating effective communication and coordination among disparate systems.",
+  "sparse_query": "interoperability standards NC3 mission systems fleet-wide integration AFNC3C"
+ },
+ "What must AFNC3C, as lead for organizing, training and equipping the AN/USQ-225, put in place for handling modification proposals?": {
+  "control_ids": [
+   "CM-2",
+   "MA-1"
+  ],
+  "dense_query": "modification proposal handling process AN/USQ-225 equipment configuration management change control",
+  "hypothesis": "The organization responsible for managing the AN/USQ-225 shall establish a process to receive, evaluate, and approve or reject proposed modifications to ensure that any changes are properly vetted and aligned with applicable requirements and standards.",
+  "sparse_query": "modification proposal handling process AN/USQ-225 equipment configuration management change control CM-2 MA-1"
+ },
+ "What must Air Force host centers and wings report about changes to Tier 1 and Tier 2 TCAs on their installations?": {
+  "control_ids": [
+   "AU-9"
+  ],
+  "dense_query": "Air Force host centers wings reporting changes Tier 1 Tier 2 TCAs installations",
+  "hypothesis": "The following regulatory requirement statement addresses the specified compliance question:\n\n\"The Air Force shall report all changes to Tier 1 and Tier 2 Technical Control Areas (TCAs) located on its installations, including any additions, deletions, or modifications, in a manner that enables timely visibility and tracking of these changes across affected organizations.\"",
+  "sparse_query": "Air Force host centers wings reporting changes Tier 1 Tier 2 TCAs installations AU-9"
+ },
+ "What must Air Force organizations that own or pay for DISN long haul circuits do to designate an Authorized Funding Official?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "DISN long haul circuit Authorized Funding Official designation",
+  "hypothesis": "Air Force organizations that own or pay for DISN long haul circuits shall designate a single individual as the Authorized Funding Official, who is responsible for ensuring that all financial transactions related to these circuits are properly authorized and accounted for.",
+  "sparse_query": "DISN long haul circuit Authorized Funding Official designation AC-3 IA-5(1) AU-9"
+ },
+ "What must CUI training cover regarding who is responsible for protecting the information?": {
+  "control_ids": [
+   "AU-9",
+   "IA-5(1)"
+  ],
+  "dense_query": "CUI training personnel security responsibility data protection",
+  "hypothesis": "\"The organization shall ensure that Controlled Unclassified Information (CUI) training includes instruction on individual accountability and responsibility for safeguarding CUI, specifically identifying those personnel with designated roles or responsibilities for its protection.\"",
+  "sparse_query": "CUI training personnel security responsibility data protection AU-9 IA-5(1)"
+ },
+ "What must CUI training say about destroying CUI?": {
+  "control_ids": [
+   "AU-9",
+   "IA-5(1)"
+  ],
+  "dense_query": "CUI destruction procedures training requirements",
+  "hypothesis": "The training on Controlled Unclassified Information (CUI) must instruct personnel on the proper procedures for disposing of and destroying CUI in accordance with applicable laws, regulations, and Government policies.",
+  "sparse_query": "CUI destruction procedures training requirements AU-9 IA-5(1)"
+ },
+ "What must CUI training say about physical safeguards and protection methods?": {
+  "control_ids": [
+   "AU-9",
+   "IA-5(1)"
+  ],
+  "dense_query": "CUI training physical safeguards protection methods",
+  "hypothesis": "\"Training on Controlled Unclassified Information (CUI) shall include information on the importance of implementing physical safeguards to prevent unauthorized access, such as securing facilities, equipment, and sensitive materials, and utilizing protection methods to safeguard against potential threats.\"",
+  "sparse_query": "CUI training physical safeguards protection methods AU-9 IA-5(1)"
+ },
+ "What must CUI training standards, at a minimum, address about individuals' duties in safeguarding such information?": {
+  "control_ids": [
+   "AU-9",
+   "IA-5(1)"
+  ],
+  "dense_query": "CUI training standards individual duties safeguarding sensitive information",
+  "hypothesis": "Individuals handling Controlled Unclassified Information (CUI) shall be trained on their responsibilities and obligations to protect CUI, including the proper handling, storage, transmission, and disposal of such information.",
+  "sparse_query": "CUI training standards individual duties safeguarding sensitive information AU-9 IA-5(1)"
+ },
+ "What must DoD Component Heads designate to represent the acquisition executive, risk management executive, and counterintelligence communities under DoDI 5200.44?": {
+  "control_ids": [],
+  "dense_query": "DoD Component Heads designation acquisition executive risk management executive counterintelligence communities DoDI 5200.44",
+  "hypothesis": "The DoD Component Head shall designate a representative from each of the acquisition executive, risk management executive, and counterintelligence communities to serve as liaison points for their respective areas of expertise in support of the implementation of this directive.",
+  "sparse_query": "DoD Component Heads designation acquisition executive risk management executive counterintelligence communities DoDI 5200.44"
+ },
+ "What must DoD Component PPSM programs do to communicate Ports, Protocols, and Services securely and block invalid PPS traffic?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "DoD Component PPSM secure communication protocols ports services blocking invalid traffic",
+  "hypothesis": "\"The DoD Component's PPSM program shall implement measures to ensure that communications involving Ports, Protocols, and Services are conducted in a secure manner, and that all invalid or unauthorized PPS traffic is blocked, thereby preventing potential security threats and maintaining the integrity of the network.\"",
+  "sparse_query": "DoD Component PPSM secure communication protocols ports services blocking invalid traffic AC-3 IA-5(1) AU-9"
+ },
+ "What must DoD Component heads do through their PPSM programs to maintain IT interoperability?": {
+  "control_ids": [],
+  "dense_query": "IT interoperability DoD Component heads PPSM program maintenance",
+  "hypothesis": "The DoD Component head shall ensure that their Public Private Sector Information Sharing (PPSIM) program maintains and promotes information technology (IT) interoperability by facilitating collaboration, coordination, and communication among participating organizations, including government agencies, contractors, and other stakeholders, in order to enable the secure sharing of information and support joint operations.",
+  "sparse_query": "IT interoperability DoD Component heads PPSM program maintenance"
+ },
+ "What must DoD Component heads do through their PPSM programs to stop invalid ports, protocols and services?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)"
+  ],
+  "dense_query": "DoD Component heads PPSM program port security protocol service validation",
+  "hypothesis": "\"The head of each DoD Component shall ensure that the organization's Public Key Infrastructure (PKI) and cryptographic boundary protection mechanisms are properly configured and maintained to prevent unauthorized access to or exploitation of network resources via invalid ports, protocols, and services.\"",
+  "sparse_query": "DoD Component heads PPSM program port security protocol service validation AC-3 IA-5(1)"
+ },
+ "What must DoD Component heads do to get their senior agency and intelligence officials to coordinate on a unified information security program?": {
+  "control_ids": [],
+  "dense_query": "DoD Component heads coordination unified information security program",
+  "hypothesis": "DoD Component heads shall ensure that senior agency and intelligence officials collaborate and synchronize efforts to develop, implement, and maintain a comprehensive and integrated information security program, thereby ensuring unity of effort in protecting DoD information.",
+  "sparse_query": "DoD Component heads coordination unified information security program"
+ },
+ "What must DoD's trusted systems and networks risk management include to find weaknesses in both bespoke and off-the-shelf hardware and software?": {
+  "control_ids": [
+   "RMF-3",
+   "IA-2(1)",
+   "AC-17"
+  ],
+  "dense_query": "DoD trusted systems networks risk management weakness identification bespoke off-the-shelf hardware software",
+  "hypothesis": "\"Trusted systems and networks risk management shall include a comprehensive assessment of all hardware and software components, including both custom-developed (bespoke) and commercially available (off-the-shelf) items, to identify potential vulnerabilities and weaknesses that could compromise the security posture of the system or network.\"",
+  "sparse_query": "DoD trusted systems networks risk management weakness identification bespoke off-the-shelf hardware software RMF-3 IA-2(1) AC-17"
+ },
+ "What must HAF functionals, MAJCOMs, DRUs and FOAs do in cyberspace governance forums?": {
+  "control_ids": [],
+  "dense_query": "cyberspace governance forums HAF functionals MAJCOMs DRUs FOAs",
+  "hypothesis": "HAF functionals, MAJCOMs, DRUs, and FOAs shall participate in cyberspace governance forums to facilitate collaboration, share best practices, and coordinate efforts with other stakeholders to ensure the secure and effective operation of DoD's information systems and networks.",
+  "sparse_query": "cyberspace governance forums HAF functionals MAJCOMs DRUs FOAs"
+ },
+ "What must HAF functionals, MAJCOMs, DRUs and FOAs do to register their cyberspace investments?": {
+  "control_ids": [],
+  "dense_query": "cyberspace investment registration HAF functional MAJCOM DRU FOA",
+  "hypothesis": "HAF functionals, MAJCOMs, DRUs, and FOAs shall accurately document and submit their respective cyberspace investment information to the designated authority for tracking and management purposes.",
+  "sparse_query": "cyberspace investment registration HAF functional MAJCOM DRU FOA"
+ },
+ "What must ISSMs ensure is tracked for contractors and non-citizen personnel with respect to cyberspace requirements?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "cyberspace requirements contractor tracking ISSM non-citizen personnel",
+  "hypothesis": "The Information System Security Manager (ISSM) shall ensure that all contractors and non-citizen personnel have their access, privileges, and activities within the organizational information systems monitored and recorded in accordance with applicable laws, regulations, and policies governing cyberspace operations.",
+  "sparse_query": "cyberspace requirements contractor tracking ISSM non-citizen personnel AC-3 IA-5(1) AU-9"
+ },
+ "What must Information System Security Managers ensure about optional requirements for the cyberspace workforce?": {
+  "control_ids": [],
+  "dense_query": "cyberspace workforce information system security managers optional requirements",
+  "hypothesis": "Information System Security Managers shall ensure that all optional requirements for the cyberspace workforce are clearly documented and communicated to personnel with a need-to-know, in order to facilitate informed decision-making regarding compliance.",
+  "sparse_query": "cyberspace workforce information system security managers optional requirements"
+ },
+ "What must MAJCOMs and DRUs do in their working groups on threats, EM and ID, and when CARM data is requested?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "MAJCOMs DRUs threat assessment EM ID CARM data request",
+  "hypothesis": "MAJCOMs and DRUs shall ensure that their working groups on threats, electromagnetic (EM) and identity (ID), as well as those responding to Counter-Artificial Intelligence and Robotics Machine (CARM) data requests, are properly constituted with representatives having the necessary expertise and authority to effectively address emerging threats and vulnerabilities.",
+  "sparse_query": "MAJCOMs DRUs threat assessment EM ID CARM data request IA-5(1) AU-9"
+ },
+ "What must MAJCOMs and DRUs oversee regarding CARM programs below them?": {
+  "control_ids": [],
+  "dense_query": "CARM program oversight MAJCOM DRU",
+  "hypothesis": "MAJCOMs and DRUs shall ensure that subordinate organizations implement and maintain effective CARM programs that are aligned with organizational mission requirements, adhere to applicable policies and procedures, and provide adequate oversight and monitoring to prevent, detect, and respond to security incidents.",
+  "sparse_query": "CARM program oversight MAJCOM DRU"
+ },
+ "What must OSD and the DoD Component heads report each year about CUI implementation?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "CUI implementation reporting requirements DoD Component heads OSD annual",
+  "hypothesis": "The Department of Defense (DoD) Component heads and the Office of the Secretary of Defense (OSD) shall annually submit a comprehensive report detailing the status of Controlled Unclassified Information (CUI) implementation within their respective organizations, including any notable successes, challenges, or areas requiring improvement.",
+  "sparse_query": "CUI implementation reporting requirements DoD Component heads OSD annual AC-3 IA-5(1) AU-9"
+ },
+ "What must Program Management Offices of Air Force centers and agencies do to keep networked systems on long haul transport bandwidth-efficient?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "networked system management bandwidth efficiency air force program management offices",
+  "hypothesis": "\"The Program Management Offices of Air Force centers and agencies shall implement measures to optimize the use of long haul transport bandwidth, ensuring that networked systems operate efficiently and effectively utilize available network resources.\"",
+  "sparse_query": "networked system management bandwidth efficiency air force program management offices AC-3 IA-5(1) AU-9"
+ },
+ "What must USD(A&S) do, with USD(R&E), the DoD CIO and Component heads, to embed protection of critical functions in acquisition and logistics policies?": {
+  "control_ids": [],
+  "dense_query": "acquisition policy embedding critical function protection USD A&S USD R&E DoD CIO Component heads",
+  "hypothesis": "\"The Department of Defense Acquisition and Sustainment (USD(A&S)) shall collaborate with the Under Secretary of Defense for Research and Engineering (USD(R&E)), the Chief Information Officer (DoD CIO), and Component Heads to incorporate security measures that protect critical functions into acquisition and logistics policies, ensuring that such policies are informed by and aligned with overall Departmental cybersecurity goals and objectives.\"",
+  "sparse_query": "acquisition policy embedding critical function protection USD A&S USD R&E DoD CIO Component heads"
+ },
+ "What must USD(R&E) set when threat assessment requests exceed available resources, working with the DoD CIO, USD(A&S), USD(I&S) and Component heads?": {
+  "control_ids": [],
+  "dense_query": "threat assessment request resource allocation DoD CIO USD A&S USD I&S Component head",
+  "hypothesis": "\"The Chief Information Officer (CIO) for Research and Engineering (USD[R&E]) shall establish a prioritization process in collaboration with the DoD CIO, Under Secretaries of Acquisition and Sustainment (A&S) and Intelligence and Security (I&S), and Component heads to allocate limited resources among competing threat assessment requests.\"",
+  "sparse_query": "threat assessment request resource allocation DoD CIO USD A&S USD I&S Component head"
+ },
+ "What must Wing/Delta Cyberspace Offices do with unit inputs on workforce metrics?": {
+  "control_ids": [],
+  "dense_query": "workforce metrics input handling procedures",
+  "hypothesis": "The Wing/Delta Cyberspace Offices shall collect and process unit inputs on workforce metrics to ensure accurate and comprehensive tracking of personnel skills, training, and certifications.",
+  "sparse_query": "workforce metrics input handling procedures"
+ },
+ "What must a network management SLA say about storing events locally?": {
+  "control_ids": [
+   "AU-9"
+  ],
+  "dense_query": "network-management sla event-logging local-storage",
+  "hypothesis": "The network management Service Level Agreement (SLA) shall specify the procedures for storing and retaining event logs on-site, including the minimum duration for which such records are to be retained.",
+  "sparse_query": "network-management sla event-logging local-storage AU-9"
+ },
+ "What must a network management SLA say about the parties to the agreement and their contacts?": {
+  "control_ids": [],
+  "dense_query": "network-management sla parties-agreement contacts",
+  "hypothesis": "The network management Service Level Agreement (SLA) shall clearly identify all parties involved in the agreement, including the service provider, the customer, and any other relevant stakeholders. Additionally, the SLA shall specify the primary and secondary points of contact for each party, including names, titles, phone numbers, email addresses, and other relevant communication details.",
+  "sparse_query": "network-management sla parties-agreement contacts"
+ },
+ "What must a network management SLA specify about how compliance is enforced and audited?": {
+  "control_ids": [
+   "AU-9",
+   "AC-2"
+  ],
+  "dense_query": "compliance enforcement auditing network management service level agreement",
+  "hypothesis": "The network management Service Level Agreement (SLA) shall define the procedures for enforcing and auditing compliance with established security policies and standards, including mechanisms for monitoring, reporting, and remediation of non-compliance.",
+  "sparse_query": "compliance enforcement auditing network management service level agreement AU-9 AC-2"
+ },
+ "What must a network management service level agreement say about how frequently data gets refreshed?": {
+  "control_ids": [],
+  "dense_query": "network-management-service-level-agreement data-refresh-frequency",
+  "hypothesis": "The network management service level agreement shall specify the frequency at which data is refreshed to ensure timely and accurate information for monitoring and decision-making purposes.",
+  "sparse_query": "network-management-service-level-agreement data-refresh-frequency"
+ },
+ "What must all Air Force centers, agencies and other key stakeholders do about funded data connections they no longer need?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "data-disconnection de-provisioning access-control network-security personnel-security physical-security risk-management",
+  "hypothesis": "\"All Air Force centers, agencies, and other key stakeholders shall promptly disconnect and remove any funded data connections that are no longer required or needed to prevent unauthorized access and maintain the integrity of sensitive information.\"",
+  "sparse_query": "data-disconnection de-provisioning access-control network-security personnel-security physical-security risk-management AC-3 IA-5(1) AU-9"
+ },
+ "What must all parties to a network management SLA agree on for data refresh rates?": {
+  "control_ids": [],
+  "dense_query": "network-management sla agreement data-refresh-rates",
+  "hypothesis": "\"All parties to a network management Service Level Agreement (SLA) shall mutually agree upon and document the frequency at which data is refreshed, ensuring consistency in data synchronization across all participating entities.\"",
+  "sparse_query": "network-management sla agreement data-refresh-rates"
+ },
+ "What must an Air Force organization serving as executive agent for NMCS components do so those components can meet their responsibilities?": {
+  "control_ids": [],
+  "dense_query": "NMCS component responsibilities executive agent Air Force organization compliance risk management",
+  "hypothesis": "\"The Executive Agent shall provide necessary support and resources to ensure that all NMCS components are able to fulfill their assigned roles and responsibilities.\"",
+  "sparse_query": "NMCS component responsibilities executive agent Air Force organization compliance risk management"
+ },
+ "What must an individual have to be given access to CUI?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)"
+  ],
+  "dense_query": "CUI access control authorization personnel security clearance",
+  "hypothesis": "An individual shall possess a valid and current need-to-know determination and a favorable background investigation prior to being granted access to Controlled Unclassified Information (CUI).",
+  "sparse_query": "CUI access control authorization personnel security clearance AC-3 IA-5(1)"
+ },
+ "What must an individual or organization show to be allowed access to CUI when a need-to-know is not required?": {
+  "control_ids": [
+   "AC-3",
+   "IA-2(1)"
+  ],
+  "dense_query": "CUI access control need-to-know exception",
+  "hypothesis": "To gain authorized access to Controlled Unclassified Information (CUI) in the absence of a need-to-know determination, an individual or organization must demonstrate a valid official need for such access and undergo a background investigation or other suitable verification process as determined by the relevant authority.",
+  "sparse_query": "CUI access control need-to-know exception AC-3 IA-2(1)"
+ },
+ "What must an original classification authority do when it finds compiled information not properly classified on websites or in folders?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)"
+  ],
+  "dense_query": "original classification authority unclassified information websites folders",
+  "hypothesis": "The original classification authority shall take corrective action to ensure that all compiled information is properly classified and marked as required, including taking steps to remove or correct any unclassified or improperly classified information discovered on websites or in folders.",
+  "sparse_query": "original classification authority unclassified information websites folders AC-3 IA-5(1)"
+ },
+ "What must be assured about components of the National Military Command System when an Air Force organization is their executive agent?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "National Military Command System component assurance Air Force executive agent",
+  "hypothesis": "The components of the National Military Command System shall be designed and implemented to ensure that they are secure, reliable, and trustworthy, and that their functionality and performance can be accurately assessed and validated by the Air Force organization acting as their executive agent.",
+  "sparse_query": "National Military Command System component assurance Air Force executive agent AC-3 IA-5(1) AU-9"
+ },
+ "What must be checked about optional cyberspace workforce requirements for mission readiness compliance?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "cyberspace workforce requirements mission readiness compliance",
+  "hypothesis": "The organization shall verify that all optional cyberspace workforce requirements are properly documented and aligned with mission objectives to ensure adequate personnel capabilities are in place to support operational needs.",
+  "sparse_query": "cyberspace workforce requirements mission readiness compliance IA-5(1) AU-9"
+ },
+ "What must be checked before approving a certification testing voucher?": {
+  "control_ids": [
+   "AC-2",
+   "IA-4(1)"
+  ],
+  "dense_query": "certification testing voucher approval checks",
+  "hypothesis": "The following regulatory requirement statement answers the question:\n\n\"The organization shall verify that all necessary documentation and evidence have been provided to support the certification testing voucher prior to its approval.\"",
+  "sparse_query": "certification testing voucher approval checks AC-2 IA-4(1)"
+ },
+ "What must be defined about how a network management service level agreement can be modified or ended?": {
+  "control_ids": [],
+  "dense_query": "network-management-service-level-agreement modification termination process",
+  "hypothesis": "The organization shall define procedures for modifying or terminating a network management service level agreement, including any applicable notice periods and requirements for approval or notification.",
+  "sparse_query": "network-management-service-level-agreement modification termination process"
+ },
+ "What must be done so systems that rely on long haul communications transport use bandwidth efficiently, including compression?": {
+  "control_ids": [],
+  "dense_query": "bandwidth efficiency compression long haul communications transport",
+  "hypothesis": "Systems that utilize long haul communications transport shall employ mechanisms to optimize bandwidth utilization, which may include data compression techniques, to minimize unnecessary transmission overhead and ensure efficient use of available communication resources.",
+  "sparse_query": "bandwidth efficiency compression long haul communications transport"
+ },
+ "What must be done to keep information technology interoperable within a ports, protocols and services management program?": {
+  "control_ids": [],
+  "dense_query": "ports protocols services management interoperability IT",
+  "hypothesis": "The information technology infrastructure shall be designed and implemented in such a manner that enables seamless communication and data exchange between different systems and networks, ensuring compatibility and consistency across all components and interfaces.",
+  "sparse_query": "ports protocols services management interoperability IT"
+ },
+ "What must be done to manage the statistical sampling report prepared for DISA and the Office of the Secretary of Defense?": {
+  "control_ids": [
+   "AU-9",
+   "AC-3"
+  ],
+  "dense_query": "statistical sampling report management DISA OSD risk assessment audit control",
+  "hypothesis": "The organization shall maintain accurate and reliable statistical sampling reports, as required by relevant stakeholders, including DISA and the Office of the Secretary of Defense, ensuring that such reports are properly documented, reviewed, and updated to support compliance and risk management activities.",
+  "sparse_query": "statistical sampling report management DISA OSD risk assessment audit control AU-9 AC-3"
+ },
+ "What must be done under the authorizing official's direction to harmonize PPS use and mappings so systems interoperate?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AC-3"
+  ],
+  "dense_query": "authorizing official direction harmonize PPS use mappings interoperability",
+  "hypothesis": "The authorizing official shall ensure that all systems utilizing Protected Product Streams (PPS) are properly configured and mapped in accordance with established standards, guidelines, and procedures, thereby facilitating interoperability among systems.",
+  "sparse_query": "authorizing official direction harmonize PPS use mappings interoperability IA-5(1) AC-3"
+ },
+ "What must be established before a person is allowed to see controlled unclassified information?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)"
+  ],
+  "dense_query": "access-control personnel-security clearance background-checks",
+  "hypothesis": "\"An individual shall undergo an appropriate authorization process prior to accessing Controlled Unclassified Information (CUI) to verify their need-to-know and ensure they are properly cleared or have been granted the necessary access permissions.\"",
+  "sparse_query": "access-control personnel-security clearance background-checks AC-3 IA-5(1)"
+ },
+ "What must be true of new or changed network elements so they can be found, managed and kept compliant with security controls?": {
+  "control_ids": [
+   "AC-2",
+   "AU-6"
+  ],
+  "dense_query": "network-element-discovery configuration-management security-controls compliance management",
+  "hypothesis": "\"Network elements that are newly introduced or modified shall be properly configured to facilitate their discoverability, management, and ongoing compliance with applicable security controls.\"",
+  "sparse_query": "network-element-discovery configuration-management security-controls compliance management AC-2 AU-6"
+ },
+ "What must combatant commanders do, where appropriate, about extension requests for decertified products from foreign partners in their areas of responsibility?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "combatant commanders extension requests decertified products foreign partners areas responsibility",
+  "hypothesis": "\"Combatant commanders shall take appropriate action to address and manage extension requests for decertified products from foreign partners within their area of responsibility, ensuring that such actions are consistent with applicable laws, regulations, and policies governing the use and procurement of certified products.\"",
+  "sparse_query": "combatant commanders extension requests decertified products foreign partners areas responsibility AC-3 IA-5(1) AU-9"
+ },
+ "What must field operating agencies ensure about listing TCAs in command post matrices?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "TCAs command post matrices listing requirements",
+  "hypothesis": "Field operating agencies shall accurately and completely document all Technical Controls (TCAs) within Command Post matrices to facilitate effective situational awareness and decision-making.",
+  "sparse_query": "TCAs command post matrices listing requirements AC-3 IA-5(1) AU-9"
+ },
+ "What must military, civilian and contractor personnel in NM positions complete before taking up their duties?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "military civilian contractor personnel nm position onboarding training background check",
+  "hypothesis": "Prior to assuming duties in a National Military (NM) position, all personnel, including military, civilian, and contractor personnel, shall successfully complete a background investigation or other security screening process as required by applicable regulations.",
+  "sparse_query": "military civilian contractor personnel nm position onboarding training background check AC-3 IA-5(1) AU-9"
+ },
+ "What must organizations covered by the cryptographic modernization instruction do to align with its objectives?": {
+  "control_ids": [],
+  "dense_query": "cryptographic modernization instruction compliance objectives alignment",
+  "hypothesis": "Organizations shall implement and maintain a comprehensive cryptographic program that ensures the confidentiality, integrity, and authenticity of sensitive information in accordance with applicable laws and regulations, and in support of national security interests.",
+  "sparse_query": "cryptographic modernization instruction compliance objectives alignment"
+ },
+ "What must organizations covered by this instruction do to stay consistent with its policy aims and the cited reference?": {
+  "control_ids": [],
+  "dense_query": "compliance risk management governance policy consistency audit logging",
+  "hypothesis": "Organizations shall implement and maintain a comprehensive security program that addresses all aspects of information technology and cybersecurity, in accordance with the principles outlined in [cited reference], to ensure the confidentiality, integrity, and availability of organizational information systems and data.",
+  "sparse_query": "compliance risk management governance policy consistency audit logging"
+ },
+ "What must ports, protocols and services used across DoD networks conform to when implemented?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)"
+  ],
+  "dense_query": "DoD network port protocol service implementation compliance",
+  "hypothesis": "\"Ports, protocols, and services utilized within Department of Defense (DoD) networks shall be compliant with standardized and approved configurations to ensure interoperability, security, and consistency.\"",
+  "sparse_query": "DoD network port protocol service implementation compliance AC-3 IA-5(1)"
+ },
+ "What must program managers, system managers, PMOs and test agencies report to WCO/DCO about their cybersecurity workforce?": {
+  "control_ids": [],
+  "dense_query": "cybersecurity workforce reporting requirements for program managers system managers project management offices test agencies",
+  "hypothesis": "Program managers, system managers, Program Management Offices (PMOs), and testing agencies shall provide accurate and timely information regarding their respective cybersecurity workforces to the designated Cybersecurity Workforce Certification Office (WCO) or Designated Cybersecurity Officer (DCO).",
+  "sparse_query": "cybersecurity workforce reporting requirements for program managers system managers project management offices test agencies"
+ },
+ "What must program offices do with the NSA and the Joint Staff J-6 when requesting continued use of decertified products?": {
+  "control_ids": [
+   "AC-2",
+   "IA-4(1)"
+  ],
+  "dense_query": "decertified-products continued-use request NSA Joint-Staff J-6",
+  "hypothesis": "Program offices shall notify and obtain approval from the National Security Agency (NSA) and the Joint Staff J-6 prior to continuing the use of decertified products.",
+  "sparse_query": "decertified-products continued-use request NSA Joint-Staff J-6 AC-2 IA-4(1)"
+ },
+ "What must supervisors and members sign regarding their assigned cybersecurity responsibilities?": {
+  "control_ids": [
+   "AU-9"
+  ],
+  "dense_query": "cybersecurity responsibilities assignment agreement signature",
+  "hypothesis": "\"Supervisors and personnel shall acknowledge in writing their understanding of and commitment to fulfilling their designated cybersecurity roles and responsibilities.\"",
+  "sparse_query": "cybersecurity responsibilities assignment agreement signature AU-9"
+ },
+ "What must supervisors do so that information system security managers get the reports needed to validate the workforce?": {
+  "control_ids": [
+   "AU-9",
+   "AC-2"
+  ],
+  "dense_query": "supervisor reporting requirements workforce validation IS security manager",
+  "hypothesis": "Supervisors shall ensure that relevant information is accurately and timely provided to information system security managers to support their validation activities regarding the workforce's adherence to organizational policies, procedures, and standards.",
+  "sparse_query": "supervisor reporting requirements workforce validation IS security manager AU-9 AC-2"
+ },
+ "What must supervisors evaluate before approving members' testing vouchers?": {
+  "control_ids": [
+   "AU-9"
+  ],
+  "dense_query": "supervisor approval voucher testing evaluation",
+  "hypothesis": "Supervisors shall verify that all necessary prerequisites and documentation are complete for each member's testing voucher prior to approval.",
+  "sparse_query": "supervisor approval voucher testing evaluation AU-9"
+ },
+ "What must the Air Force Chief of Safety (AF/SE), working with AF/A10, do to establish nuclear surety safety rules and evaluate the safety of nuclear weapon systems?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "nuclear-surety-safety-rules establishment AF/SE AF/A10 safety-evaluation nuclear-weapon-systems",
+  "hypothesis": "The Air Force Chief of Safety (AF/SE) shall develop and implement procedures for establishing and maintaining nuclear surety safety rules in conjunction with the Assistant Secretary of the Air Force for Acquisition (AF/A10), to ensure that all nuclear weapon systems are designed, developed, tested, operated, maintained, and disposed of in a manner that ensures their safe handling, storage, transportation, and use.",
+  "sparse_query": "nuclear-surety-safety-rules establishment AF/SE AF/A10 safety-evaluation nuclear-weapon-systems IA-5(1) AU-9"
+ },
+ "What must the Air Force Deputy Chief of Staff, Operations (AF/A3) do to push for resources for risk-management work on TCAs?": {
+  "control_ids": [],
+  "dense_query": "risk management resource allocation TCAs AF/A3",
+  "hypothesis": "The AF/A3 shall prioritize and advocate for allocation of necessary personnel, funding, and other organizational resources to support the identification, assessment, and mitigation of risks associated with Technical Changes.",
+  "sparse_query": "risk management resource allocation TCAs AF/A3"
+ },
+ "What must the CARM training and outreach program give recipients, and which stages of the cycle should personnel be able to carry out?": {
+  "control_ids": [],
+  "dense_query": "CARM training personnel access control audit logging authentication identity configuration management risk management security assessment",
+  "hypothesis": "The CARM training and outreach program shall provide recipients with necessary information and guidance on implementing and maintaining a comprehensive risk management program. Personnel participating in the program shall be capable of identifying, assessing, mitigating, monitoring, and reviewing risks at all stages of the risk management cycle to ensure effective management of organizational risk.",
+  "sparse_query": "CARM training personnel access control audit logging authentication identity configuration management risk management security assessment"
+ },
+ "What must the Chief, Information Dominance and CIO (SAF/CIO A6) provide to help with TCA-related cyber problems?": {
+  "control_ids": [],
+  "dense_query": "cybersecurity incident response information dominance chief cio saf/cio a6 tca related",
+  "hypothesis": "The Chief, Information Dominance and CIO (SAF/CIO A6) shall provide situational awareness and technical assistance to support the identification, mitigation, and resolution of Technical Control Area (TCA)-related cybersecurity issues.",
+  "sparse_query": "cybersecurity incident response information dominance chief cio saf/cio a6 tca related"
+ },
+ "What must the Commander, US Cyber Command require of DoD Component heads concerning situational awareness sharing?": {
+  "control_ids": [
+   "AU-9",
+   "AC-3"
+  ],
+  "dense_query": "situational awareness sharing requirements commander us cyber command dod component heads",
+  "hypothesis": "The Commander, US Cyber Command shall require that DoD Component heads establish and maintain mechanisms to share relevant situational awareness information with other Components and applicable authorities in a timely manner, in order to facilitate informed decision-making and coordinated responses to cyber threats.",
+  "sparse_query": "situational awareness sharing requirements commander us cyber command dod component heads AU-9 AC-3"
+ },
+ "What must the DAF Chief Information Officer do about cyber workforce courses and certifications when the cost-benefit analysis supports it?": {
+  "control_ids": [],
+  "dense_query": "cyber work force training certification cost benefit analysis",
+  "hypothesis": "The DAF Chief Information Officer shall ensure that cyber workforce training programs are developed and implemented to provide personnel with relevant, up-to-date knowledge and skills in accordance with organizational needs, as supported by a thorough cost-benefit analysis.",
+  "sparse_query": "cyber work force training certification cost benefit analysis"
+ },
+ "What must the DAF Chief Information Officer ensure AETC has regarding the annual user awareness training?": {
+  "control_ids": [],
+  "dense_query": "annual user awareness training CIO DAF AETC",
+  "hypothesis": "The DAF Chief Information Officer shall ensure that AETC provides annual user awareness training to all personnel with access to DoD information systems, in accordance with applicable laws and regulations.",
+  "sparse_query": "annual user awareness training CIO DAF AETC"
+ },
+ "What must the Director NSA/Chief CSS and the Directors of NRO and NGA do to run their SCI security programs?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "SCI security program management director responsibilities",
+  "hypothesis": "The Director NSA/Chief CSS and the Directors of NRO and NGA shall be responsible for overseeing and managing their respective Security Classification Information (SCI) security programs, ensuring that all necessary measures are taken to protect SCI from unauthorized disclosure or compromise. This responsibility includes establishing and enforcing policies, procedures, and guidelines to maintain the integrity and confidentiality of SCI, as well as monitoring and evaluating the effectiveness of these measures on an ongoing basis.",
+  "sparse_query": "SCI security program management director responsibilities AC-3 IA-5(1) AU-9"
+ },
+ "What must the Director of DISA do to maintain CCIs, SRGs and STIGs?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "CCI maintenance SRG management STIG compliance",
+  "hypothesis": "The Director of DISA shall ensure that Configuration Checklists (CCIs), Security Requirements Guides (SRGs), and Security Technical Implementation Guides (STIGs) are reviewed, updated, and maintained in a timely manner to reflect current security standards and best practices.",
+  "sparse_query": "CCI maintenance SRG management STIG compliance AC-3 IA-5(1) AU-9"
+ },
+ "What must the Director of DISA establish and maintain for DoD Components to declare their ports, protocols and services?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "port declaration protocol service establishment maintenance DoD Component",
+  "hypothesis": "The Director of DISA shall establish and maintain a standardized process for DoD Components to identify and declare their operational ports, protocols, and services in order to facilitate accurate and consistent security posture assessments and risk management activities.",
+  "sparse_query": "port declaration protocol service establishment maintenance DoD Component AC-3 IA-5(1) AU-9"
+ },
+ "What must the Director of Operational Test and Evaluation ensure about new or modified network elements?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "network security configuration management risk assessment audit logging",
+  "hypothesis": "The Director of Operational Test and Evaluation shall ensure that all new or modified network elements are thoroughly evaluated for their operational effectiveness and suitability prior to introduction into production environments, thereby ensuring that they meet established performance standards and do not compromise the security posture of the organization.",
+  "sparse_query": "network security configuration management risk assessment audit logging AC-3 IA-5(1) AU-9"
+ },
+ "What must the Director of the Defense Intelligence Agency maintain?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "director defense intelligence agency records retention compliance",
+  "hypothesis": "The Director of the Defense Intelligence Agency shall maintain a record of all system and network access by personnel with privileged access, including identification of the individual accessing the system or network, date and time of access, and purpose for which access was granted.",
+  "sparse_query": "director defense intelligence agency records retention compliance AC-3 IA-5(1) AU-9"
+ },
+ "What must the Director, NSA and Chief, Central Security Service develop for safeguarding signals intelligence?": {
+  "control_ids": [],
+  "dense_query": "signals intelligence safeguarding director nsa chief central security service",
+  "hypothesis": "The Director, NSA and Chief, Central Security Service shall establish a comprehensive set of guidelines and procedures to ensure the protection of signals intelligence from unauthorized access, disclosure, or exploitation. These guidelines and procedures shall be based on an understanding of the unique characteristics and vulnerabilities associated with signals intelligence and shall be designed to prevent compromise through various means, including but not limited to, insider threats, cyber attacks, and physical security breaches.",
+  "sparse_query": "signals intelligence safeguarding director nsa chief central security service"
+ },
+ "What must the DoD CUI Information Security Program keep in place while it encourages information sharing and simplifies implementation?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "DoD CUI Information Security Program controls risk management compliance",
+  "hypothesis": "The DoD CUI Information Security Program shall maintain a balance between facilitating information sharing and ensuring the security of Controlled Unclassified Information (CUI), by implementing measures that provide adequate safeguards to protect against unauthorized disclosure or misuse, without unduly hindering the free exchange of information among authorized entities.",
+  "sparse_query": "DoD CUI Information Security Program controls risk management compliance AC-3 IA-5(1) AU-9"
+ },
+ "What must the DoD Components, supported by DISA, jointly establish for managing tactical edge network elements?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "tactical edge network management DoD Component DISA joint establishment",
+  "hypothesis": "The Department of Defense (DoD) Components, in conjunction with the Defense Information Systems Agency (DISA), shall establish a standardized framework for managing tactical edge network elements to ensure consistent and secure operation across all affected networks.",
+  "sparse_query": "tactical edge network management DoD Component DISA joint establishment AC-3 IA-5(1) AU-9"
+ },
+ "What must the Services and Defense Agencies comply with?": {
+  "control_ids": [],
+  "dense_query": "compliance regulations services defense agencies",
+  "hypothesis": "The Services and Defense Agencies shall ensure compliance with applicable Federal laws, regulations, and policies governing information security and data protection.",
+  "sparse_query": "compliance regulations services defense agencies"
+ },
+ "What must the focal point designated by DoD Component heads do to prioritize requests for supply chain resources, specialists and tooling, including JFAC assets?": {
+  "control_ids": [],
+  "dense_query": "DoD Component heads prioritize supply chain resource requests specialists tooling JFAC assets",
+  "hypothesis": "The focal point designated by DoD Component heads shall ensure that requests for supply chain resources, specialists, and tooling, including Joint Field Assistance Cards (JFAC) assets, are prioritized based on mission requirements and risk assessments to minimize disruptions to operations.",
+  "sparse_query": "DoD Component heads prioritize supply chain resource requests specialists tooling JFAC assets"
+ },
+ "What must the focal point that DoD Component heads designate do to prioritize supplier threat analysis requests and share the results?": {
+  "control_ids": [
+   "SC-12",
+   "SC-18"
+  ],
+  "dense_query": "DoD Component heads supplier threat analysis prioritization sharing",
+  "hypothesis": "The designated focal point shall prioritize supplier threat analysis requests based on risk assessment and urgency, and share the results with relevant stakeholders in a timely manner.",
+  "sparse_query": "DoD Component heads supplier threat analysis prioritization sharing SC-12 SC-18"
+ },
+ "What network control duties should Service component communication support organizations make sure their technical facilities handle?": {
+  "control_ids": [
+   "AC-17",
+   "IA-4(1)",
+   "AU-6"
+  ],
+  "dense_query": "network security controls access control incident response risk management",
+  "hypothesis": "The technical facilities supporting Service component communication shall ensure that all incoming and outgoing communications are properly authenticated, authorized, and monitored to prevent unauthorized access or malicious activity.",
+  "sparse_query": "network security controls access control incident response risk management AC-17 IA-4(1) AU-6"
+ },
+ "What network management data formats and exchange methods does CDRUSSTRATCOM have to approve?": {
+  "control_ids": [],
+  "dense_query": "network management data formats approval CDRUSSTRATCOM",
+  "hypothesis": "\"CDRUSSTRATCOM shall ensure that all network management data formats and exchange methods utilized within its networks are reviewed, approved, and documented in accordance with established procedures to ensure interoperability and compliance with organizational policies.\"",
+  "sparse_query": "network management data formats approval CDRUSSTRATCOM"
+ },
+ "What network management standards are required for equipment at the tactical edge?": {
+  "control_ids": [],
+  "dense_query": "network-management-standards-tactical-edge",
+  "hypothesis": "\"Network management standards shall be implemented to ensure interoperability and manageability of equipment operating in tactical environments, allowing for real-time monitoring, configuration, and control of devices and networks.\"",
+  "sparse_query": "network-management-standards-tactical-edge"
+ },
+ "What network performance parameters must Network Management SLAs establish baseline and minimum service levels for?": {
+  "control_ids": [],
+  "dense_query": "network performance metrics network management sla baseline minimum service level",
+  "hypothesis": "Network Management Service Level Agreements (SLAs) shall establish baseline and minimum service level requirements for measurable network performance parameters to ensure consistent and reliable network operation.",
+  "sparse_query": "network performance metrics network management sla baseline minimum service level"
+ },
+ "What organizational security policies must hypervisor monitoring capability meet?": {
+  "control_ids": [
+   "AC-2",
+   "AU-6"
+  ],
+  "dense_query": "hypervisor monitoring capability organizational security policies compliance",
+  "hypothesis": "The hypervisor monitoring capability shall be configured to align with and support the organization's security policies, including those related to access controls, data protection, incident response, and audit logging.",
+  "sparse_query": "hypervisor monitoring capability organizational security policies compliance AC-2 AU-6"
+ },
+ "What oversight and management applies to the Joint Federated Assurance Center?": {
+  "control_ids": [
+   "AU-9",
+   "AC-3"
+  ],
+  "dense_query": "governance risk compliance oversight management joint federated assurance center",
+  "hypothesis": "The Joint Federated Assurance Center shall be subject to oversight and management that ensures its operations are aligned with applicable security policies and standards, and that it maintains the necessary controls to provide assurance services in a manner that is consistent with established trust frameworks.",
+  "sparse_query": "governance risk compliance oversight management joint federated assurance center AU-9 AC-3"
+ },
+ "What oversight is required for creating and implementing CARM programs at Numbered Air Force, center and wing levels?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "CARM program implementation oversight governance risk management compliance Numbered Air Force center wing level",
+  "hypothesis": "The following regulatory requirement statement addresses the oversight necessary for creating and implementing CARM (Continuous Assessment and Mitigation) programs:\n\n\"The organization shall establish a governance framework to oversee the development, implementation, and maintenance of CARM programs across all numbered Air Force, center, and wing levels, ensuring that such programs are aligned with organizational risk management objectives and are subject to regular review and assessment by senior leadership.\"",
+  "sparse_query": "CARM program implementation oversight governance risk management compliance Numbered Air Force center wing level AC-3 IA-5(1) AU-9"
+ },
+ "What participation in cyberspace governance bodies is expected?": {
+  "control_ids": [],
+  "dense_query": "cyber governance participation expectations",
+  "hypothesis": "\"Participation in relevant national and international cyberspace governance bodies shall be established to ensure informed representation and influence on matters affecting Departmental [or organizational] interests, security, and operations.\"",
+  "sparse_query": "cyber governance participation expectations"
+ },
+ "What password strength rules apply to the strings used for SNMP community access?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AC-2"
+  ],
+  "dense_query": "password strength rules SNMP community string",
+  "hypothesis": "\"Password-based authentication strings for SNMP community access must meet a minimum complexity standard, including requirements for character set diversity and uniqueness.\"",
+  "sparse_query": "password strength rules SNMP community string IA-5(1) AC-2"
+ },
+ "What personnel security clearance requirements apply to individuals filling sensitive positions?": {
+  "control_ids": [
+   "AC-2",
+   "IA-4(1)",
+   "MA-3"
+  ],
+  "dense_query": "personnel security clearance requirements sensitive position",
+  "hypothesis": "\"Sensitive positions shall be filled by individuals who possess a valid and current personnel security clearance that is commensurate with the level of access required for the position, ensuring that the individual's trustworthiness and reliability have been adequately assessed.\"",
+  "sparse_query": "personnel security clearance requirements sensitive position AC-2 IA-4(1) MA-3"
+ },
+ "What physical access controls are required for hypervisor or virtualization system hardware?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "physical-access-controls hypervisor virtualization-system-hardware",
+  "hypothesis": "\"Hypervisor and virtualization system hardware shall be physically secured to prevent unauthorized access, tampering, or removal.\"",
+  "sparse_query": "physical-access-controls hypervisor virtualization-system-hardware AC-3 IA-5(1) AU-9"
+ },
+ "What physical protections and handling methods should CUI training standards describe?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "physical security controls CUI handling procedures",
+  "hypothesis": "\"Training standards for Controlled Unclassified Information (CUI) shall specify physical protection measures and handling procedures to safeguard against unauthorized access, disclosure, modification, or destruction of CUI, including secure storage, transportation, and disposal practices.\"",
+  "sparse_query": "physical security controls CUI handling procedures AC-3 IA-5(1) AU-9"
+ },
+ "What policy has to be set so nuclear command, control and communications systems work together across the whole fleet?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "nuclear command control communications system integration policy",
+  "hypothesis": "The policy shall ensure interoperability among all nuclear command, control, and communications systems, enabling seamless integration and coordination across the entire fleet in support of unified operations.",
+  "sparse_query": "nuclear command control communications system integration policy AC-3 IA-5(1) AU-9"
+ },
+ "What policy should exist for virtual machine guests sharing a clipboard with the host?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)"
+  ],
+  "dense_query": "virtual-machine-guests clipboard-sharing host access-control policy",
+  "hypothesis": "\"Virtual machines shall not be permitted to share a clipboard with the host system unless authorized by an approved exception process and subject to applicable security controls.\"",
+  "sparse_query": "virtual-machine-guests clipboard-sharing host access-control policy AC-3 IA-5(1)"
+ },
+ "What procedures must exist to implement DoD's authorities under Title 10 U.S.C. 3252?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "DoD authorities Title 10 USC 3252 implementation procedures",
+  "hypothesis": "\"Implementing Procedures for Exercise of Authorities shall be established and maintained by the organization to ensure that all applicable DoD authorities, as specified in Title 10 U.S.C. 3252, are properly exercised and managed.\"",
+  "sparse_query": "DoD authorities Title 10 USC 3252 implementation procedures AC-3 IA-5(1) AU-9"
+ },
+ "What processes must components have for sharing situational awareness across the enterprise?": {
+  "control_ids": [
+   "AU-9",
+   "AC-3"
+  ],
+  "dense_query": "situational awareness sharing enterprise-wide situational awareness information sharing situational awareness data exchange situational awareness communication",
+  "hypothesis": "Components shall provide standardized interfaces and protocols to enable secure and interoperable exchange of situational awareness information with other authorized systems and entities within the enterprise, ensuring seamless integration and real-time awareness of relevant data.",
+  "sparse_query": "situational awareness sharing enterprise-wide situational awareness information sharing situational awareness data exchange situational awareness communication AU-9 AC-3"
+ },
+ "What protection of incoming data is expected for a legacy desktop application given unrestricted network connectivity?": {
+  "control_ids": [
+   "AC-2",
+   "IA-4(1)"
+  ],
+  "dense_query": "data-protection encryption incoming-data legacy-desktop-application network-connectivity",
+  "hypothesis": "The system shall ensure that all incoming data received from external sources via the network is validated and sanitized to prevent unauthorized access, modification, or disruption of the application's operation.",
+  "sparse_query": "data-protection encryption incoming-data legacy-desktop-application network-connectivity AC-2 IA-4(1)"
+ },
+ "What reference material must be kept current under the information security policy?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "information security policy reference material updates",
+  "hypothesis": "The organization shall maintain a current and accurate inventory of all applicable security-related standards, guidelines, and regulations to ensure that its information security program remains aligned with the latest requirements and best practices.",
+  "sparse_query": "information security policy reference material updates IA-5(1) AU-9"
+ },
+ "What registry is available for declaring the ports, protocols and services DoD organizations use, and who can use it?": {
+  "control_ids": [],
+  "dense_query": "DoD port registry declaration protocol service usage",
+  "hypothesis": "\"The Department of Defense shall maintain a centralized registry to document and declare all externally accessible ports, protocols, and services used by its organizations. This registry shall be accessible to authorized personnel for querying and validation purposes.\"",
+  "sparse_query": "DoD port registry declaration protocol service usage"
+ },
+ "What reporting capability must exist for tracking and fixing maintenance issues on the AN/USQ-225?": {
+  "control_ids": [],
+  "dense_query": "AN/USQ-225 maintenance issue tracking reporting capability",
+  "hypothesis": "The system shall provide a reporting mechanism to track and document maintenance activities related to the AN/USQ-225, enabling authorized personnel to identify and address maintenance issues in a timely manner.",
+  "sparse_query": "AN/USQ-225 maintenance issue tracking reporting capability"
+ },
+ "What reporting is required when the operating status of Tier 1 and Tier 2 TCAs at an installation changes?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "TCA operating status change reporting requirements",
+  "hypothesis": "\"Notification shall be provided to designated authorities upon any change in the operational status of Tier 1 and Tier 2 Technical Control Facilities (TCFs) at a facility, including but not limited to, activation, deactivation, or modification.\"",
+  "sparse_query": "TCA operating status change reporting requirements AC-3 IA-5(1) AU-9"
+ },
+ "What reporting must reach information system security managers so the cyber workforce can be validated?": {
+  "control_ids": [],
+  "dense_query": "cyber work force validation reporting IS security managers",
+  "hypothesis": "Information system security managers shall receive timely and accurate reports on the status of personnel with authorized access to sensitive information systems, enabling validation of the cybersecurity posture and ensuring that only qualified individuals are granted access.",
+  "sparse_query": "cyber work force validation reporting IS security managers"
+ },
+ "What requirements and methods for destroying CUI should CUI training standards cover?": {
+  "control_ids": [
+   "AU-9",
+   "AC-3"
+  ],
+  "dense_query": "CUI destruction requirements training standards NIST SP 800-171 DoD instruction",
+  "hypothesis": "The training standards for handling Controlled Unclassified Information (CUI) shall specify the procedures and techniques for securely disposing of CUI in accordance with applicable laws, regulations, and policies. This includes methods for physical destruction, electronic media sanitization, and other forms of secure disposal to prevent unauthorized access or disclosure of sensitive information.",
+  "sparse_query": "CUI destruction requirements training standards NIST SP 800-171 DoD instruction AU-9 AC-3"
+ },
+ "What requirements govern how CUI has to be recognized and protected?": {
+  "control_ids": [
+   "AC-2",
+   "AU-6"
+  ],
+  "dense_query": "CUI recognition protection NIST SP 800-171 DoD requirements",
+  "hypothesis": "\"Controlled Unclassified Information (CUI) shall be properly identified and handled in accordance with applicable laws, regulations, and policies to ensure its confidentiality, integrity, and availability.\"",
+  "sparse_query": "CUI recognition protection NIST SP 800-171 DoD requirements AC-2 AU-6"
+ },
+ "What requirements should be defined before beginning the design of a virtualization solution?": {
+  "control_ids": [],
+  "dense_query": "virtualization solution design requirements risk management compliance governance",
+  "hypothesis": "\"Organizations shall define and document the security and compliance requirements that must be met by the virtualization solution prior to its design, including but not limited to, data confidentiality, integrity, and availability requirements, as well as any applicable regulatory or contractual obligations.\"",
+  "sparse_query": "virtualization solution design requirements risk management compliance governance"
+ },
+ "What review and guidance is required for DoD Component policies that implement CUI rules?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "DoD Component policy implementation CUI rules review guidance",
+  "hypothesis": "\"The DoD Components shall ensure that all policies implementing Controlled Unclassified Information (CUI) rules are reviewed and validated to ensure compliance with applicable laws, regulations, and standards, and receive appropriate guidance from the relevant authorities to ensure consistency and adherence to established requirements.\"",
+  "sparse_query": "DoD Component policy implementation CUI rules review guidance AC-3 IA-5(1) AU-9"
+ },
+ "What role does the Directorate of Security, Special Access Program Oversight and Information Protection (SAF/AAZ) play in network defense for SAP networks?": {
+  "control_ids": [],
+  "dense_query": "network security directorate special access program oversight information protection saf aaz sap",
+  "hypothesis": "The SAF/AAZ Directorate is responsible for overseeing and ensuring the protection of Special Access Program (SAP) information and systems, including participating in the development and implementation of network defense strategies to safeguard SAP networks from unauthorized access or exploitation.",
+  "sparse_query": "network security directorate special access program oversight information protection saf aaz sap"
+ },
+ "What role does the Service with the greatest operational impact play in a multi-Service petition to extend decertified products?": {
+  "control_ids": [],
+  "dense_query": "multi-service petition decertified products service operational impact",
+  "hypothesis": "The Service with the greatest operational impact shall be responsible for providing input and justification on the continued use of decertified products, ensuring that any decision to extend their use aligns with operational requirements and minimizes risk to mission success.",
+  "sparse_query": "multi-service petition decertified products service operational impact"
+ },
+ "What role handles official correspondence and accountability reporting between a DoD Component and USD(I&S)?": {
+  "control_ids": [],
+  "dense_query": "DoD Component USD I&S correspondence accountability reporting",
+  "hypothesis": "The Information Assurance (IA) Support Manager is responsible for handling official correspondence and accountability reporting between a DoD Component and the Under Secretary of Defense for Intelligence and Security (USD(I&S)).",
+  "sparse_query": "DoD Component USD I&S correspondence accountability reporting"
+ },
+ "What rule governs the accounting and reporting of unauthorized disclosures of controlled information?": {
+  "control_ids": [
+   "AC-2",
+   "AU-6"
+  ],
+  "dense_query": "accounting unauthorized disclosure controlled information reporting",
+  "hypothesis": "\"Unauthorized disclosures of controlled information shall be promptly accounted for and reported in accordance with established procedures to ensure transparency and facilitate corrective action.\"",
+  "sparse_query": "accounting unauthorized disclosure controlled information reporting AC-2 AU-6"
+ },
+ "What safeguards should virtualization snapshots and images have against tampering and unauthorized use?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "virtualization snapshot image integrity control access authentication authorization tamper-evident logging",
+  "hypothesis": "\"Virtualization snapshots and images shall be protected from unauthorized access, modification, or deletion to prevent malicious activities, ensuring their integrity and authenticity throughout their lifecycle.\"",
+  "sparse_query": "virtualization snapshot image integrity control access authentication authorization tamper-evident logging AC-3 IA-5(1) AU-9"
+ },
+ "What safety standards for nuclear surety and what safety assessments of nuclear weapons systems are required?": {
+  "control_ids": [],
+  "dense_query": "nuclear-surety-safety-standards nuclear-weapons-systems-safety-assessments",
+  "hypothesis": "\"The organization shall ensure that all nuclear weapons systems and associated activities comply with applicable safety standards for nuclear surety, including those related to design, development, testing, deployment, operation, maintenance, and disposal. Additionally, the organization shall conduct periodic safety assessments of nuclear weapons systems to identify potential hazards and risks, and implement corrective actions as necessary to mitigate or eliminate such risks.\"",
+  "sparse_query": "nuclear-surety-safety-standards nuclear-weapons-systems-safety-assessments"
+ },
+ "What security controls should hypervisor management interfaces implement?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "hypervisor management interface security control implementation",
+  "hypothesis": "\"Hypervisor management interfaces shall be designed and implemented to provide secure access and authentication mechanisms for authorized personnel, ensuring that all interactions with the hypervisor are auditable and logged.\"",
+  "sparse_query": "hypervisor management interface security control implementation AC-3 IA-5(1) AU-9"
+ },
+ "What should an organization specify in the planning phase before designing its virtualization solution?": {
+  "control_ids": [],
+  "dense_query": "virtualization solution design planning phase requirements",
+  "hypothesis": "The organization shall define and document the scope, objectives, and requirements for the virtualization solution, including security considerations and compliance with applicable laws and regulations, prior to commencing design activities.",
+  "sparse_query": "virtualization solution design planning phase requirements"
+ },
+ "What should organizations do periodically with their virtualization policies?": {
+  "control_ids": [],
+  "dense_query": "virtualization policy review update maintenance",
+  "hypothesis": "Organizations shall periodically review and update their virtualization policies to ensure they remain aligned with organizational risk tolerance and regulatory requirements, and that such policies are effectively communicated to personnel responsible for implementing them.",
+  "sparse_query": "virtualization policy review update maintenance"
+ },
+ "What should organizations do to protect each administrative interface, local or remote?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "access-control administrative-interfaces protection remote-access",
+  "hypothesis": "Organizations shall implement measures to safeguard each administrative interface, whether accessed locally or remotely, against unauthorized access and exploitation by implementing appropriate security controls to authenticate users, encrypt data in transit, and monitor for suspicious activity.",
+  "sparse_query": "access-control administrative-interfaces protection remote-access AC-3 IA-5(1) AU-9"
+ },
+ "What should organizations do with their policies when new kinds of virtualization emerge or existing ones change significantly?": {
+  "control_ids": [],
+  "dense_query": "policy management virtualization updates",
+  "hypothesis": "Organizations shall periodically review and update their security-related policies to ensure they remain relevant and effective in addressing emerging technologies, including newly introduced or significantly modified forms of virtualization.",
+  "sparse_query": "policy management virtualization updates"
+ },
+ "What should organizations put in policy about clipboard sharing in virtualized environments?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "clipboard sharing virtualized environments access control data protection security policy",
+  "hypothesis": "Organizations shall establish a policy that clearly defines and prohibits the unauthorized sharing of clipboard contents between virtual desktops or sessions to prevent potential security breaches and maintain confidentiality, integrity, and availability of sensitive information.",
+  "sparse_query": "clipboard sharing virtualized environments access control data protection security policy AC-3 IA-5(1) AU-9"
+ },
+ "What should organizations weigh when deciding if a host operating system should sit beneath virtualization for servers or desktops?": {
+  "control_ids": [],
+  "dense_query": "virtualization server desktop host operating system risk management",
+  "hypothesis": "Organizations shall consider the security and operational requirements of their systems, including but not limited to, isolation needs, performance demands, and management complexity, when determining whether to deploy a host operating system under virtualization for both server and desktop environments.",
+  "sparse_query": "virtualization server desktop host operating system risk management"
+ },
+ "What standard process is required for reviewing and approving modification proposals for the AN/USQ-225?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "modification proposal review approval process AN/USQ-225",
+  "hypothesis": "The following regulatory requirement statement answers the question:\n\n\"A formalized review and approval process shall be established to evaluate modification proposals for the AN/USQ-225, ensuring that all proposed changes are thoroughly assessed for impact on system functionality, security, and performance before implementation.\"",
+  "sparse_query": "modification proposal review approval process AN/USQ-225 AC-3 IA-5(1) AU-9"
+ },
+ "What standards must DoD Component heads implement as part of overseeing their PPSM programs?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "DoD Component heads PPSM program implementation standards",
+  "hypothesis": "The DoD Component head shall implement and enforce standards for information systems and organizations that support the Personally Identifiable Information (PII) protection program, to ensure the confidentiality, integrity, and availability of PII in accordance with applicable laws and regulations.",
+  "sparse_query": "DoD Component heads PPSM program implementation standards IA-5(1) AU-9"
+ },
+ "What supply chain risk management requirements apply to suppliers and vendors of DoD information and communications technology?": {
+  "control_ids": [
+   "SC-12",
+   "SC-13"
+  ],
+  "dense_query": "supply-chain-risk-management-requirements-suppliers-vendors-dod-information-communications-technology",
+  "hypothesis": "\"Suppliers and vendors of DoD information and communications technology shall implement measures to identify, assess, and mitigate potential supply chain risks that could compromise the confidentiality, integrity, or availability of DoD information systems.\"",
+  "sparse_query": "supply-chain-risk-management-requirements-suppliers-vendors-dod-information-communications-technology SC-12 SC-13"
+ },
+ "What trade-off should be weighed when choosing hosted virtualization for servers or desktops?": {
+  "control_ids": [],
+  "dense_query": "hosted virtualization trade-offs server vs desktop",
+  "hypothesis": "\"The organization shall ensure that the use of hosted virtualization for servers or desktops is justified by a documented assessment of the benefits and risks, including consideration of data sovereignty, control over virtualized assets, and potential impacts on security and compliance.\"",
+  "sparse_query": "hosted virtualization trade-offs server vs desktop"
+ },
+ "What training and certifications in cybersecurity apply to people who use network management systems?": {
+  "control_ids": [],
+  "dense_query": "cybersecurity training certifications network management system users",
+  "hypothesis": "\"Personnel with access to and responsible for operating network management systems shall possess relevant training and certifications in cybersecurity to ensure their understanding of security controls, vulnerabilities, and best practices for secure system operation.\"",
+  "sparse_query": "cybersecurity training certifications network management system users"
+ },
+ "What training must DoD Component heads develop and put in place for TSN and ICT supply chain risk management?": {
+  "control_ids": [
+   "AU-9",
+   "IA-5(1)"
+  ],
+  "dense_query": "TSN ICT supply chain risk management DoD Component heads training personnel security awareness",
+  "hypothesis": "The DoD Component head shall establish a training program to educate personnel on the identification, assessment, and mitigation of risks associated with the acquisition and use of Trusted Supply Network (TSN) and Information and Communications Technology (ICT) products, including awareness of potential security threats and vulnerabilities in the supply chain.",
+  "sparse_query": "TSN ICT supply chain risk management DoD Component heads training personnel security awareness AU-9 IA-5(1)"
+ },
+ "What training on trusted systems and networks and ICT supply chain risk must be tailored for each DoD component?": {
+  "control_ids": [
+   "AU-9",
+   "AC-3"
+  ],
+  "dense_query": "training trusted systems networks ICT supply chain risk DoD component",
+  "hypothesis": "Each DoD component shall provide personnel with training that is tailored to their respective roles and responsibilities in identifying and mitigating risks associated with trusted systems, networks, and information and communications technology (ICT) supply chains.",
+  "sparse_query": "training trusted systems networks ICT supply chain risk DoD component AU-9 AC-3"
+ },
+ "What vetting and qualification must be completed before someone starts a network management security role?": {
+  "control_ids": [
+   "AC-2",
+   "IA-4(1)",
+   "AU-9"
+  ],
+  "dense_query": "network-management-security-role-vetting-qualification-background-checks-clearance-levels-training-certification",
+  "hypothesis": "The following personnel shall complete thorough background checks and suitability assessments to verify their trustworthiness and technical competence prior to assuming responsibilities for managing and securing networks. This process shall ensure that only qualified individuals with a demonstrated understanding of network security principles and practices are entrusted with the authority to implement and enforce security controls on DoD networks.",
+  "sparse_query": "network-management-security-role-vetting-qualification-background-checks-clearance-levels-training-certification AC-2 IA-4(1) AU-9"
+ },
+ "What website must the Director of DISA run for the cybersecurity community, and what is it for?": {
+  "control_ids": [],
+  "dense_query": "cybersecurity community website Director DISA",
+  "hypothesis": "The Director of Defense Information Systems Agency (DISA) shall operate a publicly accessible website to provide information, guidance, and resources to support the cybersecurity posture of the Department. This website shall serve as a centralized hub for sharing knowledge, best practices, and threat intelligence with the cybersecurity community, promoting collaboration and situational awareness among stakeholders.",
+  "sparse_query": "cybersecurity community website Director DISA"
+ },
+ "What workforce metrics must be sent to the wing-level cyberspace office?": {
+  "control_ids": [],
+  "dense_query": "workforce metrics reporting requirements wing-level cyberspace office",
+  "hypothesis": "The following workforce metrics shall be transmitted to the wing-level cyberspace office for monitoring and analysis:\n\n\"Workforce metrics, including personnel qualifications, training records, and certification status, shall be provided to the wing-level cyberspace office in a timely manner.\"",
+  "sparse_query": "workforce metrics reporting requirements wing-level cyberspace office"
+ },
+ "What working group participation and data provision is expected for the CARM program?": {
+  "control_ids": [],
+  "dense_query": "CARM program working group participation data provision requirements",
+  "hypothesis": "The organization shall participate in relevant working groups to ensure collaboration with stakeholders on matters related to the CARM program's development and implementation. Additionally, the organization shall provide necessary data to support the CARM program's objectives, as required by applicable authorities or agreements.",
+  "sparse_query": "CARM program working group participation data provision requirements"
+ },
+ "What written acknowledgment of cybersecurity duties is required of personnel?": {
+  "control_ids": [
+   "AU-2",
+   "IA-4"
+  ],
+  "dense_query": "cybersecurity duties personnel written acknowledgment",
+  "hypothesis": "\"Personnel shall provide a written acknowledgement indicating their understanding and acceptance of their assigned cybersecurity responsibilities and obligations.\"",
+  "sparse_query": "cybersecurity duties personnel written acknowledgment AU-2 IA-4"
+ },
+ "What yearly reporting is required on how far CUI implementation has progressed?": {
+  "control_ids": [
+   "AU-9",
+   "AC-2"
+  ],
+  "dense_query": "CUI implementation progress reporting requirements",
+  "hypothesis": "\"An annual report shall be submitted to [designated authority] detailing the progress and status of implementing controls for Controlled Unclassified Information (CUI), including any significant accomplishments, challenges, or areas requiring additional attention.\"",
+  "sparse_query": "CUI implementation progress reporting requirements AU-9 AC-2"
+ },
+ "When a legacy application in a virtualized desktop needs full network access, what safeguards apply to the information it takes in?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "legacy application virtualized desktop network access safeguard data protection encryption risk management",
+  "hypothesis": "The system shall ensure that any legacy applications requiring full network access within a virtualized desktop environment are subject to appropriate security controls to prevent unauthorized data collection or transmission.",
+  "sparse_query": "legacy application virtualized desktop network access safeguard data protection encryption risk management AC-3 IA-5(1) AU-9"
+ },
+ "When new virtualization technologies appear or existing ones change, what should be done about security policies?": {
+  "control_ids": [],
+  "dense_query": "virtualization technology changes security policy update review",
+  "hypothesis": "When new virtualization technologies emerge or existing ones undergo modifications, the organization shall reassess and update its security policies to ensure continued effectiveness in protecting organizational information systems and data.",
+  "sparse_query": "virtualization technology changes security policy update review"
+ },
+ "When should training courses for cyber personnel be updated to encourage more certifications?": {
+  "control_ids": [],
+  "dense_query": "cyber personnel training course updates certification requirements",
+  "hypothesis": "\"Training courses for cyber personnel shall be periodically reviewed and revised to reflect emerging threats, technologies, and industry-recognized best practices, with a focus on promoting relevant certifications that enhance professional development and maintain currency in the field.\"",
+  "sparse_query": "cyber personnel training course updates certification requirements"
+ },
+ "Where can DoD cybersecurity practitioners exchange practical fixes and documents about risk management framework implementation?": {
+  "control_ids": [],
+  "dense_query": "DoD risk management framework implementation cybersecurity practitioners exchange practical fixes documents",
+  "hypothesis": "\"Information sharing among DoD cybersecurity personnel regarding practical solutions and documentation for implementing a Risk Management Framework shall be facilitated through designated forums, repositories, or collaborative platforms.\"",
+  "sparse_query": "DoD risk management framework implementation cybersecurity practitioners exchange practical fixes documents"
+ },
+ "Where does a request to extend use of decertified products go for technical analysis during Joint Staff review?": {
+  "control_ids": [],
+  "dense_query": "decertified-products technical-analysis joint-staff-review",
+  "hypothesis": "The request to extend use of decertified products shall be submitted to the designated authority responsible for conducting technical analysis and providing recommendations on the continued use of such products, as part of the Joint Staff review process.",
+  "sparse_query": "decertified-products technical-analysis joint-staff-review"
+ },
+ "Where must MIB descriptions and format details be kept for network management?": {
+  "control_ids": [],
+  "dense_query": "network-management mib-description storage location",
+  "hypothesis": "Network management information base (MIB) descriptions and format details shall be maintained in a centralized repository accessible to authorized personnel for the purpose of managing and monitoring network devices.",
+  "sparse_query": "network-management mib-description storage location"
+ },
+ "Where must Tier 1 and Tier 2 TCAs be listed on an installation?": {
+  "control_ids": [],
+  "dense_query": "TCA listing installation requirements Tier 1 Tier 2",
+  "hypothesis": "\"Tier 1 and Tier 2 Technical Control Administrators (TCAs) shall be listed in a publicly accessible location at each installation, as designated by the applicable authority.\"",
+  "sparse_query": "TCA listing installation requirements Tier 1 Tier 2"
+ },
+ "Which Air Force organization is solely responsible for investigating felony-level crimes and for counterintelligence in cyberspace?": {
+  "control_ids": [],
+  "dense_query": "cyber counterintelligence investigation felony-level crime Air Force",
+  "hypothesis": "The Air Force shall designate a single organization to be accountable for conducting investigations into serious offenses committed within its jurisdiction, including those related to national security and cyber operations, as well as for identifying and mitigating potential counterintelligence threats within the cyber domain.",
+  "sparse_query": "cyber counterintelligence investigation felony-level crime Air Force"
+ },
+ "Which authentication safeguards, for example issuing end-user certificates, strengthen protection for systems that hold CUI?": {
+  "control_ids": [
+   "AC-2",
+   "IA-4(1)",
+   "AU-6"
+  ],
+  "dense_query": "authentication safeguard certificate issuance CUI protection",
+  "hypothesis": "\"Authentication mechanisms shall be implemented to verify the identity and authenticity of individuals accessing systems containing Controlled Unclassified Information (CUI), thereby ensuring only authorized personnel can access such systems.\"",
+  "sparse_query": "authentication safeguard certificate issuance CUI protection AC-2 IA-4(1) AU-6"
+ },
+ "Which distribution statements apply to marking controlled technical information?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "controlled technical information marking distribution statements",
+  "hypothesis": "\"Technical information that is subject to access controls shall be marked with a statement indicating its restricted nature and any applicable distribution limitations.\"",
+  "sparse_query": "controlled technical information marking distribution statements AC-3 IA-5(1) AU-9"
+ },
+ "Which network management data formats and exchange methods require formal approval?": {
+  "control_ids": [
+   "AC-2",
+   "AU-9"
+  ],
+  "dense_query": "network management data formats exchange methods formal approval",
+  "hypothesis": "\"Network management data formats and exchange methods shall be formally approved prior to implementation to ensure consistency with established standards and organizational policies.\"",
+  "sparse_query": "network management data formats exchange methods formal approval AC-2 AU-9"
+ },
+ "Which office is the main contact for records matters between a Component and the Under Secretary of Defense for Intelligence and Security?": {
+  "control_ids": [],
+  "dense_query": "records management office component under secretary defense intelligence security",
+  "hypothesis": "The primary point of contact for all records-related matters between the Component and the Under Secretary of Defense for Intelligence and Security shall be designated by the Component's senior leadership.",
+  "sparse_query": "records management office component under secretary defense intelligence security"
+ },
+ "Which office takes the lead on national leadership command capability issues that are not about nuclear command and control?": {
+  "control_ids": [],
+  "dense_query": "national leadership command capability non-nuclear command control",
+  "hypothesis": "The National Security Council (NSC) shall be responsible for addressing national leadership command capability issues that do not pertain to nuclear command and control.",
+  "sparse_query": "national leadership command capability non-nuclear command control"
+ },
+ "Which organization leads the effort to petition for extending decertified products when several Services are affected?": {
+  "control_ids": [],
+  "dense_query": "product certification extension services impacted",
+  "hypothesis": "The Defense Acquisition Regulation (DoDAF) requires that a single lead Service be designated to coordinate and manage the process for requesting the extension or re-certification of decertified products, in cases where multiple Services are impacted by the de-certification.",
+  "sparse_query": "product certification extension services impacted"
+ },
+ "Which organizations are required to follow the referenced cryptographic policy?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AC-3"
+  ],
+  "dense_query": "organizations cryptographic policy compliance requirements",
+  "hypothesis": "Here is a single regulatory requirement statement that answers the question:\n\n\"All Federal agencies and their contractors shall adhere to the applicable cryptographic policy for all information systems and networks, as specified in relevant laws, regulations, and policies.\"",
+  "sparse_query": "organizations cryptographic policy compliance requirements IA-5(1) AC-3"
+ },
+ "Which policies and procedures govern the safeguarding of sensitive compartmented information?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "sensitive-compartmented-information safeguarding policies procedures",
+  "hypothesis": "Sensitive compartmented information shall be safeguarded in accordance with applicable national security directives and Departmental policies that prescribe the handling and protection of classified information, to prevent unauthorized disclosure or access.",
+  "sparse_query": "sensitive-compartmented-information safeguarding policies procedures AC-3 IA-5(1) AU-9"
+ },
+ "Which policy and configuration control board standards must PPS follow when put into service?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "policy compliance configuration control board standards NIST SP 800-53",
+  "hypothesis": "The organization shall ensure that all systems placed in operation adhere to established policy and configuration control board standards, thereby maintaining consistency with organizational requirements for system development, deployment, and maintenance.",
+  "sparse_query": "policy compliance configuration control board standards NIST SP 800-53 AC-3 IA-5(1) AU-9"
+ },
+ "Which proactive and reactive protections should follow an incident so that a repeat is avoided?": {
+  "control_ids": [
+   "AU-9",
+   "AC-3"
+  ],
+  "dense_query": "incident-response proactive-reactive-protections repeat-avoidance",
+  "hypothesis": "The organization shall implement measures to prevent recurrence by conducting a thorough investigation into the root causes of the incident, identifying and remediating vulnerabilities, updating security policies and procedures as necessary, and implementing additional controls or compensating controls to mitigate similar risks in the future.",
+  "sparse_query": "incident-response proactive-reactive-protections repeat-avoidance AU-9 AC-3"
+ },
+ "Which reasons may never be used to justify classifying information or marking it CUI?": {
+  "control_ids": [
+   "NIAP-AC-CSC-001",
+   "NIST-800-53-AC-3"
+  ],
+  "dense_query": "justification for classification CUI",
+  "hypothesis": "Information shall not be classified or marked as Controlled Unclassified Information (CUI) based on convenience, personal preference, or any reason that is unrelated to national security concerns.",
+  "sparse_query": "justification for classification CUI NIAP-AC-CSC-001 NIST-800-53-AC-3"
+ },
+ "Which standards must be implemented for ports, protocols and services management, and which board sets them?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "ports protocols services management security standards implementation board requirements",
+  "hypothesis": "Here is a single regulatory requirement statement that answers the question:\n\n\"The organization shall implement standards for managing ports, protocols, and services in accordance with applicable government-adopted standards, as specified by the relevant Federal agency or governing body.\"",
+  "sparse_query": "ports protocols services management security standards implementation board requirements AC-3 IA-5(1) AU-9"
+ },
+ "Which technical order governs recording maintenance data for the AN/USQ-225?": {
+  "control_ids": [],
+  "dense_query": "AN/USQ-225 maintenance data recording technical order",
+  "hypothesis": "The technical order governing the recording and maintenance of data for the AN/USQ-225 shall specify procedures for accurately documenting all maintenance activities, including repairs, replacements, and adjustments, to ensure that a complete and accurate record of system performance and maintenance is maintained.",
+  "sparse_query": "AN/USQ-225 maintenance data recording technical order"
+ },
+ "While promoting information sharing, what must still be preserved about how controlled unclassified information is protected and handled?": {
+  "control_ids": [
+   "AC-3",
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "controlled unclassified information protection handling access control data security risk management compliance",
+  "hypothesis": "\"Controlled Unclassified Information (CUI) handling and protection procedures shall maintain transparency regarding the measures taken to safeguard CUI, ensuring that all stakeholders are aware of the specific controls implemented to protect sensitive information.\"",
+  "sparse_query": "controlled unclassified information protection handling access control data security risk management compliance AC-3 IA-5(1) AU-9"
+ },
+ "Who is the certification authority for network defense services on special access program networks?": {
+  "control_ids": [
+   "AC-2",
+   "IA-4(1)"
+  ],
+  "dense_query": "certification authority network defense services special access program networks",
+  "hypothesis": "\"The certification authority responsible for validating the identity and authenticity of entities accessing network defense services on special access program networks shall be a trusted third-party entity authorized by the sponsoring agency.\"",
+  "sparse_query": "certification authority network defense services special access program networks AC-2 IA-4(1)"
+ },
+ "Why are shared network management standards needed for spectrum-dependent systems and equipment at the tactical edge?": {
+  "control_ids": [],
+  "dense_query": "spectrum-dependent systems shared network management standards tactical edge",
+  "hypothesis": "\"Spectrum-dependent systems and equipment operating at the tactical edge must adhere to standardized network management practices to ensure interoperability, facilitate efficient resource allocation, and maintain situational awareness across disparate networks.\"",
+  "sparse_query": "spectrum-dependent systems shared network management standards tactical edge"
+ },
+ "With which organizations must mitigation planning be coordinated?": {
+  "control_ids": [
+   "IA-5(1)",
+   "AU-9"
+  ],
+  "dense_query": "mitigation planning coordination interagency information sharing",
+  "hypothesis": "\"Mitigation planning shall be coordinated with relevant external organizations to ensure effective communication and collaboration in response to potential security incidents.\"",
+  "sparse_query": "mitigation planning coordination interagency information sharing IA-5(1) AU-9"
+ }
+}

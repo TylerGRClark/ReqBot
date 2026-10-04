@@ -291,6 +291,14 @@ def build_report(data, groups):
                 rows, rid_docs, party_ok(style, sub), "quote_alone", "target_only", style, name
             )
             emit(f"- {style:5s} {name:9s} {fmt_cell(cell)}")
+    emit("\n## EXPLORATORY, not pre-registered: lead-in vs production, target-only, by where the adjudicated lead-in lives")
+    for loc in ("section_heading", "same_chunk", "previous_chunk"):
+        pool = [r for r in oracle if rec[r]["lead_in_location"] == loc]
+        for style in STYLES:
+            rr = party_ok(style, pool)
+            c = summarize(rows, rid_docs, rr, "oracle", "target_only", style, "recall@10")
+            m = summarize(rows, rid_docs, rr, "oracle", "target_only", style, "mrr")
+            emit(f"- {loc:16s} {style:5s} recall@10 {fmt_cell(c)}  | MRR {m['best']['mean']:+.3f} [{m['best']['lo']:+.3f},{m['best']['hi']:+.3f}]")
     emit("\n## Q4 (descriptive only): findability of each group as it stands, production text")
     for style in STYLES:
         d = descriptive(rows, {g: party_ok(style, by_group[g]) for g in GROUPS}, style)
