@@ -610,8 +610,8 @@ ACTIVE BACKLOG
     recovered_truncated, named in the end-of-run log, and not retried. Largest
     answer in the corpus was about 570 tokens (14% of the allowance), and 0 of
     839 chunks were ever cut off, so the retry has not been exercised on real
-    data. Not examined: Step D.5 enrichment has its own 4096 allowance with no
-    truncation handling.
+    data. Step D.5 enrichment has its own 4096 allowance; examined, no change
+    needed (item 46).
 
 40. [DEFERRED -- Tyler, 2026-10-04] Split paragraphs are re-expanded into
     duplicate chunks (audit F01)
@@ -688,6 +688,26 @@ ACTIVE BACKLOG
     1,000 calls. Measure the value first: Phase 45 WP-45.6 compares qwen2.5:14b
     with the 8B baseline. Prompts, thresholds and gates were tuned on 8B output
     and need re-measuring for any other model.
+
+46. Step D.5 enrichment does not pin its context window (low priority; nothing
+    is broken)
+    enrich_requirements.call_ollama sets num_predict 4096 but no num_ctx, so
+    its window is whatever the Ollama server defaults to (8192 on the project
+    server). WP-42 pinned Step C's window for exactly this reason; D.5 was not
+    covered. Measured 2026-10-04 on the 13 pinned documents: 190 batches of 10,
+    0 of 1,853 requirements failed enrichment; the largest batch prompt was 957
+    tokens (Ollama's own count) and the largest answer about 1,150 tokens, 28%
+    of the 4096 allowance. A cut-off batch cannot be partly accepted (there is
+    no truncation recovery: an unparseable or wrong-count answer falls back to
+    one call per requirement, and failures are retried on the next run), so the
+    allowance itself is safe. Latent risks only: (a) a server whose default
+    window is small (older Ollama releases used 2048; not verified here) would
+    not fit the largest observed prompt plus answer, about 2,100 tokens; (b) a
+    --batch-size above roughly 35 would approach the allowance at the observed
+    answer density. Candidate: pin num_ctx as Step C does and, if the batch
+    size is ever raised, size the batch from the window. Revisit with the next
+    change to enrichment, with item 45, or if a user on a different Ollama
+    setup reports empty descriptions.
 
 ================================================================
 RETRIEVAL EXPERIMENTS
