@@ -6,7 +6,7 @@ Part of Phase 45. No production code changes; scripts here only read the 13 docu
 | Sub-step | What | Status |
 |---|---|---|
 | (a) | Fragment census: documented text signals over every record, crossed with the attachment method | merged (#204) |
-| (b) | Attachment audit: two independent labelers, Tyler adjudicates | labeled, adjudicated and scored (below); two rulings (R067, R088) provisional pending a clarification |
+| (b) | Attachment audit: two independent labelers, Tyler adjudicates | labeled, adjudicated and scored (below) |
 | (c) | Fair retrieval test (queries written from meaning, frozen configuration) | after (b) |
 | (d) | Does a wrong stem hurt retrieval? | after (c) |
 | (e) | Small source-based sample (obligations labeled in the PDF, traced to first loss point) | not started |
@@ -134,12 +134,13 @@ python3 eval/spike_results/wp_45_1/score_audit.py --key eval/spike_results/wp_45
 - **Agreement.** Pass A: 124/130 on whether a quote needs a lead-in (kappa 0.91), 75/80 on where it is. Pass B: 61/66
   on the stem verdict (kappa 0.90). 16 disagreements. Tyler's 10-item spot-check of agreements found no errors, and his
   review of it found one shared mistake outside the sample (R107, corrected).
-- **Tyler's rulings on the 16.** Pass A: Claude's label on all 11 (R067 and R088 are provisional until he clarifies
-  two points). Pass B: Claude's on R016 and R064, Codex's on R034 and R029, and a third verdict, right, on R073. Some
+- **Tyler's rulings on the 16.** Pass A: Claude's label on 9 of 11, Codex's on R067 and R088. Pass B: Claude's on R016 and R064, Codex's on R034 and R029, and a third verdict, right, on R073. Some
   differ from what the source PDFs suggest (R006 and R074 sit under "existing systems that use SNMP v1 or v2c"; he
   treats that as a nice-to-have). His reasoning is in `audit_results/adjudication.txt`: a role named in the heading
-  completes the requirement; a document only creates requirements for parties it has authority over (R049); a chunk
-  boundary can cut a requirement off (R078); a full requirement can take its scope from more than one level above (R100).
+  completes the requirement and a requirement needs its who (R029, R067, R102, R110, R111); a document only creates
+  requirements for parties it has authority over (R049); scoping is context to attach to a requirement, not a
+  requirement itself (R088); a chunk boundary can cut a requirement off (R078); a full requirement can take its scope
+  from more than one level above (R100).
 - **The adjudication barely matters.** Resolving every disagreement to Claude, or every one to Codex, moves the pooled
   numbers by at most 6 points (right 34% to 40%; misleading 38% to 40%; incomplete 19% to 22%; need-rate 53% to 54%),
   and Tyler's rulings fall inside that range.
@@ -148,14 +149,14 @@ python3 eval/spike_results/wp_45_1/score_audit.py --key eval/spike_results/wp_45
   party; 11 to 29). Same-chunk 16 of 36 right, cross-chunk 8 of 28; the intervals overlap, so no difference is claimed.
 - **Stems on quotes that were already complete.** 12 sampled attachments sit on quotes both labelers called
   complete; 10 of the 12 are misleading. Small sample; a pointer to the candidacy rule, not a rate.
-- **Who lacks context.** About 54% of all records need a lead-in (35 to 74), and about 860 of the 1,644 with no stem
-  (52%; 31 to 74). Where it lives, among those 860: section heading only 552, same chunk 114, previous chunk 74, not
+- **Who lacks context.** About 54% of all records need a lead-in (35 to 73), and about 860 of the 1,644 with no stem
+  (52%; 31 to 74). Where it lives, among those 860: section heading only 552, same chunk 111, previous chunk 77, not
   in the text shown 119. Heading-only counts because a role named only by a heading changes who is obligated (Tyler's
   rulings on R029, R102, R110 and R111 say the heading is what completes the requirement); read by the narrower
   list-intro definition the no-stem need is about 190 records (11%).
 - **Root causes.** (4) a sibling or peer's sub-list lead-in taken as the stem: 19 of 66 sampled stems. (1) the lead-in
-  is in the previous chunk: about 74 records with no stem, plus a dozen with a wrong one. (3) the lead-in is in the
-  same chunk but the rules missed it: about 114. (2) a Docling hierarchy error cannot be told from text; the PDFs show
+  is in the previous chunk: about 77 records with no stem, plus about ten with a wrong one. (3) the lead-in is in the
+  same chunk but the rules missed it: about 111. (2) a Docling hierarchy error cannot be told from text; the PDFs show
   the source's own numbering sometimes puts later duties under an earlier item (DoDI 8551.01 2.2.d), so not every
   such case is a parser fault.
 
@@ -166,5 +167,4 @@ context ladder) the largest pool is heading-only context, but whether that hurts
 **Limits.** Two language models and one ten-item spot-check can share mistakes; one was found outside the sample.
 Intervals are wide (about +/-14 points on the large strata, wider on the rest). "Misleading" and "incomplete" are
 judged from text, not measured in retrieval. The need-rate depends on the rubric's heading rule and its conventions
-(a stem that is a list item lacking its party is `fragment_chain`). Two rulings, R067 and R088, are provisional until
-Tyler clarifies them; they affect one lead-in location and one need-rate count.
+(a stem that is a list item lacking its party is `fragment_chain`).

@@ -1,17 +1,16 @@
 # WP-45.1b adjudication. Format: `R012 a: codex` | `R012 b: claude` | `R012 a: other <standalone> [<location> :: <text>]` | `R007 a: ok`
-# STATUS: every answer below is Tyler's (2026-10-04, in his own words, summarized in the comments) except the two marked
-# PENDING, which are Claude's provisional entries until Tyler clarifies. Where his answer differs from the earlier
-# proposals (which followed the source PDFs or Codex), his answer stands.
+# STATUS: every answer below is Tyler's (2026-10-04, in his own words, summarized in the comments). Where his answer
+# differs from the earlier proposals (which followed the source PDFs or Codex), his answer stands.
 #
 # Pass A disagreements (11)
 R006 a: claude   # Tyler: complete; the SNMP v1/v2c list intro "may make it stronger" (nice to have, so still complete)
 R074 a: claude   # Tyler: complete
 R029 a: claude   # Tyler: the heading "RESPONSIBILITIES > 2.2. DIRECTOR, DISA." is all that is needed (his comment was numbered 67 but quotes this item)
-R067 a: claude   # PENDING: provisional, follows Tyler's heading rule; waiting to hear whether his "67" comment meant this item
+R067 a: codex    # Tyler: "Director, NSA (DIRNSA) will: ensure adjudication ..." - it definitely needs who it applies to; that text is in the previous chunk's heading
 R102 a: claude   # Tyler: it is in the heading, "The DOT&E shall:" followed by the quote
 R110 a: claude   # Tyler: "Air Force Deputy Chief of Staff, Operations (AF/A3) shall," followed by the quote
 R111 a: claude   # Tyler: the heading is needed to close the loop on the requirement
-R088 a: claude   # PENDING: Tyler: "a scope statement ... the quote is part of who it applies to"; provisional needs_lead_in until he says whether a scope statement counts as a requirement
+R088 a: codex    # Tyler: scoping is not in itself a requirement; it says a requirement applies to xyz (worth keeping and attaching to a requirement)
 R100 a: claude   # Tyler: it is a requirement; reads like "Contracts containing CUI ... shall implement <the quote> protective measures" (so it also draws on the previous chunk)
 R049 a: claude   # Tyler: not a requirement; a DoDI/AFI does not direct NIST, it only reads like a requirement
 R078 a: claude   # Tyler: not a requirement; a chunk cutting off a possible requirement

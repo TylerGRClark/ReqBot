@@ -34,22 +34,22 @@ Pooled over the 203 attachments, incomplete (fragment_chain):  19.7% (95%  10.9%
 | stratum | population | n | needs_lead_in | not_a_requirement | need rate (Wilson) | est. records |
 |---|---|---|---|---|---|---|
 | same-chunk | 142 | 36 | 25 | 6 |  69.4% ( 53.1% to  82.0%) | 99 |
-| cross-chunk | 59 | 28 | 20 | 1 |  71.4% ( 52.9% to  84.7%) | 42 |
+| cross-chunk | 59 | 28 | 19 | 2 |  67.9% ( 49.3% to  82.1%) | 40 |
 | heading | 2 | 2 | 2 | 0 | 100.0% ( 34.2% to 100.0%) | 2 |
 | none+signal | 90 | 28 | 14 | 4 |  50.0% ( 32.6% to  67.4%) | 45 |
 | none+nosignal | 546 | 20 | 16 | 1 |  80.0% ( 58.4% to  91.9%) | 437 |
 | not-a-candidate+signal | 54 | 8 | 3 | 5 |  37.5% ( 13.7% to  69.4%) | 20 |
 | not-a-candidate+nosignal | 954 | 8 | 3 | 0 |  37.5% ( 13.7% to  69.4%) | 358 |
 
-All 1847 records:  54.3% need a lead-in (95%  35.0% to  73.5%), about 1003
+All 1847 records:  54.2% need a lead-in (95%  34.9% to  73.4%), about 1000
 Records with no stem that need one:  52.3% of 1644 (95%  30.7% to  73.9%), about 860 (the misses)
 
 ## Where the missing lead-in lives (records that need one, weighted to the population)
 
 | location | in sample | est. among the 203 with a stem | est. among the 1,644 without | est. total |
 |---|---|---|---|---|
-| same_chunk | 33 | 71 | 114 | 185 |
-| previous_chunk | 17 | 23 | 74 | 97 |
+| same_chunk | 32 | 71 | 111 | 182 |
+| previous_chunk | 17 | 21 | 77 | 98 |
 | section_heading | 31 | 47 | 552 | 599 |
 | not_shown | 2 | 2 | 119 | 121 |
 
@@ -57,10 +57,10 @@ Records with no stem that need one:  52.3% of 1644 (95%  30.7% to  73.9%), about
 
 | class | in sample | est. records in 1,847 |
 |---|---|---|
-| (1) no stem, lead-in is in the previous chunk | 7 | 74 |
-| (3) no stem, lead-in is earlier in the same chunk | 12 | 114 |
+| (1) no stem, lead-in is in the previous chunk | 8 | 77 |
+| (3) no stem, lead-in is earlier in the same chunk | 11 | 111 |
 | (4) sibling bullet accepted as the stem; true lead-in: not_shown | 1 | 2 |
-| (4) sibling bullet accepted as the stem; true lead-in: previous_chunk | 2 | 6 |
+| (4) sibling bullet accepted as the stem; true lead-in: previous_chunk | 1 | 4 |
 | (4) sibling bullet accepted as the stem; true lead-in: same_chunk | 2 | 6 |
 | (4) sibling bullet accepted as the stem; true lead-in: section_heading | 4 | 10 |
 | no stem, lead-in not recoverable from the text shown | 1 | 119 |
