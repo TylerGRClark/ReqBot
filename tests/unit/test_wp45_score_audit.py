@@ -161,3 +161,25 @@ def test_answers_for_missing_items_or_agreed_items_are_rejected(sa):
         )  # R002 has no pass B
     with pytest.raises(SystemExit, match="agreed by both"):
         sa.resolve(a_pairs, b_pairs, dis_a, dis_b, spot, {**full, ("R002", "a"): "codex"})
+
+
+def test_lead_in_text_keeps_a_hash_and_comments_are_only_read_before_it(sa, tmp_path):
+    path = tmp_path / "answers.txt"
+    path.write_text(
+        "R107 a: other needs_lead_in same_chunk :: IAW DoDI 8500.01 item #3, and the rest\n"
+        "R012 a: codex   # a comment\n"
+        "R013 b: other wrong_sibling   # a comment\n",
+        encoding="utf-8",
+    )
+    answers = sa.parse_answers(path)
+    assert answers[("R107", "a")][2] == "IAW DoDI 8500.01 item #3, and the rest"
+    assert answers[("R012", "a")] == "codex"
+    assert answers[("R013", "b")] == ("other", ["wrong_sibling"], None)
+
+
+@pytest.mark.parametrize("line", ["R012 a: codex :: text", "R012 a: ok extra", "R012 a: codex#why"])
+def test_labeler_answers_take_nothing_extra(sa, tmp_path, line):
+    path = tmp_path / "answers.txt"
+    path.write_text(line + "\n", encoding="utf-8")
+    with pytest.raises(SystemExit, match="line 1"):
+        sa.parse_answers(path)

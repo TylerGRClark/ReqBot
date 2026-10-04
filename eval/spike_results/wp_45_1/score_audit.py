@@ -199,26 +199,31 @@ def sheet(args, key, labels, a_pairs, b_pairs, dis_a, dis_b, spot):
 
 
 def parse_answers(path):
-    """`R012 a: codex` | `R012 b: other wrong_sibling` | `R007 a: ok` | `R107 a: other needs_lead_in same_chunk`.
+    """`R012 a: codex` | `R012 b: other wrong_sibling` | `R007 a: ok` | `R107 a: other needs_lead_in same_chunk :: <text>`.
 
-    The pass letter is required (some ids are open in both passes). Returns {(id, pass): 'claude'|'codex'|'ok'|('other', [...])}.
+    The pass letter is required (some ids are open in both passes). Everything after ' :: ' is the verbatim lead-in
+    text to the end of the line, so it may contain '#'; a ' # comment' is only recognized before it. Returns
+    {(id, pass): 'claude'|'codex'|'ok'|('other', words, text)}.
     """
     ans = {}
     for n, line in enumerate(Path(path).read_text(encoding="utf-8").splitlines(), 1):
         if not line.strip() or line.lstrip().startswith("#"):
             continue
-        m = re.match(r"\s*(R\d{3})\s+([ab])\s*:\s*(\w+)\s*(.*?)\s*(?:#.*)?$", line)
+        head, sep, text = line.partition(" :: ")
+        head = re.sub(r"\s+#.*$", "", head).strip()
+        m = re.match(r"(R\d{3})\s+([ab])\s*:\s*(\w+)(?:\s+(.*))?$", head)
         if not m:
             sys.exit(f"{path} line {n}: cannot read {line!r} (expected `R012 a: codex`)")
         rid, p, kind, rest = m.groups()
         if kind == "other":
-            head, _, text = rest.partition(" :: ")
-            words, text = head.split(), text.strip() or None
+            words, text = (rest or "").split(), text.strip() or None
             problem = other_problem(p, words, text)
             if problem:
                 sys.exit(f"{path} line {n}: {problem} in {line.strip()!r}")
             ans[(rid, p)] = ("other", words, text)
         elif kind in ("claude", "codex", "ok"):
+            if rest or sep:
+                sys.exit(f"{path} line {n}: '{kind}' takes nothing after it, got {line.strip()!r}")
             ans[(rid, p)] = kind
         else:
             sys.exit(f"{path} line {n}: expected claude, codex, ok or other, got {kind!r}")
