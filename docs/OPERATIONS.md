@@ -1,267 +1,217 @@
-# ReqBot — Operations Runbook
+# Operations runbook
 
-Day-to-day procedures for running, developing, and maintaining a ReqBot deployment: rebuild/
-reindex steps, ingest recipes, common gotchas.
+[Documentation index](README.md) · [Deployment](DEPLOYMENT.md) · [CLI](CLI.md)
 
-**Scope note (WP-25.5):** this is a general runbook, not this-repo's-own private environment
-notes — every host/IP below is a placeholder (`<qdrant-host>`, `<ollama-host>`, etc.) for you to
-substitute with your own. It's illustrated throughout with one example split-host setup (Qdrant
-and Ollama each on their own machine, separate from where ReqBot itself runs) because that's a
-common real deployment shape, not because it's the only one — a single-machine setup works the
-same way with all placeholders pointing at `localhost`. It complements, not replaces, `README.md`'s
-"Install / Deployment" section (Docker, source/dev install, air-gapped transfer) — that section
-gets you installed; this one covers what you do afterward. (This repo's own actual environment
-values, for anyone working in this specific dev box, are recorded in the gitignored `CLAUDE.md`,
-not here — keeping this file free of anyone's specific infrastructure details since it's public.)
+This guide covers an installed deployment. Use `reqbot` from the active
+environment; `python3 cli/reqbot.py` is equivalent from a source checkout.
+See [Deployment](DEPLOYMENT.md) for installation and model preparation.
 
----
-
-## Environment Quick Facts
-
-| Thing | Detail |
-|---|---|
-| ReqBot host | `<dev-server-host>` — wherever `reqbot serve`/the CLI actually runs |
-| Ollama | `http://<ollama-host>:11434` — often a separate machine with a GPU |
-| Qdrant | `http://<qdrant-host>:6333` — often a separate host or container |
-| Processed JSONL | `~/documents/processed/` |
-| Config file | `~/.config/reqbot/config.json` |
-| Project root | `~/grc-ai-system/` |
-
----
-
-## Installing Python Dependencies (Debian/Ubuntu example)
-
-Debian/Ubuntu ship an externally-managed system Python by default — plain `pip install` refuses
-to touch it, so the packaged install (README's only supported path) needs `--break-system-packages`
-there specifically:
+## Check health and corpus state
 
 ```bash
-pip3 install --break-system-packages .
+reqbot status
+reqbot docs
+reqbot ask "Find requirements in my library"
 ```
 
-This flag is a Debian/Ubuntu packaging-policy quirk, not general ReqBot install guidance — most
-Python installs (a real venv, macOS, most other Linux setups) never need it. That's why it lives
-here and not in README.md.
+Check that Ollama and Qdrant are reachable and the configured model names are
+installed. A successful `status` exit code alone is not a health signal:
+the command returns 0 even when its output says a service is unreachable.
 
----
+`docs` reads the latest normalized artifacts under configured `processed_dir`.
+Search and trace exercise the live Qdrant index. Counts can differ after a
+failed index, an artifact-only ingest, or a partial reindex.
 
-## First-Run Setup
+For containers, prefix commands with `docker compose exec reqbot`.
+`localhost` inside a container refers to that container. Inspect effective
+settings through `GET /api/config` when URLs or paths are unexpected.
 
-New machine or fresh config: `python3 cli/reqbot.py init` — see README.md's "Setup" section
-for the full Qdrant/Ollama URL and synthesis (local/remote/none) walkthrough. Qdrant and Ollama
-must already be running before you run `init` — it configures URLs only, it does not install
-or manage either service. `reqbot setup` still works as a deprecated alias.
-
----
-
-## Starting the UI
-
-The compiled `reqbot` binary is stale — always use the Python source directly:
+## Ingest a document
 
 ```bash
-cd ~/grc-ai-system
-python3 cli/reqbot.py serve --host 0.0.0.0
+reqbot ingest /path/to/policy.pdf
+reqbot docs
+reqbot ask "A requirement topic from this PDF"
 ```
 
-If your dev environment runs behind a remote-workspace tool with its own port-forwarding layer
-(e.g. Coder, GitHub Codespaces), you'll need to forward port 8000 through that tool rather than
-hitting the host's IP directly — for example, in a Coder workspace using VS Code:
-1. `Ctrl+Shift+P` → **Forward a Port** → `8000`
-2. If the port was previously forwarded and is now hanging: `Ctrl+Shift+P` → **Stop Forwarding a Port** → `8000`, then re-add it
-3. Open `http://localhost:8000` in your browser
+Keep the original PDF and the complete output run directory. Default artifact
+directories are `<processed_dir>/<pdf_stem>_<YYYYMMDD>_<HHMMSS>/`.
+Use `--no-index` to inspect artifacts before indexing, or `--output-dir` for
+an explicitly managed run directory.
 
-> **Why not the host's own IP directly?** If your dev environment itself runs inside a container
-> (e.g. a Coder workspace that is itself a Docker container), that container's ports usually
-> aren't exposed to the host network at all — only whatever tunnel the remote-workspace tool
-> provides is. That tunnel is what makes `localhost:8000` on your local machine work.
+Read logs for rejected quotes, skipped enrichment, skipped entailment checks,
+and description-gate failures. See [Architecture](ARCHITECTURE.md) for artifacts
+and validation boundaries.
 
----
+On an Ollama host with GPU support, `ollama ps` or its API helps inspect model
+placement. This is independent of Docling's parsing work on the ReqBot host.
 
-## Using the CLI
+## Resume an interrupted run
 
-The compiled `reqbot` binary predates the current codebase. Use `python3 cli/reqbot.py` for everything:
-
-```bash
-cd ~/grc-ai-system
-
-# Interactive shell (Metasploit-style, tab-complete)
-python3 cli/reqbot.py
-
-# Single commands
-python3 cli/reqbot.py status
-python3 cli/reqbot.py docs
-python3 cli/reqbot.py ask "access control requirements"
-python3 cli/reqbot.py checklist --doc NIST.SP.800-61r3 --format xlsx --output /tmp/out.xlsx
-python3 cli/reqbot.py compare "AC-2"
-python3 cli/reqbot.py compare "encryption at rest" --markdown
-python3 cli/reqbot.py trace <requirement_id>
-python3 cli/reqbot.py evidence "incident response"
-```
-
-> When running `run_pipeline.py` directly (not via the CLI), always pass `--ollama-url http://<ollama-host>:11434` if Ollama runs on a separate machine. The default `localhost:11434` resolves to wherever ReqBot itself is running, not necessarily where Ollama runs.
-
----
-
-## Rebuilding the Frontend
-
-Requires Node.js 20 LTS or newer and npm on the PATH. Install Node 20+ using nvm, NodeSource, or
-an OS package source that actually provides Node 20+. On Ubuntu, the default `apt install nodejs
-npm` package may install Node 18, which is too old for ReqBot.
+Resume in the **same run directory** to retain Step C's prompt-hash cache.
+From a source checkout, use the original PDF:
 
 ```bash
-bash build/build-frontend.sh
-```
-
-The script checks for npm and a Node major version ≥20 up front and fails with a clear message
-if either is missing or too old — it does not search for or fall back to any other Node
-install. A successful build prints `[+] Frontend built → frontend/dist/`. The `dist/` folder is
-gitignored — it is a build artifact, not tracked in the repo.
-
-After rebuilding, **reload the browser tab** — the running server picks up new dist files immediately (no server restart needed).
-
----
-
-## Ingesting a New Document
-
-```bash
-cd ~/grc-ai-system
-
-python3 cli/reqbot.py ingest ~/path/to/doc.pdf \
-  --ollama-url http://<ollama-host>:11434
-```
-
-Ingestion always runs through Docling (structure-aware parsing; the earlier pymupdf/pdfplumber
-backends and `--layout-mode` flag were removed in WP-34.1) — this is what makes profile
-`skip_sections` filtering take effect on every ingest, not just some. It's slower on CPU
-(layout/table/OCR model inference) than the old fixed-size text split was, but exercises the full
-current pipeline.
-
-Output goes to `~/documents/processed/<doc_stem>_<timestamp>/`. Indexing (both
-`grc_requirements` and `grc_context`) runs automatically after extraction; add `--no-index`
-for artifact-only/debug runs.
-
-**Verifying GPU usage during ingestion:** Step C/D.5 extraction and enrichment run through
-Ollama. Confirm inference is actually using the GPU, not silently falling back to CPU:
-
-```bash
-curl http://<ollama-host>:11434/api/ps
-```
-
-For each loaded model, compare `size_vram` to `size`: `size_vram == size` means the model is
-fully resident in VRAM; `size_vram > 0` but less than `size` means only partial GPU offload.
-
-To resume a killed Step C job (do NOT start a new run — you lose the prompt hash cache):
-```bash
-python3 pipeline/run_pipeline.py \
-  ~/path/to/doc.pdf \
-  --output-dir ~/documents/processed/<existing_run_dir> \
+python3 pipeline/run_pipeline.py /path/to/policy.pdf \
+  --output-dir /path/to/existing_run \
   --skip-to C \
-  --ollama-url http://<ollama-host>:11434
+  --ollama-url http://localhost:11434 \
+  --extraction-model llama3.1:8b-instruct-q4_K_M \
+  --enrichment-model llama3.1:8b-instruct-q4_K_M
 ```
 
----
+Replace the URL and model names with those from the original run. The direct
+script has its own defaults; it does not inherit the CLI config for service
+URLs, model roles, or `processed_dir`. Its default output path is relative to
+the repository. Always specify the existing output directory for resume.
 
-## Rebuilding Qdrant from Existing JSONL
+| Resume option | Required existing artifacts / behavior |
+|---|---|
+| `--skip-to A` | Run all stages. |
+| `--skip-to B` | The parser runs to obtain the in-memory Docling document, then chunks again. |
+| `--skip-to C` | Existing matching chunks; extract or reuse valid cached responses. |
+| `--skip-to D` | Existing chunks and extracted requirements; normalize, reconstruct, enrich/check, and export. |
+| `--skip-to E` | Existing normalized requirements; aggregate without rerunning D.5/D.6. |
 
-`reindex` rebuilds **both** `grc_requirements` and `grc_context` from existing artifacts in
-`~/documents/processed/` without re-running extraction, using an atomic temp-collection +
-alias swap for each collection — the live index is never touched until indexing succeeds.
-Prefers `*_requirements_enriched.jsonl` over `*_requirements_normalized.jsonl` per document
-when both exist.
+The original PDF is still required because the script checks its existence and
+normalization uses its content identity. Changing model/prompt inputs can
+invalidate cached extraction work. Non-default profiles bypass Step C's cache;
+the direct script has no profile flag and uses `cybersecurity`.
+
+Other direct-script options are `--model` (sets both role models),
+`--max-chunks`, `--timeout` (per-request seconds, default 120),
+`--skip-enrichment`, `--skip-description-gate`, and `--qdrant-url`.
+The direct script does **not** index unless `--index` is supplied.
+Its `--index` path uses indexing-module defaults, so for a deployment with a
+custom embedding model, finish the resume and use configured `reqbot reindex`
+over its processed directory instead.
+
+Use `--skip-to D` to rerun validation/enrichment; `--skip-to E` selects normalized
+input and is not a shortcut for exporting an existing gated artifact.
+Preserve originals before a rerun if you need to compare outcomes.
+
+## Rebuild the search indexes
 
 ```bash
-python3 cli/reqbot.py reindex
+reqbot reindex
 ```
 
-For a faster requirements-only rebuild (skips the slower, CPU-bound context rebuild — useful
-when only requirement JSONL changed):
+This re-embeds existing artifacts with the configured embedding model, rebuilding
+requirements and source context. It does not rerun extraction or enrichment.
+
+Artifact selection is based on **modification times**, not directory timestamps:
+
+1. Group files by PDF stem and run directory.
+2. Choose the run whose requirement artifacts have the most recent modification.
+3. Within it, prefer gated, then enriched, then normalized, but skip a higher tier
+   if it is older than a lower tier.
+
+This prevents an old gated artifact from masking a more recent normalization
+rerun. The [shared resolver](../core/artifact_resolver.py) defines this rule.
+
+Each collection is built in a temporary collection. After successful indexing,
+its live alias is switched to the replacement; the old backing collection is
+removed. Requirements and context are rebuilt **sequentially**, not as one
+transaction. If requirements succeed and context fails, the new requirements
+remain live while old context remains live. Inspect logs and retry after fixing
+the context failure.
+
+Missing per-document chunks cause warnings and skips. Real context indexing
+errors abort that context replacement; if no context documents can be indexed,
+the command reports failure. Initial migration of a plain collection to an alias
+can create a brief availability gap.
+
+For an artifact-only requirements change with unchanged embeddings/context:
 
 ```bash
-python3 cli/reqbot.py reindex --requirements-only
+reqbot reindex --requirements-only
 ```
 
-Run after adding a new field to normalized/enriched JSONL, after a corpus refresh, or after
-restoring from backup.
+Do not use that shortcut after changing the embedding model: both indexes need
+the new vectors. Reindex excludes files outside configured `processed_dir`;
+an ingest using a separate `--output-dir` may need its artifacts moved into the
+managed library before a full rebuild.
 
-**After changing `embedding_model`:** this is also the recovery path. Every indexed point
-carries `embedding_model`/`embedding_dim` provenance in its Qdrant payload; `ask`/`compare`/
-`evidence` compare it against the currently configured model and surface a warning on mismatch
-(never a hard failure — a partially reindexed corpus is a valid, common state). `reindex`
-re-embeds every document with whichever model is currently configured and writes fresh
-provenance, clearing the warning across the corpus once complete.
-
-**Repair/debug:** to rebuild a single document's context chunks without a full reindex, use
-the low-level `index-context` command directly:
+### Single-file indexing
 
 ```bash
-python3 cli/reqbot.py index-context ~/documents/processed/<run_dir>/<doc_stem>_chunks.jsonl
+reqbot index /path/to/policy_requirements_gated.jsonl
+reqbot index-context /path/to/policy_chunks.jsonl \
+  --document-id CONTENT-HASH-FROM-REQUIREMENTS \
+  --source-pdf policy.pdf
 ```
 
----
+These commands directly upsert records. They do not promise removal of obsolete
+points left by earlier versions of a document. Prefer a full rebuild when you
+need the index to match the artifact library exactly.
+`--recreate` replaces an entire target collection; it is not a single-document
+cleanup option.
 
-## Nuking and Rebuilding the Qdrant Collections
+## Back up and restore
 
-Two different situations both start with "wipe the collections," but the recovery step differs:
+Back up original PDFs, all processed run directories, and the ReqBot config and
+authority registry. Qdrant can be rebuilt, but its snapshots can reduce recovery
+time when managed by your Qdrant deployment.
 
-- **Disaster recovery** (schema change, corruption, bad state) — rebuild from whatever JSONL
-  already exists in `~/documents/processed/` via `reqbot reindex`. No re-extraction; picks up
-  the latest run per document automatically.
-- **Genuine corpus refresh** (re-ingesting documents through an updated pipeline) — re-ingest
-  the documents you want refreshed via `reqbot ingest`/`reqbot batch` first. Indexing happens
-  as part of that ingest itself; no separate `reindex` step is needed for freshly ingested docs.
-  Only run `reindex` afterward if you also need to pick up *other* documents' existing JSONL
-  that weren't part of the refresh.
-
-To nuke, first inspect what actually exists — `grc_requirements` may be a plain collection or
-an alias pointing at a hash-suffixed backing collection (WP-24.2's alias-swap rebuild pattern),
-and the exact backing name changes every time the embedding config or a fresh reindex creates
-a new one, so don't hardcode a literal name:
+For default source-install paths, after a completed run:
 
 ```bash
-# 1. Check current state first
-python3 cli/reqbot.py status
-# or, for the raw collection/alias list:
-python3 -c "
-from qdrant_client import QdrantClient
-c = QdrantClient(url='http://<qdrant-host>:6333')
-print('collections:', [col.name for col in c.get_collections().collections])
-print('aliases:', [(a.alias_name, a.collection_name) for a in c.get_aliases().aliases])
-"
-
-# 2. Delete whatever collection name(s) that showed — for grc_requirements, delete the
-#    backing collection (not just the alias) if one exists; delete grc_context directly.
-curl -X DELETE http://<qdrant-host>:6333/collections/<backing_or_plain_name>
-curl -X DELETE http://<qdrant-host>:6333/collections/grc_context
-
-# 3. Rebuild — reindex from existing JSONL, or re-ingest for a genuine refresh (see above)
-python3 cli/reqbot.py reindex
+tar -czf reqbot-artifacts.tar.gz -C "$HOME" documents/processed .config/reqbot
+tar -tzf reqbot-artifacts.tar.gz
 ```
 
-> The first `reindex` after upgrading to WP-24.2 migrates `grc_context` from a plain collection
-> to an alias-backed one (a brief delete-then-alias-create window, same one-time cost
-> `grc_requirements` already pays if it's ever nuked back to a real collection). Every
-> `reindex` after that is a zero-downtime alias swap for both collections.
+Change the paths for custom deployments and back up PDFs separately. Quiesce
+artifact writers before taking a backup; copying files during ingestion can
+produce an inconsistent run. Archive tools should retain file modification
+times because the resolver relies on them.
 
----
-
-## Running Tests
+Restore into a staging directory first:
 
 ```bash
-cd ~/grc-ai-system
-python3 -m pytest tests/unit/ -q
+mkdir -p ~/reqbot-restore
+tar -xzf reqbot-artifacts.tar.gz -C ~/reqbot-restore
 ```
 
-Lint:
-```bash
-python3 -m ruff check .
-```
+Inspect the restored files, put them at the intended configured paths while
+preserving timestamps, verify model/service configuration, then run
+`reqbot reindex`, search, and trace. Restore Ollama models/caches separately if
+the replacement host cannot download them.
 
----
+For Compose, artifacts are in the host bind mount; Qdrant storage is a named
+volume. `docker compose down -v` deletes named volumes, so it is not a routine
+restart command for a library you intend to retain.
 
-## Common Gotchas
+## Update an installation
 
-- **`reqbot` binary is stale** — always use `python3 cli/reqbot.py`. The binary predates Phase 18 and does not have checklist, compare (updated), or any Phase 21+ commands.
-- **Ollama URL** — pipeline scripts default to `localhost:11434`, which only works if Ollama runs on the same machine as ReqBot. Always pass `--ollama-url http://<ollama-host>:11434` when running pipeline scripts directly if Ollama runs elsewhere.
-- **Step C resume** — re-running pipeline on the same PDF without `--output-dir` creates a new timestamped directory and loses the prompt hash cache. Use `--output-dir <old_dir> --skip-to C` to resume.
-- **Frontend not updating** — the browser caches aggressively. After a frontend rebuild, do a hard reload (`Ctrl+Shift+R`) if a normal reload doesn't show changes.
-- **Port forwarding stale** — if `http://localhost:8000` hangs, the VS Code port forward tunnel is stale. Stop and re-add port 8000 via `Ctrl+Shift+P`.
+For a source package, install the intended revision in the active environment.
+Rebuild the GUI before a non-editable package install so its package data includes
+the new frontend. For an editable development install, rebuilding updates the
+checkout's served files.
+
+For Docker, preserve mounts and file-only configuration, rebuild/recreate the
+ReqBot service, and verify status/search/trace afterward. Container replacement
+can lose unmounted model caches or config.
+
+A code upgrade does not automatically regenerate old extraction artifacts.
+Reindex updates vectors/payloads from existing files; re-ingest only when you
+intend to refresh extraction or validation outputs.
+
+## Troubleshooting
+
+| Symptom | Next check |
+|---|---|
+| `reqbot` runs an old version | Inspect `command -v reqbot` and `reqbot --version`; activate the intended environment/reinstall. |
+| System Python refuses pip installation | Use the virtual-environment source instructions in Deployment. |
+| Ollama model not found | Compare configured roles to `ollama list` on the configured service. |
+| Browser root returns no GUI | Build frontend before package install; API may still be available at `/api-docs`. |
+| Browser shows old frontend | Reload/hard-refresh; for a packaged install, rebuild and reinstall/recreate. |
+| Document listed, no search results | Check indexing logs, collection reachability, filters, and query topic. |
+| Trace has no context | Verify matching chunks exist and were indexed using the requirements' document_id. |
+| Reindex chose an unexpected run | Compare artifact modification times, including stale higher-tier files. |
+| Embedding mismatch or dimension error | Restore intended model settings or rebuild both indexes with the new model. |
+| Settings update returns 403 | The API requires a loopback client; container/proxy connections may not qualify. |
+| Offline ingest downloads/fails | Warm and transfer the missing assets, then repeat network-disabled qualification. |
+
+Remote workspace port forwarding is a separate layer from ReqBot's listener:
+forward port 8000 through that workspace tool, and inspect its tunnel if the
+server responds locally but your browser cannot connect.
