@@ -1,0 +1,165 @@
+#!/usr/bin/env python3
+"""WP-44.2 (measurement only): where do invented quotes and junk survivors come from?
+
+Reproduces the tables in docs/PHASE44_REQUIREMENTS.md section 12. Read-only on the corpus:
+it replays Step D into a temp directory (eval/step_d_replay.py), joins the result to
+eval/spike_results/wp_44/per_record.jsonl and each document's chunks, and writes
+eval/spike_results/wp_44_2/report.md.
+
+    python3 eval/wp_44_2_audit.py
+
+Needs the same inputs as the WP-44.1 replay (~/documents/processed run directories and
+raw_pdfs/), so it cannot run in CI. The hand labels for the 60-record sample live in
+eval/spike_results/wp_44_2/sample_labels.md, keyed by quote text.
+"""
+import collections
+import glob
+import hashlib
+import json
+import os
+import random
+import re
+import sys
+import tempfile
+from pathlib import Path
+
+_ROOT = Path(__file__).resolve().parent.parent
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+
+from core.profiles import load_profile  # noqa: E402
+from eval import step_d_replay  # noqa: E402
+
+EVIDENCE = _ROOT / "eval" / "spike_results" / "wp_44"
+OUT = _ROOT / "eval" / "spike_results" / "wp_44_2"
+PROCESSED = Path(os.path.expanduser("~/documents/processed"))
+SAMPLE_SEED = 2026
+BUCKETS = [(0, 60), (60, 150), (150, 400), (400, 10**9)]
+
+VERBS = load_profile("cybersecurity")["obligation_verbs"]
+VERB_RE = re.compile(r"\b(" + "|".join(re.escape(v) for v in VERBS) + r")\b", re.I)
+LIST_MARK = re.compile(r"^\s*[-•*]?\s*(\(?[0-9a-z]{1,3}[\.\)]|\d+(\.\d+)+\.?)\s", re.I | re.M)
+
+
+def _one(pattern: str) -> str:
+    """Exactly one match, or fail loudly -- a silently skipped document would shrink the corpus."""
+    matches = glob.glob(pattern)
+    if len(matches) != 1:
+        raise RuntimeError(f"expected exactly one file for {pattern!r}, found {len(matches)}")
+    return matches[0]
+
+
+def _load_jsonl(path: str) -> list[dict]:
+    with open(path, encoding="utf-8") as fh:
+        return [json.loads(line) for line in fh if line.strip()]
+
+
+def pinned_runs(manifest: dict) -> dict[str, Path]:
+    """The manifest's exact run directories, with chunk and extraction hashes verified.
+
+    Replaying "the latest run" instead would silently mix datasets once a newer ingest appears,
+    while `records` and the chunk tables here come from the recorded corpus.
+    """
+    runs = {}
+    for doc, m in manifest["documents"].items():
+        run = PROCESSED / m["run_dir"]
+        for key, pattern in (("chunks_sha256", "*_chunks.jsonl"), ("extracted_sha256", "*_extracted_requirements.jsonl")):
+            path = _one(str(run / pattern))
+            actual = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+            if actual != m[key]:
+                raise RuntimeError(f"{doc}: {key} differs from the recorded manifest ({path})")
+        runs[doc] = run
+    return runs
+
+
+def band(n: int) -> str:
+    for lo, hi in BUCKETS:
+        if lo <= n < hi:
+            return f"{lo}-{hi if hi < 10**9 else 'inf'}"
+    return "?"
+
+
+def main() -> None:
+    OUT.mkdir(parents=True, exist_ok=True)
+    manifest = json.loads((EVIDENCE / "manifest.json").read_text())
+    records = _load_jsonl(str(EVIDENCE / "per_record.jsonl"))
+    runs = pinned_runs(manifest)  # fail before any analysis if the inputs are not the recorded ones
+
+    # --- per-chunk yield: real = survived Step D and not invented (the 44.1 check now rejects the leaks)
+    real, raw, invented = collections.Counter(), collections.Counter(), collections.Counter()
+    for r in records:
+        k = (r["document"], r["chunk_id"])
+        raw[k] += 1
+        invented[k] += r["category"] == "invented"
+        real[k] += r["step_d_disposition"] == "survived_step_d" and r["category"] != "invented"
+
+    chunk_rows = collections.defaultdict(collections.Counter)
+    tiny_rule = collections.defaultdict(collections.Counter)
+    total_chunks = 0
+    chunks_by_doc = {}
+    for doc, m in manifest["documents"].items():
+        chunks = _load_jsonl(_one(str(PROCESSED / m["run_dir"] / "*_chunks.jsonl")))
+        chunks_by_doc[doc] = {c["chunk_id"]: c for c in chunks}
+        for c in chunks:
+            total_chunks += 1
+            body = (c.get("raw_text") or c["text"]).strip()
+            k = (doc, c["chunk_id"])
+            s = chunk_rows[band(len(body))]
+            s["chunks"] += 1
+            s["with_verb"] += bool(VERB_RE.search(body))
+            s["got_quote"] += raw[k] > 0
+            s["yielded_real"] += real[k] > 0
+            s["real_quotes"] += real[k]
+            s["invented_quotes"] += invented[k]
+            if len(body) < 150:
+                sig = ("body_verb" if VERB_RE.search(body) else "-") + "/" + \
+                      ("hdr_verb" if VERB_RE.search(c.get("parent_header_text") or "") else "-") + "/" + \
+                      ("list_marker" if LIST_MARK.search(body) else "-")
+                t = tiny_rule[sig]
+                t["chunks"] += 1
+                t["real_quotes"] += real[k]
+                t["invented_quotes"] += invented[k]
+
+    # --- survivors: replay Step D (post-WP-44.1 code) into a temp dir
+    with tempfile.TemporaryDirectory() as tmp:
+        step_d_replay.run_replay("wp44_2_audit", Path(tmp), runs=runs)
+        survivors = []
+        for doc in manifest["documents"]:
+            for r in _load_jsonl(_one(f"{tmp}/{doc}/*_requirements_normalized.jsonl")):
+                c = chunks_by_doc[doc].get(r.get("chunk_id")) or {}
+                survivors.append({"doc": doc, "cid": r["chunk_id"], "q": r["source_quote"],
+                                  "hdr": c.get("parent_header_text") or ""})
+
+    flags = collections.Counter()
+    for s in survivors:
+        q = s["q"]
+        flags["short<40"] += len(q) < 40
+        flags["short<40 and starts lowercase"] += len(q) < 40 and q[:1].islower()
+        flags["40-59 and starts lowercase"] += 40 <= len(q) < 60 and q[:1].islower()
+        flags["no obligation verb in quote or parent header"] += not VERB_RE.search(q) and not VERB_RE.search(s["hdr"])
+    random.seed(SAMPLE_SEED)
+    sample = random.sample(survivors, 60)
+
+    lines = ["# WP-44.2 audit (generated by eval/wp_44_2_audit.py; do not hand-edit)\n",
+             f"{total_chunks} chunks, {len(survivors)} survivors across {len(manifest['documents'])} documents.\n",
+             "## Chunks by body length: who yields real requirements, who gets invented ones\n",
+             "| body chars | chunks | with obligation verb | LLM returned a quote | yielded real | real quotes | invented quotes |",
+             "|---|---|---|---|---|---|---|"]
+    for lo, hi in BUCKETS:
+        g = band(lo)
+        s = chunk_rows[g]
+        lines.append(f"| {g} | {s['chunks']} | {s['with_verb']} | {s['got_quote']} | {s['yielded_real']} | {s['real_quotes']} | {s['invented_quotes']} |")
+    lines += ["\n## Chunks under 150 chars, by cheap signals (body verb / parent-header verb / list marker)\n",
+              "| signals | chunks | real quotes | invented quotes |", "|---|---|---|---|"]
+    for sig, t in sorted(tiny_rule.items()):
+        lines.append(f"| {sig} | {t['chunks']} | {t['real_quotes']} | {t['invented_quotes']} |")
+    lines += ["\n## Survivor signals (sampling hints, not rejection rules)\n"]
+    lines += [f"- {k}: {v}" for k, v in flags.items()]
+    lines += [f"\n## Random sample of 60 survivors (seed {SAMPLE_SEED}); hand labels in sample_labels.md\n"]
+    lines += [f"{i:2d}. [{s['doc']} c{s['cid']}] {s['q'][:170]}" for i, s in enumerate(sample, 1)]
+    (OUT / "report.md").write_text("\n".join(lines) + "\n")
+    print("\n".join(lines[:30]))
+
+
+if __name__ == "__main__":
+    main()
