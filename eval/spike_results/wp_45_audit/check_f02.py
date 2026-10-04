@@ -1,4 +1,4 @@
-"""WP-45 audit verification (read-only). See eval/spike_results/wp_45_audit/README.md."""
+"""F02 repro: a failed Ollama request becomes a permanent cache hit on resume."""
 
 import sys
 from pathlib import Path
@@ -6,13 +6,9 @@ from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[3]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
-"""F02 repro: a failed Ollama request becomes a permanent cache hit on resume."""
 import json
-import sys
 import tempfile
-from pathlib import Path
 
-pass
 from unittest import mock
 import requests
 from pipeline import llm_extract_requirements as L

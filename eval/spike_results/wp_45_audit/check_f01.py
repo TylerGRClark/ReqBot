@@ -1,4 +1,4 @@
-"""WP-45 audit verification (read-only). See eval/spike_results/wp_45_audit/README.md."""
+"""F01 repro with the REAL HybridChunker: does _chunk_raw_text undo the chunker's split of one oversized item?"""
 
 import sys
 from pathlib import Path
@@ -6,11 +6,8 @@ from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[3]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
-"""F01 repro with the REAL HybridChunker: does _chunk_raw_text undo the chunker's split of one oversized item?"""
-import sys
 import logging
 
-pass
 logging.disable(logging.CRITICAL)
 from docling_core.types.doc import DoclingDocument, DocItemLabel
 from docling.chunking import HybridChunker

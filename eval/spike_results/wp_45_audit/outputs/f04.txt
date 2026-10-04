@@ -1,5 +1,6 @@
 probe1 same-chunk: 'Backups shall include:'
 probe2 cross-section: 'Backup administrators shall:'
+inputs: 13 pinned documents; chunks, extracted, normalized found by exact name, sha256 matches the WP-44 manifest (normalized for DODI 5200.48, afi10-2402 excepted: edited by WP-44.1)
 
 normalized records=1847; reconstruction candidates=839
 attachment method: {'cross-chunk': 59, 'no stem': 636, 'same-chunk': 142, 'heading-fallback': 2}

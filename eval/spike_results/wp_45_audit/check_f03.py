@@ -1,4 +1,4 @@
-"""WP-45 audit verification (read-only). See eval/spike_results/wp_45_audit/README.md."""
+"""F03: the report's dedup probe, the dedup score arithmetic, and how many Step C records the dedup keys collapse."""
 
 import sys
 from pathlib import Path
@@ -6,16 +6,14 @@ from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[3]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
-import sys
 import json
 import glob
 import os
 import collections
 import logging
 
-pass
 logging.disable(logging.CRITICAL)
-from core import config as _config
+from _inputs import corpus_inputs
 from pipeline.parse_and_normalize import (
     deduplicate_requirements,
     normalize_text,
@@ -49,21 +47,12 @@ print(
 )
 
 # --- prevalence on the 13 pinned runs: Step C output, grouped the way dedup keys them
-man = json.load(open(str(_ROOT / "eval/spike_results/wp_44/manifest.json")))["documents"]
-P = str(_config.load().processed_dir_path())
+inputs = corpus_inputs("chunks", "extracted")
 tot = merged_same = merged_cross = merged_cross_scope = 0
 examples = []
-for doc, m in man.items():
-    d = f"{P}/{m['run_dir']}"
-    chunks = {
-        c["chunk_id"]: c
-        for c in (json.loads(l) for l in open(glob.glob(d + "/*_chunks.jsonl")[0]) if l.strip())
-    }
-    reqs = [
-        json.loads(l)
-        for l in open(glob.glob(d + "/*_extracted_requirements.jsonl")[0])
-        if l.strip()
-    ]
+for doc, files in inputs.items():
+    chunks = {c["chunk_id"]: c for c in (json.loads(l) for l in open(files["chunks"]) if l.strip())}
+    reqs = [json.loads(l) for l in open(files["extracted"]) if l.strip()]
     tot += len(reqs)
     groups = collections.defaultdict(list)
     for r in reqs:

@@ -496,9 +496,14 @@ ACTIVE BACKLOG
     survivors (9.6%) are not contiguous substrings of their chunk. Of 7
     sampled, 3 were legitimate stem+item stitches, 3 were formatting, and 1
     dropped a content word ("specific work role that" became "specific work
-    that") and passed at alignment 98. A scan for negation words dropped from
-    any non-contiguous quote found none. Planned as a flag-only detector sent
-    to the Phase 45 review state (WP-45.9), not a rejection rule. Evidence:
+    that") and passed at alignment 98. A heuristic scan found no excess negation
+    words inside the source span aligned to any non-contiguous quote. It cannot
+    see a dropped negation in a contiguous quote ("Share passwords." from "Do
+    not share passwords.") or one outside the aligned span, so an omitted
+    governing negation is unmeasured, not absent (Codex review of PR #201). A
+    real detector needs source-clause context; keep those two examples as
+    challenge cases. Planned as a flag-only detector sent to the Phase 45
+    review state (WP-45.9), not a rejection rule. Evidence:
     eval/spike_results/wp_45_audit/check_f07.py.
 
 35. Dangling fragments are indexed bare or under a wrong parent, and are not
@@ -569,7 +574,11 @@ ACTIVE BACKLOG
     backing collection. One failed embedding during a reindex would therefore
     replace a complete live index with an incomplete one. Nothing is wrong
     today: the live index reconciles exactly with the resolved artifacts (1,845
-    expected, 1,845 live, 0 missing, 0 stale). Plan: a strict mode that raises
+    expected, 1,845 live, 0 missing, 0 stale). That checks recorded point
+    identity only, not payloads, vectors or extraction completeness. The 13
+    pinned documents' normalized tier holds 1,847 records, not 1,845: the 2
+    afi17-203 records quarantined in WP-42 stay there but are absent from the
+    selected gated file and from Qdrant. Plan: a strict mode that raises
     on any embedding failure, used by reindex, and a refusal to swap on
     incomplete coverage; failure-injection tests. Evidence:
     eval/spike_results/wp_45_audit/check_reconcile.py.
@@ -583,9 +592,13 @@ ACTIVE BACKLOG
     transport (check_f02.py); 0 of 839 chunks in the 13 pinned runs failed, so
     nothing is missing today. Most likely to bite a first-time user on CPU-only
     Ollama (the 120 s timeout). Plan: a chunk counts as complete only when its
-    response parsed (a valid empty array counts), write the raw record last,
-    include chunk_id in the cache key. One-time cost: caches of existing run
-    directories stop matching.
+    response parsed completely and its output is durable (a valid empty array
+    counts), write the raw record last, include chunk_id in the cache key.
+    Open design points (Codex review of PR #201): Step C also recovers objects
+    from a truncated array, which is some recovered JSON, not a complete
+    response; and writing the raw record last does not make a retry idempotent
+    (a crash after the requirements write would append that chunk's rows
+    twice). One-time cost: caches of existing run directories stop matching.
 
 40. [DEFERRED -- Tyler, 2026-10-04] Split paragraphs are re-expanded into
     duplicate chunks (audit F01)
@@ -639,9 +652,13 @@ ACTIVE BACKLOG
     a fragment such as "(2) Retain visitor logs." appears with no governing
     clause. Proposed: a governing-clause column plus an "unresolved context"
     flag. Deferred because showing today's stems would surface the wrong ones
-    (item 35), and it may largely solve itself once stem accuracy improves.
-    Revisit after Phase 45 WP-45.2 C1. It is an additive export change
-    affecting the CLI, API, GUI and MCP outputs.
+    (item 35). Better stems will not change checklist output by themselves:
+    the item builder copies only source_quote (not parent_stem, embedding_text
+    or description), so after attachment validation, exposing verified
+    governing context still needs this additive change, with supplied context
+    kept visibly separate from the quoted text (Codex review of PR #201).
+    Revisit after Phase 45 WP-45.2 C1. It affects the CLI, API, GUI and MCP
+    outputs.
 
 45. Hosted LLM providers for the pipeline roles (Tyler wants this eventually)
     Today only answer synthesis can use Anthropic or OpenAI; extraction,

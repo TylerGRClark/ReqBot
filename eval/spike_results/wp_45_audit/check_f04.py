@@ -1,4 +1,4 @@
-"""WP-45 audit verification (read-only). See eval/spike_results/wp_45_audit/README.md."""
+"""F04: the report's two stem probes, then attachment method counts and cross-section checks on the corpus."""
 
 import sys
 from pathlib import Path
@@ -6,7 +6,6 @@ from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[3]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
-import sys
 import json
 import glob
 import os
@@ -14,10 +13,8 @@ import re
 import collections
 import logging
 
-pass
 logging.disable(logging.CRITICAL)
-from pathlib import Path
-from core import config as _config
+from _inputs import corpus_inputs
 from pipeline import enrich_requirements as E
 from pipeline.parse_and_normalize import normalize_text
 
@@ -54,19 +51,17 @@ print(
     ),
 )
 
-man = json.load(open(str(_ROOT / "eval/spike_results/wp_44/manifest.json")))["documents"]
-P = str(_config.load().processed_dir_path())
+inputs = corpus_inputs("chunks", "extracted", "normalized")
 meth = collections.Counter()
 xs_total = xs_mismatch = 0
 flagged = []
 cand = 0
 recs_total = 0
 xs_rows = []
-for doc, m in man.items():
-    d = Path(f"{P}/{m['run_dir']}")
-    norm = glob.glob(str(d / "*_requirements_normalized.jsonl"))[0]
+for doc, files in inputs.items():
+    norm = files["normalized"]
     reqs = [json.loads(l) for l in open(norm) if l.strip()]
-    sc, cb = E._load_reconstruction_sources(Path(norm))
+    sc, cb = E._load_reconstruction_sources(norm)
     recs_total += len(reqs)
     for r in reqs:
         q = (r.get("source_quote") or "").strip()

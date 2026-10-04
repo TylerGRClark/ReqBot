@@ -1,4 +1,8 @@
-"""WP-45 audit verification (read-only). See eval/spike_results/wp_45_audit/README.md."""
+"""F07: polarity probe on quote_word_coverage, non-contiguous quote count, and a heuristic negation scan.
+
+The scan is one-sided: it cannot see a dropped negation in a contiguous quote or one outside the aligned span
+(e.g. quote "Share passwords." from source "Do not share passwords."), so its zero is not "no dropped negations".
+"""
 
 import sys
 from pathlib import Path
@@ -6,16 +10,14 @@ from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[3]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
-import sys
 import json
 import glob
 import os
 import re
 import logging
 
-pass
 logging.disable(logging.CRITICAL)
-from core import config as _config
+from _inputs import corpus_inputs
 from rapidfuzz import fuzz
 from pipeline.parse_and_normalize import normalize_text, quote_word_coverage
 
@@ -26,18 +28,13 @@ print(
 )
 # contractions ("isn't") need their own branch: a leading \b cannot match before the "n"
 NEG = re.compile(r"\b(?:not|no|never|cannot|neither|nor|without|prohibited)\b|(?<=\w)n['’]t\b")
-man = json.load(open(str(_ROOT / "eval/spike_results/wp_44/manifest.json")))["documents"]
-P = str(_config.load().processed_dir_path())
+inputs = corpus_inputs("chunks", "normalized")
 tot = noncontig = neg_dropped = 0
 ex = []
 noncontig_ex = []
-for doc, m in man.items():
-    d = f"{P}/{m['run_dir']}"
-    chunks = {
-        c["chunk_id"]: c
-        for c in (json.loads(l) for l in open(glob.glob(d + "/*_chunks.jsonl")[0]) if l.strip())
-    }
-    for l in open(glob.glob(d + "/*_requirements_normalized.jsonl")[0]):
+for doc, files in inputs.items():
+    chunks = {c["chunk_id"]: c for c in (json.loads(l) for l in open(files["chunks"]) if l.strip())}
+    for l in open(files["normalized"]):
         r = json.loads(l)
         c = chunks.get(r.get("chunk_id"))
         q = normalize_text(r.get("source_quote", ""))
@@ -67,3 +64,8 @@ for e in noncontig_ex:
     print("  non-contiguous e.g.", e)
 for e in ex:
     print("  possible dropped negation:", e)
+print(
+    "  LIMIT: this heuristic only looks at non-contiguous quotes, and only inside the span RapidFuzz aligns to the quote."
+    "\n  A quote that is a contiguous substring, or whose omitted negation lies outside that span, is not seen."
+    "\n  So 0 here means no excess negation tokens in those spans; an omitted governing negation is unmeasured."
+)
