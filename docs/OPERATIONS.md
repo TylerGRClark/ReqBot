@@ -78,6 +78,13 @@ normalization uses its content identity. Changing model/prompt inputs can
 invalidate cached extraction work. Non-default profiles bypass Step C's cache;
 the direct script has no profile flag and uses `cybersecurity`.
 
+On resume, Step C redoes any chunk whose request failed or whose answer could not
+be parsed, and skips chunks it finished. If a chunk's answer is cut off at the
+output limit, Step C retries it once with a larger allowance that still fits the
+context window; if it is still cut off, the requirements recovered so far are kept
+and the chunk is not retried. The end-of-run log lists chunks that failed (run
+again to retry them) and chunks that may be missing requirements.
+
 Other direct-script options are `--model` (sets both role models),
 `--max-chunks`, `--timeout` (per-request seconds, default 120),
 `--skip-enrichment`, `--skip-description-gate`, and `--qdrant-url`.

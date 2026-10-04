@@ -583,22 +583,35 @@ ACTIVE BACKLOG
     incomplete coverage; failure-injection tests. Evidence:
     eval/spike_results/wp_45_audit/check_reconcile.py.
 
-39. [PLANNED -- Phase 45, WP-45.0.2] Failed Step C requests are treated as
+39. [DONE -- Phase 45, WP-45.0.2] Failed Step C requests were treated as
     completed work on resume (audit F02)
-    process_chunk stores the prompt hash even when the Ollama request failed
-    (raw_response "ERROR: ...") or the output did not parse, and run() loads
-    every stored hash as a cache hit, so a resume skips the chunk and its
-    requirements are lost. Reproduced with the real run() and a mocked
+    process_chunk stored the prompt hash even when the Ollama request failed
+    (raw_response "ERROR: ...") or the output did not parse, and run() loaded
+    every stored hash as a cache hit, so a resume skipped the chunk and its
+    requirements were lost. Reproduced with the real run() and a mocked
     transport (check_f02.py); 0 of 839 chunks in the 13 pinned runs failed, so
-    nothing is missing today. Most likely to bite a first-time user on CPU-only
-    Ollama (the 120 s timeout). Plan: a chunk counts as complete only when its
-    response parsed completely and its output is durable (a valid empty array
-    counts), write the raw record last, include chunk_id in the cache key.
-    Open design points (Codex review of PR #201): Step C also recovers objects
-    from a truncated array, which is some recovered JSON, not a complete
-    response; and writing the raw record last does not make a retry idempotent
-    (a crash after the requirements write would append that chunk's rows
-    twice). One-time cost: caches of existing run directories stop matching.
+    nothing was missing. Shipped: each raw record carries a status (complete,
+    truncated, failed); resume skips complete and truncated chunks and retries
+    failed ones; the cache is keyed by chunk_id as well as prompt hash; the raw
+    record is written last as the completion marker, and a chunk about to be
+    redone has its earlier rows removed, so a crash between the writes cannot
+    duplicate requirements. Records written before the change are classified
+    from their stored response, so resuming an old run costs nothing: all 13
+    pinned run directories resume with 0 LLM calls, and replaying their
+    recorded answers reproduces the requirements, failures and raw responses
+    byte for byte.
+    The output allowance (num_predict 4096) is our own setting, not an Ollama
+    limit: 6000 tokens was generated under the same 8192 window (2026-10-04).
+    The real ceiling is the window shared by prompt and answer; past it Ollama
+    does not stop or error. A cut-off answer (Ollama done_reason "length", or
+    JSON recoverable only by truncation recovery) now gets one retry sized from
+    the prompt (window - prompt - 64, with a proportionally longer timeout); if
+    still cut off, the recovered requirements are kept, flagged
+    recovered_truncated, named in the end-of-run log, and not retried. Largest
+    answer in the corpus was about 570 tokens (14% of the allowance), and 0 of
+    839 chunks were ever cut off, so the retry has not been exercised on real
+    data. Not examined: Step D.5 enrichment has its own 4096 allowance with no
+    truncation handling.
 
 40. [DEFERRED -- Tyler, 2026-10-04] Split paragraphs are re-expanded into
     duplicate chunks (audit F01)
