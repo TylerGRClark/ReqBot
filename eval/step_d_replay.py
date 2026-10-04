@@ -96,7 +96,7 @@ def replay_one(stem: str, run_dir: Path, out_root: Path, profile: dict) -> dict:
     }
 
 
-def run_replay(label: str, out: Path) -> dict:
+def run_replay(label: str, out: Path, runs: dict[str, Path] | None = None) -> dict:
     from core.profiles import load_profile
 
     out.mkdir(parents=True, exist_ok=True)
@@ -106,7 +106,7 @@ def run_replay(label: str, out: Path) -> dict:
                                 cwd=_ROOT, capture_output=True, text=True).stdout.strip())
     summary = {"label": label, "git_revision": rev, "pipeline_or_core_dirty": dirty,
                "profile": "cybersecurity", "documents": {}}
-    selected = select_runs()
+    selected = runs if runs is not None else select_runs()  # `runs` pins exact inputs (e.g. from a manifest)
     missing = sorted(stem for stem in selected if not (RAW_PDFS / f"{stem}.pdf").exists())
     if missing:
         # A silently skipped document would shrink the evaluated corpus in both arms alike.

@@ -14,6 +14,7 @@ eval/spike_results/wp_44_2/sample_labels.md, keyed by quote text.
 """
 import collections
 import glob
+import hashlib
 import json
 import os
 import random
@@ -40,6 +41,37 @@ VERB_RE = re.compile(r"\b(" + "|".join(re.escape(v) for v in VERBS) + r")\b", re
 LIST_MARK = re.compile(r"^\s*[-•*]?\s*(\(?[0-9a-z]{1,3}[\.\)]|\d+(\.\d+)+\.?)\s", re.I | re.M)
 
 
+def _one(pattern: str) -> str:
+    """Exactly one match, or fail loudly -- a silently skipped document would shrink the corpus."""
+    matches = glob.glob(pattern)
+    if len(matches) != 1:
+        raise RuntimeError(f"expected exactly one file for {pattern!r}, found {len(matches)}")
+    return matches[0]
+
+
+def _load_jsonl(path: str) -> list[dict]:
+    with open(path, encoding="utf-8") as fh:
+        return [json.loads(line) for line in fh if line.strip()]
+
+
+def pinned_runs(manifest: dict) -> dict[str, Path]:
+    """The manifest's exact run directories, with chunk and extraction hashes verified.
+
+    Replaying "the latest run" instead would silently mix datasets once a newer ingest appears,
+    while `records` and the chunk tables here come from the recorded corpus.
+    """
+    runs = {}
+    for doc, m in manifest["documents"].items():
+        run = PROCESSED / m["run_dir"]
+        for key, pattern in (("chunks_sha256", "*_chunks.jsonl"), ("extracted_sha256", "*_extracted_requirements.jsonl")):
+            path = _one(str(run / pattern))
+            actual = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+            if actual != m[key]:
+                raise RuntimeError(f"{doc}: {key} differs from the recorded manifest ({path})")
+        runs[doc] = run
+    return runs
+
+
 def band(n: int) -> str:
     for lo, hi in BUCKETS:
         if lo <= n < hi:
@@ -50,7 +82,8 @@ def band(n: int) -> str:
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     manifest = json.loads((EVIDENCE / "manifest.json").read_text())
-    records = [json.loads(line) for line in (EVIDENCE / "per_record.jsonl").read_text().splitlines()]
+    records = _load_jsonl(str(EVIDENCE / "per_record.jsonl"))
+    runs = pinned_runs(manifest)  # fail before any analysis if the inputs are not the recorded ones
 
     # --- per-chunk yield: real = survived Step D and not invented (the 44.1 check now rejects the leaks)
     real, raw, invented = collections.Counter(), collections.Counter(), collections.Counter()
@@ -65,7 +98,7 @@ def main() -> None:
     total_chunks = 0
     chunks_by_doc = {}
     for doc, m in manifest["documents"].items():
-        chunks = [json.loads(line) for line in open(glob.glob(str(PROCESSED / m["run_dir"] / "*_chunks.jsonl"))[0])]
+        chunks = _load_jsonl(_one(str(PROCESSED / m["run_dir"] / "*_chunks.jsonl")))
         chunks_by_doc[doc] = {c["chunk_id"]: c for c in chunks}
         for c in chunks:
             total_chunks += 1
@@ -89,15 +122,13 @@ def main() -> None:
 
     # --- survivors: replay Step D (post-WP-44.1 code) into a temp dir
     with tempfile.TemporaryDirectory() as tmp:
-        step_d_replay.run_replay("wp44_2_audit", Path(tmp))
+        step_d_replay.run_replay("wp44_2_audit", Path(tmp), runs=runs)
         survivors = []
         for doc in manifest["documents"]:
-            for f in glob.glob(f"{tmp}/{doc}/*_requirements_normalized.jsonl"):
-                for line in open(f):
-                    r = json.loads(line)
-                    c = chunks_by_doc[doc].get(r.get("chunk_id")) or {}
-                    survivors.append({"doc": doc, "cid": r["chunk_id"], "q": r["source_quote"],
-                                      "hdr": c.get("parent_header_text") or ""})
+            for r in _load_jsonl(_one(f"{tmp}/{doc}/*_requirements_normalized.jsonl")):
+                c = chunks_by_doc[doc].get(r.get("chunk_id")) or {}
+                survivors.append({"doc": doc, "cid": r["chunk_id"], "q": r["source_quote"],
+                                  "hdr": c.get("parent_header_text") or ""})
 
     flags = collections.Counter()
     for s in survivors:

@@ -150,3 +150,14 @@ def test_replay_fails_when_a_selected_document_has_no_pdf(tmp_path, monkeypatch)
     monkeypatch.setattr(replay, "RAW_PDFS", tmp_path / "no_pdfs_here")
     with pytest.raises(RuntimeError, match="has_no_pdf"):
         replay.run_replay("test", tmp_path / "out")
+
+
+def test_replay_uses_pinned_runs_and_ignores_the_latest_run_selection(tmp_path, monkeypatch):
+    # The WP-44.2 audit pins the manifest's exact runs; a newer ingest must not be picked up.
+    def boom():
+        raise AssertionError("select_runs() must not be consulted when runs are pinned")
+
+    monkeypatch.setattr(replay, "select_runs", boom)
+    monkeypatch.setattr(replay, "RAW_PDFS", tmp_path / "no_pdfs_here")
+    with pytest.raises(RuntimeError, match="pinned_doc"):  # reached the PDF check using the pinned runs
+        replay.run_replay("test", tmp_path / "out", runs={"pinned_doc": tmp_path})
