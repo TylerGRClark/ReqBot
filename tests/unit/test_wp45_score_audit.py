@@ -140,3 +140,24 @@ def test_policy_resolves_every_disagreement_to_one_labeler(sa):
     ra, rb, unresolved, *_ = sa.resolve(a_pairs, b_pairs, dis_a, dis_b, spot, {}, "codex")
     assert unresolved == []
     assert ra["R001"][1] == "previous_chunk" and rb["R001"] == "fragment_chain"
+
+
+def test_ok_on_a_disputed_item_is_an_error_not_a_silent_default(sa):
+    a_pairs, b_pairs, dis_a, dis_b, spot = _setup()
+    with pytest.raises(SystemExit, match="disputed"):
+        sa.resolve(
+            a_pairs, b_pairs, dis_a, dis_b, spot, {("R001", "a"): "ok", ("R001", "b"): "claude"}
+        )
+
+
+def test_answers_for_missing_items_or_agreed_items_are_rejected(sa):
+    a_pairs, b_pairs, dis_a, dis_b, spot = _setup()
+    full = {("R001", "a"): "codex", ("R001", "b"): "claude"}
+    with pytest.raises(SystemExit, match="do not exist"):
+        sa.resolve(a_pairs, b_pairs, dis_a, dis_b, spot, {**full, ("R999", "a"): "codex"})
+    with pytest.raises(SystemExit, match="do not exist"):
+        sa.resolve(
+            a_pairs, b_pairs, dis_a, dis_b, spot, {**full, ("R002", "b"): "ok"}
+        )  # R002 has no pass B
+    with pytest.raises(SystemExit, match="agreed by both"):
+        sa.resolve(a_pairs, b_pairs, dis_a, dis_b, spot, {**full, ("R002", "a"): "codex"})

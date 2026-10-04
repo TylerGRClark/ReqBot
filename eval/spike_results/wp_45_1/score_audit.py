@@ -256,12 +256,28 @@ def resolve(a_pairs, b_pairs, dis_a, dis_b, spot, answers, policy=None):
     unresolved, spot_changes, corrections = [], [], []
     spot_set = set(spot)
 
+    # An answer must name an item that exists in that pass; anything else is a typo, not an adjudication.
+    valid = {(rid, "a") for rid in a_pairs} | {(rid, "b") for rid in b_pairs}
+    stray = sorted(k for k in answers if k not in valid)
+    if stray:
+        sys.exit(f"answers for items that do not exist in that pass: {stray}")
+
     def pick_for(rid, p, disputed):
-        if disputed:
-            return policy or answers.get((rid, p))
         a = answers.get((rid, p))
+        if disputed:
+            if policy:
+                return policy
+            if a == "ok":
+                sys.exit(
+                    f"{rid} pass {p} is disputed but the answer is 'ok'; name claude, codex or other"
+                )
+            return a
         if a is None or a == "ok":
             return None
+        if a in ("claude", "codex"):
+            sys.exit(
+                f"{rid} pass {p} was agreed by both labelers; '{a}' is not an answer for it (use ok or other)"
+            )
         (spot_changes if (rid, p) in spot_set else corrections).append((rid, p))
         return a
 
