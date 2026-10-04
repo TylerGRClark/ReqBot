@@ -30,8 +30,8 @@ For each card in `pack_a.md`, answer in this order.
 
 | Value | Use when |
 |---|---|
-| `complete` | Read alone, the quote says who is obligated (or what is required) and what they must do or meet, and it would not mislead. Missing nice-to-have context is still `complete`. An imperative with a generic addressee ("Retain visitor logs for 90 days.") is `complete`. |
-| `needs_lead_in` | The quote is missing something it depends on: who is obligated ("Maintains the access roster."), a condition or scope it applies under, or the sentence it continues ("unless the system owner approves otherwise"). Retrieved alone it would be ambiguous or misleading. |
+| `complete` | Read alone, the quote says who is obligated (or what is required) and what they must do or meet, and it would not mislead. Missing nice-to-have context is still `complete`. An imperative is `complete` when the text around it does not assign it to a particular party ("Retain visitor logs for 90 days." in a policy that applies to everyone). Openers such as "Accordingly," or "Additionally," do not by themselves make a clear obligation incomplete. |
+| `needs_lead_in` | The quote is missing something it depends on: who is obligated ("Maintains the access roster."), a condition or scope it applies under, or the sentence it continues ("unless the system owner approves otherwise"). Retrieved alone it would be ambiguous or misleading. This includes an item that a lead-in or heading assigns to a named party the quote does not name: "Identify shortfalls in requirements." under the heading "Air Mobility Command (AMC) will:" needs that heading. |
 | `not_a_requirement` | The quote states no obligation or requirement at all (a definition, description, background, heading, citation, boilerplate, or unreadable text). If you choose this, leave the two fields below empty. |
 
 **2. `lead_in_location`** (only when `standalone` is `needs_lead_in`; otherwise `null`)
@@ -48,7 +48,7 @@ the list or that the quote continues, before a heading.
 
 **3. `lead_in_text`** (required when `lead_in_location` is `same_chunk`, `previous_chunk` or `section_heading`;
 otherwise `null`). Copy the shortest passage that supplies the missing context, exactly as shown. Use `...` to skip
-words inside it. Do not paraphrase.
+words inside it. If two separate passages are needed (for example the party and a condition), join them with ` | `. Do not paraphrase.
 
 A quote marked `(the quote does not appear verbatim in this chunk ...)` was reworded or assembled by the extractor.
 Judge it as written.
@@ -61,10 +61,10 @@ next, and take the first that fits:
 | Order | `stem_verdict` | Use when |
 |---|---|---|
 | 1 | `right` | The stem is the text that governs the quote, and stem plus quote together read as one complete, correct statement. Includes the first half of the same sentence the quote finishes. |
-| 2 | `wrong_sibling` | The stem is another item of the same list or at the same level as the quote (a peer), not the text that introduces it. |
+| 2 | `wrong_sibling` | The stem is another item of the same list or at the same level as the quote (a peer), not the text that introduces it. Includes the lead-in clause of a peer item's own sub-list (e.g. "This section will define for all parties:" taken from item (5) for item (6)). |
 | 3 | `fragment_chain` | The stem is related and sits in the right place, but is itself an incomplete piece (a list item or half-sentence), so stem plus quote still lacks its lead-in. |
 | 4 | `not_needed` | The quote is already complete, and the stem is accurate, relevant context that does it no harm. |
-| 5 | `wrong_other` | The stem is unrelated to the quote, or belongs to a different list, clause or section. |
+| 5 | `wrong_other` | The stem is unrelated to the quote, or belongs to a different section or to a list that is not a peer's. |
 
 ## Where to write the labels
 

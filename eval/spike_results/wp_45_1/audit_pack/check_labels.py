@@ -19,7 +19,7 @@ VERDICTS = {"right", "wrong_sibling", "fragment_chain", "not_needed", "wrong_oth
 
 
 def card_ids(path):
-    return re.findall(r"^## (R\d{3})$", Path(path).read_text(encoding="utf-8"), flags=re.M)
+    return re.findall(r"^## (R\d{3})\s*$", Path(path).read_text(encoding="utf-8"), flags=re.M)
 
 
 def read_labels(path, problems):

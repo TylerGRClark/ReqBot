@@ -85,7 +85,7 @@ have one, and the labeler rules on it (`right` / `wrong_sibling` / `fragment_cha
 Two passes so that the labeler forms their own view before seeing the pipeline's answer; asking "is this stem right?"
 first would anchor on it. Claude and Codex label independently; Tyler adjudicates the disagreements and spot-checks
 about 10 agreements (the shared-mistake check). `audit_pack/check_labels.py` validates a label file (standard library
-only, so it runs in a directory holding just the pack).
+only, so it runs in a directory holding just the pack). `tests/unit/test_wp45_audit_pack.py` covers the checker and the builder's pure parts (card rendering, the seeded draw).
 
 **Sample.** 130 records, ids `R001`..`R130` in random order; the ids and card order carry no stratum information. The
 answer key (id to record, stratum, attachment method) is written only to `--key-out`, not into the repository. It is

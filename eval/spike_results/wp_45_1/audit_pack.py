@@ -148,13 +148,28 @@ def draw(rows, excluded):
     return chosen
 
 
+def require_chunks(chosen):
+    """Every sampled record needs its own chunk to build a card; a gap means the inputs and the census disagree."""
+    for r in chosen:
+        if r["chunk"] is None:
+            sys.exit(
+                f"chunk {r['chunk_id']} of {r['document']} is missing for {r['requirement_id']}; "
+                "no card can be built for it"
+            )
+
+
 def _flexible(quote):
     return r"\s+".join(re.escape(tok) for tok in quote.split())
 
 
 def show_chunk(text, quote=None, tail=False):
     """The chunk as the labeler sees it: the quote marked where it appears (whitespace-insensitive), long chunks windowed."""
-    assert MARK_OPEN not in text and MARK_CLOSE not in text
+    if (
+        MARK_OPEN in text or MARK_CLOSE in text
+    ):  # never alter source text silently; the pinned corpus has none
+        sys.exit(
+            f"chunk text already contains {MARK_OPEN} or {MARK_CLOSE}; pick other quote markers"
+        )
     span = None
     if quote:
         m = re.search(_flexible(quote), text)
@@ -242,6 +257,7 @@ def main():
     excluded = prior_sample_indexes(rows)
     check_prior_sample(rows, excluded)
     chosen = draw(rows, excluded)
+    require_chunks(chosen)
 
     pack_a = (
         "# Attachment audit, pass A: source text only\n\n"
