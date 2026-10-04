@@ -1,6 +1,14 @@
 {
   "script": "eval/spike_results/wp_45_1/census.py",
-  "git_revision": "ac65c7306f909f543fd9b4372ca7a49479de9d55",
+  "git_revision": "ca68756ba927814f8dddc6fba6f79a81bd510b6e",
+  "git_revision_note": "HEAD when run; it can precede the commit that adds this script, so code_sha256 below is what identifies the code that produced the output",
+  "code_sha256": {
+    "eval/spike_results/wp_45_1/census.py": "6353f66d541633ca45222a26f369a8b5112520b0df33b742f7b0ddadee6d8758",
+    "eval/spike_results/wp_45_audit/_inputs.py": "88ff62971f3abef4f50490377cdfa4fcca54c57986b0b4261216c161f2fd251e",
+    "pipeline/enrich_requirements.py": "74a942aacf84cc49b9412ffaccc8a6f0253122ff3e4f0f6dfd7f8ac5a672382a",
+    "pipeline/parse_and_normalize.py": "80c09fe43b8027a266db2a19489aa138f9cc21ad1b8466f5e7922ab52d5990a4",
+    "pipeline/llm_extract_requirements.py": "64278c8ebeea9da36916b49436df2b3001d6687e300435dae3e7899333a249f4"
+  },
   "python": "3.12.3",
   "docling": "2.94.0",
   "docling_core": "2.99.0",

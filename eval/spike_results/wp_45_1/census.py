@@ -52,8 +52,8 @@ SIGNALS = [
     "dangling_clause",  # production predicate: starts with a bare copula (WP-38.2)
     "not_contiguous",  # normalized quote is not a substring of its chunk text (audit F07)
 ]
-# no_obligation_verb is reported but kept OUT of the composite: it fires on 56% of all records, including half
-# of the >20-word full sentences, so it does not separate fragments from requirements in this corpus.
+# no_obligation_verb is reported but kept OUT of the composite: it fires on 56% of all records, including 524 of
+# the 1,045 records over 20 words (table C2), so it does not separate fragments from requirements in this corpus.
 FRAGMENT_SIGNALS = ["lowercase_start", "list_marker", "open_ending", "dangling_clause"]
 METHODS = ["same-chunk", "cross-chunk", "heading", "none", "not-a-candidate"]
 
@@ -186,6 +186,22 @@ def report(rows):
     for k in sorted(dist):
         emit(f"   {k} signal(s): {dist[k]:5d}  {pct(dist[k], n)}")
 
+    emit("\nC2. Signals by word count (records with the signal / records in the bucket):")
+    emit(
+        "   "
+        + f"{'signal':20s}"
+        + "".join(f"{label:>12s}" for _, _, label in WORD_BUCKETS)
+        + f"{'<=20':>12s}"
+    )
+    short = [r for r in rows if r["words"] <= 20]
+    for sig in SIGNALS:
+        cells = []
+        for _, _, label in WORD_BUCKETS:
+            pool = [r for r in rows if _bucket(r["words"]) == label]
+            cells.append(f"{sum(1 for r in pool if r['signals'][sig])}/{len(pool)}")
+        cells.append(f"{sum(1 for r in short if r['signals'][sig])}/{len(short)}")
+        emit("   " + f"{sig:20s}" + "".join(f"{c:>12s}" for c in cells))
+
     emit(
         "\nD. Signals by attachment method (count of records with the signal / records with that method):"
     )
@@ -276,9 +292,21 @@ def build_manifest(inputs):
     template = L.PASS1_PROMPT_TEMPLATE.replace(
         "{obligation_verbs}", ", ".join(profile["obligation_verbs"])
     )
+    code_files = [
+        "eval/spike_results/wp_45_1/census.py",
+        "eval/spike_results/wp_45_audit/_inputs.py",
+        "pipeline/enrich_requirements.py",
+        "pipeline/parse_and_normalize.py",
+        "pipeline/llm_extract_requirements.py",
+    ]
     return {
         "script": "eval/spike_results/wp_45_1/census.py",
         "git_revision": rev,
+        "git_revision_note": (
+            "HEAD when run; it can precede the commit that adds this script, so code_sha256 below "
+            "is what identifies the code that produced the output"
+        ),
+        "code_sha256": {name: _sha256(_ROOT / name) for name in code_files},
         "python": sys.version.split()[0],
         "docling": version("docling"),
         "docling_core": version("docling-core"),

@@ -9,8 +9,9 @@ synthetic document). Run from the repo root with `python3 eval/spike_results/wp_
 The corpus scripts need those 13 documents' processed output under the configured `processed_dir`. Before measuring,
 `_inputs.py` looks each file up by exact name, checks its sha256 against the manifest, and exits non-zero listing every
 missing or changed file (`check_f05.py` does the same for the source PDFs and prints each PDF's hash); nothing is
-skipped, because a skipped document would silently shrink the counts. The two documented exceptions are the normalized
-files of DODI 5200.48 and afi10-2402, which WP-44.1 edited after the manifest was written (3 junk records removed).
+skipped, because a skipped document would silently shrink the counts. Two files cannot be checked against the manifest: the normalized
+files of DODI 5200.48 and afi10-2402, which WP-44.1 edited after it was written (3 junk records removed). They are
+pinned to their post-edit hashes in `_inputs.py` instead, so a further change to either still stops a run.
 
 | Script | Finding | What it shows | Result (2026-10-04) |
 |---|---|---|---|

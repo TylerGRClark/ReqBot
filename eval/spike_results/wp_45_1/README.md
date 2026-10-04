@@ -19,9 +19,12 @@ python3 eval/spike_results/wp_45_1/census.py --manifest-out eval/spike_results/w
 ```
 
 Inputs are checked first by the shared helper `eval/spike_results/wp_45_audit/_inputs.py` (exact filenames, sha256
-against the WP-44 manifest, the two WP-44.1 edits excepted); a missing or changed file stops the run. No LLM and no
-Qdrant access. Output: `outputs/census.txt` (two runs are byte-identical) and `outputs/manifest.json` (git
-revision, Python, docling and docling-core versions, Step C prompt-template hash, sha256 of every input).
+against the WP-44 manifest, with the two WP-44.1-edited files pinned to their post-edit hashes); a missing or
+changed file stops the run. No LLM and no
+Qdrant access. Output: `outputs/census.txt` (two runs are byte-identical) and `outputs/manifest.json` (Python, docling and docling-core
+versions, Step C prompt-template hash, sha256 of every input, and sha256 of the code that ran: the census script, the
+input helper and the production modules it calls; the recorded git revision is only the HEAD at run time and can
+precede the commit that adds the script).
 
 **Attachment method** is the production cascade (`enrich_requirements.reconstruct_parent_stem`), recomputed with
 the same functions: candidate check, then same-chunk, cross-chunk, heading.
@@ -40,8 +43,8 @@ each also flag genuine, correctly kept requirements here (see `_is_dangling_clau
 | `no_obligation_verb` | none of the profile's obligation verbs; context only |
 
 The first four make up the "fragment signals" composite. `no_obligation_verb` is reported but kept out of it: it fires
-on 56% of all records, including 501 of the 1,008 full-length (>20-word) sentences, so it does not separate
-fragments from requirements in this corpus. That choice was made after seeing the data; the composite is a sampling
+on 56% of all records: 524 of the 1,045 records over 20 words and 515 of the 802 at 20 words or fewer (table C2 in
+`outputs/census.txt`), so it does not separate fragments from requirements in this corpus. That choice was made after seeing the data; the composite is a sampling
 aid and nothing is tuned to an outcome.
 
 ### Results (2026-10-04, 1,847 normalized-tier records)

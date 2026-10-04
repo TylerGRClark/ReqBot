@@ -1,4 +1,4 @@
-inputs: 13 pinned documents; chunks, extracted, normalized found by exact name, sha256 matches the WP-44 manifest (normalized for DODI 5200.48, afi10-2402 excepted: edited by WP-44.1)
+inputs: 13 pinned documents; chunks, extracted, normalized found by exact name, sha256 matches the WP-44 manifest (normalized for DODI 5200.48, afi10-2402 pinned to their post-WP-44.1 hashes)
 records in the normalized tier: 1847
 reconstruction candidates (production predicate, <= 20 words / list marker / dangling clause): 839 ( 45.4%)
 
@@ -25,6 +25,16 @@ C. How many fragment signals fire per record (of lowercase_start, list_marker, o
    1 signal(s):   192   10.4%
    2 signal(s):    17    0.9%
    3 signal(s):     2    0.1%
+
+C2. Signals by word count (records with the signal / records in the bucket):
+   signal                       <=5         6-8        9-12       13-20         >20        <=20
+   lowercase_start             7/19       11/68      20/177      45/538     52/1045      83/802
+   list_marker                 1/19        5/68       9/177      24/538     39/1045      39/802
+   open_ending                 0/19        2/68       3/177       3/538      8/1045       8/802
+   introduces_list             0/19        0/68       0/177       0/538      0/1045       0/802
+   no_obligation_verb         15/19       56/68     126/177     318/538    524/1045     515/802
+   dangling_clause             0/19        0/68       0/177       1/538      2/1045       1/802
+   not_contiguous              1/19        3/68       6/177      34/538    133/1045      44/802
 
 D. Signals by attachment method (count of records with the signal / records with that method):
    signal                     same-chunk      cross-chunk          heading             none  not-a-candidate
