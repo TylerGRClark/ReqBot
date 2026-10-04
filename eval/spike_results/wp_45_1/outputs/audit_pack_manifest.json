@@ -1,6 +1,6 @@
 {
   "script": "eval/spike_results/wp_45_1/audit_pack.py",
-  "git_revision": "7456134ba5e389733a59724b86856ee80f06bcc2",
+  "git_revision": "167bd8db85060e2c2e55580bcc45335010cb1014",
   "git_revision_note": "HEAD when run; it can precede the commit that adds this script, so code_sha256 below is what identifies the code that produced the output",
   "code_sha256": {
     "eval/spike_results/wp_45_1/census.py": "0e52de2c1a11135dbe2e8ce9f7fbcbb772f07ffd087044ed5d9e5e59b0b4db61",
@@ -8,7 +8,7 @@
     "pipeline/enrich_requirements.py": "74a942aacf84cc49b9412ffaccc8a6f0253122ff3e4f0f6dfd7f8ac5a672382a",
     "pipeline/parse_and_normalize.py": "80c09fe43b8027a266db2a19489aa138f9cc21ad1b8466f5e7922ab52d5990a4",
     "pipeline/llm_extract_requirements.py": "64278c8ebeea9da36916b49436df2b3001d6687e300435dae3e7899333a249f4",
-    "eval/spike_results/wp_45_1/audit_pack.py": "ffd8051403b5bd6eb8cf98b050ed5b7beef45f43e8185a25403c2d61801c0f77"
+    "eval/spike_results/wp_45_1/audit_pack.py": "049ae23871f93ae69fb1c5fe5bec14471cc470205471c0db63117628bca729f5"
   },
   "python": "3.12.3",
   "docling": "2.94.0",

@@ -130,6 +130,12 @@ def test_draw_stops_when_a_stratum_has_too_few_eligible_records(pack, small_desi
         pack.draw(_rows(small_design), excluded=set(range(8)))  # leaves 2 of stratum a, sample is 4
 
 
+def test_draw_stops_on_a_stratum_it_has_no_design_for(pack, small_design):
+    rows = _rows(small_design) + [{"stratum": "zzz", "index": 99, "method": "zzz"}]
+    with pytest.raises(SystemExit, match="unexpected stratum"):
+        pack.draw(rows, excluded=set())
+
+
 def test_require_chunks_stops_on_a_missing_chunk(pack):
     pack.require_chunks([{"chunk": {"text": "x"}}])
     with pytest.raises(SystemExit):

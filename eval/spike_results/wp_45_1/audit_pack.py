@@ -83,6 +83,8 @@ def load_rows(inputs, verb_re):
     for doc, files in inputs.items():
         chunks = {c["chunk_id"]: c for c in C._read_jsonl(files["chunks"])}
         for rec in C._read_jsonl(files["normalized"]):
+            if i >= len(rows):
+                sys.exit(f"more normalized records than census rows (stopped in {doc})")
             row = rows[i]
             i += 1
             if row["document"] != doc or row["requirement_id"] != rec.get("requirement_id"):
@@ -127,6 +129,10 @@ def check_prior_sample(rows, excluded):
 def draw(rows, excluded):
     frames = {s: [] for s in POPULATION}
     for r in rows:
+        if r["stratum"] not in frames:
+            sys.exit(
+                f"unexpected stratum {r['stratum']!r} (method {r['method']!r}); update POPULATION and SAMPLE"
+            )
         frames[r["stratum"]].append(r)
     counts = {s: len(v) for s, v in frames.items()}
     if counts != POPULATION:
@@ -279,7 +285,11 @@ def main():
         "RUBRIC.md",
         "check_labels.py",
     ):  # the labelers' instructions, written by hand next to the pack
-        hashes[name] = C._sha256(out_dir / name) if (out_dir / name).exists() else None
+        if not (out_dir / name).exists():
+            sys.exit(
+                f"{out_dir / name} is missing: the pack folder must hold the rubric and checker it is hashed with"
+            )
+        hashes[name] = C._sha256(out_dir / name)
 
     key = {
         "seed": SEED,
