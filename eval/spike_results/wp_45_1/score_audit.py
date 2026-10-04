@@ -74,17 +74,24 @@ def kappa(pairs):
 
 
 def weighted(strata, sample_counts, hits, population):
-    """Pooled proportion over `strata`: sum(N_h * x_h / n_h) / sum(N_h), with an FPC normal interval."""
+    """Pooled proportion over `strata`: sum(N_h * x_h / n_h) / sum(N_h), with an FPC normal interval.
+
+    Raises ValueError for a design that cannot be estimated: a stratum with no population, fewer than 2 sampled
+    records, more sampled than exist, or more hits than sampled. Returning a number for those would hide a broken key.
+    """
+    for s in strata:
+        n, x, pop = sample_counts.get(s, 0), hits.get(s, 0), population[s]
+        if pop <= 0 or n < 2 or n > pop or x > n:
+            raise ValueError(
+                f"stratum {s!r} cannot be estimated: population {pop}, sampled {n}, hits {x}"
+            )
     big_n = sum(population[s] for s in strata)
     total, var = 0.0, 0.0
     for s in strata:
         n, x, pop = sample_counts[s], hits.get(s, 0), population[s]
-        if n == 0:
-            continue
         p = x / n
         total += pop * p
-        if n > 1:
-            var += pop * pop * (1 - n / pop) * p * (1 - p) / (n - 1)
+        var += pop * pop * (1 - n / pop) * p * (1 - p) / (n - 1)
     est = total / big_n
     se = math.sqrt(var) / big_n
     return est, max(0.0, est - 1.96 * se), min(1.0, est + 1.96 * se), total

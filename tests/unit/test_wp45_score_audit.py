@@ -183,3 +183,22 @@ def test_labeler_answers_take_nothing_extra(sa, tmp_path, line):
     path.write_text(line + "\n", encoding="utf-8")
     with pytest.raises(SystemExit, match="line 1"):
         sa.parse_answers(path)
+
+
+@pytest.mark.parametrize(
+    "population, sample, hits",
+    [
+        (
+            {"a": 100, "b": 50},
+            {"a": 10, "b": 0},
+            {},
+        ),  # unsampled stratum would drag the estimate toward zero
+        ({"a": 100, "b": 50}, {"a": 10, "b": 1}, {}),  # one record gives no variance
+        ({"a": 100, "b": 0}, {"a": 10, "b": 5}, {}),  # empty population
+        ({"a": 100, "b": 5}, {"a": 10, "b": 6}, {}),  # over-sampled
+        ({"a": 100}, {"a": 10}, {"a": 11}),  # more hits than sampled
+    ],
+)
+def test_weighted_refuses_a_design_it_cannot_estimate(sa, population, sample, hits):
+    with pytest.raises(ValueError, match="cannot be estimated"):
+        sa.weighted(list(population), sample, hits, population)
