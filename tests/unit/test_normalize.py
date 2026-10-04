@@ -2,12 +2,14 @@ import json
 from pathlib import Path
 
 from pipeline.parse_and_normalize import (
+    QUOTE_WORD_COVERAGE_THRESHOLD,
     _is_dangling_clause,
     _is_heading_echo,
     _is_orphaned_list_item,
     _is_unrepairable_fragment,
     build_chunk_text_map,
     compute_stable_id,
+    quote_word_coverage,
     run,
 )
 
@@ -254,6 +256,115 @@ def test_empty_chunk_text_still_rejects_fabricated_quote(tmp_path):
     failures = _read_jsonl(out_dir / "test_normalization_failures.jsonl")
     assert len(failures) == 1
     assert failures[0]["error"] == "quote_not_grounded_in_chunk"
+
+
+# WP-44.1: word-coverage check (docs/PHASE44_REQUIREMENTS.md section 4). The 5 fixtures in
+# tests/fixtures/wp44_invented_quote_leaks.json are real quotes that passed the fuzzy
+# gate above (scores 62-76) and were indexed: each states an obligation its chunk (a
+# marking table, a bare glossary term, a cover page, a descriptive matrix) does not.
+
+def _leak_fixtures() -> list[dict]:
+    path = Path(__file__).resolve().parent.parent / "fixtures" / "wp44_invented_quote_leaks.json"
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def test_quote_word_coverage_values():
+    assert quote_word_coverage("Systems shall enforce access control.", "x. Systems shall enforce access control.") == 1.0
+    assert quote_word_coverage("alpha beta gamma delta", "alpha beta") == 0.5
+    # tokens are counted per occurrence: a repeated missing word lowers coverage twice
+    assert quote_word_coverage("alpha zeta zeta zeta", "alpha beta") == 0.25
+    # punctuation and case are ignored for the calculation only
+    assert quote_word_coverage("ACCESS-Control, (A)", "access control a") == 1.0
+    # no words -> 0.0 (never a division error), even against a non-empty chunk
+    assert quote_word_coverage("...", "alpha beta") == 0.0
+    assert quote_word_coverage("alpha", "") == 0.0
+
+
+def test_quote_word_coverage_threshold_is_inclusive_of_exactly_point_eight():
+    assert QUOTE_WORD_COVERAGE_THRESHOLD == 0.8
+    # 4 of 5 words present -> exactly 0.8 -> NOT below the threshold
+    assert quote_word_coverage("alpha beta gamma delta epsilon", "alpha beta gamma delta") == 0.8
+
+
+def test_real_invented_quote_leaks_are_rejected_by_word_coverage(tmp_path):
+    fixtures = _leak_fixtures()
+    assert len(fixtures) == 5
+    for i, fx in enumerate(fixtures):
+        d = tmp_path / str(i)
+        d.mkdir()
+        req = dict(SAMPLE_EXTRACTED, chunk_id=fx["chunk_id"], source_quote=fx["source_quote"])
+        _write_jsonl(d / "test_extracted_requirements.jsonl", [req])
+        _write_jsonl(d / "test_chunks.jsonl", [_chunk(fx["chunk_id"], fx["chunk_text"])])
+        run(str(d / "test_extracted_requirements.jsonl"), str(d / "test_chunks.jsonl"), "", str(d / "out"))
+        assert _read_jsonl(d / "out" / "test_requirements_normalized.jsonl") == [], fx["document"]
+        failures = _read_jsonl(d / "out" / "test_normalization_failures.jsonl")
+        assert len(failures) == 1
+        # rejected by the NEW check, i.e. these had passed the fuzzy gate
+        assert failures[0]["error"] == "quote_words_not_in_chunk", fx["document"]
+        assert failures[0]["grounding_score"] >= 60
+        assert failures[0]["word_coverage"] < 0.8
+        assert failures[0]["word_coverage_threshold"] == 0.8
+
+
+def test_fabricated_quote_below_fuzzy_threshold_keeps_original_failure_code(tmp_path):
+    # Records the fuzzy gate already rejects must not be re-labelled by the new check.
+    req = dict(SAMPLE_EXTRACTED, chunk_id=1, source_quote="Completely different invented sentence about firewalls.")
+    _write_jsonl(tmp_path / "test_extracted_requirements.jsonl", [req])
+    _write_jsonl(tmp_path / "test_chunks.jsonl", [_chunk(1, "Passwords must rotate every ninety days for administrators.")])
+    run(str(tmp_path / "test_extracted_requirements.jsonl"), str(tmp_path / "test_chunks.jsonl"), "", str(tmp_path / "out"))
+    failures = _read_jsonl(tmp_path / "out" / "test_normalization_failures.jsonl")
+    assert [f["error"] for f in failures] == ["quote_not_grounded_in_chunk"]
+
+
+def _passes_step_d(tmp_path, chunk_text: str, quote: str) -> bool:
+    req = dict(SAMPLE_EXTRACTED, chunk_id=1, source_quote=quote)
+    _write_jsonl(tmp_path / "test_extracted_requirements.jsonl", [req])
+    _write_jsonl(tmp_path / "test_chunks.jsonl", [_chunk(1, chunk_text)])
+    run(str(tmp_path / "test_extracted_requirements.jsonl"), str(tmp_path / "test_chunks.jsonl"), "", str(tmp_path / "out"))
+    return len(_read_jsonl(tmp_path / "out" / "test_requirements_normalized.jsonl")) == 1
+
+
+def test_stitched_lead_in_plus_item_passes(tmp_path):
+    # Real shape from afi13-550: list lead-in and item are separate lines in the chunk; the
+    # quote joins them. Tyler's decision: stitched quotes stay (they carry the hierarchy).
+    chunk = "- 3.3.3. AFGSC will:\n- 3.3.3.1. Chair the AF NLCC/NC3 Council.\n- 3.3.3.2. Co-chair the AF NLCC/NC3 Board and Group."
+    assert _passes_step_d(tmp_path, chunk, "AFGSC will: Chair the AF NLCC/NC3 Council.")
+
+
+def test_ellipsis_quote_passes(tmp_path):
+    chunk = "Pursuant to section 252.204-7012 of the DFARS, scientific, technical, and engineering information beyond basic research must be protected and shall be treated as CUI."
+    assert _passes_step_d(tmp_path, chunk, "Pursuant to section 252.204-7012 of the DFARS, scientific, technical, and engineering information beyond basic research... shall be treated as CUI.")
+
+
+def test_quote_with_dropped_acronym_parenthetical_passes(tmp_path):
+    # Real case, dafman17-1305 chunk 41: the model dropped "(WCO/DCO)" from the lead-in.
+    chunk = "2.14. Wing/Delta Cyberspace Offices (formerly known as Cybersecurity Offices) (WCO/DCO) shall:\n2.14.1. Monitor status on all Wing/Delta cyberspace workforce personnel."
+    assert _passes_step_d(tmp_path, chunk, "Wing/Delta Cyberspace Offices (formerly known as Cybersecurity Offices) shall: Monitor status on all Wing/Delta cyberspace workforce personnel.")
+
+
+# Documented limit of a bag-of-words check (not an endorsement of these as quotations): quotes
+# whose words ALL occur in the chunk score 1.0 and pass, even when they say something the
+# chunk does not. Expected results are fixed here; none of these shapes has been observed
+# producing a stored requirement in the measured corpus except the first (a 2-word drop).
+
+def test_documented_limit_dropped_words_are_not_detected():
+    # Real case, DODI 8410.03 chunk 13: "limited to" dropped; attribution right, sense altered.
+    chunk = "- d. Implement automated CM and PBNM capabilities and standards in new or modified NM systems, including but not specifically limited to determining architectures and technical approaches for:"
+    quote = "Implement automated CM and PBNM capabilities and standards in new or modified NM systems, including but not specifically determining architectures and technical approaches for:"
+    assert quote_word_coverage(quote, chunk) == 1.0
+
+
+def test_documented_limit_negation_number_and_exception_shapes_are_not_detected():
+    chunk = "Users shall not share passwords. Passwords must be at least 14 characters. Sessions expire after 15 minutes. Access is permitted except for contractors."
+    assert quote_word_coverage("Users shall share passwords.", chunk) == 1.0                 # negation flipped
+    assert quote_word_coverage("Passwords must be at least 15 characters.", chunk) == 1.0   # number swapped
+    assert quote_word_coverage("Access is permitted for contractors.", chunk) == 1.0        # exception dropped
+    assert quote_word_coverage("Sessions expire after 14 minutes. Users shall share passwords.", chunk) == 1.0  # unrelated passages joined
+
+
+def test_novel_word_inventions_are_detected_where_real_words_are_rearranged_is_not():
+    chunk = "Users shall not share passwords. Passwords must be at least 14 characters."
+    assert quote_word_coverage("The organization shall ensure that all users encrypt backups.", chunk) < 0.8
 
 
 # WP-34.2: heading-echo and unrepairable-fragment rejection. Fixtures are the 5
