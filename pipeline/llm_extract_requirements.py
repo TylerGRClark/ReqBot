@@ -3,7 +3,9 @@
 
 Input:  chunks.jsonl (from Step B)
 Output:
-  - raw_responses.jsonl  — one line per chunk: {chunk_id, model, prompt_hash, raw_response, timestamp}
+  - raw_responses.jsonl  — one line per chunk, written last as the chunk's completion marker:
+        {chunk_id, model, prompt_hash, raw_response, timestamp, status, done_reason, num_predict,
+        retried_larger}; status is complete, truncated or failed (WP-45.0.2) and decides what resume redoes
   - extracted_requirements.jsonl — one line per requirement:
         {chunk_id, requirement_id, description, source_ref, domain_tags, requirement_type, source_quote}
   - parse_failures.jsonl — chunks whose LLM response could not be parsed
@@ -11,6 +13,9 @@ Output:
 This step is nondeterministic. It calls a local Ollama model and isolates all
 LLM interaction. Raw responses are always logged before parsing so that
 Step D can be rerun without re-calling the LLM.
+
+Resume (same output directory): chunks that finished (complete or truncated) are skipped, keyed by
+chunk_id and prompt hash; failed chunks are redone, replacing any rows an earlier attempt left.
 """
 
 import argparse
@@ -130,6 +135,20 @@ _MAX_HINT_REFS = 20  # cap to avoid bloating the prompt
 # splitting), an explicit, known floor matters more than it used to.
 OLLAMA_NUM_CTX = 8192
 
+# WP-45.0.2: the output-token allowance for one chunk's answer. This is our own setting, not an Ollama
+# limit: the server accepts larger values (6000 tokens was generated under this same 8192 window,
+# 2026-10-04). The real ceiling is the window itself -- prompt and answer share OLLAMA_NUM_CTX, and past
+# it Ollama neither stops nor errors, so a larger allowance must be sized from the prompt, never fixed.
+# Largest answer seen in the 13 pinned documents: ~570 tokens of 839 chunks.
+OLLAMA_NUM_PREDICT = 4096
+_CTX_MARGIN = 64  # tokens kept free when sizing a larger retry
+
+# Per-chunk completion states, written to each raw record. A chunk is "done" for resume purposes only if
+# it is complete or truncated; failed chunks are retried.
+STATUS_COMPLETE = "complete"    # a full answer that parsed (an empty list counts)
+STATUS_TRUNCATED = "truncated"  # the answer hit the output limit; requirements were recovered but may be missing
+STATUS_FAILED = "failed"        # request error or unparseable output; nothing usable was kept
+
 # Ollama object-wrapped JSON Schema for Pass 1 structured output.
 # Constrains the model at the tokenizer level — eliminates parse failures
 # caused by preamble text, markdown fences, or malformed bare arrays.
@@ -201,6 +220,9 @@ def call_ollama(
     timeout: int = 120,
     max_retries: int = 3,
     json_schema: dict | None = None,
+    *,
+    num_predict: int = OLLAMA_NUM_PREDICT,
+    meta: dict | None = None,
 ) -> str:
     """Call the Ollama generate API with exponential backoff for transient errors.
 
@@ -216,6 +238,11 @@ def call_ollama(
             from preamble text and malformed JSON. This module's own run() always
             passes one; None remains supported for other/future callers that want
             unconstrained generation.
+        num_predict: Output-token allowance (default OLLAMA_NUM_PREDICT). Keep prompt + allowance
+            inside OLLAMA_NUM_CTX.
+        meta: Optional dict filled with done_reason ("length" means the allowance was hit),
+            prompt_eval_count and eval_count, so callers can tell a cut-off answer from a finished one.
+            The return value is unchanged.
 
     Returns:
         The raw text response from the model.
@@ -230,7 +257,7 @@ def call_ollama(
         "stream": False,
         "options": {
             "temperature": 0.1,
-            "num_predict": 4096,
+            "num_predict": num_predict,
             "num_ctx": OLLAMA_NUM_CTX,
         },
     }
@@ -242,7 +269,10 @@ def call_ollama(
         try:
             resp = requests.post(url, json=payload, timeout=timeout)
             resp.raise_for_status()
-            return resp.json()["response"]
+            data = resp.json()
+            if meta is not None:
+                meta.update({k: data.get(k) for k in ("done_reason", "prompt_eval_count", "eval_count")})
+            return data["response"]
         except requests.RequestException as e:
             attempt += 1
             if attempt > max_retries:
@@ -416,6 +446,83 @@ def validate_requirement(
     }
 
 
+def _render_prompt(template: str, chunk_text: str) -> str:
+    """Fill a pre-rendered template with a chunk's text and its candidate source-ref hints."""
+    ref_candidates = scan_source_refs(chunk_text)
+    if ref_candidates:
+        source_ref_hints = (
+            "\nCandidate source references found in this text "
+            "(use these for the \"source_ref\" field where applicable): "
+            + ", ".join(ref_candidates)
+            + "\n"
+        )
+    else:
+        source_ref_hints = ""
+    return template.replace("{source_ref_hints}", source_ref_hints).replace("{chunk_text}", chunk_text)
+
+
+def _prompt_hash_for(template: str, chunk_text: str) -> str:
+    return compute_prompt_hash(_render_prompt(template, chunk_text))
+
+
+def _prompt_tokens(meta: dict, prompt: str) -> int:
+    """Prompt size in tokens: Ollama's own count when it reported one, else a cautious character estimate."""
+    count = meta.get("prompt_eval_count")
+    return count if isinstance(count, int) and count > 0 else -(-len(prompt) // 3)
+
+
+def _record_status(rec: dict) -> str:
+    """Completion state of a raw record. Records written before WP-45.0.2 carry no status, so
+    classify them from the stored response the way a fresh run would."""
+    status = rec.get("status")
+    if status in (STATUS_COMPLETE, STATUS_TRUNCATED, STATUS_FAILED):
+        return status
+    raw = rec.get("raw_response") or ""
+    if raw.startswith("ERROR:"):
+        return STATUS_FAILED
+    parsed, recovered_truncated = extract_json_array(raw)
+    if parsed is None:
+        return STATUS_FAILED
+    return STATUS_TRUNCATED if recovered_truncated else STATUS_COMPLETE
+
+
+def _replayed_row_count(raw_response: str, valid_domain_tags: list, valid_requirement_types: list) -> int:
+    """How many requirement rows a stored answer yields when parsed and validated again."""
+    parsed, _ = extract_json_array(raw_response or "")
+    return sum(
+        1 for item in (parsed or []) if validate_requirement(item, valid_domain_tags, valid_requirement_types)
+    )
+
+
+def _drop_chunk_rows(path: Path, chunk_ids: set) -> int:
+    """Remove the rows of the given chunks from a JSONL file (atomic rewrite); return how many went.
+
+    A chunk that is about to be re-extracted must not keep rows from its earlier attempt: requirement
+    IDs are R-<chunk_id>-<n>, so a leftover from a crash between the requirements write and the raw
+    record would otherwise be appended a second time.
+    """
+    if not chunk_ids or not path.exists():
+        return 0
+    kept, dropped = [], 0
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+            try:
+                rec = json.loads(line)
+            except json.JSONDecodeError:
+                rec = None
+            if isinstance(rec, dict) and rec.get("chunk_id") in chunk_ids:
+                dropped += 1
+            else:
+                kept.append(line if line.endswith("\n") else line + "\n")
+    if dropped:
+        tmp = path.with_suffix(path.suffix + ".tmp")
+        tmp.write_text("".join(kept), encoding="utf-8")
+        tmp.replace(path)
+    return dropped
+
+
 def process_chunk(
     chunk: dict,
     model: str,
@@ -444,36 +551,28 @@ def process_chunk(
         prompt_template = prompt_template.replace("{obligation_verbs}", _fallback_verbs)
 
     # P3: pre-scan for candidate source refs and inject as LLM hints
-    ref_candidates = scan_source_refs(chunk_text)
-    if ref_candidates:
-        source_ref_hints = (
-            "\nCandidate source references found in this text "
-            "(use these for the \"source_ref\" field where applicable): "
-            + ", ".join(ref_candidates)
-            + "\n"
-        )
-    else:
-        source_ref_hints = ""
-
-    prompt = (
-        prompt_template
-        .replace("{source_ref_hints}", source_ref_hints)
-        .replace("{chunk_text}", chunk_text)
-    )
+    prompt = _render_prompt(prompt_template, chunk_text)
     prompt_hash = compute_prompt_hash(prompt)
     timestamp = datetime.now(timezone.utc).isoformat()
 
+    # status stays "failed" until a usable answer is parsed (WP-45.0.2); run() writes this record last,
+    # after the chunk's requirements, and resume treats only complete/truncated chunks as done.
     raw_record = {
         "chunk_id": chunk_id,
         "model": model,
         "prompt_hash": prompt_hash,
         "raw_response": "",
         "timestamp": timestamp,
+        "status": STATUS_FAILED,
+        "done_reason": None,
+        "num_predict": OLLAMA_NUM_PREDICT,
+        "retried_larger": False,
     }
 
     # Call LLM
+    meta: dict = {}
     try:
-        raw_response = call_ollama(prompt, model, base_url, timeout, json_schema=json_schema)
+        raw_response = call_ollama(prompt, model, base_url, timeout, json_schema=json_schema, meta=meta)
         raw_record["raw_response"] = raw_response
     except requests.RequestException as e:
         log.error("Chunk %d: Ollama request failed: %s", chunk_id, e)
@@ -485,8 +584,49 @@ def process_chunk(
         }
         return raw_record, [], failure
 
-    # Parse response
+    # Parse response. An answer is cut off when Ollama says it hit the allowance (done_reason "length")
+    # or the JSON only parsed through truncation recovery.
     parsed, recovered_truncated = extract_json_array(raw_response)
+    truncated = recovered_truncated or meta.get("done_reason") == "length"
+
+    if truncated:
+        # The allowance is ours, not Ollama's, so give the chunk one larger try -- as large as the
+        # window leaves room for after this prompt, never beyond it.
+        room = OLLAMA_NUM_CTX - _prompt_tokens(meta, prompt) - _CTX_MARGIN
+        if room <= OLLAMA_NUM_PREDICT:
+            log.warning(
+                "Chunk %d: answer hit the %d-token output limit and the window leaves no room for a "
+                "larger retry (window %d)", chunk_id, OLLAMA_NUM_PREDICT, OLLAMA_NUM_CTX,
+            )
+        else:
+            log.warning(
+                "Chunk %d: answer hit the %d-token output limit -- retrying once with %d",
+                chunk_id, OLLAMA_NUM_PREDICT, room,
+            )
+            raw_record["retried_larger"] = True
+            retry_meta: dict = {}
+            try:
+                retry_response = call_ollama(
+                    prompt, model, base_url,
+                    int(timeout * room / OLLAMA_NUM_PREDICT) + 1,  # a longer answer takes proportionally longer
+                    max_retries=1, json_schema=json_schema, num_predict=room, meta=retry_meta,
+                )
+            except requests.RequestException as e:
+                log.warning("Chunk %d: larger retry failed (%s) -- keeping the first answer", chunk_id, e)
+            else:
+                retry_parsed, retry_recovered = extract_json_array(retry_response)
+                retry_truncated = retry_recovered or retry_meta.get("done_reason") == "length"
+                # Take the retry if it parsed and either finished cleanly or recovered at least as much.
+                if retry_parsed is not None and (
+                    not retry_truncated or parsed is None or len(retry_parsed) >= len(parsed)
+                ):
+                    raw_response, parsed, truncated, meta = (
+                        retry_response, retry_parsed, retry_truncated, retry_meta,
+                    )
+                    raw_record["raw_response"] = raw_response
+                    raw_record["num_predict"] = room
+
+    raw_record["done_reason"] = meta.get("done_reason")
     if parsed is None:
         log.warning(
             "Chunk %d: Failed to parse JSON from response (%d chars)",
@@ -497,7 +637,11 @@ def process_chunk(
             "error": "json_parse_failed",
             "raw_response_preview": raw_response[:500],
         }
+        if truncated:
+            failure["truncated"] = True
         return raw_record, [], failure
+
+    raw_record["status"] = STATUS_TRUNCATED if truncated else STATUS_COMPLETE
 
     # Validate individual requirements
     valid_reqs = []
@@ -505,7 +649,7 @@ def process_chunk(
         cleaned = validate_requirement(item, valid_domain_tags, valid_requirement_types)
         if cleaned:
             cleaned["chunk_id"] = chunk_id
-            if recovered_truncated:
+            if truncated:
                 cleaned["recovered_truncated"] = True
             valid_reqs.append(cleaned)
 
@@ -601,7 +745,19 @@ def run(
     if max_chunks is not None:
         chunks = chunks[:max_chunks]
 
-    cached_hashes: set[str] = set()
+    # (chunk_id, prompt_hash) -> status, for chunks a previous run finished (complete or truncated).
+    # Failed chunks are deliberately absent so a resume retries them (WP-45.0.2); keying on the chunk
+    # as well as its prompt keeps identical or renumbered chunks from borrowing each other's result.
+    accepted: dict[tuple, str] = {}
+    rows_on_disk: dict = {}  # chunk_id -> requirement rows already written (to vet pre-ledger records)
+    if reqs_path.exists():
+        with open(reqs_path, "r", encoding="utf-8") as f:
+            for line in f:
+                try:
+                    cid = json.loads(line).get("chunk_id")
+                except (json.JSONDecodeError, AttributeError):
+                    continue
+                rows_on_disk[cid] = rows_on_disk.get(cid, 0) + 1
     if raw_path.exists():
         # Non-default profiles always re-extract: extraction_profile is not tracked in
         # cache records until WP-20.4, so cached records from one profile run could
@@ -614,19 +770,34 @@ def run(
             )
         else:
             skipped_model_mismatch = 0
+            unfinished = 0
+            interrupted = 0
             with open(raw_path, "r", encoding="utf-8") as f:
                 for line in f:
                     line = line.strip()
                     if line:
                         try:
                             rec = json.loads(line)
+                            if not isinstance(rec, dict):
+                                continue  # valid JSON but not a record: corrupt, skip like a bad line
                             # Only accept cache entries produced by the same model (R-2.2 fix).
                             # Switching --extraction-model must not reuse prior model's output.
                             if rec.get("model") != model:
                                 skipped_model_mismatch += 1
                                 continue
-                            if ph := rec.get("prompt_hash"):
-                                cached_hashes.add(ph)
+                            status = _record_status(rec)
+                            if status == STATUS_FAILED:
+                                unfinished += 1
+                                continue
+                            if "status" not in rec and rows_on_disk.get(rec.get("chunk_id"), 0) != _replayed_row_count(
+                                rec.get("raw_response"), valid_domain_tags, valid_requirement_types
+                            ):
+                                # Written by the pre-ledger loop, which saved the raw record BEFORE the
+                                # requirements: the answer is on disk but its rows are not (or only some).
+                                interrupted += 1
+                                continue
+                            if (ph := rec.get("prompt_hash")) and rec.get("chunk_id") is not None:
+                                accepted[(rec["chunk_id"], ph)] = status
                         except json.JSONDecodeError:
                             pass
             if skipped_model_mismatch:
@@ -634,38 +805,36 @@ def run(
                     "Skipped %d cached entries from a different model — will re-process with %s",
                     skipped_model_mismatch, model,
                 )
-            if cached_hashes:
+            if interrupted:
+                log.warning(
+                    "%d earlier chunk(s) have a saved answer but not all of its requirement rows "
+                    "(an older run was interrupted) — they will be redone", interrupted,
+                )
+            if unfinished:
                 log.info(
-                    "Loaded %d cached prompt hashes (model=%s) — matching chunks will be skipped",
-                    len(cached_hashes), model,
+                    "%d earlier chunk(s) did not finish (request error or unparseable output) — "
+                    "they will be retried", unfinished,
+                )
+            if accepted:
+                log.info(
+                    "Loaded %d finished chunk records (model=%s) — matching chunks will be skipped",
+                    len(accepted), model,
                 )
                 # Guard against stale cache after a prompt template change (e.g. structured
-                # output upgrade). If cached_hashes is non-empty but NO chunk's current
+                # output upgrade). If `accepted` is non-empty but NO chunk's current
                 # prompt hash matches, opening files in append mode would duplicate every row.
                 # Scan chunks with early exit: if at least one hit exists the cache is valid;
                 # if none match, discard it so write_mode falls through to "w".
-                any_cache_hit = False
-                for _c in all_chunks:
-                    _refs = scan_source_refs(_c["text"])
-                    _hints = (
-                        "\nCandidate source references found in this text "
-                        "(use these for the \"source_ref\" field where applicable): "
-                        + ", ".join(_refs) + "\n"
-                    ) if _refs else ""
-                    _ph = compute_prompt_hash(
-                        template
-                        .replace("{source_ref_hints}", _hints)
-                        .replace("{chunk_text}", _c["text"])
-                    )
-                    if _ph in cached_hashes:
-                        any_cache_hit = True
-                        break
+                any_cache_hit = any(
+                    (_c["chunk_id"], _prompt_hash_for(template, _c["text"])) in accepted
+                    for _c in all_chunks
+                )
                 if not any_cache_hit:
                     log.warning(
                         "Cached prompt hashes exist but none match the current template — "
                         "prompt may have changed. Discarding stale cache and starting fresh write."
                     )
-                    cached_hashes = set()
+                    accepted = {}
 
     log.info("Processing %d chunks with model=%s, ollama=%s", len(chunks), model, ollama_url)
 
@@ -679,10 +848,19 @@ def run(
         log.error("Cannot reach Ollama at %s: %s", ollama_url, e)
         raise RuntimeError(f"Cannot reach Ollama at {ollama_url}: {e}") from e
 
-    write_mode = "a" if (cached_hashes or start_chunk > 0) else "w"
+    prompt_hashes = {c["chunk_id"]: _prompt_hash_for(template, c["text"]) for c in chunks}
+    write_mode = "a" if (accepted or start_chunk > 0) else "w"
+    if write_mode == "a":
+        # Chunks about to be (re)processed start clean: drop any rows an earlier attempt left behind so
+        # a retry replaces them instead of duplicating them, and the raw file keeps one record per chunk.
+        redo = {cid for cid, h in prompt_hashes.items() if (cid, h) not in accepted}
+        dropped = sum(_drop_chunk_rows(path, redo) for path in (raw_path, reqs_path, fail_path))
+        if dropped:
+            log.info("Removed %d earlier row(s) for %d chunk(s) being re-extracted", dropped, len(redo))
     total_reqs = 0
     total_failures = 0
     total_skipped = 0
+    statuses: dict[int, str] = {}
     pipeline_start = time.time()
 
     with (
@@ -693,20 +871,11 @@ def run(
         for i, chunk in enumerate(chunks):
             chunk_id = chunk["chunk_id"]
 
-            _refs = scan_source_refs(chunk["text"])
-            _hints = (
-                "\nCandidate source references found in this text "
-                "(use these for the \"source_ref\" field where applicable): "
-                + ", ".join(_refs) + "\n"
-            ) if _refs else ""
-            _prompt_hash = compute_prompt_hash(
-                template
-                .replace("{source_ref_hints}", _hints)
-                .replace("{chunk_text}", chunk["text"])
-            )
-            if _prompt_hash in cached_hashes:
+            cached_status = accepted.get((chunk_id, prompt_hashes[chunk_id]))
+            if cached_status is not None:
                 log.info("Chunk %d/%d (id=%d): skipping (cached)", i + 1, len(chunks), chunk_id)
                 total_skipped += 1
+                statuses[chunk_id] = cached_status
                 continue
 
             chunk_start = time.time()
@@ -715,8 +884,6 @@ def run(
                 valid_domain_tags=valid_domain_tags,
                 valid_requirement_types=valid_requirement_types,
             )
-
-            append_jsonl(raw_record, raw_f)
 
             for j, req in enumerate(valid_reqs):
                 req["requirement_id"] = f"R-{chunk_id}-{j}"
@@ -727,11 +894,16 @@ def run(
                 append_jsonl(failure, fail_f)
                 total_failures += 1
 
+            # The raw record is the chunk's completion marker, so it goes last: a crash before this line
+            # leaves the chunk unfinished and the next resume redoes it from a clean slate.
+            append_jsonl(raw_record, raw_f)
+            statuses[chunk_id] = raw_record["status"]
+
             elapsed = time.time() - chunk_start
             log.info(
                 "Chunk %d/%d (id=%d): %d requirements extracted in %.1fs%s",
                 i + 1, len(chunks), chunk_id, len(valid_reqs), elapsed,
-                " [PARSE FAILED]" if failure else "",
+                " [PARSE FAILED]" if failure else (" [TRUNCATED]" if raw_record["status"] == STATUS_TRUNCATED else ""),
             )
 
     total_elapsed = time.time() - pipeline_start
@@ -743,6 +915,18 @@ def run(
     log.info("Raw responses: %s", raw_path)
     log.info("Requirements:  %s", reqs_path)
     log.info("Failures:      %s", fail_path)
+    truncated_ids = sorted(cid for cid, st in statuses.items() if st == STATUS_TRUNCATED)
+    failed_ids = sorted(cid for cid, st in statuses.items() if st == STATUS_FAILED)
+    if truncated_ids:
+        log.warning(
+            "%d chunk(s) hit the output limit and may be missing requirements (kept, not retried): %s",
+            len(truncated_ids), truncated_ids,
+        )
+    if failed_ids:
+        log.warning(
+            "%d chunk(s) failed (request error or unparseable output); run again in the same output "
+            "directory to retry them: %s", len(failed_ids), failed_ids,
+        )
     return str(reqs_path)
 
 
