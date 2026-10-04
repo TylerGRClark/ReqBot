@@ -38,11 +38,12 @@ SPOT_SEED = "wp45.1b/spot"
 
 
 def read_jsonl(path):
-    return {
-        json.loads(line)["id"]: json.loads(line)
+    records = (
+        json.loads(line)
         for line in Path(path).read_text(encoding="utf-8").splitlines()
         if line.strip()
-    }
+    )
+    return {rec["id"]: rec for rec in records}
 
 
 def a_key(rec):
