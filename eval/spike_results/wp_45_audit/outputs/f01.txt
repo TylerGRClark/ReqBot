@@ -1,0 +1,6 @@
+chunks from HybridChunker: 7
+doc_items refs per chunk: [['#/texts/1'], ['#/texts/1'], ['#/texts/1'], ['#/texts/1'], ['#/texts/1'], ['#/texts/1'], ['#/texts/2']]
+len(chunk.text) per chunk : [1247, 1269, 1269, 1269, 1269, 1269, 69]
+len(raw_text) per chunk   : [7597, 7597, 7597, 7597, 7597, 7597, 69]
+full paragraph length     : 7597
+RESULT: 6 of 7 chunks carry the FULL paragraph text in raw_text -> F01 REPRODUCED with the real chunker

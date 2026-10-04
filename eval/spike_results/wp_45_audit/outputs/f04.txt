@@ -1,0 +1,15 @@
+probe1 same-chunk: 'Backups shall include:'
+probe2 cross-section: 'Backup administrators shall:'
+
+normalized records=1847; reconstruction candidates=839
+attachment method: {'cross-chunk': 59, 'no stem': 636, 'same-chunk': 142, 'heading-fallback': 2}
+cross-chunk attachments whose previous chunk is in a DIFFERENT section path: 0 of 59
+same-chunk attachments with a red flag (order/gap/not-found): 70 of 142
+  same-chunk ('DODI 5200.44', 23, 'gap>400ch', 'In addition to the responsibilities in Paragraph 2.9., the D', 'Defines processes, tools, techniques, and standards to effec')
+  same-chunk ('DODI 5200.44', 24, 'gap>400ch', 'Under the authority, direction, and control of the USD(I&S),', 'Assesses significant ICT supply chain threats to national se')
+  same-chunk ('DODI 5200.44', 27, 'gap>400ch', 'Designate a focal point and resources to represent the acqui', '(2) Determine and prioritize requests for using DoD Componen')
+  same-chunk ('DODI 5200.48', 61, 'gap>400ch', 'the OCA will:', 'the information is determined not to be classified, it must ')
+  same-chunk ('DODI 5200.48', 73, 'gap>400ch', 'In accordance with this issuance, CUI access should be encou', 'LDCs or distribution statements cannot unnecessarily restric')
+  same-chunk ('DODI 8410.03', 10, 'stem not in raw_text', 'The DoD CIO, shall:', 'Define common data standards for sharing information and dat')
+  same-chunk ('DODI 8410.03', 12, 'stem not in raw_text', 'The DoD CIO, shall:', 'The DoD CIO, shall: l. Support the USD(AT&L) in reviewing an')
+  same-chunk ('DODI 8410.03', 12, 'stem not in raw_text', 'The DoD CIO, shall:', 'The DoD CIO, shall: n. Establish and maintain a central repo')

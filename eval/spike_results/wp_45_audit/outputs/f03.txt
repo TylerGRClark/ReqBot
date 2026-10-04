@@ -1,0 +1,8 @@
+compute_stable_id signature: (document_id: str, source_ref: str, source_quote: str, chunk_id: int | None, requirement_type: str, description: str) -> str
+probe: 2 records with different scopes -> 1 after dedup
+dedup score 0.7conf/200ch = 500.0  vs 0.6conf/20ch = 580.0 (shorter quote beats higher confidence)
+
+Step C records: 1991
+records collapsed by dedup keys: same-chunk repeats=2, across chunks=33, across chunks AND different section paths=6
+  e.g. ('NIST.SP.800-125', '', 'Security should be considered from the initial planning stage at the b', [12, 88], [['Carefully plan the security for a full virtualization solution before installing, configuring, and deploying it.'], ['5. Secure Virtualization Planning and Deployment']])
+  e.g. ('afi10-2402', '', 'COMPLIANCE WITH THIS PUBLICATION IS MANDATORY', [6, 7, 8, 9, 10, 11], [['1.1. Executive Summary'], ['COMPLIANCE WITH THIS PUBLICATION IS MANDATORY']])
