@@ -65,6 +65,27 @@ def test_answers_need_a_pass_letter_and_accept_comments(sa, tmp_path):
         sa.parse_answers(path)
 
 
+@pytest.mark.parametrize(
+    "line",
+    [
+        "R012 a: other",
+        "R012 a: other maybe",
+        "R012 a: other needs_lead_in",
+        "R012 a: other needs_lead_in elsewhere",
+        "R012 a: other complete same_chunk",
+        "R012 b: other",
+        "R012 b: other right wrong_other",
+        "R012 b: other complete",
+        "R012 a: approve",
+    ],
+)
+def test_malformed_answers_stop_with_a_message(sa, tmp_path, line):
+    path = tmp_path / "answers.txt"
+    path.write_text(line + "\n", encoding="utf-8")
+    with pytest.raises(SystemExit, match="line 1"):
+        sa.parse_answers(path)
+
+
 def _a(standalone="complete", location=None, text=None):
     return {"standalone": standalone, "lead_in_location": location, "lead_in_text": text}
 
@@ -88,7 +109,7 @@ def test_resolve_applies_answers_and_separates_changes_from_corrections(sa):
         ("R003", "a"): ("other", ["needs_lead_in", "same_chunk"]),
     }
     ra, rb, unresolved, spot_changes, corrections = sa.resolve(
-        None, None, a_pairs, b_pairs, dis_a, dis_b, spot, answers
+        a_pairs, b_pairs, dis_a, dis_b, spot, answers
     )
     assert unresolved == []
     assert ra["R001"][:2] == ("needs_lead_in", "previous_chunk") and rb["R001"] == "right"
@@ -100,7 +121,7 @@ def test_resolve_reports_unanswered_disagreements_and_ignores_ok(sa):
     a_pairs, b_pairs, dis_a, dis_b, spot = _setup()
     answers = {("R002", "a"): "ok"}
     ra, rb, unresolved, spot_changes, corrections = sa.resolve(
-        None, None, a_pairs, b_pairs, dis_a, dis_b, spot, answers
+        a_pairs, b_pairs, dis_a, dis_b, spot, answers
     )
     assert sorted(unresolved) == [("R001", "a"), ("R001", "b")]
     assert ra["R002"][0] == "complete" and spot_changes == [] and corrections == []
@@ -108,8 +129,6 @@ def test_resolve_reports_unanswered_disagreements_and_ignores_ok(sa):
 
 def test_policy_resolves_every_disagreement_to_one_labeler(sa):
     a_pairs, b_pairs, dis_a, dis_b, spot = _setup()
-    ra, rb, unresolved, *_ = sa.resolve(
-        None, None, a_pairs, b_pairs, dis_a, dis_b, spot, {}, "codex"
-    )
+    ra, rb, unresolved, *_ = sa.resolve(a_pairs, b_pairs, dis_a, dis_b, spot, {}, "codex")
     assert unresolved == []
     assert ra["R001"][1] == "previous_chunk" and rb["R001"] == "fragment_chain"

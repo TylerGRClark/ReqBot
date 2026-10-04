@@ -30,6 +30,9 @@ from pathlib import Path
 LABELERS = ("claude", "codex")
 ATTACHED = ("same-chunk", "cross-chunk", "heading")
 NO_STEM = ("none+signal", "none+nosignal", "not-a-candidate+signal", "not-a-candidate+nosignal")
+STANDALONE = {"complete", "needs_lead_in", "not_a_requirement"}
+LOCATIONS = {"same_chunk", "previous_chunk", "section_heading", "not_shown"}
+VERDICTS = {"right", "wrong_sibling", "fragment_chain", "not_needed", "wrong_other"}
 SPOT_CHECKS = 10
 SPOT_SEED = "wp45.1b/spot"
 
@@ -208,11 +211,39 @@ def parse_answers(path):
         if not m:
             sys.exit(f"{path} line {n}: cannot read {line!r} (expected `R012 a: codex`)")
         rid, p, kind, rest = m.groups()
-        ans[(rid, p)] = kind if kind != "other" else ("other", rest.split())
+        if kind == "other":
+            words = rest.split()
+            problem = other_problem(p, words)
+            if problem:
+                sys.exit(f"{path} line {n}: {problem} in {line.strip()!r}")
+            ans[(rid, p)] = ("other", words)
+        elif kind in ("claude", "codex", "ok"):
+            ans[(rid, p)] = kind
+        else:
+            sys.exit(f"{path} line {n}: expected claude, codex, ok or other, got {kind!r}")
     return ans
 
 
-def resolve(key, labels, a_pairs, b_pairs, dis_a, dis_b, spot, answers, policy=None):
+def other_problem(p, words):
+    """Why an `other ...` answer cannot be used, or None. Pass A: <standalone> [<location>]; pass B: <verdict>."""
+    if p == "b":
+        return (
+            None
+            if len(words) == 1 and words[0] in VERDICTS
+            else f"pass B needs one verdict from {sorted(VERDICTS)}"
+        )
+    if not words or words[0] not in STANDALONE:
+        return f"pass A needs a standalone value from {sorted(STANDALONE)}"
+    if words[0] == "needs_lead_in":
+        return (
+            None
+            if len(words) == 2 and words[1] in LOCATIONS
+            else f"needs_lead_in needs a location from {sorted(LOCATIONS)}"
+        )
+    return None if len(words) == 1 else f"{words[0]} takes no location"
+
+
+def resolve(a_pairs, b_pairs, dis_a, dis_b, spot, answers, policy=None):
     """Resolved pass A (standalone, location, lead-in text) and pass B verdict per id.
 
     Disagreements take the answer (or, for a sensitivity run, `policy`: always one labeler). An agreed item changes only
@@ -510,7 +541,7 @@ def main():
     if args.answers or args.policy:
         answers = parse_answers(args.answers) if args.answers else {}
         ra, rb, unresolved, spot_changes, corrections = resolve(
-            key, labels, a_pairs, b_pairs, dis_a, dis_b, spot, answers, args.policy
+            a_pairs, b_pairs, dis_a, dis_b, spot, answers, args.policy
         )
         if unresolved:
             sys.exit(f"unresolved disagreements, no tables: {unresolved}")
