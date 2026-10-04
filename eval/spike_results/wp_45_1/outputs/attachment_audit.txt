@@ -19,55 +19,56 @@
 
 | stratum | n | right | wrong_sibling | fragment_chain | not_needed | wrong_other | right (Wilson 95%) |
 |---|---|---|---|---|---|---|---|
-| same-chunk | 36 | 15 | 10 | 9 | 1 | 1 |  41.7% ( 27.1% to  57.8%) |
+| same-chunk | 36 | 16 | 10 | 8 | 1 | 1 |  44.4% ( 29.5% to  60.4%) |
 | cross-chunk | 28 | 8 | 9 | 4 | 0 | 7 |  28.6% ( 15.3% to  47.1%) |
 | heading | 2 | 1 | 0 | 0 | 0 | 1 |  50.0% (  9.5% to  90.5%) |
 
-Pooled over the 203 attachments, right:  37.9% (95%  27.4% to  48.4%), about 77 records
+Pooled over the 203 attachments, right:  39.9% (95%  29.3% to  50.5%), about 81 records
 
 Pooled over the 203 attachments, misleading (wrong_sibling or wrong_other):  38.5% (95%  28.4% to  48.5%), about 78 records
 
-Pooled over the 203 attachments, incomplete (fragment_chain):  21.6% (95%  12.5% to  30.7%), about 44 records
+Pooled over the 203 attachments, incomplete (fragment_chain):  19.7% (95%  10.9% to  28.5%), about 40 records
 
 ## Records that need a lead-in (pass A, resolved)
 
 | stratum | population | n | needs_lead_in | not_a_requirement | need rate (Wilson) | est. records |
 |---|---|---|---|---|---|---|
 | same-chunk | 142 | 36 | 25 | 6 |  69.4% ( 53.1% to  82.0%) | 99 |
-| cross-chunk | 59 | 28 | 19 | 2 |  67.9% ( 49.3% to  82.1%) | 40 |
+| cross-chunk | 59 | 28 | 20 | 1 |  71.4% ( 52.9% to  84.7%) | 42 |
 | heading | 2 | 2 | 2 | 0 | 100.0% ( 34.2% to 100.0%) | 2 |
-| none+signal | 90 | 28 | 16 | 4 |  57.1% ( 39.1% to  73.5%) | 51 |
-| none+nosignal | 546 | 20 | 15 | 2 |  75.0% ( 53.1% to  88.8%) | 410 |
+| none+signal | 90 | 28 | 14 | 4 |  50.0% ( 32.6% to  67.4%) | 45 |
+| none+nosignal | 546 | 20 | 16 | 1 |  80.0% ( 58.4% to  91.9%) | 437 |
 | not-a-candidate+signal | 54 | 8 | 3 | 5 |  37.5% ( 13.7% to  69.4%) | 20 |
 | not-a-candidate+nosignal | 954 | 8 | 3 | 0 |  37.5% ( 13.7% to  69.4%) | 358 |
 
-All 1847 records:  53.0% need a lead-in (95%  33.7% to  72.4%), about 980
-Records with no stem that need one:  51.0% of 1644 (95%  29.3% to  72.7%), about 839 (the misses)
+All 1847 records:  54.3% need a lead-in (95%  35.0% to  73.5%), about 1003
+Records with no stem that need one:  52.3% of 1644 (95%  30.7% to  73.9%), about 860 (the misses)
 
 ## Where the missing lead-in lives (records that need one, weighted to the population)
 
 | location | in sample | est. among the 203 with a stem | est. among the 1,644 without | est. total |
 |---|---|---|---|---|
-| same_chunk | 32 | 71 | 91 | 161 |
-| previous_chunk | 21 | 25 | 84 | 109 |
-| section_heading | 27 | 43 | 518 | 561 |
-| not_shown | 3 | 2 | 147 | 149 |
+| same_chunk | 33 | 71 | 114 | 185 |
+| previous_chunk | 17 | 23 | 74 | 97 |
+| section_heading | 31 | 47 | 552 | 599 |
+| not_shown | 2 | 2 | 119 | 121 |
 
 ## Root-cause classes among records that need a lead-in (weighted to the population)
 
 | class | in sample | est. records in 1,847 |
 |---|---|---|
-| (1) no stem, lead-in is in the previous chunk | 10 | 84 |
-| (3) no stem, lead-in is earlier in the same chunk | 11 | 91 |
+| (1) no stem, lead-in is in the previous chunk | 7 | 74 |
+| (3) no stem, lead-in is earlier in the same chunk | 12 | 114 |
 | (4) sibling bullet accepted as the stem; true lead-in: not_shown | 1 | 2 |
-| (4) sibling bullet accepted as the stem; true lead-in: previous_chunk | 1 | 4 |
+| (4) sibling bullet accepted as the stem; true lead-in: previous_chunk | 2 | 6 |
 | (4) sibling bullet accepted as the stem; true lead-in: same_chunk | 2 | 6 |
 | (4) sibling bullet accepted as the stem; true lead-in: section_heading | 4 | 10 |
-| no stem, lead-in not recoverable from the text shown | 2 | 147 |
-| no stem, only the section heading governs | 14 | 518 |
-| stem is itself a fragment (chain); true lead-in: previous_chunk | 4 | 8 |
-| stem is itself a fragment (chain); true lead-in: same_chunk | 8 | 32 |
-| stem is right | 22 | 69 |
+| no stem, lead-in not recoverable from the text shown | 1 | 119 |
+| no stem, only the section heading governs | 16 | 552 |
+| stem is itself a fragment (chain); true lead-in: previous_chunk | 3 | 6 |
+| stem is itself a fragment (chain); true lead-in: same_chunk | 7 | 28 |
+| stem is itself a fragment (chain); true lead-in: section_heading | 1 | 2 |
+| stem is right | 23 | 73 |
 | stem unrelated to the quote; true lead-in: same_chunk | 4 | 9 |
 
 Root cause (2), Docling hierarchy missing or wrong, cannot be established from text labels.
