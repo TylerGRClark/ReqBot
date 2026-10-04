@@ -411,3 +411,50 @@ def test_a_clean_run_then_a_resume_makes_no_second_pass(tmp_path):
     _run(tmp_path, TEXTS, again)
     assert again.calls == []
     assert (tmp_path / "doc_extracted_requirements.jsonl").read_bytes() == before
+
+
+# ---------------------------------------------------------------------------
+# Legacy (pre-ledger) run directories: the old loop wrote the raw record BEFORE the requirements, so an
+# interrupted old run can hold a parseable raw record whose rows never landed. Such a chunk is unfinished.
+# ---------------------------------------------------------------------------
+
+def _legacy_dir(tmp_path, records, rows):
+    """A run directory as the pre-ledger code left it: status-less raw records plus requirement rows."""
+    from core.profiles import default_profile
+    template = L.PASS1_PROMPT_TEMPLATE.replace("{obligation_verbs}", ", ".join(default_profile()["obligation_verbs"]))
+    _chunks(tmp_path / "doc_chunks.jsonl", TEXTS)
+    raw = [
+        {"chunk_id": cid, "model": "m", "prompt_hash": L._prompt_hash_for(template, TEXTS[cid]),
+         "raw_response": response, "timestamp": "t"}
+        for cid, response in records
+    ]
+    (tmp_path / "doc_raw_responses.jsonl").write_text("".join(json.dumps(r) + "\n" for r in raw))
+    (tmp_path / "doc_extracted_requirements.jsonl").write_text(
+        "".join(json.dumps({"chunk_id": cid, "requirement_id": f"R-{cid}-{j}"}) + "\n" for cid, j in rows)
+    )
+
+
+def test_a_legacy_record_whose_rows_never_landed_is_redone(tmp_path):
+    """Crash after the raw write, before the requirements: parseable answer, zero rows on disk."""
+    _legacy_dir(tmp_path, [(0, _ok("ALPHA", 2)[1]), (1, _ok("BRAVO", 1)[1])], rows=[(0, 0), (0, 1)])
+    second = _Llm({"ALPHA": [_ok("ALPHA", 2)], "BRAVO": [_ok("BRAVO", 1)]})
+    _run(tmp_path, TEXTS, second)
+
+    assert (second.count("ALPHA"), second.count("BRAVO")) == (0, 1)  # only the chunk with no rows
+    assert sorted(r["requirement_id"] for r in _files(tmp_path)[1]) == ["R-0-0", "R-0-1", "R-1-0"]
+
+
+def test_a_legacy_record_with_only_some_of_its_rows_is_redone_without_duplicates(tmp_path):
+    _legacy_dir(tmp_path, [(0, _ok("ALPHA", 3)[1])], rows=[(0, 0)])  # crashed after 1 of 3 rows
+    second = _Llm({"ALPHA": [_ok("ALPHA", 3)], "BRAVO": [_ok("BRAVO", 1)]})
+    _run(tmp_path, TEXTS, second)
+
+    assert second.count("ALPHA") == 1
+    assert sorted(r["requirement_id"] for r in _files(tmp_path)[1] if r["chunk_id"] == 0) == ["R-0-0", "R-0-1", "R-0-2"]
+
+
+def test_a_legacy_record_whose_rows_all_landed_is_not_redone(tmp_path):
+    _legacy_dir(tmp_path, [(0, _ok("ALPHA", 2)[1]), (1, _empty()[1])], rows=[(0, 0), (0, 1)])  # chunk 1: valid empty, 0 rows
+    second = _Llm({"ALPHA": [_ok("ALPHA", 9)], "BRAVO": [_ok("BRAVO", 9)]})
+    _run(tmp_path, TEXTS, second)
+    assert second.calls == []

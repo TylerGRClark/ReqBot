@@ -486,6 +486,14 @@ def _record_status(rec: dict) -> str:
     return STATUS_TRUNCATED if recovered_truncated else STATUS_COMPLETE
 
 
+def _replayed_row_count(raw_response: str, valid_domain_tags: list, valid_requirement_types: list) -> int:
+    """How many requirement rows a stored answer yields when parsed and validated again."""
+    parsed, _ = extract_json_array(raw_response or "")
+    return sum(
+        1 for item in (parsed or []) if validate_requirement(item, valid_domain_tags, valid_requirement_types)
+    )
+
+
 def _drop_chunk_rows(path: Path, chunk_ids: set) -> int:
     """Remove the rows of the given chunks from a JSONL file (atomic rewrite); return how many went.
 
@@ -741,6 +749,15 @@ def run(
     # Failed chunks are deliberately absent so a resume retries them (WP-45.0.2); keying on the chunk
     # as well as its prompt keeps identical or renumbered chunks from borrowing each other's result.
     accepted: dict[tuple, str] = {}
+    rows_on_disk: dict = {}  # chunk_id -> requirement rows already written (to vet pre-ledger records)
+    if reqs_path.exists():
+        with open(reqs_path, "r", encoding="utf-8") as f:
+            for line in f:
+                try:
+                    cid = json.loads(line).get("chunk_id")
+                except (json.JSONDecodeError, AttributeError):
+                    continue
+                rows_on_disk[cid] = rows_on_disk.get(cid, 0) + 1
     if raw_path.exists():
         # Non-default profiles always re-extract: extraction_profile is not tracked in
         # cache records until WP-20.4, so cached records from one profile run could
@@ -754,6 +771,7 @@ def run(
         else:
             skipped_model_mismatch = 0
             unfinished = 0
+            interrupted = 0
             with open(raw_path, "r", encoding="utf-8") as f:
                 for line in f:
                     line = line.strip()
@@ -769,6 +787,13 @@ def run(
                             if status == STATUS_FAILED:
                                 unfinished += 1
                                 continue
+                            if "status" not in rec and rows_on_disk.get(rec.get("chunk_id"), 0) != _replayed_row_count(
+                                rec.get("raw_response"), valid_domain_tags, valid_requirement_types
+                            ):
+                                # Written by the pre-ledger loop, which saved the raw record BEFORE the
+                                # requirements: the answer is on disk but its rows are not (or only some).
+                                interrupted += 1
+                                continue
                             if (ph := rec.get("prompt_hash")) and rec.get("chunk_id") is not None:
                                 accepted[(rec["chunk_id"], ph)] = status
                         except json.JSONDecodeError:
@@ -777,6 +802,11 @@ def run(
                 log.info(
                     "Skipped %d cached entries from a different model — will re-process with %s",
                     skipped_model_mismatch, model,
+                )
+            if interrupted:
+                log.warning(
+                    "%d earlier chunk(s) have a saved answer but not all of its requirement rows "
+                    "(an older run was interrupted) — they will be redone", interrupted,
                 )
             if unfinished:
                 log.info(
