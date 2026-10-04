@@ -478,6 +478,62 @@ ACTIVE BACKLOG
     exact matches no longer need to go through the model at all.
 
 
+34. [RESOLVED -- Phase 44, WP-44.1, docs/PHASE44_REQUIREMENTS.md sections 10-11]
+    Invented quotes passed Step D's fuzzy grounding gate
+    5 of 1,991 measured Step C quotes (scores 62-76 against a threshold of 60)
+    stated obligations their chunks do not (a marking table, a bare glossary
+    term, a cover page, a descriptive matrix). Closed with a word-coverage check
+    after the fuzzy gate (quote_words_not_in_chunk, threshold 0.8, selected on
+    that corpus -- not shown to generalize); the 3 live records were removed from
+    the selected artifacts and Qdrant on 2026-10-04 (2 more were already
+    quarantined in WP-42). Known remaining blind spot, observed once in the
+    corpus: real words dropped or rearranged still pass (DODI 8410.03 chunk 13:
+    "limited to" dropped, coverage 1.0). If that shape recurs, add a contiguity /
+    ordered-subsequence check, measured with eval/step_d_replay.py first.
+
+35. Dangling fragments are indexed bare or under a wrong parent, and are not
+    usable requirements (found in Phase 44, WP-44.2) -> Phase 45, Track A
+    Of 16 fragment-type survivors in the live artifacts, 10 have a parent stem
+    embedded with them (so attachment before embedding does happen), but at
+    least 2 look wrong (a previous sibling list item used as the stem; a chain
+    of fragments from one sentence docling split) and 6 are embedded bare. Their
+    description is empty or just repeats the fragment, so checklists show the
+    bare fragment. PRINCIPLE (Tyler): fragments are attached, never discarded --
+    a rule that rejects them was drafted and withdrawn. Candidates, each to be
+    measured one at a time on a fair retrieval test: (A1) better deterministic
+    parent attachment (sibling vs. governing stem, fragment chains, missing
+    stems; first find out whether the cause is chunking, docling's hierarchy, or
+    the reconstruction rules); (A2) a grounded standalone statement composed
+    only from the stem and fragment, both verbatim, gated like WP-35's
+    description gate -- a new LLM-generation feature, so Tyler's approval is
+    required. Evidence: eval/spike_results/wp_44_2/fragments_and_retrieval_probe.md
+    (16 records; the 6-query probe there is too weak to count).
+
+36. Junk requirements remain in the index (found in Phase 44, WP-44.2) ->
+    Phase 45, Track B
+    A hand-labeled sample of 60 of 1,845 survivors (one reviewer, unaudited):
+    about 8% pure junk (glossary preambles, acknowledgement text, descriptive
+    facts, cross-references), 10% borderline descriptive, 5% fragments (see item
+    35). No simple text rule separates these from real requirements; "no
+    obligation verb" is a sampling hint only. PRINCIPLE: flag, don't delete --
+    a recoverable review state excluded from default search, validated against a
+    labeled gold set (more than one reviewer, with a held-out portion) with an
+    explicit recall floor, because missing a real requirement is worse than
+    keeping a questionable one. Detecting descriptive-vs-obligation statements
+    likely needs judgment (an LLM classifier = new LLM-generation feature,
+    stop-and-ask). Evidence: eval/spike_results/wp_44_2/sample_labels.md.
+
+37. [MEASURED, DEFERRED -- Phase 44, WP-44.2] Tiny boilerplate chunks are sent
+    to the LLM and produce invented quotes
+    47 of 69 inventions came from the 34 chunks under 150 characters. A narrow
+    pre-filter (under 150 chars, no obligation verb in body or parent header, no
+    list marker) would skip 25 chunks, avoid 45 inventions and lose 1 real
+    quote -- computed from existing data, no LLM run. Deferred as low value
+    because WP-44.1 already rejects the output; revisit only for efficiency (it
+    saves about 3% of LLM calls). A plain length filter is NOT safe (7 of 26
+    chunks in the 60-150 band yield real list-item requirements). About 20% of
+    inventions near-copy the prompt's few-shot examples; not pursued.
+
 ================================================================
 RETRIEVAL EXPERIMENTS
 ================================================================
@@ -485,6 +541,14 @@ RETRIEVAL EXPERIMENTS
 These are quality experiments, not guaranteed product work.
 
 1. Reranker spike
+   [TRIED -- Phase 43, docs/PHASE43_REQUIREMENTS.md: FlashRank TinyBERT and
+   MiniLM-L-12 failed the pre-agreed gate (no demonstrated benefit under the
+   tested configurations; differences within sampling noise at n=35; opt-in
+   code retained, rerank defaults to False). The broader question stays open:
+   a frozen-pool follow-up (capture the real pre-rerank pools, measure pool
+   recall as the ceiling, test the original question vs. the rewrite as
+   reranker input) is proposed in section 11.5 but not scheduled. Note both
+   models are already cross-encoders.]
    Add a local reranker stage after RRF fusion for precision improvement.
    Prior planning exists but was deferred before execution -- see
    archive/PHASE15_EXTENSION_RETRIEVAL_HARDENING.md (WP-15.5) for the fuller
@@ -551,11 +615,33 @@ These are quality experiments, not guaranteed product work.
    requirement cannot crowd out the result set.
 
 3. HyPE / hypothetical question indexing (separate from HyDE)
+   [DECISION 2026-10-04 (Tyler): SHOULD be pursued -- research and test it as
+   its own package/phase, separate from Phase 45 (extraction quality).]
    Pre-generate likely user questions for each requirement at ingest time and
    index those as an additional retrieval surface.
 
    This may improve query-time recall, but it adds generated text to the index
    and should be clearly separated from source-grounded fields.
+
+   Why it moved from "maybe" to "pursue": WP-44.2's measurement showed that
+   even a correctly attached dangling fragment ("This section will define for
+   all parties: Required NM data update rates.") is hard to find by meaning,
+   and the WP-40 audit already classed 9 retrieval misses as missing_context.
+   Index-side questions ("What must a network management SLA define about data
+   update rates?") match how users actually ask. Clarifications: HyDE is
+   query-side and already exists (WP-37); HyPE is index-side. HyPE addresses
+   FINDABILITY; it does not make a fragment a usable requirement for checklist
+   use -- that is item 35 (a grounded standalone statement), a separate fix.
+   The earlier reason for shelving it ("extractions would hallucinate") is a
+   different failure: extraction invents requirements from a chunk; generating
+   questions is expected generated text, so the control is grounding, not
+   verbatim -- every generated question must be answerable from its own
+   record's text, stored apart from source_quote, using the WP-35 grounding-
+   gate pattern. Measure against Phase 45's fair retrieval test (queries
+   written from meaning, not copied from the fragment's wording). Open costs:
+   one LLM call per record, a multiplied vector count (collapse to
+   requirement_id before ranking, per item 2's critical rule), possible
+   ranking dilution. A new LLM-generation feature: stop-and-ask applies.
 
 4. Corrective retrieval gate
    If retrieval confidence is weak, retry once with a targeted rewrite or
@@ -765,3 +851,15 @@ DECISIONS AND GUARDRAILS
     of the corpus/relationship data (see ACTIVE BACKLOG items 26-29), not a
     pivot into architecture design. Revisit only with real evidence of
     demand, not just that it would be technically possible to build.
+
+11. Extraction strength is the cornerstone; attach fragments, flag junk (2026-10-04, Tyler)
+    The quality of the extracted requirements bounds everything downstream
+    (retrieval, evidence, comparison, checklists, MCP). Two rules follow.
+    (a) Never discard a dangling fragment -- it carries a real obligation and
+    belongs attached to its parent clause before embedding; fixing that is
+    attachment work, not rejection work. (b) Flag, don't delete -- anything that
+    might be junk goes to a recoverable review state, never silently dropped,
+    and a detector only ships when a labeled gold set (more than one reviewer,
+    held-out portion) shows it stays above an explicit recall floor. Missing a
+    real requirement is worse than keeping a questionable one. See ACTIVE
+    BACKLOG items 35-36 and docs/PHASE44_REQUIREMENTS.md section 12.
