@@ -1,0 +1,103 @@
+Paired change in recall@10 (best-case ties; arm minus production), record bootstrap 95% interval, verdict, and MRR change.
+
+Q1  wrong stem removed               misleading topic
+    plain    -0.09 [-0.23,+0.00] no dem | MRR +0.02 (n=22)
+    prod r1  -0.09 [-0.27,+0.09] no dem | MRR +0.06 (n=22)
+    prod r2  -0.14 [-0.27,+0.00] no dem | MRR +0.07 (n=22)
+    prod r3  -0.18 [-0.36,-0.05] WORSE | MRR +0.01 (n=22)
+Q1  wrong stem removed               misleading party
+    plain    -0.12 [-0.29,+0.00] no dem | MRR +0.06 (n=17)
+    prod r1  +0.00 [-0.18,+0.18] no dem | MRR +0.08 (n=17)
+    prod r2  -0.06 [-0.24,+0.12] no dem | MRR +0.09 (n=17)
+    prod r3  +0.00 [-0.18,+0.18] no dem | MRR +0.01 (n=17)
+Q1  chain stem removed               incomplete topic
+    plain    +0.00 [+0.00,+0.00] no dem | MRR +0.14 (n=11)
+    prod r1  -0.09 [-0.27,+0.00] no dem | MRR +0.02 (n=11)
+    prod r2  -0.09 [-0.27,+0.00] no dem | MRR +0.09 (n=11)
+    prod r3  +0.00 [+0.00,+0.00] no dem | MRR +0.05 (n=11)
+Q1  chain stem removed               incomplete party
+    plain    -0.09 [-0.36,+0.18] no dem | MRR -0.15 (n=11)
+    prod r1  -0.18 [-0.45,+0.00] no dem | MRR -0.02 (n=11)
+    prod r2  -0.09 [-0.27,+0.00] no dem | MRR +0.00 (n=11)
+    prod r3  -0.09 [-0.27,+0.00] no dem | MRR +0.06 (n=11)
+Q2  right stem removed               right      topic
+    plain    -0.12 [-0.24,+0.00] no dem | MRR -0.09 (n=25)
+    prod r1  -0.08 [-0.24,+0.08] no dem | MRR -0.06 (n=25)
+    prod r2  -0.08 [-0.24,+0.08] no dem | MRR -0.05 (n=25)
+    prod r3  -0.12 [-0.28,+0.04] no dem | MRR -0.03 (n=25)
+Q2  right stem removed               right      party
+    plain    -0.10 [-0.24,+0.00] no dem | MRR -0.24 (n=21)
+    prod r1  -0.10 [-0.24,+0.00] no dem | MRR -0.14 (n=21)
+    prod r2  -0.10 [-0.24,+0.00] no dem | MRR -0.11 (n=21)
+    prod r3  -0.10 [-0.24,+0.00] no dem | MRR -0.14 (n=21)
+Q3  lead-in added, no stem           bare       topic
+    plain    +0.17 [+0.06,+0.31] BETTER | MRR +0.17 (n=35)
+    prod r1  +0.26 [+0.11,+0.40] BETTER | MRR +0.16 (n=35)
+    prod r2  +0.11 [+0.03,+0.23] BETTER | MRR +0.13 (n=35)
+    prod r3  +0.14 [+0.03,+0.26] BETTER | MRR +0.11 (n=35)
+Q3  lead-in added, no stem           bare       party
+    plain    +0.28 [+0.14,+0.45] BETTER | MRR +0.31 (n=29)
+    prod r1  +0.21 [+0.07,+0.34] BETTER | MRR +0.29 (n=29)
+    prod r2  +0.28 [+0.14,+0.45] BETTER | MRR +0.31 (n=29)
+    prod r3  +0.28 [+0.14,+0.45] BETTER | MRR +0.29 (n=29)
+Q3  lead-in replaces wrong stem      misleading topic
+    plain    -0.09 [-0.27,+0.00] no dem | MRR +0.15 (n=11)
+    prod r1  +0.00 [+0.00,+0.00] no dem | MRR +0.04 (n=11)
+    prod r2  +0.00 [+0.00,+0.00] no dem | MRR +0.07 (n=11)
+    prod r3  -0.09 [-0.27,+0.00] no dem | MRR +0.03 (n=11)
+Q3  lead-in replaces wrong stem      misleading party
+    plain    +0.09 [+0.00,+0.27] no dem | MRR +0.41 (n=11)
+    prod r1  +0.00 [+0.00,+0.00] no dem | MRR +0.32 (n=11)
+    prod r2  -0.09 [-0.27,+0.00] no dem | MRR +0.29 (n=11)
+    prod r3  +0.00 [+0.00,+0.00] no dem | MRR +0.19 (n=11)
+Q3  lead-in replaces chain stem      incomplete party
+    plain    +0.27 [+0.00,+0.55] no dem | MRR +0.32 (n=11)
+    prod r1  +0.27 [+0.00,+0.55] no dem | MRR +0.28 (n=11)
+    prod r2  +0.18 [+0.00,+0.45] no dem | MRR +0.24 (n=11)
+    prod r3  +0.27 [+0.00,+0.55] no dem | MRR +0.35 (n=11)
+H3  rule heading, dense+BM25         bare       topic
+    plain    +0.03 [+0.00,+0.08] no dem | MRR +0.02 (n=36)
+    prod r1  +0.08 [+0.00,+0.19] no dem | MRR +0.06 (n=36)
+    prod r2  +0.00 [+0.00,+0.00] no dem | MRR +0.04 (n=36)
+    prod r3  +0.03 [+0.00,+0.08] no dem | MRR +0.01 (n=36)
+H3  rule heading, dense+BM25         bare       party
+    plain    +0.14 [+0.03,+0.28] BETTER | MRR +0.15 (n=29)
+    prod r1  +0.10 [+0.00,+0.21] no dem | MRR +0.09 (n=29)
+    prod r2  +0.10 [+0.00,+0.21] no dem | MRR +0.12 (n=29)
+    prod r3  +0.10 [+0.00,+0.21] no dem | MRR +0.12 (n=29)
+H3  rule heading, dense only         bare       party
+    plain    +0.03 [+0.00,+0.10] no dem | MRR +0.06 (n=29)
+    prod r1  +0.00 [+0.00,+0.00] no dem | MRR +0.01 (n=29)
+    prod r2  +0.03 [+0.00,+0.10] no dem | MRR +0.05 (n=29)
+    prod r3  +0.00 [+0.00,+0.00] no dem | MRR +0.01 (n=29)
+H4  rulings' heading, dense+BM25     bare       party
+    plain    +0.14 [+0.03,+0.28] BETTER | MRR +0.13 (n=29)
+    prod r1  +0.10 [+0.00,+0.21] no dem | MRR +0.08 (n=29)
+    prod r2  +0.10 [+0.00,+0.21] no dem | MRR +0.10 (n=29)
+    prod r3  +0.10 [+0.00,+0.21] no dem | MRR +0.12 (n=29)
+
+Gold counterchecks, paired per query, cohort-wide (arm minus production), recall@10 [interval] and MRR:
+    quote_alone  plain    recall@10 -0.096 [-0.202,-0.009]  MRR -0.047 [-0.141,+0.032]
+    quote_alone  prod r1  recall@10 -0.082 [-0.182,-0.003]  MRR -0.080 [-0.169,-0.010]
+    quote_alone  prod r2  recall@10 -0.093 [-0.192,-0.016]  MRR -0.075 [-0.165,-0.008]
+    quote_alone  prod r3  recall@10 -0.102 [-0.200,-0.024]  MRR -0.060 [-0.152,+0.011]
+    oracle       plain    recall@10 -0.017 [-0.049,+0.000]  MRR -0.023 [-0.069,+0.000]
+    oracle       prod r1  recall@10 -0.032 [-0.092,+0.000]  MRR -0.029 [-0.086,+0.000]
+    oracle       prod r2  recall@10 -0.027 [-0.091,+0.009]  MRR -0.013 [-0.081,+0.043]
+    oracle       prod r3  recall@10 -0.031 [-0.092,+0.002]  MRR +0.005 [-0.071,+0.068]
+    h3_dense     plain    recall@10 +0.000 [+0.000,+0.000]  MRR +0.008 [+0.000,+0.023]
+    h3_dense     prod r1  recall@10 -0.006 [-0.043,+0.021]  MRR +0.014 [-0.014,+0.057]
+    h3_dense     prod r2  recall@10 -0.004 [-0.043,+0.025]  MRR +0.019 [+0.000,+0.057]
+    h3_dense     prod r3  recall@10 -0.007 [-0.043,+0.021]  MRR +0.017 [+0.000,+0.048]
+    h3_both      plain    recall@10 -0.003 [-0.010,+0.000]  MRR +0.013 [-0.037,+0.070]
+    h3_both      prod r1  recall@10 -0.009 [-0.046,+0.019]  MRR +0.019 [-0.010,+0.067]
+    h3_both      prod r2  recall@10 -0.007 [-0.045,+0.021]  MRR +0.026 [+0.000,+0.071]
+    h3_both      prod r3  recall@10 -0.010 [-0.046,+0.019]  MRR +0.014 [-0.002,+0.043]
+    h4_dense     plain    recall@10 +0.000 [+0.000,+0.000]  MRR +0.000 [+0.000,+0.000]
+    h4_dense     prod r1  recall@10 +0.000 [+0.000,+0.000]  MRR +0.000 [+0.000,+0.000]
+    h4_dense     prod r2  recall@10 +0.000 [+0.000,+0.000]  MRR +0.000 [+0.000,+0.000]
+    h4_dense     prod r3  recall@10 +0.000 [+0.000,+0.000]  MRR +0.000 [+0.000,+0.000]
+    h4_both      plain    recall@10 +0.000 [+0.000,+0.000]  MRR +0.000 [+0.000,+0.000]
+    h4_both      prod r1  recall@10 +0.000 [+0.000,+0.000]  MRR +0.000 [+0.000,+0.000]
+    h4_both      prod r2  recall@10 +0.000 [+0.000,+0.000]  MRR +0.000 [+0.000,+0.000]
+    h4_both      prod r3  recall@10 +0.000 [+0.000,+0.000]  MRR +0.000 [+0.000,+0.000]

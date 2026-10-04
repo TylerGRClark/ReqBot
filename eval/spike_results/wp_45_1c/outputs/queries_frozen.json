@@ -1,0 +1,29 @@
+{
+ "frozen_before_any_retrieval": true,
+ "git_revision": "bd049947d94f8ec99fdb1112b60536908d4a45ea",
+ "git_revision_note": "HEAD when frozen; the commit that adds this file follows it",
+ "no_party": 20,
+ "overlap_with_card": {
+  "party": {
+   "max_overlap": 1.0,
+   "mean_overlap": 0.597,
+   "median_overlap": 0.613,
+   "n": 112
+  },
+  "topic": {
+   "max_overlap": 1.0,
+   "mean_overlap": 0.384,
+   "median_overlap": 0.375,
+   "n": 112
+  }
+ },
+ "queries": 112,
+ "sha256": {
+  "QUERY_WRITING.md": "273a84c7f470a7262902dc31ea8e85d8f9c5b6308e47fcd3f98d1be9cad496e5",
+  "groups.json": "4b5c09ee2f35c15f3618734b4773db01780d43a0811ef93dd8276feb19f11ad6",
+  "queries.jsonl": "4fbb4b87aa53b64e6a3cd1706f6d9a466d34d27100339a4b263ac151566f5e74",
+  "query_check.py": "da1dae6ef6b16fb06fb0689ba0525760f2faaa140c1fddf177561144fb299a77",
+  "query_ids.json": "eaa35b09685a527ea2354366ba6802f4430c65de041cb9ae4217a9b24b2fe1ee",
+  "query_packet.md": "d2154f5e0d536dc81f6eec511a4cfbb2bbae9b0e3afed2185b0356d099b1a4e7"
+ }
+}
