@@ -22,6 +22,15 @@ RUN npm run build
 FROM python:3.12-slim AS runtime
 WORKDIR /app
 
+# Docling's OCR (rapidocr) depends on the non-headless opencv-python, which loads libGL, libxcb
+# and glib at import time. The slim base image has none of them, so without these packages the
+# first PDF conversion fails with "cannot open shared object file" (libxcb.so.1 / libGL.so.1).
+# libgl1 pulls in libxcb transitively. CI's docker job runs build/smoke_parse_chunk.py to catch a
+# regression here.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY pyproject.toml MANIFEST.in README.md ./
 COPY api/ ./api/
 COPY cli/ ./cli/
