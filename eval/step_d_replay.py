@@ -9,7 +9,14 @@ what survives and why the rest were rejected. Run once before a Step D change an
 
     python3 eval/step_d_replay.py --label baseline --out /tmp/wp44_replay/baseline
     python3 eval/step_d_replay.py --label after    --out /tmp/wp44_replay/after
-    python3 eval/step_d_replay.py --compare /tmp/wp44_replay/baseline /tmp/wp44_replay/after
+    python3 eval/step_d_replay.py --compare /tmp/wp44_replay/baseline /tmp/wp44_replay/after \
+        --expected-removed eval/spike_results/wp_44/expected_removals.json
+
+`--compare` exits nonzero unless: both runs used identical input run directories and chunk /
+extraction / PDF hashes; no survivor was added or had a stable field changed; no failure-code
+count decreased; the survivors removed are exactly the IDs in --expected-removed (any removal is
+unapproved when that file is not given); and every removal is accounted for by an increase in
+some failure code. Exit codes: 0 pass, 1 document-set mismatch, 3 input mismatch, 2 gate failure.
 
 Each run writes <out>/summary.json (committed-friendly: counts, failure codes, survivor IDs,
 per-record content hashes) next to the full normalized files used for the field-level diff.
@@ -63,6 +70,8 @@ def replay_one(stem: str, run_dir: Path, out_root: Path, profile: dict) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     parse_and_normalize.run(reqs_path, chunks_path, str(pdf), str(out_dir), profile=profile)
+    input_hashes = {name: hashlib.sha256(Path(path).read_bytes()).hexdigest()
+                    for name, path in (("chunks_sha256", chunks_path), ("extracted_sha256", reqs_path), ("pdf_sha256", str(pdf)))}
 
     base = Path(reqs_path).name.replace("_extracted_requirements.jsonl", "")
     survivors = _load(str(out_dir / f"{base}_requirements_normalized.jsonl"))
@@ -73,6 +82,7 @@ def replay_one(stem: str, run_dir: Path, out_root: Path, profile: dict) -> dict:
 
     return {
         "run_dir": run_dir.name,
+        **input_hashes,
         "raw_records": len(raw),
         "survivors": len(survivors),
         "unchecked_unknown_chunk": unchecked,
@@ -109,22 +119,38 @@ def run_replay(label: str, out: Path) -> dict:
     return summary
 
 
-def compare(a_dir: Path, b_dir: Path) -> int:
+def compare(a_dir: Path, b_dir: Path, expected_removed: set[str] | None = None) -> int:
     a = json.loads((a_dir / "summary.json").read_text())
     b = json.loads((b_dir / "summary.json").read_text())
+    if set(a["documents"]) != set(b["documents"]):
+        print(f"document set differs: {sorted(set(a['documents']) ^ set(b['documents']))}")
+        return 1
+
+    # Both arms must have replayed the identical inputs, or corpus changes (e.g. a newer ingest
+    # appearing between the two runs) would be attributed to the code under test.
+    mismatched = []
+    for stem in sorted(a["documents"]):
+        da, db = a["documents"][stem], b["documents"][stem]
+        for key in ("run_dir", "chunks_sha256", "extracted_sha256", "pdf_sha256"):
+            if da.get(key) is None or da.get(key) != db.get(key):
+                mismatched.append((stem, key))
+    if mismatched:
+        print("INPUT MISMATCH -- the two runs did not use identical inputs (or a summary predates input hashing):")
+        for stem, key in mismatched:
+            print(f"  {stem}: {key}")
+        return 3
+
     removed, added, changed = [], [], []
     codes_a, codes_b = Counter(), Counter()
-    for stem in sorted(set(a["documents"]) | set(b["documents"])):
-        da, db = a["documents"].get(stem), b["documents"].get(stem)
-        if not da or not db:
-            print(f"document set differs: {stem}")
-            return 1
+    for stem in sorted(a["documents"]):
+        da, db = a["documents"][stem], b["documents"][stem]
         codes_a.update(da["failure_codes"])
         codes_b.update(db["failure_codes"])
         sa, sb = set(da["survivor_ids"]), set(db["survivor_ids"])
         removed += [(stem, i) for i in sorted(sa - sb)]
         added += [(stem, i) for i in sorted(sb - sa)]
         changed += [(stem, i) for i in sorted(sa & sb) if da["survivor_hashes"][i] != db["survivor_hashes"][i]]
+
     print(f"baseline rev {a['git_revision'][:8]} (dirty={a['pipeline_or_core_dirty']})  vs  after rev {b['git_revision'][:8]} (dirty={b['pipeline_or_core_dirty']})")
     print(f"failure codes baseline: {dict(codes_a)}\nfailure codes after:    {dict(codes_b)}")
     print(f"removed survivors: {len(removed)}  added: {len(added)}  changed fields: {len(changed)}")
@@ -138,7 +164,34 @@ def compare(a_dir: Path, b_dir: Path) -> int:
         print(f"  ADDED   {stem}: {rid}")
     for stem, rid in changed[:10]:
         print(f"  CHANGED {stem}: {rid}")
-    return 0 if not added and not changed else 2
+
+    problems = []
+    if added:
+        problems.append(f"{len(added)} survivor(s) added")
+    if changed:
+        problems.append(f"{len(changed)} survivor(s) with changed fields")
+    decreased = {c: (codes_a[c], codes_b[c]) for c in codes_a if codes_b[c] < codes_a[c]}
+    if decreased:
+        problems.append(f"failure code count(s) decreased: {decreased}")
+    increase = sum(codes_b[c] - codes_a[c] for c in codes_b if codes_b[c] > codes_a[c])
+    if increase != len(removed):
+        problems.append(f"{len(removed)} removal(s) but failure codes increased by {increase} -- removals not accounted for")
+    removed_ids = {rid for _, rid in removed}
+    if expected_removed is None:
+        if removed_ids:
+            problems.append(f"{len(removed_ids)} unapproved removal(s) (no --expected-removed given)")
+    else:
+        if removed_ids - expected_removed:
+            problems.append(f"unexpected removals: {sorted(removed_ids - expected_removed)}")
+        if expected_removed - removed_ids:
+            problems.append(f"expected removals missing: {sorted(expected_removed - removed_ids)}")
+    if problems:
+        print("GATE FAILED:")
+        for pr in problems:
+            print(f"  - {pr}")
+        return 2
+    print("GATE PASSED: identical inputs; removals match the approved set; no other change.")
+    return 0
 
 
 def main() -> int:
@@ -146,9 +199,12 @@ def main() -> int:
     ap.add_argument("--label", default="run")
     ap.add_argument("--out", type=Path)
     ap.add_argument("--compare", nargs=2, type=Path, metavar=("BASELINE_DIR", "AFTER_DIR"))
+    ap.add_argument("--expected-removed", type=Path, metavar="JSON",
+                    help="JSON list of survivor requirement_ids that are allowed (and required) to disappear")
     args = ap.parse_args()
     if args.compare:
-        return compare(*args.compare)
+        expected = set(json.loads(args.expected_removed.read_text())) if args.expected_removed else None
+        return compare(*args.compare, expected_removed=expected)
     if not args.out:
         ap.error("--out is required unless --compare is given")
     if str(args.out.resolve()).startswith(str(PROCESSED.resolve())):

@@ -269,9 +269,16 @@ check with false rejections. WP-44.2 candidates use the criteria in §5.
 ## 10. Findings — WP-44.1
 
 Replay of the real Step D entry point (`eval/step_d_replay.py`) over the saved Step C output of
-the 13 documents, baseline vs. after, both at base revision `c92bd87` (the after-run is the
-uncommitted working-tree change). Baseline and after summaries are in
-`eval/spike_results/wp_44/`.
+the 13 documents. Baseline: a clean worktree at `c92bd87` (the commit before the change). After:
+`776c2e7`. Summaries, with per-document run directories and chunk / extraction / PDF SHA-256
+hashes, are in `eval/spike_results/wp_44/`.
+
+**The comparison is a gate, not a report** (hardened after Codex's PR #196 review):
+`--compare ... --expected-removed eval/spike_results/wp_44/expected_removals.json` exits nonzero
+unless both runs used identical inputs, nothing was added or changed, no failure-code count
+decreased, every removal is accounted for by a failure-code increase, and the removed survivors are
+exactly the 5 approved IDs (whose quotes match the 5 hand-labeled leak fixtures). Its failure paths
+are unit-tested (`tests/unit/test_step_d_replay.py`).
 
 **Replay fidelity (baseline):** 13 of 13 documents reproduce the existing corpus's survivor
 requirement-ID set exactly (1,991 raw records → 1,850 survivors); 0 records had an unknown chunk,
@@ -294,7 +301,7 @@ so every record was checked.
   failure codes is the new code's 5).
 - Output loses exactly the five verified baseline survivors, gains none, changes no stable field:
   **met.**
-- `pytest` green (916 passed, +10 new), `ruff check .` clean: **met.**
+- `pytest` green (929 passed: +10 for the check, +13 for the replay gate), `ruff check .` clean: **met.**
 
 **What the evidence does and does not show.**
 - Selecting 0.8 and then replaying the same corpus checks the implementation and regressions, not

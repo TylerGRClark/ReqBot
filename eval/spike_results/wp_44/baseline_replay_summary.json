@@ -1,10 +1,13 @@
 {
  "documents": {
   "CJCSI 6510.02G": {
+   "chunks_sha256": "77f474760f2a688afb20be4659c01ea2f79e3711f1d32c0d85af8c9ae0da4d60",
+   "extracted_sha256": "28173f35345fbfcb7fbbc89ab10a15c080103231f82e284b2bfc5e1eced02f4f",
    "failure_codes": {
     "quote_not_grounded_in_chunk": 14,
     "unrepairable_fragment_quote": 2
    },
+   "pdf_sha256": "208451d99602f5f74b7d484ebf46ef56c293cdcc26607ff6c4d2e796852ad041",
    "raw_records": 103,
    "run_dir": "CJCSI 6510.02G_20260731_152438",
    "survivor_hashes": {
@@ -189,10 +192,13 @@
    "unchecked_unknown_chunk": 0
   },
   "DODI 5200.01": {
+   "chunks_sha256": "20057e3fd9fb2a264cbb0d1ae93136f62b2a35dba2e0c89cc54286ecbb15690e",
+   "extracted_sha256": "ff7ee6a94cea28496ddea6127cdd9def88b523fb89123255808cddee7b22dfae",
    "failure_codes": {
     "quote_not_grounded_in_chunk": 3,
     "unrepairable_fragment_quote": 5
    },
+   "pdf_sha256": "206eaef84331885b2f9700ed86f5579da80c3119ab4a5c6707e8ed349b2f35e6",
    "raw_records": 73,
    "run_dir": "DODI 5200.01_20260730_215412",
    "survivor_hashes": {
@@ -333,10 +339,13 @@
    "unchecked_unknown_chunk": 0
   },
   "DODI 5200.44": {
+   "chunks_sha256": "8b6c9ac165bf544829118bf4fba97a54a798ded80a7953e1566c4955fda37bb2",
+   "extracted_sha256": "643aedccaba2eab6d2c38286cb31101c900effe06f5e0bfb051ab91ab85b5aad",
    "failure_codes": {
     "quote_not_grounded_in_chunk": 5,
     "unrepairable_fragment_quote": 3
    },
+   "pdf_sha256": "769ed3c3c9bd1c0e4aa2770fddb7c02694f714c2321d96f6a2d7f639f7fa88b9",
    "raw_records": 101,
    "run_dir": "DODI 5200.44_20260730_220819",
    "survivor_hashes": {
@@ -533,10 +542,13 @@
    "unchecked_unknown_chunk": 0
   },
   "DODI 5200.48": {
+   "chunks_sha256": "f149a4830f49f1d908681044609be2f8ab7c341257d5dfe2f6b4eed1c51fbe21",
+   "extracted_sha256": "05fc18aa3908e6ec8415797524957578fd51328037b3d835aeeae2296aeaf8f5",
    "failure_codes": {
     "quote_not_grounded_in_chunk": 8,
     "unrepairable_fragment_quote": 3
    },
+   "pdf_sha256": "bbbe4937419808636b21e060c7bc3912edb4bdb20dbe4737d26edb1b7c0a040d",
    "raw_records": 231,
    "run_dir": "DODI 5200.48_20260802_022447",
    "survivor_hashes": {
@@ -987,10 +999,13 @@
    "unchecked_unknown_chunk": 0
   },
   "DODI 8410.03": {
+   "chunks_sha256": "43dc137a3404a233b9019ad7346f86cde3ca99bdda4f3a97a2c4e1939fdf4be0",
+   "extracted_sha256": "9c4338be5dec4898e079daed469c5302874060274bf9794a6827b44f495e8b0f",
    "failure_codes": {
     "quote_not_grounded_in_chunk": 1,
     "unrepairable_fragment_quote": 9
    },
+   "pdf_sha256": "e0c708499cae800483a308ecc236436c988896be8ad6db8c6f214ab7f1009133",
    "raw_records": 150,
    "run_dir": "DODI 8410.03_20260730_220814",
    "survivor_hashes": {
@@ -1281,10 +1296,13 @@
    "unchecked_unknown_chunk": 0
   },
   "DODI 8551.01": {
+   "chunks_sha256": "ff58795fb75bde847d28610b1898cc403de5784e325f24bba1f3a2e2c474089e",
+   "extracted_sha256": "b38f1a2918a0c86646921101368ef94116f6fe714ccae6e88173d7f24ca3ad6f",
    "failure_codes": {
     "quote_not_grounded_in_chunk": 6,
     "unrepairable_fragment_quote": 2
    },
+   "pdf_sha256": "30371d13dfb27c58b5c1c5f3c9c198a96b86d056459a2e1f8665ba92bc904dfb",
    "raw_records": 62,
    "run_dir": "DODI 8551.01_20260802_023456",
    "survivor_hashes": {
@@ -1403,11 +1421,14 @@
    "unchecked_unknown_chunk": 0
   },
   "NIST.SP.800-125": {
+   "chunks_sha256": "2e58c27c942fe0f9d2c4edc4caa92e96c5fb845d033c7d81f2a37bf499cc388d",
+   "extracted_sha256": "49f2dd0fc33226cae07a79fc8cb39785232c173d87843efd31e4bad7bd1e9c63",
    "failure_codes": {
     "heading_echo_quote": 1,
     "quote_not_grounded_in_chunk": 2,
     "unrepairable_fragment_quote": 1
    },
+   "pdf_sha256": "da8bd5054eb1d6a1942cf756901e5ebfece26458580af143971bc54f45d5114d",
    "raw_records": 156,
    "run_dir": "NIST.SP.800-125_20260730_215611",
    "survivor_hashes": {
@@ -1720,12 +1741,15 @@
    "unchecked_unknown_chunk": 0
   },
   "afi10-2402": {
+   "chunks_sha256": "a1704526ea95af2b27d4f1d842f10906b3238721baa7adec3003a5cb2fd88f09",
+   "extracted_sha256": "4922c8504231454a6eced740d62194cd21a705099f6175b53fabff1017ca5601",
    "failure_codes": {
     "heading_echo_quote": 6,
     "orphaned_list_item_quote": 4,
     "quote_not_grounded_in_chunk": 8,
     "unrepairable_fragment_quote": 3
    },
+   "pdf_sha256": "87308ed1962cdf559549b9cb39cfc46b976aa7df317ff15db688a73895de93ed",
    "raw_records": 315,
    "run_dir": "afi10-2402_20260802_020612",
    "survivor_hashes": {
@@ -2314,10 +2338,13 @@
    "unchecked_unknown_chunk": 0
   },
   "afi13-550": {
+   "chunks_sha256": "15ca79ac0e3ca59062bc565a437378e1d50ec9a73c3877671d67c6e8ac845583",
+   "extracted_sha256": "c2175bf43882c0bfec1d97bfb87281567b5da3dd8d8a9967cbaef65298780c1a",
    "failure_codes": {
     "heading_echo_quote": 2,
     "quote_not_grounded_in_chunk": 4
    },
+   "pdf_sha256": "329008e36ab492d0ff5a644d5f38c27e7774e60eddebb04f93031a37e37318d5",
    "raw_records": 179,
    "run_dir": "afi13-550_20260730_224256",
    "survivor_hashes": {
@@ -2666,10 +2693,13 @@
    "unchecked_unknown_chunk": 0
   },
   "afi17-203": {
+   "chunks_sha256": "97322c5841458b194ca8e88288e6ebfa6e724d09aeca144c6a4d4e7aa090073f",
+   "extracted_sha256": "d6bad5ae54327758c53fc0e26153f543d35e4d823e3dd982adaccb24e9f9d9af",
    "failure_codes": {
     "heading_echo_quote": 2,
     "quote_not_grounded_in_chunk": 6
    },
+   "pdf_sha256": "147fa53787f6d7fb66ef48b40daeaee8de689f7189b3cbfdab3f61d84793f898",
    "raw_records": 118,
    "run_dir": "afi17-203_20260802_021910",
    "survivor_hashes": {
@@ -2898,11 +2928,14 @@
    "unchecked_unknown_chunk": 0
   },
   "afman17-2101": {
+   "chunks_sha256": "52bb69af3bb2ac253abab90ceea5d1f634d20078cb9495c60130a12b9ab95740",
+   "extracted_sha256": "4ec0a7acc9a94836e4bd99f6e4ea6a50e8d8d15c096765c98f9327f5c8b83fb2",
    "failure_codes": {
     "heading_echo_quote": 4,
     "quote_not_grounded_in_chunk": 4,
     "unrepairable_fragment_quote": 1
    },
+   "pdf_sha256": "b225608e15066270e4150101fba557532a92575b1206ebd56af2a93eea536f2f",
    "raw_records": 157,
    "run_dir": "afman17-2101_20260730_224258",
    "survivor_hashes": {
@@ -3201,10 +3234,13 @@
    "unchecked_unknown_chunk": 0
   },
   "afpd_17-1": {
+   "chunks_sha256": "ec9d252259a9fe56d7a7822811cb331595042030ffab771cf13a51f261a2f409",
+   "extracted_sha256": "d3d651ffbda6e3afc69ab2c64fd918dd683dd25bb9e1d7d4ea533dd5c132c7c4",
    "failure_codes": {
     "heading_echo_quote": 6,
     "quote_not_grounded_in_chunk": 3
    },
+   "pdf_sha256": "6f2b6762b844f357c67be021b6f8ee002552a6342f4c67c10acc8e0cde60aab0",
    "raw_records": 73,
    "run_dir": "afpd_17-1_20260731_012137",
    "survivor_hashes": {
@@ -3343,10 +3379,13 @@
    "unchecked_unknown_chunk": 0
   },
   "dafman17-1305": {
+   "chunks_sha256": "d95c22075db146f1bdce462890e6ef6cd57383c7281e1708c828399bd3cf6615",
+   "extracted_sha256": "7a208b582c0e995fb12788a9b2f97905d7b25a7e88a85fea9be871db08138a63",
    "failure_codes": {
     "heading_echo_quote": 3,
     "unrepairable_fragment_quote": 2
    },
+   "pdf_sha256": "ae766b6191078f78df939aa928582c12f8b5e0599fb9799205812efc0b02fc8f",
    "raw_records": 273,
    "run_dir": "dafman17-1305_20260730_224300",
    "survivor_hashes": {
