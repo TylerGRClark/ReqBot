@@ -1,7 +1,7 @@
 # ReqBot Phase 44 — Source-Quote Integrity and Junk Requirements
 
-**Status:** WP-44.1 implemented and measured on `feature/wp-44-1-quote-word-coverage` (see §10);
-awaiting review and merge. WP-44.2 not started.
+**Status:** WP-44.1 complete (merged, PR #196). The 3 invented-quote records that were live in the
+index were removed on 2026-10-04 (§11). WP-44.2 not started.
 **Date:** 2026-10-03
 **Preceded by:** Phase 43 (Reranker Spike) — `docs/PHASE43_REQUIREMENTS.md`, complete (measured
 No-Go, no default changed). This phase is unrelated to retrieval; it hardens Step D's quote
@@ -14,8 +14,8 @@ grounding, which Phase 43's docling-upgrade check (PR #159) happened to surface.
 
 | WP | Status |
 |---|---|
-| WP-44.1 — Close the invented-quote leak (Step D word-coverage check) | Implemented, gate met — in review |
-| WP-44.2 — Junk inputs (measure first; code only if the measurement supports it) | Planned, blocked on WP-44.1 |
+| WP-44.1 — Close the invented-quote leak (Step D word-coverage check) | Complete — merged (#196); live-data cleanup done 2026-10-04 (§11) |
+| WP-44.2 — Junk inputs (measure first; code only if the measurement supports it) | Planned — not started; WP-44.1 has merged, so a production change is no longer blocked |
 
 ---
 
@@ -316,4 +316,39 @@ so every record was checked.
   13: "limited to" dropped, coverage 1.0, passes). Recorded in
   `eval/spike_results/wp_44/labels_and_review.md`; not addressed by this WP.
 
-**Cleanup of the 5 existing records remains a separate, unauthorized step** (§4).
+**Cleanup of the existing records** was a separate step, approved and executed after merge; see §11.
+
+---
+
+## 11. Cleanup of the existing records (executed 2026-10-04)
+
+The word-coverage check prevents new leaks; it did not remove the 5 already stored. Cleanup was
+approved separately by Tyler after WP-44.1 merged and was scoped by inspecting the live data first,
+which changed the plan's expected scope from 5 records to 3:
+
+- **2 of the 5 were already out of the live data.** The two afi17-203 records
+  (`REQ-42109df01628`, `REQ-8d7abe4ebef4`) were quarantined by hand in WP-42
+  (`eval/audit_wp42/quarantine_corrupted_header_table.py`): absent from the selected gated file and
+  from Qdrant, but deliberately still present in that run's `normalized` and `enriched` tiers.
+  They were left exactly as they were.
+- **3 were live** in the selected (gated) artifacts and in Qdrant: `REQ-04d133ed7a9a` and
+  `REQ-18f0e05fe682` (DODI 5200.48) and `REQ-518ad22d62f4` (afi10-2402).
+
+**What was done.** Targeted removal of exactly those 3 records, leaving every other record's
+enrichment and description-gate results untouched (no Step D re-run):
+- Rows removed from the selected run directory's `normalized`, `enriched` and `gated` files for
+  each document, edited in that order so `gated` remained the newest file (the artifact resolver
+  compares modification times). DODI 5200.48: 220 → 218 in each tier; afi10-2402: 289 → 288.
+- The 3 points deleted from the live Qdrant collection by point ID: 1,848 → 1,845 points.
+- Backups taken first (the 6 original files, plus the 3 Qdrant points with dense and sparse
+  vectors) outside the processed tree, with a rollback note.
+
+**Verification.** In all 6 files the removed lines were exactly the 3 targets, nothing was added,
+and every other line was byte-identical; the resolver still selects the same gated files; the 3 IDs
+are absent from every selected artifact and from Qdrant; a direct search for one of the junk quotes
+no longer returns it; `pytest`/`ruff` unaffected (no repo code changed).
+
+**Deliberately left alone:** the 2 previously quarantined records; older run directories (not
+selected by the resolver); the `*_final_output.json` Step E exports, which still contain the
+records but have no consumer in the code (regenerating them would be a Step E re-run, not done);
+and the context collection, which holds chunk text only and never referenced these records.
