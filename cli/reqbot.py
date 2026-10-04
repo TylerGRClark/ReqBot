@@ -371,11 +371,66 @@ def _alias_swap(qdrant, live_name: str, temp_name: str) -> None:
             log.warning("Could not delete old backing collection %s: %s", old_backing, e)
 
 
+def _collection_point_ids(qdrant, collection: str) -> set[str]:
+    """Every point ID in a collection (IDs only; no payloads or vectors)."""
+    ids: set[str] = set()
+    offset = None
+    while True:
+        points, offset = qdrant.scroll(
+            collection_name=collection, limit=1000, offset=offset,
+            with_payload=False, with_vectors=False,
+        )
+        ids.update(str(p.id) for p in points)
+        # An empty page ends the walk even if an offset comes back: stopping early only means the
+        # guard sees fewer IDs (a refusal), never a hang or a false pass.
+        if offset is None or not points:
+            return ids
+
+
+def _coverage_gap(qdrant, collection: str, expected: dict[str, str]) -> list[str] | None:
+    """Labels of the expected points that are missing from `collection`.
+
+    `expected` maps point ID -> a human-readable label. Returns None when the collection
+    could not be read at all -- an unverifiable index is treated like an incomplete one.
+    """
+    try:
+        present = _collection_point_ids(qdrant, collection)
+    except Exception as e:
+        log.error("Could not read point IDs from %s to verify coverage: %s", collection, e)
+        return None
+    return sorted(label for point_id, label in expected.items() if point_id not in present)
+
+
+def _refuse_incomplete_swap(qdrant, live_alias: str, temp_name: str, expected_count: int,
+                            missing: list[str] | None, header: str) -> None:
+    """Log why a rebuilt collection is not promoted, and delete it. The live alias is untouched."""
+    log.error("=" * 60)
+    if missing is None:
+        log.error("%s -- could not verify that %s holds every expected point. Live %s untouched.",
+                  header, temp_name, live_alias)
+    else:
+        log.error("%s -- %d of %d expected point(s) are missing from the rebuilt %s. Live %s untouched.",
+                  header, len(missing), expected_count, temp_name, live_alias)
+        for label in missing[:10]:
+            log.error("  MISSING: %s", label)
+        if len(missing) > 10:
+            log.error("  ... and %d more", len(missing) - 10)
+    log.error("=" * 60)
+    try:
+        qdrant.delete_collection(temp_name)
+        log.info("Deleted incomplete temp collection: %s", temp_name)
+    except Exception as e:
+        log.warning("Could not delete temp collection %s: %s", temp_name, e)
+
+
 def _reindex_requirements(req_files: dict, qdrant_url: str, ollama_url: str, embedding_model: str) -> bool:
     """Rebuild grc_requirements from the resolved requirements JSONL per document.
 
     All-or-nothing: any file failure aborts the temp collection and leaves the
-    live alias untouched (unchanged from pre-WP-24.2 behavior).
+    live alias untouched (unchanged from pre-WP-24.2 behavior). WP-45.0.1: the
+    indexer skips (and does not raise on) a record whose embedding fails, so before
+    the swap the temp collection must also contain every distinct point ID the
+    source files should produce; otherwise it is deleted and the live alias stays.
     """
     from pipeline import embed_and_index as _embed
     from qdrant_client import QdrantClient as _QC
@@ -416,9 +471,30 @@ def _reindex_requirements(req_files: dict, qdrant_url: str, ollama_url: str, emb
             log.warning("Could not delete temp collection %s: %s", temp_name, e)
         return False
 
+    expected: dict[str, str] = {}
+    unindexable = collapsed = 0
+    for _, jsonl_path in items:
+        records = _embed.load_jsonl(jsonl_path)
+        before = len(expected)
+        expected.update(_embed.expected_point_ids(records))
+        eligible = sum(1 for r in records if _embed.build_embedding_text(r) is not None)
+        unindexable += len(records) - eligible
+        collapsed += eligible - (len(expected) - before)
+    missing = _coverage_gap(qdrant, temp_name, expected)
+    if missing is None or missing:
+        _refuse_incomplete_swap(qdrant, live_alias, temp_name, len(expected), missing, "REINDEX FAILED")
+        return False
+
     _alias_swap(qdrant, live_alias, temp_name)
     log.info("=" * 60)
-    log.info("Requirements reindex complete: %d document(s) indexed, live alias swapped", len(items))
+    log.info(
+        "Requirements reindex complete: %d document(s), %d point(s) verified present, live alias swapped",
+        len(items), len(expected),
+    )
+    if unindexable:
+        log.warning("%d record(s) without a source_quote were not indexed", unindexable)
+    if collapsed:
+        log.warning("%d record(s) share a requirement_id with another and collapsed into one point", collapsed)
     log.info("=" * 60)
     return True
 
@@ -446,6 +522,7 @@ def _reindex_context(req_files: dict, qdrant_url: str, ollama_url: str, embeddin
 
     items = sorted(req_files.items())
     indexed = []
+    indexed_sources = []
     failed = []
     skipped = []
 
@@ -461,9 +538,11 @@ def _reindex_context(req_files: dict, qdrant_url: str, ollama_url: str, embeddin
             continue
 
         try:
+            # Resolve the filename fallback here so indexing and the coverage check agree on the ID.
+            document_id = _embed_ctx.resolve_document_id(_read_document_id(str(req_path)), chunk_path)
             _embed_ctx.run(
                 str(chunk_path),
-                document_id=_read_document_id(str(req_path)),
+                document_id=document_id,
                 qdrant_url=qdrant_url,
                 ollama_url=ollama_url,
                 collection_name=temp_name,
@@ -471,6 +550,7 @@ def _reindex_context(req_files: dict, qdrant_url: str, ollama_url: str, embeddin
                 embedding_model=embedding_model,
             )
             indexed.append(doc_key)
+            indexed_sources.append((document_id, chunk_path))
         except Exception as e:
             log.error("Context indexing failed for %s: %s", doc_key, e)
             failed.append(doc_key)
@@ -501,11 +581,28 @@ def _reindex_context(req_files: dict, qdrant_url: str, ollama_url: str, embeddin
             log.warning("Could not delete temp collection %s: %s", temp_name, e)
         return False
 
+    expected: dict[str, str] = {}
+    for document_id, chunk_path in indexed_sources:
+        expected.update(_embed_ctx.expected_point_ids(document_id, _embed_ctx.load_jsonl(chunk_path)))
+    missing = _coverage_gap(qdrant, temp_name, expected)
+    if missing is None or missing:
+        _refuse_incomplete_swap(
+            qdrant, live_alias, temp_name, len(expected), missing,
+            "REINDEX PARTIAL: requirements rebuilt; context rebuild failed",
+        )
+        return False
+
     _alias_swap(qdrant, live_alias, temp_name)
     log.info("=" * 60)
-    log.info("Context reindex complete: %d document(s) indexed, live alias swapped", len(indexed))
+    log.info(
+        "Context reindex complete: %d document(s), %d point(s) verified present, live alias swapped",
+        len(indexed), len(expected),
+    )
     if skipped:
-        log.info("Skipped %d document(s) with no chunks.jsonl", len(skipped))
+        log.warning(
+            "No chunks.jsonl for %d document(s); their context is absent from the new grc_context: %s",
+            len(skipped), ", ".join(skipped),
+        )
     log.info("=" * 60)
     return True
 

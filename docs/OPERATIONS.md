@@ -109,14 +109,18 @@ Artifact selection is based on **modification times**, not directory timestamps:
 This prevents an old gated artifact from masking a more recent normalization
 rerun. The [shared resolver](../core/artifact_resolver.py) defines this rule.
 
-Each collection is built in a temporary collection. After successful indexing,
-its live alias is switched to the replacement; the old backing collection is
-removed. Requirements and context are rebuilt **sequentially**, not as one
-transaction. If requirements succeed and context fails, the new requirements
-remain live while old context remains live. Inspect logs and retry after fixing
-the context failure.
+Each collection is built in a temporary collection. Before its live alias is
+switched, reindex checks that the replacement holds every point it should (one per
+distinct requirement ID, or per document chunk). If any are missing, for example
+because an embedding failed and was skipped, the replacement is deleted, the missing
+items are logged, and the live index stays as it was. After a successful check the
+alias is switched and the old backing collection is removed. Requirements and
+context are rebuilt **sequentially**, not as one transaction. If requirements
+succeed and context fails, the new requirements remain live while old context
+remains live. Inspect logs and retry after fixing the context failure.
 
-Missing per-document chunks cause warnings and skips. Real context indexing
+A document with no chunks file is skipped with a warning that names it; its context
+will be absent from the new context index. Real context indexing
 errors abort that context replacement; if no context documents can be indexed,
 the command reports failure. Initial migration of a plain collection to an alias
 can create a brief availability gap.
