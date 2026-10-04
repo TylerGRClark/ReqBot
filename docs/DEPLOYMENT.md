@@ -70,8 +70,10 @@ docker compose logs --tail=50 reqbot
 docker compose exec reqbot reqbot status
 ```
 
-The Docker build installs the Python package and builds the frontend inside a
-Node build stage. The host does not need Python or Node. The default GUI is at
+The Docker build installs the Python package, the system libraries Docling needs,
+and builds the frontend inside a Node build stage. The host does not need Python
+or Node. CI builds this image and parses a test PDF inside it, though it does not
+run a full ingest, because there is no Ollama in CI. The default GUI is at
 `http://127.0.0.1:8000`; API documentation is at
 `http://127.0.0.1:8000/api-docs`.
 
@@ -108,30 +110,38 @@ Proceed to [First document](#first-document) to inspect results and provenance.
 
 ## Source installation
 
-The repository's source/development workflow uses system Python 3.12+ without
-virtual environments. Confirm that `pip3` targets that interpreter. On
-Debian/Ubuntu, `--break-system-packages` permits pip installation into the
-externally-managed Python environment; the commands below follow the project's
-documented system-Python convention. If you would rather not modify the system
-Python, the same install works in a virtual environment: activate one, then run
-the commands without `--break-system-packages`.
+Docker is the packaged way to run ReqBot, and CI exercises the image. A source
+install is for development, direct pipeline access, or running the CLI directly
+on a host. It needs Python 3.12 or newer and Git. Ubuntu 22.04 (Python 3.10) and
+Debian 12 (Python 3.11) are too old, and `pip` stops with
+`requires a different Python`; use Docker there or install a newer Python first.
 
-ReqBot requires Python 3.12 or newer. Ubuntu 22.04 (Python 3.10) and Debian 12
-(Python 3.11) are too old, and `pip` will stop with
-`requires a different Python`; use the Docker path there, or install a newer
-Python first.
+**System libraries.** On a minimal Debian or Ubuntu system (server images,
+containers, WSL), install the libraries that Docling's OCR dependency (OpenCV)
+loads when it first converts a PDF. The Docker image already includes them.
+
+```bash
+sudo apt install libgl1 libglib2.0-0
+```
+
+Without them, the first `reqbot ingest` fails at Step A with
+`libGL.so.1: cannot open shared object file` (or `libxcb.so.1`). Desktop
+systems usually have these already.
+
+Use a virtual environment so ReqBot does not modify your system Python (recent
+Debian and Ubuntu refuse a plain `pip install` there):
 
 ```bash
 git clone https://github.com/TylerGRClark/ReqBot.git
 cd ReqBot
-python3 --version
-pip3 --version
+python3 -m venv ~/reqbot-venv
+. ~/reqbot-venv/bin/activate
+python --version
 ```
 
-A non-root `pip` install places the `reqbot` command in a user scripts folder,
-usually `~/.local/bin`. If the shell reports `reqbot: command not found`, add
-that folder to `PATH` (`export PATH="$HOME/.local/bin:$PATH"`, and put the
-line in `~/.bashrc` to keep it). A full install, including the dependencies
+The `reqbot` command exists only while the environment is active. In a new
+terminal, run `. ~/reqbot-venv/bin/activate` again, or call
+`~/reqbot-venv/bin/reqbot` directly. A full install, including the dependencies
 and the built web interface, used about 4 GB of disk in a clean-environment test.
 
 If you want the GUI in the installed package, build it **before** installing:
@@ -139,14 +149,15 @@ If you want the GUI in the installed package, build it **before** installing:
 ```bash
 # Requires Node 20.19+, 22.12+, or a newer supported even-numbered release, and npm.
 bash build/build-frontend.sh
-pip3 install --break-system-packages .
+pip install .
 ```
 
-For CLI/API-only use, omit the frontend build and run
-`pip3 install --break-system-packages .`. A missing frontend does not remove
-the HTTP API. Developers can install with
-`pip3 install --break-system-packages -e ".[dev]"`; the editable install reads
-Python source and generated frontend files from the checkout.
+For CLI/API-only use, omit the frontend build and run `pip install .`. A missing
+frontend does not remove the HTTP API. Developers can install with
+`pip install -e ".[dev]"`; the editable install reads Python source and generated
+frontend files from the checkout. Contributors: the project's own development
+workflow uses system Python instead of a virtual environment; see
+[CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ### Services for a local source install
 
@@ -173,15 +184,15 @@ It does not install or start the services.
 
 ### Optional extras
 
-Run these from the repository root using the same system Python installation:
+Run these from the repository root, in the same activated environment:
 
 | Install command | Adds |
 |---|---|
-| `pip3 install --break-system-packages ".[remote]"` | Remote synthesis provider SDKs. |
-| `pip3 install --break-system-packages ".[mcp]"` | MCP server support for local AI clients. |
-| `pip3 install --break-system-packages ".[grounding-check]"` | MiniCheck entailment scoring in the description gate. |
-| `pip3 install --break-system-packages ".[rerank]"` | Experimental reranker for programmatic/evaluation use; no public CLI switch. |
-| `pip3 install --break-system-packages ".[dev]"` | Test and lint tools. |
+| `pip install ".[remote]"` | Remote synthesis provider SDKs. |
+| `pip install ".[mcp]"` | MCP server support for local AI clients. |
+| `pip install ".[grounding-check]"` | MiniCheck entailment scoring in the description gate. |
+| `pip install ".[rerank]"` | Experimental reranker for programmatic/evaluation use; no public CLI switch. |
+| `pip install ".[dev]"` | Test and lint tools. |
 
 Docling is a base dependency and the only current PDF parsing path. There is no
 legacy parsing fallback or `--layout-mode` switch.

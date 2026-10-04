@@ -183,8 +183,8 @@ restart command for a library you intend to retain.
 
 ## Update an installation
 
-For a source package, install the intended revision with
-`pip3 install --break-system-packages .` from that checkout.
+For a source package, install the intended revision with `pip install .` from
+that checkout, in the same virtual environment as the existing install.
 Rebuild the GUI before a non-editable package install so its package data includes
 the new frontend. For an editable development install, rebuilding updates the
 checkout's served files.
@@ -202,7 +202,8 @@ intend to refresh extraction or validation outputs.
 | Symptom | Next check |
 |---|---|
 | `reqbot` runs an old version | Inspect `command -v reqbot` and `reqbot --version`; check PATH and reinstall the intended revision. |
-| System Python refuses pip installation | Follow Deployment's system-Python instructions, including `--break-system-packages`. |
+| `pip` refuses to install (`externally-managed-environment`) | Install inside a virtual environment; see [Deployment](DEPLOYMENT.md#source-installation). |
+| Ingest fails at Step A with `libGL.so.1` or `libxcb.so.1` not found | Install the system libraries: `sudo apt install libgl1 libglib2.0-0`. The Docker image includes them. |
 | Ollama model not found | Compare configured roles to `ollama list` on the configured service. |
 | Browser root returns no GUI | Build frontend before package install; API may still be available at `/api-docs`. |
 | Browser shows old frontend | Reload/hard-refresh; for a packaged install, rebuild and reinstall/recreate. |

@@ -23,12 +23,15 @@ or prove compliance.
 
 ## Requirements
 
-- **Source install:** Python 3.12+ and Git. Building the web GUI also requires
-  Node.js 20.19+, 22.12+, or a newer even-numbered release supported by the build
-  script, with npm.
-- **Container install:** Docker Engine/Desktop with Docker Compose.
+- **Container install (recommended):** Docker Engine/Desktop with Docker Compose.
+  The image includes Python, Node-built web interface, and system libraries.
+- **Source install:** Python 3.12+ and Git, installed in a virtual environment.
+  On a minimal Debian/Ubuntu system, also `libgl1` and `libglib2.0-0`. Building
+  the web GUI also requires Node.js 20.19+, 22.12+, or a newer even-numbered
+  release supported by the build script, with npm.
 - **Both:** reachable Ollama and Qdrant services, and models installed in Ollama.
   ReqBot configures connections; it does not install or start those services.
+  The Docker example starts Qdrant for you.
 
 ## Get Started
 

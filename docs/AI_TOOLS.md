@@ -12,12 +12,13 @@ accepts a remote MCP URL cannot connect directly to this stdio server.
 
 ## Prepare the environment
 
-On the machine where the client will launch the subprocess, install ReqBot with
-the optional MCP dependency. From a source checkout, follow the project's
-system-Python installation convention:
+On the machine where the client will launch the subprocess, install ReqBot from
+a source checkout with the optional MCP dependency, in a virtual environment
+as described in [Deployment](DEPLOYMENT.md#source-installation). The Docker image
+installs only the base package, so it does not include the MCP server.
 
 ```bash
-pip3 install --break-system-packages ".[mcp]"
+pip install ".[mcp]"
 reqbot init
 reqbot status
 reqbot docs
@@ -25,8 +26,10 @@ reqbot ask "Find requirements in my library"
 command -v reqbot
 ```
 
-Use the absolute executable path reported by the last command. The client process
-may have a different PATH from your terminal.
+Use the absolute executable path reported by the last command (inside an
+activated virtual environment it points into that environment, so the client does
+not need the environment activated). The client process may have a different PATH
+from your terminal.
 Ingest at least one document before testing search tools.
 
 The subprocess needs the running account's ReqBot config, reachable Ollama and

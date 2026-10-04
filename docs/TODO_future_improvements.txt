@@ -740,6 +740,35 @@ DEPENDENCY / TOOLCHAIN BACKLOG
    WP-28.2 (Vite-only). Needs its own scoped migration PR like Vite got, not a
    one-line dependency bump, since v7 changes React Router's data APIs.
 
+6. Publish ReqBot to PyPI (decided 2026-10-04: not now; Docker is the primary install)
+   Idea: `pipx install reqbot` instead of clone + frontend build + pip install.
+   Not needed for the Docker-first install, so it is parked with its blockers
+   written down rather than rediscovered later.
+   Checked 2026-10-04: the name `reqbot` is not registered on PyPI (HTTP 404).
+   pyproject metadata, the console entry point, and MANIFEST.in (which bundles
+   frontend/dist) are mostly in place.
+   Blockers:
+   a. Top-level package names. [tool.setuptools] packages installs api, cli,
+      core, models, pipeline, profiles, services, frontend and mcp_server
+      directly into site-packages. The generic ones (api, cli, core, models,
+      services) would collide with other packages. A real release should nest
+      everything under reqbot/. That is a repo-wide refactor (every import, the
+      sys.path/_ROOT pattern in scripts and eval/, tests, Dockerfile, docs) and
+      needs its own phase with the full suite and replay as proof.
+   b. Direct URL dependency. The grounding-check extra installs MiniCheck from a
+      git URL, and PyPI rejects uploads whose metadata has direct URL
+      requirements, extras included. It would move to a documented manual step.
+   c. Release process. frontend/dist must be built before the wheel (Node in
+      CI), a versioning policy is needed (0.1.0 today), and publishing should use
+      GitHub trusted publishing (no stored token), rehearsed on TestPyPI.
+   d. System libraries. pip cannot install libgl1/libglib2.0-0, which Docling's
+      OCR needs on a minimal Linux system (rapidocr asks for the non-headless
+      opencv-python). The docs would still need an apt prerequisite.
+   Payoff: mostly `pipx install reqbot` (no --break-system-packages, no clone or
+   Node build) and an easier offline story through wheel mirrors. It is not a
+   better first run than Docker. Revisit when the namespace refactor is worth
+   doing on its own merits.
+
 
 ================================================================
 BACKBURNER

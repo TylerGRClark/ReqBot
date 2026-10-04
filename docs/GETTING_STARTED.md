@@ -142,8 +142,10 @@ do not run `reqbot init`. Skip ahead to [Step 4](#step-4-ingest-your-first-pdf).
 
 ### Path B: Python
 
-This path installs ReqBot on your computer directly. It needs Python 3.12 or
-newer, Git, and Qdrant running somewhere.
+This path installs ReqBot on your computer directly. It is aimed at developers
+and people who want the command-line tool on their own machine; Docker (Path A)
+is the simpler and better-tested route. It needs Python 3.12 or newer, Git, and
+Qdrant running somewhere.
 
 ```bash
 python3 --version
@@ -151,6 +153,14 @@ python3 --version
 
 If that prints a version older than 3.12 (Ubuntu 22.04 and Debian 12 ship older
 ones), use Path A instead or install a newer Python first.
+
+On a minimal Debian or Ubuntu system (a server image, a container, or WSL),
+install two system libraries that ReqBot's PDF reader needs. Desktop systems
+usually have them already:
+
+```bash
+sudo apt install libgl1 libglib2.0-0
+```
 
 Start Qdrant (this uses Docker; see Qdrant's own
 [installation guide](https://qdrant.tech/documentation/guides/installation/)
@@ -164,35 +174,27 @@ docker run -d --name reqbot-qdrant \
   qdrant/qdrant:v1.17.1
 ```
 
-Install ReqBot. Building the web page needs Node.js 20.19+ or 22.12+ (later
+Install ReqBot into its own virtual environment, so it does not touch your
+system Python. Building the web page needs Node.js 20.19+ or 22.12+ (later
 even-numbered releases also work; odd-numbered ones are rejected). Skip the
 `build-frontend.sh` command if you only want the command line:
 
 ```bash
 git clone https://github.com/TylerGRClark/ReqBot.git
 cd ReqBot
+python3 -m venv ~/reqbot-venv
+. ~/reqbot-venv/bin/activate
 bash build/build-frontend.sh
-pip3 install --break-system-packages .
+pip install .
 reqbot --version
 ```
 
-The project's own convention is system Python without a virtual environment,
-which is why the flag above is needed on Debian and Ubuntu. If you would rather
-not touch your system Python, a virtual environment works too (the same install
-in a fresh environment was tested): run
-`python3 -m venv ~/reqbot-venv && . ~/reqbot-venv/bin/activate` first and drop
-`--break-system-packages` from the command.
+**Check:** `reqbot --version` prints a version number.
 
-**Check:** `reqbot --version` prints a version number. If your shell says
-`reqbot: command not found`, pip installed the program into a folder that is
-not on your `PATH` (usually `~/.local/bin`; pip prints a warning naming it).
-Add it:
-
-```bash
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-Add that line to `~/.bashrc` to keep it in new terminals.
+The `reqbot` command exists only while the environment is active. In every new
+terminal, run `. ~/reqbot-venv/bin/activate` again before using it, or call
+`~/reqbot-venv/bin/reqbot` directly. (Contributors: the project's own
+development workflow uses system Python; see [CONTRIBUTING.md](../CONTRIBUTING.md).)
 
 ## Step 3: Configure ReqBot (Python path only)
 
@@ -347,8 +349,10 @@ organization complies.
 
 | What you see | What to do |
 |---|---|
-| `reqbot: command not found` | Add pip's script folder to `PATH`; see Step 2, Path B. |
+| `reqbot: command not found` | Activate the virtual environment: `. ~/reqbot-venv/bin/activate` (see Step 2, Path B). |
 | `requires a different Python` during `pip install` | Your Python is older than 3.12. Use Path A or install a newer Python. |
+| `externally-managed-environment` during `pip install` | You are installing into the system Python. Create and activate the virtual environment first (Step 2, Path B). |
+| Ingest fails with `libGL.so.1` or `libxcb.so.1: cannot open shared object file` (Python path) | Run `sudo apt install libgl1 libglib2.0-0`. The Docker image already includes these. |
 | `Status: NOT REACHABLE` for Ollama or Qdrant | The program is not running, or the address is wrong. Start it, then run `reqbot status` again. In Docker, `localhost` means the container itself; use the Compose service name or `host.docker.internal`. |
 | Docker: Ollama is running but ReqBot cannot reach it (Linux) | Ollama is listening on loopback only. See the Ollama options in Path A, step 2. |
 | `Failed to connect to Ollama` | Same as above: Ollama is not reachable at the configured address. |
