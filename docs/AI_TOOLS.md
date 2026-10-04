@@ -13,10 +13,11 @@ accepts a remote MCP URL cannot connect directly to this stdio server.
 ## Prepare the environment
 
 On the machine where the client will launch the subprocess, install ReqBot with
-the optional MCP dependency. From a source checkout and active virtual environment:
+the optional MCP dependency. From a source checkout, follow the project's
+system-Python installation convention:
 
 ```bash
-python3 -m pip install ".[mcp]"
+pip3 install --break-system-packages ".[mcp]"
 reqbot init
 reqbot status
 reqbot docs
@@ -25,7 +26,7 @@ command -v reqbot
 ```
 
 Use the absolute executable path reported by the last command. The client process
-may not inherit your terminal's activated virtual environment or PATH.
+may have a different PATH from your terminal.
 Ingest at least one document before testing search tools.
 
 The subprocess needs the running account's ReqBot config, reachable Ollama and
@@ -42,7 +43,7 @@ shape. Replace the absolute path with your installed executable:
 {
   "mcpServers": {
     "reqbot": {
-      "command": "/absolute/path/to/ReqBot/.venv/bin/reqbot",
+      "command": "/absolute/path/to/reqbot",
       "args": ["mcp"],
       "env": {
         "REQBOT_OLLAMA_URL": "http://localhost:11434",

@@ -43,9 +43,7 @@ This example uses a source install with Ollama and Qdrant already running at
 ```bash
 git clone https://github.com/TylerGRClark/ReqBot.git
 cd ReqBot
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m pip install .
+pip3 install --break-system-packages .
 
 # Run these against the Ollama instance ReqBot will use.
 ollama pull nomic-embed-text

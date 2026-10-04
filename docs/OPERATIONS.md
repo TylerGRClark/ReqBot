@@ -183,7 +183,8 @@ restart command for a library you intend to retain.
 
 ## Update an installation
 
-For a source package, install the intended revision in the active environment.
+For a source package, install the intended revision with
+`pip3 install --break-system-packages .` from that checkout.
 Rebuild the GUI before a non-editable package install so its package data includes
 the new frontend. For an editable development install, rebuilding updates the
 checkout's served files.
@@ -200,8 +201,8 @@ intend to refresh extraction or validation outputs.
 
 | Symptom | Next check |
 |---|---|
-| `reqbot` runs an old version | Inspect `command -v reqbot` and `reqbot --version`; activate the intended environment/reinstall. |
-| System Python refuses pip installation | Use the virtual-environment source instructions in Deployment. |
+| `reqbot` runs an old version | Inspect `command -v reqbot` and `reqbot --version`; check PATH and reinstall the intended revision. |
+| System Python refuses pip installation | Follow Deployment's system-Python instructions, including `--break-system-packages`. |
 | Ollama model not found | Compare configured roles to `ollama list` on the configured service. |
 | Browser root returns no GUI | Build frontend before package install; API may still be available at `/api-docs`. |
 | Browser shows old frontend | Reload/hard-refresh; for a packaged install, rebuild and reinstall/recreate. |

@@ -99,15 +99,17 @@ Proceed to [First document](#first-document) to inspect results and provenance.
 
 ## Source installation
 
-Use Python 3.12+ and a virtual environment. This avoids changing an
-externally-managed system Python.
+The repository's source/development workflow uses system Python 3.12+ without
+virtual environments. Confirm that `pip3` targets that interpreter. On
+Debian/Ubuntu, `--break-system-packages` permits pip installation into the
+externally-managed Python environment; the commands below follow the project's
+documented system-Python convention.
 
 ```bash
 git clone https://github.com/TylerGRClark/ReqBot.git
 cd ReqBot
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m pip install --upgrade pip
+python3 --version
+pip3 --version
 ```
 
 If you want the GUI in the installed package, build it **before** installing:
@@ -115,13 +117,14 @@ If you want the GUI in the installed package, build it **before** installing:
 ```bash
 # Requires Node 20.19+, 22.12+, or a newer supported even-numbered release, and npm.
 bash build/build-frontend.sh
-python3 -m pip install .
+pip3 install --break-system-packages .
 ```
 
 For CLI/API-only use, omit the frontend build and run
-`python3 -m pip install .`. A missing frontend does not remove the HTTP API.
-Developers can install with `python3 -m pip install -e ".[dev]"`; the editable
-install reads Python source and generated frontend files from the checkout.
+`pip3 install --break-system-packages .`. A missing frontend does not remove
+the HTTP API. Developers can install with
+`pip3 install --break-system-packages -e ".[dev]"`; the editable install reads
+Python source and generated frontend files from the checkout.
 
 ### Services for a local source install
 
@@ -148,15 +151,15 @@ It does not install or start the services.
 
 ### Optional extras
 
-Run these from the repository root in the active virtual environment:
+Run these from the repository root using the same system Python installation:
 
 | Install command | Adds |
 |---|---|
-| `python3 -m pip install ".[remote]"` | Remote synthesis provider SDKs. |
-| `python3 -m pip install ".[mcp]"` | MCP server support for local AI clients. |
-| `python3 -m pip install ".[grounding-check]"` | MiniCheck entailment scoring in the description gate. |
-| `python3 -m pip install ".[rerank]"` | Experimental reranker for programmatic/evaluation use; no public CLI switch. |
-| `python3 -m pip install ".[dev]"` | Test and lint tools. |
+| `pip3 install --break-system-packages ".[remote]"` | Remote synthesis provider SDKs. |
+| `pip3 install --break-system-packages ".[mcp]"` | MCP server support for local AI clients. |
+| `pip3 install --break-system-packages ".[grounding-check]"` | MiniCheck entailment scoring in the description gate. |
+| `pip3 install --break-system-packages ".[rerank]"` | Experimental reranker for programmatic/evaluation use; no public CLI switch. |
+| `pip3 install --break-system-packages ".[dev]"` | Test and lint tools. |
 
 Docling is a base dependency and the only current PDF parsing path. There is no
 legacy parsing fallback or `--layout-mode` switch.

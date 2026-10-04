@@ -62,8 +62,11 @@ not just the solution you have in mind.
 
 ## Operational Notes
 
-Use the [deployment guide](docs/DEPLOYMENT.md) for a virtual-environment source
-install or Docker setup. The [operations runbook](docs/OPERATIONS.md) covers
+The source/development workflow uses **system Python without virtual
+environments**, with dependencies installed using
+`pip3 install --break-system-packages .`. Use the
+[deployment guide](docs/DEPLOYMENT.md) for source installation or Docker setup.
+The [operations runbook](docs/OPERATIONS.md) covers
 resume, backups, reindex, and troubleshooting; the
 [developer architecture reference](ARCHITECTURE.md) covers module ownership and
 change dependencies.
