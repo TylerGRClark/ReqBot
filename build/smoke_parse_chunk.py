@@ -17,6 +17,7 @@ this needs network access. Exits 0 on success, 1 on failure.
 import json
 import sys
 import tempfile
+import traceback
 from pathlib import Path
 
 LINES = [
@@ -80,6 +81,7 @@ def main() -> int:
 if __name__ == "__main__":
     try:
         sys.exit(main())
-    except Exception as exc:  # report any import/native-library failure plainly
+    except Exception as exc:  # report any import/native-library failure, with the traceback
         print(f"FAIL: {type(exc).__name__}: {exc}", file=sys.stderr)
+        traceback.print_exc(file=sys.stderr)
         sys.exit(1)
