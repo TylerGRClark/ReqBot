@@ -6,6 +6,8 @@ item 7 and dependency item 7). Each script checks one finding from an external p
 pinned in `eval/spike_results/wp_44/manifest.json`. Nothing here writes to the corpus, the live Qdrant index or
 the Ollama server (`check_reconcile.py` reads Qdrant; `check_f02.py` and `check_f01.py` use mocks and a
 synthetic document). Run from the repo root with `python3 eval/spike_results/wp_45_audit/check_<name>.py`.
+The corpus scripts need those 13 documents' processed output under the configured `processed_dir`. If one is
+missing they stop with an error instead of skipping it, because a skipped document would silently shrink the counts.
 
 | Script | Finding | What it shows | Result (2026-10-04) |
 |---|---|---|---|
