@@ -172,6 +172,25 @@ def create_collection(client: QdrantClient, collection_name: str, vector_dim: in
     )
 
 
+def requirement_point_id(req: dict) -> str:
+    """Qdrant point ID for a requirement: uuid5 of its requirement_id (re-indexing overwrites)."""
+    return str(uuid.uuid5(QDRANT_UUID_NAMESPACE, req["requirement_id"]))
+
+
+def expected_point_ids(requirements: list[dict]) -> dict[str, str]:
+    """Map point ID -> requirement_id for every record run() would index.
+
+    A record with no source_quote is not indexed (see build_embedding_text), and a repeated
+    requirement_id is one point, so this is the distinct set a complete index must contain
+    (WP-45.0.1: reindex compares the temp collection against it before the alias swap).
+    """
+    return {
+        requirement_point_id(req): req["requirement_id"]
+        for req in requirements
+        if build_embedding_text(req) is not None
+    }
+
+
 def run(
     requirements_jsonl: str,
     *,
@@ -291,9 +310,8 @@ def run(
                 log.warning("Skipping requirement %s — embedding failed", req.get("requirement_id", "?"))
                 batch_skipped += 1
                 continue
-            point_id = str(uuid.uuid5(QDRANT_UUID_NAMESPACE, req["requirement_id"]))
             points.append(models.PointStruct(
-                id=point_id,
+                id=requirement_point_id(req),
                 vector={"dense": dense_emb, "sparse": sparse_emb},
                 payload=build_payload(req, embedding_model, len(dense_emb)),
             ))

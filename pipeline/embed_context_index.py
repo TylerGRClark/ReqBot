@@ -126,6 +126,23 @@ def embed_sparse_batch(texts: list[str], model: SparseTextEmbedding) -> list[mod
     ]
 
 
+def context_point_id(document_id: str, chunk_id) -> str:
+    """Qdrant point ID for a context chunk: uuid5 of "{document_id}:{chunk_id}"."""
+    return str(uuid.uuid5(CONTEXT_UUID_NAMESPACE, f"{document_id}:{chunk_id}"))
+
+
+def expected_point_ids(document_id: str, chunks: list[dict]) -> dict[str, str]:
+    """Map point ID -> "document_id:chunk_id" for every chunk run() would index.
+
+    Every chunk gets a point; a repeated chunk_id is one point. WP-45.0.1: reindex compares the
+    temp collection against this before the alias swap.
+    """
+    return {
+        context_point_id(document_id, chunk["chunk_id"]): f"{document_id}:{chunk['chunk_id']}"
+        for chunk in chunks
+    }
+
+
 def run(
     chunks_jsonl: str,
     *,
@@ -245,12 +262,8 @@ def run(
                 log.warning("Skipping chunk %s — embedding failed", chunk.get("chunk_id", "?"))
                 batch_skipped += 1
                 continue
-            point_id = str(uuid.uuid5(
-                CONTEXT_UUID_NAMESPACE,
-                f"{document_id}:{chunk['chunk_id']}",
-            ))
             points.append(models.PointStruct(
-                id=point_id,
+                id=context_point_id(document_id, chunk["chunk_id"]),
                 vector={"dense": dense_emb, "sparse": sparse_emb},
                 payload={
                     "document_id": document_id,
