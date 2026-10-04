@@ -458,3 +458,17 @@ def test_a_legacy_record_whose_rows_all_landed_is_not_redone(tmp_path):
     second = _Llm({"ALPHA": [_ok("ALPHA", 9)], "BRAVO": [_ok("BRAVO", 9)]})
     _run(tmp_path, TEXTS, second)
     assert second.calls == []
+
+
+def test_a_corrupt_non_object_line_in_the_raw_file_does_not_crash_resume(tmp_path):
+    """Valid JSON that is not an object (a list, a bare string, a number) is skipped like any other
+    corrupt line; the chunks that did finish are still skipped and the rest are redone."""
+    _run(tmp_path, TEXTS, _Llm({"ALPHA": [_ok("ALPHA")], "BRAVO": [RAISE]}))
+    raw_path = tmp_path / "doc_raw_responses.jsonl"
+    raw_path.write_text(raw_path.read_text() + '[1, 2]\n"malformed"\n42\n')
+
+    second = _Llm({"ALPHA": [_ok("ALPHA")], "BRAVO": [_ok("BRAVO")]})
+    _run(tmp_path, TEXTS, second)
+
+    assert (second.count("ALPHA"), second.count("BRAVO")) == (0, 1)
+    assert sorted(r["requirement_id"] for r in _files(tmp_path)[1]) == ["R-0-0", "R-1-0"]

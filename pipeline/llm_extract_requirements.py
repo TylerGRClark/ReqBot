@@ -778,6 +778,8 @@ def run(
                     if line:
                         try:
                             rec = json.loads(line)
+                            if not isinstance(rec, dict):
+                                continue  # valid JSON but not a record: corrupt, skip like a bad line
                             # Only accept cache entries produced by the same model (R-2.2 fix).
                             # Switching --extraction-model must not reuse prior model's output.
                             if rec.get("model") != model:
