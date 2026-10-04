@@ -1,0 +1,1220 @@
+{
+  "seed": "wp45.1b",
+  "prior_sample_excluded": [
+    93,
+    119,
+    134,
+    244,
+    377,
+    508,
+    511,
+    778,
+    803,
+    807,
+    872,
+    1094,
+    1152,
+    1445,
+    1684,
+    1685
+  ],
+  "items": {
+    "R001": {
+      "document": "DODI 5200.01",
+      "requirement_id": "REQ-c62e41aaf181",
+      "chunk_id": 14,
+      "index": 127,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "establish, direct, and administer all aspects of their respective organization's SCI security programs"
+    },
+    "R002": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-84a1e850de05",
+      "chunk_id": 52,
+      "index": 365,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R003": {
+      "document": "afi10-2402",
+      "requirement_id": "REQ-deb0902d16cc",
+      "chunk_id": 33,
+      "index": 862,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R004": {
+      "document": "DODI 8551.01",
+      "requirement_id": "REQ-8e9448e0db93",
+      "chunk_id": 21,
+      "index": 647,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "PPSM standards will be implemented as directed by the authorizing official for the system for DoD-wide management and PPS control used in DoD systems to:"
+    },
+    "R005": {
+      "document": "DODI 8551.01",
+      "requirement_id": "REQ-f35667d01543",
+      "chunk_id": 9,
+      "index": 618,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R006": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-a6253aa111da",
+      "chunk_id": 29,
+      "index": 560,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R007": {
+      "document": "DODI 5200.01",
+      "requirement_id": "REQ-0975525b1c7f",
+      "chunk_id": 2,
+      "index": 90,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R008": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-f96e8911b61d",
+      "chunk_id": 87,
+      "index": 769,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "In this case, the hypervisor or host OS may be able to monitor the guest OS's actions using various compensating controls"
+    },
+    "R009": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-63cdc8363326",
+      "chunk_id": 50,
+      "index": 357,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R010": {
+      "document": "dafman17-1305",
+      "requirement_id": "REQ-42d32475a005",
+      "chunk_id": 21,
+      "index": 1621,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "The DAF Chief Information Officer (SAF/CN) shall:"
+    },
+    "R011": {
+      "document": "afman17-2101",
+      "requirement_id": "REQ-71c98e63833f",
+      "chunk_id": 15,
+      "index": 1390,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R012": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-ab72726aa263",
+      "chunk_id": 86,
+      "index": 767,
+      "stratum": "not-a-candidate+nosignal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R013": {
+      "document": "afi10-2402",
+      "requirement_id": "REQ-c17e859872bf",
+      "chunk_id": 106,
+      "index": 1059,
+      "stratum": "not-a-candidate+nosignal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R014": {
+      "document": "afi13-550",
+      "requirement_id": "REQ-ec47fdf91189",
+      "chunk_id": 52,
+      "index": 1207,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R015": {
+      "document": "DODI 8551.01",
+      "requirement_id": "REQ-0af62afee810",
+      "chunk_id": 9,
+      "index": 615,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R016": {
+      "document": "afi13-550",
+      "requirement_id": "REQ-86d9b330c73b",
+      "chunk_id": 33,
+      "index": 1155,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "AFGSC will:"
+    },
+    "R017": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-723da0d1f3f3",
+      "chunk_id": 26,
+      "index": 675,
+      "stratum": "not-a-candidate+nosignal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R018": {
+      "document": "afpd_17-1",
+      "requirement_id": "REQ-df4ad532ac7d",
+      "chunk_id": 23,
+      "index": 1575,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R019": {
+      "document": "afi10-2402",
+      "requirement_id": "REQ-f389701121d6",
+      "chunk_id": 53,
+      "index": 926,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R020": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-27ad4365e6dd",
+      "chunk_id": 10,
+      "index": 664,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R021": {
+      "document": "dafman17-1305",
+      "requirement_id": "REQ-08d7c4ef4089",
+      "chunk_id": 21,
+      "index": 1622,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "The DAF Chief Information Officer (SAF/CN) shall:"
+    },
+    "R022": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-5d30644b5005",
+      "chunk_id": 38,
+      "index": 601,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "meet all required background checks, training, and certification requirements prior to assuming their duties"
+    },
+    "R023": {
+      "document": "afi13-550",
+      "requirement_id": "REQ-b3318ae61566",
+      "chunk_id": 69,
+      "index": 1258,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R024": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-203e4315f0aa",
+      "chunk_id": 21,
+      "index": 530,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "in addition to the responsibilities in sections 8 and 10 of this enclosure, shall:"
+    },
+    "R025": {
+      "document": "afi10-2402",
+      "requirement_id": "REQ-69abbe01a9e5",
+      "chunk_id": 24,
+      "index": 842,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R026": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-abf7f0a2a776",
+      "chunk_id": 63,
+      "index": 399,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "b. CUI not controlled as NOFORN may be released or disclosed to non-U.S. citizens employed by the DoD if:"
+    },
+    "R027": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-757d551b3e59",
+      "chunk_id": 7,
+      "index": 657,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R028": {
+      "document": "afi17-203",
+      "requirement_id": "REQ-7c74389ecb93",
+      "chunk_id": 32,
+      "index": 1313,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "and the Primary Recipient will be"
+    },
+    "R029": {
+      "document": "DODI 8551.01",
+      "requirement_id": "REQ-47c780e1765f",
+      "chunk_id": 8,
+      "index": 614,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "Appoints a DoD military officer in the grade of O-6, or civilian employee equivalent, possessing a Top Secret clearance with sensitive compartmented information access as the PPSM CCB chairperson to:"
+    },
+    "R030": {
+      "document": "DODI 8551.01",
+      "requirement_id": "REQ-c5d419709fd3",
+      "chunk_id": 12,
+      "index": 626,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "The DoD Component heads:"
+    },
+    "R031": {
+      "document": "afi10-2402",
+      "requirement_id": "REQ-4551f240ff39",
+      "chunk_id": 74,
+      "index": 992,
+      "stratum": "not-a-candidate+nosignal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R032": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-89b46f184cc5",
+      "chunk_id": 6,
+      "index": 256,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "Coordinates with the Secretaries of the Military Departments, Under Secretary of Defense for Research and Engineering (USD(R&E)), Under Secretary of Defense for Acquisition and Sustainment (USD(A&S)), and the DoD Component heads to:"
+    },
+    "R033": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-6c3addec6496",
+      "chunk_id": 64,
+      "index": 720,
+      "stratum": "not-a-candidate+signal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R034": {
+      "document": "dafman17-1305",
+      "requirement_id": "REQ-89e741343859",
+      "chunk_id": 65,
+      "index": 1762,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "These areas are:"
+    },
+    "R035": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-071b912a9fc6",
+      "chunk_id": 57,
+      "index": 376,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R036": {
+      "document": "DODI 5200.01",
+      "requirement_id": "REQ-295a3b2251e6",
+      "chunk_id": 21,
+      "index": 135,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "Designate a senior agency official to be responsible for the direction, administration, and oversight of the DoD Component's information security program, to include:"
+    },
+    "R037": {
+      "document": "afi13-550",
+      "requirement_id": "REQ-f450384cb0ca",
+      "chunk_id": 36,
+      "index": 1161,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "AF/A10 will:"
+    },
+    "R038": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-21d11d1871b1",
+      "chunk_id": 73,
+      "index": 744,
+      "stratum": "not-a-candidate+signal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R039": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-baa9afcc4db4",
+      "chunk_id": 53,
+      "index": 369,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R040": {
+      "document": "CJCSI 6510.02G",
+      "requirement_id": "REQ-8795ee99d37d",
+      "chunk_id": 8,
+      "index": 11,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "The process will be as follows:"
+    },
+    "R041": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-4467c13a451e",
+      "chunk_id": 59,
+      "index": 382,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "Some specific examples include:"
+    },
+    "R042": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-1d010e67ad48",
+      "chunk_id": 15,
+      "index": 272,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R043": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-efc38d9d853d",
+      "chunk_id": 37,
+      "index": 595,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "shall be designated IA Technical Category Level 2 and IA Management Category Level 2 positions and as critical sensitive positions as defined by DoD 5200.2-R"
+    },
+    "R044": {
+      "document": "DODI 5200.44",
+      "requirement_id": "REQ-42f23541de6c",
+      "chunk_id": 27,
+      "index": 220,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "Designate a focal point and resources to represent the acquisition executive; risk management executive; and counterintelligence, security, and operational communities with access to the DoD Component's research, development, acquisition, sustainment activities, and ICT supply chain risk analyses for applicable systems to:"
+    },
+    "R045": {
+      "document": "DODI 5200.44",
+      "requirement_id": "REQ-45c98fad7998",
+      "chunk_id": 9,
+      "index": 180,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "b. In coordination with the DoD CIO, the Under Secretary of Defense for Acquisition and Sustainment (USD(A&S)), the Under Secretary of Defense for Intelligence and Security (USD(I&S)), and the DoD Component heads:"
+    },
+    "R046": {
+      "document": "afi13-550",
+      "requirement_id": "REQ-8f6b26b5ede9",
+      "chunk_id": 62,
+      "index": 1239,
+      "stratum": "not-a-candidate+nosignal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R047": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-f37dff8803a8",
+      "chunk_id": 52,
+      "index": 367,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R048": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-ec7dfe0979bd",
+      "chunk_id": 50,
+      "index": 360,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R049": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-05bfaa068c63",
+      "chunk_id": 13,
+      "index": 668,
+      "stratum": "not-a-candidate+signal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R050": {
+      "document": "afi10-2402",
+      "requirement_id": "REQ-4757b80474b2",
+      "chunk_id": 50,
+      "index": 911,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R051": {
+      "document": "DODI 5200.44",
+      "requirement_id": "REQ-1b51c89cd90e",
+      "chunk_id": 10,
+      "index": 184,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "establishes processes and procedures to ensure assured access to trusted microelectronics pursuant to Section 231 of Public Law 114-328"
+    },
+    "R052": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-102ed88c1050",
+      "chunk_id": 94,
+      "index": 786,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R053": {
+      "document": "afi17-203",
+      "requirement_id": "REQ-42109df01628",
+      "chunk_id": 50,
+      "index": 1360,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R054": {
+      "document": "afi10-2402",
+      "requirement_id": "REQ-4ed0e2694d0c",
+      "chunk_id": 63,
+      "index": 953,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R055": {
+      "document": "afi13-550",
+      "requirement_id": "REQ-9edc276c2dac",
+      "chunk_id": 29,
+      "index": 1144,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R056": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-ceca6f11ee37",
+      "chunk_id": 87,
+      "index": 771,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "In cases where the legacy application must be provided full network access, care must be taken to ensure that the data it receives is not malicious"
+    },
+    "R057": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-cdba4af65a44",
+      "chunk_id": 33,
+      "index": 584,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "This section will define for all parties:"
+    },
+    "R058": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-c5e3988b8449",
+      "chunk_id": 30,
+      "index": 311,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R059": {
+      "document": "DODI 5200.44",
+      "requirement_id": "REQ-4d5ff25165d2",
+      "chunk_id": 27,
+      "index": 221,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "Designate a focal point and resources to represent the acquisition executive; risk management executive; and counterintelligence, security, and operational communities with access to the DoD Component's research, development, acquisition, sustainment activities, and ICT supply chain risk analyses for applicable systems to:"
+    },
+    "R060": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-02d473ff8f30",
+      "chunk_id": 90,
+      "index": 776,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "developing virtualization policy"
+    },
+    "R061": {
+      "document": "DODI 5200.01",
+      "requirement_id": "REQ-94fb35fbff1c",
+      "chunk_id": 9,
+      "index": 109,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "Directs, administers, and oversees the disclosure of classified military information in category 8 (military intelligence) to foreign governments and international organizations"
+    },
+    "R062": {
+      "document": "afi13-550",
+      "requirement_id": "REQ-359786defc2c",
+      "chunk_id": 57,
+      "index": 1224,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R063": {
+      "document": "afi13-550",
+      "requirement_id": "REQ-e5cad431cbde",
+      "chunk_id": 21,
+      "index": 1121,
+      "stratum": "not-a-candidate+signal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R064": {
+      "document": "afi13-550",
+      "requirement_id": "REQ-9a5fc82253bc",
+      "chunk_id": 33,
+      "index": 1151,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "AF/A10 will:"
+    },
+    "R065": {
+      "document": "afpd_17-1",
+      "requirement_id": "REQ-ff8c88e79989",
+      "chunk_id": 23,
+      "index": 1576,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R066": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-48f549669bb2",
+      "chunk_id": 33,
+      "index": 576,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "This section will define for all parties:"
+    },
+    "R067": {
+      "document": "CJCSI 6510.02G",
+      "requirement_id": "REQ-0ed3b0430b80",
+      "chunk_id": 26,
+      "index": 51,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R068": {
+      "document": "DODI 5200.01",
+      "requirement_id": "REQ-05d4d11b1fe9",
+      "chunk_id": 3,
+      "index": 98,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "Information will not be classified, continue to be maintained as classified, or fail to be declassified, or be designated CUI under any circumstances in order to:"
+    },
+    "R069": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-26bab76feacc",
+      "chunk_id": 90,
+      "index": 460,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "Defined in Section 2002.4 of Title 32 CFR"
+    },
+    "R070": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-37a749987fbd",
+      "chunk_id": 26,
+      "index": 302,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R071": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-f7a4590fddce",
+      "chunk_id": 38,
+      "index": 600,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "meet all required background checks, training, and certification requirements prior to assuming their duties"
+    },
+    "R072": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-27f7168977d9",
+      "chunk_id": 3,
+      "index": 251,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R073": {
+      "document": "afman17-2101",
+      "requirement_id": "REQ-d998b6bae50b",
+      "chunk_id": 33,
+      "index": 1443,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "All Air Force Centers, Agencies, and Other Key Stakeholder will:"
+    },
+    "R074": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-354c9774c06d",
+      "chunk_id": 29,
+      "index": 562,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R075": {
+      "document": "DODI 8551.01",
+      "requirement_id": "REQ-f02ab6a553b3",
+      "chunk_id": 13,
+      "index": 631,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "b. Oversee their respective Component's PPSM program to:"
+    },
+    "R076": {
+      "document": "dafman17-1305",
+      "requirement_id": "REQ-2be17721d614",
+      "chunk_id": 56,
+      "index": 1741,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "Supervisors shall:"
+    },
+    "R077": {
+      "document": "CJCSI 6510.02G",
+      "requirement_id": "REQ-33c13d714bb5",
+      "chunk_id": 6,
+      "index": 6,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "b. The NSA, as the national manager for cryptographic products will, through its Cryptographic Evaluation (CE) office, identify only NSA approved cryptographic products requiring replacement, pursuant to reference (b). The CE office will collaborate with data owners to determine the specific last year of use (LYOU) for aging devices and algorithms. Urgency associated with modernization planning will be reported IAW reference (b), using color codes as follows:"
+    },
+    "R078": {
+      "document": "CJCSI 6510.02G",
+      "requirement_id": "REQ-8d95ad462089",
+      "chunk_id": 3,
+      "index": 1,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "References:"
+    },
+    "R079": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-8a8ea67c9957",
+      "chunk_id": 10,
+      "index": 663,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R080": {
+      "document": "afman17-2101",
+      "requirement_id": "REQ-04af9fc7dca2",
+      "chunk_id": 33,
+      "index": 1442,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "All Air Force Centers, Agencies, and Other Key Stakeholder will:"
+    },
+    "R081": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-22336c31702a",
+      "chunk_id": 94,
+      "index": 785,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R082": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-95b1e6ffdb9f",
+      "chunk_id": 21,
+      "index": 296,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R083": {
+      "document": "dafman17-1305",
+      "requirement_id": "REQ-8179f6c1967a",
+      "chunk_id": 101,
+      "index": 1832,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R084": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-4379dbcc717a",
+      "chunk_id": 81,
+      "index": 761,
+      "stratum": "not-a-candidate+signal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R085": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-f3d8806b240f",
+      "chunk_id": 31,
+      "index": 570,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "NM SLAs shall at a minimum address the following areas identified in International Telecommunications Union - Telecommunications Recommendation M.3342 (Reference (z)) and TM Forum GB917 Release 3.0 (Reference (aa)):"
+    },
+    "R086": {
+      "document": "dafman17-1305",
+      "requirement_id": "REQ-f4c16b7b63c9",
+      "chunk_id": 51,
+      "index": 1724,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "ISSMs shall:"
+    },
+    "R087": {
+      "document": "afi17-203",
+      "requirement_id": "REQ-4ca0a0bc01d3",
+      "chunk_id": 16,
+      "index": 1275,
+      "stratum": "heading",
+      "method": "heading",
+      "stem": "2.2. Directorate of Security, Special Access Program Oversight and Information Protection (SAF/AAZ)."
+    },
+    "R088": {
+      "document": "DODI 5200.44",
+      "requirement_id": "REQ-06fce76b9659",
+      "chunk_id": 3,
+      "index": 161,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "All DoD information systems, networks, and weapon systems that are or include the following systems that are referred to collectively in this issuance as 'applicable systems:"
+    },
+    "R089": {
+      "document": "afi13-550",
+      "requirement_id": "REQ-74c63d13b8e6",
+      "chunk_id": 25,
+      "index": 1132,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R090": {
+      "document": "afman17-2101",
+      "requirement_id": "REQ-07b42597facd",
+      "chunk_id": 23,
+      "index": 1415,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R091": {
+      "document": "DODI 5200.01",
+      "requirement_id": "REQ-4aeeff50f15b",
+      "chunk_id": 17,
+      "index": 129,
+      "stratum": "not-a-candidate+signal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R092": {
+      "document": "afi13-550",
+      "requirement_id": "REQ-4289ada0296e",
+      "chunk_id": 15,
+      "index": 1106,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "Safeguard, protect, and mark NC3 classified and unclassified controlled nuclear information IAW DoDI 5200.01, DoD Information Security Program and Protection of Sensitive Compartmented Information"
+    },
+    "R093": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-433511a7f214",
+      "chunk_id": 61,
+      "index": 387,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R094": {
+      "document": "CJCSI 6510.02G",
+      "requirement_id": "REQ-717351d60b4e",
+      "chunk_id": 6,
+      "index": 7,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "b. The NSA, as the national manager for cryptographic products will, through its Cryptographic Evaluation (CE) office, identify only NSA approved cryptographic products requiring replacement, pursuant to reference (b). The CE office will collaborate with data owners to determine the specific last year of use (LYOU) for aging devices and algorithms. Urgency associated with modernization planning will be reported IAW reference (b), using color codes as follows:"
+    },
+    "R095": {
+      "document": "DODI 8551.01",
+      "requirement_id": "REQ-d83def22064c",
+      "chunk_id": 4,
+      "index": 606,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "All PPS used throughout planned, newly developed, acquired, and existing DODIN (whether used internal or external to the enclave); DoD information technology; organic cloud computing; and managed data services must:"
+    },
+    "R096": {
+      "document": "DODI 8551.01",
+      "requirement_id": "REQ-570d5f8886f6",
+      "chunk_id": 12,
+      "index": 629,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "The DoD Component heads:"
+    },
+    "R097": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-b37eb5407311",
+      "chunk_id": 56,
+      "index": 710,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R098": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-6bcf585b3a6f",
+      "chunk_id": 54,
+      "index": 706,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R099": {
+      "document": "DODI 5200.44",
+      "requirement_id": "REQ-b3dfe230a02b",
+      "chunk_id": 29,
+      "index": 229,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "e. Establish TSN processes to assess vulnerabilities and manage risk to the assurance in the applicable system by:"
+    },
+    "R100": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-ac65768bfc9f",
+      "chunk_id": 81,
+      "index": 443,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R101": {
+      "document": "DODI 5200.44",
+      "requirement_id": "REQ-cdbd6c618879",
+      "chunk_id": 17,
+      "index": 196,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "The USD(A&S):"
+    },
+    "R102": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-5da4d1a1d207",
+      "chunk_id": 18,
+      "index": 512,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "The DOT&E shall:"
+    },
+    "R103": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-b3f278b81216",
+      "chunk_id": 90,
+      "index": 462,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "CUI Specified Defined in Section 2002.4 of Title 32 CFR (DoD is not using this structure in its initial implementation phase.)"
+    },
+    "R104": {
+      "document": "dafman17-1305",
+      "requirement_id": "REQ-7a4a672c93d0",
+      "chunk_id": 51,
+      "index": 1722,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "ISSMs shall:"
+    },
+    "R105": {
+      "document": "CJCSI 6510.02G",
+      "requirement_id": "REQ-d6feffd85f75",
+      "chunk_id": 9,
+      "index": 15,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "The process will be as follows:"
+    },
+    "R106": {
+      "document": "dafman17-1305",
+      "requirement_id": "REQ-47e2745fef32",
+      "chunk_id": 55,
+      "index": 1737,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "Supervisors shall:"
+    },
+    "R107": {
+      "document": "afi13-550",
+      "requirement_id": "REQ-c449d6d767bb",
+      "chunk_id": 30,
+      "index": 1146,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "Under authority vested in Title 10 United States Code Section 171a"
+    },
+    "R108": {
+      "document": "afi13-550",
+      "requirement_id": "REQ-66ccb416d93a",
+      "chunk_id": 64,
+      "index": 1246,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "AFSPC will:"
+    },
+    "R109": {
+      "document": "DODI 5200.44",
+      "requirement_id": "REQ-9ece516563ab",
+      "chunk_id": 6,
+      "index": 170,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "d. Risk to the assurance of applicable systems will be considered as part of the risk management process used throughout the entire system life cycle. Risk management will include TSN processes, tools, and techniques to:"
+    },
+    "R110": {
+      "document": "afi10-2402",
+      "requirement_id": "REQ-d8c8c2905f47",
+      "chunk_id": 37,
+      "index": 877,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R111": {
+      "document": "CJCSI 6510.02G",
+      "requirement_id": "REQ-20eb1b1c3cb9",
+      "chunk_id": 17,
+      "index": 30,
+      "stratum": "not-a-candidate+signal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R112": {
+      "document": "DODI 5200.01",
+      "requirement_id": "REQ-d945f6f4d4ac",
+      "chunk_id": 12,
+      "index": 122,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "Operates SCI security programs to support other DoD activities and federal agencies by special agreement, in accordance with Reference (n)"
+    },
+    "R113": {
+      "document": "dafman17-1305",
+      "requirement_id": "REQ-648f2178529f",
+      "chunk_id": 41,
+      "index": 1690,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "Wing/Delta Cyberspace Offices (formerly known as Cybersecurity Offices) shall:"
+    },
+    "R114": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-3021734a3e3e",
+      "chunk_id": 77,
+      "index": 752,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R115": {
+      "document": "CJCSI 6510.02G",
+      "requirement_id": "REQ-0ab4eed54a7c",
+      "chunk_id": 3,
+      "index": 0,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "References:"
+    },
+    "R116": {
+      "document": "afi17-203",
+      "requirement_id": "REQ-1b1071c8d317",
+      "chunk_id": 15,
+      "index": 1274,
+      "stratum": "heading",
+      "method": "heading",
+      "stem": "2.2. Directorate of Security, Special Access Program Oversight and Information Protection (SAF/AAZ)."
+    },
+    "R117": {
+      "document": "DODI 5200.01",
+      "requirement_id": "REQ-0c6367d1fdde",
+      "chunk_id": 2,
+      "index": 92,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "Information will not be classified, continue to be maintained as classified, or fail to be declassified, or be designated CUI under any circumstances in order to:"
+    },
+    "R118": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-97b8b3232c12",
+      "chunk_id": 33,
+      "index": 582,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "This section will define for all parties:"
+    },
+    "R119": {
+      "document": "DODI 8551.01",
+      "requirement_id": "REQ-995a60570f5f",
+      "chunk_id": 17,
+      "index": 639,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "e. Blocks all externally visible PPS not correctly implemented or enabled in accordance with this issuance and disconnects connections to, on, or through the DODIN transport. When required:"
+    },
+    "R120": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-bae6fc20ad5d",
+      "chunk_id": 28,
+      "index": 552,
+      "stratum": "not-a-candidate+nosignal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R121": {
+      "document": "afi17-203",
+      "requirement_id": "REQ-96ca836a20b5",
+      "chunk_id": 44,
+      "index": 1348,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R122": {
+      "document": "DODI 5200.44",
+      "requirement_id": "REQ-db9aa599f5bc",
+      "chunk_id": 17,
+      "index": 195,
+      "stratum": "not-a-candidate+signal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R123": {
+      "document": "NIST.SP.800-125",
+      "requirement_id": "REQ-792a9e12f45e",
+      "chunk_id": 51,
+      "index": 704,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R124": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-974bea7518f0",
+      "chunk_id": 45,
+      "index": 350,
+      "stratum": "not-a-candidate+nosignal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R125": {
+      "document": "DODI 5200.48",
+      "requirement_id": "REQ-3f8b4a49e5f3",
+      "chunk_id": 50,
+      "index": 359,
+      "stratum": "none+signal",
+      "method": "none",
+      "stem": null
+    },
+    "R126": {
+      "document": "afman17-2101",
+      "requirement_id": "REQ-8b9d4035e9de",
+      "chunk_id": 32,
+      "index": 1438,
+      "stratum": "not-a-candidate+nosignal",
+      "method": "not-a-candidate",
+      "stem": null
+    },
+    "R127": {
+      "document": "afi17-203",
+      "requirement_id": "REQ-ca21ec754c5d",
+      "chunk_id": 32,
+      "index": 1312,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "then take the indicated Actions"
+    },
+    "R128": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-5a3bc398d988",
+      "chunk_id": 33,
+      "index": 580,
+      "stratum": "cross-chunk",
+      "method": "cross-chunk",
+      "stem": "This section will define for all parties:"
+    },
+    "R129": {
+      "document": "dafman17-1305",
+      "requirement_id": "REQ-a532075588ff",
+      "chunk_id": 47,
+      "index": 1711,
+      "stratum": "none+nosignal",
+      "method": "none",
+      "stem": null
+    },
+    "R130": {
+      "document": "DODI 8410.03",
+      "requirement_id": "REQ-c8ffd28ff034",
+      "chunk_id": 37,
+      "index": 598,
+      "stratum": "same-chunk",
+      "method": "same-chunk",
+      "stem": "meet all required background checks, training, and certification requirements prior to assuming their duties"
+    }
+  },
+  "population": {
+    "same-chunk": 142,
+    "cross-chunk": 59,
+    "heading": 2,
+    "none+signal": 90,
+    "none+nosignal": 546,
+    "not-a-candidate+signal": 54,
+    "not-a-candidate+nosignal": 954
+  },
+  "sample": {
+    "same-chunk": 36,
+    "cross-chunk": 28,
+    "heading": 2,
+    "none+signal": 28,
+    "none+nosignal": 20,
+    "not-a-candidate+signal": 8,
+    "not-a-candidate+nosignal": 8
+  },
+  "frame_excluding_prior": {
+    "same-chunk": 126,
+    "cross-chunk": 59,
+    "heading": 2,
+    "none+signal": 90,
+    "none+nosignal": 546,
+    "not-a-candidate+signal": 54,
+    "not-a-candidate+nosignal": 954
+  }
+}

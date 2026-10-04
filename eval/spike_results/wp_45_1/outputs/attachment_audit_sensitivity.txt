@@ -1,0 +1,173 @@
+## Provenance
+
+- answer key sha256 1a8fb19352ac0089 matches outputs/audit_pack_manifest.json
+- pack, rubric and checker in eval/spike_results/wp_45_1/audit_pack match the manifest
+- labels_claude_a.jsonl sha256 0696ab3d3037f173
+- labels_claude_b.jsonl sha256 2f29d7864714ab3d
+- labels_codex_a.jsonl sha256 78ec74caf6d8a4e2
+- labels_codex_b.jsonl sha256 d8fa57914cd1f250
+
+## Agreement between the two labelers
+
+- pass A `standalone`: 124/130 agree, kappa 0.91
+- pass A `lead_in_location` where both said needs_lead_in: 75/80 agree, kappa 0.91
+- pass A disagreements on (standalone, location): 11 of 130
+- pass B `stem_verdict`: 61/66 agree, kappa 0.90
+- pass B disagreements: 5 of 66
+
+SENSITIVITY RUN: every disagreement resolved to claude; adjudication answers on disagreements ignored
+
+## Attachment precision (pass B, resolved)
+
+| stratum | n | right | wrong_sibling | fragment_chain | not_needed | wrong_other | right (Wilson 95%) |
+|---|---|---|---|---|---|---|---|
+| same-chunk | 36 | 16 | 10 | 8 | 1 | 1 |  44.4% ( 29.5% to  60.4%) |
+| cross-chunk | 28 | 8 | 10 | 3 | 0 | 7 |  28.6% ( 15.3% to  47.1%) |
+| heading | 2 | 1 | 0 | 0 | 0 | 1 |  50.0% (  9.5% to  90.5%) |
+
+Pooled over the 203 attachments, right:  39.9% (95%  29.3% to  50.5%), about 81 records
+
+Pooled over the 203 attachments, misleading (wrong_sibling or wrong_other):  39.5% (95%  29.5% to  49.5%), about 80 records
+
+Pooled over the 203 attachments, incomplete (fragment_chain):  18.7% (95%  10.0% to  27.3%), about 38 records
+
+## Records that need a lead-in (pass A, resolved)
+
+| stratum | population | n | needs_lead_in | not_a_requirement | need rate (Wilson) | est. records |
+|---|---|---|---|---|---|---|
+| same-chunk | 142 | 36 | 25 | 6 |  69.4% ( 53.1% to  82.0%) | 99 |
+| cross-chunk | 59 | 28 | 20 | 1 |  71.4% ( 52.9% to  84.7%) | 42 |
+| heading | 2 | 2 | 2 | 0 | 100.0% ( 34.2% to 100.0%) | 2 |
+| none+signal | 90 | 28 | 14 | 4 |  50.0% ( 32.6% to  67.4%) | 45 |
+| none+nosignal | 546 | 20 | 16 | 1 |  80.0% ( 58.4% to  91.9%) | 437 |
+| not-a-candidate+signal | 54 | 8 | 3 | 5 |  37.5% ( 13.7% to  69.4%) | 20 |
+| not-a-candidate+nosignal | 954 | 8 | 3 | 0 |  37.5% ( 13.7% to  69.4%) | 358 |
+
+All 1847 records:  54.3% need a lead-in (95%  35.0% to  73.5%), about 1003
+Records with no stem that need one:  52.3% of 1644 (95%  30.7% to  73.9%), about 860 (the misses)
+
+## Where the missing lead-in lives (records that need one, weighted to the population)
+
+| location | in sample | est. among the 203 with a stem | est. among the 1,644 without | est. total |
+|---|---|---|---|---|
+| same_chunk | 33 | 71 | 114 | 185 |
+| previous_chunk | 17 | 23 | 74 | 97 |
+| section_heading | 31 | 47 | 552 | 599 |
+| not_shown | 2 | 2 | 119 | 121 |
+
+## Root-cause classes among records that need a lead-in (weighted to the population)
+
+| class | in sample | est. records in 1,847 |
+|---|---|---|
+| (1) no stem, lead-in is in the previous chunk | 7 | 74 |
+| (3) no stem, lead-in is earlier in the same chunk | 12 | 114 |
+| (4) sibling bullet accepted as the stem; true lead-in: not_shown | 1 | 2 |
+| (4) sibling bullet accepted as the stem; true lead-in: previous_chunk | 2 | 6 |
+| (4) sibling bullet accepted as the stem; true lead-in: same_chunk | 2 | 6 |
+| (4) sibling bullet accepted as the stem; true lead-in: section_heading | 5 | 12 |
+| no stem, lead-in not recoverable from the text shown | 1 | 119 |
+| no stem, only the section heading governs | 16 | 552 |
+| stem is itself a fragment (chain); true lead-in: previous_chunk | 3 | 6 |
+| stem is itself a fragment (chain); true lead-in: same_chunk | 8 | 32 |
+| stem is right | 22 | 69 |
+| stem unrelated to the quote; true lead-in: same_chunk | 4 | 9 |
+
+Root cause (2), Docling hierarchy missing or wrong, cannot be established from text labels.
+
+## Stems on quotes that are already complete
+
+12 of the 66 sampled attachments are on complete quotes: right 2, wrong_sibling 6, fragment_chain 0, not_needed 0, wrong_other 4
+
+## Consistency check: pass A lead-in text against the attached stem
+
+2 records where the verdict and the text overlap contradict each other (right without overlap, or wrong_sibling/wrong_other with overlap); read these before trusting the table: R030 (right, no overlap), R096 (right, no overlap)
+
+Spot-checks: 10 of 10 confirmed, 0 changed []
+Corrections to agreed items outside the spot-check: 1 [('R107', 'a')]
+## Provenance
+
+- answer key sha256 1a8fb19352ac0089 matches outputs/audit_pack_manifest.json
+- pack, rubric and checker in eval/spike_results/wp_45_1/audit_pack match the manifest
+- labels_claude_a.jsonl sha256 0696ab3d3037f173
+- labels_claude_b.jsonl sha256 2f29d7864714ab3d
+- labels_codex_a.jsonl sha256 78ec74caf6d8a4e2
+- labels_codex_b.jsonl sha256 d8fa57914cd1f250
+
+## Agreement between the two labelers
+
+- pass A `standalone`: 124/130 agree, kappa 0.91
+- pass A `lead_in_location` where both said needs_lead_in: 75/80 agree, kappa 0.91
+- pass A disagreements on (standalone, location): 11 of 130
+- pass B `stem_verdict`: 61/66 agree, kappa 0.90
+- pass B disagreements: 5 of 66
+
+SENSITIVITY RUN: every disagreement resolved to codex; adjudication answers on disagreements ignored
+
+## Attachment precision (pass B, resolved)
+
+| stratum | n | right | wrong_sibling | fragment_chain | not_needed | wrong_other | right (Wilson 95%) |
+|---|---|---|---|---|---|---|---|
+| same-chunk | 36 | 13 | 10 | 8 | 3 | 2 |  36.1% ( 22.5% to  52.4%) |
+| cross-chunk | 28 | 8 | 9 | 4 | 0 | 7 |  28.6% ( 15.3% to  47.1%) |
+| heading | 2 | 1 | 0 | 0 | 0 | 1 |  50.0% (  9.5% to  90.5%) |
+
+Pooled over the 203 attachments, right:  34.1% (95%  23.8% to  44.3%), about 69 records
+
+Pooled over the 203 attachments, misleading (wrong_sibling or wrong_other):  40.4% (95%  30.2% to  50.6%), about 82 records
+
+Pooled over the 203 attachments, incomplete (fragment_chain):  19.7% (95%  10.9% to  28.5%), about 40 records
+
+## Records that need a lead-in (pass A, resolved)
+
+| stratum | population | n | needs_lead_in | not_a_requirement | need rate (Wilson) | est. records |
+|---|---|---|---|---|---|---|
+| same-chunk | 142 | 36 | 25 | 6 |  69.4% ( 53.1% to  82.0%) | 99 |
+| cross-chunk | 59 | 28 | 20 | 1 |  71.4% ( 52.9% to  84.7%) | 42 |
+| heading | 2 | 2 | 2 | 0 | 100.0% ( 34.2% to 100.0%) | 2 |
+| none+signal | 90 | 28 | 16 | 4 |  57.1% ( 39.1% to  73.5%) | 51 |
+| none+nosignal | 546 | 20 | 15 | 2 |  75.0% ( 53.1% to  88.8%) | 410 |
+| not-a-candidate+signal | 54 | 8 | 3 | 4 |  37.5% ( 13.7% to  69.4%) | 20 |
+| not-a-candidate+nosignal | 954 | 8 | 3 | 0 |  37.5% ( 13.7% to  69.4%) | 358 |
+
+All 1847 records:  53.2% need a lead-in (95%  33.8% to  72.5%), about 982
+Records with no stem that need one:  51.0% of 1644 (95%  29.3% to  72.7%), about 839 (the misses)
+
+## Where the missing lead-in lives (records that need one, weighted to the population)
+
+| location | in sample | est. among the 203 with a stem | est. among the 1,644 without | est. total |
+|---|---|---|---|---|
+| same_chunk | 32 | 71 | 91 | 161 |
+| previous_chunk | 21 | 25 | 84 | 109 |
+| section_heading | 27 | 43 | 518 | 561 |
+| not_shown | 4 | 4 | 147 | 151 |
+
+## Root-cause classes among records that need a lead-in (weighted to the population)
+
+| class | in sample | est. records in 1,847 |
+|---|---|---|
+| (1) no stem, lead-in is in the previous chunk | 10 | 84 |
+| (3) no stem, lead-in is earlier in the same chunk | 11 | 91 |
+| (4) sibling bullet accepted as the stem; true lead-in: not_shown | 1 | 2 |
+| (4) sibling bullet accepted as the stem; true lead-in: previous_chunk | 1 | 4 |
+| (4) sibling bullet accepted as the stem; true lead-in: same_chunk | 2 | 6 |
+| (4) sibling bullet accepted as the stem; true lead-in: section_heading | 4 | 10 |
+| no stem, lead-in not recoverable from the text shown | 2 | 147 |
+| no stem, only the section heading governs | 14 | 518 |
+| stem is itself a fragment (chain); true lead-in: previous_chunk | 4 | 8 |
+| stem is itself a fragment (chain); true lead-in: same_chunk | 7 | 28 |
+| stem is right | 22 | 69 |
+| stem unrelated to the quote; true lead-in: not_shown | 1 | 2 |
+| stem unrelated to the quote; true lead-in: same_chunk | 5 | 13 |
+
+Root cause (2), Docling hierarchy missing or wrong, cannot be established from text labels.
+
+## Stems on quotes that are already complete
+
+12 of the 66 sampled attachments are on complete quotes: right 0, wrong_sibling 6, fragment_chain 0, not_needed 2, wrong_other 4
+
+## Consistency check: pass A lead-in text against the attached stem
+
+3 records where the verdict and the text overlap contradict each other (right without overlap, or wrong_sibling/wrong_other with overlap); read these before trusting the table: R030 (right, no overlap), R073 (wrong_other, overlap), R096 (right, no overlap)
+
+Spot-checks: 10 of 10 confirmed, 0 changed []
+Corrections to agreed items outside the spot-check: 1 [('R107', 'a')]
