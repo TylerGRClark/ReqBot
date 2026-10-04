@@ -1,0 +1,66 @@
+{"id": "R001", "stem_verdict": "fragment_chain", "note": "stem is the verb phrase of the governing sentence, without its subject"}
+{"id": "R004", "stem_verdict": "right", "note": ""}
+{"id": "R008", "stem_verdict": "not_needed", "note": "quote judged descriptive in pass A; stem is relevant context from the same paragraph"}
+{"id": "R010", "stem_verdict": "right", "note": ""}
+{"id": "R016", "stem_verdict": "right", "note": "redundant with the quote, but is the governing lead-in"}
+{"id": "R021", "stem_verdict": "right", "note": ""}
+{"id": "R022", "stem_verdict": "wrong_other", "note": "text from a different section (5, item c)"}
+{"id": "R024", "stem_verdict": "fragment_chain", "note": "remnant of the lead-in sentence without its subject"}
+{"id": "R026", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item b.'s own sub-list"}
+{"id": "R028", "stem_verdict": "wrong_sibling", "note": "adjacent header cell"}
+{"id": "R029", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item d.'s own sub-list (imperative items); quote belongs to the Director's list"}
+{"id": "R030", "stem_verdict": "right", "note": "party only; skips the nearer 'b. Oversee ... to:' but statement stays correct"}
+{"id": "R032", "stem_verdict": "fragment_chain", "note": "the immediate lead-in, but itself a list item that needs its party (The DDI(CL&S):)"}
+{"id": "R034", "stem_verdict": "right", "note": ""}
+{"id": "R036", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item b.'s own sub-list"}
+{"id": "R037", "stem_verdict": "wrong_sibling", "note": "peer item 4.3.1 AF/A10 will:"}
+{"id": "R040", "stem_verdict": "fragment_chain", "note": "the real list intro, but the referent 'That Service' is in the first sentence of the same item"}
+{"id": "R041", "stem_verdict": "wrong_other", "note": "'Some specific examples include:' belongs to a table elsewhere"}
+{"id": "R043", "stem_verdict": "fragment_chain", "note": "earlier half of the same long sentence but about positions, not the personnel the quote needs"}
+{"id": "R044", "stem_verdict": "fragment_chain", "note": "immediate lead-in is a list item needing 'The DoD Component heads:'"}
+{"id": "R045", "stem_verdict": "fragment_chain", "note": "immediate lead-in is a list item needing 'The USD(R&E):'"}
+{"id": "R051", "stem_verdict": "wrong_sibling", "note": "peer duty e."}
+{"id": "R056", "stem_verdict": "right", "note": "first half of the same sentence"}
+{"id": "R057", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item (5)'s own sub-list"}
+{"id": "R059", "stem_verdict": "fragment_chain", "note": "immediate lead-in is a list item needing 'The DoD Component heads:'"}
+{"id": "R060", "stem_verdict": "wrong_sibling", "note": "peer gerund item in the same enumeration"}
+{"id": "R061", "stem_verdict": "wrong_other", "note": "item from the USD(I&S) list, a different role"}
+{"id": "R064", "stem_verdict": "right", "note": ""}
+{"id": "R066", "stem_verdict": "right", "note": ""}
+{"id": "R068", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item c.; attaching it inverts the quote's meaning"}
+{"id": "R069", "stem_verdict": "wrong_sibling", "note": "adjacent glossary entry"}
+{"id": "R071", "stem_verdict": "wrong_other", "note": "text from a different section (5, item c)"}
+{"id": "R073", "stem_verdict": "fragment_chain", "note": "skips the nearer 2.7.2 'Program Management Offices:' so the duty is attributed to all stakeholders"}
+{"id": "R075", "stem_verdict": "fragment_chain", "note": "immediate lead-in is a list item needing 'The DoD Component heads:'"}
+{"id": "R076", "stem_verdict": "right", "note": ""}
+{"id": "R077", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item b.'s own sub-list"}
+{"id": "R078", "stem_verdict": "wrong_other", "note": "'References:' header"}
+{"id": "R080", "stem_verdict": "right", "note": ""}
+{"id": "R085", "stem_verdict": "right", "note": ""}
+{"id": "R086", "stem_verdict": "right", "note": ""}
+{"id": "R087", "stem_verdict": "wrong_other", "note": "stale section heading; the subject is AFOSI (2.3.1)"}
+{"id": "R088", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item (3)'s own sub-list"}
+{"id": "R092", "stem_verdict": "wrong_sibling", "note": "peer item 1.6.2"}
+{"id": "R094", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item b.'s own sub-list"}
+{"id": "R095", "stem_verdict": "right", "note": ""}
+{"id": "R096", "stem_verdict": "right", "note": "party only; skips 'b. Oversee ... to:'"}
+{"id": "R099", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item e.'s own sub-list"}
+{"id": "R101", "stem_verdict": "right", "note": ""}
+{"id": "R102", "stem_verdict": "right", "note": ""}
+{"id": "R103", "stem_verdict": "wrong_sibling", "note": "adjacent glossary entry"}
+{"id": "R104", "stem_verdict": "right", "note": ""}
+{"id": "R105", "stem_verdict": "fragment_chain", "note": "real list intro, but 'the request' is defined in the preceding sentence of item (2)"}
+{"id": "R106", "stem_verdict": "right", "note": ""}
+{"id": "R107", "stem_verdict": "wrong_other", "note": "different clause in the overview paragraph"}
+{"id": "R108", "stem_verdict": "wrong_sibling", "note": "peer 6.3.8 AFSPC will:; true party is 6.3.9"}
+{"id": "R109", "stem_verdict": "right", "note": ""}
+{"id": "R112", "stem_verdict": "wrong_other", "note": "item from the USD(I&S) list"}
+{"id": "R113", "stem_verdict": "right", "note": ""}
+{"id": "R115", "stem_verdict": "wrong_other", "note": "'References:' header"}
+{"id": "R116", "stem_verdict": "right", "note": ""}
+{"id": "R117", "stem_verdict": "right", "note": ""}
+{"id": "R118", "stem_verdict": "right", "note": ""}
+{"id": "R119", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item e.'s own sub-list"}
+{"id": "R127", "stem_verdict": "wrong_sibling", "note": "adjacent header cell"}
+{"id": "R128", "stem_verdict": "right", "note": ""}
+{"id": "R130", "stem_verdict": "wrong_sibling", "note": "fragment of peer item c."}

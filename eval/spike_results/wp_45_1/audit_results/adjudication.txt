@@ -1,0 +1,35 @@
+# WP-45.1b adjudication. Format: `R012 a: codex` | `R012 b: claude` | `R012 a: other <standalone> [<location>]` | `R007 a: ok`
+# STATUS: the spot-check answers and the R107 correction are Tyler's (2026-10-04). The resolutions of the 16
+# disagreements are Claude's proposals and are marked "proposed" until Tyler confirms them.
+#
+# Pass A disagreements (11). Location convention (proposed): with several passages, lead_in_location is the farthest back.
+R006 a: codex   # proposed. PDF: item (3) of "f. Existing systems that use SNMP v1 or v2c shall implement the following security precautions ...:"
+R074 a: codex   # proposed. PDF: item (5) of the same list
+R029 a: codex   # proposed. PDF: "(3)" is numbered under "d. Appoints ... chairperson to:" (previous chunk)
+R067 a: codex   # proposed. Location convention: the party is in the previous chunk's heading
+R102 a: codex   # proposed. PDF: "(3)" under "f. Plan, organize, procure, ..." (previous chunk)
+R110 a: codex   # proposed. The 2.12.6 "...program office, which:" lead-in is not in the text shown
+R111 a: claude  # proposed. Location convention: the heading is the farthest passage
+R088 a: codex   # proposed. Applicability scope item; no obligation
+R100 a: codex   # proposed. Non-binding examples ("may require ... include")
+R049 a: claude  # proposed (judgment). Statutory-authority background
+R078 a: claude  # proposed (judgment). Concessive clause; its main clause follows the chunk
+# Pass B disagreements (5)
+R016 b: claude  # proposed. Rubric precedence: the stem is the governing lead-in even though the quote repeats it
+R064 b: claude  # proposed. Same
+R034 b: codex   # proposed. "These areas" has its referent in the preceding sentence
+R029 b: codex   # proposed. The stem is the structural parent (PDF) but omits the Director and reads garbled
+R073 b: claude  # proposed. Both labels count as harmful; the stem is a real ancestor lead-in that skips "Program Management Offices:"
+# Spot-check of 10 agreements (Tyler)
+R034 a: ok      # not a requirement by itself; it is one of the approved ways to meet the parent requirement in 3.2.2
+R039 a: ok
+R069 a: ok
+R095 a: ok      # a requirement that needs its parent clause
+R117 a: ok      # same
+R121 a: ok
+R057 b: ok
+R088 b: ok      # Tyler: unsure which kind of wrong, but the stem is not right
+R099 b: ok      # Tyler: the real parent is the DoD Component heads list in the chunk above
+R107 b: ok
+# Correction found while reviewing the spot-check (Tyler): not part of the sampled 10
+R107 a: other needs_lead_in same_chunk   # the IAW clause says HOW the DoD CIO chairs the NLCC boards; both labelers had not_a_requirement

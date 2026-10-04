@@ -1,0 +1,130 @@
+{"id": "R001", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "the DIRNSA/CHCSS and Directors of the NRO and NGA establish, direct, and administer all aspects of their respective organization's SCI security programs, to include all necessary coordination and implementation of DNI security policy,", "note": "continues the sentence"}
+{"id": "R002", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R003", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "Air Force Deputy Chief of Staff, Operations (AF/A3)", "note": "role named only by heading"}
+{"id": "R004", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "PPSM standards will be implemented as directed by the authorizing official for the system for DoD-wide management and PPS control used in DoD systems to:", "note": ""}
+{"id": "R005", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "DIRECTOR, DISA.", "note": "role named only by heading"}
+{"id": "R006", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": "'string' = SNMP community string, resolved by heading and siblings; no introducing lead-in"}
+{"id": "R007", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R008", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "'could be added' suggestion in guidance"}
+{"id": "R009", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "In accordance with ISOO Notice 2016-01, CUI training standards must, at minimum:", "note": ""}
+{"id": "R010", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "The DAF Chief Information Officer (SAF/CN) shall:", "note": "role named only by heading"}
+{"id": "R011", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "All Service component communication support organizations should:", "note": ""}
+{"id": "R012", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R013", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": "'will provide' describes program duty"}
+{"id": "R014", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "AFNC3C will:", "note": "role named only by heading"}
+{"id": "R015", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "DIRECTOR, DISA.", "note": "role named only by heading"}
+{"id": "R016", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": "quote already names AFGSC"}
+{"id": "R017", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R018", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "All HAF Functionals, MAJCOMs, DRUs, and FOAs will:", "note": "role named only by heading"}
+{"id": "R019", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "MAJCOM/DRUs.", "note": "role named only by heading"}
+{"id": "R020", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "For remote administration,", "note": "scope clause"}
+{"id": "R021", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "The DAF Chief Information Officer (SAF/CN) shall:", "note": "role named only by heading"}
+{"id": "R022", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": "quote names the Components"}
+{"id": "R023", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "AFGSC will:", "note": "bracket heading says AF/A10 but item 7.3.4.3 sits under 7.3.4 AFGSC in the previous chunk"}
+{"id": "R024", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "The CDRUSSTRATCOM, in addition to the responsibilities in sections 8 and 10 of this enclosure, shall:", "note": "bracket heading is a different role"}
+{"id": "R025", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "Chief, Information Dominance and Chief Information Officer (SAF/CIO A6).", "note": "role named only by heading"}
+{"id": "R026", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": "clause ends with a comma; the obligation itself is stated"}
+{"id": "R027", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "benefit description in the executive summary"}
+{"id": "R028", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "table column header"}
+{"id": "R029", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "DIRECTOR, DISA.", "note": "role named only by heading"}
+{"id": "R030", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "Oversee their respective Component's PPSM program to: | DOD COMPONENT HEADS.", "note": "party is in the heading and the previous chunk"}
+{"id": "R031", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "Air Force Host Centers and Wings.", "note": "role named only by heading"}
+{"id": "R032", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "Coordinates with the Secretaries of the Military Departments, Under Secretary of Defense for Research and Engineering (USD(R&E)), Under Secretary of Defense for Acquisition and Sustainment (USD(A&S)), and the DoD Component heads to: | The DDI(CL&S):", "note": "assembled quote; party in heading"}
+{"id": "R033", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "describes a benefit of images"}
+{"id": "R034", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "item 3 of a descriptive list of qualification areas"}
+{"id": "R035", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "fragment of a descriptive sentence"}
+{"id": "R036", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "The DoD Component heads:", "note": "role named only by heading"}
+{"id": "R037", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R038", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "rationale for physical security, not an obligation"}
+{"id": "R039", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": "CTI is the subject"}
+{"id": "R040", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "the petition for a key extension will be initiated by the Service with the greatest operational impact, as determined by the MC4EB Cryptographic Security Panel (CSP). The process will be as follows:", "note": "'That Service' is anaphoric"}
+{"id": "R041", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R042", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "modifier clause cut from a lead-in sentence; no obligation"}
+{"id": "R043", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "military, government civilian, and contractor personnel filling them shall", "note": "subject missing"}
+{"id": "R044", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "The DoD Component heads: | Designate a focal point and resources to represent ... for applicable systems to:", "note": ""}
+{"id": "R045", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "The USD(R&E): | In coordination with the DoD CIO, the Under Secretary of Defense for Acquisition and Sustainment (USD(A&S)), the Under Secretary of Defense for Intelligence and Security (USD(I&S)), and the DoD Component heads:", "note": "item (4) belongs to list b. started in the previous chunk"}
+{"id": "R046", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "AFMC will:", "note": "role named only by heading"}
+{"id": "R047", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": "permission with a condition"}
+{"id": "R048", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "In accordance with ISOO Notice 2016-01, CUI training standards must, at minimum:", "note": ""}
+{"id": "R049", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "statutory authority background"}
+{"id": "R050", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "MAJCOM/DRUs.", "note": "role named only by heading"}
+{"id": "R051", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "UNDER SECRETARY OF DEFENSE FOR RESEARCH AND ENGINEERING (USD(R&E)).", "note": "role named only by heading; 'The USD(R&E):' is two chunks back"}
+{"id": "R052", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "Organizations should also be aware of the emergence of new types of virtualization solutions and of major changes to existing virtualization technologies, and", "note": "subject missing; continues the sentence"}
+{"id": "R053", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": "assigns a responsibility; chunk is a table"}
+{"id": "R054", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "FOAs.", "note": "role named only by heading"}
+{"id": "R055", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "Where an AF organization is the executive agent for components of the NMCS: provide support, funding, and other program aspects to", "note": "continues the sentence"}
+{"id": "R056", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "In cases where the legacy application must be provided full network access, care must be taken to ensure that the data it receives is not malicious and,", "note": "continues the sentence"}
+{"id": "R057", "standalone": "needs_lead_in", "lead_in_location": "not_shown", "lead_in_text": null, "note": "list intro is two chunks back (chunk 31)"}
+{"id": "R058", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "The DoD CUI Information Security Program will promote, to the maximum extent possible, information sharing, facilitate informed resource use, and simplify its management and implementation while", "note": "clause of a policy sentence"}
+{"id": "R059", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "The DoD Component heads: | Designate a focal point and resources to represent ... for applicable systems to:", "note": ""}
+{"id": "R060", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "This phase includes the tasks that an organization should perform before it starts to design a virtualization solution. These include ... and", "note": "gerund item of a 'should perform' task list"}
+{"id": "R061", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "the Director, Defense Intelligence Agency:", "note": ""}
+{"id": "R062", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "AF/A2 will:", "note": ""}
+{"id": "R063", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "Air Force Chief of Safety ( AF/SE ), in coordination with AF/A10, will", "note": "continues the sentence"}
+{"id": "R064", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": "names AF/A10"}
+{"id": "R065", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "All HAF Functionals, MAJCOMs, DRUs, and FOAs will:", "note": "role named only by heading"}
+{"id": "R066", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "This section will define for all parties:", "note": "noun-phrase item (b) of a list opened in the previous chunk"}
+{"id": "R067", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "In coordination with the Joint Staff, | Director, NSA (DIRNSA) will:", "note": "DIRNSA is in the previous chunk's heading"}
+{"id": "R068", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R069", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "glossary entry"}
+{"id": "R070", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "Unlike classified information, an individual or organization generally does not need to demonstrate a need-to-know to access CUI, unless required by a law, regulation, or governmentwide policy, but", "note": "subject missing; continues the sentence"}
+{"id": "R071", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": "quote not verbatim; clause names its subject"}
+{"id": "R072", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R073", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "All Air Force Centers, Agencies, and Other Key Stakeholder will: | Program Management Offices:", "note": ""}
+{"id": "R074", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R075", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "Oversee their respective Component's PPSM program to: | DOD COMPONENT HEADS.", "note": "items (7)-(9) continue list b. from the previous chunk"}
+{"id": "R076", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "Supervisors shall:", "note": "role named only by heading"}
+{"id": "R077", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R078", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "subordinate clause; the main clause is cut off after the chunk"}
+{"id": "R079", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R080", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "All Air Force Centers, Agencies, and Other Key Stakeholder will:", "note": "role named only by heading"}
+{"id": "R081", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R082", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "OSD and DoD Component heads:", "note": "list-introducing sentence is in the previous chunk; heading also names the role"}
+{"id": "R083", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": "sentence inside a sample memorandum"}
+{"id": "R084", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "hypothetical example policy"}
+{"id": "R085", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "NM SLAs shall at a minimum address the following areas identified in International Telecommunications Union - Telecommunications Recommendation M.3342 (Reference (z)) and TM Forum GB917 Release 3.0 (Reference (aa)):", "note": ""}
+{"id": "R086", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "Information System Security Managers (ISSMs) shall:", "note": "role named only by heading"}
+{"id": "R087", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "The AFOSI:", "note": "subject missing; reads as a role description"}
+{"id": "R088", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "This issuance applies to:", "note": "noun-phrase applicability item; opening 'a. This issuance applies to:' is in the previous chunk"}
+{"id": "R089", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "AFNC3C , as the designated lead organization for centralized organize, train and equip functions for the AN/USQ/225, will:", "note": "subject is the 2.2.12 lead-in in the previous chunk"}
+{"id": "R090", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "The AF LHC Flight is the Air Force's DISN LHC Program manager who:", "note": "role named only by heading"}
+{"id": "R091", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "preamble clause of a sentence; no obligation of its own"}
+{"id": "R092", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R093", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "Any time an OCA discovers that compiled or aggregated information is not properly classified on websites, folders, or documents,", "note": "borderline: names the party but drops the trigger condition"}
+{"id": "R094", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "POs (Service Selected Entity), in conjunction with their Authorizing Official (AO) or AO equivalent and Service Principal and/or Chief Information Officer (CIO), should request a continued use of decertified products not later than (NLT) 1 year prior to the published LYOU in reference (b).", "note": "'This request' is anaphoric"}
+{"id": "R095", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "All PPS used throughout planned, newly developed, acquired, and existing DODIN (whether used internal or external to the enclave); DoD information technology; organic cloud computing; and managed data services must:", "note": ""}
+{"id": "R096", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "Oversee their respective Component's PPSM program to: | DOD COMPONENT HEADS.", "note": ""}
+{"id": "R097", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "However, because images can be distributed and stored easily,", "note": "'they' = images"}
+{"id": "R098", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "describes a capability"}
+{"id": "R099", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "DOD COMPONENT HEADS.", "note": "role named only by heading; 'The DoD Component heads:' is further back"}
+{"id": "R100", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "Enhanced protection methods for systems hosting CUI include:", "note": "noun-phrase list item"}
+{"id": "R101", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "The USD(A&S): | In coordination with the DoD CIO,", "note": "subject in the previous chunk; coordination clause in this chunk"}
+{"id": "R102", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "The DOT&E shall:", "note": "party only in heading; may also be a sub-duty of 'f. Plan, organize...' in the previous chunk"}
+{"id": "R103", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "glossary entry"}
+{"id": "R104", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "Information System Security Managers (ISSMs) shall:", "note": "role named only by heading"}
+{"id": "R105", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "In cases where a key extension for decertified products affects multiple Services across DoD and there is no specified Service AO, the petition for a key extension will be initiated by ... The process will be as follows:", "note": "borderline: 'the request' is anaphoric (as R094)"}
+{"id": "R106", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "Supervisors shall:", "note": "role named only by heading"}
+{"id": "R107", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "trailing 'IAW' modifier of a descriptive sentence"}
+{"id": "R108", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "Remaining MAJCOMs, ANG, FOAs, and DRUs will:", "note": "bracket heading says AFSPC but 6.3.9.x sits under 6.3.9 at the end of the previous chunk"}
+{"id": "R109", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "Risk management will include TSN processes, tools, and techniques to:", "note": ""}
+{"id": "R110", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "Air Force Deputy Chief of Staff, Operations (AF/A3).", "note": "role named only by heading"}
+{"id": "R111", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "CCDRs will: | As appropriate,", "note": "party only in heading"}
+{"id": "R112", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "the DIRNSA/CHCSS:", "note": ""}
+{"id": "R113", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "Wing/Delta Cyberspace Offices (formerly known as Cybersecurity Offices) (WCO/DCO) shall:", "note": "role named only by heading"}
+{"id": "R114", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R115", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R116", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "Directorate of Security, Special Access Program Oversight and Information Protection (SAF/AAZ).", "note": "role named only by heading"}
+{"id": "R117", "standalone": "needs_lead_in", "lead_in_location": "same_chunk", "lead_in_text": "Information will not be classified, continue to be maintained as classified, or fail to be declassified, or be designated CUI under any circumstances in order to:", "note": ""}
+{"id": "R118", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "This section will define for all parties:", "note": "noun-phrase item (h)"}
+{"id": "R119", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "COMMANDER, UNITED STATES CYBER COMMAND.", "note": "role named only by heading"}
+{"id": "R120", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}
+{"id": "R121", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": "heading 'Objectives' names no party"}
+{"id": "R122", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "The USD(A&S): | In coordination with the USD(R&E), the DoD CIO, and the DoD Component heads,", "note": "subject in previous chunk; coordination clause in this chunk"}
+{"id": "R123", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "describes a capability"}
+{"id": "R124", "standalone": "needs_lead_in", "lead_in_location": "not_shown", "lead_in_text": null, "note": "the party for list 3.5 a., b. is not in the text shown"}
+{"id": "R125", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "In accordance with ISOO Notice 2016-01, CUI training standards must, at minimum:", "note": ""}
+{"id": "R126", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": "assembled quote includes the party"}
+{"id": "R127", "standalone": "not_a_requirement", "lead_in_location": null, "lead_in_text": null, "note": "table column header"}
+{"id": "R128", "standalone": "needs_lead_in", "lead_in_location": "previous_chunk", "lead_in_text": "This section will define for all parties:", "note": "noun-phrase item (f)"}
+{"id": "R129", "standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "Program or Project Managers (PMs), System Managers, Program Management Offices (PMOs), Developmental or Operational Test Agencies and all Units shall:", "note": "role named only by heading"}
+{"id": "R130", "standalone": "complete", "lead_in_location": null, "lead_in_text": null, "note": ""}

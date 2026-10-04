@@ -6,7 +6,7 @@ Part of Phase 45. No production code changes; scripts here only read the 13 docu
 | Sub-step | What | Status |
 |---|---|---|
 | (a) | Fragment census: documented text signals over every record, crossed with the attachment method | merged (#204) |
-| (b) | Attachment audit: two independent labelers, Tyler adjudicates | pack built (below); labels and analysis land in the next PR |
+| (b) | Attachment audit: two independent labelers, Tyler adjudicates | labeled and scored (below); Tyler's confirmation of the 16 proposed resolutions pending |
 | (c) | Fair retrieval test (queries written from meaning, frozen configuration) | after (b) |
 | (d) | Does a wrong stem hurt retrieval? | after (c) |
 | (e) | Small source-based sample (obligations labeled in the PDF, traced to first loss point) | not started |
@@ -118,3 +118,46 @@ on all 142 and 59 attachments, not by this sample.
 - The first main labeler (Claude) authored the pack and had seen the F04 hand labels and the census totals; the 16
   F04 records are excluded for that reason.
 - 8 of 130 quotes are not verbatim in their chunk (audit F07); each such card says so and is judged as written.
+
+### (b) Results: `score_audit.py`, `audit_results/`, `outputs/attachment_audit.txt`
+
+Claude and Codex labeled all 130 cards independently (Claude's files were hashed before Codex's were opened). The scorer
+checks the answer key and pack against `outputs/audit_pack_manifest.json`, weights each stratum by population over
+sample size, and reads Tyler's answers from `audit_results/adjudication.txt`.
+
+```bash
+python3 eval/spike_results/wp_45_1/score_audit.py --key eval/spike_results/wp_45_1/audit_results/answer_key.json \
+    --labels-dir eval/spike_results/wp_45_1/audit_results --pack-dir eval/spike_results/wp_45_1/audit_pack \
+    --answers eval/spike_results/wp_45_1/audit_results/adjudication.txt          # add --policy claude|codex for a sensitivity run
+```
+
+- **Agreement.** Pass A: 124/130 on whether a quote needs a lead-in (kappa 0.91), 75/80 on where it is. Pass B: 61/66
+  on the stem verdict (kappa 0.90). 16 disagreements; the contested ones were checked against the source PDFs
+  (SNMP, PPSM and NM items), which settled several in Codex's favor. Tyler's 10-item spot-check of agreements found no
+  errors, and his review of it found one shared mistake outside the sample (R107, corrected).
+- **The adjudication barely matters.** Resolving every disagreement to Claude, or every one to Codex, moves the pooled
+  numbers by at most 6 points (right 34% to 40%; misleading 38% to 40%; incomplete 19% to 22%; need-rate 53% to 54%).
+- **Attached stems (203).** About 38% are right (95% 27 to 48), about 39% misleading (a sibling's sub-list lead-in, or text
+  from elsewhere; 28 to 49) and 22% incomplete (the right neighbor, but a list item that still needs its own party;
+  13 to 31). Same-chunk 15 of 36 right, cross-chunk 8 of 28; the intervals overlap, so no difference is claimed.
+- **Stems on quotes that were already complete.** 12 sampled attachments sit on quotes both labelers called
+  complete; 10 of the 12 are misleading. Small sample; a pointer to the candidacy rule, not a rate.
+- **Who lacks context.** About 53% of all records need a lead-in (34 to 72), and about 840 of the 1,644 with no stem
+  (51%; 29 to 73). Where it lives, among those 840: section heading only 525, same chunk 84, previous chunk 84, not
+  in the text shown 147. Heading-only counts because a role named only by a heading changes who is obligated; read
+  by the narrower list-intro definition the no-stem need is about 170 records (10%).
+- **Root causes.** (4) a sibling or peer's sub-list lead-in taken as the stem: 19 of 66 sampled stems. (1) the lead-in
+  is in the previous chunk: about 84 records with no stem, plus a dozen with a wrong one. (3) the lead-in is in the
+  same chunk but the rules missed it: about 84. (2) a Docling hierarchy error cannot be told from text; the PDFs show
+  the source's own numbering sometimes puts later duties under an earlier item (DoDI 8551.01 2.2.d), so not every
+  such case is a parser fault.
+
+**What this justifies (candidates, not changes; each still has to pass measure-before-change in WP-45.2):**
+C1 stem-acceptance rule (peer lead-ins), C2 scope guard (no stems on complete quotes), C3 chain merge. For C4 (a
+context ladder) the largest pool is heading-only context, but whether that hurts retrieval is what (c) and (d) test.
+
+**Limits.** Two language models and one ten-item spot-check can share mistakes; one was found outside the sample.
+Intervals are wide (about +/-14 points on the large strata, wider on the rest). "Misleading" and "incomplete" are
+judged from text, not measured in retrieval. The need-rate depends on the rubric's heading rule and its conventions
+(farthest passage; a stem that is a list item lacking its party is `fragment_chain`). The Tyler-confirmation status of the
+16 resolutions is recorded in `audit_results/adjudication.txt`.

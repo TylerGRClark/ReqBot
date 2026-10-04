@@ -1,0 +1,130 @@
+{"id":"R001","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"Under the authority, direction and control of the USD(I&S), the DIRNSA/CHCSS and Directors of the NRO and NGA establish, direct, and administer all aspects of their respective organization's SCI security programs, to include all necessary coordination and implementation of DNI security policy,","note":"Continuation of the governing responsibility sentence."}
+{"id":"R002","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R003","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.12. Air Force Deputy Chief of Staff, Operations (AF/A3).","note":"The heading assigns this imperative to a specific office."}
+{"id":"R004","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"PPSM standards will be implemented as directed by the authorizing official for the system for DoD-wide management and PPS control used in DoD systems to:","note":""}
+{"id":"R005","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.2.  DIRECTOR, DISA.","note":""}
+{"id":"R006","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"Existing systems that use SNMP v1 or v2c shall implement the following security precautions in the period prior to transition to the latest approved version of SNMP:","note":"The list introduction supplies the applicable systems and transition scope."}
+{"id":"R007","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R008","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Describes a possible compensating capability rather than prescribing it."}
+{"id":"R009","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"In accordance with ISOO Notice 2016-01, CUI training standards must, at minimum:","note":"Identifying responsibilities is a requirement for training standards here."}
+{"id":"R010","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.2. The DAF Chief Information Officer (SAF/CN) shall:","note":""}
+{"id":"R011","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"All Service component communication support organizations should:","note":""}
+{"id":"R012","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R013","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R014","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"5.3.4. AFNC3C will:","note":""}
+{"id":"R015","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.2.  DIRECTOR, DISA.","note":""}
+{"id":"R016","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":"The assembled quote includes its responsible party."}
+{"id":"R017","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R018","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"3.14. All HAF Functionals, MAJCOMs, DRUs, and FOAs will:","note":""}
+{"id":"R019","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.17. MAJCOM/DRUs.","note":""}
+{"id":"R020","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"For remote administration,","note":"The omitted opener limits the communications requirement to remote administration."}
+{"id":"R021","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.2. The DAF Chief Information Officer (SAF/CN) shall:","note":""}
+{"id":"R022","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R023","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"AFGSC will:","note":"The numbered list is assigned to AFGSC despite the different displayed heading."}
+{"id":"R024","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"The CDRUSSTRATCOM, in addition to the responsibilities in sections 8 and 10 of this enclosure, shall:","note":""}
+{"id":"R025","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.5. Chief, Information Dominance and Chief Information Officer (SAF/CIO A6).","note":""}
+{"id":"R026","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":"The trailing comma precedes a separate obligation and does not obscure this one."}
+{"id":"R027","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Describes a virtualization benefit."}
+{"id":"R028","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Table column heading without a required action or recipient."}
+{"id":"R029","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"Appoints a DoD military officer in the grade of O-6, or civilian employee equivalent, possessing a Top Secret clearance with sensitive compartmented information access as the PPSM CCB chairperson to:","note":"The numbered item continues the chairperson duties introduced in the previous chunk."}
+{"id":"R030","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"2.4.  DOD COMPONENT HEADS. | Oversee their respective Component's PPSM program to:","note":"The local sub-list supplies program scope and the heading supplies the party."}
+{"id":"R031","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.22. Air Force Host Centers and Wings.","note":""}
+{"id":"R032","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"The DDI(CL&S): | Coordinates with the Secretaries of the Military Departments, Under Secretary of Defense for Research and Engineering (USD(R&E)), Under Secretary of Defense for Acquisition and Sustainment (USD(A&S)), and the DoD Component heads to:","note":""}
+{"id":"R033","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Describes a testing benefit enabled by maintained images."}
+{"id":"R034","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Defines one of the qualification matrix areas rather than directing an action."}
+{"id":"R035","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Describes the status of two data types rather than directing compliance."}
+{"id":"R036","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"The DoD Component heads:","note":""}
+{"id":"R037","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R038","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Illustrates a security risk rather than prescribing a control."}
+{"id":"R039","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R040","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"In cases where a key extension for decertified products affects multiple Services across DoD and there is no specified Service AO, the petition for a key extension will be initiated by the Service with the greatest operational impact, as determined by the MC4EB Cryptographic Security Panel (CSP).","note":"Defines the Service referred to by the quote."}
+{"id":"R041","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R042","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Isolated coordination phrase from an introduction with no substantive duty shown."}
+{"id":"R043","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"NM system operator and supervisory positions ... performing NM IA functions as defined in DoD 8570.01-M (Reference (ad)) ... military, government civilian, and contractor personnel filling them shall","note":"Supplies the personnel and positions subject to the qualifications."}
+{"id":"R044","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"The DoD Component heads: | Designate a focal point and resources to represent the acquisition executive; risk management executive; and counterintelligence, security, and operational communities with access to the DoD Component's research, development, acquisition, sustainment activities, and ICT supply chain risk analyses for applicable systems to:","note":""}
+{"id":"R045","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"The USD(R&E): | In coordination with the DoD CIO, the Under Secretary of Defense for Acquisition and Sustainment (USD(A&S)), the Under Secretary of Defense for Intelligence and Security (USD(I&S)), and the DoD Component heads:","note":""}
+{"id":"R046","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"6.3.7. AFMC will:","note":""}
+{"id":"R047","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":"States the conditions governing permissible dissemination."}
+{"id":"R048","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"In accordance with ISOO Notice 2016-01, CUI training standards must, at minimum:","note":""}
+{"id":"R049","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":"Expresses NIST's standards-development responsibility; the following sentence limits applicability of those standards."}
+{"id":"R050","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.17. MAJCOM/DRUs.","note":""}
+{"id":"R051","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.1.  UNDER SECRETARY OF DEFENSE FOR RESEARCH AND ENGINEERING (USD(R&E)).","note":""}
+{"id":"R052","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"Organizations should also be aware of the emergence of new types of virtualization solutions and of major changes to existing virtualization technologies, and","note":"Identifies whose virtualization policies must respond to the changes."}
+{"id":"R053","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":"As written the duty is complete, although the shown table does not state this sentence."}
+{"id":"R054","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.20. FOAs.","note":""}
+{"id":"R055","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"Where an AF organization is the executive agent for components of the NMCS: provide support, funding, and other program aspects to","note":"The local clause supplies the executive-agent condition and means of support."}
+{"id":"R056","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"In cases where the legacy application must be provided full network access, care must be taken to ensure that the data it receives is not malicious and,","note":""}
+{"id":"R057","standalone":"needs_lead_in","lead_in_location":"not_shown","lead_in_text":null,"note":"The shown introduction governs item (5), not this separate SLA item (7)."}
+{"id":"R058","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"The DoD CUI Information Security Program will promote, to the maximum extent possible, information sharing, facilitate informed resource use, and simplify its management and implementation while","note":""}
+{"id":"R059","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"The DoD Component heads: | Designate a focal point and resources to represent the acquisition executive; risk management executive; and counterintelligence, security, and operational communities with access to the DoD Component's research, development, acquisition, sustainment activities, and ICT supply chain risk analyses for applicable systems to:","note":""}
+{"id":"R060","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"Phase 1: Initiation. This phase includes the tasks that an organization should perform before it starts to design a virtualization solution. These include","note":"Supplies the responsible organization and initiation-stage scope."}
+{"id":"R061","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"Under the authority, direction, and control of the USD(I&S), in addition to the responsibilities in section 11 of this enclosure, and in accordance with References (a), (c), and DoDD 5105.21 (Reference (v)), the Director, Defense Intelligence Agency:","note":""}
+{"id":"R062","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"AF/A2 will:","note":""}
+{"id":"R063","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"Air Force Chief of Safety ( AF/SE ), in coordination with AF/A10, will","note":""}
+{"id":"R064","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R065","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"3.14. All HAF Functionals, MAJCOMs, DRUs, and FOAs will:","note":""}
+{"id":"R066","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"How NM service levels will be monitored and reported. ... This section will define for all parties:","note":"The list introduction supplies what must define these rates."}
+{"id":"R067","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"5.  Director, NSA (DIRNSA) will: | In coordination with the Joint Staff,","note":"The previous heading supplies the party and the local opener supplies coordination."}
+{"id":"R068","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R069","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Glossary definition pointer."}
+{"id":"R070","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"an individual or organization generally does not need to demonstrate a need-to-know to access CUI, unless required by a law, regulation, or governmentwide policy, but","note":""}
+{"id":"R071","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":"States the required standards and their intended systems."}
+{"id":"R072","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R073","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"Program Management Offices:","note":""}
+{"id":"R074","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"Existing systems that use SNMP v1 or v2c shall implement the following security precautions in the period prior to transition to the latest approved version of SNMP:","note":"The governing list limits this precaution to the transitional systems."}
+{"id":"R075","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"2.4.  DOD COMPONENT HEADS. | Oversee their respective Component's PPSM program to:","note":""}
+{"id":"R076","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.19. Supervisors shall:","note":""}
+{"id":"R077","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R078","standalone":"needs_lead_in","lead_in_location":"not_shown","lead_in_text":null,"note":"The concessive sentence is cut off before its qualifying continuation."}
+{"id":"R079","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R080","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.7. All Air Force Centers, Agencies, and Other Key Stakeholder will:","note":""}
+{"id":"R081","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R082","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"OSD and DoD Component heads:","note":""}
+{"id":"R083","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R084","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Hypothetical example of a policy an organization might have."}
+{"id":"R085","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"NM SLAs shall at a minimum address the following areas identified in International Telecommunications Union - Telecommunications Recommendation M.3342 (Reference (z)) and TM Forum GB917 Release 3.0 (Reference (aa)):","note":""}
+{"id":"R086","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.17. Information System Security Managers (ISSMs) shall:","note":""}
+{"id":"R087","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"The AFOSI:","note":""}
+{"id":"R088","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Identifies the issuance's applicability rather than a required action."}
+{"id":"R089","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"AFNC3C ,  as  the  designated  lead  organization  for  centralized  organize,  train  and equip functions for the AN/USQ/225, will: | IAW  AFI  63-101  /  20-101, Integrated  Life  Cycle  Management ,","note":"The numbered list belongs to AFNC3C rather than the displayed AF/A3 heading."}
+{"id":"R090","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"The AF LHC Flight is the Air Force's DISN LHC Program manager who:","note":""}
+{"id":"R091","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Authority and reference preamble without the substantive responsibility."}
+{"id":"R092","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R093","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"Any time an OCA discovers that compiled or aggregated information is not properly classified on websites, folders, or documents,","note":""}
+{"id":"R094","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"POs (Service Selected Entity), in conjunction with their Authorizing Official (AO) or AO equivalent and Service Principal and/or Chief Information Officer (CIO), should request a continued use of decertified products not later than (NLT) 1 year prior to the published LYOU in reference (b).","note":"Identifies what request must be coordinated."}
+{"id":"R095","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"All PPS used throughout planned, newly developed, acquired, and existing DODIN (whether used internal or external to the enclave); DoD information technology; organic cloud computing; and managed data services must:","note":""}
+{"id":"R096","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"2.4.  DOD COMPONENT HEADS. | Oversee their respective Component's PPSM program to:","note":""}
+{"id":"R097","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"However, because images can be distributed and stored easily,","note":"Identifies what the pronoun refers to."}
+{"id":"R098","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Describes a possible hypervisor capability."}
+{"id":"R099","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.9.  DOD COMPONENT HEADS.","note":""}
+{"id":"R100","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Names an example enhanced-protection method without requiring its application."}
+{"id":"R101","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"The USD(A&S): | In coordination with the DoD CIO,","note":""}
+{"id":"R102","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"The DOT&E shall: | Plan, organize, procure, develop, test, implement, and operate NM capabilities within established NetOps operational hierarchies and NM domain structures.","note":"The numbered duty is a continuation of the preceding f sub-list."}
+{"id":"R103","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Glossary definition pointer."}
+{"id":"R104","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.17. Information System Security Managers (ISSMs) shall:","note":""}
+{"id":"R105","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"In cases where a key extension for decertified products affects multiple Services across DoD and there is no specified Service AO, the petition for a key extension will be initiated by the Service with the greatest operational impact, as determined by the MC4EB Cryptographic Security Panel (CSP).","note":"Supplies the type of request and the process's applicable circumstances."}
+{"id":"R106","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.19. Supervisors shall:","note":""}
+{"id":"R107","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Citation phrase without a substantive obligation."}
+{"id":"R108","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"Remaining MAJCOMs, ANG, FOAs, and DRUs will:","note":"The direct list introduction overrides the displayed AFSPC heading."}
+{"id":"R109","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"Risk to the assurance of applicable systems will be considered as part of the risk management process used throughout the entire system life cycle.  Risk management will include TSN processes, tools, and techniques to:","note":""}
+{"id":"R110","standalone":"needs_lead_in","lead_in_location":"not_shown","lead_in_text":null,"note":"The introduction governing the 2.12.6 sub-list is absent from the displayed chunks."}
+{"id":"R111","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"3.  CCDRs will: | As appropriate,","note":"The quote omits both its assigned party and the local qualification."}
+{"id":"R112","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"the DIRNSA/CHCSS:","note":""}
+{"id":"R113","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.14. Wing/Delta Cyberspace Offices (formerly known as Cybersecurity Offices) (WCO/DCO) shall:","note":""}
+{"id":"R114","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R115","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":"Explicitly restricts the duty to organizations within the instruction's applicability."}
+{"id":"R116","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.2. Directorate of Security, Special Access Program Oversight and Information Protection (SAF/AAZ).","note":""}
+{"id":"R117","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"Information will not be classified, continue to be maintained as classified, or fail to be declassified, or be designated CUI under any circumstances in order to:","note":"The governing clause makes the apparent imperative a prohibited purpose."}
+{"id":"R118","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"How NM service levels will be monitored and reported. ... This section will define for all parties:","note":""}
+{"id":"R119","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.6.  COMMANDER, UNITED STATES CYBER COMMAND.","note":"Assigns responsibility for requiring the Component processes."}
+{"id":"R120","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R121","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":"The nearby named party is tasked with planning, not uniquely assigned this general response objective."}
+{"id":"R122","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"The USD(A&S): | In coordination with the USD(R&E), the DoD CIO, and the DoD Component heads,","note":""}
+{"id":"R123","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Describes a hypervisor capability."}
+{"id":"R124","standalone":"needs_lead_in","lead_in_location":"not_shown","lead_in_text":null,"note":"The CPM introduction governs numbered children of item a, not this peer item b."}
+{"id":"R125","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"In accordance with ISOO Notice 2016-01, CUI training standards must, at minimum:","note":""}
+{"id":"R126","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":"The assembled quote includes the responsible organizations."}
+{"id":"R127","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Table column heading without a specified recipient or duty."}
+{"id":"R128","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"How NM service levels will be monitored and reported. ... This section will define for all parties:","note":""}
+{"id":"R129","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"2.15. Program  or  Project  Managers  (PMs),  System  Managers,  Program  Management Offices (PMOs), Developmental or Operational Test Agencies and all Units shall:","note":""}
+{"id":"R130","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}

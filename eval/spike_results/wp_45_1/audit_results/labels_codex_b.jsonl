@@ -1,0 +1,66 @@
+{"id":"R001","stem_verdict":"fragment_chain","note":"The governing sentence fragment still omits its responsible directors."}
+{"id":"R004","stem_verdict":"right","note":""}
+{"id":"R008","stem_verdict":"not_needed","note":"Accurate legacy-application context, but the quote is already an independent statement."}
+{"id":"R010","stem_verdict":"right","note":""}
+{"id":"R016","stem_verdict":"not_needed","note":"The quote already contains the same responsible party and governing phrase."}
+{"id":"R021","stem_verdict":"right","note":""}
+{"id":"R022","stem_verdict":"wrong_other","note":"Personnel qualifications do not govern tactical-edge standards."}
+{"id":"R024","stem_verdict":"fragment_chain","note":"The genuine introducing clause is truncated before its CDRUSSTRATCOM subject."}
+{"id":"R026","stem_verdict":"wrong_sibling","note":"This is the introduction to peer item b, not the reporting duty in item e."}
+{"id":"R028","stem_verdict":"wrong_sibling","note":"Another column heading from the same table."}
+{"id":"R029","stem_verdict":"fragment_chain","note":"The local parent clause is relevant but still omits the Director, DISA subject."}
+{"id":"R030","stem_verdict":"right","note":"Correct responsible party, although the intervening PPSM-program clause adds scope."}
+{"id":"R032","stem_verdict":"fragment_chain","note":"The coordinating clause still lacks the DDI(CL&S) subject."}
+{"id":"R034","stem_verdict":"fragment_chain","note":"The referring phrase does not identify the qualification matrix whose areas are listed."}
+{"id":"R036","stem_verdict":"wrong_sibling","note":"The senior-agency-official sub-list belongs to item b; the quote is item d."}
+{"id":"R037","stem_verdict":"wrong_sibling","note":"AF/A10's peer responsibilities do not govern AF/A5/8's duty."}
+{"id":"R040","stem_verdict":"fragment_chain","note":"The process introduction does not identify the Service referred to by That Service."}
+{"id":"R041","stem_verdict":"wrong_other","note":"The examples belong to a preceding UCNI table entry, not the restricted-data rule."}
+{"id":"R043","stem_verdict":"fragment_chain","note":"Both pieces still omit the personnel subject and their governing position context."}
+{"id":"R044","stem_verdict":"fragment_chain","note":"The genuine parent item still lacks its DoD Component heads subject."}
+{"id":"R045","stem_verdict":"fragment_chain","note":"The coordination-only lead-in still lacks the USD(R&E) subject."}
+{"id":"R051","stem_verdict":"wrong_sibling","note":"Trusted-microelectronics processes are peer item e, not item f's JFAC duty."}
+{"id":"R056","stem_verdict":"right","note":"The stem is the governing portion of the same sentence."}
+{"id":"R057","stem_verdict":"wrong_sibling","note":"This introduces item (5)'s sub-list rather than peer item (7)."}
+{"id":"R059","stem_verdict":"fragment_chain","note":"The genuine parent item still lacks its DoD Component heads subject."}
+{"id":"R060","stem_verdict":"wrong_sibling","note":"Developing policy and specifying requirements are peer initiation tasks."}
+{"id":"R061","stem_verdict":"wrong_other","note":"The disclosure duty belongs to USD(I&S), not the newly introduced Director, DIA."}
+{"id":"R064","stem_verdict":"not_needed","note":"The complete quote already names AF/A10 and the duty."}
+{"id":"R066","stem_verdict":"right","note":"Introduces the NM-service-level details listed in this sub-list."}
+{"id":"R068","stem_verdict":"wrong_sibling","note":"The prohibited-purpose sub-list belongs to policy c rather than SCI policy f."}
+{"id":"R069","stem_verdict":"wrong_sibling","note":"Another glossary entry's definition pointer."}
+{"id":"R071","stem_verdict":"wrong_other","note":"Personnel qualifications do not govern the standards requirement."}
+{"id":"R073","stem_verdict":"wrong_other","note":"The more specific local list assigns this duty to Program Management Offices."}
+{"id":"R075","stem_verdict":"fragment_chain","note":"The local parent item still lacks the DoD Component heads subject."}
+{"id":"R076","stem_verdict":"right","note":""}
+{"id":"R077","stem_verdict":"wrong_sibling","note":"The NSA's item b does not govern Services and Defense Agencies in item c."}
+{"id":"R078","stem_verdict":"wrong_other","note":"References is an unrelated document heading."}
+{"id":"R080","stem_verdict":"right","note":""}
+{"id":"R085","stem_verdict":"right","note":""}
+{"id":"R086","stem_verdict":"right","note":""}
+{"id":"R087","stem_verdict":"wrong_other","note":"The local text names AFOSI rather than SAF/AAZ as the responsible entity."}
+{"id":"R088","stem_verdict":"wrong_sibling","note":"The stem introduces applicability item (3), while the quote is peer item (4)."}
+{"id":"R092","stem_verdict":"wrong_sibling","note":"Safeguarding and marking is peer paragraph 1.6.2, not maintenance paragraph 1.6.3."}
+{"id":"R094","stem_verdict":"wrong_sibling","note":"The NSA's item b does not introduce the request-processing sub-list in item c."}
+{"id":"R095","stem_verdict":"right","note":""}
+{"id":"R096","stem_verdict":"right","note":"Correct responsible party; the intermediate PPSM-program clause gives additional scope."}
+{"id":"R099","stem_verdict":"wrong_sibling","note":"The stem introduces item e's process sub-list, not the training duty in item g."}
+{"id":"R101","stem_verdict":"right","note":"Correct party, although the local clause also requires DoD CIO coordination."}
+{"id":"R102","stem_verdict":"right","note":"Matches the responsible party shown for the continuing NM duties."}
+{"id":"R103","stem_verdict":"wrong_sibling","note":"Another glossary term's definition rather than a governing clause."}
+{"id":"R104","stem_verdict":"right","note":""}
+{"id":"R105","stem_verdict":"fragment_chain","note":"The generic process opener does not identify the key-extension request or its scope."}
+{"id":"R106","stem_verdict":"right","note":""}
+{"id":"R107","stem_verdict":"wrong_other","note":"The authority clause concerns establishing the Council, not the CIO's subordinate governance forums."}
+{"id":"R108","stem_verdict":"wrong_sibling","note":"AFSPC's item 6.3.8 is a peer of the governing Remaining MAJCOMs item 6.3.9."}
+{"id":"R109","stem_verdict":"right","note":""}
+{"id":"R112","stem_verdict":"wrong_other","note":"The prior SCI-program duty belongs to a different office before DIRNSA/CHCSS is introduced."}
+{"id":"R113","stem_verdict":"right","note":""}
+{"id":"R115","stem_verdict":"wrong_other","note":"References is an unrelated document heading."}
+{"id":"R116","stem_verdict":"right","note":""}
+{"id":"R117","stem_verdict":"right","note":"Supplies the prohibition that governs the listed purpose."}
+{"id":"R118","stem_verdict":"right","note":"Introduces the NM-service-level sub-list containing this item."}
+{"id":"R119","stem_verdict":"wrong_sibling","note":"The when-required sub-list belongs to blocking duty e, not enterprise-awareness duty f."}
+{"id":"R127","stem_verdict":"wrong_sibling","note":"Another column heading from the same table."}
+{"id":"R128","stem_verdict":"right","note":"Introduces the NM-service-level sub-list containing this item."}
+{"id":"R130","stem_verdict":"wrong_sibling","note":"The qualifications clause belongs to peer item c rather than the user-compliance sentence in item d."}
