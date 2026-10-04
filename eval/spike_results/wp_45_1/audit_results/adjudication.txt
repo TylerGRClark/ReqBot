@@ -2,14 +2,15 @@
 # STATUS: the spot-check answers and the R107 correction are Tyler's (2026-10-04). The resolutions of the 16
 # disagreements are Claude's proposals and are marked "proposed" until Tyler confirms them.
 #
-# Pass A disagreements (11). Location convention (proposed): with several passages, lead_in_location is the farthest back.
+# Pass A disagreements (11). Location disputes are decided by the frozen rubric as written: the clause the quote continues or the list-introducing
+# sentence outranks a heading; both labelers labeled R101 and R122 (same pattern as R067) as previous_chunk.
 R006 a: codex   # proposed. PDF: item (3) of "f. Existing systems that use SNMP v1 or v2c shall implement the following security precautions ...:"
 R074 a: codex   # proposed. PDF: item (5) of the same list
 R029 a: codex   # proposed. PDF: "(3)" is numbered under "d. Appoints ... chairperson to:" (previous chunk)
-R067 a: codex   # proposed. Location convention: the party is in the previous chunk's heading
+R067 a: codex   # proposed. The list-introducing "5. Director, NSA (DIRNSA) will:" is in the previous chunk (as R101, R122)
 R102 a: codex   # proposed. PDF: "(3)" under "f. Plan, organize, procure, ..." (previous chunk)
 R110 a: codex   # proposed. The 2.12.6 "...program office, which:" lead-in is not in the text shown
-R111 a: claude  # proposed. Location convention: the heading is the farthest passage
+R111 a: codex   # proposed. "As appropriate," (the clause the quote continues) outranks the heading "CCDRs will:"
 R088 a: codex   # proposed. Applicability scope item; no obligation
 R100 a: codex   # proposed. Non-binding examples ("may require ... include")
 R049 a: claude  # proposed (judgment). Statutory-authority background
@@ -31,5 +32,6 @@ R057 b: ok
 R088 b: ok      # Tyler: unsure which kind of wrong, but the stem is not right
 R099 b: ok      # Tyler: the real parent is the DoD Component heads list in the chunk above
 R107 b: ok
-# Correction found while reviewing the spot-check (Tyler): not part of the sampled 10
-R107 a: other needs_lead_in same_chunk   # the IAW clause says HOW the DoD CIO chairs the NLCC boards; both labelers had not_a_requirement
+# Correction found while reviewing the spot-check (Tyler): not part of the sampled 10. The IAW clause says HOW the DoD CIO
+# chairs the NLCC boards; both labelers had not_a_requirement.
+R107 a: other needs_lead_in same_chunk :: Subordinate to the Council, DoD Chief Information Officer (CIO) chairs a NLCC Executive Management Board, Senior Steering Group, and numerous working groups

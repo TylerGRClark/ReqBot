@@ -212,11 +212,12 @@ def parse_answers(path):
             sys.exit(f"{path} line {n}: cannot read {line!r} (expected `R012 a: codex`)")
         rid, p, kind, rest = m.groups()
         if kind == "other":
-            words = rest.split()
-            problem = other_problem(p, words)
+            head, _, text = rest.partition(" :: ")
+            words, text = head.split(), text.strip() or None
+            problem = other_problem(p, words, text)
             if problem:
                 sys.exit(f"{path} line {n}: {problem} in {line.strip()!r}")
-            ans[(rid, p)] = ("other", words)
+            ans[(rid, p)] = ("other", words, text)
         elif kind in ("claude", "codex", "ok"):
             ans[(rid, p)] = kind
         else:
@@ -224,23 +225,25 @@ def parse_answers(path):
     return ans
 
 
-def other_problem(p, words):
-    """Why an `other ...` answer cannot be used, or None. Pass A: <standalone> [<location>]; pass B: <verdict>."""
+def other_problem(p, words, text):
+    """Why an `other ...` answer cannot be used, or None.
+
+    Pass A: `<standalone> [<location> [:: <lead-in text>]]`; the text is required for same_chunk, previous_chunk and
+    section_heading (so the consistency check covers the correction) and not allowed otherwise. Pass B: `<verdict>`.
+    """
     if p == "b":
-        return (
-            None
-            if len(words) == 1 and words[0] in VERDICTS
-            else f"pass B needs one verdict from {sorted(VERDICTS)}"
-        )
+        if text or len(words) != 1 or words[0] not in VERDICTS:
+            return f"pass B needs one verdict from {sorted(VERDICTS)} and no text"
+        return None
     if not words or words[0] not in STANDALONE:
         return f"pass A needs a standalone value from {sorted(STANDALONE)}"
-    if words[0] == "needs_lead_in":
-        return (
-            None
-            if len(words) == 2 and words[1] in LOCATIONS
-            else f"needs_lead_in needs a location from {sorted(LOCATIONS)}"
-        )
-    return None if len(words) == 1 else f"{words[0]} takes no location"
+    if words[0] != "needs_lead_in":
+        return None if len(words) == 1 and not text else f"{words[0]} takes no location or text"
+    if len(words) != 2 or words[1] not in LOCATIONS:
+        return f"needs_lead_in needs a location from {sorted(LOCATIONS)}"
+    if words[1] == "not_shown":
+        return "not_shown takes no text" if text else None
+    return None if text else f"{words[1]} needs the lead-in text after ' :: '"
 
 
 def resolve(a_pairs, b_pairs, dis_a, dis_b, spot, answers, policy=None):
@@ -275,7 +278,7 @@ def resolve(a_pairs, b_pairs, dis_a, dis_b, spot, answers, policy=None):
             ra[rid] = (rec["standalone"], rec.get("lead_in_location"), rec.get("lead_in_text"))
         elif isinstance(pick, tuple):
             words = pick[1]
-            ra[rid] = (words[0], words[1] if len(words) > 1 else None, text)
+            ra[rid] = (words[0], words[1] if len(words) > 1 else None, pick[2])
         else:
             ra[rid] = (x["standalone"], x.get("lead_in_location"), text)
     for rid, (x, y) in b_pairs.items():

@@ -48,9 +48,9 @@ Records with no stem that need one:  51.0% of 1644 (95%  29.3% to  72.7%), about
 
 | location | in sample | est. among the 203 with a stem | est. among the 1,644 without | est. total |
 |---|---|---|---|---|
-| same_chunk | 31 | 71 | 84 | 155 |
+| same_chunk | 32 | 71 | 91 | 161 |
 | previous_chunk | 21 | 25 | 84 | 109 |
-| section_heading | 28 | 43 | 525 | 568 |
+| section_heading | 27 | 43 | 518 | 561 |
 | not_shown | 3 | 2 | 147 | 149 |
 
 ## Root-cause classes among records that need a lead-in (weighted to the population)
@@ -58,13 +58,13 @@ Records with no stem that need one:  51.0% of 1644 (95%  29.3% to  72.7%), about
 | class | in sample | est. records in 1,847 |
 |---|---|---|
 | (1) no stem, lead-in is in the previous chunk | 10 | 84 |
-| (3) no stem, lead-in is earlier in the same chunk | 10 | 84 |
+| (3) no stem, lead-in is earlier in the same chunk | 11 | 91 |
 | (4) sibling bullet accepted as the stem; true lead-in: not_shown | 1 | 2 |
 | (4) sibling bullet accepted as the stem; true lead-in: previous_chunk | 1 | 4 |
 | (4) sibling bullet accepted as the stem; true lead-in: same_chunk | 2 | 6 |
 | (4) sibling bullet accepted as the stem; true lead-in: section_heading | 4 | 10 |
 | no stem, lead-in not recoverable from the text shown | 2 | 147 |
-| no stem, only the section heading governs | 15 | 525 |
+| no stem, only the section heading governs | 14 | 518 |
 | stem is itself a fragment (chain); true lead-in: previous_chunk | 4 | 8 |
 | stem is itself a fragment (chain); true lead-in: same_chunk | 8 | 32 |
 | stem is right | 22 | 69 |

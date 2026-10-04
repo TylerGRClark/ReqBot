@@ -52,13 +52,13 @@ def test_weighted_pooling_follows_stratum_populations(sa):
 def test_answers_need_a_pass_letter_and_accept_comments(sa, tmp_path):
     path = tmp_path / "answers.txt"
     path.write_text(
-        "# header\nR012 a: codex  # why\nR019 b: claude\nR031 a: other needs_lead_in same_chunk\nR007 a: ok\n",
+        "# header\nR012 a: codex  # why\nR019 b: claude\nR031 a: other needs_lead_in same_chunk :: The PM:\nR007 a: ok\n",
         encoding="utf-8",
     )
     answers = sa.parse_answers(path)
     assert answers[("R012", "a")] == "codex"
     assert answers[("R019", "b")] == "claude"
-    assert answers[("R031", "a")] == ("other", ["needs_lead_in", "same_chunk"])
+    assert answers[("R031", "a")] == ("other", ["needs_lead_in", "same_chunk"], "The PM:")
     assert answers[("R007", "a")] == "ok"
     path.write_text("R012: codex\n", encoding="utf-8")
     with pytest.raises(SystemExit):
@@ -72,6 +72,10 @@ def test_answers_need_a_pass_letter_and_accept_comments(sa, tmp_path):
         "R012 a: other maybe",
         "R012 a: other needs_lead_in",
         "R012 a: other needs_lead_in elsewhere",
+        "R012 a: other needs_lead_in same_chunk",
+        "R012 a: other needs_lead_in not_shown :: text",
+        "R012 a: other complete :: text",
+        "R012 b: other right :: text",
         "R012 a: other complete same_chunk",
         "R012 b: other",
         "R012 b: other right wrong_other",
@@ -105,16 +109,20 @@ def test_resolve_applies_answers_and_separates_changes_from_corrections(sa):
     answers = {
         ("R001", "a"): "codex",
         ("R001", "b"): "claude",
-        ("R002", "a"): ("other", ["needs_lead_in", "same_chunk"]),
-        ("R003", "a"): ("other", ["needs_lead_in", "same_chunk"]),
+        ("R002", "a"): ("other", ["needs_lead_in", "same_chunk"], "The PM:"),
+        ("R003", "a"): ("other", ["needs_lead_in", "same_chunk"], "The PM:"),
     }
     ra, rb, unresolved, spot_changes, corrections = sa.resolve(
         a_pairs, b_pairs, dis_a, dis_b, spot, answers
     )
     assert unresolved == []
     assert ra["R001"][:2] == ("needs_lead_in", "previous_chunk") and rb["R001"] == "right"
-    assert ra["R002"][:2] == ("needs_lead_in", "same_chunk") and spot_changes == [("R002", "a")]
-    assert ra["R003"][:2] == ("needs_lead_in", "same_chunk") and corrections == [("R003", "a")]
+    assert ra["R002"][:3] == ("needs_lead_in", "same_chunk", "The PM:") and spot_changes == [
+        ("R002", "a")
+    ]
+    assert ra["R003"][:3] == ("needs_lead_in", "same_chunk", "The PM:") and corrections == [
+        ("R003", "a")
+    ]
 
 
 def test_resolve_reports_unanswered_disagreements_and_ignores_ok(sa):

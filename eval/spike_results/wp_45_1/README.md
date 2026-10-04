@@ -143,12 +143,12 @@ python3 eval/spike_results/wp_45_1/score_audit.py --key eval/spike_results/wp_45
 - **Stems on quotes that were already complete.** 12 sampled attachments sit on quotes both labelers called
   complete; 10 of the 12 are misleading. Small sample; a pointer to the candidacy rule, not a rate.
 - **Who lacks context.** About 53% of all records need a lead-in (34 to 72), and about 840 of the 1,644 with no stem
-  (51%; 29 to 73). Where it lives, among those 840: section heading only 525, same chunk 84, previous chunk 84, not
+  (51%; 29 to 73). Where it lives, among those 840: section heading only 518, same chunk 91, previous chunk 84, not
   in the text shown 147. Heading-only counts because a role named only by a heading changes who is obligated; read
-  by the narrower list-intro definition the no-stem need is about 170 records (10%).
+  by the narrower list-intro definition the no-stem need is about 175 records (11%).
 - **Root causes.** (4) a sibling or peer's sub-list lead-in taken as the stem: 19 of 66 sampled stems. (1) the lead-in
   is in the previous chunk: about 84 records with no stem, plus a dozen with a wrong one. (3) the lead-in is in the
-  same chunk but the rules missed it: about 84. (2) a Docling hierarchy error cannot be told from text; the PDFs show
+  same chunk but the rules missed it: about 91. (2) a Docling hierarchy error cannot be told from text; the PDFs show
   the source's own numbering sometimes puts later duties under an earlier item (DoDI 8551.01 2.2.d), so not every
   such case is a parser fault.
 
@@ -159,5 +159,5 @@ context ladder) the largest pool is heading-only context, but whether that hurts
 **Limits.** Two language models and one ten-item spot-check can share mistakes; one was found outside the sample.
 Intervals are wide (about +/-14 points on the large strata, wider on the rest). "Misleading" and "incomplete" are
 judged from text, not measured in retrieval. The need-rate depends on the rubric's heading rule and its conventions
-(farthest passage; a stem that is a list item lacking its party is `fragment_chain`). The Tyler-confirmation status of the
+(a stem that is a list item lacking its party is `fragment_chain`; a location tie follows the rubric's order: the clause the quote continues or the list-introducing sentence, before a heading). The Tyler-confirmation status of the
 16 resolutions is recorded in `audit_results/adjudication.txt`.
