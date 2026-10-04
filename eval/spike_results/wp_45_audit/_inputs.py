@@ -13,8 +13,12 @@ FILENAMES = {
     "normalized": "{doc}_requirements_normalized.jsonl",
 }
 # WP-44.1 removed three junk records from these two documents after the manifest was written
-# (docs/PHASE44_REQUIREMENTS.md: 220 -> 218 and 289 -> 288), so their normalized hash is expected to differ.
-NORMALIZED_EDITED_AFTER_MANIFEST = {"DODI 5200.48", "afi10-2402"}
+# (docs/PHASE44_REQUIREMENTS.md: 220 -> 218 and 289 -> 288), so the manifest's normalized hash is out of date
+# for them. They are pinned to the post-edit state instead of being skipped, so a further change still stops a run.
+NORMALIZED_POST_WP441_SHA256 = {
+    "DODI 5200.48": "fab20d06f580a7f3444a00e29b25e25cb61f779a74acca848b2802cfde1c4a4c",
+    "afi10-2402": "0ef0c86caa8dc470b74a4c3825f705ec561ea49515e9df7c118f9c3cbd5fa00c",
+}
 
 
 def sha256_of(path):
@@ -43,9 +47,12 @@ def corpus_inputs(*kinds):
             if not path.exists():
                 problems.append(f"missing: {path}")
                 continue
-            expected_edit = kind == "normalized" and doc in NORMALIZED_EDITED_AFTER_MANIFEST
-            if not expected_edit and sha256_of(path) != m[f"{kind}_sha256"]:
-                problems.append(f"changed since the WP-44 manifest: {path}")
+            if kind == "normalized" and doc in NORMALIZED_POST_WP441_SHA256:
+                expected, basis = NORMALIZED_POST_WP441_SHA256[doc], "the post-WP-44.1 state"
+            else:
+                expected, basis = m[f"{kind}_sha256"], "the WP-44 manifest"
+            if sha256_of(path) != expected:
+                problems.append(f"changed since {basis}: {path}")
             inputs[doc][kind] = path
     if problems:
         sys.exit(
@@ -53,7 +60,7 @@ def corpus_inputs(*kinds):
         )
     note = ""
     if "normalized" in kinds:
-        note = f" (normalized for {', '.join(sorted(NORMALIZED_EDITED_AFTER_MANIFEST))} excepted: edited by WP-44.1)"
+        note = f" (normalized for {', '.join(sorted(NORMALIZED_POST_WP441_SHA256))} pinned to their post-WP-44.1 hashes)"
     print(
         f"inputs: {len(inputs)} pinned documents; {', '.join(kinds)} found by exact name, "
         f"sha256 matches the WP-44 manifest{note}"

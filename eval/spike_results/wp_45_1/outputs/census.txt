@@ -1,0 +1,77 @@
+inputs: 13 pinned documents; chunks, extracted, normalized found by exact name, sha256 matches the WP-44 manifest (normalized for DODI 5200.48, afi10-2402 pinned to their post-WP-44.1 hashes)
+records in the normalized tier: 1847
+reconstruction candidates (production predicate, <= 20 words / list marker / dangling clause): 839 ( 45.4%)
+
+A. Attachment method (the production cascade, recomputed):
+   same-chunk         142    7.7% of records
+   cross-chunk         59    3.2% of records
+   heading              2    0.1% of records
+   none               636   34.4% of records
+   not-a-candidate   1008   54.6% of records
+   stems stored in the data: 203; recomputed now: 203; records where they differ: 0
+
+B. Signals, over all records (sampling aids, not classifiers; no_obligation_verb is context only):
+   lowercase_start        135    7.3%
+   list_marker             78    4.2%
+   open_ending             16    0.9%
+   introduces_list          0    0.0%
+   no_obligation_verb    1039   56.3%
+   dangling_clause          3    0.2%
+   not_contiguous         177    9.6%
+   word count: <=5=19, 6-8=68, 9-12=177, 13-20=538, >20=1045
+
+C. How many fragment signals fire per record (of lowercase_start, list_marker, open_ending, dangling_clause; no_obligation_verb excluded):
+   0 signal(s):  1636   88.6%
+   1 signal(s):   192   10.4%
+   2 signal(s):    17    0.9%
+   3 signal(s):     2    0.1%
+
+C2. Signals by word count (records with the signal / records in the bucket):
+   signal                       <=5         6-8        9-12       13-20         >20        <=20
+   lowercase_start             7/19       11/68      20/177      45/538     52/1045      83/802
+   list_marker                 1/19        5/68       9/177      24/538     39/1045      39/802
+   open_ending                 0/19        2/68       3/177       3/538      8/1045       8/802
+   introduces_list             0/19        0/68       0/177       0/538      0/1045       0/802
+   no_obligation_verb         15/19       56/68     126/177     318/538    524/1045     515/802
+   dangling_clause             0/19        0/68       0/177       1/538      2/1045       1/802
+   not_contiguous              1/19        3/68       6/177      34/538    133/1045      44/802
+
+D. Signals by attachment method (count of records with the signal / records with that method):
+   signal                     same-chunk      cross-chunk          heading             none  not-a-candidate
+   lowercase_start                28/142             6/59              0/2           56/636          45/1008
+   list_marker                    27/142            14/59              0/2           33/636           4/1008
+   open_ending                     2/142             2/59              0/2            5/636           7/1008
+   introduces_list                 0/142             0/59              0/2            0/636           0/1008
+   no_obligation_verb             93/142            35/59              1/2          409/636         501/1008
+   dangling_clause                 1/142             0/59              2/2            0/636           0/1008
+   not_contiguous                 15/142             2/59              0/2           27/636         133/1008
+   word count by method: same-chunk: <=5=5,6-8=20,9-12=28,13-20=76,>20=13; cross-chunk: <=5=3,6-8=4,9-12=11,13-20=33,>20=8; heading: <=5=0,6-8=0,9-12=0,13-20=1,>20=1; none: <=5=11,6-8=44,9-12=138,13-20=428,>20=15; not-a-candidate: <=5=0,6-8=0,9-12=0,13-20=0,>20=1008
+
+E. Candidates that got NO stem, by how fragment-shaped they look (fragment signals fired):
+   0 signal(s):   546   85.8% of the 636 no-stem candidates
+   1 signal(s):    86   13.5% of the 636 no-stem candidates
+   2 signal(s):     4    0.6% of the 636 no-stem candidates
+
+F. Attached stems, by whether the quote looks like a fragment (>= 1 fragment signal):
+   same-chunk    142 attached |   45 look like fragments |   97 do not
+   cross-chunk    59 attached |   20 look like fragments |   39 do not
+   heading         2 attached |    2 look like fragments |    0 do not
+   records with >= 1 fragment signal, any method: 211 ( 11.4%); >= 2: 19
+   LIMIT: the signals are lexical. A fragment written as a capitalised imperative sentence (a sibling bullet such
+   as "Retain visitor logs.") fires none of them, so these counts are a floor on fragment-shaped records, not a
+   prevalence. Prevalence and attachment correctness come from the labeled audit (WP-45.1b/e).
+
+G. Per document (records | candidates | stems same/cross/heading | none | signals: lowerc list_m open_e dangli | intro noncon noverb):
+   CJCSI 6510.02G       87 |   28 |   1/  6/ 0 |   21 |     6     0     1     0 |     0      3     49
+   DODI 5200.01         65 |   29 |   9/  8/ 0 |   12 |     6     5     2     0 |     0      4     43
+   DODI 5200.44         93 |   38 |   9/ 14/ 0 |   15 |    18    15     0     0 |     0      3     72
+   DODI 5200.48        218 |   90 |   6/  2/ 0 |   82 |    17    16     2     1 |     0     11    109
+   DODI 8410.03        140 |   65 |  24/ 16/ 0 |   25 |     5    14     0     0 |     0     25     37
+   DODI 8551.01         54 |   37 |   7/ 13/ 0 |   17 |    12    23     0     0 |     0      2     36
+   NIST.SP.800-125     151 |   83 |  17/  0/ 0 |   66 |    35     0     3     0 |     0      3    124
+   afi10-2402          288 |  123 |   8/  0/ 0 |  115 |     1     0     0     0 |     0     14    162
+   afi13-550           169 |   74 |  14/  0/ 0 |   60 |    13     0     0     0 |     0     23     96
+   afi17-203           109 |   54 |   3/  0/ 2 |   49 |     6     0     2     2 |     0      7     69
+   afman17-2101        144 |   69 |  14/  0/ 0 |   55 |     2     0     2     0 |     0     17     85
+   afpd_17-1            64 |   36 |   0/  0/ 0 |   36 |     2     0     0     0 |     0      6     39
+   dafman17-1305       265 |  113 |  30/  0/ 0 |   83 |    12     5     4     0 |     0     59    118

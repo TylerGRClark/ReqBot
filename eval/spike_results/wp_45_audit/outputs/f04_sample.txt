@@ -1,4 +1,4 @@
-inputs: 13 pinned documents; chunks, extracted, normalized found by exact name, sha256 matches the WP-44 manifest (normalized for DODI 5200.48, afi10-2402 excepted: edited by WP-44.1)
+inputs: 13 pinned documents; chunks, extracted, normalized found by exact name, sha256 matches the WP-44 manifest (normalized for DODI 5200.48, afi10-2402 pinned to their post-WP-44.1 hashes)
 same-chunk attachments: 142
  1. [NIST.SP.800-125 c103]
     STEM : Reconfigure access control features as needed based on factors such as policy changes, technology changes, audit findings, and new security needs

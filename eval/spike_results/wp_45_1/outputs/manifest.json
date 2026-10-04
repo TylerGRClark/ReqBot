@@ -1,0 +1,85 @@
+{
+  "script": "eval/spike_results/wp_45_1/census.py",
+  "git_revision": "b1329f061fc7eebec5df0510f54e7c3eb94a769b",
+  "git_revision_note": "HEAD when run; it can precede the commit that adds this script, so code_sha256 below is what identifies the code that produced the output",
+  "code_sha256": {
+    "eval/spike_results/wp_45_1/census.py": "0e52de2c1a11135dbe2e8ce9f7fbcbb772f07ffd087044ed5d9e5e59b0b4db61",
+    "eval/spike_results/wp_45_audit/_inputs.py": "88ff62971f3abef4f50490377cdfa4fcca54c57986b0b4261216c161f2fd251e",
+    "pipeline/enrich_requirements.py": "74a942aacf84cc49b9412ffaccc8a6f0253122ff3e4f0f6dfd7f8ac5a672382a",
+    "pipeline/parse_and_normalize.py": "80c09fe43b8027a266db2a19489aa138f9cc21ad1b8466f5e7922ab52d5990a4",
+    "pipeline/llm_extract_requirements.py": "64278c8ebeea9da36916b49436df2b3001d6687e300435dae3e7899333a249f4"
+  },
+  "python": "3.12.3",
+  "docling": "2.94.0",
+  "docling_core": "2.99.0",
+  "profile": "cybersecurity",
+  "step_c_prompt_template_sha256": "ef4a3c0151b2f0a4",
+  "inputs_sha256": {
+    "CJCSI 6510.02G": {
+      "chunks": "77f474760f2a688afb20be4659c01ea2f79e3711f1d32c0d85af8c9ae0da4d60",
+      "extracted": "28173f35345fbfcb7fbbc89ab10a15c080103231f82e284b2bfc5e1eced02f4f",
+      "normalized": "e88f51d781184dfe6637eb3cc3f3f8e093f902d54b4afa6a5ef9a8dfe83e2d85"
+    },
+    "DODI 5200.01": {
+      "chunks": "20057e3fd9fb2a264cbb0d1ae93136f62b2a35dba2e0c89cc54286ecbb15690e",
+      "extracted": "ff7ee6a94cea28496ddea6127cdd9def88b523fb89123255808cddee7b22dfae",
+      "normalized": "9bd67b068b258549a9012b7715eb41dfe8528f812a5454647c215ac36e7e1adc"
+    },
+    "DODI 5200.44": {
+      "chunks": "8b6c9ac165bf544829118bf4fba97a54a798ded80a7953e1566c4955fda37bb2",
+      "extracted": "643aedccaba2eab6d2c38286cb31101c900effe06f5e0bfb051ab91ab85b5aad",
+      "normalized": "6e52445a69cd8163424759a5ec1322379cf89be2a149b96781cd5030dbed6e6a"
+    },
+    "DODI 5200.48": {
+      "chunks": "f149a4830f49f1d908681044609be2f8ab7c341257d5dfe2f6b4eed1c51fbe21",
+      "extracted": "05fc18aa3908e6ec8415797524957578fd51328037b3d835aeeae2296aeaf8f5",
+      "normalized": "fab20d06f580a7f3444a00e29b25e25cb61f779a74acca848b2802cfde1c4a4c"
+    },
+    "DODI 8410.03": {
+      "chunks": "43dc137a3404a233b9019ad7346f86cde3ca99bdda4f3a97a2c4e1939fdf4be0",
+      "extracted": "9c4338be5dec4898e079daed469c5302874060274bf9794a6827b44f495e8b0f",
+      "normalized": "40bc6c23163b31173fe226fb0bb5ced1a1e9a6c727688738b83a600b5fa8a653"
+    },
+    "DODI 8551.01": {
+      "chunks": "ff58795fb75bde847d28610b1898cc403de5784e325f24bba1f3a2e2c474089e",
+      "extracted": "b38f1a2918a0c86646921101368ef94116f6fe714ccae6e88173d7f24ca3ad6f",
+      "normalized": "28e6ac7823201dcb6648af7a7f18c8bda4b4559506d2bd20d4215e02c167ae1a"
+    },
+    "NIST.SP.800-125": {
+      "chunks": "2e58c27c942fe0f9d2c4edc4caa92e96c5fb845d033c7d81f2a37bf499cc388d",
+      "extracted": "49f2dd0fc33226cae07a79fc8cb39785232c173d87843efd31e4bad7bd1e9c63",
+      "normalized": "2f2e27989351caa39339dc5d414d85c3754e60d86d79e566582fc001f09171b3"
+    },
+    "afi10-2402": {
+      "chunks": "a1704526ea95af2b27d4f1d842f10906b3238721baa7adec3003a5cb2fd88f09",
+      "extracted": "4922c8504231454a6eced740d62194cd21a705099f6175b53fabff1017ca5601",
+      "normalized": "0ef0c86caa8dc470b74a4c3825f705ec561ea49515e9df7c118f9c3cbd5fa00c"
+    },
+    "afi13-550": {
+      "chunks": "15ca79ac0e3ca59062bc565a437378e1d50ec9a73c3877671d67c6e8ac845583",
+      "extracted": "c2175bf43882c0bfec1d97bfb87281567b5da3dd8d8a9967cbaef65298780c1a",
+      "normalized": "b9e07076ec5f79c00b970a02108147033822b8cdec8e01ef9b81562064fb8476"
+    },
+    "afi17-203": {
+      "chunks": "97322c5841458b194ca8e88288e6ebfa6e724d09aeca144c6a4d4e7aa090073f",
+      "extracted": "d6bad5ae54327758c53fc0e26153f543d35e4d823e3dd982adaccb24e9f9d9af",
+      "normalized": "0406f4e04a70714e45a7779da7a48a0bfa72f230f5c18327749a63b20d61a3bd"
+    },
+    "afman17-2101": {
+      "chunks": "52bb69af3bb2ac253abab90ceea5d1f634d20078cb9495c60130a12b9ab95740",
+      "extracted": "4ec0a7acc9a94836e4bd99f6e4ea6a50e8d8d15c096765c98f9327f5c8b83fb2",
+      "normalized": "a3862bffb4aaa59ddf1c20ba558d97e893e05bb6fe9054e333e74659192665e0"
+    },
+    "afpd_17-1": {
+      "chunks": "ec9d252259a9fe56d7a7822811cb331595042030ffab771cf13a51f261a2f409",
+      "extracted": "d3d651ffbda6e3afc69ab2c64fd918dd683dd25bb9e1d7d4ea533dd5c132c7c4",
+      "normalized": "da72a244d444233a178f9a68f5594cb7548af4062b36c2fc4edea05ae0cdf555"
+    },
+    "dafman17-1305": {
+      "chunks": "d95c22075db146f1bdce462890e6ef6cd57383c7281e1708c828399bd3cf6615",
+      "extracted": "7a208b582c0e995fb12788a9b2f97905d7b25a7e88a85fea9be871db08138a63",
+      "normalized": "8a540e27d81cfb86ad30a89c52d01b36dafc69ce4d8f88fc61fbb74a4057ea2a"
+    }
+  },
+  "note": "No LLM or Qdrant access. The extraction model that produced the inputs is recorded per raw response (llama3.1:8b-instruct-q4_K_M for the pinned runs)."
+}
