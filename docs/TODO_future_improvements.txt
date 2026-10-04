@@ -491,6 +491,21 @@ ACTIVE BACKLOG
     "limited to" dropped, coverage 1.0). If that shape recurs, add a contiguity /
     ordered-subsequence check, measured with eval/step_d_replay.py first.
 
+    UPDATE 2026-10-04 (outside pipeline audit, verified): the blind spot is
+    real and has fired, but the bag-of-words check is by design. 177 of 1,847
+    survivors (9.6%) are not contiguous substrings of their chunk. Of 7
+    sampled, 3 were legitimate stem+item stitches, 3 were formatting, and 1
+    dropped a content word ("specific work role that" became "specific work
+    that") and passed at alignment 98. A heuristic scan found no excess negation
+    words inside the source span aligned to any non-contiguous quote. It cannot
+    see a dropped negation in a contiguous quote ("Share passwords." from "Do
+    not share passwords.") or one outside the aligned span, so an omitted
+    governing negation is unmeasured, not absent (Codex review of PR #201). A
+    real detector needs source-clause context; keep those two examples as
+    challenge cases. Planned as a flag-only detector sent to the Phase 45
+    review state (WP-45.9), not a rejection rule. Evidence:
+    eval/spike_results/wp_45_audit/check_f07.py.
+
 35. Dangling fragments are indexed bare or under a wrong parent, and are not
     usable requirements (found in Phase 44, WP-44.2) -> Phase 45, Track A
     Of 16 fragment-type survivors in the live artifacts, 10 have a parent stem
@@ -508,6 +523,23 @@ ACTIVE BACKLOG
     description gate -- a new LLM-generation feature, so Tyler's approval is
     required. Evidence: eval/spike_results/wp_44_2/fragments_and_retrieval_probe.md
     (16 records; the 6-query probe there is too weak to count).
+
+    UPDATE 2026-10-04 (outside pipeline audit, verified): mechanism confirmed
+    in pipeline/enrich_requirements.py _extract_stem_from_record_text: an
+    earlier record with no colon, no list marker and no terminal punctuation is
+    accepted as the stem, so short unpunctuated sibling bullets ("Have load-
+    shedding plan") become stems for their siblings.
+    _is_reconstruction_candidate is deliberately permissive on the assumption
+    that a wrong stem is cheap; that was never measured. Of 839 reconstruction
+    candidates, 142 attach same-chunk, 59 cross-chunk, 2 by heading and 636 get
+    no stem; none of the 59 cross-chunk attachments crosses a section path. In
+    a random sample of 16 same-chunk attachments that I labeled (one reviewer,
+    not audited), 7 looked wrong (a sibling as the stem, or fragment chains).
+    That is a lead, not a rate. Phase 45 WP-45.1 confirms it with two
+    independent labelers; the first candidate fix (WP-45.2 C1) is a stem-
+    acceptance rule that requires a governing signal. Principle: no stem beats
+    a wrong stem. Evidence: eval/spike_results/wp_45_audit/check_f04.py and
+    check_f04_sample.py.
 
 36. Junk requirements remain in the index (found in Phase 44, WP-44.2) ->
     Phase 45, Track B
@@ -533,6 +565,116 @@ ACTIVE BACKLOG
     saves about 3% of LLM calls). A plain length filter is NOT safe (7 of 26
     chunks in the 60-150 band yield real list-item requirements). About 20% of
     inventions near-copy the prompt's few-shot examples; not pursued.
+
+38. [PLANNED -- Phase 45, WP-45.0.1] Reindex can promote an incomplete index
+    (outside pipeline audit F08, verified 2026-10-04)
+    embed_and_index.run and embed_context_index.run skip a record whose
+    embedding fails and return a count; cli/reqbot.py's _reindex_requirements
+    and _reindex_context ignore that count, swap the alias, then delete the old
+    backing collection. One failed embedding during a reindex would therefore
+    replace a complete live index with an incomplete one. Nothing is wrong
+    today: the live index reconciles exactly with the resolved artifacts (1,845
+    expected, 1,845 live, 0 missing, 0 stale). That checks recorded point
+    identity only, not payloads, vectors or extraction completeness. The 13
+    pinned documents' normalized tier holds 1,847 records, not 1,845: the 2
+    afi17-203 records quarantined in WP-42 stay there but are absent from the
+    selected gated file and from Qdrant. Plan: a strict mode that raises
+    on any embedding failure, used by reindex, and a refusal to swap on
+    incomplete coverage; failure-injection tests. Evidence:
+    eval/spike_results/wp_45_audit/check_reconcile.py.
+
+39. [PLANNED -- Phase 45, WP-45.0.2] Failed Step C requests are treated as
+    completed work on resume (audit F02)
+    process_chunk stores the prompt hash even when the Ollama request failed
+    (raw_response "ERROR: ...") or the output did not parse, and run() loads
+    every stored hash as a cache hit, so a resume skips the chunk and its
+    requirements are lost. Reproduced with the real run() and a mocked
+    transport (check_f02.py); 0 of 839 chunks in the 13 pinned runs failed, so
+    nothing is missing today. Most likely to bite a first-time user on CPU-only
+    Ollama (the 120 s timeout). Plan: a chunk counts as complete only when its
+    response parsed completely and its output is durable (a valid empty array
+    counts), write the raw record last, include chunk_id in the cache key.
+    Open design points (Codex review of PR #201): Step C also recovers objects
+    from a truncated array, which is some recovered JSON, not a complete
+    response; and writing the raw record last does not make a retry idempotent
+    (a crash after the requirements write would append that chunk's rows
+    twice). One-time cost: caches of existing run directories stop matching.
+
+40. [DEFERRED -- Tyler, 2026-10-04] Split paragraphs are re-expanded into
+    duplicate chunks (audit F01)
+    pipeline/chunk_text.py's _chunk_raw_text rebuilds each chunk from the
+    item's full text, so when HybridChunker splits one oversized paragraph into
+    N segments, all N chunks carry the whole paragraph (reproduced with the
+    real chunker, check_f01.py). 16 of 839 chunks (1.9%, 8 pairs, 5 documents).
+    Not worth fixing: those 16 chunks yielded only 16 surviving records, with
+    no exact or near duplicates reaching the index, so dedup absorbs it; the
+    cost is about 8 wasted LLM calls. Chunk composition is Docling's job.
+    Revisit only if a neighbor-context extraction pilot (Phase 45, WP-45.2 C4)
+    gets the same text twice in a window. Candidate fixes if ever needed: use
+    the chunker's own segments, or merge the twins so the paragraph is read
+    once (the split comes from the chunker's 512-token default tokenizer, not
+    Step C's 8192-token context).
+
+41. [DEFERRED] Identity and dedup do not use scope (audit F03)
+    compute_stable_id uses document, source_ref and normalized quote only, and
+    deduplicate_requirements keys on source_ref + normalized quote, so
+    identical quotes from different sections without a source_ref collapse (the
+    audit's probe merged 2 into 1). Measured on the 13 documents: no harmful
+    merge. Of 23 cross-chunk merge groups, 17 are item 40's twins, 3 are one
+    repeated page heading, and 3 are non-adjacent repeats (1 crosses a section
+    and is a legitimately repeated sentence). Changing identity would change
+    every REQ- ID and force a reindex, so it is not worth doing without
+    observed harm.
+    Do fix: _dedup_score's docstring says confidence always dominates, but 0.7
+    confidence with a 200-character quote scores 500 against 580 for 0.6
+    confidence with a 20-character quote (no practical effect, since grouped
+    quotes are equal after normalization).
+
+42. [DEFERRED] Incremental indexing keeps stale points (audit F09)
+    The indexers upsert; they never remove a document's earlier points, and a
+    changed PDF gets a new document_id, so old and new editions can coexist.
+    Measured 2026-10-04: 0 stale points and 0 PDFs with more than one
+    document_id in the live index. docs/OPERATIONS.md already says to prefer a
+    full reindex. If it starts to matter: replace-on-reingest by document, plus
+    explicit edition and supersession tracking.
+
+43. [DEFERRED] Validation state is not recorded (audit F13)
+    The gated artifact keeps its name when MiniCheck is skipped or fails (only
+    a log line says so), the normalization confidence is a metadata-
+    completeness heuristic rather than a probability, and synthesis output has
+    no post-generation check that its citations exist or support its claims.
+    Candidate: record gate availability in the run's stats file and in the
+    Phase 45 review-state design (WP-45.5).
+
+44. [DEFERRED -- Tyler, 2026-10-04] Checklists do not show the governing clause
+    (audit F06)
+    services/checklist_service.py never uses parent_stem or embedding_text, so
+    a fragment such as "(2) Retain visitor logs." appears with no governing
+    clause. Proposed: a governing-clause column plus an "unresolved context"
+    flag. Deferred because showing today's stems would surface the wrong ones
+    (item 35). Better stems will not change checklist output by themselves:
+    the item builder copies only source_quote (not parent_stem, embedding_text
+    or description), so after attachment validation, exposing verified
+    governing context still needs this additive change, with supplied context
+    kept visibly separate from the quoted text (Codex review of PR #201).
+    Revisit after Phase 45 WP-45.2 C1. It affects the CLI, API, GUI and MCP
+    outputs.
+
+45. Hosted LLM providers for the pipeline roles (Tyler wants this eventually)
+    Today only answer synthesis can use Anthropic or OpenAI; extraction,
+    enrichment, query rewrite/HyDE and embeddings are Ollama-only. A real
+    provider layer would touch core/ask.py (rewrite, HyDE), the two pipeline
+    call_ollama functions (Ollama's constrained JSON "format" becomes tool use
+    or structured output elsewhere), config/init/settings/status and the docs.
+    Embeddings would stay on Ollama (Anthropic has no embeddings API; a
+    different embedding model means a new vector size, a full reindex and re-
+    measured retrieval). Policy cost: document text leaves the machine, which
+    breaks the air-gapped default, so Ollama stays the default.
+    Rough corpus cost (estimate, about 4 characters per token): one pass over
+    the 13 documents is about 1.0M input and 0.23M output tokens across roughly
+    1,000 calls. Measure the value first: Phase 45 WP-45.6 compares qwen2.5:14b
+    with the 8B baseline. Prompts, thresholds and gates were tuned on 8B output
+    and need re-measuring for any other model.
 
 ================================================================
 RETRIEVAL EXPERIMENTS
@@ -650,6 +792,11 @@ These are quality experiments, not guaranteed product work.
 
    Depends on having calibrated reranking or confidence signals.
 
+   Evidence (WP-41, Phase 43): a flat min_score cannot separate zero-truth
+   noise from weak matches (0 of 8 zero-truth queries returned empty; rank-
+   based RRF scores have no calibrated relationship to relevance), and the
+   reranker was a No-Go. An abstention signal is still unsolved.
+
 5. Raw-context search as an explicit MCP tool (distinct from item 4)
    grc_context is indexed but only used today for context around existing
    requirement hits (core/ask.py's retrieve_context_chunks) -- it isn't
@@ -670,6 +817,12 @@ These are quality experiments, not guaranteed product work.
      queries to know what it's actually good for.
    - Clearly label grc_context results as lower-confidence than curated
      requirements.
+
+   Evidence (2026-10-04): WP-40's classification attributes 9 misses to
+   extraction failure and 9 to missing context, which a raw-context route would
+   partly surface. A context lookup only enriches already-retrieved hits and
+   cannot rescue text that was never extracted, so label any such result as
+   source evidence, not as a requirement record.
 
 6. [DETERMINISTIC VARIANT TRIED AND REVERTED -- Phase 37, WP-37.2,
    2026-07-31; LLM-generated variant remains UNTESTED] Contextual
@@ -716,6 +869,22 @@ These are quality experiments, not guaranteed product work.
    eval/gold_retrieval_queries.jsonl before considering it an improvement --
    don't assume the published technique's benchmark numbers transfer to a
    structurally different corpus.
+
+   NOTE 2026-10-04: an outside audit re-proposed the deterministic section-path
+   prefix as a new idea. WP-37.2 above already tried and reverted it. Do not
+   repeat it.
+
+7. Original-query retrieval leg (outside pipeline audit F11, 2026-10-04)
+   core/ask.py retrieve() replaces both the dense and the sparse query with the
+   LLM's expanded query when rewriting is on (control IDs are appended for
+   BM25); the user's own wording is used only if the rewrite fails. WP-40's
+   classification labeled 8 misses query_filter_issue: the requirement appears
+   in a raw-query top-20 but not in production's. Proposal: add a retrieval leg
+   on the original question beside the rewritten one. Measure with
+   eval/retrieval_eval_harness.py and the gold queries on a test collection
+   with a frozen configuration (HyDE held constant): recall at 5/10/20, MRR and
+   p95 latency by query shape, since HyDE already adds a third RRF leg and a
+   fourth adds latency. Check Phases 24, 37 and 40 for prior art first.
 
 
 ================================================================
@@ -768,6 +937,17 @@ DEPENDENCY / TOOLCHAIN BACKLOG
    Node build) and an easier offline story through wheel mirrors. It is not a
    better first run than Docker. Revisit when the namespace refactor is worth
    doing on its own merits.
+
+7. Docling upgrade evaluation: heading hierarchy inference (outside audit,
+   2026-10-04)
+   Current Docling documentation describes optional PDF heading-hierarchy
+   inference, but docling==2.94.0 has no such option (verified: no
+   HeadingHierarchy* in the installed package), and section_parser.py computes
+   heading depth from the heading text and ignores Docling's item levels. So
+   "just enable it" is not available. Evaluate a compatible upgrade as its own
+   change. Also: the resolved docling-core version is not pinned (2.99.0 here),
+   so chunking behavior can shift between installs; record both versions in
+   every experiment manifest.
 
 
 ================================================================

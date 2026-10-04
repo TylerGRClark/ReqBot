@@ -1,0 +1,10 @@
+probe: coverage('Users shall share passwords.' vs 'Users shall not share passwords.') = 1.0
+inputs: 13 pinned documents; chunks, normalized found by exact name, sha256 matches the WP-44 manifest (normalized for DODI 5200.48, afi10-2402 excepted: edited by WP-44.1)
+survivors checked=1847; quote NOT a contiguous substring of its chunk (after normalization)=177 (9.6%)
+  of those, aligned source span has MORE negation words than the quote: 0
+  non-contiguous e.g. ('CJCSI 6510.02G', 'All DoD Components must adhere to the specific guidance contained in Enclosures A, B, C, and D of this instruc')
+  non-contiguous e.g. ('CJCSI 6510.02G', 'This directive is approved for public release; distribution is unlimited on the Non-classified Internet Protoc')
+  non-contiguous e.g. ('CJCSI 6510.02G', 'The PO will notify the Service Principal/CIO in order to inform the MC4EB CSP that the system affected require')
+  LIMIT: this heuristic only looks at non-contiguous quotes, and only inside the span RapidFuzz aligns to the quote.
+  A quote that is a contiguous substring, or whose omitted negation lies outside that span, is not seen.
+  So 0 here means no excess negation tokens in those spans; an omitted governing negation is unmeasured.

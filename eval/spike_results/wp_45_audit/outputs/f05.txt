@@ -1,0 +1,15 @@
+document           chunks multi-scope(distinct item section paths>1) equal-depth-tie  pdf-sha256
+CJCSI 6510.02G         50          0          0  208451d99602
+DODI 5200.01           34          0          0  206eaef84331
+DODI 5200.44           62          0          0  769ed3c3c9bd
+DODI 5200.48          134          0          0  bbbe49374198
+DODI 8410.03           61          0          0  e0c708499cae
+DODI 8551.01           53          0          0  30371d13dfb2
+NIST.SP.800-125       130          0          0  da8bd5054eb1
+afi10-2402            183          0          0  87308ed1962c
+afi13-550             104          0          0  329008e36ab4
+afi17-203              87          0          0  147fa53787f6
+afman17-2101           81          0          0  b225608e1506
+afpd_17-1              45          0          0  6f2b6762b844
+dafman17-1305         142          0          0  ae766b619107
+TOTAL raw HybridChunker chunks=1166 multi-scope=0 (0.0%) equal-depth ties (last wins)=0

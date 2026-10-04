@@ -1,0 +1,5 @@
+2026-10-04 14:43:03 [ERROR] Chunk 0: Ollama request failed: boom
+run1 generation calls: 1
+run2 (resume) generation calls: 0
+requirements after resume: ''
+RESULT: REPRODUCED (failed chunk skipped, requirement lost)

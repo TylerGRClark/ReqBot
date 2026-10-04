@@ -1,0 +1,3 @@
+resolved documents=13 expected=1845 live=1845
+expected but missing from Qdrant=0; in Qdrant but not in artifacts=0
+source PDFs with more than one document_id in the live index: 0

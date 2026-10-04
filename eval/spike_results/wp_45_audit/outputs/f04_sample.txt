@@ -1,0 +1,50 @@
+inputs: 13 pinned documents; chunks, extracted, normalized found by exact name, sha256 matches the WP-44 manifest (normalized for DODI 5200.48, afi10-2402 excepted: edited by WP-44.1)
+same-chunk attachments: 142
+ 1. [NIST.SP.800-125 c103]
+    STEM : Reconfigure access control features as needed based on factors such as policy changes, technology changes, audit findings, and new security needs
+    ITEM : Organizations should periodically perform assessments to confirm that the organization's virtualization policies, processes, and procedures are being 
+ 2. [afman17-2101 c33]
+    STEM : All Air Force Centers, Agencies, and Other Key Stakeholder will:
+    ITEM : Review/revalidate bandwidth requirements prior to initial fielding.
+ 3. [dafman17-1305 c41]
+    STEM : Wing/Delta Cyberspace Offices (formerly known as Cybersecurity Offices) shall:
+    ITEM : Collect the UMD position validation status from units.
+ 4. [NIST.SP.800-125 c90]
+    STEM : equipment is configured to meet operational and security requirements
+    ITEM : altering the configuration of other security controls and technologies, such as security event logging, network management, and authentication server 
+ 5. [DODI 5200.48 c57]
+    STEM : satisfy the CUI requirements
+    ITEM : are subject to safeguarding and limited distribution control, and are exempt from mandatory public disclosure in accordance with Exemption 3 of the FO
+ 6. [afi10-2402 c35]
+    STEM : Develop CARM program processes and procedures, to include the implementation of a risk management framework for AF TCAs, which implements the program'
+    ITEM : Ensure organization senior leaders (General Officer level) are aware of the organization's Tier 1 and Tier 2 TCA lists.
+ 7. [afi13-550 c33]
+    STEM : AF/A10 will:
+    ITEM : Headquarters Air Force functionals will participate as advisory members in all AF NLCC/NC3 governance forums as determined by agenda topics.
+ 8. [DODI 5200.01 c11]
+    STEM : Develops and coordinates recommendations on current and proposed DNI SCI security policy and procedures with the senior intelligence officials designa
+    ITEM : Establishes memorandums of agreement with NSA/CSS, NRO, and NGA and non-DoD federal agencies for joint use of SCI-accredited facilities
+ 9. [DODI 5200.44 c33]
+    STEM : Takes all necessary and appropriate actions to secure, defend, and operate the DOD information network in accordance with existing authorities, to inc
+    ITEM : (2)  Periodically monitor the DOD information network for DoD use of hardware, software, or services that have been excluded from acquisition actions 
+10. [dafman17-1305 c41]
+    STEM : Wing/Delta Cyberspace Offices (formerly known as Cybersecurity Offices) shall:
+    ITEM : Report  status  on  all  Wing/Delta  cyberspace  workforce  personnel  to  appropriate MAJCOM representative.
+11. [DODI 5200.01 c2]
+    STEM : Information will not be classified, continue to be maintained as classified, or fail to be declassified, or be designated CUI under any circumstances 
+    ITEM : (2) Prevent embarrassment to a person, organization, or agency.
+12. [DODI 8410.03 c15]
+    STEM : The DOT&E shall:
+    ITEM : a. Execute NM within the portions of the Defense Information Enterprise within their assigned area of responsibility (AOR) IAW Reference (b) and in su
+13. [NIST.SP.800-125 c104]
+    STEM : the organization should remove any sensitive data from the host
+    ITEM : An organization should strongly consider erasing all storage devices completely
+14. [DODI 8410.03 c17]
+    STEM : The DOT&E shall:
+    ITEM : Ensure Component NM systems comply with USSTRATCOM-approved NM dataexchange schemas and standards-based data sharing mechanisms.
+15. [afi10-2402 c127]
+    STEM : Have load-shedding plan
+    ITEM : Have portable equip. avail.
+16. [DODI 5200.01 c20]
+    STEM : Designate a senior agency official to be responsible for the direction, administration, and oversight of the DoD Component's information security prog
+    ITEM : (1) Classification, declassification, and safeguarding classified information.
