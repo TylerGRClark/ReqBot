@@ -110,6 +110,36 @@ def texts_overlap(a, b):
     return inter / len(ta | tb) >= 0.5 or inter / min(len(ta), len(tb)) >= 0.8
 
 
+def label_problems(key, labels):
+    """Every way a label set can disagree with the answer key or the rubric's allowed values, as a list of messages."""
+    problems = []
+    all_ids = set(key["items"])
+    with_stem = {rid for rid, it in key["items"].items() if it["stem"]}
+    for (who, p), recs in sorted(labels.items()):
+        expected = all_ids if p == "a" else with_stem
+        for rid in sorted(expected - set(recs)):
+            problems.append(f"{who} pass {p}: no label for {rid}")
+        for rid in sorted(set(recs) - expected):
+            problems.append(f"{who} pass {p}: {rid} is not an item of that pass")
+        for rid, rec in sorted(recs.items()):
+            if p == "b":
+                if rec.get("stem_verdict") not in VERDICTS:
+                    problems.append(
+                        f"{who} pass b {rid}: stem_verdict {rec.get('stem_verdict')!r} is not allowed"
+                    )
+                continue
+            stand, loc = rec.get("standalone"), rec.get("lead_in_location")
+            if stand not in STANDALONE:
+                problems.append(f"{who} pass a {rid}: standalone {stand!r} is not allowed")
+            elif (stand == "needs_lead_in") != (loc is not None):
+                problems.append(
+                    f"{who} pass a {rid}: lead_in_location {loc!r} does not fit standalone {stand!r}"
+                )
+            elif loc is not None and loc not in LOCATIONS:
+                problems.append(f"{who} pass a {rid}: lead_in_location {loc!r} is not allowed")
+    return problems
+
+
 def load(args):
     key = json.loads(Path(args.key).read_text(encoding="utf-8"))
     labels = {}
@@ -119,6 +149,9 @@ def load(args):
             if not path.exists():
                 sys.exit(f"missing {path}")
             labels[(who, p)] = read_jsonl(path)
+    problems = label_problems(key, labels)
+    if problems:
+        sys.exit("label files are not usable:\n  " + "\n  ".join(problems))
     return key, labels
 
 

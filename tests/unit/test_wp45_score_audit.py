@@ -202,3 +202,62 @@ def test_labeler_answers_take_nothing_extra(sa, tmp_path, line):
 def test_weighted_refuses_a_design_it_cannot_estimate(sa, population, sample, hits):
     with pytest.raises(ValueError, match="cannot be estimated"):
         sa.weighted(list(population), sample, hits, population)
+
+
+def _key():
+    return {"items": {"R001": {"stem": "S"}, "R002": {"stem": ""}}}
+
+
+def _good_labels():
+    a = {
+        "R001": {"id": "R001", "standalone": "needs_lead_in", "lead_in_location": "same_chunk"},
+        "R002": {"id": "R002", "standalone": "complete", "lead_in_location": None},
+    }
+    b = {"R001": {"id": "R001", "stem_verdict": "right"}}
+    return {
+        ("claude", "a"): a,
+        ("claude", "b"): b,
+        ("codex", "a"): dict(a),
+        ("codex", "b"): dict(b),
+    }
+
+
+def test_label_problems_accepts_a_complete_valid_set(sa):
+    assert sa.label_problems(_key(), _good_labels()) == []
+
+
+@pytest.mark.parametrize(
+    "mutate, expected",
+    [
+        (lambda L: L[("codex", "a")]["R001"].update(standalone="needs_lead_inn"), "standalone"),
+        (
+            lambda L: L[("codex", "a")]["R001"].update(lead_in_location="samechunk"),
+            "lead_in_location",
+        ),
+        (lambda L: L[("codex", "a")]["R002"].update(lead_in_location="same_chunk"), "does not fit"),
+        (lambda L: L[("codex", "a")]["R001"].update(lead_in_location=None), "does not fit"),
+        (lambda L: L[("claude", "b")]["R001"].update(stem_verdict="wrong_siblng"), "stem_verdict"),
+        (lambda L: L[("claude", "a")].pop("R002"), "no label for R002"),
+        (
+            lambda L: L[("claude", "b")].update(R002={"id": "R002", "stem_verdict": "right"}),
+            "not an item",
+        ),
+    ],
+)
+def test_label_problems_reports_typos_and_gaps(sa, mutate, expected):
+    labels = _good_labels()
+    mutate(labels)
+    assert any(expected in problem for problem in sa.label_problems(_key(), labels))
+
+
+def test_scorer_and_checker_use_the_same_allowed_values(sa):
+    spec = importlib.util.spec_from_file_location(
+        "wp45_check_labels_for_scorer", _PATH.parent / "audit_pack/check_labels.py"
+    )
+    checker = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(checker)
+    assert (sa.STANDALONE, sa.LOCATIONS, sa.VERDICTS) == (
+        checker.STANDALONE,
+        checker.LOCATIONS,
+        checker.VERDICTS,
+    )
