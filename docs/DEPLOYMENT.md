@@ -2,6 +2,10 @@
 
 [Documentation index](README.md) · [Configuration](CONFIGURATION.md) · [Operations](OPERATIONS.md)
 
+This guide is the reference for every install variant. If you are setting up
+ReqBot for the first time, follow [Getting started](GETTING_STARTED.md) instead,
+which walks one path end to end.
+
 Choose Docker for a packaged CLI/API/GUI, or a source install for development
 and direct pipeline access. Both use the same Python package. The commands below
 use a POSIX shell; replace example PDF paths and service URLs with your own.
@@ -12,8 +16,9 @@ ReqBot needs reachable Qdrant and Ollama services. The example Compose file
 starts Qdrant; it points at an existing Ollama instance. A source install does
 not start either service.
 
-Install Ollama using its distribution's instructions. On the Ollama host, pull
-the default embedding and extraction/enrichment/rewrite models:
+Install Ollama from <https://ollama.com/download> (or run it as a container).
+On the Ollama host, pull the default embedding and extraction/enrichment/rewrite
+models:
 
 ```bash
 ollama pull nomic-embed-text
@@ -44,8 +49,12 @@ Before starting, edit `docker-compose.yml`:
 - Keep `REQBOT_QDRANT_URL: "http://qdrant:6333"` for the included Qdrant service.
 - Set `REQBOT_OLLAMA_URL` to an Ollama URL reachable **from the container**.
   The example uses `http://host.docker.internal:11434` and adds a host-gateway
-  mapping. A loopback-only Ollama listener on the host may need a different
-  reachable listener or deployment arrangement.
+  mapping. On Linux, a container reaches the host through the Docker bridge, and
+  Ollama listens only on loopback by default, so the connection is refused.
+  Either set `OLLAMA_HOST=0.0.0.0:11434` for the host's Ollama service (it has
+  no authentication, so restrict the port with a firewall) or use the Compose
+  `ollama` service below. Docker Desktop on macOS and Windows normally reaches
+  host services through `host.docker.internal` without that change.
 - For a first retrieval-only setup, add
   `REQBOT_SYNTHESIS_BACKEND: "none"` under the ReqBot service's environment.
   This avoids needing the synthesis model.
@@ -103,7 +112,14 @@ The repository's source/development workflow uses system Python 3.12+ without
 virtual environments. Confirm that `pip3` targets that interpreter. On
 Debian/Ubuntu, `--break-system-packages` permits pip installation into the
 externally-managed Python environment; the commands below follow the project's
-documented system-Python convention.
+documented system-Python convention. If you would rather not modify the system
+Python, the same install works in a virtual environment: activate one, then run
+the commands without `--break-system-packages`.
+
+ReqBot requires Python 3.12 or newer. Ubuntu 22.04 (Python 3.10) and Debian 12
+(Python 3.11) are too old, and `pip` will stop with
+`requires a different Python`; use the Docker path there, or install a newer
+Python first.
 
 ```bash
 git clone https://github.com/TylerGRClark/ReqBot.git
@@ -111,6 +127,12 @@ cd ReqBot
 python3 --version
 pip3 --version
 ```
+
+A non-root `pip` install places the `reqbot` command in a user scripts folder,
+usually `~/.local/bin`. If the shell reports `reqbot: command not found`, add
+that folder to `PATH` (`export PATH="$HOME/.local/bin:$PATH"`, and put the
+line in `~/.bashrc` to keep it). A full install, including the dependencies
+and the built web interface, used about 4 GB of disk in a clean-environment test.
 
 If you want the GUI in the installed package, build it **before** installing:
 
@@ -206,12 +228,38 @@ Open `http://127.0.0.1:8000`. Search, trace, comparison, evidence, corpus,
 checklists, system status, and settings are available through the GUI.
 Without a frontend build, use `/api-docs` and the CLI.
 
+## First-run downloads and caches
+
+Besides the Ollama models, ReqBot downloads some model files from Hugging Face
+the first time it needs them, so a connected first run is the easiest way to
+warm the caches:
+
+| When | What is downloaded | Where it is cached |
+|---|---|---|
+| First `ingest` | Docling layout and table models (about 0.5 GB measured: `docling-project/docling-layout-heron` and `docling-project/docling-models`). | `~/.cache/huggingface` |
+| First search or index | A small keyword-ranking model (`Qdrant/bm25`). | `<system temp dir>/fastembed_cache` unless `FASTEMBED_CACHE_PATH` is set. |
+| First use of the `grounding-check` extra | MiniCheck weights (about 5.9 GB measured). | `~/.cache/huggingface` |
+
+The keyword model's default location is a temporary directory, which a reboot
+can clear; set `FASTEMBED_CACHE_PATH` to a persistent path if that matters. In a
+container, none of these locations is mounted by the example Compose file, so
+replacing the container discards them.
+
 ## Air-gapped deployment
 
 An exported base image is only one part of an offline installation. Prepare
 Ollama models, ReqBot's parsing/tokenizer/sparse-model caches, optional model
 assets, configuration, and artifacts before disconnecting. The stock image
 build does not exercise ingestion or retrieval to populate all those caches.
+
+Even with warm caches, an ingest run contacts huggingface.co to check Docling's
+model revision (a `GET https://huggingface.co/...` line appears in the log).
+Once the caches are warm, set `HF_HUB_OFFLINE=1` in the environment of the
+ReqBot process on the offline host so those lookups are not attempted. With
+warm caches and that variable set, document parsing, chunking, one extraction
+call, and a search all completed, and the ingest log contained no
+huggingface.co requests. This was a same-machine check, not a
+disconnected-network test, so keep the qualification step below.
 
 The following is a **staging procedure**, not a claim of a tested offline
 release bundle. Qualify the staged result with your PDF types and selected

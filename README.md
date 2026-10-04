@@ -30,44 +30,18 @@ or prove compliance.
 - **Both:** reachable Ollama and Qdrant services, and models installed in Ollama.
   ReqBot configures connections; it does not install or start those services.
 
-## Install / Deployment
+## Get Started
 
-The [deployment guide](docs/DEPLOYMENT.md) covers Docker, source installation,
-model preparation, and air-gapped transfer. Use it for a fresh machine.
+New to ReqBot? Follow the [Getting started guide](docs/GETTING_STARTED.md). It
+walks through every step, with a check after each one:
 
-## Quick Start
+1. Install Ollama and download two models.
+2. Install ReqBot, with Docker Compose (recommended) or Python.
+3. Ingest a PDF with `reqbot ingest`.
+4. Search with `reqbot ask` or the web interface at `http://127.0.0.1:8000`.
 
-This example uses a source install with Ollama and Qdrant already running at
-`http://localhost:11434` and `http://localhost:6333`.
-
-```bash
-git clone https://github.com/TylerGRClark/ReqBot.git
-cd ReqBot
-pip3 install --break-system-packages .
-
-# Run these against the Ollama instance ReqBot will use.
-ollama pull nomic-embed-text
-ollama pull llama3.1:8b-instruct-q4_K_M
-
-reqbot init
-reqbot status
-```
-
-For the first run, choose **None** for answer synthesis in `reqbot init`.
-Retrieval still uses local embedding and query models.
-
-```bash
-# Replace this path with a real PDF. Ingestion indexes requirements and context.
-reqbot ingest /path/to/policy.pdf
-reqbot docs
-reqbot ask "What are the access control requirements?"
-
-# Replace the ID with one returned by the search.
-reqbot trace REQ-returned-id --context
-```
-
-The [deployment guide](docs/DEPLOYMENT.md#first-document) explains what to check
-after ingestion and how to start the browser interface.
+The [deployment guide](docs/DEPLOYMENT.md) covers every install variant,
+including optional extras and air-gapped transfer.
 
 ## Core Commands
 
@@ -85,7 +59,8 @@ one exists.
 
 | Guide | Start here when you want to… |
 |---|---|
-| [Deployment](docs/DEPLOYMENT.md) | Install ReqBot with containers, from source, or offline. |
+| [Getting started](docs/GETTING_STARTED.md) | Go from nothing to your first search, step by step. |
+| [Deployment](docs/DEPLOYMENT.md) | See every install variant: containers, source, extras, or offline. |
 | [Architecture](docs/ARCHITECTURE.md) | Understand the pipeline and component responsibilities. |
 | [Configuration](docs/CONFIGURATION.md) | Set service URLs, models, paths, and synthesis options. |
 | [Connecting AI tools](docs/AI_TOOLS.md) | Expose your library to a local MCP client. |

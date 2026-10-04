@@ -1,14 +1,16 @@
 # ReqBot documentation
 
-Start with [Deployment](DEPLOYMENT.md) to install ReqBot and ingest your first
-document. These guides describe the implementation in this repository; use the
-documentation from your deployed Git revision when versions differ.
+New here? Start with [Getting started](GETTING_STARTED.md): it takes you from
+nothing to your first search. These guides describe the implementation in this
+repository; use the documentation from your deployed Git revision when versions
+differ.
 
 ## User and integration guides
 
 | Guide | Contents |
 |---|---|
-| [Deployment](DEPLOYMENT.md) | Docker, source install, models, first document, and offline preparation. |
+| [Getting started](GETTING_STARTED.md) | Step-by-step first run: Ollama, install, first PDF, first search. |
+| [Deployment](DEPLOYMENT.md) | Every install variant: Docker, source, extras, networking, and offline preparation. |
 | [Architecture](ARCHITECTURE.md) | Document-to-requirement flow, retrieval, validation, and component ownership. |
 | [Configuration](CONFIGURATION.md) | Defaults, precedence, environment variables, and model changes. |
 | [Connecting AI tools](AI_TOOLS.md) | MCP setup, subprocess configuration, tools, and troubleshooting. |
