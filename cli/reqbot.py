@@ -381,7 +381,9 @@ def _collection_point_ids(qdrant, collection: str) -> set[str]:
             with_payload=False, with_vectors=False,
         )
         ids.update(str(p.id) for p in points)
-        if offset is None:
+        # An empty page ends the walk even if an offset comes back: stopping early only means the
+        # guard sees fewer IDs (a refusal), never a hang or a false pass.
+        if offset is None or not points:
             return ids
 
 
@@ -408,7 +410,7 @@ def _refuse_incomplete_swap(qdrant, live_alias: str, temp_name: str, expected_co
                   header, temp_name, live_alias)
     else:
         log.error("%s -- %d of %d expected point(s) are missing from the rebuilt %s. Live %s untouched.",
-                  header, len(missing), expected_count, live_alias, live_alias)
+                  header, len(missing), expected_count, temp_name, live_alias)
         for label in missing[:10]:
             log.error("  MISSING: %s", label)
         if len(missing) > 10:
@@ -535,9 +537,9 @@ def _reindex_context(req_files: dict, qdrant_url: str, ollama_url: str, embeddin
             skipped.append(doc_key)
             continue
 
-        # Resolve the filename fallback here so indexing and the coverage check agree on the ID.
-        document_id = _embed_ctx.resolve_document_id(_read_document_id(str(req_path)), chunk_path)
         try:
+            # Resolve the filename fallback here so indexing and the coverage check agree on the ID.
+            document_id = _embed_ctx.resolve_document_id(_read_document_id(str(req_path)), chunk_path)
             _embed_ctx.run(
                 str(chunk_path),
                 document_id=document_id,

@@ -580,3 +580,51 @@ def test_resolve_document_id_prefers_the_given_id_and_falls_back_to_the_chunks_f
     assert embed_context_index.resolve_document_id(None, chunks) == "SOME-DOC"
     assert embed_context_index.resolve_document_id("", chunks) == "SOME-DOC"
     assert embed_context_index.resolve_document_id(None, tmp_path / "plain.jsonl") == "plain"
+
+
+def test_refusal_message_names_the_rebuilt_collection_and_the_live_alias(tmp_path, caplog):
+    _write_doc(tmp_path, "DOC-A", "hash-a", quotes=("alpha", "beta"))
+
+    with _env() as env:
+        env.fake.drop = {embed_and_index.requirement_point_id({"requirement_id": "REQ-DOC-A-0"})}
+        rc = cmd_reindex(_args(requirements_only=True))
+
+    assert rc == 1
+    # "missing from the rebuilt <temp collection>. Live <alias> untouched."
+    assert "missing from the rebuilt grc_requirements_" in caplog.text
+    assert "Live grc_requirements untouched" in caplog.text
+
+
+def test_a_failure_resolving_one_documents_id_is_isolated_like_an_indexing_failure(tmp_path, caplog):
+    """Everything per-document in the context loop sits inside the try, so one unresolvable document is
+    logged and counted as failed (no swap, nonzero) instead of crashing the whole reindex."""
+    _write_doc(tmp_path, "DOC-A", "hash-a")
+    _write_doc(tmp_path, "DOC-B", "hash-b")
+    real_resolve = embed_context_index.resolve_document_id
+
+    def _resolve(document_id, chunks_path):
+        if "DOC-B" in str(chunks_path):
+            raise OSError("symlink loop")
+        return real_resolve(document_id, chunks_path)
+
+    with patch("pipeline.embed_context_index.resolve_document_id", side_effect=_resolve), _env() as env:
+        rc = cmd_reindex(_args())
+
+    assert rc == 1
+    assert "Context indexing failed for DOC-B" in caplog.text
+    assert env.client.update_collection_aliases.call_count == 1  # requirements only; context not swapped
+
+
+def test_collection_point_ids_stops_on_an_empty_page_with_a_stuck_offset():
+    """A server that kept returning an empty page with a non-None offset would loop forever. Stopping
+    early can only make the guard see fewer IDs (a refusal), never more, so it fails safe."""
+    calls = []
+
+    class _Stuck:
+        def scroll(self, **kwargs):
+            calls.append(kwargs["offset"])
+            assert len(calls) < 5, "scroll loop did not stop"
+            return ([SimpleNamespace(id="a")] if len(calls) == 1 else []), "stuck"
+
+    assert _collection_point_ids(_Stuck(), "c") == {"a"}
+    assert len(calls) == 2
