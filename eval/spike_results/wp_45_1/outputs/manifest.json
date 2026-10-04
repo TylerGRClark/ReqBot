@@ -1,9 +1,9 @@
 {
   "script": "eval/spike_results/wp_45_1/census.py",
-  "git_revision": "ca68756ba927814f8dddc6fba6f79a81bd510b6e",
+  "git_revision": "b1329f061fc7eebec5df0510f54e7c3eb94a769b",
   "git_revision_note": "HEAD when run; it can precede the commit that adds this script, so code_sha256 below is what identifies the code that produced the output",
   "code_sha256": {
-    "eval/spike_results/wp_45_1/census.py": "6353f66d541633ca45222a26f369a8b5112520b0df33b742f7b0ddadee6d8758",
+    "eval/spike_results/wp_45_1/census.py": "0e52de2c1a11135dbe2e8ce9f7fbcbb772f07ffd087044ed5d9e5e59b0b4db61",
     "eval/spike_results/wp_45_audit/_inputs.py": "88ff62971f3abef4f50490377cdfa4fcca54c57986b0b4261216c161f2fd251e",
     "pipeline/enrich_requirements.py": "74a942aacf84cc49b9412ffaccc8a6f0253122ff3e4f0f6dfd7f8ac5a672382a",
     "pipeline/parse_and_normalize.py": "80c09fe43b8027a266db2a19489aa138f9cc21ad1b8466f5e7922ab52d5990a4",

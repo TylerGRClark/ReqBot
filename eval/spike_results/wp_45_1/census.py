@@ -349,11 +349,15 @@ def main():
                 repr((r["stem"] or "")[:50]),
             )
     if args.records_out:
-        with open(args.records_out, "w", encoding="utf-8") as f:
+        records_path = Path(args.records_out)
+        records_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(records_path, "w", encoding="utf-8") as f:
             for r in rows:
                 f.write(json.dumps(r, ensure_ascii=False) + "\n")
     if args.manifest_out:
-        Path(args.manifest_out).write_text(
+        manifest_path = Path(args.manifest_out)
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path.write_text(
             json.dumps(build_manifest(inputs), indent=2) + "\n", encoding="utf-8"
         )
 
