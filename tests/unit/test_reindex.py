@@ -551,3 +551,32 @@ def test_real_context_indexer_embedding_failure_blocks_the_context_swap(tmp_path
     assert "REINDEX PARTIAL" in caplog.text
     assert "1 of 3 expected point(s) are missing" in caplog.text
     assert "MISSING: hash-a:c1" in caplog.text
+
+
+@pytest.mark.parametrize("legacy_first_line", ["missing-field", "blank-line"])
+def test_real_context_indexer_with_a_legacy_requirements_file_is_not_falsely_refused(tmp_path, legacy_first_line):
+    """_read_document_id() returns None for a requirements file with no document_id (or that starts with
+    a blank line), and the indexer then derives the ID from the chunks filename. The guard must expect the
+    IDs that were actually indexed, not "None:<chunk_id>" -- otherwise it rejects a complete rebuild."""
+    run_dir = tmp_path / "DOC-A_20260101_000000"
+    run_dir.mkdir()
+    record = json.dumps({"requirement_id": "REQ-1", "source_quote": "alpha"}) + "\n"
+    (run_dir / "DOC-A_requirements_normalized.jsonl").write_text(
+        record if legacy_first_line == "missing-field" else "\n" + record
+    )
+    (run_dir / "DOC-A_chunks.jsonl").write_text(json.dumps({"chunk_id": "c0", "text": "alpha"}) + "\n")
+
+    with _real_indexers() as env:
+        rc = cmd_reindex(_args())
+
+    assert rc == 0
+    context_ids = env.fake.points[env.fake.aliases["grc_context"]]
+    assert set(context_ids) == {embed_context_index.context_point_id("DOC-A", "c0")}
+
+
+def test_resolve_document_id_prefers_the_given_id_and_falls_back_to_the_chunks_filename(tmp_path):
+    chunks = tmp_path / "SOME-DOC_chunks.jsonl"
+    assert embed_context_index.resolve_document_id("hash-a", chunks) == "hash-a"
+    assert embed_context_index.resolve_document_id(None, chunks) == "SOME-DOC"
+    assert embed_context_index.resolve_document_id("", chunks) == "SOME-DOC"
+    assert embed_context_index.resolve_document_id(None, tmp_path / "plain.jsonl") == "plain"

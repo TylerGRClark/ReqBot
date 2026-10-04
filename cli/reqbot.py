@@ -535,7 +535,8 @@ def _reindex_context(req_files: dict, qdrant_url: str, ollama_url: str, embeddin
             skipped.append(doc_key)
             continue
 
-        document_id = _read_document_id(str(req_path))
+        # Resolve the filename fallback here so indexing and the coverage check agree on the ID.
+        document_id = _embed_ctx.resolve_document_id(_read_document_id(str(req_path)), chunk_path)
         try:
             _embed_ctx.run(
                 str(chunk_path),

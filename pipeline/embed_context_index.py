@@ -131,6 +131,19 @@ def context_point_id(document_id: str, chunk_id) -> str:
     return str(uuid.uuid5(CONTEXT_UUID_NAMESPACE, f"{document_id}:{chunk_id}"))
 
 
+def resolve_document_id(document_id: str | None, chunks_path) -> str:
+    """The document_id run() indexes under: the one given, else derived from the chunks filename.
+
+    cmd_reindex's _read_document_id() returns None for a legacy requirements file, and run() then
+    falls back to the filename. Reindex resolves it through here first so the coverage guard
+    expects the IDs that were actually indexed (WP-45.0.1).
+    """
+    if document_id:
+        return document_id
+    stem = Path(chunks_path).resolve().stem
+    return stem[:-len("_chunks")] if stem.endswith("_chunks") else stem
+
+
 def expected_point_ids(document_id: str, chunks: list[dict]) -> dict[str, str]:
     """Map point ID -> "document_id:chunk_id" for every chunk run() would index.
 
@@ -178,8 +191,7 @@ def run(
     chunks_path = Path(chunks_jsonl).resolve()
 
     if not document_id:
-        stem = chunks_path.stem
-        document_id = stem[:-len("_chunks")] if stem.endswith("_chunks") else stem
+        document_id = resolve_document_id(None, chunks_path)
         log.info("Derived document_id: %s", document_id)
 
     source_pdf = source_pdf or chunks_path.name
