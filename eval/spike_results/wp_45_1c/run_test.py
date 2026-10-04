@@ -100,14 +100,32 @@ def load_gold():
 # ------------------------------------------------------------------------------------------------- query inputs
 
 
+def cache_identity(rewrite_model):
+    """What a cached rewrite/HyDE input depends on: the model asked and the retrieval module holding the prompts."""
+    return {"rewrite_model": rewrite_model, "core_ask_sha256": sha256(_ROOT / "core/ask.py")}
+
+
 def make_inputs(questions, mode, repeat, ollama_client, rewrite_model, cache_dir):
-    """{question: {"dense_query", "sparse_query", "hypothesis"}} for the chosen input mode."""
+    """{question: {"dense_query", "sparse_query", "hypothesis"}} for the chosen input mode.
+
+    Production-path inputs are cached per repeat so every arm sees the same rewrite and HyDE text. The cache records which
+    model and which core/ask.py produced it and is refused, never silently reused, if either differs (Codex, PR #207).
+    """
     if mode == "plain":
         return {q: {"dense_query": q, "sparse_query": q, "hypothesis": None} for q in questions}
     import core.ask as ask
 
     cache = cache_dir / f"prod_inputs_r{repeat}.json"
-    done = json.loads(cache.read_text(encoding="utf-8")) if cache.exists() else {}
+    identity = cache_identity(rewrite_model)
+    done = {}
+    if cache.exists():
+        stored = json.loads(cache.read_text(encoding="utf-8"))
+        if stored.get("meta") != identity:
+            sys.exit(
+                f"{cache.name} was generated with {stored.get('meta')} but this run is {identity}; "
+                "use a different cache directory or delete the file to regenerate it"
+            )
+        done = stored["queries"]
     for q in questions:
         if q in done:
             continue
@@ -122,7 +140,10 @@ def make_inputs(questions, mode, repeat, ollama_client, rewrite_model, cache_dir
                 q, rewrite_model, ollama_client, enabled=False
             ),
         }
-        cache.write_text(json.dumps(done, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+        cache.write_text(
+            json.dumps({"meta": identity, "queries": done}, indent=1, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
     return {q: done[q] for q in questions}
 
 
@@ -350,6 +371,7 @@ def run(args):
             "prefetch_per_leg": E.PREFETCH,
             "diagnostic_depth": E.DIAG_DEPTH,
         },
+        "prod_input_cache": cache_identity(args.rewrite_model) if args.inputs == "prod" else None,
         "models": {
             "embedding": EMBEDDING_MODEL,
             "sparse": SPARSE_MODEL,

@@ -113,8 +113,9 @@ same chunk, and carries topical words, helps both.
 - The same model that proposed the hypotheses wrote the queries (mitigated by blindness, freezing, the overlap report and
   review; not removed). Party questions name the party that the oracle and heading text contain, so their gains partly reflect
   term matching by construction; the topical results do not have that built in. Restricted to queries at or below the median
-  overlap (`outputs/report_plain_low_overlap.txt`) the party gain holds (+0.33 [+0.08,+0.58], n=12) and the topical gain keeps its direction
+  overlap (`outputs/report_plain_low_overlap.txt`) the party gain holds (+0.38 [+0.15,+0.62], n=13; the median is taken over the 92 party queries the analysis uses, not the 20 `no_party` ones) and the topical gain keeps its direction
   but is not demonstrated (+0.21 [0.00,+0.43], n=14).
+- The cached rewrite/HyDE inputs record the model and the `core/ask.py` hash that produced them and are refused if either differs.
 - In-memory engine, not the real server (see above). The conclusions here are large, directional ones and do not depend on tie
   ordering, but this is the reason no production change follows directly.
 - 13 documents; the gold set is 35 topical queries; R053 is not in the live index.

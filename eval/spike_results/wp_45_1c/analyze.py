@@ -329,13 +329,18 @@ def build_report(data, groups):
 
 
 def low_overlap_filter(rows, ids_by_pid, queries, cards, qc):
-    """Keep only (record, style) queries at or below the median content-word overlap of their style."""
+    """Keep only (record, style) queries at or below the median content-word overlap of their style.
+
+    The party median is taken over the queries the party analyses actually use: `no_party` records are excluded from every
+    party-style result, so they must not move its cutoff either (Codex, PR #207).
+    """
     checked, _ = qc.check(queries, cards)
+    no_party = {q["pid"] for q in queries if q.get("no_party")}
     keep = set()
     for style in STYLES:
-        vals = sorted(c["overlap"] for c in checked if c["style"] == style)
-        median = statistics.median(vals)
-        keep |= {(ids_by_pid[c["pid"]], style) for c in checked if c["style"] == style and c["overlap"] <= median}
+        eligible = [c for c in checked if c["style"] == style and not (style == "party" and c["pid"] in no_party)]
+        median = statistics.median(sorted(c["overlap"] for c in eligible))
+        keep |= {(ids_by_pid[c["pid"]], style) for c in eligible if c["overlap"] <= median}
     return [r for r in rows if (r["rid"], r["style"]) in keep]
 
 

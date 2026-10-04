@@ -8099,7 +8099,7 @@
   "code_sha256": {
    "engine.py": "fcfded553525f96e256c6bc23bd4b111e24780d26fd4b046ad7e19d9788fffda",
    "groups.py": "05e5b88e1d178245e8d08c7cd28defffca80f83c1a67c92753d38602c4ee6176",
-   "run_test.py": "76ef42f398b5857dd2d7e1efd5e7109ef73fb849dc2b8b1c2ed0b8fffdd3465f",
+   "run_test.py": "dacd95727ffcc1b9fa9f5add693103a7b1efd12c42d1b9e5bd73e33fc06a9659",
    "variants.py": "a3e279e01310337ae75382a686f26af9e4d4ee2f7f911aa08cd07ad2ad50936c"
   },
   "constants": {
@@ -8132,10 +8132,11 @@
    "nomic-embed-text:latest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
    "qwen2.5:14b": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
   },
+  "prod_input_cache": null,
   "repeat": null,
   "restore_check": "all 222 production-state ranks identical after the last swap was undone",
   "script": "eval/spike_results/wp_45_1c/run_test.py",
-  "seconds": 80.5,
+  "seconds": 109.2,
   "snapshot": {
    "collection": "grc_requirements",
    "dense_distance": "Cosine",

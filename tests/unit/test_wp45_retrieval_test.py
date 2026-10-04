@@ -427,3 +427,56 @@ def test_heading_path_reads_lists_and_stringified_lists(hrule):
     assert hrule.heading_path({"section_title_path": ["A", " ", "B"]}) == ["A", "B"]
     assert hrule.heading_path({"section_title_path": "['A', 'B']"}) == ["A", "B"]
     assert hrule.heading_path({}) == []
+
+
+# ------------------------------------------------------------------------ Codex review fixes (PR #207)
+
+
+@pytest.fixture(scope="module")
+def runner():
+    import logging
+
+    module = _load("run_test")
+    logging.disable(logging.NOTSET)  # run_test silences logging at import, like census.py
+    return module
+
+
+def test_cached_rewrite_inputs_are_refused_for_another_model_or_prompt_source(runner, tmp_path):
+    identity = runner.cache_identity("model-a")
+    cache = tmp_path / "prod_inputs_r1.json"
+    cache.write_text(
+        '{"meta": %s, "queries": {"q": {"dense_query": "d", "sparse_query": "s", "control_ids": [], "hypothesis": "h"}}}'
+        % __import__("json").dumps(identity),
+        encoding="utf-8",
+    )
+    got = runner.make_inputs(["q"], "prod", 1, None, "model-a", tmp_path)  # same identity: reused, no model call
+    assert got["q"]["hypothesis"] == "h"
+    with pytest.raises(SystemExit, match="was generated with"):
+        runner.make_inputs(["q"], "prod", 1, None, "model-b", tmp_path)
+    cache.write_text('{"q": {"dense_query": "d"}}', encoding="utf-8")  # a legacy file with no provenance
+    with pytest.raises(SystemExit, match="was generated with"):
+        runner.make_inputs(["q"], "prod", 1, None, "model-a", tmp_path)
+
+
+def test_party_overlap_median_ignores_queries_the_party_analysis_drops(analyze, qcheck):
+    cards = {f"P{i}": {"quote": "alpha beta gamma delta epsilon", "lead_in": ""} for i in range(1, 7)}
+    # topic overlap is irrelevant here; party overlap rises with the pid, and P5 and P6 are no_party records
+    party = {
+        "P1": "What does alpha beta cover here today now?",
+        "P2": "What does alpha beta gamma cover here today?",
+        "P3": "What does alpha beta gamma delta cover here?",
+        "P4": "What does alpha beta gamma delta epsilon cover?",
+        "P5": "What does zeta eta theta iota kappa lambda cover?",
+        "P6": "What does zeta eta theta iota kappa lambda mu cover?",
+    }
+    queries = [
+        {"pid": pid, "topic": "What does the alpha beta gamma delta thing cover now here?", "party": party[pid], **({"no_party": True} if pid in ("P5", "P6") else {})}
+        for pid in cards
+    ]
+    rows = [{"rid": f"R{i}", "style": s} for i in range(1, 7) for s in ("topic", "party")]
+    ids = {f"P{i}": f"R{i}" for i in range(1, 7)}
+    kept = analyze.low_overlap_filter(rows, ids, queries, cards, qcheck)
+    party_kept = sorted(r["rid"] for r in kept if r["style"] == "party")
+    # the median is over the four analyzable party queries (P1..P4), so the lower two stay; the no_party records (zero
+    # overlap) must not drag the cutoff down, which with the old all-queries median would have dropped P2
+    assert party_kept == ["R1", "R2"]
