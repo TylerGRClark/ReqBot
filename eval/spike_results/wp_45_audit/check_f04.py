@@ -17,6 +17,7 @@ import logging
 pass
 logging.disable(logging.CRITICAL)
 from pathlib import Path
+from core import config as _config
 from pipeline import enrich_requirements as E
 from pipeline.parse_and_normalize import normalize_text
 
@@ -54,7 +55,7 @@ print(
 )
 
 man = json.load(open(str(_ROOT / "eval/spike_results/wp_44/manifest.json")))["documents"]
-P = os.path.expanduser("~/documents/processed")
+P = str(_config.load().processed_dir_path())
 meth = collections.Counter()
 xs_total = xs_mismatch = 0
 flagged = []

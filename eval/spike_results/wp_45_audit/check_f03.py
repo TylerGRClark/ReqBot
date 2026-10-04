@@ -15,6 +15,7 @@ import logging
 
 pass
 logging.disable(logging.CRITICAL)
+from core import config as _config
 from pipeline.parse_and_normalize import (
     deduplicate_requirements,
     normalize_text,
@@ -49,7 +50,7 @@ print(
 
 # --- prevalence on the 13 pinned runs: Step C output, grouped the way dedup keys them
 man = json.load(open(str(_ROOT / "eval/spike_results/wp_44/manifest.json")))["documents"]
-P = os.path.expanduser("~/documents/processed")
+P = str(_config.load().processed_dir_path())
 tot = merged_same = merged_cross = merged_cross_scope = 0
 examples = []
 for doc, m in man.items():
@@ -88,7 +89,7 @@ for doc, m in man.items():
                             ref,
                             g[0]["source_quote"][:70],
                             sorted(cids),
-                            [list(s)[-1:] for s in scopes],
+                            [list(s)[-1:] for s in sorted(scopes)],
                         )
                     )
 print(f"\nStep C records: {tot}")

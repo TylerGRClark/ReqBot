@@ -12,10 +12,11 @@ _ROOT = Path(__file__).resolve().parents[3]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 logging.disable(logging.CRITICAL)
+from core import config as _config
 from pipeline import enrich_requirements as E
 
 man = json.load(open(_ROOT / "eval/spike_results/wp_44/manifest.json"))["documents"]
-P = os.path.expanduser("~/documents/processed")
+P = str(_config.load().processed_dir_path())
 pairs = []
 for doc, m in man.items():
     norm = glob.glob(f"{P}/{m['run_dir']}/*_requirements_normalized.jsonl")[0]

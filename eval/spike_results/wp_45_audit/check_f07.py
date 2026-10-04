@@ -15,6 +15,7 @@ import logging
 
 pass
 logging.disable(logging.CRITICAL)
+from core import config as _config
 from rapidfuzz import fuzz
 from pipeline.parse_and_normalize import normalize_text, quote_word_coverage
 
@@ -26,7 +27,7 @@ print(
 # contractions ("isn't") need their own branch: a leading \b cannot match before the "n"
 NEG = re.compile(r"\b(?:not|no|never|cannot|neither|nor|without|prohibited)\b|(?<=\w)n['’]t\b")
 man = json.load(open(str(_ROOT / "eval/spike_results/wp_44/manifest.json")))["documents"]
-P = os.path.expanduser("~/documents/processed")
+P = str(_config.load().processed_dir_path())
 tot = noncontig = neg_dropped = 0
 ex = []
 noncontig_ex = []
