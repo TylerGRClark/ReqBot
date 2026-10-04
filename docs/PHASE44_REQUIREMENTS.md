@@ -273,12 +273,15 @@ the 13 documents. Baseline: a clean worktree at `c92bd87` (the commit before the
 `776c2e7`. Summaries, with per-document run directories and chunk / extraction / PDF SHA-256
 hashes, are in `eval/spike_results/wp_44/`.
 
-**The comparison is a gate, not a report** (hardened after Codex's PR #196 review):
-`--compare ... --expected-removed eval/spike_results/wp_44/expected_removals.json` exits nonzero
-unless both runs used identical inputs, nothing was added or changed, no failure-code count
-decreased, every removal is accounted for by a failure-code increase, and the removed survivors are
-exactly the 5 approved IDs (whose quotes match the 5 hand-labeled leak fixtures). Its failure paths
-are unit-tested (`tests/unit/test_step_d_replay.py`).
+**The comparison is a gate, not a report** (hardened after Codex's two PR #196 reviews):
+`--compare ... --expected eval/spike_results/wp_44/expected_gate.json` exits nonzero unless both
+runs used identical inputs (run directories and chunk / extraction / PDF hashes); the documents
+compared are exactly the expected manifest of 13; nothing was added or changed; the removed
+survivors are exactly the 5 approved IDs (whose quotes match the 5 hand-labeled leak fixtures); and,
+per document, the failure-code change is exactly `quote_words_not_in_chunk` rising by that
+document's removal count with every other code unchanged. Replay itself fails if any selected
+document has no PDF instead of silently skipping it. Its failure paths, including each scenario
+Codex reproduced, are unit-tested (`tests/unit/test_step_d_replay.py`).
 
 **Replay fidelity (baseline):** 13 of 13 documents reproduce the existing corpus's survivor
 requirement-ID set exactly (1,991 raw records → 1,850 survivors); 0 records had an unknown chunk,
@@ -301,7 +304,7 @@ so every record was checked.
   failure codes is the new code's 5).
 - Output loses exactly the five verified baseline survivors, gains none, changes no stable field:
   **met.**
-- `pytest` green (929 passed: +10 for the check, +13 for the replay gate), `ruff check .` clean: **met.**
+- `pytest` green (936 passed: +10 for the check, +20 for the replay gate), `ruff check .` clean: **met.**
 
 **What the evidence does and does not show.**
 - Selecting 0.8 and then replaying the same corpus checks the implementation and regressions, not

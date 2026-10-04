@@ -10,16 +10,20 @@ what survives and why the rest were rejected. Run once before a Step D change an
     python3 eval/step_d_replay.py --label baseline --out /tmp/wp44_replay/baseline
     python3 eval/step_d_replay.py --label after    --out /tmp/wp44_replay/after
     python3 eval/step_d_replay.py --compare /tmp/wp44_replay/baseline /tmp/wp44_replay/after \
-        --expected-removed eval/spike_results/wp_44/expected_removals.json
+        --expected eval/spike_results/wp_44/expected_gate.json
 
 `--compare` exits nonzero unless: both runs used identical input run directories and chunk /
-extraction / PDF hashes; no survivor was added or had a stable field changed; no failure-code
-count decreased; the survivors removed are exactly the IDs in --expected-removed (any removal is
-unapproved when that file is not given); and every removal is accounted for by an increase in
-some failure code. Exit codes: 0 pass, 1 document-set mismatch, 3 input mismatch, 2 gate failure.
+extraction / PDF hashes; the documents compared are exactly the expected manifest; no survivor was
+added or had a stable field changed; the survivors removed are exactly the approved IDs (any
+removal is unapproved when no expectations file is given); and, **per document**, the failure-code
+change is exactly the expected new code rising by that document's removal count with every other
+code unchanged. Expectations live in one JSON file (`--expected`):
 
-Each run writes <out>/summary.json (committed-friendly: counts, failure codes, survivor IDs,
-per-record content hashes) next to the full normalized files used for the field-level diff.
+    {"removed_ids": [...], "new_failure_code": "quote_words_not_in_chunk", "documents": [...]}
+
+Replay itself fails (exit 4) if any selected document has no PDF, rather than silently shrinking
+the corpus. Exit codes: 0 pass, 1 document-set mismatch, 2 gate failure, 3 input mismatch,
+4 replay inputs missing.
 """
 import argparse
 import glob
@@ -102,10 +106,12 @@ def run_replay(label: str, out: Path) -> dict:
                                 cwd=_ROOT, capture_output=True, text=True).stdout.strip())
     summary = {"label": label, "git_revision": rev, "pipeline_or_core_dirty": dirty,
                "profile": "cybersecurity", "documents": {}}
-    for stem, run_dir in select_runs().items():
-        if not (RAW_PDFS / f"{stem}.pdf").exists():
-            print(f"SKIP {stem}: no raw_pdfs/{stem}.pdf", file=sys.stderr)
-            continue
+    selected = select_runs()
+    missing = sorted(stem for stem in selected if not (RAW_PDFS / f"{stem}.pdf").exists())
+    if missing:
+        # A silently skipped document would shrink the evaluated corpus in both arms alike.
+        raise RuntimeError(f"replay inputs missing -- no PDF in {RAW_PDFS} for: {missing}")
+    for stem, run_dir in selected.items():
         summary["documents"][stem] = replay_one(stem, run_dir, out, profile)
         d = summary["documents"][stem]
         print(f"{stem:18s} raw={d['raw_records']:4d} survivors={d['survivors']:4d} failures={d['failure_codes']}")
@@ -119,11 +125,18 @@ def run_replay(label: str, out: Path) -> dict:
     return summary
 
 
-def compare(a_dir: Path, b_dir: Path, expected_removed: set[str] | None = None) -> int:
+def compare(a_dir: Path, b_dir: Path, expected: dict | None = None) -> int:
+    expected = expected or {}
     a = json.loads((a_dir / "summary.json").read_text())
     b = json.loads((b_dir / "summary.json").read_text())
     if set(a["documents"]) != set(b["documents"]):
-        print(f"document set differs: {sorted(set(a['documents']) ^ set(b['documents']))}")
+        print(f"document set differs between runs: {sorted(set(a['documents']) ^ set(b['documents']))}")
+        return 1
+    if "documents" in expected and set(a["documents"]) != set(expected["documents"]):
+        # Both arms could silently omit the same documents; only a manifest catches that.
+        print("documents compared differ from the expected manifest: "
+              f"missing {sorted(set(expected['documents']) - set(a['documents']))}, "
+              f"unexpected {sorted(set(a['documents']) - set(expected['documents']))}")
         return 1
 
     # Both arms must have replayed the identical inputs, or corpus changes (e.g. a newer ingest
@@ -140,16 +153,27 @@ def compare(a_dir: Path, b_dir: Path, expected_removed: set[str] | None = None) 
             print(f"  {stem}: {key}")
         return 3
 
-    removed, added, changed = [], [], []
+    new_code = expected.get("new_failure_code")
+    removed, added, changed, code_problems = [], [], [], []
     codes_a, codes_b = Counter(), Counter()
     for stem in sorted(a["documents"]):
         da, db = a["documents"][stem], b["documents"][stem]
         codes_a.update(da["failure_codes"])
         codes_b.update(db["failure_codes"])
         sa, sb = set(da["survivor_ids"]), set(db["survivor_ids"])
-        removed += [(stem, i) for i in sorted(sa - sb)]
+        removed_here = sorted(sa - sb)
+        removed += [(stem, i) for i in removed_here]
         added += [(stem, i) for i in sorted(sb - sa)]
         changed += [(stem, i) for i in sorted(sa & sb) if da["survivor_hashes"][i] != db["survivor_hashes"][i]]
+        # Per document: the new code must rise by exactly this document's removals; no other
+        # code may move at all (a removal attributed to the wrong rule must not pass).
+        for code in sorted(set(da["failure_codes"]) | set(db["failure_codes"])):
+            delta = db["failure_codes"].get(code, 0) - da["failure_codes"].get(code, 0)
+            want = len(removed_here) if code == new_code else 0
+            if delta != want:
+                code_problems.append(f"{stem}: failure code {code!r} changed by {delta:+d}, expected {want:+d}")
+        if new_code and new_code not in da["failure_codes"] and new_code not in db["failure_codes"] and removed_here:
+            code_problems.append(f"{stem}: {len(removed_here)} removal(s) but no {new_code!r} failures recorded")
 
     print(f"baseline rev {a['git_revision'][:8]} (dirty={a['pipeline_or_core_dirty']})  vs  after rev {b['git_revision'][:8]} (dirty={b['pipeline_or_core_dirty']})")
     print(f"failure codes baseline: {dict(codes_a)}\nfailure codes after:    {dict(codes_b)}")
@@ -165,32 +189,28 @@ def compare(a_dir: Path, b_dir: Path, expected_removed: set[str] | None = None) 
     for stem, rid in changed[:10]:
         print(f"  CHANGED {stem}: {rid}")
 
-    problems = []
+    problems = list(code_problems)
     if added:
         problems.append(f"{len(added)} survivor(s) added")
     if changed:
         problems.append(f"{len(changed)} survivor(s) with changed fields")
-    decreased = {c: (codes_a[c], codes_b[c]) for c in codes_a if codes_b[c] < codes_a[c]}
-    if decreased:
-        problems.append(f"failure code count(s) decreased: {decreased}")
-    increase = sum(codes_b[c] - codes_a[c] for c in codes_b if codes_b[c] > codes_a[c])
-    if increase != len(removed):
-        problems.append(f"{len(removed)} removal(s) but failure codes increased by {increase} -- removals not accounted for")
     removed_ids = {rid for _, rid in removed}
-    if expected_removed is None:
+    if "removed_ids" not in expected:
         if removed_ids:
-            problems.append(f"{len(removed_ids)} unapproved removal(s) (no --expected-removed given)")
+            problems.append(f"{len(removed_ids)} unapproved removal(s) (no expectations given)")
     else:
-        if removed_ids - expected_removed:
-            problems.append(f"unexpected removals: {sorted(removed_ids - expected_removed)}")
-        if expected_removed - removed_ids:
-            problems.append(f"expected removals missing: {sorted(expected_removed - removed_ids)}")
+        approved = set(expected["removed_ids"])
+        if removed_ids - approved:
+            problems.append(f"unexpected removals: {sorted(removed_ids - approved)}")
+        if approved - removed_ids:
+            problems.append(f"expected removals missing: {sorted(approved - removed_ids)}")
     if problems:
         print("GATE FAILED:")
         for pr in problems:
             print(f"  - {pr}")
         return 2
-    print("GATE PASSED: identical inputs; removals match the approved set; no other change.")
+    print("GATE PASSED: identical inputs; expected documents; removals match the approved set; "
+          "failure-code change is exactly the expected new code, per document.")
     return 0
 
 
@@ -199,17 +219,21 @@ def main() -> int:
     ap.add_argument("--label", default="run")
     ap.add_argument("--out", type=Path)
     ap.add_argument("--compare", nargs=2, type=Path, metavar=("BASELINE_DIR", "AFTER_DIR"))
-    ap.add_argument("--expected-removed", type=Path, metavar="JSON",
-                    help="JSON list of survivor requirement_ids that are allowed (and required) to disappear")
+    ap.add_argument("--expected", type=Path, metavar="JSON",
+                    help='gate expectations: {"removed_ids": [...], "new_failure_code": "...", "documents": [...]}')
     args = ap.parse_args()
     if args.compare:
-        expected = set(json.loads(args.expected_removed.read_text())) if args.expected_removed else None
-        return compare(*args.compare, expected_removed=expected)
+        expected = json.loads(args.expected.read_text()) if args.expected else None
+        return compare(*args.compare, expected=expected)
     if not args.out:
         ap.error("--out is required unless --compare is given")
     if str(args.out.resolve()).startswith(str(PROCESSED.resolve())):
         ap.error("--out must be outside ~/documents/processed/")
-    run_replay(args.label, args.out)
+    try:
+        run_replay(args.label, args.out)
+    except RuntimeError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        return 4
     return 0
 
 
