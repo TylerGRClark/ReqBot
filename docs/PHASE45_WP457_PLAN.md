@@ -1,8 +1,24 @@
 # WP-45.7 plan: does separating discovery from resolution improve extraction? (measurement only)
 
-Status: **proposal, not approved** (2026-10-05). Part of `docs/PHASE45_REQUIREMENTS.md`. Everything below runs in a scratch
-directory against frozen inputs. No production code, prompt, schema, index or configuration changes. It adds a new LLM stage
-(the resolver) in scratch only, so it needs Tyler's approval before any code is written.
+Status: **approved by Tyler 2026-10-05** (the resolver stage in scratch, and the held-out labeling), with the decisions in
+section 0. Part of `docs/PHASE45_REQUIREMENTS.md`. Everything below runs in a scratch directory against frozen inputs. No
+production code, prompt, schema, index or configuration changes.
+
+## 0. Decisions (Tyler, 2026-10-05)
+
+- **The resolver idea is approved** for scratch measurement. Tyler is confident it will help; the gates in 4.5 still decide
+  whether anything reaches production.
+- **"Should" and "may" statements are requirements.** A recommendation ("you should ...") or a hint at one, and a permission,
+  are extracted, because sources such as NIST rarely say "must". The stored record keeps the modality so an end user decides
+  what to enforce in an audit. The sample's labeling already counts "should" recommendations as obligations; permissions
+  (`may`) now count too, so the precision tally treats a correctly kept permission as a true positive, not a false one. The
+  dev labels were made before this ruling for permissions: any dev piece whose only modal is "may" is re-checked by Tyler
+  before it enters the precision tally.
+- **Lean toward over-extraction.** Deleting a row is cheap; missing a whole clause is not. Consequence for the gates: recall is
+  the primary measure, and a precision cost is acceptable if every kept-but-doubtful candidate is flagged and recoverable
+  (status `unresolved` or `scope_or_context`), never silently dropped. G3 below reflects this.
+- **Process: every iteration is a PR.** This work runs in a remote session with no local Codex, so each plan revision, tool and
+  result is pushed as its own small PR for the Codex connector and the Gemini workflow to review. One open branch at a time.
 
 Prior art checked first (per the "check prior art" rule): this overlaps WP-45.2 C4 (neighbor window), WP-45.3 (pass two and
 grounded standalone statement), the parked "14B over-extract prompt", and backlog item 23 (Step C prompt changes are "the
@@ -151,7 +167,7 @@ documents; the metric only looks at those chunks. A 10-call pilot measures laten
 |---|---|---|
 | **G1 discovery** | D1 recall on held-out at least 10 points above D0 in both repeats, no fall on dev, regurgitation count 0 after Step D, Step D rejection codes not up | Stop the prompt direction; record why; C4 and pass two remain the options |
 | **G2 resolver** | Attachment "right" above today's 40% and "misleading" at or below today's 39%; **zero** strengthened modality (code check, and no case in the hand audit); invented party or number rate at or below 2% | Fix the prompt or tier once on dev; if still failing, stop and report |
-| **G3 separation** | E2E recall keeps at least 80% of D1's recall gain, and precision (kept set, `unresolved` shown separately) is within 5 points of D0 | Report that broad discovery alone or the resolver alone is the better half, whichever the numbers show |
+| **G3 separation** | E2E recall keeps at least 80% of D1's recall gain, and precision (kept set, `unresolved` shown separately) is within 10 points of D0 **or** every extra false positive is flagged and recoverable (Tyler's over-extract lean, section 0) | Report that broad discovery alone or the resolver alone is the better half, whichever the numbers show |
 | **Evidence limit** | Passing means "improves on these documents and this labeling," not that production quality is proven | State it in the report |
 
 ## 5. Build list (scratch only, each testable)
