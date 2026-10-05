@@ -1,0 +1,11 @@
+pass A agreement: 84/90; disagreements 6; spot-checks 10
+new_only  n= 30 genuine 30/30 = 1.00 [0.89,1.00]  complete 21/30 = 0.70  junk 0/30
+base_only n= 40 genuine 29/40 = 0.72 [0.57,0.84]  complete 14/40 = 0.35  junk 11/40
+both      n= 20 genuine 20/20 = 1.00 [0.84,1.00]  complete 11/20 = 0.55  junk 0/20
+spot-checks: 10 of 10 confirmed; later corrections 0
+(a) fail  (G - L) / N8 = -0.505 [-0.551, -0.436]  (G 30, L 210, N8 356); needs >= 0.1 with the interval above 0
+(b) PASS  not-a-requirement share, 14B-only minus 8B-only = -0.275 [-0.425, -0.150]; needs <= 0.1
+(c) PASS  fragment composite, 14B minus baseline = -0.097 [-0.141, -0.054]; needs the lower bound <= 0
+(d) PASS  chunks lost (failed or cut off): 14B 0.000 vs fresh 8B 0.000; needs the 14B no more than 0.05 above
+(e) fail  net unique difference: 14B -0.595 vs fresh 8B -0.032 (of baseline survivors); needs the 14B above it by >= 0.05
+RESULT: no demonstrated meaningful improvement under the pre-set rule (not 'no difference')

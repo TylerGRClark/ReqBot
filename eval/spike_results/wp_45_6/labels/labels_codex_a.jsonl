@@ -1,0 +1,90 @@
+{"id":"R001","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R002","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"AF Installations will:","note":""}
+{"id":"R003","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R004","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"The DoD CIO, shall:","note":""}
+{"id":"R005","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R006","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"Where standards or data schemas are not available or have not been approved,","note":""}
+{"id":"R007","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R008","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R009","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R010","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R011","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R012","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R013","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"The CJCS, in addition to the responsibilities in section 8 of this enclosure and in coordination with the other Heads of the DoD Components, shall:","note":"The local CJCS introduction overrides the displayed DOT&E heading."}
+{"id":"R014","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R015","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"How NM service levels will be monitored and reported. ... This section will define for all parties:","note":""}
+{"id":"R016","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"The LAFO responsibilities are to:","note":""}
+{"id":"R017","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R018","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R019","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"The DoD CIO, shall: | In coordination with Under Secretary of Defense for Acquisition, Technology, and Logistics (USD(AT&L)) and the Heads of the DoD Components, develop:","note":""}
+{"id":"R020","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R021","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R022","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"All  CMO  not  part  of  the  MAJCOM  CMO's  consolidation  effort  retain  their  CMO responsibilities to:","note":"The assembled quote omits the limitation to CMOs outside the consolidation effort."}
+{"id":"R023","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R024","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R025","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R026","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"How NM service levels will be monitored and reported. ... This section will define for all parties:","note":""}
+{"id":"R027","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"AFO's will:","note":""}
+{"id":"R028","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R029","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R030","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"Submit concurrence or non- concurrence to the base Communications Focal Point for SBU I DATA,  SECRET IP DATA, and 24 AF designated mission  critical circuits.","note":""}
+{"id":"R031","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R032","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R033","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R034","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R035","standalone":"needs_lead_in","lead_in_location":"not_shown","lead_in_text":null,"note":"The shown lead-in governs item (5), not this separate item (7)."}
+{"id":"R036","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R037","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R038","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R039","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R040","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R041","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"Existing systems that use SNMP v1 or v2c shall implement the following security precautions in the period prior to transition to the latest approved version of SNMP: | NEs requiring SNMP management shall be properly configured with appropriate read-only and read-write community names (commonly referred to as 'community strings').","note":""}
+{"id":"R042","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R043","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R044","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"How NM service levels will be monitored and reported.","note":""}
+{"id":"R045","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"The CDRUSSTRATCOM, in addition to the responsibilities in sections 8 and 10 of this enclosure, shall:","note":"The local CDRUSSTRATCOM introduction overrides the displayed DOT&E heading."}
+{"id":"R046","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R047","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R048","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"Technical  Control  Facility  (TCF),  Patch  and  Test  Facility  (PTF),  and/or  Circuit Actions.","note":""}
+{"id":"R049","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R050","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"This is a purpose phrase within a descriptive sentence."}
+{"id":"R051","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R052","standalone":"needs_lead_in","lead_in_location":"not_shown","lead_in_text":null,"note":"The shown lead-in governs item (5), not this separate item (6)."}
+{"id":"R053","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"Before a device using virtualization permanently leaves an organization (such as when a leased server's lease expires or when an obsolete PC is being recycled),","note":""}
+{"id":"R054","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R055","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R056","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R057","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"This phase includes the tasks that an organization should perform before it starts to design a virtualization solution. These include","note":""}
+{"id":"R058","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R059","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"The  CISP  connection  complies  with  applicable  STIGs,  SRGs,  and  other DoD cyber security policies when the application of those policies and standards will not adversely affect the mission need for the CISP.","note":""}
+{"id":"R060","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R061","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"This phase includes security-related tasks that an organization should perform on an ongoing basis once the virtualization solution is operational, including","note":""}
+{"id":"R062","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R063","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"How NM service levels will be monitored and reported. ... This section will define for all parties:","note":""}
+{"id":"R064","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"All Service component communication support organizations should:","note":""}
+{"id":"R065","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":"Permissive background text ends mid-sentence at 'and'."}
+{"id":"R066","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R067","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"commercial connections for recruiting offices;","note":""}
+{"id":"R068","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R069","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R070","standalone":"needs_lead_in","lead_in_location":"previous_chunk","lead_in_text":"All  CMO  not  part  of  the  MAJCOM  CMO's  consolidation  effort  retain  their  CMO responsibilities to:","note":""}
+{"id":"R071","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R072","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"All  CMO  not  part  of  the  MAJCOM  CMO's  consolidation  effort  retain  their  CMO responsibilities to: | All CMO's will:","note":""}
+{"id":"R073","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"Functional LHC Circuit Management Office (CMO) Responsibilities.","note":""}
+{"id":"R074","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"Major Commands, Management Headquarters (MHQ), AF level Organizations will:","note":"An accompanying note exempts AF-level FOAs and DRUs without LHC requirements."}
+{"id":"R075","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R076","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"The DoD CIO, shall:","note":""}
+{"id":"R077","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R078","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"Organizations should also be aware of the emergence of new types of virtualization solutions and of major changes to existing virtualization technologies, and","note":""}
+{"id":"R079","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"AF  organizations  processing  Automatic  Teller Machine (ATM) or Point of Sale (POS) transactions must","note":""}
+{"id":"R080","standalone":"needs_lead_in","lead_in_location":"section_heading","lead_in_text":"Functional LHC Circuit Management Office (CMO) Responsibilities.","note":""}
+{"id":"R081","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R082","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R083","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R084","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R085","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R086","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R087","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R088","standalone":"needs_lead_in","lead_in_location":"same_chunk","lead_in_text":"NM standards for tactical edge NEs.","note":""}
+{"id":"R089","standalone":"not_a_requirement","lead_in_location":null,"lead_in_text":null,"note":""}
+{"id":"R090","standalone":"complete","lead_in_location":null,"lead_in_text":null,"note":""}
