@@ -120,7 +120,8 @@ WP-45.1(e).
   segmentation), including the 26 never-extracted and 3 partly extracted pieces. This is where prompts may be tuned.
 - **Resolver gold (already labeled).** The WP-45.1(b) attachment audit records, **split by a seeded hash of the record id into a selection half and an evaluation half before any run** (the split is frozen in the manifest), with Tyler's adjudicated lead-ins (the governing
   clause or party each record needs), plus the 90 labeled 8B-only / 14B-only disagreement cards from WP-45.6 (real requirement
-  or not, agreed by two labelers on 79). These are the "troublesome fragments and disagreements".
+  or not, agreed by two labelers on 79), **split the same way into a selection half and an evaluation half** (seeded hash, frozen
+  in the manifest). These are the "troublesome fragments and disagreements".
 - **Held-out set (new, to be created).** A seeded draw of 16 pages from at least five documents **not** among the three dev
   documents, stratified across formal policy, guidance prose, a control-catalog style and a table-heavy page, cut and labeled by
   the same pipeline as 45.1(e) (`draw.py`, `segment.py`, `pack.py`): Claude and Codex label independently and blind, Tyler
@@ -128,8 +129,9 @@ WP-45.1(e).
   before either new prompt is finalized, and not opened for tuning.** Rough load: about 350 pieces per labeler, perhaps 25 to
   30 disagreements for Tyler, the same shape as the last sample.
 - **Lead-in labels for the held-out set (new, small, so attachment is also tested on unseen data).** Alongside `kind`, the
-  labelers record for every held-out obligation the governing clause or party it needs (a quoted span from the page, or
-  `none`), blind and independently, with Tyler adjudicating disagreements. Attachment correctness in G2 is scored on the
+  labelers record for every held-out obligation the governing clause or party it needs: a quoted span from the whole resolver
+  window, not only the obligation's page (the labelers are shown the same bounded previous- and next-chunk spans the R2 bundle
+  contains), with where it was found (same chunk, previous or next chunk, heading) or `none`, blind and independently, with Tyler adjudicating disagreements. Attachment correctness in G2 is scored on the
   audit **evaluation half** and on these held-out labels; the audit **selection half** and the dev pages are the only data
   used to choose the tier and model.
 - **Kind labels (new, small, needed for the G2 status-agreement gate).** The existing labels say obligation or not, not which
@@ -180,8 +182,8 @@ pilot measures latency, the resolver's structural conformance (below) and these 
 - Tune on the dev set only, at most two revisions per prompt; then freeze (hash recorded) and run the held-out set once.
 - **Every configuration choice is made and frozen before the held-out labels are opened for any run:** the discovery prompt,
   the resolver prompt, the bundle tier (R0, R1 or R2) and the resolver model (8B or 14B) are chosen from the development
-  pages, the audit **selection half** and the WP-45.6 cards only (never the audit evaluation half, which is scored once, after the
-  freeze, together with the held-out labels), and recorded with hashes. The held-out
+  pages, the audit **selection half** and the card **selection half** only (never the evaluation halves of either, which are scored
+  once, after the freeze, together with the held-out labels), and recorded with hashes. The held-out
   run then uses exactly that frozen configuration, once; the held-out set is never used to pick between R0/R1/R2 or 8B/14B.
 - Two repeats for every discovery arm. Backlog item 23 showed a single A/B can flip on rerun, so a result counts only if both
   repeats agree in direction.
@@ -197,7 +199,7 @@ pilot measures latency, the resolver's structural conformance (below) and these 
 | Gate | Pass | If it fails |
 |---|---|---|
 | **G1 discovery** | D1 recall on held-out at least 10 points above D0 in both repeats, no fall on dev, regurgitation count 0 after Step D, Step D rejection codes not up | Stop the prompt direction; record why; C4 and pass two remain the options |
-| **G2 resolver** | Attachment "right" above today's 40% and "misleading" at or below today's 39%; **zero** strengthened modality (code check, and no case in the hand audit); invented party or number rate at or below 2%; **status accuracy** against the adjudicated labels: at least 90% of real obligations (oracle candidates) must receive a **requirement status** (`obligation`, `recommendation`, `permission` or `prohibition`); at most 5% may be returned `not_a_requirement`; every oracle obligation returned `scope_or_context` or `unresolved` is listed and hand-read, and together those two may not exceed 10% (so no single catch-all label can stand in for a decision, and a resolver that never distinguishes requirements fails); the status must also match the adjudicated kind (`should` as `recommendation`, `may` as `permission`, a prohibition wording as `prohibition`): **at least 85% agreement** on oracle obligations, and by code the status must equal the modality class whenever the class is not `none` (an `obligation` status with `should` wording is a strengthened modality and counts toward the zero-tolerance rule), so a resolver cannot pass by calling everything `obligation`. On the labeled non-obligation candidates (the 90 disagreement cards plus non-obligation pieces D1 returns) at least 60% must come back `not_a_requirement` or `scope_or_context` rather than `unresolved` or a requirement status | Fix the prompt or tier once on dev; if still failing, stop and report |
+| **G2 resolver** | Attachment, scored on the audit evaluation half and the held-out lead-in labels: "right" above today's 40%, "misleading" at or below today's 39%, **and "incomplete" (a null or partial parent or actor) at or below today's 20% plus 5 points**, so the resolver cannot avoid being wrong by returning nothing; **zero** strengthened modality (code check, and no case in the hand audit); invented party or number rate at or below 2%; **status accuracy** against the adjudicated labels: at least 90% of real obligations (oracle candidates) must receive a **requirement status** (`obligation`, `recommendation`, `permission` or `prohibition`); at most 5% may be returned `not_a_requirement`; every oracle obligation returned `scope_or_context` or `unresolved` is listed and hand-read, and together those two may not exceed 10% (so no single catch-all label can stand in for a decision, and a resolver that never distinguishes requirements fails); the status must also match the adjudicated kind (`should` as `recommendation`, `may` as `permission`, a prohibition wording as `prohibition`): **at least 85% agreement** on oracle obligations, and by code the status must equal the modality class whenever the class is not `none` (an `obligation` status with `should` wording is a strengthened modality and counts toward the zero-tolerance rule), so a resolver cannot pass by calling everything `obligation`. On the independent labeled non-obligation candidates (the card **evaluation half** plus, separately, the non-obligation pieces D1 returns on the held-out set, so selection never gets confirmatory credit) at least 60% in each must come back `not_a_requirement` or `scope_or_context` rather than `unresolved` or a requirement status | Fix the prompt or tier once on dev; if still failing, stop and report |
 | **G3 separation** | E2E recall keeps at least 80% of D1's recall gain; precision of the kept set, with `unresolved` candidates **counted as kept** (so a resolver that marks everything `unresolved` restores nothing and fails), is within 10 points of D0; and `unresolved` is at most 25% of kept candidates. Tyler's over-extract lean (section 0) is honored by retaining doubtful candidates as flagged and recoverable, never by letting `unresolved` stand in for a decision | Report that broad discovery alone or the resolver alone is the better half, whichever the numbers show |
 | **Evidence limit** | Passing means "improves on these documents and this labeling," not that production quality is proven | State it in the report |
 
