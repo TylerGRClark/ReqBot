@@ -63,12 +63,22 @@ collection.
 5. **Indexed.** Present in the live collection. (Ranking out of search results is a separate question and is **not**
    measured here; the WP-45.1(c) engine can do it later if this result says it matters.)
 
-**Matching rules, fixed now.** After the same normalization Step D uses plus ligature repair, lowercasing and removal
-of list markers, a piece is *found in a chunk* or *covered by a record* if its token sequence is contained in the text,
-or the text is contained in the piece, or the token-level `difflib` similarity to the best window is at least 0.90.
-The threshold is fixed before looking at any result and is not tuned. A covered piece that the record only
-partly covers (record much shorter than the piece) is reported as **partly covered** and counted as covered, with its
-count shown, because the cut-off records are the WP-45.2 fragment story, not a recall loss.
+**Matching rules, fixed now.** Text is normalized the way Step D does, plus ligature repair, lowercasing and removal of
+list markers, then split into tokens. Two different questions use two different rules:
+
+- *Is the piece in a chunk?* The piece's tokens are found in the chunk's tokens (the chunk is the longer text), with
+  token-level `difflib` similarity to the best window of at least 0.90. A piece that is not in any chunk is a step 1 loss.
+- *Is the piece covered by a record?* Coverage is the **share of the piece's tokens** that the records in that chunk
+  reproduce, matched in order. When a piece is split over two records, the share is the union of what they cover. A short
+  record that happens to sit inside a long piece (a record of only "access control" against an obligation with several
+  actions) therefore covers only a small share of it and does not count.
+  - Share at least 0.90: **covered**.
+  - Share from 0.50 up to 0.90: **partly covered**. This is the cut-off record, the WP-45.2 fragment story. It is **not**
+    counted as found in the primary recall; it is reported on its own line, and recall is also shown with partly covered
+    pieces counted as found, so the effect of the choice is visible.
+  - Share below 0.50: not covered.
+
+All thresholds (0.90, 0.50) are fixed before looking at any result and are not tuned.
 
 **Secondary traces.** The same pieces are traced through the fresh 8B and the 14B runs left in `~/wp45_6_scratch`,
 steps 1 to 3 only (those runs were never indexed). This gives each model's recall against the source.
@@ -76,14 +86,19 @@ steps 1 to 3 only (those runs were never indexed). This gives each model's recal
 ## 4. What is reported
 
 - Recall at each step for the production run: of N obligations, how many are chunked, extracted, survive Step D, are
-  indexed; with Wilson intervals, overall and per document.
+  indexed. Uncertainty comes from a **page-level bootstrap** (resample the 12 sampled pages, keeping each page's pieces
+  together, because pieces on one page and the pieces of one multi-sentence obligation are not independent), not from a
+  binomial interval over pieces. Per-document figures are shown descriptively.
 - The loss table: how many obligations are lost first at each step, with the Step D rejection codes and the Step C chunk
   status.
-- Recall for the fresh 8B and the 14B, with a paired comparison against the production run on the same pieces.
+- Recall for the fresh 8B and the 14B, with a paired comparison against the production run on the same pieces, again
+  with a page-level bootstrap on the paired difference.
 - Obligation density per page and per document, since that decides how far the sample generalizes.
 
 There is **no pass or fail gate**. This is a measurement, and the routing is stated in advance so the result cannot be
-bent after the fact:
+bent after the fact. The table is used only when one loss category is clearly the largest: its page-bootstrap lower
+bound is above the next category's point estimate. Otherwise the result is reported as "no single dominant loss point"
+and no routing is claimed.
 
 | If the largest loss is ... | the next work is ... |
 |---|---|
@@ -95,9 +110,10 @@ bent after the fact:
 
 ## 5. Limits stated up front
 
-- Twelve pages across three documents. About 100 obligations are expected, so a recall estimate will carry roughly
-  plus or minus 8 to 10 points. Pages inside a document are not independent, so the documents are the real unit of
-  generalization and three is few.
+- Twelve pages across three documents. About 100 obligations are expected. Treated as independent they would give a
+  recall estimate of roughly plus or minus 8 to 10 points, but pieces on a page are correlated, so the page-bootstrap
+  intervals will be wider, possibly much wider. We report whatever the bootstrap gives. The documents are the real unit
+  of generalization and three is few.
 - Two labelers who share one rubric can share a blind spot; Tyler's spot-check is the only guard against that.
 - PyMuPDF reading order can scramble tables and columns; labelers are told to mark such pieces in a note, and the
   report counts pieces whose text could not be found because of reading-order differences separately if they appear.
@@ -125,6 +141,6 @@ and 10 spot-checks, roughly 15 to 25 minutes.
 1. Four pages per document, or fewer pages with a larger stride? (More pages dilute page-level clustering; fewer cut
    labeling time.)
 2. Is "should" guidance counted the same as "shall" (the plan says yes, per the WP-45.4 definition)?
-3. Should the trace also record whether a covered piece is covered by one record or split over several (a merge/split
-   count), given WP-45.6's matching findings?
+3. The coverage share already unions records, so a piece split over several records counts. Should the report also
+   show how many covered pieces needed more than one record (a split count), given WP-45.6's matching findings?
 4. Is excluding the retrieval step from this WP right, or should a cheap top-20 check be included?
