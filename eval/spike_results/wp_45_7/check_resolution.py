@@ -35,7 +35,8 @@ import resolver as R  # noqa: E402
 MODAL_TABLE = {
     "obligation": ["shall", "must", "will", "is required to", "are required to", "required to", "is to", "are to", "has to", "have to"],
     "recommendation": ["should", "is recommended", "are recommended", "is encouraged to", "are encouraged to", "ought",
-                       "should not", "ought not", "shouldn't"],
+                       "should not", "ought not", "shouldn't", "is advised to", "are advised to", "is advised not to",
+                       "are advised not to", "advised not to"],
     "permission": ["may", "can", "is authorized to", "are authorized to", "is permitted to", "are permitted to",
                    "is allowed to", "are allowed to"],
     "prohibition": ["shall not", "must not", "may not", "cannot", "will not", "never", "must never", "shall never",
@@ -111,30 +112,42 @@ def shape_issues(answer):
     if issues:
         return issues
 
-    def wrapped(name, node):
+    def wrapped(name, node, strict_string=False):
         ok = isinstance(node, dict) and "value" in node and isinstance(node.get("evidence"), list)
         if not ok:
             issues.append(Issue("shape", name, "needs a value and an evidence list"))
+            return False
+        value = node["value"]
+        if not (isinstance(value, str) or (value is None and not strict_string)):
+            issues.append(Issue("shape", name, f"value must be a {'string' if strict_string else 'string or null'}, got {type(value).__name__}"))
+            ok = False
+        if not all(isinstance(e, str) for e in node["evidence"]):
+            issues.append(Issue("shape", name, "evidence must be a list of strings"))
+            ok = False
         return ok
 
-    for name in ("status", "logic") + R.VALUE_FIELDS + ("standalone_statement", "plain_language", "unresolved_reason"):
+    for name in ("status", "logic"):
+        wrapped(name, answer[name], strict_string=True)
+    for name in R.VALUE_FIELDS + ("standalone_statement", "plain_language", "unresolved_reason"):
         wrapped(name, answer[name])
     for name in R.LIST_FIELDS:
         if not isinstance(answer[name], list):
             issues.append(Issue("shape", name, "must be an array"))
         else:
             for i, item in enumerate(answer[name]):
-                wrapped(f"{name}[{i}]", item)
+                wrapped(f"{name}[{i}]", item, strict_string=True)
     mod = answer["modality"]
     if not (isinstance(mod, dict) and "verbatim" in mod and "class" in mod and isinstance(mod.get("evidence"), list)):
         issues.append(Issue("shape", "modality", "needs verbatim, class and an evidence list"))
+    elif not (isinstance(mod["verbatim"], str) or mod["verbatim"] is None) or not all(isinstance(e, str) for e in mod["evidence"]):
+        issues.append(Issue("shape", "modality", "verbatim must be a string or null and evidence a list of strings"))
     status = answer["status"].get("value") if isinstance(answer["status"], dict) else None
-    if status not in R.STATUS:
+    if not isinstance(status, str) or status not in R.STATUS:
         issues.append(Issue("shape", "status", f"{status!r} is not one of {R.STATUS}"))
-    if isinstance(mod, dict) and mod.get("class") not in R.CLASS:
+    if isinstance(mod, dict) and (not isinstance(mod.get("class"), str) or mod.get("class") not in R.CLASS):
         issues.append(Issue("shape", "modality", f"class {mod.get('class')!r} is not one of {R.CLASS}"))
     logic = answer["logic"].get("value") if isinstance(answer["logic"], dict) else None
-    if logic not in R.LOGIC:
+    if not isinstance(logic, str) or logic not in R.LOGIC:
         issues.append(Issue("shape", "logic", f"{logic!r} is not one of {R.LOGIC}"))
     return issues
 
@@ -179,6 +192,10 @@ def check(answer, spans):
             extractive(f"{name}[{i}]", item)
     for name in ("status", "logic", "standalone_statement"):
         ids_ok(name, answer[name])
+    for name in ("plain_language", "unresolved_reason"):  # derived or explanatory: their evidence list stays empty
+        ids_ok(name, answer[name])
+        if answer[name]["evidence"]:
+            issues.append(Issue("evidence_not_allowed", name, "evidence must stay empty for this field"))
     ids_ok("modality", answer["modality"])
 
     status = answer["status"]["value"]
@@ -228,7 +245,7 @@ def check(answer, spans):
         added = new_tokens(stand_text, source)
         if added:
             issues.append(Issue("added_token", "standalone_statement", f"adds {added} that the cited spans lack"))
-        _modal_issues("standalone_statement", stand_text, mod["class"], source, issues)
+        _modal_issues("standalone_statement", stand_text, mod["class"], source, issues, must_keep=True)
     plain = answer["plain_language"]["value"]
     if plain:
         if not stand_text:
@@ -237,7 +254,7 @@ def check(answer, spans):
             added = new_tokens(plain, stand_text + " " + _cited_text(by_id, standalone["evidence"]))
             if added:
                 issues.append(Issue("added_token", "plain_language", f"adds {added} that the standalone sentence and its spans lack"))
-            _modal_issues("plain_language", plain, mod["class"], stand_text + " " + _cited_text(by_id, standalone["evidence"]), issues)
+            _modal_issues("plain_language", plain, mod["class"], stand_text, issues)
     return issues
 
 
@@ -247,18 +264,27 @@ def _evidence_of(node):
     return node.get("evidence", [])
 
 
-def _modal_issues(field, text, cls, source, issues):
-    """Flag a modal in generated text only if it is NEW or CHANGED relative to the source: a modal phrase that the cited source
-    itself contains (a subordinate "may" inside an obligation, or one in a condition) is a faithful copy and is allowed. A new
-    phrase must keep the primary class; for an imperative (class none) any new modal is an addition."""
-    in_source = {phrase for phrase, _ in modals_in(source)}
-    for phrase, found in modals_in(text):
-        if phrase in in_source:
-            continue
-        if cls == "none":
-            issues.append(Issue("modality_added", field, f"uses {phrase!r}, which the source does not, but the modality class is none"))
-        elif found != cls:
-            issues.append(Issue("modality_strengthened", field, f"uses {phrase!r} ({found}), which the source does not, but the modality class is {cls}"))
+def _class_counts(text):
+    counts = {}
+    for _, c in modals_in(text):
+        counts[c] = counts.get(c, 0) + 1
+    return counts
+
+
+def _modal_issues(field, text, cls, source, issues, must_keep=False):
+    """Compare the modals of generated text with those of its source, per class, in both directions.
+
+    A class may not appear more often in the text than in the source: that catches a new modal and a subordinate modal
+    reassigned to another class (source "must ... may", text "must ... must"), while a modal the source itself contains is a
+    faithful copy. For an imperative (class none) any modal is an addition. With `must_keep`, the primary class must still be
+    present, so "may grant a waiver" cannot become "grants a waiver" (a dropped permission)."""
+    have, want = _class_counts(text), _class_counts(source)
+    for c, n in sorted(have.items()):
+        if n > want.get(c, 0):
+            code = "modality_added" if cls == "none" else "modality_strengthened"
+            issues.append(Issue(code, field, f"has {n} {c} modal(s) but the source has {want.get(c, 0)}"))
+    if must_keep and cls != "none" and have.get(cls, 0) == 0:
+        issues.append(Issue("modality_removed", field, f"the {cls} modal of the source is missing from the sentence"))
 
 
 def errors(issues):

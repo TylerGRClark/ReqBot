@@ -170,8 +170,9 @@ bundle it was given, by field type, as plan section 4.6 specifies: extractive co
 modal-phrase table (`should not` is a recommendation, `may not` a prohibition), status equals modality class for requirement
 statuses (class `none` is only for a modal-free obligation), the cited operator must be the logic value, and for the composed fields
 no new number, acronym or proper name and no new or changed modal of a different class (a subordinate modal the source itself
-contains is a faithful copy). An extractive value must lie inside ONE cited span; two spans that end and begin with the halves of
-a name do not count. Tests: `tests/unit/test_wp457_resolution_check.py` (23). **Every worked example must pass the checker against its
+contains is a faithful copy; the modals are compared per class in both directions, so a dropped primary modal or a subordinate
+modal reassigned to another class is caught too). A wrong primitive type in an answer is a shape issue, never a crash. An extractive value must lie inside ONE cited span; two spans that end and begin with the halves of
+a name do not count. Tests: `tests/unit/test_wp457_resolution_check.py` (27). **Every worked example must pass the checker against its
 own bundle** (a test enforces it), which keeps the prompt and the checker from drifting apart.
 
 Two things the numbers say:

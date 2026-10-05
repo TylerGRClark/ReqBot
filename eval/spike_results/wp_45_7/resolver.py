@@ -19,7 +19,7 @@ if str(_HERE) not in sys.path:
 import bundle as B  # noqa: E402
 
 STATUS = ("obligation", "recommendation", "permission", "prohibition", "scope_or_context", "not_a_requirement", "unresolved")
-REQUIREMENT_STATUS = STATUS[:4]
+REQUIREMENT_STATUS = ("obligation", "recommendation", "permission", "prohibition")
 CLASS = ("obligation", "recommendation", "permission", "prohibition", "none")
 LOGIC = ("and", "or", "none")
 VALUE_FIELDS = ("actor", "action", "target", "applicability", "timing", "parent")  # {value, evidence}

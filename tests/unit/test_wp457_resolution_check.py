@@ -332,3 +332,67 @@ def test_shape_issues_are_reported_per_field_and_stop_further_checks(R, C):
     assert ("shape", "timing") in codes(issues)
     assert C.shape_issues("not an object")[0].code == "shape"
     assert C.shape_issues(R.EXAMPLES[0]["answer"]) == []
+
+
+def test_a_dropped_primary_modal_or_a_reassigned_subordinate_modal_is_caught(R, C):
+    spans = _spans("The Authorizing Official may grant a waiver.")
+    a = copy.deepcopy(R.EXAMPLES[2]["answer"])
+    a["timing"] = {"value": None, "evidence": []}
+    a["standalone_statement"] = {"value": "The Authorizing Official grants a waiver.", "evidence": ["E1"]}
+    a["plain_language"] = {"value": None, "evidence": []}
+    assert ("modality_removed", "standalone_statement") in codes(C.check(a, spans))  # the permission was dropped
+    a["standalone_statement"] = {"value": "The Authorizing Official may grant a waiver.", "evidence": ["E1"]}
+    assert codes(C.check(a, spans)) == []
+    # a source with both "must" and a subordinate "may": swapping the "may" for "must" changes the meaning
+    spans = _spans("Administrators must record whether users may obtain access.")
+    b = copy.deepcopy(R.EXAMPLES[1]["answer"])
+    b["status"] = {"value": "obligation", "evidence": ["E1"]}
+    b["actor"] = {"value": "Administrators", "evidence": ["E1"]}
+    b["action"] = {"value": "record whether users may obtain access", "evidence": ["E1"]}
+    b["target"] = {"value": None, "evidence": []}
+    b["exceptions"] = []
+    b["modality"] = {"verbatim": "must", "class": "obligation", "evidence": ["E1"]}
+    b["plain_language"] = {"value": None, "evidence": []}
+    b["standalone_statement"] = {"value": "Administrators must record whether users must obtain access.", "evidence": ["E1"]}
+    assert ("modality_strengthened", "standalone_statement") in codes(C.check(b, spans))
+    # plain language is held to the standalone sentence's modals the same way
+    b["standalone_statement"] = {"value": "Administrators must record whether users may obtain access.", "evidence": ["E1"]}
+    b["plain_language"] = {"value": "Administrators have to note whether users have to get access.", "evidence": []}
+    assert ("modality_strengthened", "plain_language") in codes(C.check(b, spans))
+
+
+def test_wrong_primitive_types_are_shape_issues_not_crashes(R, C):
+    spans = _spans("Administrators should not reuse passwords.")
+    for field, bad in (
+        ("actor", {"value": 123, "evidence": ["E1"]}),
+        ("action", {"value": "x", "evidence": [1]}),
+        ("status", {"value": ["obligation"], "evidence": []}),
+        ("logic", {"value": None, "evidence": []}),
+        ("plain_language", {"value": {"a": 1}, "evidence": []}),
+    ):
+        a = copy.deepcopy(R.EXAMPLES[3]["answer"])
+        a[field] = bad
+        issues = C.check(a, spans)  # must not raise
+        assert issues and all(i.code == "shape" for i in issues), field
+    a = copy.deepcopy(R.EXAMPLES[3]["answer"])
+    a["modality"] = {"verbatim": 5, "class": "recommendation", "evidence": ["E1"]}
+    assert all(i.code == "shape" for i in C.check(a, spans))
+    a = copy.deepcopy(R.EXAMPLES[3]["answer"])
+    a["conditions"] = [{"value": None, "evidence": []}]
+    assert any(i.code == "shape" for i in C.check(a, spans))  # a list item's value must be a string
+
+
+def test_plain_language_and_unresolved_reason_evidence_is_validated_and_must_stay_empty(R, C):
+    spans = _spans("Administrators should not reuse passwords.")
+    a = copy.deepcopy(R.EXAMPLES[3]["answer"])
+    a["plain_language"] = {"value": a["plain_language"]["value"], "evidence": ["E999"]}
+    got = codes(C.check(a, spans))
+    assert ("bad_evidence_id", "plain_language") in got and ("evidence_not_allowed", "plain_language") in got
+    a = copy.deepcopy(R.EXAMPLES[4]["answer"])
+    a["unresolved_reason"] = {"value": "x", "evidence": ["E1"]}
+    assert ("evidence_not_allowed", "unresolved_reason") in codes(C.check(a, _spans("Comply with paragraph 4.2.")))
+
+
+def test_the_requirement_statuses_are_listed_explicitly_not_by_position(R):
+    assert R.REQUIREMENT_STATUS == ("obligation", "recommendation", "permission", "prohibition")
+    assert set(R.REQUIREMENT_STATUS) <= set(R.STATUS)
