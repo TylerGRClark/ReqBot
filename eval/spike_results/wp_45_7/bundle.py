@@ -225,18 +225,24 @@ def stem_candidates(quote, chunk_id, step_c_by_chunk, chunks_by_id):
     return out
 
 
-def prompt_budget_chars(fixed_tokens):
+def prompt_cap(num_ctx=NUM_CTX):
+    """The most estimated prompt tokens to send: the fixed cap, or less when a smaller context window is selected, so the answer
+    reserve always fits inside the window."""
+    return min(PROMPT_TOKEN_CAP, int(num_ctx) - ANSWER_RESERVE_TOKENS)
+
+
+def prompt_budget_chars(fixed_tokens, num_ctx=NUM_CTX):
     """Characters the bundle may use: the smaller of the bundle cap and what is left of the prompt cap after the fixed
     instructions. The prompt cap already leaves the answer its room inside the window, so the answer reserve is not taken
     off again here; it is checked once, in `preflight`."""
-    room = PROMPT_TOKEN_CAP - int(fixed_tokens)
+    room = prompt_cap(num_ctx) - int(fixed_tokens)
     return int(min(BUNDLE_TOKEN_CAP, room) * CHARS_PER_TOKEN)
 
 
 def preflight(fixed_tokens, minimum_bundle_chars, num_ctx=NUM_CTX):
     """True if the fixed instructions, the answer reserve and the smallest allowed bundle fit the window at all."""
     prompt = int(fixed_tokens) + estimate_tokens(minimum_bundle_chars)
-    return prompt <= PROMPT_TOKEN_CAP and prompt + ANSWER_RESERVE_TOKENS <= num_ctx
+    return prompt <= prompt_cap(num_ctx)
 
 
 def _around(text, needle, width):
@@ -252,7 +258,7 @@ def _around(text, needle, width):
     return ("... " if start > 0 else "") + cut + (" ..." if start + width < len(text) else "")
 
 
-def build(quote, chunk_id, chunks_by_id, tier="R1", step_c_by_chunk=None, fixed_tokens=0):
+def build(quote, chunk_id, chunks_by_id, tier="R1", step_c_by_chunk=None, fixed_tokens=0, num_ctx=NUM_CTX):
     """Build the bundle for one candidate. `chunks_by_id` is the document's chunk records keyed by chunk_id;
     `step_c_by_chunk` (chunk_id to that chunk's extracted records) feeds the same-chunk stem finder."""
     if tier not in TIERS:
@@ -299,7 +305,7 @@ def build(quote, chunk_id, chunks_by_id, tier="R1", step_c_by_chunk=None, fixed_
                 label_id = re.sub(r"^(?:para(?:graph)?s?|sub-?sec(?:tion)?s?|sec(?:tion)?s?)\.?\s+", "", display, flags=re.IGNORECASE)
                 add("reference", f"referenced section {label_id}", normalize(target.get("raw_text") or "")[:REFERENCE_CHARS], priority=4, source=f"chunk {target['chunk_id']}")
                 shown.add(target["chunk_id"])
-    _fit(bundle, prompt_budget_chars(fixed_tokens), q)
+    _fit(bundle, prompt_budget_chars(fixed_tokens, num_ctx), q)
     return bundle
 
 

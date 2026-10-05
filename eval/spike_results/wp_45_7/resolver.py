@@ -59,7 +59,7 @@ def json_schema():
     return {"type": "object", "properties": {k: props[k] for k in ORDER}, "required": list(ORDER)}
 
 
-INSTRUCTIONS = """You are resolving ONE candidate requirement from a compliance document, using only the evidence below. Do not use outside knowledge. Every field is an object with a "value" and the evidence ids ("E1", "E2", ...) that support it. If the evidence does not support a field, its value is null and its evidence list is empty. Spans marked "unverified" were found by a rule and may be wrong: use one only if the other evidence agrees.
+INSTRUCTIONS = """You are resolving ONE candidate requirement from a compliance document, using only the evidence below. Do not use outside knowledge. Every field is an object with a "value" and the evidence ids ("E1", "E2", ...) that support it. If the evidence does not support a field, its value is null and its evidence list is empty. plain_language and unresolved_reason always have an empty evidence list. Spans marked "unverified" were found by a rule and may be wrong: use one only if the other evidence agrees.
 
 Fields:
 - status: obligation (must, shall, will, a mandatory duty), recommendation (should, should not, is recommended, a hint at what to do), permission (may, is authorized to), prohibition (shall not, must not), scope_or_context (says who or what the document covers; it is kept and attached, not a requirement), not_a_requirement (a description or background, not something anyone is asked or allowed to do), or unresolved (the evidence is not enough to decide).

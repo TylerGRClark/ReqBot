@@ -43,6 +43,10 @@ MODAL_TABLE = {
     "prohibition": ["shall not", "must not", "may not", "cannot", "will not", "never", "must never", "shall never",
                     "is prohibited from", "are prohibited from", "is forbidden", "are forbidden", "forbidden"],
 }
+# "can" is ambiguous in running text ("who can get into them" describes ability, not permission). It is accepted as a copied modality
+# phrase, and it is counted as a modal in an answer's source, sentences and evidence only when THAT ANSWER declares it as its modality
+# (`modality.verbatim == "can"`); otherwise it is ignored. "cannot" is always counted: it is rarely anything but deontic.
+AMBIGUOUS = {"can"}
 _PHRASES = sorted(((p, c) for c, ps in MODAL_TABLE.items() for p in ps), key=lambda pc: -len(pc[0]))
 _PHRASE_RE = [(re.compile(rf"(?<![\w']){re.escape(p)}(?![\w'])"), p, c) for p, c in _PHRASES]
 
@@ -72,11 +76,14 @@ def phrase_class(phrase):
     return None
 
 
-def modals_in(text):
-    """[(phrase, class)] for every table phrase in the text, longest match first, without overlapping matches."""
+def modals_in(text, ambiguous=False):
+    """[(phrase, class)] for every table phrase in the text, longest match first, without overlapping matches. The ambiguous
+    phrase ("can") is left out unless `ambiguous` is true."""
     text = B.normalize(text).lower()
     taken, found = [], []
     for rx, p, c in _PHRASE_RE:
+        if p in AMBIGUOUS and not ambiguous:
+            continue
         for m in rx.finditer(text):
             if not any(m.start() < e and s < m.end() for s, e in taken):
                 taken.append((m.start(), m.end()))
@@ -202,6 +209,9 @@ def check(answer, spans):
 
     status = answer["status"]["value"]
     mod = answer["modality"]
+    # "can" counts as a modal for this answer only if the answer itself declares it as its modality phrase
+    verbatim_norm = B.normalize(mod["verbatim"] or "").lower()
+    can_active = verbatim_norm == "can" or verbatim_norm.startswith("can ")  # "can be granted" is accepted through the "can" entry too
     all_cited = _cited_text(by_id, [i for n in R.ORDER for i in _evidence_of(answer[n])])
 
     # modality: the phrase is copied from a cited span and its class matches the table. An unresolved answer keeps whatever the
@@ -253,7 +263,7 @@ def check(answer, spans):
         if added:
             issues.append(Issue("added_token", "standalone_statement", f"adds {added} that the cited spans lack"))
         if status != "unresolved":
-            _modal_issues("standalone_statement", stand_text, mod["class"], source, issues, must_keep=True)
+            _modal_issues("standalone_statement", stand_text, mod["class"], source, issues, must_keep=True, ambiguous=can_active)
     plain = answer["plain_language"]["value"]
     if plain:
         if not stand_text:
@@ -263,7 +273,7 @@ def check(answer, spans):
             if added:
                 issues.append(Issue("added_token", "plain_language", f"adds {added} that the standalone sentence and its spans lack"))
             if status != "unresolved":
-                _modal_issues("plain_language", plain, mod["class"], stand_text, issues, must_keep=True)
+                _modal_issues("plain_language", plain, mod["class"], stand_text, issues, must_keep=True, ambiguous=can_active)
     return issues
 
 
@@ -273,21 +283,21 @@ def _evidence_of(node):
     return node.get("evidence", [])
 
 
-def _class_counts(text):
+def _class_counts(text, ambiguous=False):
     counts = {}
-    for _, c in modals_in(text):
+    for _, c in modals_in(text, ambiguous):
         counts[c] = counts.get(c, 0) + 1
     return counts
 
 
-def _modal_issues(field, text, cls, source, issues, must_keep=False):
+def _modal_issues(field, text, cls, source, issues, must_keep=False, ambiguous=False):
     """Compare the modals of generated text with those of its source, per class, in both directions.
 
     A class may not appear more often in the text than in the source: that catches a new modal and a subordinate modal
     reassigned to another class (source "must ... may", text "must ... must"), while a modal the source itself contains is a
     faithful copy. For an imperative (class none) any modal is an addition. With `must_keep`, the primary class must still be
     present, so "may grant a waiver" cannot become "grants a waiver" (a dropped permission)."""
-    have, want = _class_counts(text), _class_counts(source)
+    have, want = _class_counts(text, ambiguous), _class_counts(source, ambiguous)
     for c, n in sorted(have.items()):
         if n > want.get(c, 0):
             code = "modality_added" if cls == "none" else "modality_strengthened"
