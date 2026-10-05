@@ -114,7 +114,14 @@ Two behaviors worth knowing:
   ("Paragraphs 2.2, 4.1, and 11.2"). A bare identifier such as AC-2 counts only if it resolves to a section in the document,
   because `AES-256` and `SHA-384` look the same and are not references; an unresolved bare identifier is never reported as
   "not found". Only reference words, which cannot be mistaken, produce a "not found" line. This took the corpus count of
-  records with a not-found reference from 116 to 80 (83 after named sections were added: they now resolve or are reported).
+  records with a not-found reference from 116 to 80 (87 after named sections and references into other documents were added: they now resolve or are reported).
+- **References into another document (fixed in review of #214).** "section 3.7 of Reference (c)", "Section 3252 of Title 10" and
+  "paragraphs 4.(a) through 4.(d) of the January 19, 2017 Memorandum" name a provision of some other document, so they are
+  never looked up locally (a local section with the same number would be offered as the wrong provision) and are listed as
+  not found, with the qualifier in the text. "of this instruction" and "of this enclosure" are local and still resolve. The rule
+  is a capitalized name after "of/in/from" that is not one of this document's own section words; 85 qualified references
+  occur in the pinned corpus. Plural named forms ("Enclosures A, B, C, and D", "Appendices A and B") use the canonical keys too,
+  with no bare-letter fallback, which would collide with unrelated list ids.
 - **Budget (fixed in review of #214).** The bundle budget is the smaller of 3,000 estimated tokens and what the 6,500-token
   prompt cap leaves after the fixed text; the answer reserve is checked once, in the pre-call `preflight`, not taken off the budget
   again. Governing-clause candidates are never clipped: an over-long one makes the bundle untreatable, which is visible.
@@ -131,6 +138,6 @@ resolver, and these are Step C records, not discovery output:
 | R1 | 1,295 | 1,838 | 5,314 | 0 | 0 | 420 (21.1%) |
 | R2 | 2,667 | 3,386 | 6,632 | 0 | 0 | 420 (21.1%) |
 
-R2 added 50 referenced-section excerpts and left 83 records with an explicit reference ("paragraph 4.2", "Sections 3 and 5") it could not find in the document. At this fixed prompt size
+R2 added 49 referenced-section excerpts and left 87 records with an explicit reference ("paragraph 4.2", "Sections 3 and 5") it could not find in the document. At this fixed prompt size
 the window is not a binding constraint on these documents; table-heavy chunks and a larger fixed prompt (the seven worked examples)
 are what would push a bundle over, and the cuts and `untreatable` flag are tested for that case.

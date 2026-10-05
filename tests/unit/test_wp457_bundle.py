@@ -215,7 +215,7 @@ def test_named_sections_resolve_through_the_parsers_canonical_paths(B):
     doc[21] = _chunk(21, "Enclosure 3 duties.", "ENCLOSURE 3: DUTIES", ["ENCLOSURE-3"], ["ENCLOSURE 3: DUTIES"])
     doc[22] = _chunk(22, "Section 5 rules.", "SECTION 5: RULES", ["SECTION-5"], ["SECTION 5: RULES"])
     refs = B.cross_references(B.normalize("See Appendix A, Enclosure 3 and Section 5."))
-    assert [k for _, k, _ in refs] == [["APPENDIX-A", "A"], ["ENCLOSURE-3", "3"], ["SECTION-5", "5"]]
+    assert [k for _, k, _ in refs] == [["APPENDIX-A"], ["ENCLOSURE-3", "3"], ["SECTION-5", "5"]]
     b = B.build("See Appendix A, Enclosure 3 and Section 5.", 2, doc, "R2")
     labels = {s.label for s in b.spans if s.kind == "reference"}
     assert labels == {"referenced section Appendix A", "referenced section Enclosure 3", "referenced section Section 5"} or len(labels) == 3
@@ -228,3 +228,30 @@ def test_named_sections_resolve_through_the_parsers_canonical_paths(B):
 def test_a_lowercase_letter_after_a_reference_word_is_not_a_section_id(B):
     assert B.cross_references(B.normalize("Follow paragraph a of this instruction and the appendix a reader needs.")) == []
     assert [k for _, k, _ in B.cross_references("Follow paragraph 3(a) here.")] == [["3(a)"]]
+
+
+def test_plural_named_forms_use_the_canonical_keys_and_no_bare_letter_fallback(B):
+    refs = B.cross_references(B.normalize("See Enclosures A, B, C, and D of this instruction and Appendices A and B."))
+    assert [k for _, k, _ in refs] == [["ENCLOSURE-A"], ["ENCLOSURE-B"], ["ENCLOSURE-C"], ["ENCLOSURE-D"], ["APPENDIX-A"], ["APPENDIX-B"]]
+    doc = _doc()
+    doc[30] = _chunk(30, "An unrelated list.", "LIST", ["A"], ["A. Unrelated"])  # a bare-letter section must not be picked up
+    doc[31] = _chunk(31, "Enclosure B text.", "ENCLOSURE B", ["ENCLOSURE-B"], ["ENCLOSURE B: DUTIES"])
+    b = B.build("See Enclosures A and B.", 2, doc, "R2")
+    assert [s.source for s in b.spans if s.kind == "reference"] == ["chunk 31"]
+    assert b.unresolved_references == ["Enclosures A"]
+
+
+def test_a_reference_into_another_document_is_reported_not_looked_up_locally(B):
+    doc = _doc()  # chunk 3 is section 4.2; a local "3.4" exists too
+    for text, expected in (
+        ("Per section 3.4 of Reference (c).", ["section 3.4 of Reference (c)"]),
+        ("Under Section 3252 of Title 10, comply.", ["Section 3252 of Title 10"]),
+        ("See paragraphs 3.4 and 4.2 of DoDI 8500.01.", ["paragraphs 3.4 of DoDI 8500.01", "paragraphs 4.2 of DoDI 8500.01"]),
+    ):
+        b = B.build(text, 2, doc, "R2")
+        assert not [s for s in b.spans if s.kind == "reference"], text  # no unrelated local text offered as the provision
+        assert b.unresolved_references == expected, text
+    # "of this enclosure" and "of this instruction" are local and still resolve
+    local = B.build("Per paragraph 4.2 of this instruction.", 2, doc, "R2")
+    assert [s.label for s in local.spans if s.kind == "reference"] == ["referenced section 4.2"]
+    assert local.unresolved_references == []

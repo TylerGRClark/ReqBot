@@ -48,12 +48,33 @@ TIERS = ("R0", "R1", "R2")
 _SOFT_HYPHEN_BREAK = re.compile(r"(?<=[a-z])[­-]\s*\n\s*(?=[a-z])")
 _ID = r"(?:[A-Z]?\d+(?:\.\d+)*(?:\([a-zA-Z0-9]+\))*|(?-i:[A-Z])\b)"  # 4.2, 3(a), or a single capital letter (Appendix A)
 _REF_WORD = re.compile(
-    r"\b(?P<word>paragraphs?|para\.?|sections?|sec\.?|enclosures?|appendix|attachment|annex|chapter)\s+"
+    r"\b(?P<word>paragraphs?|para\.?|sections?|sec\.?|enclosures?|appendix|appendices|attachments?|annex(?:es)?|chapters?)\s+"
     rf"(?P<num>{_ID})",
     re.IGNORECASE,
 )
 # The repository's section parser (pipeline/section_parser.py) stores named headings as SECTION-1, ENCLOSURE-3, APPENDIX-A.
-_NAMED = {"section": "SECTION", "sec": "SECTION", "enclosure": "ENCLOSURE", "appendix": "APPENDIX", "annex": "ANNEX", "attachment": "ATTACHMENT"}
+_NAMED = {
+    "section": "SECTION", "sections": "SECTION", "sec": "SECTION",
+    "enclosure": "ENCLOSURE", "enclosures": "ENCLOSURE",
+    "appendix": "APPENDIX", "appendices": "APPENDIX",
+    "annex": "ANNEX", "annexes": "ANNEX",
+    "attachment": "ATTACHMENT", "attachments": "ATTACHMENT",
+}  # plural forms included: "Enclosures A, B, C, and D" must become ENCLOSURE-A, ENCLOSURE-B, ...
+# "section 3.7 of Reference (c)", "Section 3252 of Title 10", "paragraph 4 of the January 19 Memorandum": a reference followed by
+# "of/in/from" and a capitalized name that is not one of this document's own section words points at ANOTHER document.
+_QUALIFIER = re.compile(r"\s*,?\s*(?:of|in|from)\s+(?:the\s+)?(?P<next>[A-Za-z][\w.\-]*)(?:\s+[\w().\-]+)?")
+_SECTION_WORDS = {"enclosure", "section", "paragraph", "appendix", "annex", "attachment", "chapter"}
+
+
+def _external_qualifier(text, pos):
+    """The text of an "of <Name>" qualifier at `pos` if it names another document, else None."""
+    m = _QUALIFIER.match(text, pos)
+    if not m:
+        return None
+    first = m.group("next")
+    if first[:1].isupper() and first.lower() not in _SECTION_WORDS:
+        return m.group(0).strip().lstrip(",").strip().rstrip(".,;:")
+    return None
 _REF_CONTROL = re.compile(r"\b[A-Z]{2,4}-\d+(?:\([a-zA-Z0-9]+\))*(?!\w)")
 
 
@@ -75,8 +96,11 @@ def _keys(word, ident):
     KEYWORD-ID form the section parser stores (Appendix A is APPENDIX-A, Enclosure 3 is ENCLOSURE-3)."""
     ident = ident.rstrip(".")
     named = _NAMED.get(word.lower().rstrip("."))
-    # the canonical named form goes first: "Enclosure 3" should find ENCLOSURE-3 before a numbered paragraph 3
-    return [f"{named}-{ident.upper()}", ident] if named else [ident]
+    # the canonical named form goes first: "Enclosure 3" should find ENCLOSURE-3 before a numbered paragraph 3. A bare number is
+    # a fair fallback ("Section 4" can be the path element 4); a bare letter is not (it would collide with unrelated list ids).
+    if named:
+        return [f"{named}-{ident.upper()}"] + ([] if not ident[:1].isdigit() else [ident])
+    return [ident]
 
 
 def cross_references(text):
@@ -87,21 +111,28 @@ def cross_references(text):
     section: AES-256 or SHA-384 look the same and are not."""
     found, seen = [], set()
 
-    def add(display, keys, explicit):
-        if keys[0].lower() not in seen:
-            seen.add(keys[0].lower())
+    def add(display, keys, explicit, key=None):
+        key = (key or keys[0]).lower()
+        if key not in seen:
+            seen.add(key)
             found.append((display, keys, explicit))
 
     for m in _REF_WORD.finditer(text):
         word = m.group("word")
-        add(m.group(0), _keys(word, m.group("num")), True)
+        group = [(m.group(0), _keys(word, m.group("num")))]
         pos = m.end()
         while True:
             nxt = _LIST_NEXT.match(text, pos)
             if not nxt:
                 break
-            add(f"{word} {nxt.group('num')}", _keys(word, nxt.group("num")), True)
+            group.append((f"{word} {nxt.group('num')}", _keys(word, nxt.group("num"))))
             pos = nxt.end()
+        qualifier = _external_qualifier(text, pos)
+        for display, keys in group:
+            if qualifier:  # another document: nothing to look up here, and the display says so
+                add(f"{display} {qualifier}", [], True, key=keys[0] + " " + qualifier)
+            else:
+                add(display, keys, True)
     for m in _REF_CONTROL.finditer(text):
         add(m.group(0), [m.group(0)], False)
     return found
@@ -253,7 +284,7 @@ def build(quote, chunk_id, chunks_by_id, tier="R1", step_c_by_chunk=None, fixed_
         # neighbors are cut first when the budget binds, and a label on a neighbor would vanish with it.
         shown = set()
         for display, keys, explicit in cross_references(q):
-            target = resolve_reference(keys, ordered)
+            target = resolve_reference(keys, ordered) if keys else None  # no keys: it cites another document
             if target is None:
                 if explicit:  # a bare identifier that resolves to nothing may be an algorithm name, so it is not reported
                     bundle.unresolved_references.append(display)
