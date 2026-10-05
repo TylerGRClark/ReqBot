@@ -142,7 +142,7 @@ WP-45.1(e).
 | **D1** | Discovery v2 (appendix A): inclusive definition plus new examples. **Same output schema, same Step D** | 8B | 2 |
 | **D1-14B** | Same D1 prompt on the 14B. This is the parked "14B told to over-extract" test; it costs one more run and answers whether the 14B's literalness was the prompt | 14B | 2 |
 | **R0 / R1 / R2** | Resolver (appendix B) on **oracle candidates** (the labeled obligations and the audit records, so resolver quality is not confounded with discovery). Bundle tiers: R0 quote only (today's D.5 information); R1 adds own chunk, the leaf heading and the code-found stem candidates labeled "unverified"; R2 adds the bounded tail of the previous chunk and head of the next | 8B and 14B | 1 (temperature 0.1; any disagreement between a rerun and the first run on 20 sampled items is reported) |
-| **E2E** | D1 output through the resolver at the best tier, compared with D0 and D1 alone on the same chunks | 8B discovery; resolver model chosen from the R results | 2 for discovery |
+| **E2E** | D1 output through the resolver at the frozen tier, compared with D0 and D1 alone on the same chunks | 8B discovery; resolver tier and model as **frozen from the dev and audit R results before the held-out labels are opened** (section 4.4) | 2 for discovery |
 
 Discovery runs only on the chunks that overlap the sampled pages (their ids are in the frozen manifests), not on whole
 documents. **Label set closed over the selected chunks:** a Docling chunk can span pages, and a real requirement from an
@@ -170,11 +170,17 @@ pilot measures latency, the resolver's structural conformance (below) and these 
 ### 4.4 Rules fixed before any run
 
 - Tune on the dev set only, at most two revisions per prompt; then freeze (hash recorded) and run the held-out set once.
+- **Every configuration choice is made and frozen before the held-out labels are opened for any run:** the discovery prompt,
+  the resolver prompt, the bundle tier (R0, R1 or R2) and the resolver model (8B or 14B) are chosen from the development
+  pages and the existing audit data (the WP-45.1(b) records and the WP-45.6 cards) only, and recorded with hashes. The held-out
+  run then uses exactly that frozen configuration, once; the held-out set is never used to pick between R0/R1/R2 or 8B/14B.
 - Two repeats for every discovery arm. Backlog item 23 showed a single A/B can flip on rerun, so a result counts only if both
   repeats agree in direction.
 - Report counts next to percentages. With 74 dev obligations an interval is wide (the 45.1(e) interval is plus or minus
-  about 17 points); a gain is called real only if it clears the repeat noise and the pooled dev plus held-out bootstrap interval
-  excludes zero.
+  about 17 points); a gain is called real only if it clears the repeat noise **and the held-out pages' own bootstrap
+  interval excludes zero**. The development pages were used for tuning, so their interval is reported descriptively and is never
+  pooled into the confirmatory test. Sixteen held-out pages give a wide interval; if the held-out point estimate passes the gate
+  but its interval includes zero, the outcome is **inconclusive** (extend the held-out set before deciding), not a pass.
 - No arm is chosen for having more records.
 
 ### 4.5 Gates (set now, applied after)
@@ -210,8 +216,10 @@ function as the bundle builder), so raw Docling spacing or soft hyphens cannot c
    Ollama reports no count) and caps the whole prompt at about 6,500 estimated tokens, leaving room for the answer inside the
    pinned 8,192. Because Ollama does not stop or error when a prompt overruns the window (it drops the start of the prompt, which
    holds the instructions), the runners also read `prompt_eval_count` after every call and mark any call where
-   `prompt_eval_count` plus `eval_count` (both Ollama token counts, never character lengths) reaches `num_ctx` as a **window overrun**: counted per arm, excluded from every
-   quality number, and reported. Unit tests include a bundle that would overflow and must be truncated from the neighbors
+   `prompt_eval_count` plus `eval_count` (both Ollama token counts, never character lengths) reaches `num_ctx` as a **window overrun**. An overrun is a **failure, never an exclusion**: dropping those calls would remove the longest and
+   likely hardest inputs, and the larger-prompt arms (D1, R2) are the most exposed, so an arm could look better by overrunning.
+   Obligations in an overrun chunk stay in the recall denominator as misses; for the resolver the call counts as a failed
+   resolution; and every arm is also required to have an overrun rate of at most 2% to pass its gate, with the count reported. Unit tests include a bundle that would overflow and must be truncated from the neighbors
    first, never from the instructions. Standard library only: the experiment needs and plans no new dependency (no tokenizer
    package; the post-call count is the check).
 2. `run_discovery.py` and `run_resolver.py`: call Ollama with pinned `num_ctx`, write the raw answer before parsing (as Step C
