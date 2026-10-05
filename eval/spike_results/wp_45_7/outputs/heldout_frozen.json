@@ -1,0 +1,2303 @@
+{
+ "catalog_chunk_provenance": {
+  "documents": [
+   "CNSSI_No1253"
+  ],
+  "generated_with": {
+   "docling": "2.94.0",
+   "docling_core": "2.99.0"
+  },
+  "note": "Step B (pipeline/chunk_text.py) output, pinned by sha256 in CATALOG_CHUNKS_SHA256"
+ },
+ "documents": {
+  "CJCSI 6510.02G": {
+   "chunks_sha256": "77f474760f2a688afb20be4659c01ea2f79e3711f1d32c0d85af8c9ae0da4d60",
+   "closed_pages": [
+    27
+   ],
+   "drawn": [
+    {
+     "page": 27,
+     "reason": "per_document"
+    }
+   ],
+   "eligible_pages": 19,
+   "pages_added_by_closure": [],
+   "pages_in_pdf": 28,
+   "pdf_sha256": "208451d99602f5f74b7d484ebf46ef56c293cdcc26607ff6c4d2e796852ad041",
+   "pieces": {
+    "27": [
+     {
+      "id": "CJCSI-p027-001",
+      "text": "UNCLASSIFIED CJCSI 6510.02G 20 March 2025"
+     },
+     {
+      "id": "CJCSI-p027-002",
+      "text": "GLOSSARY"
+     },
+     {
+      "id": "CJCSI-p027-003",
+      "text": "ACRONYMS"
+     },
+     {
+      "id": "CJCSI-p027-004",
+      "text": "AO Authorizing Official AoA Analysis of Alternatives"
+     },
+     {
+      "id": "CJCSI-p027-005",
+      "text": "C4ISR command, control, communications, computers, intelligence, surveillance, and reconnaissance CCMD Combatant Command CED Cryptographic Equipment Decertification CIO Chief Information Officer CJCS Chairman of the Joint Chief of Staff CJCSI Chairman of the Joint Chief of Staff Instruction CJCSN Chairman of the Joint Chief of Staff Notice CND Computer Network Defense COMSEC communications security CM cryptographic modernization CSfC Commercial Solutions for Classified CSP Cryptographic Security Panel"
+     },
+     {
+      "id": "CJCSI-p027-006",
+      "text": "DIRNSA Director, NSA DISA Defense Information Systems Agency DoD Department of Defense"
+     },
+     {
+      "id": "CJCSI-p027-007",
+      "text": "IC Intelligence Community IT information technology"
+     },
+     {
+      "id": "CJCSI-p027-008",
+      "text": "JROC Joint Requirements Oversight Council"
+     },
+     {
+      "id": "CJCSI-p027-009",
+      "text": "KER Key Extension Request"
+     },
+     {
+      "id": "CJCSI-p027-010",
+      "text": "LO lead organization LYOU last year of use"
+     },
+     {
+      "id": "CJCSI-p027-011",
+      "text": "MC4EB Military Command, Control, Communications and Computers Executive Board"
+     },
+     {
+      "id": "CJCSI-p027-012",
+      "text": "NC2 nuclear command and control NIPRNET Non-Classified Internet Protocol Router Network NSA/CSS National Security Agency/Central Security Service NSS National Security Systems"
+     },
+     {
+      "id": "CJCSI-p027-013",
+      "text": "GL-1 Glossary UNCLASSIFIED"
+     }
+    ]
+   },
+   "selected_chunk_ids": [],
+   "table_pages_eligible": []
+  },
+  "CNSSI_No1253": {
+   "chunks_sha256": "41dd02157fc7751ef00baccd71310413104f98844f089325513e3c2bc6a46c9d",
+   "closed_pages": [
+    64,
+    89
+   ],
+   "drawn": [
+    {
+     "page": 64,
+     "reason": "per_document"
+    },
+    {
+     "page": 89,
+     "reason": "catalog"
+    }
+   ],
+   "eligible_pages": 94,
+   "pages_added_by_closure": [],
+   "pages_in_pdf": 96,
+   "pdf_sha256": "0f556d6e1517f148000ff2a8b9ad77abf77a0435beacceffe05cf30596d21e9f",
+   "pieces": {
+    "64": [
+     {
+      "id": "CNSSI-p064-001",
+      "text": "CNSSI No. 1253"
+     },
+     {
+      "id": "CNSSI-p064-002",
+      "text": "Potentially ID C I A Justification for NSS Baseline(s) Common/Inheritable"
+     },
+     {
+      "id": "CNSSI-p064-003",
+      "text": "PE-3(6) X X PE-4 X X X PE-5 X PE-5(1) X PE-5(2) X PE-5(3) X PE-6 X X X PE-6(1) X X X PE-6(2) X X X PE-6(3) X X X PE-6(4) X X X PE-7 Withdrawn PE-7(1) Withdrawn PE-7(2) Withdrawn PE-8 X X X X PE-8(1) X X PE-8(2) Withdrawn PE-9 X X PE-9(1) X PE-9(2) X X PE-10 X X PE-10(1) Withdrawn PE-11 X PE-11(1) X X PE-11(2) X X PE-12 X X PE-12(1) X X PE-13 X X PE-13(1) X X PE-13(2) X X PE-13(3) X X PE-13(4) NIST Assumption: Information systems are located X X in physical facilities."
+     },
+     {
+      "id": "CNSSI-p064-004",
+      "text": "Best Practice."
+     },
+     {
+      "id": "CNSSI-p064-005",
+      "text": "PE-14 X X PE-14(1) X X PE-14(2) X X PE-15 X X PE-15(1) X PE-16 X X X X"
+     },
+     {
+      "id": "CNSSI-p064-006",
+      "text": "D-51"
+     }
+    ],
+    "89": [
+     {
+      "id": "CNSSI-p089-001",
+      "text": "CNSSI No. 1253"
+     },
+     {
+      "id": "CNSSI-p089-002",
+      "text": "ID Control Text Defined Value for NSS"
+     },
+     {
+      "id": "CNSSI-p089-003",
+      "text": "all NSS."
+     },
+     {
+      "id": "CNSSI-p089-004",
+      "text": "PS-6"
+     },
+     {
+      "id": "CNSSI-p089-005",
+      "text": "b. [Assignment: organization-defined frequency]"
+     },
+     {
+      "id": "CNSSI-p089-006",
+      "text": "b. At least annually if not otherwise defined in formal organizational policy ."
+     },
+     {
+      "id": "CNSSI-p089-007",
+      "text": "c.2."
+     },
+     {
+      "id": "CNSSI-p089-008",
+      "text": "[Assignment: organization-defined c.2."
+     },
+     {
+      "id": "CNSSI-p089-009",
+      "text": "At least annually if not otherwise defined in frequency] formal organizational policy."
+     },
+     {
+      "id": "CNSSI-p089-010",
+      "text": "PS-7"
+     },
+     {
+      "id": "CNSSI-p089-011",
+      "text": "d. [Assignment: organization-defined personnel"
+     },
+     {
+      "id": "CNSSI-p089-012",
+      "text": "d. Organizational Security Manager. or roles]"
+     },
+     {
+      "id": "CNSSI-p089-013",
+      "text": "[Assignment: organization-defined time period] As soon as possible, not to exceed 1 working day."
+     },
+     {
+      "id": "CNSSI-p089-014",
+      "text": "RA-1"
+     },
+     {
+      "id": "CNSSI-p089-015",
+      "text": "a. [Assignment: organization-defined personnel"
+     },
+     {
+      "id": "CNSSI-p089-016",
+      "text": "a. All personnel or roles]"
+     },
+     {
+      "id": "CNSSI-p089-017",
+      "text": "b.1."
+     },
+     {
+      "id": "CNSSI-p089-018",
+      "text": "[Assignment: organization-defined b.1."
+     },
+     {
+      "id": "CNSSI-p089-019",
+      "text": "At least annually if not otherwise defined in frequency] formal organizational policy."
+     },
+     {
+      "id": "CNSSI-p089-020",
+      "text": "b.2."
+     },
+     {
+      "id": "CNSSI-p089-021",
+      "text": "[Assignment: organization-defined b.2."
+     },
+     {
+      "id": "CNSSI-p089-022",
+      "text": "At least annually if not otherwise defined in frequency] formal organizational policy."
+     },
+     {
+      "id": "CNSSI-p089-023",
+      "text": "RA-3"
+     },
+     {
+      "id": "CNSSI-p089-024",
+      "text": "b. [Selection: security plan; risk assessment"
+     },
+     {
+      "id": "CNSSI-p089-025",
+      "text": "b. Not appropriate to define at the CNSS level report; for all NSS."
+     },
+     {
+      "id": "CNSSI-p089-026",
+      "text": "[Assignment: organization-defined document]] Not appropriate to define at the CNSS level for all NSS."
+     },
+     {
+      "id": "CNSSI-p089-027",
+      "text": "c. [Assignment: organization-defined frequency]"
+     },
+     {
+      "id": "CNSSI-p089-028",
+      "text": "c. At least annually if not otherwise defined in formal organizational policy."
+     },
+     {
+      "id": "CNSSI-p089-029",
+      "text": "d. [Assignment: organization-defined personnel"
+     },
+     {
+      "id": "CNSSI-p089-030",
+      "text": "d. Not appropriate to define at the CNSS level or roles] for all NSS."
+     },
+     {
+      "id": "CNSSI-p089-031",
+      "text": "e. [Assignment: organization-defined frequency]"
+     },
+     {
+      "id": "CNSSI-p089-032",
+      "text": "e. At least annually if not otherwise defined in formal organizational policy."
+     },
+     {
+      "id": "CNSSI-p089-033",
+      "text": "RA-5"
+     },
+     {
+      "id": "CNSSI-p089-034",
+      "text": "a. [Assignment: organization-defined frequency"
+     },
+     {
+      "id": "CNSSI-p089-035",
+      "text": "a. At least every 120 days. and/or randomly in accordance with organization-defined process]"
+     },
+     {
+      "id": "CNSSI-p089-036",
+      "text": "d. [Assignment: organization-defined response"
+     },
+     {
+      "id": "CNSSI-p089-037",
+      "text": "d. Not appropriate to define at the CNSS level times] for all NSS."
+     },
+     {
+      "id": "CNSSI-p089-038",
+      "text": "e. [Assignment: organization-defined personnel"
+     },
+     {
+      "id": "CNSSI-p089-039",
+      "text": "e. Not appropriate to define at the CNSS level for or roles] all NSS."
+     },
+     {
+      "id": "CNSSI-p089-040",
+      "text": "RA-5(2) [Selection (one or more): [Assignment: organization-defined frequency]; prior to a new Within 24 hours prior to running scans. scan; when new vulnerabilities are identified and reported]."
+     },
+     {
+      "id": "CNSSI-p089-041",
+      "text": "RA-5(5) [Assignment: organization-identified information Authorized vulnerability scanning components. system components]"
+     },
+     {
+      "id": "CNSSI-p089-042",
+      "text": "[Assignment: organization-defined vulnerability Authorization by the CISO/SISO or designate. scanning activities]"
+     },
+     {
+      "id": "CNSSI-p089-043",
+      "text": "SA-1"
+     },
+     {
+      "id": "CNSSI-p089-044",
+      "text": "a. [Assignment: organization-defined personnel"
+     },
+     {
+      "id": "CNSSI-p089-045",
+      "text": "a. All personnel. or roles]"
+     },
+     {
+      "id": "CNSSI-p089-046",
+      "text": "b. 1."
+     },
+     {
+      "id": "CNSSI-p089-047",
+      "text": "[Assignment: organization-defined b.1."
+     },
+     {
+      "id": "CNSSI-p089-048",
+      "text": "At least annually if not otherwise defined in"
+     },
+     {
+      "id": "CNSSI-p089-049",
+      "text": "E-14"
+     }
+    ]
+   },
+   "selected_chunk_ids": [
+    86,
+    112
+   ],
+   "table_pages_eligible": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94
+   ]
+  },
+  "DODI 5200.01": {
+   "chunks_sha256": "20057e3fd9fb2a264cbb0d1ae93136f62b2a35dba2e0c89cc54286ecbb15690e",
+   "closed_pages": [
+    10
+   ],
+   "drawn": [
+    {
+     "page": 10,
+     "reason": "per_document"
+    }
+   ],
+   "eligible_pages": 13,
+   "pages_added_by_closure": [],
+   "pages_in_pdf": 13,
+   "pdf_sha256": "206eaef84331885b2f9700ed86f5579da80c3119ab4a5c6707e8ed349b2f35e6",
+   "pieces": {
+    "10": [
+     {
+      "id": "D5201-p010-001",
+      "text": "DoDI 5200.01, April 21, 2016"
+     },
+     {
+      "id": "D5201-p010-002",
+      "text": "(2) Security education and training programs."
+     },
+     {
+      "id": "D5201-p010-003",
+      "text": "(3) Implementation of References (c) and (i)."
+     },
+     {
+      "id": "D5201-p010-004",
+      "text": "c. DoD Component heads who lead IC components in accordance with Reference (h) will appoint the senior intelligence official to oversee their SCI program."
+     },
+     {
+      "id": "D5201-p010-005",
+      "text": "d. Ensure the senior agency official and the senior intelligence official coordinate to achieve a cohesive information security program."
+     },
+     {
+      "id": "D5201-p010-006",
+      "text": "e. Provide adequate funding and resources to implement classification, declassification, safeguarding, oversight, and security education and training programs."
+     },
+     {
+      "id": "D5201-p010-007",
+      "text": "f. Establish and maintain an ongoing self-inspection program to include periodic review and assessment of the DoD Component’s classified information and CUI products."
+     },
+     {
+      "id": "D5201-p010-008",
+      "text": "g. Direct and administer a program for systematic declassification reviews as required by subsection 3.4 of Reference (c), to declassify records as soon as possible, but not prematurely, and for review of information subject to the automatic declassification provisions of subsection 3.3 of Reference (c)."
+     },
+     {
+      "id": "D5201-p010-009",
+      "text": "h. Establish and maintain an active security education and training program to inform personnel of their responsibilities for protecting classified information and CUI."
+     },
+     {
+      "id": "D5201-p010-010",
+      "text": "(1) Train all original classification authorities and derivative classifiers in the fundamentals of security classification, the limitations of their authority, and their duties and responsibilities as a prerequisite to exercising this authority."
+     },
+     {
+      "id": "D5201-p010-011",
+      "text": "(2) Train all personnel to provide a basic understanding of the nature of classified information and CUI and the proper protection of such information in their possession to include responsibilities for the protection of classified information and CUI from unauthorized disclosure."
+     },
+     {
+      "id": "D5201-p010-012",
+      "text": "(3) Incorporate security education and training, as appropriate, into DoD contracts."
+     },
+     {
+      "id": "D5201-p010-013",
+      "text": "(4) Brief onsite support contractor personnel in security responsibilities, procedures, and duties applicable to their positions."
+     },
+     {
+      "id": "D5201-p010-014",
+      "text": "i. Submit DoD information intended for public release for review in accordance with paragraph 3.k of this Instruction."
+     },
+     {
+      "id": "D5201-p010-015",
+      "text": "j. Establish a system for the receipt of and action on complaints and suggestions regarding the DoD Component’s information security program."
+     },
+     {
+      "id": "D5201-p010-016",
+      "text": "k. Forward recommendations for improvements to the DoD Information Security Program to the USD(I&S)’s Director for Defense Intelligence (Intelligence & Security)/Security Policy and Oversight Division."
+     },
+     {
+      "id": "D5201-p010-017",
+      "text": "l. Participate in the NDC by providing:"
+     },
+     {
+      "id": "D5201-p010-018",
+      "text": "Change 2, 10/01/2020 10 ENCLOSURE 2"
+     }
+    ]
+   },
+   "selected_chunk_ids": [
+    21,
+    22
+   ],
+   "table_pages_eligible": []
+  },
+  "DODI 5200.44": {
+   "chunks_sha256": "8b6c9ac165bf544829118bf4fba97a54a798ded80a7953e1566c4955fda37bb2",
+   "closed_pages": [
+    9,
+    10
+   ],
+   "drawn": [
+    {
+     "page": 9,
+     "reason": "per_document"
+    },
+    {
+     "page": 10,
+     "reason": "extra"
+    }
+   ],
+   "eligible_pages": 22,
+   "pages_added_by_closure": [],
+   "pages_in_pdf": 22,
+   "pdf_sha256": "769ed3c3c9bd1c0e4aa2770fddb7c02694f714c2321d96f6a2d7f639f7fa88b9",
+   "pieces": {
+    "10": [
+     {
+      "id": "D5244-p010-001",
+      "text": "DoDI 5200.44, February 16, 2024"
+     },
+     {
+      "id": "D5244-p010-002",
+      "text": "d. In coordination with the USD(R&E), the DoD CIO, and the DoD Component heads, integrates identifying and protecting mission critical functions and critical components into acquisition, logistics, and materiel readiness policies to ensure that assurance concepts are implemented in defense acquisition programs."
+     },
+     {
+      "id": "D5244-p010-003",
+      "text": "e. Through the Director, DMEA, and in coordination with the DoD CIO and the DoD Component heads, performs the accreditations of trusted suppliers, reviews those accreditations on an annual basis, issues follow-on guidance for the use of trusted suppliers, establishes criteria for accrediting trusted suppliers of integrated circuit-related products and services, and executes efforts to ensure assured access to trusted microelectronics pursuant to Section 231 of the NDAA for FY 2017."
+     },
+     {
+      "id": "D5244-p010-004",
+      "text": "f. In coordination with the DoD CIO, establishes and maintains procedures to implement the authorities in Section 3252 of Title 10, U.S.C.."
+     },
+     {
+      "id": "D5244-p010-005",
+      "text": "g. For risks requiring action under Section 3252 of Title 10, U.S.C., coordinates on an action package prepared by DoD CIO that contains a joint recommendation of the DoD CIO and USD(A&S), on the basis of a risk assessment by the USD(I&S), regarding the assessment of a significant supply chain risk, the scope of applicability, and required or recommended mitigations."
+     },
+     {
+      "id": "D5244-p010-006",
+      "text": "h. Coordinates on any determination by an Authorized Official in a Military Department to exercise the authority in Section 3252 of Title 10, U.S.C. for a procurement that is within scope of a joint recommendation, pursuant to DFARS Part 239.7304(b)."
+     },
+     {
+      "id": "D5244-p010-007",
+      "text": "i. As the Defense Acquisition Executive, makes determinations pursuant to DFARS Part 239.7304(b) for the DoD Components on behalf of the Secretary of Defense, when necessary, to protect national security by reducing ICT supply chain risk."
+     },
+     {
+      "id": "D5244-p010-008",
+      "text": "This authority cannot be further delegated."
+     },
+     {
+      "id": "D5244-p010-009",
+      "text": "j. Provides congressional notifications, as required, of exclusion determinations that are made by the USD(A&S) in accordance with Section 3252 of Title 10, U.S.C.."
+     },
+     {
+      "id": "D5244-p010-010",
+      "text": "k. Fulfills congressional reporting requirements regarding covered procurement actions taken pursuant to DFARS Part 239.73 during the annual reporting period."
+     },
+     {
+      "id": "D5244-p010-011",
+      "text": "l. In coordination with the USD(R&E); the DoD CIO; the USD(I&S); the Secretaries of the Military Departments; and the Commander, USCYBERCOM, reviews intelligence and counterintelligence assessments of known ICT supplier threats and determines associated risks affecting DoD information systems, networks, weapon systems, and defense critical infrastructure."
+     },
+     {
+      "id": "D5244-p010-012",
+      "text": "m. Identifies ICT supply chain risks and indicates whether the risk applies to an individual procurement transaction only or to a class of procurements."
+     },
+     {
+      "id": "D5244-p010-013",
+      "text": "Directs or recommends specific mitigation actions, as appropriate."
+     },
+     {
+      "id": "D5244-p010-014",
+      "text": "SECTION 2: RESPONSIBILITIES 10"
+     }
+    ],
+    "9": [
+     {
+      "id": "D5244-p009-001",
+      "text": "DoDI 5200.44, February 16, 2024"
+     },
+     {
+      "id": "D5244-p009-002",
+      "text": "(2) The determination by the USD(A&S), including any conditions or limitations thereon, to exercise the authority in Section 3252 of Title 10, U.S.C. for procurements by any DoD Component (including the MILDEPS and the DoD Fourth Estate) that are within the scope of the joint recommendation, pursuant to DFARS Part 239.7304(b)."
+     },
+     {
+      "id": "D5244-p009-003",
+      "text": "f. Issues guidance on the DoD operational usage of suppliers and components on DoD systems that are excluded from procurement or otherwise restricted from use due to a significant ICT supply chain risk."
+     },
+     {
+      "id": "D5244-p009-004",
+      "text": "g. In coordination with the USD(R&E); the USD(A&S); the USD(I&S); the Secretaries of the Military Departments; and the Commander, USCYBERCOM, reviews intelligence and counterintelligence assessments of known ICT supplier threats and determines associated risks affecting DoD information systems, networks, weapon systems, and defense critical infrastructure."
+     },
+     {
+      "id": "D5244-p009-005",
+      "text": "Identifies ICT supply chain risks and directs or recommends specific mitigation actions, as appropriate."
+     },
+     {
+      "id": "D5244-p009-006",
+      "text": "h. Oversees the establishment of a DoD enterprise ICT SCRM capability to provide risk decision support for due diligence of high-interest commodity ICT items."
+     },
+     {
+      "id": "D5244-p009-007",
+      "text": "i. Retains all signed joint recommendation, concurrence, and determination packages developed in connection with DoD’s exercise of the authority set forth in Section 3252 of Title 10, U.S.C. and DFARS Part 239.73, in accordance with applicable recordkeeping guidelines."
+     },
+     {
+      "id": "D5244-p009-008",
+      "text": "j. Issues guidance and provides recommendations to DoD Component heads for ICT supply chain due diligence, risk and mitigation trade-offs, and residual risk management."
+     },
+     {
+      "id": "D5244-p009-009",
+      "text": "k. Develops programming recommendations to ensure the integration of TSN concepts and processes into the acquisition and maintenance of DoD information systems, enclaves, and services, including the purchase and integration of ICT commodities."
+     },
+     {
+      "id": "D5244-p009-010",
+      "text": "2.3. USD(A&S)."
+     },
+     {
+      "id": "D5244-p009-011",
+      "text": "The USD(A&S):"
+     },
+     {
+      "id": "D5244-p009-012",
+      "text": "a. In coordination with the USD(R&E) and the DoD CIO, evaluates the supply chain risk and integrates ICT SCRM into the acquisition process."
+     },
+     {
+      "id": "D5244-p009-013",
+      "text": "b. Establishes policy and develops implementing guidance for acquisition and materiel management, including source selection guidance in support of TSN capabilities, to include ICT SCRM."
+     },
+     {
+      "id": "D5244-p009-014",
+      "text": "c. In coordination with the USD(R&E), the DoD CIO, the USD(I&S), and the DoD Component heads, establishes TSN and ICT SCRM policy, guidance, education, and training for the program managers and the acquisition and sustainment workforce to include cybersecurity for acquisition decision authorities and program managers in accordance with DoDI 5000.90."
+     },
+     {
+      "id": "D5244-p009-015",
+      "text": "Develops budget recommendations for the lifecycle of the TSN capability."
+     },
+     {
+      "id": "D5244-p009-016",
+      "text": "SECTION 2: RESPONSIBILITIES 9"
+     }
+    ]
+   },
+   "selected_chunk_ids": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "table_pages_eligible": []
+  },
+  "DODI 5200.48": {
+   "chunks_sha256": "f149a4830f49f1d908681044609be2f8ab7c341257d5dfe2f6b4eed1c51fbe21",
+   "closed_pages": [
+    14,
+    15
+   ],
+   "drawn": [
+    {
+     "page": 15,
+     "reason": "per_document"
+    }
+   ],
+   "eligible_pages": 39,
+   "pages_added_by_closure": [
+    14
+   ],
+   "pages_in_pdf": 40,
+   "pdf_sha256": "bbbe4937419808636b21e060c7bc3912edb4bdb20dbe4737d26edb1b7c0a040d",
+   "pieces": {
+    "14": [
+     {
+      "id": "D5248-p014-001",
+      "text": "DoDI 5200.48, March 6, 2020"
+     },
+     {
+      "id": "D5248-p014-002",
+      "text": "(1) The official DoD CUI Registry of categories can be accessed on Intelink at https://intelshare.intelink.gov/sites/ousdi/hcis/sec/icdirect/information/CUI/Forms/AllItems.aspx."
+     },
+     {
+      "id": "D5248-p014-003",
+      "text": "(2) The site will be updated as changes to the DoD CUI Registry are made based on official notification from the CUI EA through the CUI Registry Working Group; changes to law, regulation, or government-wide policy; or notification that the information no longer meets the requirements for CUI."
+     },
+     {
+      "id": "D5248-p014-004",
+      "text": "3.4. MARKING REQUIREMENTS."
+     },
+     {
+      "id": "D5248-p014-005",
+      "text": "This paragraph covers the essential marking requirements for initial phased implementation of the DoD CUI Program."
+     },
+     {
+      "id": "D5248-p014-006",
+      "text": "a. At minimum, CUI markings for unclassified DoD documents will include the acronym “CUI” in the banner and footer of the document."
+     },
+     {
+      "id": "D5248-p014-007",
+      "text": "b. If portion markings are selected, then all document subjects and titles, as well as individual sections, parts, paragraphs, or similar portions of a CUI document known to contain CUI, will be portion marked with “(CUI).”"
+     },
+     {
+      "id": "D5248-p014-008",
+      "text": "Use of the unclassified marking “(U)” as a portion marking for unclassified information within CUI documents or materials is required."
+     },
+     {
+      "id": "D5248-p014-009",
+      "text": "(1) There is no requirement to add the “U,” signifying unclassified, to the banner and footer as was required with the old FOUO marking (i.e., U//FOUO)."
+     },
+     {
+      "id": "D5248-p014-010",
+      "text": "(2) Banners, footers, and portion marking will only be marked “Unclassified” or “(U)” for unclassified information in accordance with the June 4, 2019 ISOO letter."
+     },
+     {
+      "id": "D5248-p014-011",
+      "text": "If the document also contains CUI, it will be marked in accordance with Paragraph 3.4.a. and additional forthcoming guidance."
+     },
+     {
+      "id": "D5248-p014-012",
+      "text": "c. CUI markings in classified documents will appear in paragraphs or subparagraphs known to contain only CUI and must be portion marked with “(CUI).”"
+     },
+     {
+      "id": "D5248-p014-013",
+      "text": "“CUI” will not appear in the banner or footer."
+     },
+     {
+      "id": "D5248-p014-014",
+      "text": "(1) There will be an acknowledgement added to the warning box on the first page of multi-page documents to alert readers to the presence of CUI in a classified DoD document, as shown in Figure 1."
+     },
+     {
+      "id": "D5248-p014-015",
+      "text": "SECTION 3: PROGRAMMATICS 14"
+     }
+    ],
+    "15": [
+     {
+      "id": "D5248-p015-001",
+      "text": "DoDI 5200.48, March 6, 2020"
+     },
+     {
+      "id": "D5248-p015-002",
+      "text": "Figure 1."
+     },
+     {
+      "id": "D5248-p015-003",
+      "text": "CUI Warning Box for Classified Material"
+     },
+     {
+      "id": "D5248-p015-004",
+      "text": "This content is classified at the [insert highest classification level of the source data] level and may contain elements of controlled unclassified information (CUI), unclassified, or information classified at a lower level than the overall classification displayed."
+     },
+     {
+      "id": "D5248-p015-005",
+      "text": "This content shall not be used as a source of derivative classification; refer instead to [cite specific reference, where possible, or state “the applicable classification guide(s)”]."
+     },
+     {
+      "id": "D5248-p015-006",
+      "text": "It must be reviewed for both Classified National Security Information (CNSI) and CUI in accordance with DoDI 5230.09 prior to public release."
+     },
+     {
+      "id": "D5248-p015-007",
+      "text": "[Add a point of contact when needed.]"
+     },
+     {
+      "id": "D5248-p015-008",
+      "text": "(2) Volume 2 of DoDM 5200.01 requires DoD intelligence producers to follow DNI formats for intelligence production under the authority of the DNI."
+     },
+     {
+      "id": "D5248-p015-009",
+      "text": "When DoD CUI is incorporated into a Digital Access Policy under the authority of the DNI, the information and the document will follow the Digital Access Policy standards established by the DNI."
+     },
+     {
+      "id": "D5248-p015-010",
+      "text": "d. The dissemination marking “not releasable to foreign nationals (NOFORN or NF)” is an intelligence control marking used to identify intelligence information an originator has determined meets the criteria of Intelligence Community Directive 710 and Intelligence Community Policy Guidance 403.1, which provides guidance for further dissemination control markings."
+     },
+     {
+      "id": "D5248-p015-011",
+      "text": "It must be applied to controlled unclassified intelligence information that is properly characterized as CUI with appropriate CUI markings."
+     },
+     {
+      "id": "D5248-p015-012",
+      "text": "CUI identified with this marking will not be provided, in any form, to foreign governments (including coalition partners), international organizations, foreign nationals, or other non-U.S. persons without the originator’s approval in accordance with E.O.s 13526 and 13556."
+     },
+     {
+      "id": "D5248-p015-013",
+      "text": "If originator approval is required for further dissemination, the originator will mark the requirement on the information in accordance with Section 4.1(i)(1) of E.O. 13526."
+     },
+     {
+      "id": "D5248-p015-014",
+      "text": "(1) The application of the control marking “not releasable to foreign nationals” (NOFORN or NF) will only be applied, when warranted, to unclassified intelligence information properly categorized as CUI and reviewed by a Foreign Disclosure Officer to ensure there are no international agreements in place to prohibit its use and prohibiting sharing."
+     },
+     {
+      "id": "D5248-p015-015",
+      "text": "(2) The control marking NOFORN or NF will be applied to Naval Nuclear Propulsion Information (NNPI), Unclassified Controlled Nuclear Information (UCNI), National Disclosure Policy (NDP-1), and cover and cover support information."
+     },
+     {
+      "id": "D5248-p015-016",
+      "text": "When warranted, it can be applied to unclassified information properly categorized as CUI having a licensing or export control requirement."
+     },
+     {
+      "id": "D5248-p015-017",
+      "text": "Before marking a document or material as NOFORN or NF, it will be reviewed by the Foreign Disclosure Officer to ensure there are no agreements in place to prohibit its use and sharing."
+     },
+     {
+      "id": "D5248-p015-018",
+      "text": "(3) The application of “Releasable to” (“REL TO”) can only be applied, when warranted and consistent with relevant law, regulation, or government-wide policy or DoD policy, to information properly categorized as CUI with an export control or licensing requirement with a foreign disclosure agreement in place."
+     },
+     {
+      "id": "D5248-p015-019",
+      "text": "SECTION 3: PROGRAMMATICS 15"
+     }
+    ]
+   },
+   "selected_chunk_ids": [
+    35,
+    36,
+    37,
+    38,
+    39
+   ],
+   "table_pages_eligible": [
+    22
+   ]
+  },
+  "DODI 8551.01": {
+   "chunks_sha256": "ff58795fb75bde847d28610b1898cc403de5784e325f24bba1f3a2e2c474089e",
+   "closed_pages": [
+    6
+   ],
+   "drawn": [
+    {
+     "page": 6,
+     "reason": "per_document"
+    }
+   ],
+   "eligible_pages": 14,
+   "pages_added_by_closure": [],
+   "pages_in_pdf": 15,
+   "pdf_sha256": "30371d13dfb27c58b5c1c5f3c9c198a96b86d056459a2e1f8665ba92bc904dfb",
+   "pieces": {
+    "6": [
+     {
+      "id": "D8551-p006-001",
+      "text": "DoDI 8551.01, May 31, 2023"
+     },
+     {
+      "id": "D8551-p006-002",
+      "text": "(3) A representative from OIG DoD may attend in a non-voting role only."
+     },
+     {
+      "id": "D8551-p006-003",
+      "text": "b. Oversee their respective Component’s PPSM program to:"
+     },
+     {
+      "id": "D8551-p006-004",
+      "text": "(1) Assess it for vulnerabilities and document them in an internal vulnerability assessment report for internal PPS by the system owner in accordance with PPSM component local service assessment process."
+     },
+     {
+      "id": "D8551-p006-005",
+      "text": "(2) Track on the classified network in the Classified PPSM registry at https://pnp.cert.smil.mil/pnp and the unclassified system in the PPSM registry at https://pnp.cert.mil/pnp."
+     },
+     {
+      "id": "D8551-p006-006",
+      "text": "(3) Implement standards established by the PPSM CCB and in accordance with DoDI 8500.01, CJCSI 6510.01F, and CJCSI 6211.02D."
+     },
+     {
+      "id": "D8551-p006-007",
+      "text": "(4) Verify PPS before authorization, incorporation, or connection to systems or technology in accordance with DoDI 8510.01."
+     },
+     {
+      "id": "D8551-p006-008",
+      "text": "(5) Validate PPS for DoD systems in accordance with DoDI 8510.01."
+     },
+     {
+      "id": "D8551-p006-009",
+      "text": "(6) Maintain information technology interoperability in accordance with DoDI 8330.01."
+     },
+     {
+      "id": "D8551-p006-010",
+      "text": "(7) Communicate PPS securely across the DODIN."
+     },
+     {
+      "id": "D8551-p006-011",
+      "text": "(8) Block invalid PPS using appropriate boundary protection devices."
+     },
+     {
+      "id": "D8551-p006-012",
+      "text": "(9) Oversee usage of PPS not listed on the CAL for DoD Component systems operating on research, test, and evaluation (RT&E) information networks if:"
+     },
+     {
+      "id": "D8551-p006-013",
+      "text": "(a) Using PPS remains solely in the RT&E information network and does not traverse the DODIN."
+     },
+     {
+      "id": "D8551-p006-014",
+      "text": "(b) The RT&E information network authorizing official provides the PPSM CCB a DSAWG-approved process to manage PPS risk."
+     },
+     {
+      "id": "D8551-p006-015",
+      "text": "2.5. CJCS."
+     },
+     {
+      "id": "D8551-p006-016",
+      "text": "In addition to the responsibilities in Paragraph 2.4., the CJCS develops, coordinates, and distributes PPSM policies, doctrine, and procedures for joint and combined operations in accordance with this issuance."
+     },
+     {
+      "id": "D8551-p006-017",
+      "text": "SECTION 2: RESPONSIBILITIES 6"
+     }
+    ]
+   },
+   "selected_chunk_ids": [
+    12,
+    13,
+    14
+   ],
+   "table_pages_eligible": [
+    12,
+    13
+   ]
+  },
+  "afi10-2402": {
+   "chunks_sha256": "a1704526ea95af2b27d4f1d842f10906b3238721baa7adec3003a5cb2fd88f09",
+   "closed_pages": [
+    10,
+    11,
+    25,
+    26,
+    27,
+    42
+   ],
+   "drawn": [
+    {
+     "page": 11,
+     "reason": "per_document"
+    },
+    {
+     "page": 26,
+     "reason": "extra"
+    },
+    {
+     "page": 42,
+     "reason": "table"
+    }
+   ],
+   "eligible_pages": 46,
+   "pages_added_by_closure": [
+    10,
+    25,
+    27
+   ],
+   "pages_in_pdf": 48,
+   "pdf_sha256": "87308ed1962cdf559549b9cb39cfc46b976aa7df317ff15db688a73895de93ed",
+   "pieces": {
+    "10": [
+     {
+      "id": "AFI102-p010-001",
+      "text": "8 AFI10-2402 29 AUGUST 2017"
+     },
+     {
+      "id": "AFI102-p010-002",
+      "text": "2.5.3. Coordinate with other federal CIOs on CARM cybersecurity issues related to CARM TCAs."
+     },
+     {
+      "id": "AFI102-p010-003",
+      "text": "2.5.4. Provide Subject Matter Experts (SME) to assist in the identification, assessment, analysis, and management of TCA-related cyber issues."
+     },
+     {
+      "id": "AFI102-p010-004",
+      "text": "2.5.5. Provide SMEs to participate in the Mission Assurance Assessments (MAA) process as requested."
+     },
+     {
+      "id": "AFI102-p010-005",
+      "text": "2.5.6. Plan and develop procedures to ensure COOP for TCAs and related cyber systems that support AF operations."
+     },
+     {
+      "id": "AFI102-p010-006",
+      "text": "2.5.7. Develop guidance and procedures to implement National, DoD, Joint Chiefs of Staff (JCS), and AF Information Assurance (IA) and cybersecurity direction for CARM applications."
+     },
+     {
+      "id": "AFI102-p010-007",
+      "text": "2.5.8. Provide a cyber-representative to the CARM WG when requested."
+     },
+     {
+      "id": "AFI102-p010-008",
+      "text": "2.6. Assistant Secretary of the Air Force, Financial Management and Comptroller (SAF/FM)."
+     },
+     {
+      "id": "AFI102-p010-009",
+      "text": "2.6.1. Serve as the AF appropriations, programming, and financial management functional area lead."
+     },
+     {
+      "id": "AFI102-p010-010",
+      "text": "2.6.2. Provide SMEs to advise CARM on resourcing issues including AF manpower, remediation, the AF corporate budget, and AF finance policy."
+     },
+     {
+      "id": "AFI102-p010-011",
+      "text": "2.6.3. Provide a finance representative to the CARM WG when requested."
+     },
+     {
+      "id": "AFI102-p010-012",
+      "text": "2.7. Secretary of the Air Force, Inspector General (SAF/IG)."
+     },
+     {
+      "id": "AFI102-p010-013",
+      "text": "2.7.1. Provide inspection policy IAW HAF functional requirements."
+     },
+     {
+      "id": "AFI102-p010-014",
+      "text": "2.7.2. Ensure the Air Force Office of Special Investigations (AFOSI), in coordination with the HAF CARM Program office, provides policy and oversight regarding intelligence, threat and counterintelligence (CI) support provided by AFOSI to the CARM Program, and more specifically will:"
+     },
+     {
+      "id": "AFI102-p010-015",
+      "text": "2.7.2.1. Identify tailored CI collection requirements based on foreign intelligence and international terrorist threats that could affect the protection and assurance of Tier 1 TCAs."
+     },
+     {
+      "id": "AFI102-p010-016",
+      "text": "TCA tier definitions can be found in section 3.2.5."
+     },
+     {
+      "id": "AFI102-p010-017",
+      "text": "2.7.2.2. Assign servicing AFOSI unit-specific roles and responsibilities for the identification, tracking, and dissemination of threat information to all AF commands owning or operating Tier 1 TCAs."
+     },
+     {
+      "id": "AFI102-p010-018",
+      "text": "2.7.2.3. Coordinate with the Department of Homeland Security (DHS), Federal Bureau of Investigation (FBI), Defense Intelligence Agency (DIA), and AF Intelligence Community (IC) to obtain threat information on AF TCAs consistent with U.S. law and military regulations concerning sharing of intelligence information and intelligence collection in the U.S. and on U.S. persons."
+     },
+     {
+      "id": "AFI102-p010-019",
+      "text": "2.7.2.4. Provide CI summaries and indications and warnings (I&W) to appropriate authorities and commands with respect to activities in geographic areas where Tier 1"
+     }
+    ],
+    "11": [
+     {
+      "id": "AFI102-p011-001",
+      "text": "AFI10-2402 29 AUGUST 2017 9"
+     },
+     {
+      "id": "AFI102-p011-002",
+      "text": "TCAs are located, to include but not limited to, AF installations, facilities, or other property."
+     },
+     {
+      "id": "AFI102-p011-003",
+      "text": "2.7.2.5. Provide comprehensive CI support to the CARM Program IAW DoDI 5240.19, Counterintelligence Support to the Defense Critical Infrastructure Program, AFI 71-101 V4, Counterintelligence, and related instructions."
+     },
+     {
+      "id": "AFI102-p011-004",
+      "text": "2.7.2.6. Provide Defense Threat Assessment Summaries on an annual basis to CARM for locations that will receive a Higher Headquarters (HHQ) assessment."
+     },
+     {
+      "id": "AFI102-p011-005",
+      "text": "2.7.3. Provide a representative to the CARM WG when requested."
+     },
+     {
+      "id": "AFI102-p011-006",
+      "text": "2.7.4. Provide SMEs to participate in the MAA process as it pertains to Tier 1 TCAs and as requested."
+     },
+     {
+      "id": "AFI102-p011-007",
+      "text": "2.8. Secretary of the Air Force, Installations, Environment and Energy (SAF/IE)."
+     },
+     {
+      "id": "AFI102-p011-008",
+      "text": "2.8.1. Serve as the CARM energy, and water and wastewater-systems functional area lead."
+     },
+     {
+      "id": "AFI102-p011-009",
+      "text": "2.8.2. Provide SMEs to advise the CARM Program on enterprise-wide energy, water and wastewater-systems related issues."
+     },
+     {
+      "id": "AFI102-p011-010",
+      "text": "2.9. Air Force Surgeon General (AF/SG)."
+     },
+     {
+      "id": "AFI102-p011-011",
+      "text": "2.9.1. Serve as the AF functional area lead for Health Affairs."
+     },
+     {
+      "id": "AFI102-p011-012",
+      "text": "2.9.2. Provide a health functional area representative to the CARM WG when requested."
+     },
+     {
+      "id": "AFI102-p011-013",
+      "text": "2.9.3. Provide SMEs to participate in the MAA process as it pertains to TCAs and as requested."
+     },
+     {
+      "id": "AFI102-p011-014",
+      "text": "2.10. Deputy Chief of Staff, Manpower, Personnel and Services (AF/A1)."
+     },
+     {
+      "id": "AFI102-p011-015",
+      "text": "2.10.1. Serve as the AF functional area lead for Personnel."
+     },
+     {
+      "id": "AFI102-p011-016",
+      "text": "2.10.2. Provide a personnel representative to the CARM WG when requested."
+     },
+     {
+      "id": "AFI102-p011-017",
+      "text": "2.10.3. Assist the HAF CARM Program office in the assessment and validation of CARM program manpower requirements for MAJCOM/DRUs and FOAs CARM POCs."
+     },
+     {
+      "id": "AFI102-p011-018",
+      "text": "2.10.4. Assist the HAF CARM Program office with the inclusion of Center/Wing CARM POCs in the official additional duties list."
+     },
+     {
+      "id": "AFI102-p011-019",
+      "text": "2.10.5. Coordinate as appropriate with the HAF CARM Program to code HAF, MAJCOM/DRU, and FOA CARM positions with a Top Secret (TS) / Sensitive Compartmented Information (SCI) security clearance."
+     },
+     {
+      "id": "AFI102-p011-020",
+      "text": "2.11. Deputy Chief of Staff, Intelligence, Surveillance, and Reconnaissance (ISR) (AF/A2)."
+     },
+     {
+      "id": "AFI102-p011-021",
+      "text": "2.11.1. Serve as the AF Functional Area Lead for Intelligence, Surveillance, and Reconnaissance."
+     },
+     {
+      "id": "AFI102-p011-022",
+      "text": "2.11.2. Provide ISR information as requested."
+     },
+     {
+      "id": "AFI102-p011-023",
+      "text": "2.11.3. Provide an ISR representative to the CARM WG when requested to brief intelligence issues pertaining to TCAs."
+     }
+    ],
+    "25": [
+     {
+      "id": "AFI102-p025-001",
+      "text": "AFI10-2402 29 AUGUST 2017 23"
+     },
+     {
+      "id": "AFI102-p025-002",
+      "text": "3.2.5.1.1. Defense Critical Asset (DCA) - TCAs of such extraordinary importance to operations in peace, crisis, and war, that its incapacitation or destruction would have a very serious, debilitating effect on the ability of the DOD to fulfill its missions."
+     },
+     {
+      "id": "AFI102-p025-003",
+      "text": "DCAs are not an independent tier of assets, but are a high-priority subset of Tier 1 TCAs."
+     },
+     {
+      "id": "AFI102-p025-004",
+      "text": "3.2.5.2. Tier 2 TCA – A system or asset of which the loss, incapacitation, or disruption could result in severe mission (or function) degradation at the DoD, Military Department, CCMD, Sub-Unified Command, Defense Agency, or DISLA level."
+     },
+     {
+      "id": "AFI102-p025-005",
+      "text": "3.2.5.3. Critical Assets, formerly known as SICAs, are infrastructures directly used to support the functioning or operation of a TCA such that the supporting infrastructure TCA’s loss, degradation, or denial will result in the inability of TCAs to function or operate as intended in the execution of their associated METs/MEFs."
+     },
+     {
+      "id": "AFI102-p025-006",
+      "text": "An example would include an electrical substation that provides power to an identified TCA for which backup power generation is not available."
+     },
+     {
+      "id": "AFI102-p025-007",
+      "text": "3.2.6. Task Asset (TA) – An asset that is directly used to support execution of one or more operations, activities, or METs/MEFs."
+     },
+     {
+      "id": "AFI102-p025-008",
+      "text": "3.2.6.1. TAs determined to be critical to the execution of a mission are upgraded to TCAs and assigned a tier level based on the impact their loss would have on the mission."
+     },
+     {
+      "id": "AFI102-p025-009",
+      "text": "3.2.7. The CARM Program risk management process is cyclical in nature and the CAIP timeline synchronizes the efforts of this process, aims to prevent duplication of effort, and establishes procedures and time requirements for the flow of CARM program guidance to all AF commands."
+     },
+     {
+      "id": "AFI102-p025-010",
+      "text": "3.2.8. AF-CAMS NG is the AF CARM system of record for data associated with AF TCAs."
+     },
+     {
+      "id": "AFI102-p025-011",
+      "text": "3.2.8.1. MAJCOM/DRUs and FOAs (as appropriate) are responsible for entering all of their TCAs into the AF CARM system of record and validating TCAs."
+     },
+     {
+      "id": "AFI102-p025-012",
+      "text": "3.2.8.2. The CARM Program sustains and modernizes a Secret Internet Protocol Router Network (SIPRNet) database application for general programmatic tracking of critical systems and assets to assist with providing remediation and programmatic status on AF remediation efforts."
+     },
+     {
+      "id": "AFI102-p025-013",
+      "text": "The AF CARM system of record is not an operational reporting tool, nor is it built or certified for those types of functions."
+     },
+     {
+      "id": "AFI102-p025-014",
+      "text": "3.2.8.3. The AF CARM system of record captures critical systems and assets for programming remediation efforts."
+     },
+     {
+      "id": "AFI102-p025-015",
+      "text": "The system is designed to serve as a common entry point for the MAJCOM/DRUs and FOAs (as appropriate) and is one-way web shared with CCMDs, JS/J33, and ASD (HD&GS) databases and representatives as appropriate."
+     },
+     {
+      "id": "AFI102-p025-016",
+      "text": "3.3. TCA Assessment Processes."
+     },
+     {
+      "id": "AFI102-p025-017",
+      "text": "3.3.1. The CARM Program utilizes products from three separate assessments to determine risk to AF TCAs and develop risk management strategies."
+     },
+     {
+      "id": "AFI102-p025-018",
+      "text": "The three assessments are 1) Balanced Survivability Assessments (BSA), 2) Joint Mission Assurance Assessments (JMAA) conducted by the Defense Threat Reduction Agency (DTRA), and 3) Air Force Mission Assurance Assessments (AFMAA) conducted by the AFSFC."
+     }
+    ],
+    "26": [
+     {
+      "id": "AFI102-p026-001",
+      "text": "24 AFI10-2402 29 AUGUST 2017"
+     },
+     {
+      "id": "AFI102-p026-002",
+      "text": "3.3.2. BSAs are mission survivability assessments which identify vulnerabilities and assess the mission impact should those vulnerabilities be successfully exploited."
+     },
+     {
+      "id": "AFI102-p026-003",
+      "text": "BSAs also recommend measures to remediate or mitigate the identified vulnerabilities."
+     },
+     {
+      "id": "AFI102-p026-004",
+      "text": "The assessments are mission, rather than geographically oriented, and focus on the systems, networks, architectures, infrastructures, and assets supporting the specific missions targeted by the assessment."
+     },
+     {
+      "id": "AFI102-p026-005",
+      "text": "BSAs are performed at the request of responsible commanders or directors."
+     },
+     {
+      "id": "AFI102-p026-006",
+      "text": "3.3.2.1. BSAs consist of three phases: 1) pre-assessment phase, 2) assessment phase, and 3) post-assessment phase."
+     },
+     {
+      "id": "AFI102-p026-007",
+      "text": "BSA findings reports are distributed only to the assessed organization, the JS, the relevant CCMD(s) and service(s), the assessment requesting organization, and any organization mandated by DoD or service guidance."
+     },
+     {
+      "id": "AFI102-p026-008",
+      "text": "For additional details regarding the activities, timelines, and products generated by the BSA, please reference DoDI 3000.08, Balanced Survivability Assessments."
+     },
+     {
+      "id": "AFI102-p026-009",
+      "text": "3.3.3. JMAAs identify potential risks to mission execution through risks to critical systems and assets based on the combination of likely threats or hazards with identified vulnerabilities."
+     },
+     {
+      "id": "AFI102-p026-010",
+      "text": "These include inter-and-intra-dependencies needed to accomplish required DoD mission requirements."
+     },
+     {
+      "id": "AFI102-p026-011",
+      "text": "JMAAs integrate the findings of three distinct assessments: 1) criticality assessment, 2) all hazards/threats assessments (AHTA), and 3) vulnerability assessment."
+     },
+     {
+      "id": "AFI102-p026-012",
+      "text": "JMAAs are based on DoD MAA benchmarks."
+     },
+     {
+      "id": "AFI102-p026-013",
+      "text": "Together, these are used to form a risk assessment for leadership use in prioritizing response actions."
+     },
+     {
+      "id": "AFI102-p026-014",
+      "text": "3.3.3.1. Criticality assessments are conducted by asset and mission owners and categorize the importance of assets to the DoD missions they support."
+     },
+     {
+      "id": "AFI102-p026-015",
+      "text": "Criticality, along with vulnerabilities and threats/hazards, are used to determine the risk to a mission posed by specific assets."
+     },
+     {
+      "id": "AFI102-p026-016",
+      "text": "Criticality assessments are driven by the information gleaned via the latest CAIP and include various BEI data, including at a minimum, asset name and description, consequence of loss statement, and applicable stakeholders."
+     },
+     {
+      "id": "AFI102-p026-017",
+      "text": "Additionally, beneficial data points include missions/functions/plans supported by the asset, Impact of Loss (i.e., Tier I (mission failure) or Tier II (severe mission degradation), Time to Mission Impact, Time to Restore Mission Capability, and Criticality Rating."
+     },
+     {
+      "id": "AFI102-p026-018",
+      "text": "3.3.3.2. The AHTA is a comprehensive list of known threats and hazards likely to occur on or in the vicinity of the installation."
+     },
+     {
+      "id": "AFI102-p026-019",
+      "text": "It covers man-made threats (terrorism, insider threat, cyber threats, etc.), natural hazards (geological, meteorological, and biological), and accidents."
+     },
+     {
+      "id": "AFI102-p026-020",
+      "text": "The installation AHTA should be tailored to the local environment and specific to the installation, identifying threats and hazards that may cause impact to assets, missions, or personnel."
+     },
+     {
+      "id": "AFI102-p026-021",
+      "text": "Each identified threat or hazard will receive a rating based on agreed-upon definitions, which indicates the likelihood of its occurrence."
+     },
+     {
+      "id": "AFI102-p026-022",
+      "text": "3.3.3.2.1. The AHTAs fulfills the DoD requirement for annual installation threat assessments."
+     },
+     {
+      "id": "AFI102-p026-023",
+      "text": "It is initially drafted and then updated by on-site POCs, typically from the products created within the Threat WG and the EM WG."
+     },
+     {
+      "id": "AFI102-p026-024",
+      "text": "For the purposes of the HHQ assessments, the assessment team may review the existing installation AHTA, or develop a new document if no pre-existing product is available or deemed satisfactory."
+     },
+     {
+      "id": "AFI102-p026-025",
+      "text": "The AHTA provides the assessment team an understanding of the threats/hazards which must be considered during the assessment and will factor into mission risk determinations."
+     },
+     {
+      "id": "AFI102-p026-026",
+      "text": "Additionally, it is also reviewed during the vulnerability"
+     }
+    ],
+    "27": [
+     {
+      "id": "AFI102-p027-001",
+      "text": "AFI10-2402 29 AUGUST 2017 25"
+     },
+     {
+      "id": "AFI102-p027-002",
+      "text": "assessment by the ATO and EM SMEs with the applicable on-site POCs to ensure a comprehensive product."
+     },
+     {
+      "id": "AFI102-p027-003",
+      "text": "3.3.3.3. HHQ AFMAAs are conducted at the installation by the MAA team."
+     },
+     {
+      "id": "AFI102-p027-004",
+      "text": "These onthe-ground assessments determine the susceptibility of a system or asset to the identified threats and hazards."
+     },
+     {
+      "id": "AFI102-p027-005",
+      "text": "The three key phases to the AFMAA are 1) assessment preparation, 2) on-site assessment, and 3) post-assessment coordination."
+     },
+     {
+      "id": "AFI102-p027-006",
+      "text": "3.3.3.3.1. The assessment preparation phase readies both the assessment team and the assessment recipient for the AFMAA vulnerability assessment."
+     },
+     {
+      "id": "AFI102-p027-007",
+      "text": "This includes the development of a Notification Message, Assessment Focus Statement (AFS), execution of a pre-assessment site survey (PSS), provision of applicable POC information, and required documentation from the location to the assessment team, and other logistical coordination (i.e., security requirements, on-site requirements such as work space, transportation, etc.)."
+     },
+     {
+      "id": "AFI102-p027-008",
+      "text": "The assessment team will familiarize itself with the installation and the assets/infrastructures which are to be assessed, while the installation will develop an understanding of what can be expected throughout the process and what support and documentation must be provided to the assessment team."
+     },
+     {
+      "id": "AFI102-p027-009",
+      "text": "These activities will be primarily coordinated directly between the assessment team and installation POCs, but the assistance of Center/Wing CARM POCs may be requested throughout the process."
+     },
+     {
+      "id": "AFI102-p027-010",
+      "text": "3.3.3.3.2. The Notification Message for the pending assessment is delivered by the assessing organization through the applicable chain of command to the recipient installation and signifies the beginning of the pre-assessment preparation phase."
+     },
+     {
+      "id": "AFI102-p027-011",
+      "text": "The notification includes a breakdown of responsibilities between stakeholders, an anticipated timeline, required documentation, and deliverables due upon completion of the assessment."
+     },
+     {
+      "id": "AFI102-p027-012",
+      "text": "3.3.3.3.3. The AFS is a document usually drafted by the mission owner or asset owner with inputs from various stakeholders to include relevant CCMD(s) and service(s)."
+     },
+     {
+      "id": "AFI102-p027-013",
+      "text": "In certain circumstances, the AF may be tasked to develop the AFS for installations where it is not a mission owner."
+     },
+     {
+      "id": "AFI102-p027-014",
+      "text": "The AFS outlines the programs, missions, assets, and special interest items to be assessed at the location, along with an assessment POC."
+     },
+     {
+      "id": "AFI102-p027-015",
+      "text": "This document will guide the assessment team’s focus."
+     },
+     {
+      "id": "AFI102-p027-016",
+      "text": "3.3.3.3.4. The PSS is a site visit by the assessment team to obtain additional insight to installation layout and local assessment partners, address pending issues or concerns, and prepare the assessment recipient for the AFMAA vulnerability assessment."
+     },
+     {
+      "id": "AFI102-p027-017",
+      "text": "Although PSS participation may vary depending on the features of the location being assessed, standard PSS activities include presentations by the local leadership and Team Chief; a windshield tour of the installation being assessed; and mission briefs and asset tours for each asset being assessed."
+     },
+     {
+      "id": "AFI102-p027-018",
+      "text": "Additionally, this visit is used to close out any key preparation activities that have not already been completed."
+     },
+     {
+      "id": "AFI102-p027-019",
+      "text": "3.3.3.3.5. The on-site assessment is the physical execution of the AFMAA vulnerability assessment, which focuses on identifying vulnerabilities of the system or asset as well as the infrastructure components supporting the function of that system or asset."
+     },
+     {
+      "id": "AFI102-p027-020",
+      "text": "Components of the on-site assessment typically include an in-brief presentation with key installation and tenant leadership, asset tours to include a"
+     }
+    ],
+    "42": [
+     {
+      "id": "AFI102-p042-001",
+      "text": "40 AFI10-2402 29 AUGUST 2017"
+     },
+     {
+      "id": "AFI102-p042-002",
+      "text": "Attachment 2"
+     },
+     {
+      "id": "AFI102-p042-003",
+      "text": "QUICK REFERENCE CHART AND PROCESS OVERVIEW"
+     },
+     {
+      "id": "AFI102-p042-004",
+      "text": "Table A2.1."
+     },
+     {
+      "id": "AFI102-p042-005",
+      "text": "AF Critical Asset Identification Process (CAIP)."
+     },
+     {
+      "id": "AFI102-p042-006",
+      "text": "STEP TASK 1 Mission owners decompose assigned missions to identify capabilities required to implement each mission."
+     },
+     {
+      "id": "AFI102-p042-007",
+      "text": "(T-1) Deliverable: A list of validated missions, as applicable, executed at each command level down to the Center/Wing level (Wing roll-up of Squadron mission tasks)."
+     },
+     {
+      "id": "AFI102-p042-008",
+      "text": "OPRs, where formal METs/MEFs do not apply, identify to the HAF CARM Program office how these are expressed (e.g., OPLANS or CONPLANs)."
+     },
+     {
+      "id": "AFI102-p042-009",
+      "text": "2 MAJCOM/DRUs, FOAs, ANGRC, and functional areas initiate Task Asset identification and analysis."
+     },
+     {
+      "id": "AFI102-p042-010",
+      "text": "(T-1) Deliverable: MAJCOM/DRUs, FOAs and ANGRC, (as appropriate) A3 Division Chief memorandum/email confirmation."
+     },
+     {
+      "id": "AFI102-p042-011",
+      "text": "3 MAJCOM/DRUs, FOAs, ANGRC, and functional areas submit nominated TCAs to HAF from Step 2 based on the mission data from Step 1."
+     },
+     {
+      "id": "AFI102-p042-012",
+      "text": "(T-1) Deliverable: MAJCOM/DRU, FOA, ANGRC, and (as appropriate) CV approves TCA nominations and releases report."
+     },
+     {
+      "id": "AFI102-p042-013",
+      "text": "All TCA nominations, including recommended tier level, are loaded into AF-CAMS NG."
+     },
+     {
+      "id": "AFI102-p042-014",
+      "text": "Systemgenerated TCA reports are sent to the HAF CARM Program office."
+     },
+     {
+      "id": "AFI102-p042-015",
+      "text": "4 HAF, MAJCOM/DRUs, FOAs (as appropriate), ANGRC, and functional areas review/validate nominated TCAs."
+     },
+     {
+      "id": "AFI102-p042-016",
+      "text": "(T-1) Deliverable: AF-validated TCA nominations and updated AF TCA data in AF-CAMS NG."
+     },
+     {
+      "id": "AFI102-p042-017",
+      "text": "5 HAF submits AF TCA validated data to the JS/J33."
+     },
+     {
+      "id": "AFI102-p042-018",
+      "text": "Deliverable: AFvalidated TCA data and AF/A3 approval and release of AF TCA validated data to JS."
+     },
+     {
+      "id": "AFI102-p042-019",
+      "text": "6 JS/J33 compiles TCA submissions (COCOMs, Military Departments, Defense Agencies, and DISLAs) consolidates duplicates and coordinates updates."
+     },
+     {
+      "id": "AFI102-p042-020",
+      "text": "Deliverable: JS release of TCA list to DCI community."
+     },
+     {
+      "id": "AFI102-p042-021",
+      "text": "7 Defense infrastructure functional area lead conducts an interdependency analysis of TCAs, when requested."
+     },
+     {
+      "id": "AFI102-p042-022",
+      "text": "Deliverable: Request interdependency analysis through the JS and ASD (HD&GS) as required."
+     },
+     {
+      "id": "AFI102-p042-023",
+      "text": "8 MAJCOM/FOAs (as appropriate), ANGRC, and functional areas review and submit DCA nominations to HAF."
+     },
+     {
+      "id": "AFI102-p042-024",
+      "text": "(T-1) HAF submits AF-approved DCA nominations to JS/J33."
+     },
+     {
+      "id": "AFI102-p042-025",
+      "text": "Deliverable: MAJCOM CV-approved DCA nomination listing."
+     },
+     {
+      "id": "AFI102-p042-026",
+      "text": "AF-approved DCA nominations submitted to JS."
+     },
+     {
+      "id": "AFI102-p042-027",
+      "text": "9 JS Submits DCA nominations list to ASD (HD&GS) and is reviewed and approved."
+     },
+     {
+      "id": "AFI102-p042-028",
+      "text": "Deliverable: ASD (HD&GS)-approved DCA list to the DCI community."
+     }
+    ]
+   },
+   "selected_chunk_ids": [
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    81,
+    82,
+    83,
+    84,
+    85,
+    110
+   ],
+   "table_pages_eligible": [
+    42,
+    46,
+    48
+   ]
+  },
+  "afi13-550": {
+   "chunks_sha256": "15ca79ac0e3ca59062bc565a437378e1d50ec9a73c3877671d67c6e8ac845583",
+   "closed_pages": [
+    8
+   ],
+   "drawn": [
+    {
+     "page": 8,
+     "reason": "per_document"
+    }
+   ],
+   "eligible_pages": 29,
+   "pages_added_by_closure": [],
+   "pages_in_pdf": 29,
+   "pdf_sha256": "329008e36ab492d0ff5a644d5f38c27e7774e60eddebb04f93031a37e37318d5",
+   "pieces": {
+    "8": [
+     {
+      "id": "AFI13-p008-001",
+      "text": "8 AFI13-550 16 APRIL 2019"
+     },
+     {
+      "id": "AFI13-p008-002",
+      "text": "2.2.4.4. In coordination with AF/A10, advocate for AF NC3 requirements and integration with respect to military satellite communications, as well as space- and ground-based missile warning systems, in order to ensure AF space equities and activities are integrated and coordinated across Department and Interagency efforts."
+     },
+     {
+      "id": "AFI13-p008-003",
+      "text": "2.2.5. Deputy Chief of Staff for Logistics, Engineering, and Force Protection (AF/A4) will provide guidance for AN/USQ-225 maintenance documentation and reporting processes."
+     },
+     {
+      "id": "AFI13-p008-004",
+      "text": "2.2.6. Deputy Chief of Staff for Strategic Plans and Requirements (AF/A5/8) will:"
+     },
+     {
+      "id": "AFI13-p008-005",
+      "text": "2.2.6.1. Integrate AF NC3 into the Nuclear Deterrence Operations (NDO) corporate panel."
+     },
+     {
+      "id": "AFI13-p008-006",
+      "text": "2.2.6.2. Act as AF lead for AF NC3 requirements."
+     },
+     {
+      "id": "AFI13-p008-007",
+      "text": "Represent the AF at appropriate Joint Capabilities Integration and Development System boards and working groups (e.g., C4/Cyber and Battlespace Awareness Functional Capability Boards) IAW CJCSI 5123.01H, Charter of the Joint Requirements Oversight Council (JROC) and Implementation of the Joint Capabilities Integration and Development System (JCIDS).(T- 0)"
+     },
+     {
+      "id": "AFI13-p008-008",
+      "text": "2.2.7. Director for Studies, Analyses and Assessments (AF/A9) will provide guidance and feedback on the integration of AF NC3 analyses of programs, plans, and operations; synchronizing DoD and Air Force NC3 capabilities; and requirements analyses designed to optimize operations and sustainment efforts."
+     },
+     {
+      "id": "AFI13-p008-009",
+      "text": "2.2.8. Air Force Chief of Safety (AF/SE), in coordination with AF/A10, will develop and establish Air Force nuclear surety standards and policies for safety, and will assess nuclear weapons systems and systems requirements for safety."
+     },
+     {
+      "id": "AFI13-p008-010",
+      "text": "2.2.9. The Assistant Secretary of the Air Force for Acquisition, Technology and Logistics (SAF/AQ), through multiple AF Program Executive Officers (PEO) to include the Air Force Program Executive Office (AFPEO) NC3, will ensure the timely delivery and lifecycle sustainment of Air Force NC3 system capabilities and equipment to the warfighter based on validated requirements and funding."
+     },
+     {
+      "id": "AFI13-p008-011",
+      "text": "(T-0)"
+     },
+     {
+      "id": "AFI13-p008-012",
+      "text": "2.2.10. Chief, Information Dominance and Chief Information Officer (SAF/CIO A6) will:"
+     },
+     {
+      "id": "AFI13-p008-013",
+      "text": "2.2.10.1. Serve as Headquarters Air Force lead for non-NC3 components of NLCC (senior leader communications and continuity of operations communications)."
+     },
+     {
+      "id": "AFI13-p008-014",
+      "text": "2.2.10.2. In accordance with AFI 17-130, Cybersecurity Program Management, serve as lead for cybersecurity policy implementation."
+     },
+     {
+      "id": "AFI13-p008-015",
+      "text": "2.2.11. AFGSC will:"
+     },
+     {
+      "id": "AFI13-p008-016",
+      "text": "2.2.11.1. Serve as the lead command for the NC3 mission area and as designated Lead Command for the AN/USQ-225 IAW PAD D16-01, AFPD 10-9, Lead Command Designation and Responsibilities for Weapon Systems, and AFI 13-500, Air Force Nuclear Mission Responsibilities."
+     },
+     {
+      "id": "AFI13-p008-017",
+      "text": "2.2.11.2. Integrate AN/USQ-225 into the NDO Service Core Function and Domain Mission Chief Architect roles and responsibilities."
+     }
+    ]
+   },
+   "selected_chunk_ids": [
+    20,
+    21,
+    22,
+    23
+   ],
+   "table_pages_eligible": []
+  },
+  "afi17-203": {
+   "chunks_sha256": "97322c5841458b194ca8e88288e6ebfa6e724d09aeca144c6a4d4e7aa090073f",
+   "closed_pages": [
+    9,
+    10,
+    19,
+    20
+   ],
+   "drawn": [
+    {
+     "page": 9,
+     "reason": "per_document"
+    },
+    {
+     "page": 20,
+     "reason": "table"
+    }
+   ],
+   "eligible_pages": 27,
+   "pages_added_by_closure": [
+    10,
+    19
+   ],
+   "pages_in_pdf": 28,
+   "pdf_sha256": "147fa53787f6d7fb66ef48b40daeaee8de689f7189b3cbfdab3f61d84793f898",
+   "pieces": {
+    "10": [
+     {
+      "id": "AFI17-p010-001",
+      "text": "10 AFI17-203 16 MARCH 2017"
+     },
+     {
+      "id": "AFI17-p010-002",
+      "text": "timely and accurate information and to ensure effective C2 of executed COAs."
+     },
+     {
+      "id": "AFI17-p010-003",
+      "text": "2.5.1.1.7.5. Notifies MCCCs and NOSs of cyber incidents occurring in their respective AORs to facilitate mission impact analysis."
+     },
+     {
+      "id": "AFI17-p010-004",
+      "text": "NOSs will coordinate through the 624 OC with 24 AF, if necessary, to determine if additional protections are required to prevent future similar incidents."
+     },
+     {
+      "id": "AFI17-p010-005",
+      "text": "2.5.1.1.8. 24 AF operates the appropriate key weapon systems and associated infrastructure to support cyber incident handling."
+     },
+     {
+      "id": "AFI17-p010-006",
+      "text": "Air Force Cyber Defense (ACD) performs continuous operations to prevent, detect and respond to intrusions and attacks against Air Force networks."
+     },
+     {
+      "id": "AFI17-p010-007",
+      "text": "2.5.2. Air Combat Command (ACC)."
+     },
+     {
+      "id": "AFI17-p010-008",
+      "text": "AF intelligence, surveillance, and reconnaissance (ISR) assets belonging to 25th AF (ACC) provide foreign cyber threat Indications and Warnings (I&W), Attack Sensing & Warning (AS&W), in-depth entity profiling, in-depth incident analysis, and detailed sensor data analysis of foreign threats to AF computers for the ACD weapon system and 624 OC."
+     },
+     {
+      "id": "AFI17-p010-009",
+      "text": "This information is reported in a Network Intelligence Report (NIR), threat tipper, or AS&W advisory."
+     },
+     {
+      "id": "AFI17-p010-010",
+      "text": "2.5.3. I-NOSCs."
+     },
+     {
+      "id": "AFI17-p010-011",
+      "text": "The I-NOSC is one of three functions provided by the Cyberspace Security and Control System (CSCS)."
+     },
+     {
+      "id": "AFI17-p010-012",
+      "text": "There are three I-NOSCs: they are operated by the 83d Network Operations Squadron (83 NOS), the 561st Network Operations Squadron (561 NOS), and the Air National Guard's 299th Network Operations Security Squadron (299 NOSS)."
+     },
+     {
+      "id": "AFI17-p010-013",
+      "text": "In support of DCO operations, I-NOSCs provide commanders real-time situational awareness of the network within their area of responsibility."
+     },
+     {
+      "id": "AFI17-p010-014",
+      "text": "The I-NOSCs:"
+     },
+     {
+      "id": "AFI17-p010-015",
+      "text": "2.5.3.1. Coordinate with and inform MCCCs/ACCCs (if applicable) and CFPs under their purview in response to DCO events that cross their area of responsibility."
+     },
+     {
+      "id": "AFI17-p010-016",
+      "text": "Accomplish tasking using the most expeditious means available (voice, electrical message, ACT, etc.), and direct organizations to report completion of required actions."
+     },
+     {
+      "id": "AFI17-p010-017",
+      "text": "2.5.3.2. Report suspected/confirmed events to the ACD units in accordance with standing rules of engagement."
+     },
+     {
+      "id": "AFI17-p010-018",
+      "text": "2.5.3.3. Coordinate with and inform the 624 OC, MCCC, CFP, and appropriate weapon system units on all corrective actions associated with the investigation and mitigation of events and incidents."
+     },
+     {
+      "id": "AFI17-p010-019",
+      "text": "2.5.4. MCCCs."
+     },
+     {
+      "id": "AFI17-p010-020",
+      "text": "MCCCs, or similar structures established at the discretion of the MAJCOM, provide network situational awareness to MAJCOM/CCs and manage MAJCOM-unique systems and applications."
+     },
+     {
+      "id": "AFI17-p010-021",
+      "text": "MCCCs:"
+     },
+     {
+      "id": "AFI17-p010-022",
+      "text": "2.5.4.1. Coordinate with the functional communities within their area of responsibility to maintain a situational awareness picture of all MAJCOM-unique systems and applications on AF networks."
+     },
+     {
+      "id": "AFI17-p010-023",
+      "text": "2.5.4.2. Coordinate DCO and DoDIN Operations COA planning and execution with the appropriate I-NOSC, the 624 OC and applicable 24 AF-designated units as appropriate."
+     },
+     {
+      "id": "AFI17-p010-024",
+      "text": "Provide operational impact data to assist efforts to investigate and mitigate events and incidents involving systems within their area of responsibility."
+     },
+     {
+      "id": "AFI17-p010-025",
+      "text": "2.5.5. CFPs/Communications Squadrons."
+     },
+     {
+      "id": "AFI17-p010-026",
+      "text": "CFPs, and those Communication Squadrons at locations without a servicing CFP, provide an on-site technical capability to implement"
+     }
+    ],
+    "19": [
+     {
+      "id": "AFI17-p019-001",
+      "text": "AFI17-203 16 MARCH 2017 19"
+     },
+     {
+      "id": "AFI17-p019-002",
+      "text": "3.8. LE & CI Incidents ."
+     },
+     {
+      "id": "AFI17-p019-003",
+      "text": "An incident/event investigation involving LE/CI (e.g., investigation of insider activity) may deviate from “typical” cyber incident handling processes depending upon the nature and sensitivity of the investigation."
+     },
+     {
+      "id": "AFI17-p019-004",
+      "text": "In such cases, information may be “law enforcement sensitive” or subject to other handling restrictions, with limited distribution to the general AF community."
+     },
+     {
+      "id": "AFI17-p019-005",
+      "text": "3.8.1. An incident/event investigation involving the IC may deviate from “typical” cyber incident handling processes depending upon the nature and sensitivity of the operation."
+     },
+     {
+      "id": "AFI17-p019-006",
+      "text": "In such cases, adversary activity may be allowed to continue in order for friendly forces to gain actionable intelligence or allow for the continuation of friendly classified operations."
+     }
+    ],
+    "20": [
+     {
+      "id": "AFI17-p020-001",
+      "text": "20 AFI17-203 16 MARCH 2017"
+     },
+     {
+      "id": "AFI17-p020-002",
+      "text": "Table 3.2."
+     },
+     {
+      "id": "AFI17-p020-003",
+      "text": "Incident Handling and Support Activities."
+     },
+     {
+      "id": "AFI17-p020-004",
+      "text": "This table presents the relationship between the ongoing support activities and the basic phases of incident handling."
+     },
+     {
+      "id": "AFI17-p020-005",
+      "text": "Reporting & Documentation Coordination Notification Detection of Submission of Initial documentation Global information sharing Events report of events of event activity and gathering between tiers, of interest with other DCO and DoDIN Operations components, LE/CI or IC"
+     },
+     {
+      "id": "AFI17-p020-006",
+      "text": "Preliminary Submission of If no documentation Coordination to identify Analysis & initial incident has been started additional sources of Identification report initial documentation information and artifacts should occur here"
+     },
+     {
+      "id": "AFI17-p020-007",
+      "text": "Preliminary Update of Documentation of Coordination of technical and Response actions taken any actions taken organizational steps taken to Action implement preliminary actions across all affected C/S/As"
+     },
+     {
+      "id": "AFI17-p020-008",
+      "text": "Incident More detailed Documentation of Coordination of incident Analysis updates of analysis results analysis activities between analysis DCO, DoDIN Operations, performed mission owners, technical and management components and internal/external subject matter experts"
+     },
+     {
+      "id": "AFI17-p020-009",
+      "text": "Response & Updates on Documentation of Coordination of response Recovery actions taken response plan, actions between C/S/As and and submission analysis performed, field activities, CNDSPs, of final report and COAs mission owners, Installations for closure and DCO Service subscribers, DoDIN Operations, and with LE/CI and IC, and others as required"
+     },
+     {
+      "id": "AFI17-p020-010",
+      "text": "Post-Incident Submission of Documentation of Coordination between DoD Analysis Post-Incident lessons learned and components to implement any Analysis report resulting process improvement improvement plan activities resulting from postincident analysis"
+     }
+    ],
+    "9": [
+     {
+      "id": "AFI17-p009-001",
+      "text": "AFI17-203 16 MARCH 2017 9"
+     },
+     {
+      "id": "AFI17-p009-002",
+      "text": "2.5.1. Air Force Space Command (AFSPC)."
+     },
+     {
+      "id": "AFI17-p009-003",
+      "text": "AFSPC is the lead command for Cyberspace Operations with responsibilities as outlined in AFPD 10-9, Lead Command Designation and Responsibilities For Weapon Systems."
+     },
+     {
+      "id": "AFI17-p009-004",
+      "text": "In accordance with AFI 17-201, Command and Control for Cyberspace Operations, the Commander, AF Space Command (AFSPC/CC) is responsible for the overall command and control, security and defense of the AF Information Network (AFIN), and for the command, control, implementation, security, operation, maintenance, sustainment, configuration, and defense of the AF Network (AFNET)/AF Network-Secure (AFNET-S)."
+     },
+     {
+      "id": "AFI17-p009-005",
+      "text": "These day-to-day authorities may be delegated."
+     },
+     {
+      "id": "AFI17-p009-006",
+      "text": "2.5.1.1. 24 AF / AFCYBER."
+     },
+     {
+      "id": "AFI17-p009-007",
+      "text": "AFCYBER is the Air Force component to USCYBERCOM."
+     },
+     {
+      "id": "AFI17-p009-008",
+      "text": "24 AF/CC, when acting as AFCYBER/CC or when executing missions delegated by AFSPC/CC:"
+     },
+     {
+      "id": "AFI17-p009-009",
+      "text": "2.5.1.1.1. Issues cyber orders to subordinate 24 AF wings, MAJCOMs, wings, NOSs, and CFPs via the 624 OC and/or the AFSPC Command Center as needed for response to cyber incidents."
+     },
+     {
+      "id": "AFI17-p009-010",
+      "text": "2.5.1.1.2. Exercises specific compliance enforcement and directive authority to task the NOSs in response to network events that involve multiple MAJCOMs, affect the preponderance of the AF network, or are time-critical to assure network availability and security."
+     },
+     {
+      "id": "AFI17-p009-011",
+      "text": "This authority extends to all systems and applications that expose AF networks to a vulnerability or impact operations."
+     },
+     {
+      "id": "AFI17-p009-012",
+      "text": "2.5.1.1.3. Provides the Intelligence Community with requirements for priority intelligence and I&W of potential attacks against AF information systems and computer networks."
+     },
+     {
+      "id": "AFI17-p009-013",
+      "text": "2.5.1.1.4. Establishes requirements and direction for AF Attack, Sensing and Warning under responsibilities for the National Security Incident Program."
+     },
+     {
+      "id": "AFI17-p009-014",
+      "text": "2.5.1.1.5. Engages with the owners of functional systems that are employed and inuse on the AF network, and with appropriate Authorizing Officials (AOs) and their staffs, to ensure that information needed for management of incidents involving those systems is disseminated to levels were it is required to enable appropriate action."
+     },
+     {
+      "id": "AFI17-p009-015",
+      "text": "2.5.1.1.6. In his/her role as AF component commander (AFCYBER/CC) to USCYBERCOM, 24 AF/CC ensures AF forces perform the mission and tasks assigned by USCYBERCOM to include the reporting and coordination of network events and incidents."
+     },
+     {
+      "id": "AFI17-p009-016",
+      "text": "2.5.1.1.7. 24 AF is designated as the AF CNDSP for AF General Services (GENSER) on NIPRNet and SIPRNet."
+     },
+     {
+      "id": "AFI17-p009-017",
+      "text": "In this role, 24 AF:"
+     },
+     {
+      "id": "AFI17-p009-018",
+      "text": "2.5.1.1.7.1. Coordinates and directs AF-wide CNDSP activities in accordance with DoDD O-8530.1, Computer Network Defense (CND)."
+     },
+     {
+      "id": "AFI17-p009-019",
+      "text": "2.5.1.1.7.2. Supports USCYBERCOM in Mission Analysis development."
+     },
+     {
+      "id": "AFI17-p009-020",
+      "text": "2.5.1.1.7.3. Provides functional expertise in Mission Analysis, leveraging established doctrine, tactics, techniques and procedures."
+     },
+     {
+      "id": "AFI17-p009-021",
+      "text": "2.5.1.1.7.4. Develops and implements procedures to coordinate with NOSs, MCCCs/ACCCs (if applicable), CFPs and other AF organizations to collect"
+     }
+    ]
+   },
+   "selected_chunk_ids": [
+    18,
+    19,
+    20,
+    21,
+    49,
+    50
+   ],
+   "table_pages_eligible": [
+    5,
+    6,
+    14,
+    20
+   ]
+  },
+  "afpd_17-1": {
+   "chunks_sha256": "ec9d252259a9fe56d7a7822811cb331595042030ffab771cf13a51f261a2f409",
+   "closed_pages": [
+    7,
+    8
+   ],
+   "drawn": [
+    {
+     "page": 8,
+     "reason": "per_document"
+    }
+   ],
+   "eligible_pages": 15,
+   "pages_added_by_closure": [
+    7
+   ],
+   "pages_in_pdf": 15,
+   "pdf_sha256": "6f2b6762b844f357c67be021b6f8ee002552a6342f4c67c10acc8e0cde60aab0",
+   "pieces": {
+    "7": [
+     {
+      "id": "AFPD-p007-001",
+      "text": "AFPD 17-1 12 APRIL 2016 7"
+     },
+     {
+      "id": "AFPD-p007-002",
+      "text": "3.11.5. Develop and maintain the AF Operational Baseline (OB) which is synchronized with the Target Baseline (TB) and Implementation Baseline (IB) developed by SAF/CIO A6."
+     },
+     {
+      "id": "AFPD-p007-003",
+      "text": "3.11.6. Deploy AF approved cyber weapon systems."
+     },
+     {
+      "id": "AFPD-p007-004",
+      "text": "3.11.7. In conjunction with the National Security Agency, provide oversight and guidance for AF COMSEC, AF Cryptologic Modernization and the development, fielding and sustainment of cryptologic solutions within the AF."
+     },
+     {
+      "id": "AFPD-p007-005",
+      "text": "3.11.8. Develop a trained, educated, experienced force to conduct cyberspace operations."
+     },
+     {
+      "id": "AFPD-p007-006",
+      "text": "3.12. Air Force Materiel Command will:"
+     },
+     {
+      "id": "AFPD-p007-007",
+      "text": "3.12.1. Serve as the core functional lead integrator for agile combat support."
+     },
+     {
+      "id": "AFPD-p007-008",
+      "text": "3.12.2. Conduct technological research and materiel development activities to acquire, perform developmental testing of, field and sustain current and future cyberspace capabilities."
+     },
+     {
+      "id": "AFPD-p007-009",
+      "text": "3.13. CFLs will:"
+     },
+     {
+      "id": "AFPD-p007-010",
+      "text": "3.13.1. Plan and program cyberspace investments for assigned service core functions based on the AF Strategic Master Plan and IDFP, the IEMA Roadmap, and other IDFPaligned roadmaps."
+     },
+     {
+      "id": "AFPD-p007-011",
+      "text": "3.13.2. Coordinate with cyberspace governance forums and to enhance collaborative efforts potentially reducing costs, complexity, and unnecessary duplication of effort."
+     },
+     {
+      "id": "AFPD-p007-012",
+      "text": "3.13.3. Establish mission capability needs and requirements for cyberspace infrastructure within the respective CFL portfolio."
+     },
+     {
+      "id": "AFPD-p007-013",
+      "text": "3.13.4. Provide investment performance information to SAF/CIO A6."
+     },
+     {
+      "id": "AFPD-p007-014",
+      "text": "3.13.5. Serve as the Functional Sponsor for Defense Business System requirements within the Service Development and Delivery Process leading into the Defense Acquisition System."
+     },
+     {
+      "id": "AFPD-p007-015",
+      "text": "3.14. All HAF Functionals, MAJCOMs, DRUs, and FOAs will:"
+     },
+     {
+      "id": "AFPD-p007-016",
+      "text": "3.14.1. Participate in the cyberspace governance forums, as required."
+     },
+     {
+      "id": "AFPD-p007-017",
+      "text": "Identify new cyberspace requirements to responsible CFL."
+     },
+     {
+      "id": "AFPD-p007-018",
+      "text": "3.14.2. Ensure all cyberspace investments are identified and registered in the SAF/CIO A6-directed management control system."
+     },
+     {
+      "id": "AFPD-p007-019",
+      "text": "3.14.3. Maintain enterprise architectures for their areas of responsibility, to include mission-unique IS solution architectures, and be able to integrate their architectural data using AF-directed repositories."
+     },
+     {
+      "id": "AFPD-p007-020",
+      "text": "3.14.4. Develop and exercise contingency plans for mission assurance when operating under conditions of diminished or denied NSS, mission critical IT and data availability."
+     },
+     {
+      "id": "AFPD-p007-021",
+      "text": "3.14.5. Identify and advocate for rapid innovation initiatives, both leveraging cyberspace capabilities and operating through cyberspace."
+     }
+    ],
+    "8": [
+     {
+      "id": "AFPD-p008-001",
+      "text": "8 AFPD 17-1 12 APRIL 2016"
+     },
+     {
+      "id": "AFPD-p008-002",
+      "text": "3.14.6. Ensure that subordinate organizations identify the Protection Level of their cyber and computer/communications assets and apply integrated defense measures IAW AFI 31-101, Integrated Defense."
+     },
+     {
+      "id": "AFPD-p008-003",
+      "text": "3.15. The General Counsel (SAF/GC) and The Judge Advocate General (AF/JA) will advise the AF on legal matters related to information dominance governance and management."
+     },
+     {
+      "id": "AFPD-p008-004",
+      "text": "4. Applicability to ISR and Counterintelligence Authorities and Policies."
+     },
+     {
+      "id": "AFPD-p008-005",
+      "text": "Nothing in this directive shall alter or supersede the existing authorities and policies of the Director of National Intelligence (DNI) regarding the protection of Sensitive Compartmented Information (SCI) or intelligence SAPs."
+     },
+     {
+      "id": "AFPD-p008-006",
+      "text": "The application of the provisions and procedures of this directive to SCI or other intelligence ISs is encouraged where they may complement or address areas not otherwise specifically addressed."
+     },
+     {
+      "id": "AFPD-p008-007",
+      "text": "AF ISR and counterintelligence governance, compliance, and reporting is governed by applicable Attorney General, DNI, Under Secretary of Defense (Intelligence), Director of Central Intelligence, and Director, National Security Agency directives and guidelines."
+     },
+     {
+      "id": "AFPD-p008-008",
+      "text": "DEBORAH L. JAMES Secretary of the Air Force"
+     }
+    ]
+   },
+   "selected_chunk_ids": [
+    23,
+    24
+   ],
+   "table_pages_eligible": []
+  },
+  "dafman17-1305": {
+   "chunks_sha256": "d95c22075db146f1bdce462890e6ef6cd57383c7281e1708c828399bd3cf6615",
+   "closed_pages": [
+    26,
+    27
+   ],
+   "drawn": [
+    {
+     "page": 27,
+     "reason": "per_document"
+    }
+   ],
+   "eligible_pages": 42,
+   "pages_added_by_closure": [
+    26
+   ],
+   "pages_in_pdf": 42,
+   "pdf_sha256": "ae766b6191078f78df939aa928582c12f8b5e0599fb9799205812efc0b02fc8f",
+   "pieces": {
+    "26": [
+     {
+      "id": "DAFM-p026-001",
+      "text": "26 DAFMAN17-1305 7 JUNE 2024"
+     },
+     {
+      "id": "DAFM-p026-002",
+      "text": "in good standing even while serving in a joint assignment, special duty assignment, or deployment."
+     },
+     {
+      "id": "DAFM-p026-003",
+      "text": "4.1.14. CCC funds will not be used to pay for exam vouchers for civilian or military personnel who are within one (1) year of a confirmed retirement or separation date (T-1)."
+     },
+     {
+      "id": "DAFM-p026-004",
+      "text": "4.1.15. Civilian personnel can update civilian personnel database(s) or system(s) through a self-certification process in the MyBiz+ application."
+     },
+     {
+      "id": "DAFM-p026-005",
+      "text": "The status of the certification would be listed as \"self-certified\" in the member's record."
+     },
+     {
+      "id": "DAFM-p026-006",
+      "text": "The member routinely receives an automated email with a link to upload the certificate into the AF Personnel Services application where it is verified by AFPC at Joint Base San Antonio -Randolph, TX."
+     },
+     {
+      "id": "DAFM-p026-007",
+      "text": "Once verified, the status in MyBiz+ would change to “Verified.”"
+     },
+     {
+      "id": "DAFM-p026-008",
+      "text": "MyBiz+ is available on the DCPDS portal: https://compo.dcpds.cpms.osd.mil/."
+     },
+     {
+      "id": "DAFM-p026-009",
+      "text": "4.1.16. Military personnel (officers and enlisted) will complete DAF Form 2096, Classification/On-the-Job Training Action, to indicate award of the SEI for the highest cyberspace qualification obtained (T-1)."
+     },
+     {
+      "id": "DAFM-p026-010",
+      "text": "4.1.16.1. The DAF Form 2096 shall be submitted within 10 working days after vendor notification of completing the DoD approved cyberspace certification."
+     },
+     {
+      "id": "DAFM-p026-011",
+      "text": "Members shall submit this form to the appropriate servicing personnel function (e.g., Force Support Squadron, Military Personnel Flight, or equivalent) to update their personnel record, after the supervisor and commander signs the form."
+     },
+     {
+      "id": "DAFM-p026-012",
+      "text": "4.1.16.2. The SEI reflects coding for assigned UMD billet, position, AFSC or SFSC and/or DCWF requirement."
+     },
+     {
+      "id": "DAFM-p026-013",
+      "text": "4.1.17. Cyberspace coding is based upon serving in an identified Cyber role and not as a function of rank, position of prestige, or appointment."
+     },
+     {
+      "id": "DAFM-p026-014",
+      "text": "4.1.18. Graduates of Undergraduate Cyber Training are expected to become cyber coded and meet qualification requirements as a precondition for matriculation (entry) into the career field (T-1)."
+     },
+     {
+      "id": "DAFM-p026-015",
+      "text": "4.1.18.1. Once assigned to cyberspace-coded position, Cyber Operations (17XX) officers will meet DCWF foundational requirements within nine (9) months of duty assignment (T-0)."
+     },
+     {
+      "id": "DAFM-p026-016",
+      "text": "4.1.18.2. Once DCWF qualifications are obtained, 17X officers will maintain their qualifications in good standing even while serving in a joint assignment, special duty assignment, or deployment (T-1)."
+     },
+     {
+      "id": "DAFM-p026-017",
+      "text": "4.1.19. An individual’s cyberspace certification may be accepted for credit at the Community College of the Air Force, based on applicable degree requirements."
+     },
+     {
+      "id": "DAFM-p026-018",
+      "text": "It is recommended for individuals contact their local education office to verify applicability."
+     },
+     {
+      "id": "DAFM-p026-019",
+      "text": "4.2. Exceptional Procedures"
+     },
+     {
+      "id": "DAFM-p026-020",
+      "text": "4.2.1. DAF Civilian and military personnel may temporarily perform cyberspace position duties while working toward meeting qualification requirements under the direct observation and supervision of a qualified individual."
+     },
+     {
+      "id": "DAFM-p026-021",
+      "text": "The responsible AO, with a recommendation from the ISSM must determine the allowable period."
+     },
+     {
+      "id": "DAFM-p026-022",
+      "text": "If such observation is not feasible, the"
+     }
+    ],
+    "27": [
+     {
+      "id": "DAFM-p027-001",
+      "text": "DAFMAN17-1305 7 JUNE 2024 27"
+     },
+     {
+      "id": "DAFM-p027-002",
+      "text": "observational requirement may be waived due to severe operational or personnel constraints, otherwise the individual must be reassigned duties consistent with their qualifications (T-1)."
+     },
+     {
+      "id": "DAFM-p027-003",
+      "text": "4.2.2. Deployment line remarks may be established for each DCWF code and proficiency level of cyberspace qualifications to allow the Combatant Commanders the flexibility to identify the appropriate cyberspace workforce requirements in a deployed environment not already identified in the Unit Type Code (UTC) Manpower Details section and/or to facilitate reciprocity across the DoD Enterprise."
+     },
+     {
+      "id": "DAFM-p027-004",
+      "text": "4.2.3. Each military member assigned or tasked as a UTC substitute will meet the cybersecurity certification requirements where the Mission Capability Statement or manpower detail SEI includes cybersecurity responsibilities (T-1)."
+     },
+     {
+      "id": "DAFM-p027-005",
+      "text": "4.3. Waivers to procedure"
+     },
+     {
+      "id": "DAFM-p027-006",
+      "text": "4.3.1. Units will initiate a waiver from normal procedures, as appropriate, by consulting their appointed representative as noted in paragraph 2.9.6 of this manual."
+     },
+     {
+      "id": "DAFM-p027-007",
+      "text": "After vetting the request, representatives shall endorse the request with rationale and forward to the responsible Authorizing Official for their consideration if within the scope of the Authorizing Official’s authority."
+     },
+     {
+      "id": "DAFM-p027-008",
+      "text": "Requests requiring higher authority are considered and endorsed with SAF/CN and as appropriate, forwarded to the CWMB for final approval."
+     },
+     {
+      "id": "DAFM-p027-009",
+      "text": "4.3.2. Cybersecurity is critical for ensuring information is protected and the Systems meets the operational requirements as designed under any cyber situation."
+     },
+     {
+      "id": "DAFM-p027-010",
+      "text": "Select DAF workforce personnel (e.g., aircrew, maintenance, researchers, and system technicians) may need limited elevated permissions to perform tasks as required by DAF publications (e.g., technical orders, aids, software handbooks, checklists, and contractor-developed technical manual procedures) to facilitate operation, troubleshooting and repair of systems."
+     },
+     {
+      "id": "DAFM-p027-011",
+      "text": "Limited elevated permissions are elevated network rights for a specific requirement as required by DAF publications but do not include all permissions of a privileged user."
+     },
+     {
+      "id": "DAFM-p027-012",
+      "text": "These tasks potentially require DCWF qualifications beyond the requirements established in publications such as mission design series documents and technical orders."
+     },
+     {
+      "id": "DAFM-p027-013",
+      "text": "These DAF publications have been vetted and approved by the responsible AO under previous models to prevent the unauthorized alteration of a system cybersecurity posture."
+     },
+     {
+      "id": "DAFM-p027-014",
+      "text": "Such approvals should be newly reviewed for applicability by relevant responsible parties."
+     },
+     {
+      "id": "DAFM-p027-015",
+      "text": "The responsible AO shall make a DCWF identification and requirements determination, exempting individuals who have limited elevated network or system permissions to systems."
+     },
+     {
+      "id": "DAFM-p027-016",
+      "text": "The determination must apply only to systems under the AO’s authority and responsibility for risk acceptance (T-1)."
+     },
+     {
+      "id": "DAFM-p027-017",
+      "text": "The PM will initiate the exemption determination memo, the ISSM will coordinate on the memo and the AO will sign the memo (T-1)."
+     },
+     {
+      "id": "DAFM-p027-018",
+      "text": "The PM will ensure the exemption determination memo includes the following items:"
+     },
+     {
+      "id": "DAFM-p027-019",
+      "text": "4.3.2.1. General description of specific systems."
+     },
+     {
+      "id": "DAFM-p027-020",
+      "text": "4.3.2.2. Details on specific positions, including AFSC, SFSCs, or occupational series to be exempted."
+     },
+     {
+      "id": "DAFM-p027-021",
+      "text": "4.3.2.3. Rationale why a DoD approved cyberspace foundational qualification is not required."
+     },
+     {
+      "id": "DAFM-p027-022",
+      "text": "4.3.2.4. Details on specific actions to be performed by an individual or individuals as required by DAF publications that necessitate limited elevated permissions."
+     }
+    ]
+   },
+   "selected_chunk_ids": [
+    81,
+    82,
+    83,
+    84
+   ],
+   "table_pages_eligible": []
+  }
+ },
+ "min_words": 60,
+ "pages_closed_total": 24,
+ "pages_drawn_total": 16,
+ "pieces_sha256": "31b24ac851f827b6abde41676bdc14a1f7269a429e17dde11db01d0fb478a998",
+ "pieces_total": 454,
+ "pymupdf": "1.27.1:",
+ "seed": "wp45.7-heldout",
+ "segmenter_sha256": "54d8f67fd66a2bd23df7c5774d24691f3bdda61871a206137bcda0713fb25f72",
+ "segmenter_version": "1"
+}
