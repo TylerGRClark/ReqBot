@@ -1,0 +1,17 @@
+{
+ "devkind_adjudicated_obligations": 78,
+ "devkind_permission_wording_non_obligations": 27,
+ "devkind_pieces": 105,
+ "frozen_sha256": {
+  "heldout_frozen.json": "1018c13e7a9084defa97c50b6cf5ce9b825e901fb8d19d8392481cd4720bcbfc",
+  "pages_frozen.json": "e9e26d1457df46f43894d33aff43a8b63a9ec5de1e5c19c497c927ef799c57b4"
+ },
+ "heldout_pieces": 454,
+ "heldout_pieces_sha256": "31b24ac851f827b6abde41676bdc14a1f7269a429e17dde11db01d0fb478a998",
+ "sha256": {
+  "RUBRIC.md": "af21ef5e6a4f4072e160a5be60359fa830c66d62a9dbe188322b32a6f2e08345",
+  "check_labels.py": "6fc40c3f865f8e8f6d2e1c8ed35b35044b6832338efc915b9788cce81cd817b8",
+  "pack_devkind.md": "10bcdb453c1405cf13f575997a126593f46606146207e72aa8835ea21de82975",
+  "pack_heldout.md": "e4050ec29b2eb1b3aeb58a9d7e9c7a77db90d62b7ffa19d6d58f678381d3a137"
+ }
+}
