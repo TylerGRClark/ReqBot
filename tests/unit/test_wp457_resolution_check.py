@@ -177,13 +177,13 @@ def test_a_null_phrase_needs_class_none_and_an_imperative_may_not_gain_a_modal(R
 
 
 def test_a_modal_in_the_evidence_is_an_error_for_requirements_but_fine_for_non_requirements(R, C):
-    spans = _spans("The hypervisor can pause a guest OS.")
+    spans = _spans("The hypervisor should pause a guest OS.")
     a = copy.deepcopy(R.EXAMPLES[5]["answer"])  # scope_or_context, null modality
     a["status"] = {"value": "obligation", "evidence": ["E1"]}
     a["applicability"] = {"value": None, "evidence": []}
     a["actor"] = {"value": "The hypervisor", "evidence": ["E1"]}
     assert ("modal_in_evidence", "modality") in codes(C.check(a, spans))  # an obligation with a modal in the evidence needs it
-    a["status"] = {"value": "not_a_requirement", "evidence": ["E1"]}  # a non-deontic "can": no modal rule applies
+    a["status"] = {"value": "not_a_requirement", "evidence": ["E1"]}  # not a requirement: no modal rule applies
     assert C.check(a, spans) == []
 
 
@@ -437,3 +437,24 @@ def test_a_reason_on_a_resolved_answer_is_a_warning_and_the_modality_error_set_i
     got = C.check(a, spans)
     assert {i.code for i in C.modality_errors(got)} >= {"modality_strengthened"}
     assert "modality_removed" in C.MODALITY_ERROR_CODES and "added_token" not in C.MODALITY_ERROR_CODES
+
+
+def test_can_is_a_copied_phrase_but_not_a_modal_in_generated_sentences(R, C):
+    assert C.phrase_class("can") == "permission"
+    assert C.modals_in("who can get into them") == []  # ability, not permission
+    assert C.modals_in("who can get into them", ambiguous=True) == [("can", "permission")]
+    spans = _spans("All NC3 systems must be configured to enforce approved authorizations.")
+    a = copy.deepcopy(R.EXAMPLES[1]["answer"])
+    a["status"] = {"value": "obligation", "evidence": ["E1"]}
+    a["actor"] = {"value": "All NC3 systems", "evidence": ["E1"]}
+    a["action"] = {"value": "be configured to enforce approved authorizations", "evidence": ["E1"]}
+    a["target"] = {"value": None, "evidence": []}
+    a["exceptions"] = []
+    a["modality"] = {"verbatim": "must", "class": "obligation", "evidence": ["E1"]}
+    a["standalone_statement"] = {"value": "All NC3 systems must be configured to enforce approved authorizations.", "evidence": ["E1"]}
+    a["plain_language"] = {"value": "All NC3 systems have to be set up so that only approved people can get in.", "evidence": []}
+    assert codes(C.check(a, spans)) == []  # "can get in" is not a new permission
+
+
+def test_the_prompt_says_plain_language_and_unresolved_reason_take_no_evidence(R):
+    assert "plain_language and unresolved_reason always have an empty evidence list" in R.INSTRUCTIONS

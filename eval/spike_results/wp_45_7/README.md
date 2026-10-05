@@ -172,7 +172,7 @@ statuses (class `none` is only for a modal-free obligation), the cited operator 
 no new number, acronym or proper name and no new or changed modal of a different class (a subordinate modal the source itself
 contains is a faithful copy; the modals are compared per class in both directions, so a dropped primary modal or a subordinate
 modal reassigned to another class is caught too). A wrong primitive type in an answer is a shape issue, never a crash. An extractive value must lie inside ONE cited span; two spans that end and begin with the halves of
-a name do not count. Tests: `tests/unit/test_wp457_resolution_check.py` (31). **Every worked example must pass the checker against its
+a name do not count. Tests: `tests/unit/test_wp457_resolution_check.py` (33). **Every worked example must pass the checker against its
 own bundle** (a test enforces it), which keeps the prompt and the checker from drifting apart.
 
 Two things the numbers say:
@@ -206,3 +206,45 @@ hand audit and the entailment gate (a model) are separate and still needed. Know
   (the field is supposed to quote), but it will count against a model that paraphrases.
 - **Codes that count toward the zero-tolerance modality gate** are listed in `MODALITY_ERROR_CODES`; `added_token` and shape
   problems are reported separately and are not part of that rule.
+
+## Step 5: the runners and the first live pilot (`ollama_run.py`, `discovery_prompts.py`, `chunk_sets.py`, `run_discovery.py`, `run_resolver.py`)
+
+Measurement only. The shared client records Ollama's own token counts and timings; every run label (arm, model, repeat) has its own directory
+and its own ledger, and a ledger key includes the **model digest** and the run label, so a second repeat or the 14B arm can never reuse
+an earlier answer. A discovery prompt estimated over the prompt cap, or a resolver bundle that cannot fit, is recorded `untreatable` and
+never sent; a call whose prompt plus answer reaches `num_ctx` is `window_overrun`; both stay in every denominator as failures. `failed`
+records are redone on resume. D0 is the production Step C prompt unchanged; D1 is the plan's inclusive prompt (appendix A) with five invented
+examples. Chunk sets: 46 held-out chunks and 38 dev chunks (the chunks that touch the labeled pages). Tests: `tests/unit/test_wp457_runners.py`
+(13, with a faked Ollama).
+
+**Pilot against the real server** (Tyler's Ollama, `llama3.1:8b-instruct-q4_K_M` digest `46e0c10c039e` and `qwen2.5:14b` digest `7cdf5a0187d5`,
+temperature 0.1, `num_ctx` 8192). A schema and prompt smoke test on a handful of records, not an evaluation:
+
+| Pilot | Calls | Complete | Shape-conformant | Mean prompt tokens | Mean answer tokens | Mean seconds | Answers with no checker error |
+|---|---|---|---|---|---|---|---|
+| Resolver R1, 8B, 10 production Step C records | 10 | 10 | 10 | 2,339 | 261 | 5.9 | 5 of 10 |
+| Resolver R1, 14B, 10 same records (earlier prompt) | 10 | 10 | 10 | 2,350 | 322 | 15.0 | 2 of 10 |
+| Discovery D0, 8B, 10 dev chunks | 10 | 10 | n/a | 1,004 | 130 | 3.1 | n/a |
+| Discovery D1, 8B, 10 dev chunks | 10 | 10 | n/a | 1,201 | 202 | 5.0 | n/a |
+
+What it settled:
+
+- **The schema works.** Both models accepted the JSON Schema `format` constraint with nullable strings and enum keys; 20 of 20 resolver answers were
+  structurally conformant and none failed to parse. That was the main open risk from step 4.
+- **The 2.5 characters per token estimate is pessimistic by about 1.6 to 1.8 times** (estimate over real: 1.65 for the resolver, 1.7 to 1.8 for
+  discovery). The real fixed resolver prompt is about 1,400 to 1,500 tokens, not 3,400, so windows are far from binding at these sizes (no overrun
+  in any pilot call). The budget stays conservative for the experiment; the real counts are in the ledgers.
+- **D1 is more inclusive, as designed**: 46 records against D0's 27 on the same ten dev chunks, at about 200 more prompt tokens and 60% more
+  time per call. Record count is not the metric (recall and precision against the labels are), and 8-word runs from the D1 examples appeared in
+  none of the 46 quotes (the regurgitation check that backlog item 23 asked for).
+- **The 14B is about 2.5 times slower per resolver call and not better on this smoke test** (2 of 10 clean answers against 5 of 10, on the earlier
+  prompt). Ten records settle nothing; the full runs and labels do.
+
+What the checker found in the 8B resolver answers (so the pilot is also a test of the checker): on fragments whose governing "shall" is in the
+bundle, the 8B often copies the quote and cites a "shall" from a span that does not contain it (`not_in_cited_span`), leaves the actor out of
+the standalone sentence, gives a null modality phrase with class `obligation`, or invents a modality phrase from nowhere. These are model errors
+the experiment exists to measure, not checker artifacts, and **the prompt was deliberately not tuned on this smoke test**. Two checker or prompt
+artifacts were found and fixed before the numbers above: "can" in plain language ("who can get into them") was counted as a permission, and neither
+model had been told that `plain_language` and `unresolved_reason` take an empty evidence list (the prompt now says so, which changed its hash).
+
+Not in this step: Step D on the discovery output, the scoring against labels, and the labels themselves (still waiting on the second-labeler decision).

@@ -43,6 +43,9 @@ MODAL_TABLE = {
     "prohibition": ["shall not", "must not", "may not", "cannot", "will not", "never", "must never", "shall never",
                     "is prohibited from", "are prohibited from", "is forbidden", "are forbidden", "forbidden"],
 }
+# "can" and "cannot" are ambiguous in running text ("who can get into them" describes ability, not permission), so they are accepted as
+# a copied modality phrase but never counted as a modal in generated sentences or in "a modal is in the evidence" tests.
+AMBIGUOUS = {"can", "cannot"}
 _PHRASES = sorted(((p, c) for c, ps in MODAL_TABLE.items() for p in ps), key=lambda pc: -len(pc[0]))
 _PHRASE_RE = [(re.compile(rf"(?<![\w']){re.escape(p)}(?![\w'])"), p, c) for p, c in _PHRASES]
 
@@ -72,11 +75,14 @@ def phrase_class(phrase):
     return None
 
 
-def modals_in(text):
-    """[(phrase, class)] for every table phrase in the text, longest match first, without overlapping matches."""
+def modals_in(text, ambiguous=False):
+    """[(phrase, class)] for every table phrase in the text, longest match first, without overlapping matches. The ambiguous
+    phrases ("can", "cannot") are left out unless `ambiguous` is true."""
     text = B.normalize(text).lower()
     taken, found = [], []
     for rx, p, c in _PHRASE_RE:
+        if p in AMBIGUOUS and not ambiguous:
+            continue
         for m in rx.finditer(text):
             if not any(m.start() < e and s < m.end() for s, e in taken):
                 taken.append((m.start(), m.end()))
