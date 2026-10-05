@@ -187,9 +187,9 @@ function as the bundle builder), so raw Docling spacing or soft hyphens cannot c
 | Field type | Fields | Check |
 |---|---|---|
 | Extractive | actor, action, target, applicability, conditions, exceptions, timing, parent (the governing-clause text must be found in a cited span, so an invented or paraphrased parent fails) | Value found in at least one cited span (normalized); cited ids exist |
-| Modality | modality | `verbatim` found in a cited span (normalized); `class` consistent with the phrase through a fixed mapping table with synonyms (mandatory: shall, must, will, is required to, has to, is to; recommended: should, is recommended; permitted: may, is authorized to, is permitted to; prohibited: shall not, must not, is prohibited from, never, forbidden); a null phrase must come with class `none` and is not string-matched |
+| Modality | modality | `verbatim` found in a cited span (normalized); `class` consistent with the phrase through a fixed mapping table with synonyms (mandatory: shall, must, will, is required to, has to, is to; recommended: should, is recommended, and the negative forms should not and ought not, which stay `recommendation` (a negative recommendation is never strengthened to `prohibition`); permitted: may, is authorized to, is permitted to; prohibited: shall not, must not, is prohibited from, never, forbidden); a null phrase must come with class `none` and is not string-matched |
 | Categorical | status, logic | Derivation rules where a rule exists (`recommendation` needs a recommended phrase, `permission` a permitted phrase, `prohibition` a prohibited phrase; `logic` other than `none` needs and/or text in a cited span); no literal-containment test, since `obligation` or `unresolved` never appear in the text. Statuses with no rule (`scope_or_context`, `not_a_requirement`, `unresolved`) are scored by the labelers, not by code |
-| Composed | standalone_statement, plain_language | `standalone_statement` adds no number or capitalized name absent from **its cited spans**; `plain_language` is checked against the same set (the spans cited by `standalone_statement`, and the standalone sentence itself), and must be null when `standalone_statement` is null, so a faithful rendering that keeps "90 days" or an actor name passes and an added one fails; modal class unchanged; the entailment gate with the evidence bundle as premise (the WP-45.3 change to the gate); hand audit for faithfulness |
+| Composed | standalone_statement, plain_language | `standalone_statement` adds no number, acronym or proper name absent from **its cited spans** (the rule ignores a sentence's first word and a stoplist of common capitalized words such as articles, pronouns and prepositions, and compares tokens case-insensitively, so reordering a sentence or starting it with "The" does not fail; a token counts as new only if it is all capitals, contains a digit, or is capitalized mid-sentence, and has no match in the spans); `plain_language` is checked against the same set (the spans cited by `standalone_statement`, and the standalone sentence itself), and must be null when `standalone_statement` is null, so a faithful rendering that keeps "90 days" or an actor name passes and an added one fails; modal class unchanged; the entailment gate with the evidence bundle as premise (the WP-45.3 change to the gate); hand audit for faithfulness |
 | Explanatory | unresolved_reason | Not validated by code; read in the unresolved-case labeling |
 
 ## 5. Build list (scratch only, each testable)
@@ -197,13 +197,22 @@ function as the bundle builder), so raw Docling spacing or soft hyphens cannot c
 1. `bundle.py`: deterministic evidence-bundle builder (own chunk, leaf heading, existing stem finders' candidates marked
    unverified, bounded neighbors, cross-reference detector for patterns like "paragraph 2.3", "Section 4", "AC-2", run on whitespace-normalized
    text: collapse newlines and repeated spaces and rejoin soft-hyphenated line breaks, since Docling output carries such
-   artifacts, with unit tests on "Section\n4" and "paragraph  2.3"); token
-   cap so the prompt fits the pinned 8192 window; unit tests including a bundle that would overflow.
+   artifacts, with unit tests on "Section\n4" and "paragraph  2.3"). **Window safety:** the builder budgets with a conservative
+   2.5 characters per token (dense JSON and Docling text tokenize worse than the 3-per-token fallback the pipeline uses when
+   Ollama reports no count) and caps the whole prompt at about 6,500 estimated tokens, leaving room for the answer inside the
+   pinned 8,192. Because Ollama does not stop or error when a prompt overruns the window (it drops the start of the prompt, which
+   holds the instructions), the runners also read `prompt_eval_count` after every call and mark any call where
+   `prompt_eval_count` plus the answer length reaches `num_ctx` as a **window overrun**: counted per arm, excluded from every
+   quality number, and reported. Unit tests include a bundle that would overflow and must be truncated from the neighbors
+   first, never from the instructions. Standard library only: the experiment needs and plans no new dependency (no tokenizer
+   package; the post-call count is the check).
 2. `run_discovery.py` and `run_resolver.py`: call Ollama with pinned `num_ctx`, write the raw answer before parsing (as Step C
    does), record model digest and prompt hash. No hardcoded endpoint or model: `--ollama-url` and `--model` arguments, with
    defaults read from `~/.config/reqbot/config.json` and `REQBOT_*` overrides (CLAUDE.md: pipeline scripts must be given the
    URL explicitly, since `localhost` is this container, not Tyler's machine), and the project's argparse validators for numeric options
-   (`_positive_int` for integers such as `--num-ctx`, `_non_negative_float` for `--temperature`).
+   (`_positive_int` for integers such as `--num-ctx`, `_non_negative_float` for `--temperature`). The runners take page and chunk
+   manifests, not domain-tag or requirement-type filters; if such a filter flag is ever added it goes through
+   `_normalize_filter_flags` (`cli/console.py`) like the production commands.
 3. `check_resolution.py`: the field-specific validations in section 4.6, plus the example-regurgitation scan for discovery.
 4. Reuse of `loss_trace.py` and `score.py` for recall, plus a small precision tally.
 5. A labeling pack for the resolver outputs and the held-out pieces, built like the 45.1(e) pack.
@@ -279,7 +288,7 @@ Fields that may be empty are nullable in the JSON Schema (`standalone_statement.
 stated"), so a literal `null` is valid output, not a parse failure.
 
 Size estimate (to be measured in the 10-call pilot): the template below is about 450 tokens at the 3-characters-per-token
-estimate the pipeline already uses for window sizing; the seven worked examples add roughly 1,000; the evidence bundle is
+estimate (about 540 at the 2.5 the builder budgets with); the seven worked examples add roughly 1,000; the evidence bundle is
 capped at 3,000; the answer is expected under 600. That is about 5,000 of the pinned 8,192, so the bundle cap, not the
 template, is what protects the window.
 
