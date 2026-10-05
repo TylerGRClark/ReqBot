@@ -1,4 +1,12 @@
 {
+ "catalog_chunk_provenance": {
+  "docling": "2.94.0",
+  "docling_core": "2.99.0",
+  "documents": [
+   "CNSSI_No1253"
+  ],
+  "note": "Step B (pipeline/chunk_text.py) output, pinned by sha256 in CATALOG_CHUNKS_SHA256"
+ },
  "documents": {
   "CJCSI 6510.02G": {
    "chunks_sha256": "77f474760f2a688afb20be4659c01ea2f79e3711f1d32c0d85af8c9ae0da4d60",
@@ -73,6 +81,338 @@
    },
    "selected_chunk_ids": [],
    "table_pages_eligible": []
+  },
+  "CNSSI_No1253": {
+   "chunks_sha256": "41dd02157fc7751ef00baccd71310413104f98844f089325513e3c2bc6a46c9d",
+   "closed_pages": [
+    64,
+    89
+   ],
+   "drawn": [
+    {
+     "page": 64,
+     "reason": "per_document"
+    },
+    {
+     "page": 89,
+     "reason": "catalog"
+    }
+   ],
+   "eligible_pages": 94,
+   "pages_added_by_closure": [],
+   "pages_in_pdf": 96,
+   "pdf_sha256": "0f556d6e1517f148000ff2a8b9ad77abf77a0435beacceffe05cf30596d21e9f",
+   "pieces": {
+    "64": [
+     {
+      "id": "CNSSI-p064-001",
+      "text": "CNSSI No. 1253"
+     },
+     {
+      "id": "CNSSI-p064-002",
+      "text": "Potentially ID C I A Justification for NSS Baseline(s) Common/Inheritable"
+     },
+     {
+      "id": "CNSSI-p064-003",
+      "text": "PE-3(6) X X PE-4 X X X PE-5 X PE-5(1) X PE-5(2) X PE-5(3) X PE-6 X X X PE-6(1) X X X PE-6(2) X X X PE-6(3) X X X PE-6(4) X X X PE-7 Withdrawn PE-7(1) Withdrawn PE-7(2) Withdrawn PE-8 X X X X PE-8(1) X X PE-8(2) Withdrawn PE-9 X X PE-9(1) X PE-9(2) X X PE-10 X X PE-10(1) Withdrawn PE-11 X PE-11(1) X X PE-11(2) X X PE-12 X X PE-12(1) X X PE-13 X X PE-13(1) X X PE-13(2) X X PE-13(3) X X PE-13(4) NIST Assumption: Information systems are located X X in physical facilities."
+     },
+     {
+      "id": "CNSSI-p064-004",
+      "text": "Best Practice."
+     },
+     {
+      "id": "CNSSI-p064-005",
+      "text": "PE-14 X X PE-14(1) X X PE-14(2) X X PE-15 X X PE-15(1) X PE-16 X X X X"
+     },
+     {
+      "id": "CNSSI-p064-006",
+      "text": "D-51"
+     }
+    ],
+    "89": [
+     {
+      "id": "CNSSI-p089-001",
+      "text": "CNSSI No. 1253"
+     },
+     {
+      "id": "CNSSI-p089-002",
+      "text": "ID Control Text Defined Value for NSS"
+     },
+     {
+      "id": "CNSSI-p089-003",
+      "text": "all NSS."
+     },
+     {
+      "id": "CNSSI-p089-004",
+      "text": "PS-6"
+     },
+     {
+      "id": "CNSSI-p089-005",
+      "text": "b. [Assignment: organization-defined frequency]"
+     },
+     {
+      "id": "CNSSI-p089-006",
+      "text": "b. At least annually if not otherwise defined in formal organizational policy ."
+     },
+     {
+      "id": "CNSSI-p089-007",
+      "text": "c.2."
+     },
+     {
+      "id": "CNSSI-p089-008",
+      "text": "[Assignment: organization-defined c.2."
+     },
+     {
+      "id": "CNSSI-p089-009",
+      "text": "At least annually if not otherwise defined in frequency] formal organizational policy."
+     },
+     {
+      "id": "CNSSI-p089-010",
+      "text": "PS-7"
+     },
+     {
+      "id": "CNSSI-p089-011",
+      "text": "d. [Assignment: organization-defined personnel"
+     },
+     {
+      "id": "CNSSI-p089-012",
+      "text": "d. Organizational Security Manager. or roles]"
+     },
+     {
+      "id": "CNSSI-p089-013",
+      "text": "[Assignment: organization-defined time period] As soon as possible, not to exceed 1 working day."
+     },
+     {
+      "id": "CNSSI-p089-014",
+      "text": "RA-1"
+     },
+     {
+      "id": "CNSSI-p089-015",
+      "text": "a. [Assignment: organization-defined personnel"
+     },
+     {
+      "id": "CNSSI-p089-016",
+      "text": "a. All personnel or roles]"
+     },
+     {
+      "id": "CNSSI-p089-017",
+      "text": "b.1."
+     },
+     {
+      "id": "CNSSI-p089-018",
+      "text": "[Assignment: organization-defined b.1."
+     },
+     {
+      "id": "CNSSI-p089-019",
+      "text": "At least annually if not otherwise defined in frequency] formal organizational policy."
+     },
+     {
+      "id": "CNSSI-p089-020",
+      "text": "b.2."
+     },
+     {
+      "id": "CNSSI-p089-021",
+      "text": "[Assignment: organization-defined b.2."
+     },
+     {
+      "id": "CNSSI-p089-022",
+      "text": "At least annually if not otherwise defined in frequency] formal organizational policy."
+     },
+     {
+      "id": "CNSSI-p089-023",
+      "text": "RA-3"
+     },
+     {
+      "id": "CNSSI-p089-024",
+      "text": "b. [Selection: security plan; risk assessment"
+     },
+     {
+      "id": "CNSSI-p089-025",
+      "text": "b. Not appropriate to define at the CNSS level report; for all NSS."
+     },
+     {
+      "id": "CNSSI-p089-026",
+      "text": "[Assignment: organization-defined document]] Not appropriate to define at the CNSS level for all NSS."
+     },
+     {
+      "id": "CNSSI-p089-027",
+      "text": "c. [Assignment: organization-defined frequency]"
+     },
+     {
+      "id": "CNSSI-p089-028",
+      "text": "c. At least annually if not otherwise defined in formal organizational policy."
+     },
+     {
+      "id": "CNSSI-p089-029",
+      "text": "d. [Assignment: organization-defined personnel"
+     },
+     {
+      "id": "CNSSI-p089-030",
+      "text": "d. Not appropriate to define at the CNSS level or roles] for all NSS."
+     },
+     {
+      "id": "CNSSI-p089-031",
+      "text": "e. [Assignment: organization-defined frequency]"
+     },
+     {
+      "id": "CNSSI-p089-032",
+      "text": "e. At least annually if not otherwise defined in formal organizational policy."
+     },
+     {
+      "id": "CNSSI-p089-033",
+      "text": "RA-5"
+     },
+     {
+      "id": "CNSSI-p089-034",
+      "text": "a. [Assignment: organization-defined frequency"
+     },
+     {
+      "id": "CNSSI-p089-035",
+      "text": "a. At least every 120 days. and/or randomly in accordance with organization-defined process]"
+     },
+     {
+      "id": "CNSSI-p089-036",
+      "text": "d. [Assignment: organization-defined response"
+     },
+     {
+      "id": "CNSSI-p089-037",
+      "text": "d. Not appropriate to define at the CNSS level times] for all NSS."
+     },
+     {
+      "id": "CNSSI-p089-038",
+      "text": "e. [Assignment: organization-defined personnel"
+     },
+     {
+      "id": "CNSSI-p089-039",
+      "text": "e. Not appropriate to define at the CNSS level for or roles] all NSS."
+     },
+     {
+      "id": "CNSSI-p089-040",
+      "text": "RA-5(2) [Selection (one or more): [Assignment: organization-defined frequency]; prior to a new Within 24 hours prior to running scans. scan; when new vulnerabilities are identified and reported]."
+     },
+     {
+      "id": "CNSSI-p089-041",
+      "text": "RA-5(5) [Assignment: organization-identified information Authorized vulnerability scanning components. system components]"
+     },
+     {
+      "id": "CNSSI-p089-042",
+      "text": "[Assignment: organization-defined vulnerability Authorization by the CISO/SISO or designate. scanning activities]"
+     },
+     {
+      "id": "CNSSI-p089-043",
+      "text": "SA-1"
+     },
+     {
+      "id": "CNSSI-p089-044",
+      "text": "a. [Assignment: organization-defined personnel"
+     },
+     {
+      "id": "CNSSI-p089-045",
+      "text": "a. All personnel. or roles]"
+     },
+     {
+      "id": "CNSSI-p089-046",
+      "text": "b. 1."
+     },
+     {
+      "id": "CNSSI-p089-047",
+      "text": "[Assignment: organization-defined b.1."
+     },
+     {
+      "id": "CNSSI-p089-048",
+      "text": "At least annually if not otherwise defined in"
+     },
+     {
+      "id": "CNSSI-p089-049",
+      "text": "E-14"
+     }
+    ]
+   },
+   "selected_chunk_ids": [
+    86,
+    112
+   ],
+   "table_pages_eligible": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94
+   ]
   },
   "DODI 5200.01": {
    "chunks_sha256": "20057e3fd9fb2a264cbb0d1ae93136f62b2a35dba2e0c89cc54286ecbb15690e",
@@ -602,8 +942,8 @@
     11,
     25,
     26,
-    42,
-    48
+    27,
+    42
    ],
    "drawn": [
     {
@@ -611,22 +951,19 @@
      "reason": "per_document"
     },
     {
-     "page": 25,
+     "page": 26,
      "reason": "extra"
     },
     {
      "page": 42,
-     "reason": "table"
-    },
-    {
-     "page": 48,
      "reason": "table"
     }
    ],
    "eligible_pages": 46,
    "pages_added_by_closure": [
     10,
-    26
+    25,
+    27
    ],
    "pages_in_pdf": 48,
    "pdf_sha256": "87308ed1962cdf559549b9cb39cfc46b976aa7df317ff15db688a73895de93ed",
@@ -983,6 +1320,88 @@
       "text": "Additionally, it is also reviewed during the vulnerability"
      }
     ],
+    "27": [
+     {
+      "id": "AFI102-p027-001",
+      "text": "AFI10-2402 29 AUGUST 2017 25"
+     },
+     {
+      "id": "AFI102-p027-002",
+      "text": "assessment by the ATO and EM SMEs with the applicable on-site POCs to ensure a comprehensive product."
+     },
+     {
+      "id": "AFI102-p027-003",
+      "text": "3.3.3.3. HHQ AFMAAs are conducted at the installation by the MAA team."
+     },
+     {
+      "id": "AFI102-p027-004",
+      "text": "These onthe-ground assessments determine the susceptibility of a system or asset to the identified threats and hazards."
+     },
+     {
+      "id": "AFI102-p027-005",
+      "text": "The three key phases to the AFMAA are 1) assessment preparation, 2) on-site assessment, and 3) post-assessment coordination."
+     },
+     {
+      "id": "AFI102-p027-006",
+      "text": "3.3.3.3.1. The assessment preparation phase readies both the assessment team and the assessment recipient for the AFMAA vulnerability assessment."
+     },
+     {
+      "id": "AFI102-p027-007",
+      "text": "This includes the development of a Notification Message, Assessment Focus Statement (AFS), execution of a pre-assessment site survey (PSS), provision of applicable POC information, and required documentation from the location to the assessment team, and other logistical coordination (i.e., security requirements, on-site requirements such as work space, transportation, etc.)."
+     },
+     {
+      "id": "AFI102-p027-008",
+      "text": "The assessment team will familiarize itself with the installation and the assets/infrastructures which are to be assessed, while the installation will develop an understanding of what can be expected throughout the process and what support and documentation must be provided to the assessment team."
+     },
+     {
+      "id": "AFI102-p027-009",
+      "text": "These activities will be primarily coordinated directly between the assessment team and installation POCs, but the assistance of Center/Wing CARM POCs may be requested throughout the process."
+     },
+     {
+      "id": "AFI102-p027-010",
+      "text": "3.3.3.3.2. The Notification Message for the pending assessment is delivered by the assessing organization through the applicable chain of command to the recipient installation and signifies the beginning of the pre-assessment preparation phase."
+     },
+     {
+      "id": "AFI102-p027-011",
+      "text": "The notification includes a breakdown of responsibilities between stakeholders, an anticipated timeline, required documentation, and deliverables due upon completion of the assessment."
+     },
+     {
+      "id": "AFI102-p027-012",
+      "text": "3.3.3.3.3. The AFS is a document usually drafted by the mission owner or asset owner with inputs from various stakeholders to include relevant CCMD(s) and service(s)."
+     },
+     {
+      "id": "AFI102-p027-013",
+      "text": "In certain circumstances, the AF may be tasked to develop the AFS for installations where it is not a mission owner."
+     },
+     {
+      "id": "AFI102-p027-014",
+      "text": "The AFS outlines the programs, missions, assets, and special interest items to be assessed at the location, along with an assessment POC."
+     },
+     {
+      "id": "AFI102-p027-015",
+      "text": "This document will guide the assessment team’s focus."
+     },
+     {
+      "id": "AFI102-p027-016",
+      "text": "3.3.3.3.4. The PSS is a site visit by the assessment team to obtain additional insight to installation layout and local assessment partners, address pending issues or concerns, and prepare the assessment recipient for the AFMAA vulnerability assessment."
+     },
+     {
+      "id": "AFI102-p027-017",
+      "text": "Although PSS participation may vary depending on the features of the location being assessed, standard PSS activities include presentations by the local leadership and Team Chief; a windshield tour of the installation being assessed; and mission briefs and asset tours for each asset being assessed."
+     },
+     {
+      "id": "AFI102-p027-018",
+      "text": "Additionally, this visit is used to close out any key preparation activities that have not already been completed."
+     },
+     {
+      "id": "AFI102-p027-019",
+      "text": "3.3.3.3.5. The on-site assessment is the physical execution of the AFMAA vulnerability assessment, which focuses on identifying vulnerabilities of the system or asset as well as the infrastructure components supporting the function of that system or asset."
+     },
+     {
+      "id": "AFI102-p027-020",
+      "text": "Components of the on-site assessment typically include an in-brief presentation with key installation and tenant leadership, asset tours to include a"
+     }
+    ],
     "42": [
      {
       "id": "AFI102-p042-001",
@@ -1096,72 +1515,6 @@
       "id": "AFI102-p042-028",
       "text": "Deliverable: ASD (HD&GS)-approved DCA list to the DCI community."
      }
-    ],
-    "48": [
-     {
-      "id": "AFI102-p048-001",
-      "text": "46 AFI10-2402 29 AUGUST 2017"
-     },
-     {
-      "id": "AFI102-p048-002",
-      "text": "VI."
-     },
-     {
-      "id": "AFI102-p048-003",
-      "text": "Risk Response"
-     },
-     {
-      "id": "AFI102-p048-004",
-      "text": "Describe what your organization may have already done or can do based on the proposed COAs for each risk, and identify how this revises the risk."
-     },
-     {
-      "id": "AFI102-p048-005",
-      "text": "Provide project numbers, titles, cost, resource provider, ESD, ECD, LIMFACs, etc.)."
-     },
-     {
-      "id": "AFI102-p048-006",
-      "text": "The below table represents the anticipated change in vulnerability and risk after implementation of each of the identified COAs:"
-     },
-     {
-      "id": "AFI102-p048-007",
-      "text": "Risk Revised Revised Vul."
-     },
-     {
-      "id": "AFI102-p048-008",
-      "text": "Descrip."
-     },
-     {
-      "id": "AFI102-p048-009",
-      "text": "Vul."
-     },
-     {
-      "id": "AFI102-p048-010",
-      "text": "Rating COA Rating Vul."
-     },
-     {
-      "id": "AFI102-p048-011",
-      "text": "Risk Risk A, Inadequate Have load- High Critical High Critical Cooling shedding plan COA #1 Risk A, Inadequate Have portable High Critical Medium High COA #2 Cooling equip. avail."
-     },
-     {
-      "id": "AFI102-p048-012",
-      "text": "Risk A, Inadequate Add another High Critical Low Low COA #3 Cooling A/C unit Update barrier Risk B, VBIED Medium High plan for higher Medium High COA #4 FPCONs"
-     },
-     {
-      "id": "AFI102-p048-013",
-      "text": "VII."
-     },
-     {
-      "id": "AFI102-p048-014",
-      "text": "Conclusions & Recommendations"
-     },
-     {
-      "id": "AFI102-p048-015",
-      "text": "Propose way ahead by your organization on COAs."
-     },
-     {
-      "id": "AFI102-p048-016",
-      "text": "Include recommendations or requests your organization has for the DoD/JS/Mission Owners and include additional conclusions as necessary."
-     }
     ]
    },
    "selected_chunk_ids": [
@@ -1171,14 +1524,12 @@
     30,
     31,
     32,
-    78,
-    79,
-    80,
     81,
-    110,
-    126,
-    127,
-    128
+    82,
+    83,
+    84,
+    85,
+    110
    ],
    "table_pages_eligible": [
     42,
@@ -1587,17 +1938,12 @@
    "chunks_sha256": "ec9d252259a9fe56d7a7822811cb331595042030ffab771cf13a51f261a2f409",
    "closed_pages": [
     7,
-    8,
-    11
+    8
    ],
    "drawn": [
     {
      "page": 8,
      "reason": "per_document"
-    },
-    {
-     "page": 11,
-     "reason": "extra"
     }
    ],
    "eligible_pages": 15,
@@ -1607,140 +1953,6 @@
    "pages_in_pdf": 15,
    "pdf_sha256": "6f2b6762b844f357c67be021b6f8ee002552a6342f4c67c10acc8e0cde60aab0",
    "pieces": {
-    "11": [
-     {
-      "id": "AFPD-p011-001",
-      "text": "AFPD 17-1 12 APRIL 2016 11"
-     },
-     {
-      "id": "AFPD-p011-002",
-      "text": "CCA—Clinger-Cohen Act"
-     },
-     {
-      "id": "AFPD-p011-003",
-      "text": "CFL—Core Function Lead"
-     },
-     {
-      "id": "AFPD-p011-004",
-      "text": "CIO—Chief Information Officer"
-     },
-     {
-      "id": "AFPD-p011-005",
-      "text": "DBS—Defense Business System"
-     },
-     {
-      "id": "AFPD-p011-006",
-      "text": "DCMO—Deputy Chief Management Officer"
-     },
-     {
-      "id": "AFPD-p011-007",
-      "text": "DoD—Department of Defense"
-     },
-     {
-      "id": "AFPD-p011-008",
-      "text": "DoDD—Department of Defense Directive"
-     },
-     {
-      "id": "AFPD-p011-009",
-      "text": "DoDI—Department of Defense Instruction"
-     },
-     {
-      "id": "AFPD-p011-010",
-      "text": "DIMA —Defense Intelligence Mission Area"
-     },
-     {
-      "id": "AFPD-p011-011",
-      "text": "DRU—Direct Report Units"
-     },
-     {
-      "id": "AFPD-p011-012",
-      "text": "EA—Enterprise Architecture"
-     },
-     {
-      "id": "AFPD-p011-013",
-      "text": "FISMA—Federal Information Security Management Act"
-     },
-     {
-      "id": "AFPD-p011-014",
-      "text": "FOA—Field Operating Agency"
-     },
-     {
-      "id": "AFPD-p011-015",
-      "text": "HAF—Headquarters Air Force"
-     },
-     {
-      "id": "AFPD-p011-016",
-      "text": "IB—Implementation Baseline"
-     },
-     {
-      "id": "AFPD-p011-017",
-      "text": "IDFP —Information Dominance Flight Plan"
-     },
-     {
-      "id": "AFPD-p011-018",
-      "text": "IEMA —Information Environment Mission Area"
-     },
-     {
-      "id": "AFPD-p011-019",
-      "text": "IS —Information System"
-     },
-     {
-      "id": "AFPD-p011-020",
-      "text": "ISR—Intelligence, Surveillance, and Reconnaissance"
-     },
-     {
-      "id": "AFPD-p011-021",
-      "text": "IT—Information Technology"
-     },
-     {
-      "id": "AFPD-p011-022",
-      "text": "ITIL—Information Technology Infrastructure Library"
-     },
-     {
-      "id": "AFPD-p011-023",
-      "text": "MAJCOM—Major Command"
-     },
-     {
-      "id": "AFPD-p011-024",
-      "text": "NDAA—National Defense Authorization Act"
-     },
-     {
-      "id": "AFPD-p011-025",
-      "text": "NSS—National Security System"
-     },
-     {
-      "id": "AFPD-p011-026",
-      "text": "OB—Operational Baseline"
-     },
-     {
-      "id": "AFPD-p011-027",
-      "text": "OMB—Office of Management and Budget"
-     },
-     {
-      "id": "AFPD-p011-028",
-      "text": "OPR—Office of Primary Responsibility"
-     },
-     {
-      "id": "AFPD-p011-029",
-      "text": "PEO—Program Executive Officer"
-     },
-     {
-      "id": "AFPD-p011-030",
-      "text": "PIT —Platform Information Technology"
-     },
-     {
-      "id": "AFPD-p011-031",
-      "text": "RDS—Records Disposition Schedule"
-     },
-     {
-      "id": "AFPD-p011-032",
-      "text": "SCF—Service Core Function"
-     },
-     {
-      "id": "AFPD-p011-033",
-      "text": "T&E —Test and Evaluation"
-     }
-    ],
     "7": [
      {
       "id": "AFPD-p007-001",
@@ -2078,10 +2290,10 @@
   }
  },
  "min_words": 60,
- "pages_closed_total": 23,
+ "pages_closed_total": 24,
  "pages_drawn_total": 16,
- "pieces_sha256": "796a398a97be7602641b125c134e39753522528b06d954ed29008a7b437547f9",
- "pieces_total": 428,
+ "pieces_sha256": "31b24ac851f827b6abde41676bdc14a1f7269a429e17dde11db01d0fb478a998",
+ "pieces_total": 454,
  "pymupdf": "1.27.1:",
  "seed": "wp45.7-heldout",
  "segmenter_sha256": "54d8f67fd66a2bd23df7c5774d24691f3bdda61871a206137bcda0713fb25f72",

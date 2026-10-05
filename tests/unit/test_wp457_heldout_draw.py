@@ -31,8 +31,9 @@ def _chunk(cid, start, end, text="body"):
 
 def test_the_three_development_documents_are_not_in_the_held_out_set(draw):
     assert not set(draw.DOC_CODES) & set(draw.DEV_DOCUMENTS)
-    assert len(draw.DOC_CODES) == 10
-    assert len(set(draw.DOC_CODES.values())) == 10  # piece-id prefixes are unique
+    assert len(draw.DOC_CODES) == 11
+    assert set(draw.CATALOG_DOCUMENTS) <= set(draw.DOC_CODES)
+    assert len(set(draw.DOC_CODES.values())) == 11  # piece-id prefixes are unique
 
 
 def test_page_selection_is_deterministic_and_follows_the_three_step_rule(draw):
@@ -42,8 +43,8 @@ def test_page_selection_is_deterministic_and_follows_the_three_step_rule(draw):
     assert first == draw.select_pages(eligible, tables)
     reasons = [r for _, _, r in first]
     assert reasons.count("per_document") == 3
-    assert reasons.count("table") == 3
-    assert reasons.count("extra") == 3
+    assert reasons.count("table") == draw.TABLE_PAGES  # the pools here are large enough to fill every quota
+    assert reasons.count("extra") == draw.EXTRA_PAGES
     assert {d for d, _, r in first if r == "per_document"} == {"A", "B", "C"}
     pages = [(d, p) for d, p, _ in first]
     assert len(pages) == len(set(pages))  # nothing is drawn twice
@@ -55,6 +56,31 @@ def test_page_selection_is_deterministic_and_follows_the_three_step_rule(draw):
 def test_a_different_seed_gives_a_different_draw(draw):
     eligible = {"A": list(range(1, 40)), "B": list(range(1, 40))}
     assert draw.select_pages(eligible, {}, seed="x") != draw.select_pages(eligible, {}, seed="y")
+
+
+def test_a_catalog_document_gets_extra_pages_from_its_own_shuffle(draw):
+    eligible = {"A": list(range(1, 21)), "CAT": list(range(1, 21))}
+    chosen = draw.select_pages(eligible, {}, catalogs=("CAT",))
+    cat = [p for d, p, r in chosen if d == "CAT" and r == "catalog"]
+    assert len(cat) == draw.CATALOG_EXTRA_PAGES
+    first = [p for d, p, r in chosen if d == "CAT" and r == "per_document"]
+    assert first and first[0] not in cat
+    assert all(r != "catalog" for d, _, r in chosen if d == "A")
+    # a catalog document gets only its two pages: it is kept out of the table and extra pools
+    assert [r for d, _, r in chosen if d == "CAT"] == ["per_document", "catalog"]
+
+
+def test_a_catalog_full_of_tables_does_not_take_the_table_stratum(draw):
+    eligible = {"A": list(range(1, 11)), "CAT": list(range(1, 41))}
+    tables = {"A": {2, 3, 4}, "CAT": set(range(1, 41))}
+    chosen = draw.select_pages(eligible, tables, catalogs=("CAT",))
+    table_docs = {d for d, _, r in chosen if r == "table"}
+    assert table_docs == {"A"}
+
+
+def test_a_document_with_no_eligible_page_fails_loudly_not_with_an_index_error(draw):
+    with pytest.raises(ValueError, match="no page with at least"):
+        draw.select_pages({"A": [1, 2], "B": []}, {})
 
 
 def test_fewer_table_pages_than_the_quota_does_not_fail(draw):
@@ -107,6 +133,7 @@ FROZEN = _DIR / "outputs" / "heldout_frozen.json"
 def test_the_frozen_draw_is_internally_consistent(draw):
     data = json.loads(FROZEN.read_text(encoding="utf-8"))
     assert data["pages_drawn_total"] == 16
+    assert "CNSSI_No1253" in data["documents"]  # the control-catalog stratum is present
     drawn_total = 0
     texts = []
     for document, e in data["documents"].items():
