@@ -173,13 +173,15 @@ documents; the metric only looks at those chunks. A 10-call pilot measures laten
 ## 5. Build list (scratch only, each testable)
 
 1. `bundle.py`: deterministic evidence-bundle builder (own chunk, leaf heading, existing stem finders' candidates marked
-   unverified, bounded neighbors, cross-reference detector for patterns like "paragraph 2.3", "Section 4", "AC-2"); token
+   unverified, bounded neighbors, cross-reference detector for patterns like "paragraph 2.3", "Section 4", "AC-2", run on whitespace-normalized
+   text: collapse newlines and repeated spaces and rejoin soft-hyphenated line breaks, since Docling output carries such
+   artifacts, with unit tests on "Section\n4" and "paragraph  2.3"); token
    cap so the prompt fits the pinned 8192 window; unit tests including a bundle that would overflow.
 2. `run_discovery.py` and `run_resolver.py`: call Ollama with pinned `num_ctx`, write the raw answer before parsing (as Step C
    does), record model digest and prompt hash. No hardcoded endpoint or model: `--ollama-url` and `--model` arguments, with
    defaults read from `~/.config/reqbot/config.json` and `REQBOT_*` overrides (CLAUDE.md: pipeline scripts must be given the
-   URL explicitly, since `localhost` is this container, not Tyler's machine), and the project's positive-int validator for any
-   numeric option.
+   URL explicitly, since `localhost` is this container, not Tyler's machine), and the project's argparse validators for numeric options
+   (`_positive_int` for integers such as `--num-ctx`, `_non_negative_float` for `--temperature`).
 3. `check_resolution.py`: the code validations in section 4.3 (ids exist, value found in span, modal word equal, no new numbers
    or names, example-regurgitation scan).
 4. Reuse of `loss_trace.py` and `score.py` for recall, plus a small precision tally.
@@ -243,6 +245,12 @@ Expected size: the template grows by roughly 500 to 600 tokens (to be measured, 
 the Phase 45 plan).
 
 ## Appendix B: resolver prompt v1 (draft, for review before any run)
+
+**How this is shown to the model.** The block below is a specification for reviewers, not the literal prompt text. The model is
+shown (a) the field list and the allowed values in plain prose, and (b) the worked examples as strictly valid JSON with no
+comments and no placeholder tokens; the shape itself is enforced by the JSON Schema `format` constraint. A pseudo-JSON
+template with comments and unquoted alternatives is not put in the prompt, because 8B models tend to copy such placeholders
+into the answer. A test renders the final prompt and fails if any example in it does not parse as JSON.
 
 Fields that may be empty are nullable in the JSON Schema (`standalone_statement.value`, and every `value` that can be "not
 stated"), so a literal `null` is valid output, not a parse failure.
