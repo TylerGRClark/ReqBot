@@ -176,7 +176,10 @@ documents; the metric only looks at those chunks. A 10-call pilot measures laten
    unverified, bounded neighbors, cross-reference detector for patterns like "paragraph 2.3", "Section 4", "AC-2"); token
    cap so the prompt fits the pinned 8192 window; unit tests including a bundle that would overflow.
 2. `run_discovery.py` and `run_resolver.py`: call Ollama with pinned `num_ctx`, write the raw answer before parsing (as Step C
-   does), record model digest and prompt hash.
+   does), record model digest and prompt hash. No hardcoded endpoint or model: `--ollama-url` and `--model` arguments, with
+   defaults read from `~/.config/reqbot/config.json` and `REQBOT_*` overrides (CLAUDE.md: pipeline scripts must be given the
+   URL explicitly, since `localhost` is this container, not Tyler's machine), and the project's positive-int validator for any
+   numeric option.
 3. `check_resolution.py`: the code validations in section 4.3 (ids exist, value found in span, modal word equal, no new numbers
    or names, example-regurgitation scan).
 4. Reuse of `loss_trace.py` and `score.py` for recall, plus a small precision tally.
@@ -187,6 +190,11 @@ documents; the metric only looks at those chunks. A 10-call pilot measures laten
 - Whether a resolver stage ships, whether discovery's schema gains `kind` or a verbatim `lead_in` span, whether "should"
   recommendations and permissions become first-class records, or whether `modality` becomes a stored field. Each is a
   production change and a separate approval, informed by the numbers above.
+- **Production migration of a changed Step C prompt.** Any edit to `PASS1_PROMPT_TEMPLATE` changes the prompt hash and so
+  invalidates every cached Step C result for the corpus (resume is keyed by chunk id and prompt hash; a full re-extraction, plus
+  re-enrichment and reindex, follows). If G1 passes and Tyler approves a production change, the migration plan, with the cache
+  invalidation and a before/after index comparison, is its own WP and its own PR. This experiment never touches the production
+  cache; scratch runs use their own ledger.
 - The model-requested retrieval loop. The unresolved-case labels size it; it is built only if those cases justify it.
 - Any fix to the checklist, which still ignores stems and descriptions (audit F06).
 - Whether the resolver should run on the 14B for precision and the 8B for discovery. The R runs report both; the choice
@@ -249,19 +257,20 @@ Evidence (each span has an id; "unverified" spans were found by a rule and may b
 [E4] possible governing clause (unverified): "..."
 [E5] previous chunk, last lines: "..."
 
-Return JSON:
+Return JSON (the allowed values below are enforced by a JSON Schema `format` constraint with `enum` keys, as Step C does with
+`_PASS1_FORMAT_SCHEMA`; the prompt lists them in prose too, never as `a | b` unions the model might copy literally):
 {
- "status": "obligation" | "recommendation" | "permission" | "prohibition" | "scope_or_context" | "not_a_requirement" | "unresolved",
+ "status": one of obligation, recommendation, permission, prohibition, scope_or_context, not_a_requirement, unresolved,
  "actor":      {"value": ..., "evidence": ["E#"]},   // the party that must act. An approver or authorizer is NOT the actor.
  "action":     {"value": ..., "evidence": [...]},
  "target":     {"value": ..., "evidence": [...]},
- "modality":   {"value": "shall|must|should|may|will|must not|shall not|imperative|none", "evidence": [...]},  // copy the word; never change it
+ "modality":   {"value": one of shall, must, should, may, will, must not, shall not, imperative, none, "evidence": [...]},  // copy the word; never change it
  "applicability": {"value": ..., "evidence": [...]}, // who or what it applies to
  "conditions": [{"value": ..., "evidence": [...]}],
  "exceptions": [{"value": ..., "evidence": [...]}],
  "timing":     {"value": ..., "evidence": [...]},
  "parent":     {"evidence": ["E#"]},                  // the governing clause span, if any
- "logic":      "AND" | "OR" | "NONE",                 // how this item relates to sibling items, only if the text says so
+ "logic":      one of AND, OR, NONE,                  // how this item relates to sibling items, only if the text says so
  "standalone_statement": ...,   // one sentence built only from cited spans; keep modality, conditions and exceptions
  "plain_language": ...,         // one sentence, no new facts
  "unresolved_reason": ...       // what is missing, and where it might be (previous page, section X)
