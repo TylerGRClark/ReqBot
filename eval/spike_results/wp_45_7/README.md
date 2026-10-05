@@ -94,3 +94,36 @@ Decisions worth knowing:
 
 Reproduce: `python3 eval/spike_results/wp_45_7/pack.py` (rewrites the packs and the manifest; the committed manifest is checked by
 `tests/unit/test_wp457_label_packs.py`).
+
+## Step 3: the evidence-bundle builder (`bundle.py`, `bundle_stats.py`)
+
+Offline; no LLM. `bundle.py` builds the numbered evidence spans the resolver is shown, in the three tiers the plan defines
+(R0 quote only; R1 adds the own chunk, the leaf heading and the governing-clause candidates from the existing stem finders,
+marked unverified; R2 adds the bounded previous and next chunk and any cross-referenced section found in the document). It
+follows the plan's rules: whitespace normalization shared with the later checks, a conservative 2.5 characters per token
+with the whole prompt capped near 6,500 estimated tokens, cuts from the neighbors first and never from the candidate, the
+heading or the stem candidates, a pre-call `preflight` and an `untreatable` flag, and standard library only. Tests:
+`tests/unit/test_wp457_bundle.py` (13).
+
+Two behaviors worth knowing:
+
+- **References are read from the candidate's own text only.** Scanning the whole chunk would pull in references that belong to
+  other sentences. A reference whose section is already shown (for instance as the next chunk) is marked on that span ("also
+  the referenced section 4.2") instead of repeating the text; a reference that cannot be found in the document is listed in the
+  prompt so the resolver can say what is missing.
+- **Governing-clause candidates are all of the finders' answers, not only the first**, each labeled with where it came from,
+  because the stem rules were right only about 40% of the time (WP-45.1(b)) and the resolver has to be able to reject them.
+
+Smoke measurement on the real pinned corpus (`python3 eval/spike_results/wp_45_7/bundle_stats.py`, 1,991 production Step C
+records of the 13 pinned documents, 2,000 estimated tokens of fixed prompt, budget 7,500 characters). Not an evaluation of the
+resolver, and these are Step C records, not discovery output:
+
+| Tier | Mean chars | p95 | Max | Cut to fit | Untreatable | With a governing-clause candidate |
+|---|---|---|---|---|---|---|
+| R0 | 279 | 437 | 743 | 0 | 0 | 0 |
+| R1 | 1,295 | 1,838 | 5,314 | 0 | 0 | 420 (21.1%) |
+| R2 | 2,667 | 3,386 | 6,632 | 0 | 0 | 420 (21.1%) |
+
+R2 found 42 referenced sections and left 116 records with a reference it could not find in the document. At this fixed prompt size
+the window is not a binding constraint on these documents; table-heavy chunks and a larger fixed prompt (the seven worked examples)
+are what would push a bundle over, and the cuts and `untreatable` flag are tested for that case.
