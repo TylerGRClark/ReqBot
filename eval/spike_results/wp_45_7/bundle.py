@@ -46,11 +46,14 @@ MIN_SPAN_CHARS = 80
 TIERS = ("R0", "R1", "R2")
 
 _SOFT_HYPHEN_BREAK = re.compile(r"(?<=[a-z])[­-]\s*\n\s*(?=[a-z])")
+_ID = r"(?:[A-Z]?\d+(?:\.\d+)*(?:\([a-zA-Z0-9]+\))*|(?-i:[A-Z])\b)"  # 4.2, 3(a), or a single capital letter (Appendix A)
 _REF_WORD = re.compile(
-    r"\b(?:paragraphs?|para\.?|sections?|sec\.?|enclosures?|appendix|attachment|annex|chapter)\s+"
-    r"(?P<num>[A-Z]?\d+(?:\.\d+)*(?:\([a-zA-Z0-9]+\))*)",
+    r"\b(?P<word>paragraphs?|para\.?|sections?|sec\.?|enclosures?|appendix|attachment|annex|chapter)\s+"
+    rf"(?P<num>{_ID})",
     re.IGNORECASE,
 )
+# The repository's section parser (pipeline/section_parser.py) stores named headings as SECTION-1, ENCLOSURE-3, APPENDIX-A.
+_NAMED = {"section": "SECTION", "sec": "SECTION", "enclosure": "ENCLOSURE", "appendix": "APPENDIX", "annex": "ANNEX", "attachment": "ATTACHMENT"}
 _REF_CONTROL = re.compile(r"\b[A-Z]{2,4}-\d+(?:\([a-zA-Z0-9]+\))*(?!\w)")
 
 
@@ -64,46 +67,56 @@ def estimate_tokens(chars):
     return -(-int(chars) * 2 // 5)  # ceil(chars / 2.5)
 
 
-_LIST_NEXT = re.compile(
-    r"\s*(?:,\s*(?:and\s+|or\s+)?|\s+and\s+|\s+or\s+|\s*&\s*)(?P<num>[A-Z]?\d+(?:\.\d+)*(?:\([a-zA-Z0-9]+\))*)"
-)
+_LIST_NEXT = re.compile(rf"\s*(?:,\s*(?:and\s+|or\s+)?|\s+and\s+|\s+or\s+|\s*&\s*)(?P<num>{_ID})")
+
+
+def _keys(word, ident):
+    """The section-path keys a reference can match: the bare number or letter, and for a named heading the canonical
+    KEYWORD-ID form the section parser stores (Appendix A is APPENDIX-A, Enclosure 3 is ENCLOSURE-3)."""
+    ident = ident.rstrip(".")
+    named = _NAMED.get(word.lower().rstrip("."))
+    # the canonical named form goes first: "Enclosure 3" should find ENCLOSURE-3 before a numbered paragraph 3
+    return [f"{named}-{ident.upper()}", ident] if named else [ident]
 
 
 def cross_references(text):
     """Cross-references found in already-normalized text, in order, without repeats:
-    [(display, number-or-id, explicit)]. `explicit` is true for a reference introduced by a word ("paragraph 4.2",
-    "Paragraphs 2.2, 4.1, and 11.2": every member of the list is returned) and false for a bare control identifier such
-    as AC-2, which is only a reference if it resolves to a section: AES-256 or SHA-384 look the same and are not."""
+    [(display, keys, explicit)], where `keys` are the section-path forms to try (see `_keys`). `explicit` is true for a
+    reference introduced by a word ("paragraph 4.2", "Appendix A", "Paragraphs 2.2, 4.1, and 11.2": every member of the
+    list is returned) and false for a bare control identifier such as AC-2, which is only a reference if it resolves to a
+    section: AES-256 or SHA-384 look the same and are not."""
     found, seen = [], set()
 
-    def add(display, key, explicit):
-        if key.lower() not in seen:
-            seen.add(key.lower())
-            found.append((display, key, explicit))
+    def add(display, keys, explicit):
+        if keys[0].lower() not in seen:
+            seen.add(keys[0].lower())
+            found.append((display, keys, explicit))
 
     for m in _REF_WORD.finditer(text):
-        word = m.group(0)[: m.start("num") - m.start()].strip()
-        add(m.group(0), m.group("num").rstrip("."), True)
+        word = m.group("word")
+        add(m.group(0), _keys(word, m.group("num")), True)
         pos = m.end()
         while True:
             nxt = _LIST_NEXT.match(text, pos)
             if not nxt:
                 break
-            add(f"{word} {nxt.group('num')}", nxt.group("num").rstrip("."), True)
+            add(f"{word} {nxt.group('num')}", _keys(word, nxt.group("num")), True)
             pos = nxt.end()
     for m in _REF_CONTROL.finditer(text):
-        add(m.group(0), m.group(0), False)
+        add(m.group(0), [m.group(0)], False)
     return found
 
 
-def resolve_reference(key, chunks):
-    """The first chunk whose section path names `key` (a number such as 4.2 or a control id such as AC-2), or None."""
-    want = key.lower().rstrip(".")
-    for chunk in chunks:
-        for element in list(chunk.get("section_ref_path") or []) + list(chunk.get("section_title_path") or []):
-            first = normalize(element).split(" ")[0].rstrip(".:").lower() if element else ""
-            if first == want or normalize(element).lower().rstrip(".") == want:
-                return chunk
+def resolve_reference(keys, chunks):
+    """The first chunk whose section path names one of `keys` (4.2, AC-2, APPENDIX-A, ...), trying the keys in order so the
+    canonical named form wins over a bare number, or None. A single string is accepted for a one-key lookup."""
+    for key in [keys] if isinstance(keys, str) else keys:
+        want = key.lower().rstrip(".")
+        for chunk in chunks:
+            for element in list(chunk.get("section_ref_path") or []) + list(chunk.get("section_title_path") or []):
+                first = normalize(element).split(" ")[0].rstrip(".:").lower() if element else ""
+                if first == want or normalize(element).lower().rstrip(".") == want:
+                    return chunk
     return None
 
 
@@ -236,21 +249,18 @@ def build(quote, chunk_id, chunks_by_id, tier="R1", step_c_by_chunk=None, fixed_
             add("next", "next chunk, first lines", normalize(nxt.get("raw_text") or "")[:NEIGHBOR_CHARS], priority=6, source=f"chunk {nxt['chunk_id']}")
         # References are read from the candidate's own text only: scanning the whole chunk would pull in references that
         # belong to other sentences.
-        shown = {s.source for s in bundle.spans}
-        for display, key, explicit in cross_references(q):
-            target = resolve_reference(key, ordered)
+        # A referenced section always gets its own excerpt, even if the same chunk is also the previous or next neighbor:
+        # neighbors are cut first when the budget binds, and a label on a neighbor would vanish with it.
+        shown = set()
+        for display, keys, explicit in cross_references(q):
+            target = resolve_reference(keys, ordered)
             if target is None:
                 if explicit:  # a bare identifier that resolves to nothing may be an algorithm name, so it is not reported
                     bundle.unresolved_references.append(display)
-            elif f"chunk {target['chunk_id']}" in shown:
-                # already in the bundle (as a neighbor or the own chunk): say so on that span rather than repeating it
-                for span in bundle.spans:
-                    if span.source == f"chunk {target['chunk_id']}" and span.kind in ("chunk", "previous", "next"):
-                        span.label += f" (also the referenced section {key})"
-                        break
-            else:
-                add("reference", f"referenced section {key}", normalize(target.get("raw_text") or "")[:REFERENCE_CHARS], priority=4, source=f"chunk {target['chunk_id']}")
-                shown.add(f"chunk {target['chunk_id']}")
+            elif target["chunk_id"] not in shown:
+                label_id = re.sub(r"^(?:para(?:graph)?s?|sec(?:tion)?s?)\.?\s+", "", display, flags=re.IGNORECASE)
+                add("reference", f"referenced section {label_id}", normalize(target.get("raw_text") or "")[:REFERENCE_CHARS], priority=4, source=f"chunk {target['chunk_id']}")
+                shown.add(target["chunk_id"])
     _fit(bundle, prompt_budget_chars(fixed_tokens), q)
     return bundle
 

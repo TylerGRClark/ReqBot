@@ -108,14 +108,13 @@ heading or the stem candidates, a pre-call `preflight` and an `untreatable` flag
 Two behaviors worth knowing:
 
 - **References are read from the candidate's own text only.** Scanning the whole chunk would pull in references that belong to
-  other sentences. A reference whose section is already shown (for instance as the next chunk) is marked on that span ("also
-  the referenced section 4.2") instead of repeating the text; a reference that cannot be found in the document is listed in the
+  other sentences. A referenced section always gets its own excerpt, even when the same chunk is also the previous or next neighbor (neighbors are cut first when the budget binds, and a label on a neighbor would vanish with it); a reference that cannot be found in the document is listed in the
   prompt so the resolver can say what is missing.
-- **Reference parsing (fixed in review of #214).** A reference word introduces a list, and every member is returned
+- **Reference parsing (fixed in review of #214).** Named sections use the section parser's canonical keys (`APPENDIX-A`, `ENCLOSURE-3`, `SECTION-5`), tried before a bare number, so "Enclosure 3" does not land on paragraph 3.  A reference word introduces a list, and every member is returned
   ("Paragraphs 2.2, 4.1, and 11.2"). A bare identifier such as AC-2 counts only if it resolves to a section in the document,
   because `AES-256` and `SHA-384` look the same and are not references; an unresolved bare identifier is never reported as
   "not found". Only reference words, which cannot be mistaken, produce a "not found" line. This took the corpus count of
-  records with a not-found reference from 116 to 80.
+  records with a not-found reference from 116 to 80 (83 after named sections were added: they now resolve or are reported).
 - **Budget (fixed in review of #214).** The bundle budget is the smaller of 3,000 estimated tokens and what the 6,500-token
   prompt cap leaves after the fixed text; the answer reserve is checked once, in the pre-call `preflight`, not taken off the budget
   again. Governing-clause candidates are never clipped: an over-long one makes the bundle untreatable, which is visible.
@@ -132,6 +131,6 @@ resolver, and these are Step C records, not discovery output:
 | R1 | 1,295 | 1,838 | 5,314 | 0 | 0 | 420 (21.1%) |
 | R2 | 2,667 | 3,386 | 6,632 | 0 | 0 | 420 (21.1%) |
 
-R2 added 42 referenced sections and left 80 records with an explicit reference ("paragraph 4.2", "Sections 3 and 5") it could not find in the document. At this fixed prompt size
+R2 added 50 referenced-section excerpts and left 83 records with an explicit reference ("paragraph 4.2", "Sections 3 and 5") it could not find in the document. At this fixed prompt size
 the window is not a binding constraint on these documents; table-heavy chunks and a larger fixed prompt (the seven worked examples)
 are what would push a bundle over, and the cuts and `untreatable` flag are tested for that case.

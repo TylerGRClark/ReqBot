@@ -46,7 +46,7 @@ def test_normalize_collapses_whitespace_and_rejoins_soft_hyphenated_breaks(B):
 
 def test_cross_references_are_found_on_normalized_text_and_not_repeated(B):
     text = B.normalize("Comply with Section\n4 and paragraph  2.3, see AC-2(4) and section 4 again.")
-    keys = [k for _, k, _ in B.cross_references(text)]
+    keys = [k[-1] for _, k, _ in B.cross_references(text)]
     assert keys == ["4", "2.3", "AC-2(4)"]
 
 
@@ -80,12 +80,20 @@ def test_a_cross_reference_in_the_candidate_adds_the_referenced_section_or_lists
     assert not [s for s in B.build("Comply with paragraph 6.1.", 2, doc, "R1").spans if s.kind == "reference"]
 
 
-def test_a_referenced_section_that_is_already_a_neighbor_is_marked_there_not_repeated(B):
+def test_a_referenced_section_that_is_also_a_neighbor_still_gets_its_own_excerpt(B):
     b = B.build("Comply with paragraph 4.2.", 2, _doc(), "R2")  # chunk 3 is the next chunk and holds 4.2
-    assert not [s for s in b.spans if s.kind == "reference"]
-    nxt = [s for s in b.spans if s.kind == "next"]
-    assert len(nxt) == 1 and "also the referenced section 4.2" in nxt[0].label
-    assert b.render().count("due by 1 March") == 1
+    refs = [s for s in b.spans if s.kind == "reference"]
+    assert len(refs) == 1 and refs[0].label == "referenced section 4.2" and "due by 1 March" in refs[0].text
+    assert [s for s in b.spans if s.kind == "next"]  # the neighbor is still there as a neighbor
+    # a tight budget cuts the neighbor first; the reference excerpt, which the candidate depends on, survives
+    big = _doc()
+    big[3]["raw_text"] = "4.2 Reports are due by 1 March. " + "filler words here " * 300
+    big[1]["raw_text"] = "earlier text " * 300
+    tight = B.build("Comply with paragraph 4.2.", 2, big, "R2", fixed_tokens=6100)  # 400 tokens (1,000 characters) of room
+    assert "reference" in [s.kind for s in tight.spans] and not tight.untreatable
+    cuts = [c.split(":")[0].split(" ", 1)[1] for c in tight.truncated]
+    assert cuts[0] in ("next", "previous")  # the neighbors go first
+    assert tight.chars() <= B.prompt_budget_chars(6100)
 
 
 def test_governing_clause_candidates_come_from_the_existing_finders_and_are_marked_unverified(B):
@@ -162,7 +170,7 @@ def test_the_first_and_last_chunks_have_only_the_neighbor_they_have(B):
 
 def test_plural_reference_lists_return_every_member(B):
     text = B.normalize("Comply with Paragraphs 2.2, 4.1, and 11.2, and section 6 or 7.")
-    keys = [k for _, k, _ in B.cross_references(text)]
+    keys = [k[-1] for _, k, _ in B.cross_references(text)]
     assert keys == ["2.2", "4.1", "11.2", "6", "7"]
     doc = _doc()
     doc[9] = _chunk(9, "4.1 Waivers.", "4.1 WAIVERS", ["4", "4.1"], ["4. WAIVERS", "4.1 WAIVERS"])
@@ -199,3 +207,24 @@ def test_a_trim_window_narrower_than_the_candidate_starts_at_the_candidate(B):
     assert out.lstrip(". ").startswith("THE CANDIDATE")
     wide = B._around(text, "THE CANDIDATE QUOTE IS HERE and more", 120)
     assert "THE CANDIDATE QUOTE IS HERE and more" in wide
+
+
+def test_named_sections_resolve_through_the_parsers_canonical_paths(B):
+    doc = _doc()
+    doc[20] = _chunk(20, "Appendix A glossary text.", "APPENDIX A: GLOSSARY", ["APPENDIX-A"], ["APPENDIX A: GLOSSARY"])
+    doc[21] = _chunk(21, "Enclosure 3 duties.", "ENCLOSURE 3: DUTIES", ["ENCLOSURE-3"], ["ENCLOSURE 3: DUTIES"])
+    doc[22] = _chunk(22, "Section 5 rules.", "SECTION 5: RULES", ["SECTION-5"], ["SECTION 5: RULES"])
+    refs = B.cross_references(B.normalize("See Appendix A, Enclosure 3 and Section 5."))
+    assert [k for _, k, _ in refs] == [["APPENDIX-A", "A"], ["ENCLOSURE-3", "3"], ["SECTION-5", "5"]]
+    b = B.build("See Appendix A, Enclosure 3 and Section 5.", 2, doc, "R2")
+    labels = {s.label for s in b.spans if s.kind == "reference"}
+    assert labels == {"referenced section Appendix A", "referenced section Enclosure 3", "referenced section Section 5"} or len(labels) == 3
+    assert b.unresolved_references == []
+    assert [s.source for s in b.spans if s.kind == "reference"] == ["chunk 20", "chunk 21", "chunk 22"]
+    # a named section that is not in the document is reported by the words used
+    assert B.build("See Annex B.", 2, doc, "R2").unresolved_references == ["Annex B"]
+
+
+def test_a_lowercase_letter_after_a_reference_word_is_not_a_section_id(B):
+    assert B.cross_references(B.normalize("Follow paragraph a of this instruction and the appendix a reader needs.")) == []
+    assert [k for _, k, _ in B.cross_references("Follow paragraph 3(a) here.")] == [["3(a)"]]
