@@ -1,7 +1,22 @@
 # WP-45.1(e) plan: a source-based recall sample (measurement only)
 
-Status: draft 2026-10-05, not reviewed. Part of `docs/PHASE45_REQUIREMENTS.md` (WP-45.1). No production code, index or
-configuration changes. No new LLM stage.
+Status: executed 2026-10-05; results and the outcome notes below are in `eval/spike_results/wp_45_1e/README.md`. Part of
+`docs/PHASE45_REQUIREMENTS.md` (WP-45.1). No production code, index or configuration changes. No new LLM stage.
+
+## Outcome notes (added after the run)
+
+Departures from the plan as written, all fixed before any result was seen unless noted:
+
+- Tokens are NFKC, lowercase, runs of letters and digits (simpler than Step D's normalizer); coverage counts matching runs of at
+  least three tokens so scattered common words do not count.
+- A piece straddling two consecutive chunks counts as chunked (the plan said "in a chunk").
+- Step D survivors are matched to Step C records by chunk and quote text, not by id (the ids differ). A first run that joined by
+  id reported zero indexed, was caught as implausible, and was fixed with a sanity check and a regression test.
+- The bootstrap resamples all 12 sampled pages, including three with no obligations (a Codex review point on the results PR).
+- A disagreement needs a ruling only when it changes whether a piece is an obligation (decided after seeing the labels; it
+  changed workload only).
+- The result also needs the caveat that the obligation set rests on Tyler's ruling that duty statements without shall or must
+  are obligations (18 of the 20 rulings).
 
 ## 1. Why this exists
 

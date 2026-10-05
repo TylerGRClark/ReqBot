@@ -1,0 +1,1046 @@
+{
+ "agreement": {
+  "disagreements": 20,
+  "pieces": 254
+ },
+ "density": {
+  "DODI 8410.03": {
+   "lead_in": 2,
+   "not_obligation": 40,
+   "obligation": 20,
+   "pages": 4,
+   "pieces": 63,
+   "scope": 1
+  },
+  "NIST.SP.800-125": {
+   "lead_in": 2,
+   "not_obligation": 91,
+   "obligation": 17,
+   "pages": 4,
+   "pieces": 110
+  },
+  "afman17-2101": {
+   "lead_in": 2,
+   "not_obligation": 32,
+   "obligation": 41,
+   "pages": 4,
+   "pieces": 81,
+   "scope": 6
+  }
+ },
+ "frozen_pieces_sha256": "5fe17c118aabf117da270f6fd4301a41b3d172d23f01b48d8516bc4bd69ad90a",
+ "label_counts": {
+  "claude": {
+   "lead_in": 6,
+   "not_obligation": 161,
+   "obligation": 80,
+   "scope": 7
+  },
+  "codex": {
+   "lead_in": 6,
+   "not_obligation": 179,
+   "obligation": 64,
+   "scope": 5
+  }
+ },
+ "live_index_distinct_requirement_ids": 1845,
+ "live_index_points": 1845,
+ "obligations": {
+  "adjudicated": 78,
+  "both_agree": 62,
+  "either": 82
+ },
+ "paired": {
+  "llama3.1_8b-instruct-q4_K_M_minus_production": {
+   "extracted": {
+    "difference": 0.0,
+    "interval": [
+     0.0,
+     0.0
+    ],
+    "n": 74,
+    "only_first_covers": 1,
+    "only_second_covers": 1
+   },
+   "survived_step_d": {
+    "difference": 0.0,
+    "interval": [
+     0.0,
+     0.0
+    ],
+    "n": 74,
+    "only_first_covers": 1,
+    "only_second_covers": 1
+   }
+  },
+  "qwen2.5_14b_minus_fresh_8b": {
+   "extracted": {
+    "difference": -0.33783783783783783,
+    "interval": [
+     -0.46875691371681416,
+     -0.14285714285714285
+    ],
+    "n": 74,
+    "only_first_covers": 1,
+    "only_second_covers": 26
+   },
+   "survived_step_d": {
+    "difference": -0.32432432432432434,
+    "interval": [
+     -0.4426229508196721,
+     -0.14285714285714285
+    ],
+    "n": 74,
+    "only_first_covers": 1,
+    "only_second_covers": 25
+   }
+  },
+  "qwen2.5_14b_minus_production": {
+   "extracted": {
+    "difference": -0.33783783783783783,
+    "interval": [
+     -0.46875691371681416,
+     -0.14285714285714285
+    ],
+    "n": 74,
+    "only_first_covers": 1,
+    "only_second_covers": 26
+   },
+   "survived_step_d": {
+    "difference": -0.32432432432432434,
+    "interval": [
+     -0.4426229508196721,
+     -0.14285714285714285
+    ],
+    "n": 74,
+    "only_first_covers": 1,
+    "only_second_covers": 25
+   }
+  }
+ },
+ "sanity": {
+  "DODI 8410.03": {
+   "chunks": 42,
+   "step_c_records": 150,
+   "step_d_survivors": 140,
+   "survivors_in_live_index": 140
+  },
+  "NIST.SP.800-125": {
+   "chunks": 109,
+   "step_c_records": 156,
+   "step_d_survivors": 151,
+   "survivors_in_live_index": 151
+  },
+  "afman17-2101": {
+   "chunks": 63,
+   "step_c_records": 157,
+   "step_d_survivors": 144,
+   "survivors_in_live_index": 144
+  }
+ },
+ "secondary": {
+  "llama3.1_8b-instruct-q4_K_M": {
+   "by_document": {
+    "DODI 8410.03": {
+     "chunked": 20,
+     "extracted": 17,
+     "losses": {
+      "not_extracted": 1,
+      "partly_extracted": 2,
+      "survived_all_stages": 17
+     },
+     "obligations": 20,
+     "survived_step_d": 17
+    },
+    "NIST.SP.800-125": {
+     "chunked": 16,
+     "extracted": 6,
+     "losses": {
+      "not_extracted": 9,
+      "partly_extracted": 1,
+      "survived_all_stages": 6
+     },
+     "obligations": 16,
+     "survived_step_d": 6
+    },
+    "afman17-2101": {
+     "chunked": 38,
+     "extracted": 22,
+     "losses": {
+      "not_extracted": 16,
+      "rejected_step_d": 1,
+      "survived_all_stages": 21
+     },
+     "obligations": 38,
+     "survived_step_d": 21
+    }
+   },
+   "loss_shares": {
+    "never_chunked": {
+     "count": 0,
+     "interval": [
+      0.0,
+      0.0
+     ],
+     "share": 0.0
+    },
+    "not_extracted": {
+     "count": 26,
+     "interval": [
+      0.19298245614035087,
+      0.5138988095238093
+     ],
+     "share": 0.35135135135135137
+    },
+    "not_indexed": {
+     "count": 0,
+     "interval": [
+      0.0,
+      0.0
+     ],
+     "share": 0.0
+    },
+    "partly_extracted": {
+     "count": 3,
+     "interval": [
+      0.0,
+      0.11690221543162692
+     ],
+     "share": 0.04054054054054054
+    },
+    "rejected_step_d": {
+     "count": 1,
+     "interval": [
+      0.0,
+      0.031914893617021274
+     ],
+     "share": 0.013513513513513514
+    }
+   },
+   "losses": {
+    "not_extracted": 26,
+    "partly_extracted": 3,
+    "rejected_step_d": 1,
+    "survived_all_stages": 44
+   },
+   "obligations": 74,
+   "recall": {
+    "chunked": {
+     "lenient": {
+      "hits": 74,
+      "interval": [
+       1.0,
+       1.0
+      ],
+      "n": 74,
+      "recall": 1.0
+     },
+     "primary": {
+      "hits": 74,
+      "interval": [
+       1.0,
+       1.0
+      ],
+      "n": 74,
+      "recall": 1.0
+     }
+    },
+    "extracted": {
+     "lenient": {
+      "hits": 48,
+      "interval": [
+       0.4861011904761905,
+       0.8070175438596491
+      ],
+      "n": 74,
+      "recall": 0.6486486486486487
+     },
+     "primary": {
+      "hits": 45,
+      "interval": [
+       0.43902439024390244,
+       0.7671312519910798
+      ],
+      "n": 74,
+      "recall": 0.6081081081081081
+     }
+    },
+    "survived_step_d": {
+     "lenient": {
+      "hits": 47,
+      "interval": [
+       0.4788732394366197,
+       0.8032947605271614
+      ],
+      "n": 74,
+      "recall": 0.6351351351351351
+     },
+     "primary": {
+      "hits": 44,
+      "interval": [
+       0.4375,
+       0.7619047619047619
+      ],
+      "n": 74,
+      "recall": 0.5945945945945946
+     }
+    }
+   }
+  },
+  "qwen2.5_14b": {
+   "by_document": {
+    "DODI 8410.03": {
+     "chunked": 20,
+     "extracted": 14,
+     "losses": {
+      "not_extracted": 5,
+      "partly_extracted": 1,
+      "survived_all_stages": 14
+     },
+     "obligations": 20,
+     "survived_step_d": 14
+    },
+    "NIST.SP.800-125": {
+     "chunked": 16,
+     "extracted": 0,
+     "losses": {
+      "not_extracted": 16
+     },
+     "obligations": 16,
+     "survived_step_d": 0
+    },
+    "afman17-2101": {
+     "chunked": 38,
+     "extracted": 6,
+     "losses": {
+      "not_extracted": 32,
+      "survived_all_stages": 6
+     },
+     "obligations": 38,
+     "survived_step_d": 6
+    }
+   },
+   "loss_shares": {
+    "never_chunked": {
+     "count": 0,
+     "interval": [
+      0.0,
+      0.0
+     ],
+     "share": 0.0
+    },
+    "not_extracted": {
+     "count": 53,
+     "interval": [
+      0.4328257361839451,
+      0.9354838709677419
+     ],
+     "share": 0.7162162162162162
+    },
+    "not_indexed": {
+     "count": 0,
+     "interval": [
+      0.0,
+      0.0
+     ],
+     "share": 0.0
+    },
+    "partly_extracted": {
+     "count": 1,
+     "interval": [
+      0.0,
+      0.05263157894736842
+     ],
+     "share": 0.013513513513513514
+    },
+    "rejected_step_d": {
+     "count": 0,
+     "interval": [
+      0.0,
+      0.0
+     ],
+     "share": 0.0
+    }
+   },
+   "losses": {
+    "not_extracted": 53,
+    "partly_extracted": 1,
+    "survived_all_stages": 20
+   },
+   "obligations": 74,
+   "recall": {
+    "chunked": {
+     "lenient": {
+      "hits": 74,
+      "interval": [
+       1.0,
+       1.0
+      ],
+      "n": 74,
+      "recall": 1.0
+     },
+     "primary": {
+      "hits": 74,
+      "interval": [
+       1.0,
+       1.0
+      ],
+      "n": 74,
+      "recall": 1.0
+     }
+    },
+    "extracted": {
+     "lenient": {
+      "hits": 21,
+      "interval": [
+       0.06451612903225806,
+       0.5671742638160547
+      ],
+      "n": 74,
+      "recall": 0.28378378378378377
+     },
+     "primary": {
+      "hits": 20,
+      "interval": [
+       0.06451612903225806,
+       0.5333522727272725
+      ],
+      "n": 74,
+      "recall": 0.2702702702702703
+     }
+    },
+    "survived_step_d": {
+     "lenient": {
+      "hits": 21,
+      "interval": [
+       0.06451612903225806,
+       0.5671742638160547
+      ],
+      "n": 74,
+      "recall": 0.28378378378378377
+     },
+     "primary": {
+      "hits": 20,
+      "interval": [
+       0.06451612903225806,
+       0.5333522727272725
+      ],
+      "n": 74,
+      "recall": 0.2702702702702703
+     }
+    }
+   }
+  }
+ },
+ "segmentation_flagged_pieces": 21,
+ "views": {
+  "adjudicated": {
+   "production": {
+    "by_document": {
+     "DODI 8410.03": {
+      "chunked": 20,
+      "extracted": 17,
+      "indexed": 17,
+      "losses": {
+       "not_extracted": 2,
+       "partly_extracted": 1,
+       "survived_all_stages": 17
+      },
+      "obligations": 20,
+      "survived_step_d": 17
+     },
+     "NIST.SP.800-125": {
+      "chunked": 16,
+      "extracted": 6,
+      "indexed": 6,
+      "losses": {
+       "not_extracted": 8,
+       "partly_extracted": 2,
+       "survived_all_stages": 6
+      },
+      "obligations": 16,
+      "survived_step_d": 6
+     },
+     "afman17-2101": {
+      "chunked": 38,
+      "extracted": 22,
+      "indexed": 21,
+      "losses": {
+       "not_extracted": 16,
+       "rejected_step_d": 1,
+       "survived_all_stages": 21
+      },
+      "obligations": 38,
+      "survived_step_d": 21
+     }
+    },
+    "loss_shares": {
+     "never_chunked": {
+      "count": 0,
+      "interval": [
+       0.0,
+       0.0
+      ],
+      "share": 0.0
+     },
+     "not_extracted": {
+      "count": 26,
+      "interval": [
+       0.1944377022653722,
+       0.4909170653907495
+      ],
+      "share": 0.35135135135135137
+     },
+     "not_indexed": {
+      "count": 0,
+      "interval": [
+       0.0,
+       0.0
+      ],
+      "share": 0.0
+     },
+     "partly_extracted": {
+      "count": 3,
+      "interval": [
+       0.0,
+       0.1087055335968378
+      ],
+      "share": 0.04054054054054054
+     },
+     "rejected_step_d": {
+      "count": 1,
+      "interval": [
+       0.0,
+       0.031914893617021274
+      ],
+      "share": 0.013513513513513514
+     }
+    },
+    "losses": {
+     "not_extracted": 26,
+     "partly_extracted": 3,
+     "rejected_step_d": 1,
+     "survived_all_stages": 44
+    },
+    "obligations": 74,
+    "recall": {
+     "chunked": {
+      "lenient": {
+       "hits": 74,
+       "interval": [
+        1.0,
+        1.0
+       ],
+       "n": 74,
+       "recall": 1.0
+      },
+      "primary": {
+       "hits": 74,
+       "interval": [
+        1.0,
+        1.0
+       ],
+       "n": 74,
+       "recall": 1.0
+      }
+     },
+     "extracted": {
+      "lenient": {
+       "hits": 48,
+       "interval": [
+        0.5090829346092504,
+        0.8055622977346277
+       ],
+       "n": 74,
+       "recall": 0.6486486486486487
+      },
+      "primary": {
+       "hits": 45,
+       "interval": [
+        0.43902439024390244,
+        0.7671312519910798
+       ],
+       "n": 74,
+       "recall": 0.6081081081081081
+      }
+     },
+     "indexed": {
+      "lenient": {
+       "hits": 47,
+       "interval": [
+        0.5,
+        0.8024691358024691
+       ],
+       "n": 74,
+       "recall": 0.6351351351351351
+      },
+      "primary": {
+       "hits": 44,
+       "interval": [
+        0.4375,
+        0.7619047619047619
+       ],
+       "n": 74,
+       "recall": 0.5945945945945946
+      }
+     },
+     "survived_step_d": {
+      "lenient": {
+       "hits": 47,
+       "interval": [
+        0.5,
+        0.8024691358024691
+       ],
+       "n": 74,
+       "recall": 0.6351351351351351
+      },
+      "primary": {
+       "hits": 44,
+       "interval": [
+        0.4375,
+        0.7619047619047619
+       ],
+       "n": 74,
+       "recall": 0.5945945945945946
+      }
+     }
+    }
+   },
+   "production_including_flagged": {
+    "losses": {
+     "not_extracted": 27,
+     "partly_extracted": 4,
+     "rejected_step_d": 1,
+     "survived_all_stages": 46
+    },
+    "obligations": 78,
+    "recall": {
+     "chunked": {
+      "lenient": {
+       "hits": 78,
+       "interval": [
+        1.0,
+        1.0
+       ],
+       "n": 78,
+       "recall": 1.0
+      },
+      "primary": {
+       "hits": 78,
+       "interval": [
+        1.0,
+        1.0
+       ],
+       "n": 78,
+       "recall": 1.0
+      }
+     },
+     "extracted": {
+      "lenient": {
+       "hits": 51,
+       "interval": [
+        0.5121951219512195,
+        0.8048780487804879
+       ],
+       "n": 78,
+       "recall": 0.6538461538461539
+      },
+      "primary": {
+       "hits": 47,
+       "interval": [
+        0.4262120683641437,
+        0.7564320388349511
+       ],
+       "n": 78,
+       "recall": 0.6025641025641025
+      }
+     },
+     "indexed": {
+      "lenient": {
+       "hits": 50,
+       "interval": [
+        0.5061691209281571,
+        0.8
+       ],
+       "n": 78,
+       "recall": 0.6410256410256411
+      },
+      "primary": {
+       "hits": 46,
+       "interval": [
+        0.4230555555555556,
+        0.7476711496086922
+       ],
+       "n": 78,
+       "recall": 0.5897435897435898
+      }
+     },
+     "survived_step_d": {
+      "lenient": {
+       "hits": 50,
+       "interval": [
+        0.5061691209281571,
+        0.8
+       ],
+       "n": 78,
+       "recall": 0.6410256410256411
+      },
+      "primary": {
+       "hits": 46,
+       "interval": [
+        0.4230555555555556,
+        0.7476711496086922
+       ],
+       "n": 78,
+       "recall": 0.5897435897435898
+      }
+     }
+    }
+   }
+  },
+  "both_agree": {
+   "production": {
+    "by_document": {
+     "DODI 8410.03": {
+      "chunked": 20,
+      "extracted": 17,
+      "indexed": 17,
+      "losses": {
+       "not_extracted": 2,
+       "partly_extracted": 1,
+       "survived_all_stages": 17
+      },
+      "obligations": 20,
+      "survived_step_d": 17
+     },
+     "NIST.SP.800-125": {
+      "chunked": 16,
+      "extracted": 6,
+      "indexed": 6,
+      "losses": {
+       "not_extracted": 8,
+       "partly_extracted": 2,
+       "survived_all_stages": 6
+      },
+      "obligations": 16,
+      "survived_step_d": 6
+     },
+     "afman17-2101": {
+      "chunked": 22,
+      "extracted": 16,
+      "indexed": 16,
+      "losses": {
+       "not_extracted": 6,
+       "survived_all_stages": 16
+      },
+      "obligations": 22,
+      "survived_step_d": 16
+     }
+    },
+    "loss_shares": {
+     "never_chunked": {
+      "count": 0,
+      "interval": [
+       0.0,
+       0.0
+      ],
+      "share": 0.0
+     },
+     "not_extracted": {
+      "count": 16,
+      "interval": [
+       0.0985857769568229,
+       0.4565372670807451
+      ],
+      "share": 0.27586206896551724
+     },
+     "not_indexed": {
+      "count": 0,
+      "interval": [
+       0.0,
+       0.0
+      ],
+      "share": 0.0
+     },
+     "partly_extracted": {
+      "count": 3,
+      "interval": [
+       0.0,
+       0.13157894736842105
+      ],
+      "share": 0.05172413793103448
+     },
+     "rejected_step_d": {
+      "count": 0,
+      "interval": [
+       0.0,
+       0.0
+      ],
+      "share": 0.0
+     }
+    },
+    "losses": {
+     "not_extracted": 16,
+     "partly_extracted": 3,
+     "survived_all_stages": 39
+    },
+    "obligations": 58,
+    "recall": {
+     "chunked": {
+      "lenient": {
+       "hits": 58,
+       "interval": [
+        1.0,
+        1.0
+       ],
+       "n": 58,
+       "recall": 1.0
+      },
+      "primary": {
+       "hits": 58,
+       "interval": [
+        1.0,
+        1.0
+       ],
+       "n": 58,
+       "recall": 1.0
+      }
+     },
+     "extracted": {
+      "lenient": {
+       "hits": 42,
+       "interval": [
+        0.5434627329192546,
+        0.901414223043177
+       ],
+       "n": 58,
+       "recall": 0.7241379310344828
+      },
+      "primary": {
+       "hits": 39,
+       "interval": [
+        0.4594483828090386,
+        0.863013698630137
+       ],
+       "n": 58,
+       "recall": 0.6724137931034483
+      }
+     },
+     "indexed": {
+      "lenient": {
+       "hits": 42,
+       "interval": [
+        0.5434627329192546,
+        0.901414223043177
+       ],
+       "n": 58,
+       "recall": 0.7241379310344828
+      },
+      "primary": {
+       "hits": 39,
+       "interval": [
+        0.4594483828090386,
+        0.863013698630137
+       ],
+       "n": 58,
+       "recall": 0.6724137931034483
+      }
+     },
+     "survived_step_d": {
+      "lenient": {
+       "hits": 42,
+       "interval": [
+        0.5434627329192546,
+        0.901414223043177
+       ],
+       "n": 58,
+       "recall": 0.7241379310344828
+      },
+      "primary": {
+       "hits": 39,
+       "interval": [
+        0.4594483828090386,
+        0.863013698630137
+       ],
+       "n": 58,
+       "recall": 0.6724137931034483
+      }
+     }
+    }
+   }
+  },
+  "either": {
+   "production": {
+    "by_document": {
+     "DODI 8410.03": {
+      "chunked": 20,
+      "extracted": 17,
+      "indexed": 17,
+      "losses": {
+       "not_extracted": 2,
+       "partly_extracted": 1,
+       "survived_all_stages": 17
+      },
+      "obligations": 20,
+      "survived_step_d": 17
+     },
+     "NIST.SP.800-125": {
+      "chunked": 17,
+      "extracted": 6,
+      "indexed": 6,
+      "losses": {
+       "not_extracted": 9,
+       "partly_extracted": 2,
+       "survived_all_stages": 6
+      },
+      "obligations": 17,
+      "survived_step_d": 6
+     },
+     "afman17-2101": {
+      "chunked": 41,
+      "extracted": 22,
+      "indexed": 21,
+      "losses": {
+       "not_extracted": 19,
+       "rejected_step_d": 1,
+       "survived_all_stages": 21
+      },
+      "obligations": 41,
+      "survived_step_d": 21
+     }
+    },
+    "loss_shares": {
+     "never_chunked": {
+      "count": 0,
+      "interval": [
+       0.0,
+       0.0
+      ],
+      "share": 0.0
+     },
+     "not_extracted": {
+      "count": 30,
+      "interval": [
+       0.22220101781170484,
+       0.5405405405405406
+      ],
+      "share": 0.38461538461538464
+     },
+     "not_indexed": {
+      "count": 0,
+      "interval": [
+       0.0,
+       0.0
+      ],
+      "share": 0.0
+     },
+     "partly_extracted": {
+      "count": 3,
+      "interval": [
+       0.0,
+       0.1
+      ],
+      "share": 0.038461538461538464
+     },
+     "rejected_step_d": {
+      "count": 1,
+      "interval": [
+       0.0,
+       0.03125
+      ],
+      "share": 0.01282051282051282
+     }
+    },
+    "losses": {
+     "not_extracted": 30,
+     "partly_extracted": 3,
+     "rejected_step_d": 1,
+     "survived_all_stages": 44
+    },
+    "obligations": 78,
+    "recall": {
+     "chunked": {
+      "lenient": {
+       "hits": 78,
+       "interval": [
+        1.0,
+        1.0
+       ],
+       "n": 78,
+       "recall": 1.0
+      },
+      "primary": {
+       "hits": 78,
+       "interval": [
+        1.0,
+        1.0
+       ],
+       "n": 78,
+       "recall": 1.0
+      }
+     },
+     "extracted": {
+      "lenient": {
+       "hits": 48,
+       "interval": [
+        0.4594594594594595,
+        0.7777989821882949
+       ],
+       "n": 78,
+       "recall": 0.6153846153846154
+      },
+      "primary": {
+       "hits": 45,
+       "interval": [
+        0.3965337643678161,
+        0.7460376687988628
+       ],
+       "n": 78,
+       "recall": 0.5769230769230769
+      }
+     },
+     "indexed": {
+      "lenient": {
+       "hits": 47,
+       "interval": [
+        0.4561339009287925,
+        0.7741935483870968
+       ],
+       "n": 78,
+       "recall": 0.6025641025641025
+      },
+      "primary": {
+       "hits": 44,
+       "interval": [
+        0.3962165880503145,
+        0.7397260273972602
+       ],
+       "n": 78,
+       "recall": 0.5641025641025641
+      }
+     },
+     "survived_step_d": {
+      "lenient": {
+       "hits": 47,
+       "interval": [
+        0.4561339009287925,
+        0.7741935483870968
+       ],
+       "n": 78,
+       "recall": 0.6025641025641025
+      },
+      "primary": {
+       "hits": 44,
+       "interval": [
+        0.3962165880503145,
+        0.7397260273972602
+       ],
+       "n": 78,
+       "recall": 0.5641025641025641
+      }
+     }
+    }
+   }
+  }
+ }
+}
