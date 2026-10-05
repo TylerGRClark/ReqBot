@@ -1,0 +1,241 @@
+"""WP-45.7: draw the held-out page set, close it over the chunks that discovery will run on, and freeze it before any labeling.
+
+Rules fixed in docs/PHASE45_WP457_PLAN.md (sections 4.1 and 4.2) and in this docstring before anything is labeled:
+
+- Documents: the ten pinned WP-45 documents that are not among the three development documents of WP-45.1(e).
+- Pages: a page is eligible if it has at least 60 words of PyMuPDF text (the same rule as WP-45.1(e)). 16 pages are drawn:
+  (1) one page from every document, the first of that document's seeded shuffle (10 pages);
+  (2) three table pages, from pages touched by a chunk whose text holds a markdown table (at least six pipe characters),
+      the first of a seeded shuffle across documents, not already drawn;
+  (3) three more pages, the first of a seeded shuffle of every other eligible page.
+  The seed is fixed below; nothing is redrawn. A later extension keeps every page already drawn.
+- Chunks: discovery runs on every chunk whose page range touches a drawn page.
+- Closure (plan 4.2): a chunk can span pages, so the labeled page set is every drawn page plus every page any selected chunk
+  touches. All of those pages are cut into pieces and labeled; a record from a selected chunk then always lies in labeled text,
+  and a drawn page that no chunk covers (the pipeline skipped it) is still labeled, so a loss before extraction stays visible.
+  (Found at freeze time, before any labeling: the first version took only chunk-touched pages and left CJCSI 6510.02G page 27,
+  which no chunk covers, unlabeled; the drawn pages were added to the rule and the draw regenerated, never edited by hand.)
+- The pinned chunk files are checked against the WP-44 manifest hashes before anything is drawn.
+
+Run from the repo root:
+  python3 eval/spike_results/wp_45_7/draw_heldout.py            # write outputs/heldout_frozen.json (refuses to overwrite)
+  python3 eval/spike_results/wp_45_7/draw_heldout.py --check    # verify it
+"""
+
+import argparse
+import hashlib
+import json
+import random
+import sys
+from pathlib import Path
+
+_HERE = Path(__file__).resolve().parent
+_ROOT = _HERE.parents[2]
+_SEG_DIR = _ROOT / "eval/spike_results/wp_45_1e"
+for _p in (_ROOT, _SEG_DIR):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
+
+import segment as S  # noqa: E402  (the WP-45.1(e) page cutter, reused unchanged)
+
+SEED = "wp45.7-heldout"
+MIN_WORDS = 60
+TABLE_PIPES = 6
+TABLE_PAGES = 3
+EXTRA_PAGES = 3
+FROZEN = _HERE / "outputs" / "heldout_frozen.json"
+
+# Short, unique ids for piece names; the three development documents are deliberately absent.
+DOC_CODES = {
+    "CJCSI 6510.02G": "CJCSI",
+    "DODI 5200.01": "D5201",
+    "DODI 5200.44": "D5244",
+    "DODI 5200.48": "D5248",
+    "DODI 8551.01": "D8551",
+    "afi10-2402": "AFI102",
+    "afi13-550": "AFI13",
+    "afi17-203": "AFI17",
+    "afpd_17-1": "AFPD",
+    "dafman17-1305": "DAFM",
+}
+DEV_DOCUMENTS = ("DODI 8410.03", "afman17-2101", "NIST.SP.800-125")
+
+
+def sha256_bytes(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def shuffled(items, key, seed=SEED):
+    """A deterministic shuffle of the sorted items, keyed so that each draw step has its own order."""
+    order = sorted(items)
+    random.Random(f"{seed}/{key}").shuffle(order)
+    return order
+
+
+def piece_id(document, page_number, n):
+    return f"{DOC_CODES[document]}-p{page_number:03d}-{n:03d}"
+
+
+def table_pages(chunks):
+    """Pages touched by any chunk that holds a markdown table."""
+    pages = set()
+    for c in chunks:
+        if c["text"].count("|") >= TABLE_PIPES:
+            pages.update(range(c["page_start"], c["page_end"] + 1))
+    return pages
+
+
+def select_pages(eligible, tables, seed=SEED):
+    """Return [(document, page, reason)] by the three-step rule in the module docstring.
+
+    eligible: {document: [page, ...]}; tables: {document: set of pages touched by a table chunk}.
+    """
+    chosen = []
+    taken = set()
+    for document in sorted(eligible):
+        page = shuffled(eligible[document], f"per_document/{document}", seed)[0]
+        chosen.append((document, page, "per_document"))
+        taken.add((document, page))
+    pool = [
+        (d, p) for d in sorted(eligible) for p in eligible[d] if p in tables.get(d, ()) and (d, p) not in taken
+    ]
+    for d, p in shuffled(pool, "table", seed)[:TABLE_PAGES]:
+        chosen.append((d, p, "table"))
+        taken.add((d, p))
+    pool = [(d, p) for d in sorted(eligible) for p in eligible[d] if (d, p) not in taken]
+    for d, p in shuffled(pool, "extra", seed)[:EXTRA_PAGES]:
+        chosen.append((d, p, "extra"))
+        taken.add((d, p))
+    return chosen
+
+
+def select_chunks(chunks, drawn_pages):
+    """Ids of the chunks whose page range touches a drawn page."""
+    drawn = set(drawn_pages)
+    return sorted(
+        c["chunk_id"] for c in chunks if drawn & set(range(c["page_start"], c["page_end"] + 1))
+    )
+
+
+def closed_pages(chunks, selected_ids, drawn_pages, pages_in_pdf):
+    """The label set: every drawn page plus every page any selected chunk touches, within the PDF."""
+    wanted = set(selected_ids)
+    pages = set(drawn_pages)
+    for c in chunks:
+        if c["chunk_id"] in wanted:
+            pages.update(range(c["page_start"], c["page_end"] + 1))
+    return sorted(p for p in pages if 1 <= p <= pages_in_pdf)
+
+
+def _fitz():
+    import fitz  # PyMuPDF: needed only to read the PDFs, not a project dependency
+
+    return fitz
+
+
+def _load_chunks(path):
+    return [json.loads(line) for line in Path(path).read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def build(pdf_dir, seed=SEED):
+    assert not set(DOC_CODES) & set(DEV_DOCUMENTS)
+    sys.path.insert(0, str(_ROOT / "eval/spike_results/wp_45_audit"))
+    import _inputs  # the shared pinned-input check: stops if a chunk file is missing or changed
+
+    inputs = _inputs.corpus_inputs("chunks")
+    fitz = _fitz()
+    docs, chunks_by_doc, eligible, tables = {}, {}, {}, {}
+    for document in sorted(DOC_CODES):
+        pdf = Path(pdf_dir) / f"{document}.pdf"
+        doc = fitz.open(pdf)
+        docs[document] = (pdf, doc)
+        chunks_by_doc[document] = _load_chunks(inputs[document]["chunks"])
+        eligible[document] = [
+            i + 1 for i, page in enumerate(doc) if len(page.get_text().split()) >= MIN_WORDS
+        ]
+        tables[document] = table_pages(chunks_by_doc[document]) & set(eligible[document])
+    chosen = select_pages(eligible, tables, seed)
+    out = {
+        "seed": seed,
+        "min_words": MIN_WORDS,
+        "segmenter_version": S.SEGMENTER_VERSION,
+        "segmenter_sha256": sha256_bytes(Path(S.__file__).read_bytes()),
+        "pymupdf": fitz.__doc__.split()[1] if fitz.__doc__ else "",
+        "documents": {},
+    }
+    for document in sorted(DOC_CODES):
+        pdf, doc = docs[document]
+        drawn = sorted((p, why) for d, p, why in chosen if d == document)
+        drawn_pages = [p for p, _ in drawn]
+        chunks = chunks_by_doc[document]
+        selected = select_chunks(chunks, drawn_pages)
+        closed = closed_pages(chunks, selected, drawn_pages, len(doc))
+        entry = {
+            "pdf_sha256": sha256_bytes(pdf.read_bytes()),
+            "chunks_sha256": sha256_bytes(Path(inputs[document]["chunks"]).read_bytes()),
+            "pages_in_pdf": len(doc),
+            "eligible_pages": len(eligible[document]),
+            "table_pages_eligible": sorted(tables[document]),
+            "drawn": [{"page": p, "reason": why} for p, why in drawn],
+            "selected_chunk_ids": selected,
+            "closed_pages": closed,
+            "pages_added_by_closure": [p for p in closed if p not in drawn_pages],
+            "pieces": {},
+        }
+        for page_number in closed:
+            pieces = S.segment_page(doc[page_number - 1])
+            entry["pieces"][str(page_number)] = [
+                {"id": piece_id(document, page_number, k), "text": t} for k, t in enumerate(pieces, 1)
+            ]
+        out["documents"][document] = entry
+    texts = sorted(
+        p["id"] + "\t" + p["text"]
+        for e in out["documents"].values()
+        for pg in e["pieces"].values()
+        for p in pg
+    )
+    out["pages_drawn_total"] = sum(len(e["drawn"]) for e in out["documents"].values())
+    out["pages_closed_total"] = sum(len(e["closed_pages"]) for e in out["documents"].values())
+    out["pieces_total"] = len(texts)
+    out["pieces_sha256"] = sha256_bytes("\n".join(texts).encode("utf-8"))
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--pdf-dir", default=str(_ROOT / "raw_pdfs"))
+    ap.add_argument("--check", action="store_true", help="verify the frozen file instead of writing it")
+    args = ap.parse_args()
+    built = build(args.pdf_dir)
+    text = json.dumps(built, indent=1, sort_keys=True, ensure_ascii=False) + "\n"
+    if args.check:
+        if not FROZEN.exists():
+            sys.exit(f"{FROZEN} does not exist")
+        if FROZEN.read_text(encoding="utf-8") != text:
+            sys.exit("the recomputed draw differs from the frozen file (PDFs, chunks, segmenter or PyMuPDF changed)")
+        print(f"frozen draw verified: {built['pieces_total']} pieces, sha256 {built['pieces_sha256'][:16]}")
+        return
+    if FROZEN.exists():
+        sys.exit(f"{FROZEN} already exists; the draw is frozen. Use --check to verify it.")
+    FROZEN.parent.mkdir(exist_ok=True)
+    FROZEN.write_text(text, encoding="utf-8")
+    print(
+        json.dumps(
+            {
+                "pages_drawn": built["pages_drawn_total"],
+                "pages_closed": built["pages_closed_total"],
+                "pieces_total": built["pieces_total"],
+                "drawn": {d: [x["page"] for x in e["drawn"]] for d, e in built["documents"].items()},
+                "added_by_closure": {
+                    d: e["pages_added_by_closure"]
+                    for d, e in built["documents"].items()
+                    if e["pages_added_by_closure"]
+                },
+            },
+            indent=1,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()
