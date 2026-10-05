@@ -91,10 +91,14 @@ def run_chunks(chunks, *, arm, model, digest, run_label, ledger, ollama_url, num
 
 
 def extracted_records(ledger):
-    """Step C-shaped records from a discovery ledger, validated by the production validator: [(document, record)]."""
+    """Step C-shaped records from a discovery ledger, validated by the production validator: [(document, record)].
+
+    Only `complete` and `truncated` answers are exported. A `window_overrun` call may have lost the start of its prompt (the
+    instructions), so its answer is not trusted: its ledger record stays, and the chunk counts as a miss in every denominator, but
+    it contributes no records, so scoring cannot credit candidates from an invalid call."""
     out = []
     for rec in sorted(ledger.records.values(), key=lambda r: (r["document"], r["chunk_id"])):
-        if rec["status"] not in ("complete", "truncated", "window_overrun"):
+        if rec["status"] not in ("complete", "truncated"):
             continue
         parsed, _ = S.extract_json_array(rec["raw_response"])
         for n, item in enumerate(parsed or [], 1):

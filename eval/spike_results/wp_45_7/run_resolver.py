@@ -47,21 +47,26 @@ def _non_negative_float(value):
 
 
 def load_documents(documents):
-    """{document: (chunks_by_id, step_c_by_chunk)} from the pinned corpus files (production Step C records feed the stem finder)."""
+    """{document: (chunks_by_id, step_c_by_chunk)}. Pinned documents come from the WP-44 manifest files (production Step C
+    records feed the same-chunk stem finder); a catalog document (CNSSI 1253) has only its pinned chunk file, so its Step C map
+    is empty and the finder simply has nothing to offer."""
     import _inputs
+    import chunk_sets as CS
 
-    inputs = _inputs.corpus_inputs("chunks", "extracted")
+    pinned = _inputs.corpus_inputs("chunks", "extracted")
     out = {}
     for document in documents:
-        chunks, step = {}, {}
-        for line in Path(inputs[document]["chunks"]).read_text(encoding="utf-8").splitlines():
-            if line.strip():
-                rec = json.loads(line)
-                chunks[rec["chunk_id"]] = rec
-        for line in Path(inputs[document]["extracted"]).read_text(encoding="utf-8").splitlines():
-            if line.strip():
-                rec = json.loads(line)
-                step.setdefault(rec["chunk_id"], []).append(rec)
+        step = {}
+        if document in pinned:
+            chunks = {c["chunk_id"]: c for c in CS.load_document_chunks(document)[document]}
+            for line in Path(pinned[document]["extracted"]).read_text(encoding="utf-8").splitlines():
+                if line.strip():
+                    rec = json.loads(line)
+                    step.setdefault(rec["chunk_id"], []).append(rec)
+        elif document in CS.H.CATALOG_DOCUMENTS:
+            chunks = {c["chunk_id"]: c for c in CS.load_document_chunks(document)[document]}
+        else:
+            raise SystemExit(f"{document} is neither a pinned document nor a pinned catalog document")
         out[document] = (chunks, step)
     return out
 

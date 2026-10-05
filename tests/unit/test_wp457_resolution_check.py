@@ -441,7 +441,7 @@ def test_a_reason_on_a_resolved_answer_is_a_warning_and_the_modality_error_set_i
 
 def test_can_is_a_copied_phrase_but_not_a_modal_in_generated_sentences(R, C):
     assert C.phrase_class("can") == "permission"
-    assert C.modals_in("who can get into them") == []  # ability, not permission
+    assert C.modals_in("who can get into them") == []  # ability, not permission unless the answer declares it
     assert C.modals_in("who can get into them", ambiguous=True) == [("can", "permission")]
     spans = _spans("All NC3 systems must be configured to enforce approved authorizations.")
     a = copy.deepcopy(R.EXAMPLES[1]["answer"])
@@ -458,3 +458,28 @@ def test_can_is_a_copied_phrase_but_not_a_modal_in_generated_sentences(R, C):
 
 def test_the_prompt_says_plain_language_and_unresolved_reason_take_no_evidence(R):
     assert "plain_language and unresolved_reason always have an empty evidence list" in R.INSTRUCTIONS
+
+
+def test_can_counts_when_the_answer_declares_it_and_cannot_always_counts(R, C):
+    # a valid permission copied as "can": the standalone sentence keeps it, so nothing is removed
+    spans = _spans("Users can reset passwords.")
+    a = copy.deepcopy(R.EXAMPLES[2]["answer"])
+    a["actor"] = {"value": "Users", "evidence": ["E1"]}
+    a["action"] = {"value": "reset passwords", "evidence": ["E1"]}
+    a["target"] = {"value": "passwords", "evidence": ["E1"]}
+    a["timing"] = {"value": None, "evidence": []}
+    a["modality"] = {"verbatim": "can", "class": "permission", "evidence": ["E1"]}
+    a["standalone_statement"] = {"value": "Users can reset passwords.", "evidence": ["E1"]}
+    a["plain_language"] = {"value": "Users are able to change their passwords.", "evidence": []}
+    got = codes(C.check(a, spans))
+    assert ("modality_removed", "plain_language") in got  # "are able to" is not a table phrase: the permission vanished
+    a["plain_language"] = {"value": "Users are allowed to change their passwords.", "evidence": []}
+    assert codes(C.check(a, spans)) == []
+    a["standalone_statement"] = {"value": "Users reset passwords.", "evidence": ["E1"]}
+    assert ("modality_removed", "standalone_statement") in codes(C.check(a, spans))
+    # "cannot" is always a modal: a modal-free obligation cannot hide a prohibition
+    spans = _spans("Users cannot share accounts.")
+    b = copy.deepcopy(R.EXAMPLES[4]["answer"])
+    b["status"] = {"value": "obligation", "evidence": ["E1"]}
+    b["action"] = {"value": "share accounts", "evidence": ["E1"]}
+    assert ("modal_in_evidence", "modality") in codes(C.check(b, spans))

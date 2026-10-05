@@ -204,6 +204,8 @@ hand audit and the entailment gate (a model) are separate and still needed. Know
   closing bracket or quote are handled, a start after a colon is not.
 - **Extractive containment is literal.** A value that restates a span in other words fails `not_in_cited_span`; that is intended
   (the field is supposed to quote), but it will count against a model that paraphrases.
+- **"can" is context-dependent.** It counts as a modal only when the answer declares it as its modality phrase, so a permission written
+  with "can" is checked, but an answer that calls a "can" sentence a modal-free obligation is not caught on that word alone.
 - **Codes that count toward the zero-tolerance modality gate** are listed in `MODALITY_ERROR_CODES`; `added_token` and shape
   problems are reported separately and are not part of that rule.
 
@@ -244,7 +246,10 @@ What the checker found in the 8B resolver answers (so the pilot is also a test o
 bundle, the 8B often copies the quote and cites a "shall" from a span that does not contain it (`not_in_cited_span`), leaves the actor out of
 the standalone sentence, gives a null modality phrase with class `obligation`, or invents a modality phrase from nowhere. These are model errors
 the experiment exists to measure, not checker artifacts, and **the prompt was deliberately not tuned on this smoke test**. Two checker or prompt
-artifacts were found and fixed before the numbers above: "can" in plain language ("who can get into them") was counted as a permission, and neither
+artifacts were found and fixed before the numbers above: "can" in plain language ("who can get into them") was counted as a permission (it now counts as a modal only when the answer itself declares "can" as its modality phrase; "cannot" always counts), and neither
 model had been told that `plain_language` and `unresolved_reason` take an empty evidence list (the prompt now says so, which changed its hash).
+
+A `window_overrun` answer is kept in the ledger and counted, but exports no records (its prompt may have lost its instructions), so scoring
+cannot credit candidates from an invalid call; the resolver loader serves the pinned catalog document (CNSSI 1253) as well as the WP-44 documents.
 
 Not in this step: Step D on the discovery output, the scoring against labels, and the labels themselves (still waiting on the second-labeler decision).

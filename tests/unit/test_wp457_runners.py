@@ -130,6 +130,18 @@ def test_the_discovery_runner_writes_records_resumes_and_uses_the_schema(mods, t
     assert s["status"] == {"complete": 3} and s["records"] == 3 and s["mean_prompt_tokens"] == 900.0
 
 
+def test_an_overrun_answer_is_kept_in_the_ledger_but_exports_no_records(mods, tmp_path, monkeypatch):
+    RD, OR = mods["run_discovery"], mods["ollama_run"]
+    reply = json.dumps({"requirements": [{"source_quote": "Administrators shall review logs 1.", "source_ref": ""}]})
+    monkeypatch.setattr(OR, "generate", _fake_generate(reply, prompt_eval_count=8100, eval_count=300))
+    ledger = OR.Ledger(tmp_path / "ov.jsonl")
+    RD.run_chunks(_fake_chunks()[:1], arm="D1", model="m", digest="dg", run_label="ov", ledger=ledger, ollama_url="http://x", log=lambda *a: None)
+    assert [r["status"] for r in ledger.records.values()] == ["window_overrun"]
+    assert RD.extracted_records(ledger) == []  # an invalid call credits no candidate; the chunk stays a miss
+    assert RD.write_extracted(ledger, tmp_path) == []
+    assert RD.summarize(ledger)["status"] == {"window_overrun": 1}  # but it is counted
+
+
 def test_an_overrun_a_truncation_a_bad_answer_and_a_failed_request_are_recorded_not_dropped(mods, tmp_path, monkeypatch):
     RD, OR = mods["run_discovery"], mods["ollama_run"]
     good = json.dumps({"requirements": []})
@@ -238,3 +250,14 @@ def test_the_runners_validate_numeric_options_like_the_project(mods):
         with pytest.raises(argparse.ArgumentTypeError):
             m._non_negative_float("-0.1")
         assert m._non_negative_float("0") == 0.0 and m._positive_int("8192") == 8192
+
+
+def test_the_resolver_loader_serves_pinned_and_catalog_documents_and_rejects_others(mods):
+    RR = mods["run_resolver"]
+    docs = RR.load_documents(["DODI 5200.44", "CNSSI_No1253"])
+    chunks, step = docs["DODI 5200.44"]
+    assert chunks and step  # a pinned document has chunks and production Step C records
+    cchunks, cstep = docs["CNSSI_No1253"]
+    assert cchunks and cstep == {}  # the catalog has its pinned chunks and no Step C records
+    with pytest.raises(SystemExit):
+        RR.load_documents(["not-a-document"])
