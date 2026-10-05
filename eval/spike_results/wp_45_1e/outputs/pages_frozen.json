@@ -1,0 +1,1179 @@
+{
+ "documents": {
+  "DODI 8410.03": {
+   "drawn": [
+    6,
+    12,
+    14,
+    3
+   ],
+   "eligible_pages": 24,
+   "pages_in_pdf": 25,
+   "pdf_sha256": "e0c708499cae800483a308ecc236436c988896be8ad6db8c6f214ab7f1009133",
+   "pieces": {
+    "12": [
+     {
+      "id": "DODI-p012-001",
+      "text": "DoDI 8410.03, August 29, 2012"
+     },
+     {
+      "id": "DODI-p012-002",
+      "text": "k. Provide the NM and SM data necessary to fulfill the commander’s critical information requirements in support of established DoD cyberspace operational hierarchies."
+     },
+     {
+      "id": "DODI-p012-003",
+      "text": "l. Ensure, in coordination with DISA, all DoD equipment containing or potentially containing personally identifiable information and other data of a sensitive nature is managed in accordance with DoDI 5000.64 (Reference (s))."
+     },
+     {
+      "id": "DODI-p012-004",
+      "text": "10. CJCS."
+     },
+     {
+      "id": "DODI-p012-005",
+      "text": "The CJCS, in addition to the responsibilities in section 8 of this enclosure and in coordination with the other Heads of the DoD Components, shall:"
+     },
+     {
+      "id": "DODI-p012-006",
+      "text": "a. Establish and issue priorities for the collection and sharing of NM data."
+     },
+     {
+      "id": "DODI-p012-007",
+      "text": "b. Develop and promulgate joint NM tactics, techniques, and procedures."
+     },
+     {
+      "id": "DODI-p012-008",
+      "text": "c. In coordination with the Combatant Commanders, establish requirements for sharing NM information and data with coalition partner networks."
+     },
+     {
+      "id": "DODI-p012-009",
+      "text": "11. COMMANDERS OF THE COMBATANT COMMANDS."
+     },
+     {
+      "id": "DODI-p012-010",
+      "text": "The Commanders of the Combatant Commands, in addition to the responsibilities in section 8 of this enclosure, shall support the Joint Staff in establishing requirements for sharing NM information and data with coalition partner networks."
+     },
+     {
+      "id": "DODI-p012-011",
+      "text": "12. CDRUSSTRATCOM."
+     },
+     {
+      "id": "DODI-p012-012",
+      "text": "The CDRUSSTRATCOM, in addition to the responsibilities in sections 8 and 10 of this enclosure, shall:"
+     },
+     {
+      "id": "DODI-p012-013",
+      "text": "a. Develop and issue guidance for ensuring uninterrupted, end-to-end monitoring and control of all operational DoD networks."
+     },
+     {
+      "id": "DODI-p012-014",
+      "text": "b. Develop, publish, and enforce standard processes for the sharing of NM data about readiness and operating status of all DoD networks."
+     },
+     {
+      "id": "DODI-p012-015",
+      "text": "c. Establish clear lines of authority and responsibility for NM across all DoD network domains and with DoD mission partners."
+     },
+     {
+      "id": "DODI-p012-016",
+      "text": "d. Develop, in coordination with the Director, DISA, operational guidance for integrating and correlating NM capabilities to enable near real-time end-to-end network SA."
+     },
+     {
+      "id": "DODI-p012-017",
+      "text": "e. Develop, in coordination with the other Heads of the DoD Components, and issue security classification guidelines for NM and SM information IAW DoDM 5200.01, Volume 1 (Reference (t))."
+     },
+     {
+      "id": "DODI-p012-018",
+      "text": "f. Approve NM data schemas and sharing mechanisms."
+     },
+     {
+      "id": "DODI-p012-019",
+      "text": "Change 1, 07/19/2017 12 ENCLOSURE 2"
+     }
+    ],
+    "14": [
+     {
+      "id": "DODI-p014-001",
+      "text": "DoDI 8410.03, August 29, 2012"
+     },
+     {
+      "id": "DODI-p014-002",
+      "text": "ENCLOSURE 3"
+     },
+     {
+      "id": "DODI-p014-003",
+      "text": "PROCEDURES"
+     },
+     {
+      "id": "DODI-p014-004",
+      "text": "1. GENERAL."
+     },
+     {
+      "id": "DODI-p014-005",
+      "text": "The procedures in this enclosure are applicable to all NM systems, including those intended for the tactical environment, except as specifically noted in each section."
+     },
+     {
+      "id": "DODI-p014-006",
+      "text": "2. NM DATA EXCHANGE GUIDELINES"
+     },
+     {
+      "id": "DODI-p014-007",
+      "text": "a. The DoD shall adopt and implement the TeleManagement (TM) Forum Information Framework (formerly known as the Shared Information and Data Model) and the Desktop Management Task Force (DMTF), Common Information Model (CIM) as the foundation NM information and data models and the National Institute of Standards and Technology (NIST) Security Content Automation Protocol as the baseline protocol and standards for sharing security management information sharing (References (u), (v), and (w))."
+     },
+     {
+      "id": "DODI-p014-008",
+      "text": "Drawing on the DISR, other industry-standard information and data models (e.g., Internet Engineering Task Force (IETF), DMTF CIM, IETF SMIv2) and protocols (e.g., International Telecommunications Union- Telecommunication Cybersecurity Information Exchange (ITU-T CYBEX)) may be used to tailor those baselines where application requirements and other circumstances so warrant."
+     },
+     {
+      "id": "DODI-p014-009",
+      "text": "Only if existing standards cannot be extended shall DoD Components adopt and implement nonstandards based data schemas and exchange mechanisms."
+     },
+     {
+      "id": "DODI-p014-010",
+      "text": "b. The CDRUSSTRATCOM, IAW Reference (c) and functioning IAW Reference (g), shall vet and approve NM data schemas and sharing mechanisms."
+     },
+     {
+      "id": "DODI-p014-011",
+      "text": "c. DoD programs of record (POR) shall adopt and implement NM data schemas and netcentric sharing mechanisms that have been approved by CDRUSSTRATCOM."
+     },
+     {
+      "id": "DODI-p014-012",
+      "text": "In situations where it is determined that adopting approved NM data schemas and net-centric sharing mechanisms would result in unacceptable delay or increased costs to a POR, a request for waiver will be submitted via the applicable acquisition oversight process."
+     },
+     {
+      "id": "DODI-p014-013",
+      "text": "(1) Where standards or data schemas are not available or have not been approved, program offices shall work with DISA to identify and vet program specific data standards, schemas, and exchange mechanisms prior to them being submitted to CDRUSSTRATCOM for approval."
+     },
+     {
+      "id": "DODI-p014-014",
+      "text": "(2) Requests for approval of data schema or sharing mechanism submitted to USSTRATCOM must be reviewed and adjudicated within 90 days of their submittal to ensure that program development timelines should not be adversely impacted."
+     },
+     {
+      "id": "DODI-p014-015",
+      "text": "d. NM systems shall use Enterprise Services (ES) that have been approved by the DoD CIO to enable and facilitate the discovery, sharing, and collaborative use of NM data among all authorized users."
+     },
+     {
+      "id": "DODI-p014-016",
+      "text": "Change 1, 07/19/2017 14 ENCLOSURE 3"
+     }
+    ],
+    "3": [
+     {
+      "id": "DODI-p003-001",
+      "text": "DoDI 8410.03, August 29, 2012"
+     },
+     {
+      "id": "DODI-p003-002",
+      "text": "6. RELEASABILITY."
+     },
+     {
+      "id": "DODI-p003-003",
+      "text": "Cleared for public release."
+     },
+     {
+      "id": "DODI-p003-004",
+      "text": "This instruction is available on the Directives Division Website at https://www.esd.whs.mil/DD/."
+     },
+     {
+      "id": "DODI-p003-005",
+      "text": "7. SUMMARY OF CHANGE 1."
+     },
+     {
+      "id": "DODI-p003-006",
+      "text": "The changes to this issuance are administrative and update organizational titles and references for accuracy."
+     },
+     {
+      "id": "DODI-p003-007",
+      "text": "8. EFFECTIVE DATE."
+     },
+     {
+      "id": "DODI-p003-008",
+      "text": "This Instruction is effective August 29, 2012."
+     },
+     {
+      "id": "DODI-p003-009",
+      "text": "Teresa M. Takai DoD Chief Information Officer"
+     },
+     {
+      "id": "DODI-p003-010",
+      "text": "Enclosures"
+     },
+     {
+      "id": "DODI-p003-011",
+      "text": "1. References"
+     },
+     {
+      "id": "DODI-p003-012",
+      "text": "2. Responsibilities"
+     },
+     {
+      "id": "DODI-p003-013",
+      "text": "3. Procedures Glossary"
+     },
+     {
+      "id": "DODI-p003-014",
+      "text": "Change 1, 07/19/2017 3"
+     }
+    ],
+    "6": [
+     {
+      "id": "DODI-p006-001",
+      "text": "DoDI 8410.03, August 29, 2012"
+     },
+     {
+      "id": "DODI-p006-002",
+      "text": "(y) International Telegraph and Telephone Consultative Committee Recommendation X.731, “Information Technology – Open Systems Interconnection – Systems Management: State Management Function,” January 1992"
+     },
+     {
+      "id": "DODI-p006-003",
+      "text": "(z) International Telecommunication Union – Telecommunication Standardization Sector Recommendation M.3342, “Guidelines for the definition of SLA representation templates,” July 2006"
+     },
+     {
+      "id": "DODI-p006-004",
+      "text": "(aa) TM Forum GB917 Release 3.0, “SLA Management Handbook,” January 2011"
+     },
+     {
+      "id": "DODI-p006-005",
+      "text": "(ab) DISA Security Technical Implementation Guides, Network Infrastructure1"
+     },
+     {
+      "id": "DODI-p006-006",
+      "text": "(ac) US Strategic Command Instruction 720-1, “Global Information Grid (GIG) NetOps Security Classification Guide (SCG),” July 15, 2009"
+     },
+     {
+      "id": "DODI-p006-007",
+      "text": "(ad) DoD 8570.01-M, “Information Assurance Workforce Improvement Program,” December 19, 2005, as amended"
+     },
+     {
+      "id": "DODI-p006-008",
+      "text": "(ae) DoD Manual 5200.02, “Procedures for the DoD Personnel Security Program (PSP),” April 3, 2017"
+     },
+     {
+      "id": "DODI-p006-009",
+      "text": "(af) DoD Instruction 5200.44, “Protection of Mission Critical Functions to Achieve Trusted Systems & Networks,” November 5, 2011, as amended"
+     },
+     {
+      "id": "DODI-p006-010",
+      "text": "(ag) DoD Instruction 5200.39, “Critical Program Information (CPI) Identification and Protection Within Research, Development, Test, and Evaluation (RDT&E),” May 28, 2015"
+     },
+     {
+      "id": "DODI-p006-011",
+      "text": "(ah) Office of the Chairman of the Joint Chiefs of Staff, “DoD Dictionary of Military and Associated Terms,” current edition"
+     },
+     {
+      "id": "DODI-p006-012",
+      "text": "(ai) Internet Engineering Task Force Request For Comment 2570, “Introduction to Version 3 of the Internet-standard Network Management Framework,” April 1999"
+     },
+     {
+      "id": "DODI-p006-013",
+      "text": "1 http://iase.disa.mil/stigs/stig/index.html"
+     },
+     {
+      "id": "DODI-p006-014",
+      "text": "Change 1, 07/19/2017 6 ENCLOSURE 1"
+     }
+    ]
+   },
+   "shuffle_order": [
+    6,
+    12,
+    14,
+    3,
+    10,
+    8,
+    20,
+    17,
+    18,
+    24,
+    21,
+    2,
+    11,
+    5,
+    19,
+    25,
+    22,
+    9,
+    23,
+    1,
+    15,
+    16,
+    7,
+    4
+   ]
+  },
+  "NIST.SP.800-125": {
+   "drawn": [
+    25,
+    18,
+    3,
+    26
+   ],
+   "eligible_pages": 34,
+   "pages_in_pdf": 35,
+   "pdf_sha256": "da8bd5054eb1d6a1942cf756901e5ebfece26458580af143971bc54f45d5114d",
+   "pieces": {
+    "18": [
+     {
+      "id": "NIST-p018-001",
+      "text": "GUIDE TO SECURITY FOR FULL VIRTUALIZATION TECHNOLOGIES"
+     },
+     {
+      "id": "NIST-p018-002",
+      "text": "3. Virtualization Security Overview"
+     },
+     {
+      "id": "NIST-p018-003",
+      "text": "Migrating computing resources to a virtualized environment has little or no effect on most of the resources’ vulnerabilities and threats."
+     },
+     {
+      "id": "NIST-p018-004",
+      "text": "For example, if a service has inherent vulnerabilities and that service is moved from a non-virtualized server to a virtualized server, the service is still just as vulnerable to exploitation."
+     },
+     {
+      "id": "NIST-p018-005",
+      "text": "However, the use of virtualization may help reduce the impact of such exploitation—but virtualization may also provide additional attack vectors, thus increasing the likelihood of successful attacks."
+     },
+     {
+      "id": "NIST-p018-006",
+      "text": "Many of the features of virtualization offer both benefits and disadvantages to security."
+     },
+     {
+      "id": "NIST-p018-007",
+      "text": "This section describes these security implications."
+     },
+     {
+      "id": "NIST-p018-008",
+      "text": "Section 3.1 discusses the isolation of guest OSs from each other and the underlying hypervisor and host OS."
+     },
+     {
+      "id": "NIST-p018-009",
+      "text": "Section 3.2 explains the purpose of and mechanisms for guest OS monitoring."
+     },
+     {
+      "id": "NIST-p018-010",
+      "text": "Section 3.3 discusses image and snapshot management."
+     },
+     {
+      "id": "NIST-p018-011",
+      "text": "3.1 Guest OS Isolation"
+     },
+     {
+      "id": "NIST-p018-012",
+      "text": "The hypervisor is responsible for managing guest OS access to hardware (e.g., CPU, memory, storage)."
+     },
+     {
+      "id": "NIST-p018-013",
+      "text": "The hypervisor partitions these resources so that each guest OS can access its own resources but cannot encroach on the other guest OSs’ resources or any resources not allocated for virtualization use."
+     },
+     {
+      "id": "NIST-p018-014",
+      "text": "This prevents unauthorized access to resources and also helps prevent one guest OS from injecting malware into another, such as infecting a guest OS’s files or placing malware code into another guest OS’s memory."
+     },
+     {
+      "id": "NIST-p018-015",
+      "text": "Separately, partitioning can also reduce the threat of denial of service conditions caused by excess resource consumption in other guest OSs on the same hypervisor."
+     },
+     {
+      "id": "NIST-p018-016",
+      "text": "Resources may be partitioned physically or logically."
+     },
+     {
+      "id": "NIST-p018-017",
+      "text": "In physical partitioning, the hypervisor assigns separate physical resources to each guest OS, such as disk partitions, disk drives, and network interface cards."
+     },
+     {
+      "id": "NIST-p018-018",
+      "text": "Logical partitioning may divide resources on a single host or across multiple hosts as in a pool of resources with the same security impact level categorization, allowing multiple guest OSs to share the same physical resources, such as processors and RAM, with the hypervisor mediating access to the resources."
+     },
+     {
+      "id": "NIST-p018-019",
+      "text": "Physical partitioning sets hard limits on resources for each guest OS because unused capacity from one resource may not be accessed by any other guest OS."
+     },
+     {
+      "id": "NIST-p018-020",
+      "text": "However, having physical separation for resources may provide stronger security and improved performance than logical partitioning."
+     },
+     {
+      "id": "NIST-p018-021",
+      "text": "Many virtualization systems can do both physical and logical partitioning."
+     },
+     {
+      "id": "NIST-p018-022",
+      "text": "Some organizations have policies about which application data can physically reside on drives with the data of other applications, and such policies should take into account physical and logical partitioning in hypervisors."
+     },
+     {
+      "id": "NIST-p018-023",
+      "text": "Having separate partitions for resource is an important part of isolating guest OSs."
+     },
+     {
+      "id": "NIST-p018-024",
+      "text": "Isolation also involves limiting guest OS communications and the access that each guest OS has to the other guest OSs, to the hypervisor, and to the host OS (if present)."
+     },
+     {
+      "id": "NIST-p018-025",
+      "text": "Hypervisors can theoretically support a level of logical isolation nearly equivalent to physical isolation, mediating all communications from each guest OS to have full control over each guest OS’s actions."
+     },
+     {
+      "id": "NIST-p018-026",
+      "text": "Hypervisors can permit interactions between guest OSs as needed, such as allowing two desktop OSs to share a file system."
+     },
+     {
+      "id": "NIST-p018-027",
+      "text": "Hypervisors can also dynamically alter isolation for each guest OS as needed—for example, enabling and disabling networking at specific times."
+     },
+     {
+      "id": "NIST-p018-028",
+      "text": "Isolation has obvious security benefits, but it can also increase the reliability of a host by preventing actions in one guest OS from directly affecting another."
+     },
+     {
+      "id": "NIST-p018-029",
+      "text": "For example, if one guest OS crashes because of an application fault or an attack, the other guest OSs on that host are unlikely to be affected."
+     },
+     {
+      "id": "NIST-p018-030",
+      "text": "Isolating each guest OS from the others and restricting what resources they can access and what privileges they have is also known as sandboxing."
+     },
+     {
+      "id": "NIST-p018-031",
+      "text": "Another motivation for isolating guest OSs from each other and the underlying hypervisor and host OS is the mitigation of side-channel attacks."
+     },
+     {
+      "id": "NIST-p018-032",
+      "text": "These attacks exploit the physical properties of hardware to reveal information about usage patterns for memory access, CPU use, and other resources."
+     },
+     {
+      "id": "NIST-p018-033",
+      "text": "A common goal of"
+     },
+     {
+      "id": "NIST-p018-034",
+      "text": "3-1"
+     }
+    ],
+    "25": [
+     {
+      "id": "NIST-p025-001",
+      "text": "GUIDE TO SECURITY FOR FULL VIRTUALIZATION TECHNOLOGIES"
+     },
+     {
+      "id": "NIST-p025-002",
+      "text": "Many hosted virtualization systems also allow guest OSs to share information with the host OS through clipboard sharing."
+     },
+     {
+      "id": "NIST-p025-003",
+      "text": "That is, copying information to the clipboard in the host OS allows that information to be pasted in the guest OS, and vice versa."
+     },
+     {
+      "id": "NIST-p025-004",
+      "text": "Similarly, putting information on the clipboard in one guest OS makes the same information show up on the clipboard in other guest OSs running on the same hypervisor."
+     },
+     {
+      "id": "NIST-p025-005",
+      "text": "This is a handy feature for users, but it is also a vector for attacks between the guest OS and host OS."
+     },
+     {
+      "id": "NIST-p025-006",
+      "text": "Because of this, organizations should have policies regarding the use of shared clipboards."
+     },
+     {
+      "id": "NIST-p025-007",
+      "text": "The following are security recommendations for the guest OS itself:"
+     },
+     {
+      "id": "NIST-p025-008",
+      "text": " Follow the recommended practices for managing the physical OS, e.g., time synchronization, log management, authentication, remote access, etc."
+     },
+     {
+      "id": "NIST-p025-009",
+      "text": " Install all updates to the guest OS promptly."
+     },
+     {
+      "id": "NIST-p025-010",
+      "text": "All modern OSs have features that will automatically check for updates and install them."
+     },
+     {
+      "id": "NIST-p025-011",
+      "text": " Back up the virtual drives used by the guest OS on a regular basis, using the same policy for backups as is used for non-virtualized computers in the organization."
+     },
+     {
+      "id": "NIST-p025-012",
+      "text": " In each guest OS, disconnect unused virtual hardware."
+     },
+     {
+      "id": "NIST-p025-013",
+      "text": "This is particularly important for virtual drives (usually virtual CDs and floppy drives), but is also important for virtual network adapters other than the primary network interface and serial and/or parallel ports."
+     },
+     {
+      "id": "NIST-p025-014",
+      "text": " Use separate authentication solutions for each guest OS unless there is a particular reason for two guest OSs to share credentials."
+     },
+     {
+      "id": "NIST-p025-015",
+      "text": " Ensure that virtual devices for the guest OS are associated only with the appropriate physical devices on the host system, such as the mappings between virtual and physical NICs."
+     },
+     {
+      "id": "NIST-p025-016",
+      "text": "If a guest OS on a hosted virtualization system is compromised, that guest OS can potentially infect other systems on the same hypervisor."
+     },
+     {
+      "id": "NIST-p025-017",
+      "text": "The most likely way this can happen is that both systems are sharing disks or clipboards."
+     },
+     {
+      "id": "NIST-p025-018",
+      "text": "If such sharing is turned on in two or more guest OSs, and one guest OS is compromised, the administrator of the virtualization system needs to decide how to deal with the potential compromise of other guest OSs."
+     },
+     {
+      "id": "NIST-p025-019",
+      "text": "Two strategies for dealing with this situation are:"
+     },
+     {
+      "id": "NIST-p025-020",
+      "text": " Assume that all guest OSs on the same hardware have been compromised."
+     },
+     {
+      "id": "NIST-p025-021",
+      "text": "Revert each guest OS to a known-good image that was saved before the compromise."
+     },
+     {
+      "id": "NIST-p025-022",
+      "text": " Investigate each guest OS for compromise, just as one would during normal scanning for malware."
+     },
+     {
+      "id": "NIST-p025-023",
+      "text": "If malware is found, follow the organization’s normal security policy."
+     },
+     {
+      "id": "NIST-p025-024",
+      "text": "The first method assumes that guest OSs are different than “regular” systems, while the second assumes that the organization’s current security policy is sufficient and should be applied to all systems in the same manner."
+     },
+     {
+      "id": "NIST-p025-025",
+      "text": "4.3 Virtualized Infrastructure Security"
+     },
+     {
+      "id": "NIST-p025-026",
+      "text": "Virtualization provides simulation of hardware such as storage and network interfaces."
+     },
+     {
+      "id": "NIST-p025-027",
+      "text": "This infrastructure is as important to the security of a virtualized guest OS as real hardware infrastructure is to an operating system running on a physical computer."
+     },
+     {
+      "id": "NIST-p025-028",
+      "text": "Many virtualization systems have features to provide access control to the virtual hardware, particularly storage and networking."
+     },
+     {
+      "id": "NIST-p025-029",
+      "text": "Access to virtual hardware should be strictly limited to the guest OSs that will use it."
+     },
+     {
+      "id": "NIST-p025-030",
+      "text": "For example, if a virtual hard drive will be shared between two guest OSs, only those two OSs should have access to the virtual hard drive."
+     },
+     {
+      "id": "NIST-p025-031",
+      "text": "Some virtual hardware is meant to be widely shared."
+     },
+     {
+      "id": "NIST-p025-032",
+      "text": "For example, a disk image that represents an installation CD may"
+     },
+     {
+      "id": "NIST-p025-033",
+      "text": "4-4"
+     }
+    ],
+    "26": [
+     {
+      "id": "NIST-p026-001",
+      "text": "GUIDE TO SECURITY FOR FULL VIRTUALIZATION TECHNOLOGIES"
+     },
+     {
+      "id": "NIST-p026-002",
+      "text": "be shared among many guest OSs; still, access to that image should be read-only, and no guest image should have write access to it."
+     },
+     {
+      "id": "NIST-p026-003",
+      "text": "Hypervisor systems that connect multiple guest OSs together on a virtual network present issues for organizations whose policies require that all networks be monitored in specified fashions."
+     },
+     {
+      "id": "NIST-p026-004",
+      "text": "For example, an organization might have a network security policy that says that all network switches connecting multiple servers must be managed and that traffic between the servers be monitored for suspicious activity."
+     },
+     {
+      "id": "NIST-p026-005",
+      "text": "However, network switches in most virtual systems do not have such a capability."
+     },
+     {
+      "id": "NIST-p026-006",
+      "text": "Some virtual switches support virtual LAN (VLAN) and firewall capabilites to provide separation and isolation of the VM network traffic."
+     },
+     {
+      "id": "NIST-p026-007",
+      "text": "In some environments, additional security appliances can be implemted to inspect, control, shape, and monitor the VM network communications in a centralized location."
+     },
+     {
+      "id": "NIST-p026-008",
+      "text": "Hypervisors sometimes offer virtual storage networks and virtual interfaces to existing hardware storage networks."
+     },
+     {
+      "id": "NIST-p026-009",
+      "text": "These features offer the same security problems as virtual networks, namely that organizations whose security policies require monitoring those connections cannot use the same methods for virtual storage as they do for physical storage."
+     },
+     {
+      "id": "NIST-p026-010",
+      "text": "Using physical interfaces to existing networked storage can eliminate this problem, but also reduces some of the flexibility that hypervisors offer."
+     },
+     {
+      "id": "NIST-p026-011",
+      "text": "4.4 Desktop Virtualization Security"
+     },
+     {
+      "id": "NIST-p026-012",
+      "text": "A major difference in security between server and desktop virtualization is the ability to control the images."
+     },
+     {
+      "id": "NIST-p026-013",
+      "text": "In a server environment, the ability to create and manage images is usually limited to administrators."
+     },
+     {
+      "id": "NIST-p026-014",
+      "text": "But in desktop environments, end users often have the ability to create, modify, duplicate, and delete images."
+     },
+     {
+      "id": "NIST-p026-015",
+      "text": "The virtualization software itself may also be fully controlled by the user."
+     },
+     {
+      "id": "NIST-p026-016",
+      "text": "It may not be possible for the organization to ensure that the guest OS images meet the organization’s security policy requirements, such as being patched regularly."
+     },
+     {
+      "id": "NIST-p026-017",
+      "text": "Organizations considering the use of desktop virtualization should determine which scenarios require the enforcement of security by managed virtualization solutions and which scenarios do not require centralized management."
+     },
+     {
+      "id": "NIST-p026-018",
+      "text": "For example, if a teleworker is using desktop virtualization to run programs that the security policy would allow them to run from, say, a lightly-protected home computer, then that system probably does not need to be as tightly managed as one that accesses internal databases or websites, and therefore would only be allowed from computers with more stringent security controls."
+     },
+     {
+      "id": "NIST-p026-019",
+      "text": "Organizations often manage virtual machines like they are real computers; another option is to treat them as appliances that expire (or are forced out of service) after a period of time and replaced by more up-todate appliances."
+     },
+     {
+      "id": "NIST-p026-020",
+      "text": "Desktop virtualization can be used to improve security by providing a well-secured guest OS image for the desktop environment."
+     },
+     {
+      "id": "NIST-p026-021",
+      "text": "A number of virtualization vendors provide solutions that will allow organizations to deploy a managed desktop guest OS on unmanaged computers."
+     },
+     {
+      "id": "NIST-p026-022",
+      "text": "For example, telecommuting employees may install a hypervisor on their home computer and access the organization’s intranet through a specific guest OS image, or a remote access server might deliver a clean guest OS image every time a user initiates a remote access session."
+     },
+     {
+      "id": "NIST-p026-023",
+      "text": "Some solutions even permit users to boot their home computers from removable media containing a hypervisor and guest OS image; this can provide a bare metal full virtualization solution that does not run the host OS on the home computer."
+     },
+     {
+      "id": "NIST-p026-024",
+      "text": "Guest OS images on read-only media are not a panacea, however."
+     },
+     {
+      "id": "NIST-p026-025",
+      "text": "Guest OSs are often updated, which means that the old read-only media would need to be destroyed and new media created and distributed."
+     },
+     {
+      "id": "NIST-p026-026",
+      "text": "Because of this, some organizations might be tempted to use rewritable media instead, but that could lead to the media being infected with malware."
+     },
+     {
+      "id": "NIST-p026-027",
+      "text": "4-5"
+     }
+    ],
+    "3": [
+     {
+      "id": "NIST-p003-001",
+      "text": "GUIDE TO SECURITY FOR FULL VIRTUALIZATION TECHNOLOGIES"
+     },
+     {
+      "id": "NIST-p003-002",
+      "text": "Reports on Computer Systems Technology"
+     },
+     {
+      "id": "NIST-p003-003",
+      "text": "The Information Technology Laboratory (ITL) at the National Institute of Standards and Technology (NIST) promotes the U.S. economy and public welfare by providing technical leadership for the nation’s measurement and standards infrastructure."
+     },
+     {
+      "id": "NIST-p003-004",
+      "text": "ITL develops tests, test methods, reference data, proof of concept implementations, and technical analysis to advance the development and productive use of information technology."
+     },
+     {
+      "id": "NIST-p003-005",
+      "text": "ITL’s responsibilities include the development of technical, physical, administrative, and management standards and guidelines for the cost-effective security and privacy of sensitive unclassified information in Federal computer systems."
+     },
+     {
+      "id": "NIST-p003-006",
+      "text": "This Special Publication 800-series reports on ITL’s research, guidance, and outreach efforts in computer security and its collaborative activities with industry, government, and academic organizations."
+     },
+     {
+      "id": "NIST-p003-007",
+      "text": "National Institute of Standards and Technology Special Publication 800-125 Natl."
+     },
+     {
+      "id": "NIST-p003-008",
+      "text": "Inst."
+     },
+     {
+      "id": "NIST-p003-009",
+      "text": "Stand."
+     },
+     {
+      "id": "NIST-p003-010",
+      "text": "Technol."
+     },
+     {
+      "id": "NIST-p003-011",
+      "text": "Spec."
+     },
+     {
+      "id": "NIST-p003-012",
+      "text": "Publ."
+     },
+     {
+      "id": "NIST-p003-013",
+      "text": "800-125, 35 pages (January 2010)"
+     },
+     {
+      "id": "NIST-p003-014",
+      "text": "Certain commercial entities, equipment, or materials may be identified in this document in order to describe an experimental procedure or concept adequately."
+     },
+     {
+      "id": "NIST-p003-015",
+      "text": "Such identification is not intended to imply recommendation or endorsement by the National Institute of Standards and Technology, nor is it intended to imply that the entities, materials, or equipment are necessarily the best available for the purpose."
+     },
+     {
+      "id": "NIST-p003-016",
+      "text": "ii"
+     }
+    ]
+   },
+   "shuffle_order": [
+    25,
+    18,
+    3,
+    26,
+    30,
+    29,
+    4,
+    11,
+    9,
+    6,
+    31,
+    28,
+    7,
+    32,
+    23,
+    22,
+    33,
+    34,
+    15,
+    8,
+    2,
+    10,
+    13,
+    14,
+    12,
+    17,
+    20,
+    16,
+    21,
+    19,
+    27,
+    24,
+    35,
+    5
+   ]
+  },
+  "afman17-2101": {
+   "drawn": [
+    9,
+    1,
+    4,
+    10
+   ],
+   "eligible_pages": 24,
+   "pages_in_pdf": 26,
+   "pdf_sha256": "b225608e15066270e4150101fba557532a92575b1206ebd56af2a93eea536f2f",
+   "pieces": {
+    "1": [
+     {
+      "id": "AFMAN-p001-001",
+      "text": "1BY ORDER OF THE AIR FORCE MANUAL 17-2101 SECRETARY OF THE AIR FORCE 22 MAY 2018"
+     },
+     {
+      "id": "AFMAN-p001-002",
+      "text": "Communications and Information"
+     },
+     {
+      "id": "AFMAN-p001-003",
+      "text": "LONG-HAUL COMMUNICATIONS MANAGEMENT"
+     },
+     {
+      "id": "AFMAN-p001-004",
+      "text": "COMPLIANCE WITH THIS PUBLICATION IS MANDATORY"
+     },
+     {
+      "id": "AFMAN-p001-005",
+      "text": "ACCESSIBILITY: Publications and forms are available on the e-Publishing website at www.e-publishing.af.mil for downloading or ordering."
+     },
+     {
+      "id": "AFMAN-p001-006",
+      "text": "RELEASABILITY: There are no releasability restrictions on this publication."
+     },
+     {
+      "id": "AFMAN-p001-007",
+      "text": "OPR: SAF/CIO A6SE Certified by: SAF/CIO A6S (Maj Gen Higby) Supersedes: AFMAN33-116, 16 May 2013 Pages: 26"
+     },
+     {
+      "id": "AFMAN-p001-008",
+      "text": "This Air Force Manual defines Air Force (AF) Long-Haul Communications (LHC) and assigns responsibilities for standardization and management of Long Haul Communications in the AF."
+     },
+     {
+      "id": "AFMAN-p001-009",
+      "text": "This instruction implements Department of Defense (DOD) Directive (DODD) 8000.01, Management of the Department of Defense Information Enterprise, Joint Publication 6-0, Joint Communication System, 10 June 2015, CJCSI 6211.02D, Defense Information System Network (DISN) Responsibilities, 24 January 2012 and consistent with AFPD 17-1, Information Dominance Governance and Management."
+     },
+     {
+      "id": "AFMAN-p001-010",
+      "text": "It describes the procedures to provision, process and manage AF Long-Haul Communications in accordance with the Defense Information Systems Agency (DISA) circulars and documents referenced in Attachment 1."
+     },
+     {
+      "id": "AFMAN-p001-011",
+      "text": "This manual applies to all AF military, civilians, and contractor personnel under contract by the Department of Defense"
+     },
+     {
+      "id": "AFMAN-p001-012",
+      "text": "(DOD) who develop, use, operate, or manage AF communications and information systems."
+     },
+     {
+      "id": "AFMAN-p001-013",
+      "text": "Unless otherwise specified, the term major command (MAJCOM) includes AF level field operating agencies (FOA) and direct reporting units (DRU)."
+     },
+     {
+      "id": "AFMAN-p001-014",
+      "text": "This publication applies to the to all AF military, civilian and contractor personnel to include Air National Guard (ANG) and the AF Reserve."
+     },
+     {
+      "id": "AFMAN-p001-015",
+      "text": "The authorities to waive wing/unit level requirements in this publication are identified with a Tier (“T-0, T-1, T-2, T-3”) number following the compliance statement."
+     },
+     {
+      "id": "AFMAN-p001-016",
+      "text": "Send questions or comments on the content of this manual through appropriate command channels to the SAF/CIO A6S and the Air Force Long Haul Comm Flight, 38th Cyberspace Readiness Squadron (CYRS)/SCC."
+     },
+     {
+      "id": "AFMAN-p001-017",
+      "text": "Refer recommended changes and conflicts between this and other publications to SAF/CIO A6S, using AF Form 847, Recommendation for Change of Publication, with information copy to AF Cyberspace Strategy & Policy Division (SAF/A6SS)."
+     },
+     {
+      "id": "AFMAN-p001-018",
+      "text": "Ensure that all records created as a result of processes prescribed in this publication are maintained IAW Air"
+     }
+    ],
+    "10": [
+     {
+      "id": "AFMAN-p010-001",
+      "text": "10 AFMAN17-2101 22 MAY 2018"
+     },
+     {
+      "id": "AFMAN-p010-002",
+      "text": "2.3.15.1. AF focal point for registration and maintenance of Agency Hierarchy Codes through DITCO and requesting user entitlements to vendor web-based portal applications directly from the vendor."
+     },
+     {
+      "id": "AFMAN-p010-003",
+      "text": "2.3.15.2. AF lead manager for Networx/EIS Fair Opportunity Source Selection activities and subsequent contracts."
+     },
+     {
+      "id": "AFMAN-p010-004",
+      "text": "2.3.15.3. AF Networx/ EIS inventory transition manager."
+     },
+     {
+      "id": "AFMAN-p010-005",
+      "text": "2.3.16. Denies/terminates DISN LHC requests when it is in the best interest of the AF."
+     },
+     {
+      "id": "AFMAN-p010-006",
+      "text": "This activity will not be accomplished indiscriminately and shall be coordinated with the customer."
+     },
+     {
+      "id": "AFMAN-p010-007",
+      "text": "2.3.17. Represents the AF at meetings, conferences, workshops and surveys with civilian, government, DOD, Joint Chiefs of Staff, Major Commands, FOA, DRU, and Joint agencies pertaining to DISN LHC."
+     },
+     {
+      "id": "AFMAN-p010-008",
+      "text": "2.3.18. Represents the AF with government and DOD procurement actions involving longhaul requirements and participates in contract evaluation panels."
+     },
+     {
+      "id": "AFMAN-p010-009",
+      "text": "2.3.19. Participates in working groups internal and external to AF, providing LHC technical and/or procedure SME recommendations and guidance."
+     },
+     {
+      "id": "AFMAN-p010-010",
+      "text": "2.3.20. Coordinates with all appropriate organizations (DISA, the AF customers/mission system managers, sister services, COCOMs and other DOD Agencies) regarding contract transitions which affect circuits, equipment, and services."
+     },
+     {
+      "id": "AFMAN-p010-011",
+      "text": "2.3.21. Forwards National Security Emergency Preparedness (NS/EP) appointment letters to Department of Homeland Security TSP Program Office. (tsp@hq.dhs.gov)"
+     },
+     {
+      "id": "AFMAN-p010-012",
+      "text": "2.3.22. Manages the expired/expiring Communications Service Authorization (CSA) program to ensure commercial circuits and services are re-awarded or discontinued IAW DISA Global Contract Re-award Actions Tactics, Techniques, and Procedures."
+     },
+     {
+      "id": "AFMAN-p010-013",
+      "text": "2.4. Major Commands, Management Headquarters (MHQ), AF level Organizations will:"
+     },
+     {
+      "id": "AFMAN-p010-014",
+      "text": "2.4.1. Execute LAFO duties as detailed in Chapter 2, paragraph 2.11 of this AFMAN."
+     },
+     {
+      "id": "AFMAN-p010-015",
+      "text": "2.4.2. Appoint a Long Haul Comm point of Contact (POC) for circuit management and LHC related issues and forward appointment letter to AF Long Haul Communication Flight, 38 Cyberspace Readiness Squadron/SCC."
+     },
+     {
+      "id": "AFMAN-p010-016",
+      "text": "(T-3)"
+     },
+     {
+      "id": "AFMAN-p010-017",
+      "text": "2.4.3. Appoint a LAFO and alternate and forward appointment letter to 38 CYRS/SCC."
+     },
+     {
+      "id": "AFMAN-p010-018",
+      "text": "If the LAFO and alternate are identified as the LHC POC state that in the LAFO appointment letter."
+     },
+     {
+      "id": "AFMAN-p010-019",
+      "text": "Note: AF-level FOAs and DRUs that do not have LHC requirements (circuits and services) do NOT need to appoint a LHC POC or LAFO and alternate."
+     },
+     {
+      "id": "AFMAN-p010-020",
+      "text": "2.4.4. Appoint one or more Telecommunications Service Priority (TSP) NS/EP Invoking Officials in writing IAW NCS Directive 3-1 Telecommunications Service Priority."
+     },
+     {
+      "id": "AFMAN-p010-021",
+      "text": "(TSP) System for National Security Emergency Preparedness (NS/EP); NCS Manual 3-1-1 TSP Service User Manual for the Telecommunications Service Priority (TSP) Systems; DISAC"
+     }
+    ],
+    "4": [
+     {
+      "id": "AFMAN-p004-001",
+      "text": "4 AFMAN17-2101 22 MAY 2018"
+     },
+     {
+      "id": "AFMAN-p004-002",
+      "text": "Chapter 1"
+     },
+     {
+      "id": "AFMAN-p004-003",
+      "text": "AF LONG-HAUL COMMUNICATIONS (AF LHC) MANAGEMENT"
+     },
+     {
+      "id": "AFMAN-p004-004",
+      "text": "1.1. Overview."
+     },
+     {
+      "id": "AFMAN-p004-005",
+      "text": "Long Haul Telecommunications is all general and special purpose longdistance telecommunications, facilities and services (including commercial satellite services, terminal equipment and local circuitry supporting the long-haul service ) to or from the base, post camp or station switch and/or main distribution frame (except for trunk lines to the firstserving commercial central office for local communications services)."
+     },
+     {
+      "id": "AFMAN-p004-006",
+      "text": "1.1.1. The AF centrally provisions, manages and funds the AF enterprise Long Haul Communications transport portion of the DOD network and services called the Defense Information Systems Network (DISN) and the AF segment called the AF Information Networks (AFIN) which uses the DISN for transport."
+     },
+     {
+      "id": "AFMAN-p004-007",
+      "text": "1.1.2. DOD policy assigns Defense Information Systems Agency (DISA) the responsibility to provide end-to-end DOD Information Network (DODIN) infrastructure and to provision, manage and sustain DISN transport, services, facilities, and equipment in direct support of DOD missions, the Joint warfighter and AF operational readiness."
+     },
+     {
+      "id": "AFMAN-p004-008",
+      "text": "1.1.2.1. DOD Chief Information Officer (CIO) policy mandates all DOD Service Components and Agencies provision and fund the shared DOD network and services from DISA to promote Joint interoperability."
+     },
+     {
+      "id": "AFMAN-p004-009",
+      "text": "1.1.3. The AF Information Network (AFIN) is the AF managed segment of the DoD network known as the DODIN and its subcomponent, that is called the DISN."
+     },
+     {
+      "id": "AFMAN-p004-010",
+      "text": "1.1.3.1. The DISN is comprised of Non-Secure Internet Protocol Router Network (NIPRNET) also referred to as \"Sensitive but Unclassified IP Data\" and Secure Internet Protocol Router Network (SIPRNET) also referred to as \"Secret IP Data\"."
+     },
+     {
+      "id": "AFMAN-p004-011",
+      "text": "1.1.3.2. The AF Network (AFNET) is the AF’s underlying unclassified network that enables AF operational capabilities and lines of business."
+     },
+     {
+      "id": "AFMAN-p004-012",
+      "text": "1.1.3.3. AFNET-S is the secret level AFNET also known as the classified network (Secret) that enables AF operational capabilities and lines of business."
+     },
+     {
+      "id": "AFMAN-p004-013",
+      "text": "1.1.4. The AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron (CYRS)/SCC, executes and manages all facets of the DISN Enterprise Long Haul Communications Program on behalf of the AF."
+     },
+     {
+      "id": "AFMAN-p004-014",
+      "text": "1.1.4.1. AF LHC provisioning and management guidance can be found in the AF LHC Management Handbook located on AF LHC Community of Practice (CoP):"
+     },
+     {
+      "id": "AFMAN-p004-015",
+      "text": "1.1.4.2. DISA connection process guidance on DISN connectivity can be found in the DISN Connection Process Guide at:"
+     },
+     {
+      "id": "AFMAN-p004-016",
+      "text": "https://www.disa.mil/Network-Services/Enterprise-Connections/Connection- Process-Guide."
+     },
+     {
+      "id": "AFMAN-p004-017",
+      "text": "1.2. DISN Cost Recovery Overview ."
+     },
+     {
+      "id": "AFMAN-p004-018",
+      "text": "DISN Infrastructure Services (DISN IS) is the method established by DOD CIO and DOD-Comptroller to allocate and fund the total cost of the DISN between all DOD Military Departments (MILDEPs) and Agencies."
+     }
+    ],
+    "9": [
+     {
+      "id": "AFMAN-p009-001",
+      "text": "AFMAN17-2101 22 MAY 2018 9"
+     },
+     {
+      "id": "AFMAN-p009-002",
+      "text": "2.3.10. Provides direct provisioning oversight and management of all corporately funded enterprise SBU IP Data (formerly NIPRNET), Secret IP Data (formerly SIPRNET) and DISN Virtual Private Network (VPN) requirements for all MAJCOMs."
+     },
+     {
+      "id": "AFMAN-p009-003",
+      "text": "2.3.11. Provides direct management oversight on corporate AF LHC funding appropriations and MAJCOM dedicated funding."
+     },
+     {
+      "id": "AFMAN-p009-004",
+      "text": "The AF LHC Financial Analysts:"
+     },
+     {
+      "id": "AFMAN-p009-005",
+      "text": "2.3.11.1. Serve as AF Program Designator Code (PDC) manager."
+     },
+     {
+      "id": "AFMAN-p009-006",
+      "text": "Reviews local funded codes created by Management Headquarters, Agencies, Units and COCOMs."
+     },
+     {
+      "id": "AFMAN-p009-007",
+      "text": "2.3.11.1.1. Establish a line of accounting and funding for all new PDCs with an AF Form 406, Miscellaneous Obligation/Reimbursement Document (MORD), and ensure all new PDCs are loaded by Defense Information Technology Contracting Office (DITCO) in the billing system."
+     },
+     {
+      "id": "AFMAN-p009-008",
+      "text": "2.3.11.1.2. Create, manage, and track PDC(s) for all AF corporately funded and MAJCOM dedicated LHC circuits and services."
+     },
+     {
+      "id": "AFMAN-p009-009",
+      "text": "2.3.11.3. Ensure Defense Finance and Accounting Services posts expenditures correctly and expeditiously."
+     },
+     {
+      "id": "AFMAN-p009-010",
+      "text": "2.3.11.4. Manage AF LHC Program Element 33126F."
+     },
+     {
+      "id": "AFMAN-p009-011",
+      "text": "2.3.11.4.1. Project and submit AF LHC Future Year Defense Program (FYDP) budget estimate."
+     },
+     {
+      "id": "AFMAN-p009-012",
+      "text": "2.3.11.4.2. Develop and implement current year spend plan."
+     },
+     {
+      "id": "AFMAN-p009-013",
+      "text": "2.3.11.4.3. Coordinate with AF LHC Core Function Lead Integrator to rectify shortages or overages in execution year."
+     },
+     {
+      "id": "AFMAN-p009-014",
+      "text": "2.3.11.5. Receive financial/execution plan (D-22s) from MAJCOMs."
+     },
+     {
+      "id": "AFMAN-p009-015",
+      "text": "Ensures that financial/execution (D-22) transfers cover costs for existing requirements."
+     },
+     {
+      "id": "AFMAN-p009-016",
+      "text": "2.3.11.5.1. Pay MAJCOM dedicated LHC bills on behalf of their command."
+     },
+     {
+      "id": "AFMAN-p009-017",
+      "text": "2.3.11.6. Manage the DISA and the OSD Statistical Sampling Report."
+     },
+     {
+      "id": "AFMAN-p009-018",
+      "text": "2.3.11.6.1. Receive OSD Statistical Sampling Report from DITCO."
+     },
+     {
+      "id": "AFMAN-p009-019",
+      "text": "2.3.11.6.2. Forward report to appropriate Lead Authorized Funding Official (LAFO) / Authorized Funding Official for validation."
+     },
+     {
+      "id": "AFMAN-p009-020",
+      "text": "2.3.12. Assists SAF/CIO A6 as SME in support of AF and Major Command IG teams."
+     },
+     {
+      "id": "AFMAN-p009-021",
+      "text": "2.3.13. Serves as the AF customer interface and focal point with DISA, DITCO, and the General Services Administration (GSA) for long-haul circuit and service requirements."
+     },
+     {
+      "id": "AFMAN-p009-022",
+      "text": "2.3.14. Coordinates with DISA, DITCO, GSA, commercial venders, and users to resolve management, acquisition, and technical issues with LHC systems, circuits, equipment, and services."
+     },
+     {
+      "id": "AFMAN-p009-023",
+      "text": "Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process."
+     },
+     {
+      "id": "AFMAN-p009-024",
+      "text": "2.3.15. Serves as the AF Transition Lead and Designated Agency Representative Administrator for GSA’s Networx/Enterprise Infrastructure Solutions (EIS) contracts by acting as the:"
+     }
+    ]
+   },
+   "shuffle_order": [
+    9,
+    1,
+    4,
+    10,
+    15,
+    17,
+    7,
+    14,
+    3,
+    23,
+    20,
+    18,
+    22,
+    21,
+    13,
+    19,
+    11,
+    2,
+    25,
+    8,
+    16,
+    5,
+    24,
+    12
+   ]
+  }
+ },
+ "min_words": 60,
+ "pages_per_document": 4,
+ "pieces_sha256": "5fe17c118aabf117da270f6fd4301a41b3d172d23f01b48d8516bc4bd69ad90a",
+ "pieces_total": 254,
+ "pymupdf": "1.27.1:",
+ "seed": "wp45.1e",
+ "segmenter_sha256": "54d8f67fd66a2bd23df7c5774d24691f3bdda61871a206137bcda0713fb25f72",
+ "segmenter_version": "1"
+}
