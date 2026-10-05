@@ -114,7 +114,7 @@ Two behaviors worth knowing:
   ("Paragraphs 2.2, 4.1, and 11.2"). A bare identifier such as AC-2 counts only if it resolves to a section in the document,
   because `AES-256` and `SHA-384` look the same and are not references; an unresolved bare identifier is never reported as
   "not found". Only reference words, which cannot be mistaken, produce a "not found" line. This took the corpus count of
-  records with a not-found reference from 116 to 80 (87 after named sections and references into other documents were added: they now resolve or are reported).
+  records with a not-found reference from 116 to 80 (103 after named sections, subsections and references into other documents were added: they now resolve or are reported; more of the earlier 49 excerpts turned out to cite another document).
 - **References into another document (fixed in review of #214).** "section 3.7 of Reference (c)", "Section 3252 of Title 10" and
   "paragraphs 4.(a) through 4.(d) of the January 19, 2017 Memorandum" name a provision of some other document, so they are
   never looked up locally (a local section with the same number would be offered as the wrong provision) and are listed as
@@ -138,6 +138,23 @@ resolver, and these are Step C records, not discovery output:
 | R1 | 1,295 | 1,838 | 5,314 | 0 | 0 | 420 (21.1%) |
 | R2 | 2,667 | 3,386 | 6,632 | 0 | 0 | 420 (21.1%) |
 
-R2 added 49 referenced-section excerpts and left 87 records with an explicit reference ("paragraph 4.2", "Sections 3 and 5") it could not find in the document. At this fixed prompt size
+R2 added 33 referenced-section excerpts and left 103 records with an explicit reference ("paragraph 4.2", "Sections 3 and 5") it could not find in the document. At this fixed prompt size
 the window is not a binding constraint on these documents; table-heavy chunks and a larger fixed prompt (the seven worked examples)
 are what would push a bundle over, and the cuts and `untreatable` flag are tested for that case.
+
+### Known limits of the reference rules
+
+The cross-reference rules are deliberately rule-based and were hardened against real phrases from the pinned corpus over several
+review rounds of #214; they will not catch everything. A reference the rules miss is simply absent from the bundle (the resolver
+can still answer `unresolved`), and one they mis-read as local would offer the wrong text, which is why the doubtful cases go to
+"not found". Known gaps, none measured to matter yet:
+
+- **Ranges list their endpoints only** ("4.(a) through 4.(d)" returns 4.(a) and 4.(d), not 4.(b) and 4.(c)).
+- **Local resolution needs the section number in the chunk's section path.** A provision named in running text but never made a
+  heading is not found, and a reference whose parent section exists but whose lettered part does not (3.k with only section 3
+  present) is reported as not found, not resolved to the parent.
+- **The "other document" rule is a capitalized name after of/in/from.** "of the Manual" (capitalized, ambiguous) is treated as
+  external; "of the instruction" (lowercase) as local. A reference with no qualifier is assumed local.
+- **Bare control identifiers resolve or are ignored**, so a real control id the document does not contain is never reported as
+  missing (AES-256 and AC-2 cannot be told apart otherwise).
+- **Word forms are English** and listed in `_REF_WORD` / `_NAMED`; a new issuance style may need one more word.

@@ -255,3 +255,35 @@ def test_a_reference_into_another_document_is_reported_not_looked_up_locally(B):
     local = B.build("Per paragraph 4.2 of this instruction.", 2, doc, "R2")
     assert [s.label for s in local.spans if s.kind == "reference"] == ["referenced section 4.2"]
     assert local.unresolved_references == []
+
+
+def test_complete_identifiers_subsections_and_ranges_with_an_external_qualifier(B):
+    assert [k for _, k, _ in B.cross_references("per paragraph 3.k of this Instruction.")] == [["3.k"]]
+    refs = B.cross_references(
+        B.normalize("Paragraphs 4.(a) through 4.(d) of the January 19, 2017 Memorandum of Agreement between the DoD and DHS.")
+    )
+    assert [(d, k) for d, k, _ in refs] == [
+        ("Paragraphs 4.(a) of the January 19", []),
+        ("Paragraphs 4.(d) of the January 19", []),
+    ]
+    refs = B.cross_references(B.normalize("See subsection 3.4 of Reference (c) and subsections 2.1 and 2.2."))
+    assert [(d, k) for d, k, _ in refs] == [
+        ("subsection 3.4 of Reference (c)", []),
+        ("subsections 2.1", ["2.1"]),
+        ("subsections 2.2", ["2.2"]),
+    ]
+    assert [k for _, k, _ in B.cross_references("see paragraph 10a and 10b.")] == [["10a"], ["10b"]]
+
+
+def test_a_partial_match_never_falls_back_to_the_broader_local_section(B):
+    doc = _doc()  # holds local section 3.4 and 4.2 but no 3.k and no 4.(a)
+    for text, expected in (
+        ("per paragraph 3.k of this Instruction.", ["paragraph 3.k"]),
+        ("Paragraphs 4.(a) through 4.(d) of the January 19, 2017 Memorandum.", ["Paragraphs 4.(a) of the January 19", "Paragraphs 4.(d) of the January 19"]),
+        ("per subsection 3.4 of Reference (c).", ["subsection 3.4 of Reference (c)"]),
+    ):
+        b = B.build(text, 2, doc, "R2")
+        assert not [s for s in b.spans if s.kind == "reference"], text
+        assert b.unresolved_references == expected, text
+    local = B.build("per subsection 3.4 of this instruction.", 2, doc, "R2")
+    assert [s.label for s in local.spans if s.kind == "reference"] == ["referenced section 3.4"]

@@ -46,9 +46,14 @@ MIN_SPAN_CHARS = 80
 TIERS = ("R0", "R1", "R2")
 
 _SOFT_HYPHEN_BREAK = re.compile(r"(?<=[a-z])[­-]\s*\n\s*(?=[a-z])")
-_ID = r"(?:[A-Z]?\d+(?:\.\d+)*(?:\([a-zA-Z0-9]+\))*|(?-i:[A-Z])\b)"  # 4.2, 3(a), or a single capital letter (Appendix A)
+# 4.2, 3(a), 10a, 3.k, 4.(a), or a single capital letter (Appendix A). The whole identifier is consumed, so a reference to 3.k is
+# never read as the broader section 3 and the text after it (an "of <Name>" qualifier) is found where the parser stops.
+_ID = (
+    r"(?:[A-Z]?\d+[a-z]?(?:\.(?:\d+[a-z]?|[a-z]\b|\([a-zA-Z0-9]+\)))*(?:\([a-zA-Z0-9]+\))*"
+    r"|(?-i:[A-Z])\b)"
+)
 _REF_WORD = re.compile(
-    r"\b(?P<word>paragraphs?|para\.?|sections?|sec\.?|enclosures?|appendix|appendices|attachments?|annex(?:es)?|chapters?)\s+"
+    r"\b(?P<word>paragraphs?|para\.?|sub-?sections?|sections?|sec\.?|enclosures?|appendix|appendices|attachments?|annex(?:es)?|chapters?)\s+"
     rf"(?P<num>{_ID})",
     re.IGNORECASE,
 )
@@ -88,7 +93,9 @@ def estimate_tokens(chars):
     return -(-int(chars) * 2 // 5)  # ceil(chars / 2.5)
 
 
-_LIST_NEXT = re.compile(rf"\s*(?:,\s*(?:and\s+|or\s+)?|\s+and\s+|\s+or\s+|\s*&\s*)(?P<num>{_ID})")
+_LIST_NEXT = re.compile(
+    rf"\s*(?:,\s*(?:and\s+|or\s+)?|\s+and\s+|\s+or\s+|\s*&\s*|\s+(?:through|thru|to)\s+)(?P<num>{_ID})"
+)  # a "4.(a) through 4.(d)" range returns both ends; the members in between are not expanded
 
 
 def _keys(word, ident):
@@ -289,7 +296,7 @@ def build(quote, chunk_id, chunks_by_id, tier="R1", step_c_by_chunk=None, fixed_
                 if explicit:  # a bare identifier that resolves to nothing may be an algorithm name, so it is not reported
                     bundle.unresolved_references.append(display)
             elif target["chunk_id"] not in shown:
-                label_id = re.sub(r"^(?:para(?:graph)?s?|sec(?:tion)?s?)\.?\s+", "", display, flags=re.IGNORECASE)
+                label_id = re.sub(r"^(?:para(?:graph)?s?|sub-?sec(?:tion)?s?|sec(?:tion)?s?)\.?\s+", "", display, flags=re.IGNORECASE)
                 add("reference", f"referenced section {label_id}", normalize(target.get("raw_text") or "")[:REFERENCE_CHARS], priority=4, source=f"chunk {target['chunk_id']}")
                 shown.add(target["chunk_id"])
     _fit(bundle, prompt_budget_chars(fixed_tokens), q)
