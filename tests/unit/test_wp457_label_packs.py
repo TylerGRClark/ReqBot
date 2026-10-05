@@ -150,3 +150,37 @@ def test_committed_packs_match_the_frozen_pieces_and_the_manifest():
     dev_ids = chk.pack_ids((_PACKS / "pack_devkind.md").read_text(encoding="utf-8"))
     assert len(dev_ids) == manifest["devkind_pieces"] == 105
     assert len(set(dev_ids)) == len(dev_ids)
+
+
+def _run_cli(*args):
+    import subprocess
+
+    return subprocess.run(
+        [sys.executable, str(_PACKS / "check_labels.py"), *args], capture_output=True, text=True
+    )
+
+
+def test_the_documented_checker_commands_run_end_to_end(tmp_path):
+    """The exact command lines from RUBRIC.md, through main(), on the real packs: a complete valid file passes, a broken one fails."""
+    import re
+
+    for mode, pack_name, make in (
+        ("heldout", "pack_heldout.md", lambda i: {"id": i, "label": "not_obligation", "kind": "", "segment_ok": True, "note": ""}),
+        ("devkind", "pack_devkind.md", lambda i: {"id": i, "kind": "none", "note": ""}),
+    ):
+        pack = _PACKS / pack_name
+        ids = [m.group(1) for line in pack.read_text(encoding="utf-8").splitlines() if (m := re.match(r"^\[(\S+)\] ", line))]
+        good = tmp_path / f"good_{mode}.jsonl"
+        good.write_text("\n".join(json.dumps(make(i)) for i in ids) + "\n", encoding="utf-8")
+        ok = _run_cli("--pack", str(pack), "--mode", mode, "--labels", str(good))
+        assert ok.returncode == 0, ok.stderr
+        assert f"ok: {len(ids)} pieces labeled" in ok.stdout
+        bad = tmp_path / f"bad_{mode}.jsonl"
+        bad.write_text(good.read_text(encoding="utf-8").splitlines()[0] + "\n", encoding="utf-8")
+        failed = _run_cli("--pack", str(pack), "--mode", mode, "--labels", str(bad))
+        assert failed.returncode == 1 and "no label" in failed.stdout
+
+
+def test_the_rubric_documents_the_option_name_the_checker_accepts():
+    rubric = (_PACKS / "RUBRIC.md").read_text(encoding="utf-8")
+    assert "--kind-pack-mode" not in rubric and "--mode heldout" in rubric and "--mode devkind" in rubric

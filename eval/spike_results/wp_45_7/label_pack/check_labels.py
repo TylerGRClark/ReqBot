@@ -81,7 +81,7 @@ def main():
     expected, problems = check(
         Path(args.pack).read_text(encoding="utf-8"),
         Path(args.labels).read_text(encoding="utf-8").splitlines(),
-        args.kind_pack_mode,
+        args.mode,
     )
     if problems:
         print("\n".join(problems))
