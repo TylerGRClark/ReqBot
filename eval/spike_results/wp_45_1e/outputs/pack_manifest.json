@@ -1,0 +1,10 @@
+{
+ "pages_frozen_sha256": "e9e26d1457df46f43894d33aff43a8b63a9ec5de1e5c19c497c927ef799c57b4",
+ "pieces_sha256": "5fe17c118aabf117da270f6fd4301a41b3d172d23f01b48d8516bc4bd69ad90a",
+ "pieces_total": 254,
+ "sha256": {
+  "RUBRIC.md": "6398b531a35e180cbb8d54fcaa929e46cff733823d6f0b0b5326aaae1a35cc9d",
+  "check_labels.py": "c72614e8d2380873902aca0e30dfdde2335e5241fca256d385f6b2745ca1f270",
+  "pack_a.md": "2cf80f41b728bb4a4390cd0cc0925088668272804ca80525ed708b09acbb2696"
+ }
+}

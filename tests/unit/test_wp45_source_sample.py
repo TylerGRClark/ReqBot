@@ -141,3 +141,57 @@ def test_the_frozen_draw_is_internally_consistent_and_tied_to_the_segmenter(seg,
         frozen["pieces_sha256"]
         == hashlib.sha256("\n".join(sorted(texts)).encode("utf-8")).hexdigest()
     )
+
+
+@pytest.fixture(scope="module")
+def pack():
+    return _load("pack")
+
+
+def _checker():
+    spec = importlib.util.spec_from_file_location(
+        "wp451e_check", _DIR / "audit_pack/check_labels.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_pack_holds_exactly_the_frozen_pieces_and_the_manifest_matches_the_files(pack, draw):
+    frozen = json.loads(draw.FROZEN.read_text(encoding="utf-8"))
+    manifest = json.loads(pack.MANIFEST.read_text(encoding="utf-8"))
+    ids = [p["id"] for e in frozen["documents"].values() for pg in e["pieces"].values() for p in pg]
+    assert sorted(_checker().piece_ids(pack.PACK_DIR / "pack_a.md")) == sorted(ids)
+    assert manifest["pieces_sha256"] == frozen["pieces_sha256"]
+    assert manifest["pages_frozen_sha256"] == pack.sha256_of(draw.FROZEN)
+    assert manifest["sha256"] == {n: pack.sha256_of(pack.PACK_DIR / n) for n in manifest["sha256"]}
+    # nothing from the extraction pipeline is in the pack
+    text = (pack.PACK_DIR / "pack_a.md").read_text(encoding="utf-8").lower()
+    assert "requirement_id" not in text and "chunk" not in text
+
+
+def test_the_checker_flags_missing_duplicate_invalid_and_unknown_labels(tmp_path):
+    chk = _checker()
+    (tmp_path / "pack_a.md").write_text(
+        "## doc\n[AAA-p001-001] First piece.\n[AAA-p001-002] Second piece.\n[AAA-p001-003] Third.\n",
+        encoding="utf-8",
+    )
+    good = [
+        {"id": "AAA-p001-001", "label": "obligation", "segment_ok": True, "note": ""},
+        {"id": "AAA-p001-002", "label": "lead_in", "segment_ok": True},
+        {"id": "AAA-p001-003", "label": "not_obligation", "segment_ok": False, "note": "joined"},
+    ]
+    path = tmp_path / "labels.jsonl"
+    path.write_text("\n".join(json.dumps(r) for r in good), encoding="utf-8")
+    assert chk.check(tmp_path, path) == []
+    bad = [
+        good[0],
+        good[0],
+        {"id": "AAA-p001-002", "label": "requirement", "segment_ok": "yes"},
+        {"id": "AAA-p009-001", "label": "scope", "segment_ok": True},
+    ]
+    path.write_text("\n".join(json.dumps(r) for r in bad), encoding="utf-8")
+    problems = "\n".join(chk.check(tmp_path, path))
+    assert "appears more than once" in problems and "no label for AAA-p001-003" in problems
+    assert "label must be one of" in problems and "segment_ok must be true or false" in problems
+    assert "AAA-p009-001 is not a piece" in problems
