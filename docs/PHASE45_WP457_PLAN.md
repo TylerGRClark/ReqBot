@@ -165,7 +165,7 @@ pilot measures latency, the resolver's structural conformance (below) and these 
 | **Unresolved cases** | Rate; and for each, a labeler says whether wider context would have resolved it and where (same page, previous page, a cross-referenced section). That sizes any later retrieval loop without building it |
 | **Cost** | Ollama's own `prompt_eval_count`, `eval_count` and `total_duration` per call; extrapolated to the corpus (about 1,845 records, which the resolver would call one by one) as a stated estimate, labeled as such |
 | **Health only** | JSON validity, Step D rejection codes, regurgitation count (any 8-word run from a prompt example appearing in an output). Valid JSON is never reported as a success measure |
-| **Structural conformance** (resolver pilot) | Per field, the share of outputs whose shape is what the schema asked for and not merely parseable, using each field's own shape: most fields need `value` and `evidence`; `modality` needs `verbatim` (string or null), `class` (one of the five values) and `evidence`; `conditions` and `exceptions` need arrays of `value` and `evidence` objects; and evidence ids must come from the bundle. If `conditions` or `exceptions` are often malformed on the 8B, the fallback is a flat list of strings with the evidence taken from the whole bundle, or more examples, decided before the full run |
+| **Structural conformance** (resolver pilot) | Per field, the share of outputs whose shape is what the schema asked for and not merely parseable, using each field's own shape: most fields need `value` and `evidence`; `modality` needs `verbatim` (string or null), `class` (obligation, recommendation, permission, prohibition or none) and `evidence`; `conditions` and `exceptions` need arrays of `value` and `evidence` objects; and evidence ids must come from the bundle. If `conditions` or `exceptions` are often malformed on the 8B, the fallback is a flat list of strings with the evidence taken from the whole bundle, or more examples, decided before the full run |
 
 ### 4.4 Rules fixed before any run
 
@@ -195,7 +195,7 @@ function as the bundle builder), so raw Docling spacing or soft hyphens cannot c
 | Field type | Fields | Check |
 |---|---|---|
 | Extractive | actor, action, target, applicability, conditions, exceptions, timing, parent (the governing-clause text must be found in a cited span, so an invented or paraphrased parent fails) | Value found in at least one cited span (normalized); cited ids exist |
-| Modality | modality | `verbatim` found in a cited span (normalized); `class` consistent with the phrase through a fixed mapping table with synonyms (mandatory: shall, must, will, is required to, has to, is to; recommended: should, is recommended, and the negative forms should not and ought not, which stay `recommendation` (a negative recommendation is never strengthened to `prohibition`); permitted: may, is authorized to, is permitted to; prohibited: shall not, must not, is prohibited from, never, forbidden); a null phrase must come with class `none` and is not string-matched |
+| Modality | modality | `verbatim` found in a cited span (normalized); `class` consistent with the phrase through a fixed mapping table with synonyms (obligation: shall, must, will, is required to, has to, is to; recommendation: should, is recommended, and the negative forms should not and ought not, which stay `recommendation` (a negative recommendation is never strengthened to `prohibition`); permission: may, is authorized to, is permitted to; prohibition: shall not, must not, is prohibited from, never, forbidden); a null phrase must come with class `none` and is not string-matched |
 | Categorical | status, logic | Derivation rules where a rule exists (`recommendation` needs a recommended phrase, `permission` a permitted phrase, `prohibition` a prohibited phrase; `logic` other than `none` needs and/or text in a cited span); no literal-containment test, since `obligation` or `unresolved` never appear in the text. Statuses with no rule (`scope_or_context`, `not_a_requirement`, `unresolved`) are scored by the labelers, not by code |
 | Composed | standalone_statement, plain_language | `standalone_statement` adds no number, acronym or proper name absent from **its cited spans** (the rule ignores a sentence's first word and a stoplist of common capitalized words such as articles, pronouns and prepositions, and compares tokens case-insensitively, so reordering a sentence or starting it with "The" does not fail; a token counts as new only if it is all capitals, contains a digit, or is capitalized mid-sentence, and has no match in the spans); `plain_language` is checked against the same set (the spans cited by `standalone_statement`, and the standalone sentence itself), and must be null when `standalone_statement` is null, so a faithful rendering that keeps "90 days" or an actor name passes and an added one fails; modal class unchanged; the entailment gate with the evidence bundle as premise (the WP-45.3 change to the gate); hand audit for faithfulness |
 | Explanatory | unresolved_reason | Not validated by code; read in the unresolved-case labeling |
@@ -210,7 +210,7 @@ function as the bundle builder), so raw Docling spacing or soft hyphens cannot c
    Ollama reports no count) and caps the whole prompt at about 6,500 estimated tokens, leaving room for the answer inside the
    pinned 8,192. Because Ollama does not stop or error when a prompt overruns the window (it drops the start of the prompt, which
    holds the instructions), the runners also read `prompt_eval_count` after every call and mark any call where
-   `prompt_eval_count` plus the answer length reaches `num_ctx` as a **window overrun**: counted per arm, excluded from every
+   `prompt_eval_count` plus `eval_count` (both Ollama token counts, never character lengths) reaches `num_ctx` as a **window overrun**: counted per arm, excluded from every
    quality number, and reported. Unit tests include a bundle that would overflow and must be truncated from the neighbors
    first, never from the instructions. Standard library only: the experiment needs and plans no new dependency (no tokenizer
    package; the post-call count is the check).
@@ -219,8 +219,9 @@ function as the bundle builder), so raw Docling spacing or soft hyphens cannot c
    defaults read from `~/.config/reqbot/config.json` and `REQBOT_*` overrides (CLAUDE.md: pipeline scripts must be given the
    URL explicitly, since `localhost` is this container, not Tyler's machine), and the project's argparse validators for numeric options
    (`_positive_int` for integers such as `--num-ctx`, `_non_negative_float` for `--temperature`). The runners take page and chunk
-   manifests, not domain-tag or requirement-type filters; if such a filter flag is ever added it goes through
-   `_normalize_filter_flags` (`cli/console.py`) like the production commands.
+   manifests, not domain-tag or requirement-type filters, so no filter-flag normalization is needed. If such a flag is ever
+   added, it reuses the production normalization; moving that helper out of `cli/console.py` into a shared module so a
+   pipeline script can import it without a layer violation is a separate refactor, not part of this experiment.
 3. `check_resolution.py`: the field-specific validations in section 4.6, plus the example-regurgitation scan for discovery.
 4. Reuse of `loss_trace.py` and `score.py` for recall, plus a small precision tally.
 5. A labeling pack for the resolver outputs and the held-out pieces, built like the 45.1(e) pack.
@@ -321,7 +322,7 @@ Return JSON (the allowed values below are enforced by a JSON Schema `format` con
  "action":     {"value": ..., "evidence": [...]},
  "target":     {"value": ..., "evidence": [...]},
  "modality":   {"verbatim": the exact modal phrase copied from a cited span ("shall", "is required to", "is prohibited from", "should", ...) or null for an imperative with no modal,
-                "class": one of mandatory, recommended, permitted, prohibited, none, "evidence": [...]},  // the phrase is copied, never edited; the class is the strength it carries
+                "class": one of obligation, recommendation, permission, prohibition, none, "evidence": [...]},  // the phrase is copied, never edited; the class is the strength it carries, in the same words as status
  "applicability": {"value": ..., "evidence": [...]}, // who or what it applies to
  "conditions": [{"value": ..., "evidence": [...]}],
  "exceptions": [{"value": ..., "evidence": [...]}],
@@ -333,14 +334,14 @@ Return JSON (the allowed values below are enforced by a JSON Schema `format` con
  "unresolved_reason": {"value": a string or null, "evidence": []}   // what is missing and where it might be (previous page, section X); explains an absence, so the evidence list stays empty
 }
 
-Rules: never turn "may" or "should" into "shall"; the modality class must match the phrase you copied ("should" is recommended, never mandatory). Never name a party that no span names. A list item inherits its subject from
+Rules: never turn "may" or "should" into "shall"; the modality class must match the phrase you copied ("should" is a recommendation, never an obligation). Never name a party that no span names. A list item inherits its subject from
 the lead-in span you cite. If the standalone statement cannot be built from the spans without adding a fact, return null for it.
 ```
 
 Worked examples to include (fictional), each as bundle plus expected JSON:
 
 1. Inherited subject: candidate "Reviews disposal schedules each year." with E4 "The Records Officer will:" gives actor
-   "The Records Officer" from E4, modality phrase "will" (class `mandatory`) inherited from the lead-in in E4 (`null` phrase and class `none` are only for an imperative with no modal anywhere in the cited spans), timing "each year" from E1.
+   "The Records Officer" from E4, modality phrase "will" (class `obligation`) inherited from the lead-in in E4 (`null` phrase and class `none` are only for an imperative with no modal anywhere in the cited spans), timing "each year" from E1.
 2. Prohibition with exception: "Contractors shall not transmit logs offshore unless the Program Manager approves in writing."
    gives status `prohibition`, actor "Contractors" (not the Program Manager, who is the approver), exception cited.
 3. Permission not strengthened: "The Authorizing Official may grant a waiver" gives `permission`, modality `may`, never `shall`.
