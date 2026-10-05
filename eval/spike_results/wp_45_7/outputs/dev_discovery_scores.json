@@ -83,6 +83,50 @@
    "complete": 38
   }
  },
+ "d0_8b_r2": {
+  "mean_answer_tokens": 107.1,
+  "mean_prompt_tokens": 988.1,
+  "mean_wall_seconds": 2.5,
+  "precision": {
+   "false_positive": 21,
+   "false_positive_not_obligation": 21,
+   "true_positive": 52,
+   "unscored": 11
+  },
+  "precision_rate": 0.712,
+  "recall": {
+   "hits": 45,
+   "interval": [
+    0.42105263157894735,
+    0.7671232876712328
+   ],
+   "n": 74,
+   "recall": 0.6081081081081081
+  },
+  "recall_partly_counted": {
+   "hits": 46,
+   "interval": [
+    0.4444444444444444,
+    0.7710929432013769
+   ],
+   "n": 74,
+   "recall": 0.6216216216216216
+  },
+  "records": 84,
+  "status": {
+   "complete": 38
+  },
+  "vs_d0_8b_r1": {
+   "difference": -0.013513513513513514,
+   "interval": [
+    -0.06451612903225806,
+    0.0
+   ],
+   "n": 74,
+   "only_first_covers": 0,
+   "only_second_covers": 1
+  }
+ },
  "d1_14b_r1": {
   "mean_answer_tokens": 78.2,
   "mean_prompt_tokens": 1211.9,

@@ -7,7 +7,9 @@ with the 45.1(e) page-level bootstrap interval and a paired difference between r
 a record touches a labeled piece when it holds at least half of the piece's tokens or the piece holds at least half of the
 record's; a record that touches an adjudicated obligation is a true positive; one that touches only non-obligation pieces is a
 false positive (split by the pieces' label); one that touches no labeled piece is `unscored` (it lies in text nobody labeled) and
-is reported by count, never counted as a false positive or a miss. A chunk whose call was an overrun, a truncation, a failure or
+is reported by count, never counted as a false positive or a miss. When a false-positive record touches pieces of different labels, the
+`false_positive_<label>` breakdown uses the first touched piece in page order; the false-positive total is unaffected. Needs numpy,
+as WP-45.1(e)'s `score.py` (which this reuses) already does; numpy is not a project dependency, and this script is an eval tool. A chunk whose call was an overrun, a truncation, a failure or
 untreatable exports no records, so its obligations stay misses.
 
 The labels are the 45.1(e) ones, made under rubric version 1: permission-only pieces ("may", "can") were not obligations there, and

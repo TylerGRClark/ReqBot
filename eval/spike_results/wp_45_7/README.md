@@ -258,7 +258,7 @@ Not in this step: Step D on the discovery output, the scoring against labels, an
 
 ## Step 6: dev-set discovery results (`score_discovery.py`, `outputs/dev_discovery_scores.json`, `outputs/dev_runs/`)
 
-Offline scoring of seven real runs on the 38 chunks that touch the 12 labeled development pages (2026-10-05, Tyler's Ollama,
+Offline scoring (needs numpy, like 45.1(e)'s `score.py` it reuses; not a project dependency) of seven real runs on the 38 chunks that touch the 12 labeled development pages (2026-10-05, Tyler's Ollama,
 temperature 0.1, `num_ctx` 8192; run summaries with model digests and prompt hashes are in `outputs/dev_runs/`). Recall is the 45.1(e)
 rule on the 74 adjudicated obligations with sound segmentation (a piece is covered when the records of its chunk reproduce at least 90%
 of its tokens), with its page-level bootstrap interval. Precision uses an overlap rule fixed in the script: a record touching an
