@@ -1,0 +1,20 @@
+{
+ "chunks": 38,
+ "status": {
+  "complete": 38
+ },
+ "records": 35,
+ "mean_prompt_tokens": 1033.9,
+ "mean_answer_tokens": 46.9,
+ "mean_wall_seconds": 2.3,
+ "estimate_over_real": 1.71,
+ "run_label": "d0_14b_dev_r1",
+ "arm": "D0",
+ "set": "dev",
+ "model": "qwen2.5:14b",
+ "digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6",
+ "prompt_hash": "dae9584ffa32ae9b",
+ "chunks_selected": 38,
+ "calls_made": 38,
+ "wall_seconds": 86.5
+}

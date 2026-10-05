@@ -255,3 +255,55 @@ A `window_overrun` answer is kept in the ledger and counted, but exports no reco
 cannot credit candidates from an invalid call; the resolver loader serves the pinned catalog document (CNSSI 1253) as well as the WP-44 documents.
 
 Not in this step: Step D on the discovery output, the scoring against labels, and the labels themselves (still waiting on the second-labeler decision).
+
+## Step 6: dev-set discovery results (`score_discovery.py`, `outputs/dev_discovery_scores.json`, `outputs/dev_runs/`)
+
+Offline scoring of seven real runs on the 38 chunks that touch the 12 labeled development pages (2026-10-05, Tyler's Ollama,
+temperature 0.1, `num_ctx` 8192; run summaries with model digests and prompt hashes are in `outputs/dev_runs/`). Recall is the 45.1(e)
+rule on the 74 adjudicated obligations with sound segmentation (a piece is covered when the records of its chunk reproduce at least 90%
+of its tokens), with its page-level bootstrap interval. Precision uses an overlap rule fixed in the script: a record touching an
+adjudicated obligation is a true positive, one touching only non-obligation pieces is a false positive, one touching no labeled piece
+is `unscored` and counted in neither. Every call was `complete`: no overrun, truncation, failure or untreatable chunk in any run.
+
+| Run | Recall (74) | 95% interval | Records | True / false positive | Precision | Unscored | Prompt / answer tokens | s per chunk |
+|---|---|---|---|---|---|---|---|---|
+| D0 8B, repeat 1 | 46 (62.2%) | 45 to 78% | 82 | 53 / 20 | 72.6% | 9 | 988 / 108 | 2.5 |
+| D0 8B, repeat 2 | 45 (60.8%) | 42 to 77% | 84 | 52 / 21 | 71.2% | 11 | 988 / 107 | 2.5 |
+| **D1 8B, repeat 1** | **68 (91.9%)** | 86 to 96% | 143 | 69 / 55 | 55.6% | 19 | 1,185 / 185 | 4.2 |
+| **D1 8B, repeat 2** | **67 (90.5%)** | 77 to 97% | 136 | 68 / 51 | 57.1% | 17 | 1,185 / 174 | 4.0 |
+| D0 14B | 24 (32.4%) | 11 to 58% | 35 | 27 / 1 | 96.4% | 7 | 1,034 / 47 | 2.3 |
+| D1 14B, repeat 1 | 42 (56.8%) | 34 to 78% | 63 | 50 / 4 | 92.6% | 9 | 1,212 / 78 | 3.7 |
+| D1 14B, repeat 2 | 38 (51.4%) | 28 to 73% | 57 | 44 / 4 | 91.7% | 9 | 1,212 / 71 | 3.5 |
+
+**Findings.**
+
+- **D0 on the 8B reproduces the 45.1(e) baseline** (60.8% there; 62.2% and 60.8% here, one piece apart between repeats), so this runner
+  and its prompt handling are faithful to production Step C.
+- **D1 raises the 8B's recall by about 30 points** (paired difference against D0 repeat 1: +29.7 points, interval +12.7 to +46.2, 26 pieces only D1
+  covers against 4 only D0 covers; repeat 2 gives +28.4, interval +9.4 to +41.9, 24 against 3). Both repeats agree in direction and size.
+  By document: NIST SP 800-125 from 6 of 16 to 15 of 16, afman17-2101 from 22 of 38 to 34 of 38, DODI 8410.03 from 18 of 20 to 19 of 20.
+  D1 misses only 5 of the 74 in both repeats, among them "Ensure, in coordination with DISA ...", "organizations should have policies ..." and an AFMAN
+  sentence with "shall be coordinated".
+- **The price is precision, as designed**: 55 to 57% against 71 to 73%, from 20 false-positive records to 51 to 55. A sample of D1's false positives is
+  mostly descriptive "may" and "can" sentences in NIST background ("Hypervisors can also dynamically alter isolation ..."), scope and boilerplate lines
+  ("This Instruction:", "COMPLIANCE WITH THIS PUBLICATION IS MANDATORY"), and statements about what a technology does. These are what the resolver must
+  mark `not_a_requirement` or `scope_or_context` (gate G3); under Tyler's over-extract rule they are cheap, flagged rows, not losses.
+- **The parked "tell the 14B to over-extract" test is answered**: D1 lifts the 14B from 32% to 51 to 57% and keeps it very precise (92%), but it stays below
+  the 8B under either prompt, so the 8B remains the discovery model. The 14B's precision suggests the second-pass role (resolver) rather than discovery,
+  which the resolver runs can now test.
+- **No regurgitation**: none of the quotes in any D0 or D1 8B run shares an 8-word run with the D1 examples (0 of 82, 84, 143 and 136 quotes).
+- **Cost**: D1 adds about 200 prompt tokens and about 75 answer tokens per chunk and 1.6 times the time (4.0 against 2.5 seconds on the 8B).
+
+**D1 is frozen as it stands** (prompt hash `7da34da9994793c5`): none of the two dev revisions the plan allows was used, so the held-out set will
+test exactly this prompt. The resolver prompt, bundle tier and model are chosen later, from the dev and audit data, and frozen before the held-out labels
+are opened (plan section 4.4).
+
+**What this does not show.**
+
+- **The dev set is not independent of D1.** The failure shapes that D1's definition and examples target (third-person duty lists, imperatives, "should")
+  were found on these same pages in WP-45.1(e); the examples are invented, but the dev gain is partly designed in. The held-out set is the test.
+- **The labels are rubric version 1**: permission-only pieces were not obligations there, so an arm that correctly returns permissions is under-credited,
+  and 78 versus 74 obligations depends on four badly cut pieces left out of the main numbers. The kind pass will say how many dev pieces are affected.
+- **Seven runs, 38 chunks, 12 pages**: the intervals are wide (D1's lower bounds are 77 to 86%, well above D0's point estimate, but the 14B figures overlap).
+  The 17 to 19 `unscored` D1 records lie in unlabeled text beside the sampled pages (closure was applied to the held-out set, not to dev).
+- **Step D has not been run on these outputs**, so the plan's check that rejection codes do not rise is still open; recall here is at extraction.
