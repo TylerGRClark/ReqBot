@@ -41,10 +41,14 @@ def main():
     for doc, paths in inputs.items():
         chunks = {}
         for line in Path(paths["chunks"]).read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
             rec = json.loads(line)
             chunks[rec["chunk_id"]] = rec
         step = {}
         for line in Path(paths["extracted"]).read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
             rec = json.loads(line)
             step.setdefault(rec["chunk_id"], []).append(rec)
         for chunk_id, records in step.items():

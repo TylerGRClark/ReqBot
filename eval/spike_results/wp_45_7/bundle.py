@@ -42,7 +42,6 @@ BUNDLE_TOKEN_CAP = 3000
 ANSWER_RESERVE_TOKENS = 600
 NEIGHBOR_CHARS = 800
 REFERENCE_CHARS = 600
-STEM_CHARS = 400
 MIN_SPAN_CHARS = 80
 TIERS = ("R0", "R1", "R2")
 
@@ -65,18 +64,35 @@ def estimate_tokens(chars):
     return -(-int(chars) * 2 // 5)  # ceil(chars / 2.5)
 
 
+_LIST_NEXT = re.compile(
+    r"\s*(?:,\s*(?:and\s+|or\s+)?|\s+and\s+|\s+or\s+|\s*&\s*)(?P<num>[A-Z]?\d+(?:\.\d+)*(?:\([a-zA-Z0-9]+\))*)"
+)
+
+
 def cross_references(text):
-    """Cross-references found in already-normalized text: [(display, number-or-id)], in order, without repeats."""
+    """Cross-references found in already-normalized text, in order, without repeats:
+    [(display, number-or-id, explicit)]. `explicit` is true for a reference introduced by a word ("paragraph 4.2",
+    "Paragraphs 2.2, 4.1, and 11.2": every member of the list is returned) and false for a bare control identifier such
+    as AC-2, which is only a reference if it resolves to a section: AES-256 or SHA-384 look the same and are not."""
     found, seen = [], set()
-    for m in _REF_WORD.finditer(text):
-        key = m.group("num").rstrip(".")
+
+    def add(display, key, explicit):
         if key.lower() not in seen:
             seen.add(key.lower())
-            found.append((m.group(0), key))
+            found.append((display, key, explicit))
+
+    for m in _REF_WORD.finditer(text):
+        word = m.group(0)[: m.start("num") - m.start()].strip()
+        add(m.group(0), m.group("num").rstrip("."), True)
+        pos = m.end()
+        while True:
+            nxt = _LIST_NEXT.match(text, pos)
+            if not nxt:
+                break
+            add(f"{word} {nxt.group('num')}", nxt.group("num").rstrip("."), True)
+            pos = nxt.end()
     for m in _REF_CONTROL.finditer(text):
-        if m.group(0).lower() not in seen:
-            seen.add(m.group(0).lower())
-            found.append((m.group(0), m.group(0)))
+        add(m.group(0), m.group(0), False)
     return found
 
 
@@ -160,15 +176,16 @@ def stem_candidates(quote, chunk_id, step_c_by_chunk, chunks_by_id):
 
 def prompt_budget_chars(fixed_tokens):
     """Characters the bundle may use: the smaller of the bundle cap and what is left of the prompt cap after the fixed
-    instructions and the answer reserve."""
-    room = PROMPT_TOKEN_CAP - int(fixed_tokens) - ANSWER_RESERVE_TOKENS
+    instructions. The prompt cap already leaves the answer its room inside the window, so the answer reserve is not taken
+    off again here; it is checked once, in `preflight`."""
+    room = PROMPT_TOKEN_CAP - int(fixed_tokens)
     return int(min(BUNDLE_TOKEN_CAP, room) * CHARS_PER_TOKEN)
 
 
 def preflight(fixed_tokens, minimum_bundle_chars, num_ctx=NUM_CTX):
     """True if the fixed instructions, the answer reserve and the smallest allowed bundle fit the window at all."""
-    need = int(fixed_tokens) + ANSWER_RESERVE_TOKENS + estimate_tokens(minimum_bundle_chars)
-    return need <= min(num_ctx, PROMPT_TOKEN_CAP + ANSWER_RESERVE_TOKENS)
+    prompt = int(fixed_tokens) + estimate_tokens(minimum_bundle_chars)
+    return prompt <= PROMPT_TOKEN_CAP and prompt + ANSWER_RESERVE_TOKENS <= num_ctx
 
 
 def _around(text, needle, width):
@@ -178,7 +195,8 @@ def _around(text, needle, width):
     pos = text.find(needle) if needle else -1
     if pos < 0:
         return text[:width].rstrip() + " ..."
-    start = max(0, min(pos - (width - len(needle)) // 2, len(text) - width))
+    padding = max(0, width - len(needle))  # a window narrower than the needle starts at the needle, never inside it
+    start = max(0, min(pos - padding // 2, len(text) - width))
     cut = text[start : start + width].strip()
     return ("... " if start > 0 else "") + cut + (" ..." if start + width < len(text) else "")
 
@@ -206,7 +224,7 @@ def build(quote, chunk_id, chunks_by_id, tier="R1", step_c_by_chunk=None, fixed_
             add("heading", "heading (leaf)", heading, priority=0, trimmable=False, source=f"chunk {chunk_id}")
         for source, stem in stem_candidates(quote, chunk_id, step_c_by_chunk, chunks_by_id):
             add(
-                "stem", f"possible governing clause, found by rule: {source}", stem[:STEM_CHARS],
+                "stem", f"possible governing clause, found by rule: {source}", stem,
                 unverified=True, priority=0, trimmable=False, source=source,
             )
     if tier == "R2" and chunk is not None:
@@ -219,10 +237,11 @@ def build(quote, chunk_id, chunks_by_id, tier="R1", step_c_by_chunk=None, fixed_
         # References are read from the candidate's own text only: scanning the whole chunk would pull in references that
         # belong to other sentences.
         shown = {s.source for s in bundle.spans}
-        for display, key in cross_references(q):
+        for display, key, explicit in cross_references(q):
             target = resolve_reference(key, ordered)
             if target is None:
-                bundle.unresolved_references.append(display)
+                if explicit:  # a bare identifier that resolves to nothing may be an algorithm name, so it is not reported
+                    bundle.unresolved_references.append(display)
             elif f"chunk {target['chunk_id']}" in shown:
                 # already in the bundle (as a neighbor or the own chunk): say so on that span rather than repeating it
                 for span in bundle.spans:

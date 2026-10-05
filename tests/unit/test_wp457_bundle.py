@@ -46,7 +46,7 @@ def test_normalize_collapses_whitespace_and_rejoins_soft_hyphenated_breaks(B):
 
 def test_cross_references_are_found_on_normalized_text_and_not_repeated(B):
     text = B.normalize("Comply with Section\n4 and paragraph  2.3, see AC-2(4) and section 4 again.")
-    keys = [k for _, k in B.cross_references(text)]
+    keys = [k for _, k, _ in B.cross_references(text)]
     assert keys == ["4", "2.3", "AC-2(4)"]
 
 
@@ -117,16 +117,25 @@ def test_neighbors_are_cut_first_and_the_candidate_heading_and_stems_are_never_c
 
 
 def test_a_bundle_that_cannot_fit_is_flagged_untreatable_before_any_call(B):
-    b = B.build("a. Provides reports.", 2, _doc(), "R2", fixed_tokens=6400)
+    b = B.build("a. Provides reports.", 2, _doc(), "R2", fixed_tokens=6490)  # 10 tokens (25 characters) of room
     assert b.untreatable
     assert B.preflight(fixed_tokens=1500, minimum_bundle_chars=500)
     assert not B.preflight(fixed_tokens=7500, minimum_bundle_chars=500)
+    assert not B.preflight(fixed_tokens=6400, minimum_bundle_chars=500)  # 6,600 estimated prompt tokens is over the cap
+
+
+def test_the_answer_reserve_is_checked_once_in_preflight_not_taken_off_the_bundle_budget_again(B):
+    # 6,000 fixed tokens and a 250-character minimum bundle: under the prompt cap, and the answer still fits the window
+    assert B.preflight(fixed_tokens=6000, minimum_bundle_chars=250)
+    assert B.prompt_budget_chars(6000) == int((B.PROMPT_TOKEN_CAP - 6000) * 2.5) > 0
+    b = B.build("a. Provides reports.", 2, _doc(), "R1", fixed_tokens=6000)
+    assert not b.untreatable
 
 
 def test_budget_uses_the_conservative_character_estimate(B):
     assert B.estimate_tokens(250) == 100
     assert B.prompt_budget_chars(0) == int(B.BUNDLE_TOKEN_CAP * 2.5)
-    assert B.prompt_budget_chars(5000) == int((B.PROMPT_TOKEN_CAP - 5000 - B.ANSWER_RESERVE_TOKENS) * 2.5)
+    assert B.prompt_budget_chars(5000) == int((B.PROMPT_TOKEN_CAP - 5000) * 2.5)
 
 
 def test_the_bundle_hash_is_stable_and_follows_the_text(B):
@@ -149,3 +158,44 @@ def test_the_first_and_last_chunks_have_only_the_neighbor_they_have(B):
     assert "previous" not in [s.kind for s in first.spans] and "next" in [s.kind for s in first.spans]
     last = B.build("q", 3, _doc(), "R2")
     assert "next" not in [s.kind for s in last.spans] and "previous" in [s.kind for s in last.spans]
+
+
+def test_plural_reference_lists_return_every_member(B):
+    text = B.normalize("Comply with Paragraphs 2.2, 4.1, and 11.2, and section 6 or 7.")
+    keys = [k for _, k, _ in B.cross_references(text)]
+    assert keys == ["2.2", "4.1", "11.2", "6", "7"]
+    doc = _doc()
+    doc[9] = _chunk(9, "4.1 Waivers.", "4.1 WAIVERS", ["4", "4.1"], ["4. WAIVERS", "4.1 WAIVERS"])
+    doc[10] = _chunk(10, "11.2 Appeals.", "11.2 APPEALS", ["11", "11.2"], ["11. APPEALS", "11.2 APPEALS"])
+    b = B.build("Comply with Paragraphs 2.2, 4.1, and 11.2.", 2, doc, "R2")
+    assert {s.label for s in b.spans if s.kind == "reference"} == {"referenced section 4.1", "referenced section 11.2"}
+    assert b.unresolved_references == ["Paragraphs 2.2"]
+
+
+def test_a_bare_identifier_is_a_reference_only_if_it_resolves_so_algorithm_names_are_not_reported(B):
+    doc = _doc()
+    doc[11] = _chunk(11, "AC-2 Account management.", "AC-2 ACCOUNT MANAGEMENT", ["AC-2"], ["AC-2 ACCOUNT MANAGEMENT"])
+    b = B.build("Use AES-256 and SHA-384 to protect accounts as AC-2 requires.", 2, doc, "R2")
+    assert b.unresolved_references == []  # AES-256 and SHA-384 resolve to nothing and are not reported as missing
+    assert [s.label for s in b.spans if s.kind == "reference"] == ["referenced section AC-2"]
+    # an explicit reference word that resolves to nothing is still reported
+    assert B.build("See section 99.", 2, doc, "R2").unresolved_references == ["section 99"]
+
+
+def test_a_long_governing_clause_is_never_clipped(B):
+    long_stem = "The Director shall ensure that " + "all components of the programme " * 40 + "are reviewed:"
+    chunks = {1: _chunk(1, long_stem + " (1) review plans.", "DUTIES")}
+    step_c = {1: [{"source_quote": long_stem}, {"source_quote": "(1) review plans."}]}
+    b = B.build("(1) review plans.", 1, chunks, "R1", step_c_by_chunk=step_c)
+    stem = next(s for s in b.spans if s.kind == "stem")
+    assert stem.text == B.normalize(long_stem) and len(stem.text) > 400
+    # when the stem and the other uncuttable spans cannot fit, the bundle says so instead of silently clipping
+    assert B.build("(1) review plans.", 1, chunks, "R1", step_c_by_chunk=step_c, fixed_tokens=6400).untreatable
+
+
+def test_a_trim_window_narrower_than_the_candidate_starts_at_the_candidate(B):
+    text = "prefix " * 30 + "THE CANDIDATE QUOTE IS HERE and more" + " suffix" * 30
+    out = B._around(text, "THE CANDIDATE QUOTE IS HERE and more", 20)
+    assert out.lstrip(". ").startswith("THE CANDIDATE")
+    wide = B._around(text, "THE CANDIDATE QUOTE IS HERE and more", 120)
+    assert "THE CANDIDATE QUOTE IS HERE and more" in wide
