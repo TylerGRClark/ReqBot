@@ -124,6 +124,14 @@ WP-45.1(e).
   adjudicates disagreements about obligation status and spot-checks a few agreements. **Frozen (page list and piece hash)
   before either new prompt is finalized, and not opened for tuning.** Rough load: about 350 pieces per labeler, perhaps 25 to
   30 disagreements for Tyler, the same shape as the last sample.
+- **Kind labels (new, small, needed for the G2 status-agreement gate).** The existing labels say obligation or not, not which
+  kind. Every adjudicated obligation in the dev set (78) and the held-out set gets one more label, `kind`: `obligation`
+  (mandatory wording, including "will" and a verb-free duty under a mandatory lead-in), `recommendation` ("should", "is
+  recommended", "should not"), `permission` ("may", "is authorized to") or `prohibition` ("shall not", "must not",
+  "is prohibited from"). Claude and Codex label `kind` blind and independently in the same pack as the held-out pieces (for
+  dev, a small extra pack of 78 items), Tyler adjudicates disagreements, and this is also where the dev pieces whose only
+  modal is "may" get their re-check (section 0). The resolver gold for `status` is this label. The 90 disagreement cards need
+  no kind (they are scored real or not).
 - Prompt examples are **invented text** (a fictional agency and system names), never taken from the dev or held-out pages.
 
 ### 4.2 Runs
@@ -157,7 +165,7 @@ pilot measures latency, the resolver's structural conformance (below) and these 
 | **Unresolved cases** | Rate; and for each, a labeler says whether wider context would have resolved it and where (same page, previous page, a cross-referenced section). That sizes any later retrieval loop without building it |
 | **Cost** | Ollama's own `prompt_eval_count`, `eval_count` and `total_duration` per call; extrapolated to the corpus (about 1,845 records, which the resolver would call one by one) as a stated estimate, labeled as such |
 | **Health only** | JSON validity, Step D rejection codes, regurgitation count (any 8-word run from a prompt example appearing in an output). Valid JSON is never reported as a success measure |
-| **Structural conformance** (resolver pilot) | Per field, the share of outputs whose shape is what the schema asked for and not merely parseable: arrays where arrays are expected (`conditions`, `exceptions`), `value` and `evidence` both present, evidence ids drawn from the bundle. If `conditions` or `exceptions` are often malformed on the 8B, the fallback is a flat list of strings with the evidence taken from the whole bundle, or more examples, decided before the full run |
+| **Structural conformance** (resolver pilot) | Per field, the share of outputs whose shape is what the schema asked for and not merely parseable, using each field's own shape: most fields need `value` and `evidence`; `modality` needs `verbatim` (string or null), `class` (one of the five values) and `evidence`; `conditions` and `exceptions` need arrays of `value` and `evidence` objects; and evidence ids must come from the bundle. If `conditions` or `exceptions` are often malformed on the 8B, the fallback is a flat list of strings with the evidence taken from the whole bundle, or more examples, decided before the full run |
 
 ### 4.4 Rules fixed before any run
 
