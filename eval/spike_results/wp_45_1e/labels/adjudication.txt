@@ -1,0 +1,27 @@
+# Tyler's rulings, 2026-10-05, on the 20 disagreements about whether a piece is an obligation.
+# Rule: a statement of what someone does or provides is a "do it" even without shall or must, if it is attached to a party.
+# AFMAN section 2.3 duty items and the paragraph after 2.3.14: obligations.
+AFMAN-p009-002: obligation
+AFMAN-p009-003: obligation
+AFMAN-p009-020: obligation
+AFMAN-p009-021: obligation
+AFMAN-p009-022: obligation
+AFMAN-p009-023: obligation
+AFMAN-p009-024: obligation
+AFMAN-p010-005: obligation
+AFMAN-p010-007: obligation
+AFMAN-p010-008: obligation
+AFMAN-p010-009: obligation
+AFMAN-p010-010: obligation
+AFMAN-p010-011: obligation
+AFMAN-p010-012: obligation
+# 2.3.15.1-3 are descriptions of a role: nobody can act on them or audit them, so not requirements.
+AFMAN-p010-002: not_obligation
+AFMAN-p010-003: not_obligation
+AFMAN-p010-004: not_obligation
+# 1.1.2: says DISA must do things on the DODIN.
+AFMAN-p004-007: obligation
+# Not ruled on by Tyler in so many words; Claude applied his rule above (a named party, an action, no modal verb) to 1.1.4.
+AFMAN-p004-013: obligation
+# Suggestion; nothing on pages 22-26 says to do anything from this point.
+NIST-p026-025: not_obligation

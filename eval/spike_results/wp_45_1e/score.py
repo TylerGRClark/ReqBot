@@ -71,8 +71,19 @@ def piece_index(frozen):
 
 
 def disagreements(labels):
+    """Pieces where the labelers differ on whether the piece is an obligation. A difference between two non-obligation
+    labels (scope, lead_in, not_obligation) changes no count, so it needs no ruling."""
     a, b = (labels[w] for w in LABELERS)
-    return sorted(i for i in a if a[i]["label"] != b[i]["label"])
+    return sorted(
+        i for i in a if (a[i]["label"] == "obligation") != (b[i]["label"] == "obligation")
+    )
+
+
+def non_obligation_differences(labels):
+    a, b = (labels[w] for w in LABELERS)
+    return sorted(
+        i for i in a if a[i]["label"] != b[i]["label"] and i not in set(disagreements(labels))
+    )
 
 
 def spot_checks(labels, seed=SEED, per_kind=5):
@@ -112,7 +123,9 @@ def sheet(labels, index):
 
     head = (
         "# Adjudication sheet (WP-45.1e)\n\n"
-        f"{len(dis)} disagreements, then {len(spot)} agreements to spot-check. Answer with one line per piece, "
+        f"{len(dis)} disagreements about whether a piece is an obligation, then {len(spot)} agreements to spot-check "
+        f"({len(non_obligation_differences(labels))} other pieces differ only between non-obligation labels and need no "
+        "ruling). Answer with one line per piece, "
         f"`PIECE-ID: label` where label is one of {', '.join(LABELS)}; for a spot-check write the label you think is "
         "right (the same label confirms the agreement).\n"
     )
@@ -149,7 +162,9 @@ def resolve(labels, answers):
         raise ValueError(f"disagreements without a ruling: {unresolved}")
     final = {}
     for pid in a:
-        label = answers.get(pid, a[pid]["label"])
+        label = answers.get(
+            pid, a[pid]["label"]
+        )  # an unruled difference is between two non-obligation labels
         final[pid] = {
             "label": label,
             "flagged": not (a[pid]["segment_ok"] and b[pid]["segment_ok"]),
@@ -186,7 +201,7 @@ def load_run(directory, doc):
     return {
         "chunk_tokens": {cid: T.tokens(c["text"], drop_marker=False) for cid, c in chunks.items()},
         "extracted": extracted,
-        "survivors": {r["requirement_id"] for r in normalized},
+        "normalized": normalized,
         "failure_codes": failures,
         "gate_failures": gate,
         "parse_failed_chunks": parse_failed,
@@ -214,7 +229,12 @@ def trace_all(obligation_ids, index, runs, indexed):
         info = index[pid]
         run = runs[info["document"]]
         t = T.trace_piece(
-            info["text"], run["chunk_tokens"], run["extracted"], run["survivors"], indexed
+            info["text"],
+            run["chunk_tokens"],
+            run["extracted"],
+            run["normalized"],
+            indexed,
+            run["failure_codes"],
         )
         t["document"], t["page"] = info["document"], info["page"]
         if t["first_loss"] == "rejected_step_d":
@@ -227,9 +247,7 @@ def trace_all(obligation_ids, index, runs, indexed):
         if t["first_loss"] == "not_extracted" and t["chunk_ids"]:
             t["chunk_parse_failed"] = any(c in run["parse_failed_chunks"] for c in t["chunk_ids"])
         if t["first_loss"] == "not_indexed":
-            t["description_gate"] = any(
-                r in run["gate_failures"] for r in t["records_surviving_step_d"]
-            )
+            t["description_gate"] = any(r in run["gate_failures"] for r in t["covering_surviving"])
         out[pid] = t
     return out
 
@@ -292,6 +310,36 @@ def loss_table(traces):
     return dict(c)
 
 
+def loss_bootstrap(traces, resamples=RESAMPLES, seed=BOOT_SEED):
+    """Share of the obligations first lost at each step, with page-level bootstrap intervals (the routing rule uses these)."""
+    cats = ["never_chunked", "not_extracted", "partly_extracted", "rejected_step_d", "not_indexed"]
+    pages = sorted({(t["document"], t["page"]) for t in traces.values()})
+    pos = {p: k for k, p in enumerate(pages)}
+    n = np.zeros(len(pages))
+    counts = {c: np.zeros(len(pages)) for c in cats}
+    for t in traces.values():
+        k = pos[(t["document"], t["page"])]
+        n[k] += 1
+        if t["first_loss"] in counts:
+            counts[t["first_loss"]][k] += 1
+    rng = np.random.default_rng(seed)
+    idx = rng.integers(0, len(pages), size=(resamples, len(pages))) if pages else None
+    den = n[idx].sum(axis=1) if idx is not None else None
+    out = {}
+    for c in cats:
+        point = counts[c].sum() / n.sum() if n.sum() else float("nan")
+        lo = hi = float("nan")
+        if idx is not None:
+            ok = den > 0
+            lo, hi = np.percentile(counts[c][idx].sum(axis=1)[ok] / den[ok], [2.5, 97.5])
+        out[c] = {
+            "count": int(counts[c].sum()),
+            "share": float(point),
+            "interval": [float(lo), float(hi)],
+        }
+    return out
+
+
 def by_document(traces, with_index):
     out = {}
     for doc in sorted({t["document"] for t in traces.values()}):
@@ -306,18 +354,23 @@ def by_document(traces, with_index):
 
 
 def paired_difference(trace_a, trace_b, stage, resamples=RESAMPLES, seed=BOOT_SEED):
-    """Recall(a) - recall(b) at a stage on the same pieces, with a page-level bootstrap interval."""
+    """Recall(a) - recall(b) at a stage on the same pieces, with a page-level bootstrap interval, plus the pieces only a or
+    only b covers. The counts matter because gains and losses on one page cancel in the page-level interval."""
     ids = sorted(set(trace_a) & set(trace_b))
     pages = sorted({(trace_a[i]["document"], trace_a[i]["page"]) for i in ids})
     pos = {p: k for k, p in enumerate(pages)}
     n = np.zeros(len(pages))
     da = np.zeros(len(pages))
     db = np.zeros(len(pages))
+    only_a = only_b = 0
     for i in ids:
         k = pos[(trace_a[i]["document"], trace_a[i]["page"])]
         n[k] += 1
-        da[k] += stage_flags(trace_a[i], False)[0][stage]
-        db[k] += stage_flags(trace_b[i], False)[0][stage]
+        fa, fb = (stage_flags(t[i], False)[0][stage] for t in (trace_a, trace_b))
+        da[k] += fa
+        db[k] += fb
+        only_a += fa and not fb
+        only_b += fb and not fa
     rng = np.random.default_rng(seed)
     idx = rng.integers(0, len(pages), size=(resamples, len(pages)))
     den = n[idx].sum(axis=1)
@@ -328,6 +381,8 @@ def paired_difference(trace_a, trace_b, stage, resamples=RESAMPLES, seed=BOOT_SE
         "difference": float((da.sum() - db.sum()) / n.sum()),
         "interval": [float(lo), float(hi)],
         "n": int(n.sum()),
+        "only_first_covers": int(only_a),
+        "only_second_covers": int(only_b),
     }
 
 
@@ -385,6 +440,19 @@ def main():
     docs = frozen["documents"]
     production_runs = {d: load_run(inputs[d]["chunks"].parent, d) for d in docs}
     indexed = None if args.no_index else live_ids(_config.load().qdrant_url)
+    sanity = {}
+    for d, run in production_runs.items():
+        normalized_ids = {r["requirement_id"] for r in run["normalized"]}
+        sanity[d] = {
+            "chunks": len(run["chunk_tokens"]),
+            "step_c_records": len(run["extracted"]),
+            "step_d_survivors": len(normalized_ids),
+            "survivors_in_live_index": None if indexed is None else len(normalized_ids & indexed),
+        }
+        if indexed is not None and not normalized_ids & indexed:
+            sys.exit(
+                f"{d}: none of the Step D survivors is in the live index; the id join is wrong"
+            )
     out = {
         "frozen_pieces_sha256": frozen["pieces_sha256"],
         "label_counts": {
@@ -394,6 +462,7 @@ def main():
         "agreement": {"pieces": len(index), "disagreements": len(disagreements(labels))},
         "obligations": {k: len(v) for k, v in sets.items()},
         "segmentation_flagged_pieces": len(flagged),
+        "sanity": sanity,
         "density": density(index, final, labels),
         "views": {},
         "secondary": {},
@@ -408,6 +477,7 @@ def main():
                 "obligations": len(traces),
                 "recall": page_bootstrap(traces, indexed is not None),
                 "losses": loss_table(traces),
+                "loss_shares": loss_bootstrap(traces),
                 "by_document": by_document(traces, indexed is not None),
             }
         }
@@ -429,6 +499,7 @@ def main():
             "obligations": len(tr),
             "recall": page_bootstrap(tr, False),
             "losses": loss_table(tr),
+            "loss_shares": loss_bootstrap(tr),
             "by_document": by_document(tr, False),
         }
     out["paired"] = {}

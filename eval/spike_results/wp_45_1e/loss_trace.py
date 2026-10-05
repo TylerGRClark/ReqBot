@@ -85,12 +85,14 @@ def union_share(piece, quotes):
     return len(covered) / len(piece) if piece else 0.0
 
 
-def trace_piece(text, chunk_tokens, extracted, survivors, indexed=None):
+def trace_piece(text, chunk_tokens, extracted, normalized, indexed=None, failure_codes=None):
     """Trace one obligation text.
 
-    chunk_tokens: {chunk_id: token list}; extracted: [{requirement_id, chunk_id, source_quote}] (Step C records);
-    survivors: set of requirement ids that survived Step D; indexed: set of ids in the live index, or None when the run
-    was never indexed. Returns the first loss, the share and status at each stage, and the record ids involved.
+    chunk_tokens: {chunk_id: token list}; extracted: Step C records [{requirement_id, chunk_id, source_quote}];
+    normalized: the Step D survivors (Step D gives records new ids, so they are matched by chunk and quote text, never by
+    id); indexed: the set of normalized requirement ids in the live index, or None when the run was never indexed;
+    failure_codes: {Step C requirement_id: Step D rejection code}. Returns the first loss, the share and status at each
+    stage, and the records involved.
     """
     piece = tokens(text)
     chunks = chunk_ids_holding(piece, chunk_tokens)
@@ -105,32 +107,25 @@ def trace_piece(text, chunk_tokens, extracted, survivors, indexed=None):
         out["first_loss"] = "never_chunked"
         return out
     here = [r for r in extracted if r["chunk_id"] in chunks]
-    stages = [
-        ("extracted", here),
-        ("survived_step_d", [r for r in here if r["requirement_id"] in survivors]),
-    ]
+    kept = [r for r in normalized if r["chunk_id"] in chunks]
+    stages = [("extracted", here), ("survived_step_d", kept)]
     if indexed is not None:
-        stages.append(("indexed", [r for r in here if r["requirement_id"] in indexed]))
-    stage_records = {}
+        stages.append(("indexed", [r for r in kept if r["requirement_id"] in indexed]))
     for name, recs in stages:
         share = union_share(piece, [tokens(r["source_quote"], drop_marker=False) for r in recs])
         out["shares"][name] = round(share, 4)
         out["status"][name] = status(share)
-        stage_records[name] = [r["requirement_id"] for r in recs]
         if out["first_loss"] is None and out["status"][name] != "covered":
             out["first_loss"] = LOSS_NAMES[name][0 if out["status"][name] == "none" else 1]
             out["lost_at"] = name
-    out["records_in_chunks"] = [r["requirement_id"] for r in here]
-    out["records_surviving_step_d"] = stage_records["survived_step_d"]
-    # records that were extracted for this piece but did not survive Step D (so their rejection codes can be looked up)
+
+    def touches(r):
+        return bool(matched_indices(piece, tokens(r["source_quote"], drop_marker=False)))
+
+    out["covering_extracted"] = [r["requirement_id"] for r in here if touches(r)]
+    out["covering_surviving"] = [r["requirement_id"] for r in kept if touches(r)]
     out["rejected_ids"] = [
-        r["requirement_id"]
-        for r in here
-        if r["requirement_id"] not in survivors
-        and matched_indices(piece, tokens(r["source_quote"], drop_marker=False))
+        i for i in out["covering_extracted"] if failure_codes is not None and i in failure_codes
     ]
-    out["covering_records"] = len(
-        [r for r in here if matched_indices(piece, tokens(r["source_quote"], drop_marker=False))]
-    )
     out["covered_through_last_stage"] = out["first_loss"] is None
     return out

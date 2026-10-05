@@ -47,6 +47,15 @@ def _rec(rid, chunk, quote):
     return {"requirement_id": rid, "chunk_id": chunk, "source_quote": quote}
 
 
+def _norm(records, survivors):
+    """What Step D keeps: a new id ("N-" + the Step C id), same chunk and quote."""
+    return [
+        _rec("N-" + r["requirement_id"], r["chunk_id"], r["source_quote"])
+        for r in records
+        if r["requirement_id"] in survivors
+    ]
+
+
 def test_tokens_undo_ligatures_drop_the_list_marker_and_ignore_punctuation(lt):
     assert lt.tokens("2.8.2.2.3. Verify the ﬁrewall, now.") == ["verify", "the", "firewall", "now"]
     assert lt.tokens("(a) Keep it.") == ["keep", "it"]
@@ -118,13 +127,20 @@ def test_a_piece_straddling_two_consecutive_chunks_is_still_chunked(lt):
 )
 def test_each_pipeline_step_is_named_as_the_first_loss(lt, records, survivors, indexed, loss):
     chunks = _chunks(lt, c1=CHUNK)
-    t = lt.trace_piece(PIECE, chunks, records, survivors, indexed)
+    t = lt.trace_piece(
+        PIECE,
+        chunks,
+        records,
+        _norm(records, survivors),
+        {"N-" + i for i in indexed},
+        {"a": "x", "b": "x"},
+    )
     assert t["first_loss"] == loss
 
 
 def test_a_piece_missing_from_every_chunk_is_never_chunked(lt):
     t = lt.trace_piece(
-        PIECE, _chunks(lt, c1="Entirely different words about something else."), [], set(), set()
+        PIECE, _chunks(lt, c1="Entirely different words about something else."), [], [], set()
     )
     assert t["first_loss"] == "never_chunked" and t["chunk_ids"] == []
 
@@ -135,10 +151,11 @@ def test_two_records_jointly_cover_a_split_piece_and_a_never_indexed_run_has_no_
         _rec("a", 1, "The Program Manager shall maintain the access roster"),
         _rec("b", 1, "and report changes to the security office monthly."),
     ]
-    t = lt.trace_piece(PIECE, chunks, recs, {"a", "b"}, None)
-    assert t["first_loss"] is None and "indexed" not in t["status"] and t["covering_records"] == 2
+    t = lt.trace_piece(PIECE, chunks, recs, _norm(recs, {"a", "b"}), None)
+    assert t["first_loss"] is None and "indexed" not in t["status"]
+    assert len(t["covering_extracted"]) == 2
     # only one of the two survives Step D: the loss is at Step D, and the rejected id is reported
-    t = lt.trace_piece(PIECE, chunks, recs, {"a"}, None)
+    t = lt.trace_piece(PIECE, chunks, recs, _norm(recs, {"a"}), None, {"b": "not_grounded"})
     assert t["first_loss"] == "rejected_step_d" and t["rejected_ids"] == ["b"]
 
 
@@ -164,6 +181,12 @@ def test_answers_parse_and_every_disagreement_needs_a_ruling(sc):
     sets = sc.label_sets(labels, final)
     assert sets["adjudicated"] == {"X-p001-001"} and sets["either"] == {"X-p001-001", "X-p001-002"}
     assert sets["both_agree"] == {"X-p001-001"}
+    # scope against not_obligation changes no count, so it needs no ruling and the obligation sets are unaffected
+    quiet = _labels(
+        {"X-p001-001": ("obligation", "obligation"), "X-p001-003": ("scope", "not_obligation")}
+    )
+    assert sc.disagreements(quiet) == [] and sc.non_obligation_differences(quiet) == ["X-p001-003"]
+    assert sc.label_sets(quiet, sc.resolve(quiet, {}))["adjudicated"] == {"X-p001-001"}
 
 
 def test_spot_checks_are_seeded_and_split_between_obligations_and_non_obligations(sc):
@@ -208,3 +231,20 @@ def test_a_paired_difference_uses_the_same_pieces(sc):
     }
     d = sc.paired_difference(a, b, "extracted", resamples=300)
     assert d["difference"] == 0.5 and d["n"] == 2
+
+
+def test_loss_shares_count_each_first_loss_with_a_page_interval(sc):
+    def tr(page, loss):
+        return {"document": "D", "page": page, "first_loss": loss, "chunk_ids": [1], "status": {}}
+
+    traces = {
+        "a": tr(1, None),
+        "b": tr(1, "not_extracted"),
+        "c": tr(2, "not_extracted"),
+        "d": tr(2, "partly_extracted"),
+    }
+    r = sc.loss_bootstrap(traces, resamples=300)
+    assert r["not_extracted"]["count"] == 2 and r["not_extracted"]["share"] == 0.5
+    assert r["partly_extracted"]["count"] == 1 and r["never_chunked"]["count"] == 0
+    lo, hi = r["not_extracted"]["interval"]
+    assert lo <= 0.5 <= hi
