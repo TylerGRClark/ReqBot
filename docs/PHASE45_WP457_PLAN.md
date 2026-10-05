@@ -166,8 +166,8 @@ documents; the metric only looks at those chunks. A 10-call pilot measures laten
 | Gate | Pass | If it fails |
 |---|---|---|
 | **G1 discovery** | D1 recall on held-out at least 10 points above D0 in both repeats, no fall on dev, regurgitation count 0 after Step D, Step D rejection codes not up | Stop the prompt direction; record why; C4 and pass two remain the options |
-| **G2 resolver** | Attachment "right" above today's 40% and "misleading" at or below today's 39%; **zero** strengthened modality (code check, and no case in the hand audit); invented party or number rate at or below 2% | Fix the prompt or tier once on dev; if still failing, stop and report |
-| **G3 separation** | E2E recall keeps at least 80% of D1's recall gain, and precision (kept set, `unresolved` shown separately) is within 10 points of D0 **or** every extra false positive is flagged and recoverable (Tyler's over-extract lean, section 0) | Report that broad discovery alone or the resolver alone is the better half, whichever the numbers show |
+| **G2 resolver** | Attachment "right" above today's 40% and "misleading" at or below today's 39%; **zero** strengthened modality (code check, and no case in the hand audit); invented party or number rate at or below 2%; **status accuracy** against the adjudicated labels: at most 5% of real obligations (oracle candidates) may be returned `not_a_requirement` (a resolver that discards real requirements defeats the over-extract lean), and on the labeled non-obligation candidates (the 90 disagreement cards plus non-obligation pieces D1 returns) at least 60% must come back `not_a_requirement` or `scope_or_context` rather than `unresolved` or a requirement status | Fix the prompt or tier once on dev; if still failing, stop and report |
+| **G3 separation** | E2E recall keeps at least 80% of D1's recall gain; precision of the kept set, with `unresolved` candidates **counted as kept** (so a resolver that marks everything `unresolved` restores nothing and fails), is within 10 points of D0; and `unresolved` is at most 25% of kept candidates. Tyler's over-extract lean (section 0) is honored by retaining doubtful candidates as flagged and recoverable, never by letting `unresolved` stand in for a decision | Report that broad discovery alone or the resolver alone is the better half, whichever the numbers show |
 | **Evidence limit** | Passing means "improves on these documents and this labeling," not that production quality is proven | State it in the report |
 
 ## 5. Build list (scratch only, each testable)
@@ -248,7 +248,7 @@ One candidate per call. Code builds the bundle; the model never sees the whole d
 
 ```
 You are resolving ONE candidate requirement using only the evidence below. Do not use outside knowledge.
-Every populated field must cite evidence ids. If the evidence does not support a field, use null.
+Every populated field that makes a claim about the text (everything except `plain_language` and `unresolved_reason`, which are checked differently) must cite evidence ids. If the evidence does not support a field, use null.
 
 Evidence (each span has an id; "unverified" spans were found by a rule and may be wrong):
 [E1] candidate quote: "..."
@@ -260,7 +260,7 @@ Evidence (each span has an id; "unverified" spans were found by a rule and may b
 Return JSON (the allowed values below are enforced by a JSON Schema `format` constraint with `enum` keys, as Step C does with
 `_PASS1_FORMAT_SCHEMA`; the prompt lists them in prose too, never as `a | b` unions the model might copy literally):
 {
- "status": one of obligation, recommendation, permission, prohibition, scope_or_context, not_a_requirement, unresolved,
+ "status":     {"value": one of obligation, recommendation, permission, prohibition, scope_or_context, not_a_requirement, unresolved, "evidence": [...]},
  "actor":      {"value": ..., "evidence": ["E#"]},   // the party that must act. An approver or authorizer is NOT the actor.
  "action":     {"value": ..., "evidence": [...]},
  "target":     {"value": ..., "evidence": [...]},
@@ -270,10 +270,10 @@ Return JSON (the allowed values below are enforced by a JSON Schema `format` con
  "exceptions": [{"value": ..., "evidence": [...]}],
  "timing":     {"value": ..., "evidence": [...]},
  "parent":     {"evidence": ["E#"]},                  // the governing clause span, if any
- "logic":      one of AND, OR, NONE,                  // how this item relates to sibling items, only if the text says so
- "standalone_statement": ...,   // one sentence built only from cited spans; keep modality, conditions and exceptions
- "plain_language": ...,         // one sentence, no new facts
- "unresolved_reason": ...       // what is missing, and where it might be (previous page, section X)
+ "logic":      {"value": one of AND, OR, NONE, "evidence": [...]},  // how this item relates to sibling items, only if the text says so
+ "standalone_statement": {"value": ..., "evidence": [...]},  // one sentence built only from the cited spans; keep modality, conditions, exceptions
+ "plain_language": ...,         // one sentence, no new facts; derived from standalone_statement, so no evidence slot (code checks it adds no number or name)
+ "unresolved_reason": ...       // what is missing and where it might be (previous page, section X); explains an absence, so no evidence slot
 }
 
 Rules: never turn "may" or "should" into "shall". Never name a party that no span names. A list item inherits its subject from
@@ -283,7 +283,7 @@ the lead-in span you cite. If the standalone statement cannot be built from the 
 Worked examples to include (fictional), each as bundle plus expected JSON:
 
 1. Inherited subject: candidate "Reviews disposal schedules each year." with E4 "The Records Officer will:" gives actor
-   "The Records Officer" from E4, modality `none` (third-person duty, from E1 and E4), timing "each year" from E1.
+   "The Records Officer" from E4, modality `will` inherited from the lead-in in E4 (`none` is only for an imperative with no modal anywhere in the cited spans), timing "each year" from E1.
 2. Prohibition with exception: "Contractors shall not transmit logs offshore unless the Program Manager approves in writing."
    gives status `prohibition`, actor "Contractors" (not the Program Manager, who is the approver), exception cited.
 3. Permission not strengthened: "The Authorizing Official may grant a waiver" gives `permission`, modality `may`, never `shall`.
