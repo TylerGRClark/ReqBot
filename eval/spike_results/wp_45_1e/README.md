@@ -32,8 +32,8 @@ each way); the 14B from WP-45.6 gives 27%.
   "will:" lead-in is not on the page. His rule: a statement of what someone does or provides is a "do it" if it is attached
   to a party; role descriptions that nobody can act on or audit (2.3.15.1 to 3) are not. He also ruled AFMAN 1.1.2 (DISA
   must do things on the DODIN) an obligation and NIST p26 "Guest OS images ... would need to be destroyed..." not one. One
-  piece (AFMAN 1.1.4) he did not rule on in so many words; Claude applied his rule and said so. The 10 seeded spot-checks of
-  agreements have **not yet been reviewed**; any change would be a rerun of `score.py report`.
+  piece (AFMAN 1.1.4) he did not rule on in so many words; Claude applied his rule and said so. Tyler also reviewed the 10 seeded
+  spot-checks of agreements (5 obligations, 5 non-obligations) and agreed with all 10, so no label changed.
 - **Adjudicated result:** 78 obligations, of which 4 sit in pieces someone flagged as badly cut; those 4 are left out of
   the main numbers (74) and put back in a sensitivity line (78).
 - **Trace (`loss_trace.py`):** each obligation is followed through Step C records, Step D survivors and the live index. A
@@ -99,8 +99,8 @@ the verb-free obligations were found. This was looked at after the main result, 
   be a fragment that needs a lead-in (the WP-45.1(b) problem).
 - **Not measured:** whether an indexed requirement can be found by a search query (ranking), and requirements that exist in
   the source but were not on the sampled pages.
-- **Two labelers share one rubric and one adjudicator.** The spot-checks of agreements, the only guard against a shared blind
-  spot, are not yet done.
+- **Two labelers share one rubric and one adjudicator.** The 10 spot-checks of agreements all held, which makes a widespread
+  shared mistake unlikely but cannot rule out one affecting up to about a quarter of the agreements (10 clean checks).
 - **PyMuPDF text is not Docling text.** The two agree where it matters here (every obligation was found in a chunk), but a
   reading-order difference would have appeared as "never chunked", and none did.
 

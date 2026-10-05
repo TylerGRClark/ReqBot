@@ -25,3 +25,6 @@ AFMAN-p004-007: obligation
 AFMAN-p004-013: obligation
 # Suggestion; nothing on pages 22-26 says to do anything from this point.
 NIST-p026-025: not_obligation
+
+# Spot-checks: Tyler reviewed the 10 seeded agreements (5 agreed obligations, 5 agreed non-obligations) on 2026-10-05 and
+# agreed with all 10, so no label changed: AFMAN-p009-005, DODI-p014-013, AFMAN-p009-011, AFMAN-p009-010, DODI-p012-007, NIST-p003-007, AFMAN-p004-001, NIST-p026-020, DODI-p014-002, NIST-p026-016
