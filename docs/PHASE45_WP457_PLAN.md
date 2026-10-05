@@ -101,8 +101,8 @@ Input: **only the quote** (batch of N, or single) plus the ref. Output: one-sent
 | **Prompt** | Discovery v2 definition and examples (D1); resolver prompt (R) | Enrichment prompt rewrite |
 | **Context assembly** | Deterministic evidence-bundle builder, three tiers (R0, R1, R2) | A model-requested retrieval loop (sized from the unresolved cases, built only if they justify it) |
 | **Schema** | Scratch-only resolver output; scratch-only `kind` field is *not* added to discovery in the first run | Any change to production record fields |
-| **Validation** | Code checks: cited ids exist, value found in cited span, modal word unchanged, no new numbers or names; the existing grounding check applied unchanged to discovery quotes | New Step D rules |
-| **Caching** | Scratch cache keyed by chunk id + prompt hash (discovery) and quote hash + bundle hash + prompt hash + model digest (resolver) | Changes to the WP-45.0.2 ledger |
+| **Validation** | Field-specific code checks (section 4.6): cited ids exist; extractive fields found in the cited spans after whitespace normalization of both sides; modality phrase copied verbatim and consistent with its class; categorical fields checked by derivation rules; composed fields checked for added numbers, names and modality; the existing grounding check applied unchanged to discovery quotes | New Step D rules |
+| **Caching** | Scratch cache keyed by chunk id + prompt hash + **model digest + run label** (discovery; each repeat and each model is its own run label with its own ledger, so a second repeat or the 14B arm can never reuse an earlier answer) and quote hash + bundle hash + prompt hash + model digest + run label (resolver) | Changes to the WP-45.0.2 ledger |
 | **Display** | Nothing | Checklist or GUI changes |
 
 ## 4. The experiment
@@ -161,12 +161,26 @@ documents; the metric only looks at those chunks. A 10-call pilot measures laten
   excludes zero.
 - No arm is chosen for having more records.
 
+### 4.6 Resolver validation, by field type
+
+A blanket "value is found in the cited span" check would reject correct output and weaken the provenance claim, so each field
+type gets its own check. Every containment test runs on whitespace-normalized text on **both** sides (the same normalization
+function as the bundle builder), so raw Docling spacing or soft hyphens cannot cause a false failure.
+
+| Field type | Fields | Check |
+|---|---|---|
+| Extractive | actor, action, target, applicability, conditions, exceptions, timing | Value found in at least one cited span (normalized); cited ids exist |
+| Modality | modality | `verbatim` found in a cited span (normalized); `class` consistent with the phrase through a fixed mapping table with synonyms (mandatory: shall, must, will, is required to, has to, is to; recommended: should, is recommended; permitted: may, is authorized to, is permitted to; prohibited: shall not, must not, is prohibited from, never, forbidden); a null phrase must come with class `none` and is not string-matched |
+| Categorical | status, logic | Derivation rules where a rule exists (`recommendation` needs a recommended phrase, `permission` a permitted phrase, `prohibition` a prohibited phrase; `logic` other than `none` needs and/or text in a cited span); no literal-containment test, since `obligation` or `unresolved` never appear in the text. Statuses with no rule (`scope_or_context`, `not_a_requirement`, `unresolved`) are scored by the labelers, not by code |
+| Composed | standalone_statement, plain_language | Adds no number or capitalized name absent from the cited spans; modal class unchanged; the entailment gate with the evidence bundle as premise (the WP-45.3 change to the gate); hand audit for faithfulness |
+| Explanatory | unresolved_reason | Not validated by code; read in the unresolved-case labeling |
+
 ### 4.5 Gates (set now, applied after)
 
 | Gate | Pass | If it fails |
 |---|---|---|
 | **G1 discovery** | D1 recall on held-out at least 10 points above D0 in both repeats, no fall on dev, regurgitation count 0 after Step D, Step D rejection codes not up | Stop the prompt direction; record why; C4 and pass two remain the options |
-| **G2 resolver** | Attachment "right" above today's 40% and "misleading" at or below today's 39%; **zero** strengthened modality (code check, and no case in the hand audit); invented party or number rate at or below 2%; **status accuracy** against the adjudicated labels: at most 5% of real obligations (oracle candidates) may be returned `not_a_requirement` (a resolver that discards real requirements defeats the over-extract lean), and on the labeled non-obligation candidates (the 90 disagreement cards plus non-obligation pieces D1 returns) at least 60% must come back `not_a_requirement` or `scope_or_context` rather than `unresolved` or a requirement status | Fix the prompt or tier once on dev; if still failing, stop and report |
+| **G2 resolver** | Attachment "right" above today's 40% and "misleading" at or below today's 39%; **zero** strengthened modality (code check, and no case in the hand audit); invented party or number rate at or below 2%; **status accuracy** against the adjudicated labels: at least 90% of real obligations (oracle candidates) must receive a **requirement status** (`obligation`, `recommendation`, `permission` or `prohibition`); at most 5% may be returned `not_a_requirement`; every oracle obligation returned `scope_or_context` or `unresolved` is listed and hand-read, and together those two may not exceed 10% (so no single catch-all label can stand in for a decision, and a resolver that never distinguishes requirements fails); the status must also match the adjudicated kind (`should` as `recommendation`, `may` as `permission`), reported as an agreement rate. On the labeled non-obligation candidates (the 90 disagreement cards plus non-obligation pieces D1 returns) at least 60% must come back `not_a_requirement` or `scope_or_context` rather than `unresolved` or a requirement status | Fix the prompt or tier once on dev; if still failing, stop and report |
 | **G3 separation** | E2E recall keeps at least 80% of D1's recall gain; precision of the kept set, with `unresolved` candidates **counted as kept** (so a resolver that marks everything `unresolved` restores nothing and fails), is within 10 points of D0; and `unresolved` is at most 25% of kept candidates. Tyler's over-extract lean (section 0) is honored by retaining doubtful candidates as flagged and recoverable, never by letting `unresolved` stand in for a decision | Report that broad discovery alone or the resolver alone is the better half, whichever the numbers show |
 | **Evidence limit** | Passing means "improves on these documents and this labeling," not that production quality is proven | State it in the report |
 
@@ -182,8 +196,7 @@ documents; the metric only looks at those chunks. A 10-call pilot measures laten
    defaults read from `~/.config/reqbot/config.json` and `REQBOT_*` overrides (CLAUDE.md: pipeline scripts must be given the
    URL explicitly, since `localhost` is this container, not Tyler's machine), and the project's argparse validators for numeric options
    (`_positive_int` for integers such as `--num-ctx`, `_non_negative_float` for `--temperature`).
-3. `check_resolution.py`: the code validations in section 4.3 (ids exist, value found in span, modal word equal, no new numbers
-   or names, example-regurgitation scan).
+3. `check_resolution.py`: the field-specific validations in section 4.6, plus the example-regurgitation scan for discovery.
 4. Reuse of `loss_trace.py` and `score.py` for recall, plus a small precision tally.
 5. A labeling pack for the resolver outputs and the held-out pieces, built like the 45.1(e) pack.
 
@@ -205,7 +218,7 @@ documents; the metric only looks at those chunks. A 10-call pilot measures laten
 ## Appendix A: discovery prompt v2 (draft, for review before any run)
 
 Replaces the opening definition and the example block of `PASS1_PROMPT_TEMPLATE`. The output schema, the verbatim-quote rule,
-the "do not extract" bullets and the `{source_ref_hints}` and `{chunk_text}` slots stay as they are. Examples are invented.
+the `{source_ref_hints}` and `{chunk_text}` slots stay as they are. The existing "do not extract" bullets are **replaced** by the list below, in particular the old "General background, context, or informational text" bullet, which would drop scope text before the resolver sees it. Examples are invented.
 
 ```
 You are finding CANDIDATE requirement passages in a cybersecurity compliance document.
@@ -220,6 +233,8 @@ A candidate is a passage that tells a party what it must, should, may or must no
   for example "Reviews access lists annually." Return the item itself, even if its lead-in is not in this text.
 - Imperative instructions, for example "Disable unused services."
 - When a sentence contains a condition or exception (if, unless, except, provided that), copy the whole sentence.
+- Scope or applicability statements ("This manual applies to all network operators"). They are not requirements, but the next
+  step keeps and attaches them, so return them.
 
 Do NOT return:
 - definitions, change logs, tables of contents, headings
@@ -264,7 +279,7 @@ One candidate per call. Code builds the bundle; the model never sees the whole d
 
 ```
 You are resolving ONE candidate requirement using only the evidence below. Do not use outside knowledge.
-Every populated field that makes a claim about the text (everything except `plain_language` and `unresolved_reason`, which are checked differently) must cite evidence ids. If the evidence does not support a field, use null.
+Every field is an object with a `value` and the evidence ids that support it. If the evidence does not support a field, its `value` is null and `evidence` is empty.
 
 Evidence (each span has an id; "unverified" spans were found by a rule and may be wrong):
 [E1] candidate quote: "..."
@@ -280,26 +295,27 @@ Return JSON (the allowed values below are enforced by a JSON Schema `format` con
  "actor":      {"value": ..., "evidence": ["E#"]},   // the party that must act. An approver or authorizer is NOT the actor.
  "action":     {"value": ..., "evidence": [...]},
  "target":     {"value": ..., "evidence": [...]},
- "modality":   {"value": one of shall, must, should, may, will, must not, shall not, imperative, none, "evidence": [...]},  // copy the word; never change it
+ "modality":   {"verbatim": the exact modal phrase copied from a cited span ("shall", "is required to", "is prohibited from", "should", ...) or null for an imperative with no modal,
+                "class": one of mandatory, recommended, permitted, prohibited, none, "evidence": [...]},  // the phrase is copied, never edited; the class is the strength it carries
  "applicability": {"value": ..., "evidence": [...]}, // who or what it applies to
  "conditions": [{"value": ..., "evidence": [...]}],
  "exceptions": [{"value": ..., "evidence": [...]}],
  "timing":     {"value": ..., "evidence": [...]},
- "parent":     {"evidence": ["E#"]},                  // the governing clause span, if any
- "logic":      {"value": one of AND, OR, NONE, "evidence": [...]},  // how this item relates to sibling items, only if the text says so
+ "parent":     {"value": the governing clause text, or null, "evidence": ["E#"]},
+ "logic":      {"value": one of and, or, none, "evidence": [...]},  // how this item relates to sibling items, only if the text says so
  "standalone_statement": {"value": a string or null, "evidence": [...]},  // one sentence built only from the cited spans; keep modality, conditions, exceptions
- "plain_language": ...,         // one sentence, no new facts; derived from standalone_statement, so no evidence slot (code checks it adds no number or name)
- "unresolved_reason": ...       // what is missing and where it might be (previous page, section X); explains an absence, so no evidence slot
+ "plain_language": {"value": a string or null, "evidence": []},     // one sentence, no new facts; derived from standalone_statement, so the evidence list stays empty and code checks it adds no number or name
+ "unresolved_reason": {"value": a string or null, "evidence": []}   // what is missing and where it might be (previous page, section X); explains an absence, so the evidence list stays empty
 }
 
-Rules: never turn "may" or "should" into "shall". Never name a party that no span names. A list item inherits its subject from
+Rules: never turn "may" or "should" into "shall"; the modality class must match the phrase you copied ("should" is recommended, never mandatory). Never name a party that no span names. A list item inherits its subject from
 the lead-in span you cite. If the standalone statement cannot be built from the spans without adding a fact, return null for it.
 ```
 
 Worked examples to include (fictional), each as bundle plus expected JSON:
 
 1. Inherited subject: candidate "Reviews disposal schedules each year." with E4 "The Records Officer will:" gives actor
-   "The Records Officer" from E4, modality `will` inherited from the lead-in in E4 (`none` is only for an imperative with no modal anywhere in the cited spans), timing "each year" from E1.
+   "The Records Officer" from E4, modality phrase "will" (class `mandatory`) inherited from the lead-in in E4 (`null` phrase and class `none` are only for an imperative with no modal anywhere in the cited spans), timing "each year" from E1.
 2. Prohibition with exception: "Contractors shall not transmit logs offshore unless the Program Manager approves in writing."
    gives status `prohibition`, actor "Contractors" (not the Program Manager, who is the approver), exception cited.
 3. Permission not strengthened: "The Authorizing Official may grant a waiver" gives `permission`, modality `may`, never `shall`.
