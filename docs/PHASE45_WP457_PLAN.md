@@ -244,6 +244,14 @@ the Phase 45 plan).
 
 ## Appendix B: resolver prompt v1 (draft, for review before any run)
 
+Fields that may be empty are nullable in the JSON Schema (`standalone_statement.value`, and every `value` that can be "not
+stated"), so a literal `null` is valid output, not a parse failure.
+
+Size estimate (to be measured in the 10-call pilot): the template below is about 450 tokens at the 3-characters-per-token
+estimate the pipeline already uses for window sizing; the seven worked examples add roughly 1,000; the evidence bundle is
+capped at 3,000; the answer is expected under 600. That is about 5,000 of the pinned 8,192, so the bundle cap, not the
+template, is what protects the window.
+
 One candidate per call. Code builds the bundle; the model never sees the whole document.
 
 ```
@@ -271,7 +279,7 @@ Return JSON (the allowed values below are enforced by a JSON Schema `format` con
  "timing":     {"value": ..., "evidence": [...]},
  "parent":     {"evidence": ["E#"]},                  // the governing clause span, if any
  "logic":      {"value": one of AND, OR, NONE, "evidence": [...]},  // how this item relates to sibling items, only if the text says so
- "standalone_statement": {"value": ..., "evidence": [...]},  // one sentence built only from the cited spans; keep modality, conditions, exceptions
+ "standalone_statement": {"value": a string or null, "evidence": [...]},  // one sentence built only from the cited spans; keep modality, conditions, exceptions
  "plain_language": ...,         // one sentence, no new facts; derived from standalone_statement, so no evidence slot (code checks it adds no number or name)
  "unresolved_reason": ...       // what is missing and where it might be (previous page, section X); explains an absence, so no evidence slot
 }
