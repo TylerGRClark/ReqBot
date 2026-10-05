@@ -1,0 +1,24 @@
+{
+ "drawn": {
+  "base_only": 40,
+  "both": 20,
+  "new_only": 30
+ },
+ "frame": {
+  "base_only": 289,
+  "both": 143,
+  "new_only": 30
+ },
+ "sample": {
+  "base_only": 40,
+  "both": 20,
+  "new_only": 40
+ },
+ "seed": "wp45.6",
+ "sha256": {
+  "RUBRIC.md": "e7b7e15ac349c66cf1183e997be0035b3072699664b84d737cd34738d0477e00",
+  "answers": "4ebad7b88e71a602e16abadd095508b679e4d7283aa9b1fcb465b52df15c1d99",
+  "check_labels.py": "d45b2e58390b9531ab9b1849221cac51da894ed36a53f5af3f3115d2111ec4b0",
+  "pack_a.md": "befa6cb5dbed01fa8caab19a2b6f35314ba0fe11a1e528c4e05b6fdb6b7621f5"
+ }
+}

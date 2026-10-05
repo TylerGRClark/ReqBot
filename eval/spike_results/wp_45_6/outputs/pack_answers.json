@@ -1,0 +1,560 @@
+{
+ "drawn": {
+  "base_only": 40,
+  "both": 20,
+  "new_only": 30
+ },
+ "frame": {
+  "base_only": 289,
+  "both": 143,
+  "new_only": 30
+ },
+ "items": {
+  "R001": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-8298d851da13",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R002": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-2458bf15e21d",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R003": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-75692d2c3b99",
+   "set": "both",
+   "side": "new"
+  },
+  "R004": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-7b7d051f5375",
+   "set": "both",
+   "side": "new"
+  },
+  "R005": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-aced525c6d93",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R006": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-f2b0ee33b110",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R007": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-21d11d1871b1",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R008": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-4dd90b6e3a71",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R009": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-4379dbcc717a",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R010": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-0dc70fd65ca1",
+   "set": "both",
+   "side": "new"
+  },
+  "R011": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-b77774d5c1e3",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R012": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-c1db5585473b",
+   "set": "both",
+   "side": "new"
+  },
+  "R013": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-3ead9e30de80",
+   "set": "both",
+   "side": "new"
+  },
+  "R014": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-49d31019e1ba",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R015": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-c20e399581fb",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R016": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-2052ffb5cf7b",
+   "set": "both",
+   "side": "new"
+  },
+  "R017": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-c8ffd28ff034",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R018": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-a043bc9401b1",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R019": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-0ff3e7b188ca",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R020": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-cb44cef4b415",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R021": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-1b28524892cf",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R022": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-8ec9bec00429",
+   "set": "both",
+   "side": "new"
+  },
+  "R023": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-f06d67b66e62",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R024": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-ef7f5a60271a",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R025": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-f9ffa2835541",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R026": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-5a3bc398d988",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R027": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-56a4208c7514",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R028": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-a711af30b336",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R029": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-ab72726aa263",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R030": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-7bb7a60cd5ec",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R031": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-9f94147354c2",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R032": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-28abeb383bb9",
+   "set": "both",
+   "side": "new"
+  },
+  "R033": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-ea963c894169",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R034": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-06aba21757ed",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R035": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-cdba4af65a44",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R036": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-6ce87155b8bc",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R037": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-f79cf709dd19",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R038": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-a6e8dd255fa9",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R039": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-5e8fdd44580e",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R040": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-bf82d991d251",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R041": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-a6253aa111da",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R042": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-745bbeeb39b9",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R043": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-31b1c3ee3683",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R044": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-f3dfd9819668",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R045": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-9d86503af9b2",
+   "set": "both",
+   "side": "new"
+  },
+  "R046": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-577989d24aa2",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R047": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-cc2b423ad02b",
+   "set": "both",
+   "side": "new"
+  },
+  "R048": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-981d5fc95015",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R049": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-ab605250f8f8",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R050": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-dca74d91cec2",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R051": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-6c709c00b380",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R052": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-906c779cb5a2",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R053": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-098140d40d9a",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R054": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-1f34c142c577",
+   "set": "both",
+   "side": "new"
+  },
+  "R055": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-8fd8303b26bf",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R056": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-aedfbac03949",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R057": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-52fc6d563728",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R058": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-81889983235a",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R059": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-64a3af49e8bb",
+   "set": "both",
+   "side": "new"
+  },
+  "R060": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-b4ab3238460c",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R061": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-5f3d04846292",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R062": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-afc3d8fdea9f",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R063": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-cea67f57aecf",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R064": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-71c98e63833f",
+   "set": "both",
+   "side": "new"
+  },
+  "R065": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-8add54019e05",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R066": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-a9650dbd6701",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R067": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-9ae28196c34f",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R068": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-9478fee7a42b",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R069": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-27998b57b68e",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R070": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-1d6c7c662f52",
+   "set": "both",
+   "side": "new"
+  },
+  "R071": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-0db4bb096993",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R072": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-ef0cbdce387b",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R073": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-d407c2df1467",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R074": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-783fc41064e7",
+   "set": "both",
+   "side": "new"
+  },
+  "R075": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-8dcfb816f6a0",
+   "set": "both",
+   "side": "new"
+  },
+  "R076": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-ce5d2ec76428",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R077": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-5e89c0084f22",
+   "set": "both",
+   "side": "new"
+  },
+  "R078": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-102ed88c1050",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R079": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-e24fa8862288",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R080": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-03b3d17e49f3",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R081": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-74c77212f441",
+   "set": "both",
+   "side": "new"
+  },
+  "R082": {
+   "document": "afman17-2101",
+   "requirement_id": "REQ-9b6b783f00c0",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R083": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-5961f41f7f8c",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R084": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-5f698b8f9521",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R085": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-f7a4590fddce",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R086": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-1414d44daac6",
+   "set": "both",
+   "side": "new"
+  },
+  "R087": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-800b401e2206",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R088": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-db2683299070",
+   "set": "new_only",
+   "side": "new"
+  },
+  "R089": {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-e59159c78aff",
+   "set": "base_only",
+   "side": "base"
+  },
+  "R090": {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-f9e58e86db52",
+   "set": "both",
+   "side": "new"
+  }
+ },
+ "sample": {
+  "base_only": 40,
+  "both": 20,
+  "new_only": 40
+ },
+ "seed": "wp45.6"
+}
