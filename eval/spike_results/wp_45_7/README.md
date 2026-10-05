@@ -168,8 +168,10 @@ text). The examples are strictly valid JSON, no `a | b` placeholder and no comme
 is built into a real `bundle.Bundle` so it renders exactly like a live one. `check_resolution.py` validates an answer against the
 bundle it was given, by field type, as plan section 4.6 specifies: extractive containment on whitespace-normalized text, the
 modal-phrase table (`should not` is a recommendation, `may not` a prohibition), status equals modality class for requirement
-statuses, derivation rules for logic, and for the composed fields no new number, acronym or proper name and no modal of a
-different class. Tests: `tests/unit/test_wp457_resolution_check.py` (19). **Every worked example must pass the checker against its
+statuses (class `none` is only for a modal-free obligation), the cited operator must be the logic value, and for the composed fields
+no new number, acronym or proper name and no new or changed modal of a different class (a subordinate modal the source itself
+contains is a faithful copy). An extractive value must lie inside ONE cited span; two spans that end and begin with the halves of
+a name do not count. Tests: `tests/unit/test_wp457_resolution_check.py` (23). **Every worked example must pass the checker against its
 own bundle** (a test enforces it), which keeps the prompt and the checker from drifting apart.
 
 Two things the numbers say:

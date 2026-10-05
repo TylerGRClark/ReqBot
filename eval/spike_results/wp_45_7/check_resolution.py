@@ -11,8 +11,9 @@ would weaken provenance, so each field type gets its own check:
                `none` and is valid only if no cited span holds a deontic modal (checked for requirement statuses only)
   categorical  status, logic: derivation rules where a rule exists; status equals the modality class for requirement
                statuses when the class is not `none`
-  composed     standalone_statement, plain_language: no number, acronym or proper name that the cited spans lack, and no
-               modal of a different class; plain_language is checked against the standalone sentence and its spans
+  composed     standalone_statement, plain_language: no number, acronym or proper name that the cited spans lack, and no NEW
+               or changed modal of a different class (a modal the source itself contains, such as a subordinate "may", is a
+               faithful copy); plain_language is checked against the standalone sentence and its spans
   explanatory  unresolved_reason: not validated by code
 
 The entailment gate (a model) and the hand audit are separate. Issues are errors unless marked "warn".
@@ -142,6 +143,13 @@ def _cited_text(spans_by_id, ids):
     return " ".join(B.normalize(spans_by_id[i]["text"]) for i in ids if i in spans_by_id)
 
 
+def _in_one_span(value, spans_by_id, ids):
+    """True if the normalized value is found inside at least ONE cited span: two spans that merely end and begin with the two
+    halves of a name do not count as containing it."""
+    want = B.normalize(value).lower()
+    return any(want in B.normalize(spans_by_id[i]["text"]).lower() for i in ids if i in spans_by_id)
+
+
 def check(answer, spans):
     """All issues for one answer. `spans` is a list of {"id", "text", ...} dicts (`Bundle.to_dict()["spans"]`)."""
     issues = shape_issues(answer)
@@ -161,8 +169,8 @@ def check(answer, spans):
         if not node["evidence"]:
             issues.append(Issue("uncited_value", field, "has a value but cites no evidence"))
             return
-        if B.normalize(node["value"]).lower() not in _cited_text(by_id, node["evidence"]).lower():
-            issues.append(Issue("not_in_cited_span", field, f"{node['value']!r} is not in the cited spans"))
+        if not _in_one_span(node["value"], by_id, node["evidence"]):
+            issues.append(Issue("not_in_cited_span", field, f"{node['value']!r} is not in any one cited span"))
 
     for name in R.VALUE_FIELDS:
         extractive(name, answer[name])
@@ -175,13 +183,12 @@ def check(answer, spans):
 
     status = answer["status"]["value"]
     mod = answer["modality"]
-    cited_modality = _cited_text(by_id, [i for i in mod["evidence"] if i in by_id])
     all_cited = _cited_text(by_id, [i for n in R.ORDER for i in _evidence_of(answer[n])])
 
     # modality: the phrase is copied from a cited span and its class matches the table
     if mod["verbatim"]:
-        if B.normalize(mod["verbatim"]).lower() not in cited_modality.lower():
-            issues.append(Issue("not_in_cited_span", "modality", f"phrase {mod['verbatim']!r} is not in the cited spans"))
+        if not _in_one_span(mod["verbatim"], by_id, mod["evidence"]):
+            issues.append(Issue("not_in_cited_span", "modality", f"phrase {mod['verbatim']!r} is not in any one cited span"))
         cls = phrase_class(mod["verbatim"])
         if cls is None:
             issues.append(Issue("unknown_modal_phrase", "modality", f"{mod['verbatim']!r} is not in the phrase table"))
@@ -191,10 +198,16 @@ def check(answer, spans):
         if mod["class"] != "none":
             issues.append(Issue("modality_class", "modality", "a null phrase needs class none"))
         if status in R.REQUIREMENT_STATUS and modals_in(all_cited):
-            issues.append(Issue("modal_in_evidence", "modality", "the cited evidence holds a modal but none was given", "warn"))
-    # status and class agree for requirement statuses (a mismatch is a strengthened or weakened modality)
-    if status in R.REQUIREMENT_STATUS and mod["class"] != "none" and mod["class"] != status:
-        issues.append(Issue("modality_strengthened", "status", f"status {status} but modality class {mod['class']}"))
+            issues.append(Issue("modal_in_evidence", "modality", "the cited evidence holds a modal but none was given"))
+    # status and class agree for requirement statuses (a mismatch is a strengthened or weakened modality). Class `none` is a
+    # genuinely modal-free OBLIGATION only (an imperative, or a duty with no modal anywhere in the cited evidence): a
+    # recommendation, permission or prohibition always has a modal phrase and class of its own.
+    if status in R.REQUIREMENT_STATUS:
+        if mod["class"] == "none":
+            if status != "obligation":
+                issues.append(Issue("modality_class", "status", f"status {status} needs a modal phrase and a matching class, not none"))
+        elif mod["class"] != status:
+            issues.append(Issue("modality_strengthened", "status", f"status {status} but modality class {mod['class']}"))
     if status == "unresolved" and not (answer["unresolved_reason"]["value"] or "").strip():
         issues.append(Issue("missing_reason", "unresolved_reason", "status is unresolved but no reason is given", "warn"))
 
@@ -202,8 +215,8 @@ def check(answer, spans):
     logic = answer["logic"]
     if logic["value"] != "none":
         text = _cited_text(by_id, logic["evidence"]).lower()
-        if not re.search(r"\b(and|or)\b", text):
-            issues.append(Issue("logic_without_text", "logic", f"{logic['value']!r} needs 'and' or 'or' in a cited span"))
+        if not re.search(rf"\b{logic['value']}\b", text):
+            issues.append(Issue("logic_without_text", "logic", f"{logic['value']!r} needs the word {logic['value']!r} in a cited span"))
 
     # composed fields
     standalone = answer["standalone_statement"]
@@ -215,7 +228,7 @@ def check(answer, spans):
         added = new_tokens(stand_text, source)
         if added:
             issues.append(Issue("added_token", "standalone_statement", f"adds {added} that the cited spans lack"))
-        _modal_issues("standalone_statement", stand_text, mod["class"], issues)
+        _modal_issues("standalone_statement", stand_text, mod["class"], source, issues)
     plain = answer["plain_language"]["value"]
     if plain:
         if not stand_text:
@@ -224,7 +237,7 @@ def check(answer, spans):
             added = new_tokens(plain, stand_text + " " + _cited_text(by_id, standalone["evidence"]))
             if added:
                 issues.append(Issue("added_token", "plain_language", f"adds {added} that the standalone sentence and its spans lack"))
-            _modal_issues("plain_language", plain, mod["class"], issues)
+            _modal_issues("plain_language", plain, mod["class"], stand_text + " " + _cited_text(by_id, standalone["evidence"]), issues)
     return issues
 
 
@@ -234,12 +247,18 @@ def _evidence_of(node):
     return node.get("evidence", [])
 
 
-def _modal_issues(field, text, cls, issues):
+def _modal_issues(field, text, cls, source, issues):
+    """Flag a modal in generated text only if it is NEW or CHANGED relative to the source: a modal phrase that the cited source
+    itself contains (a subordinate "may" inside an obligation, or one in a condition) is a faithful copy and is allowed. A new
+    phrase must keep the primary class; for an imperative (class none) any new modal is an addition."""
+    in_source = {phrase for phrase, _ in modals_in(source)}
     for phrase, found in modals_in(text):
+        if phrase in in_source:
+            continue
         if cls == "none":
-            issues.append(Issue("modality_added", field, f"uses {phrase!r} but the modality class is none"))
+            issues.append(Issue("modality_added", field, f"uses {phrase!r}, which the source does not, but the modality class is none"))
         elif found != cls:
-            issues.append(Issue("modality_strengthened", field, f"uses {phrase!r} ({found}) but the modality class is {cls}"))
+            issues.append(Issue("modality_strengthened", field, f"uses {phrase!r} ({found}), which the source does not, but the modality class is {cls}"))
 
 
 def errors(issues):

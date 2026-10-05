@@ -176,16 +176,75 @@ def test_a_null_phrase_needs_class_none_and_an_imperative_may_not_gain_a_modal(R
     assert ("modality_class", "modality") in codes(C.check(a, spans))
 
 
-def test_a_modal_in_the_evidence_is_a_warning_for_requirements_but_fine_for_non_requirements(R, C):
+def test_a_modal_in_the_evidence_is_an_error_for_requirements_but_fine_for_non_requirements(R, C):
     spans = _spans("The hypervisor can pause a guest OS.")
     a = copy.deepcopy(R.EXAMPLES[5]["answer"])  # scope_or_context, null modality
     a["status"] = {"value": "obligation", "evidence": ["E1"]}
     a["applicability"] = {"value": None, "evidence": []}
     a["actor"] = {"value": "The hypervisor", "evidence": ["E1"]}
-    issues = C.check(a, spans)
-    assert ("modal_in_evidence", "modality") in codes(issues, "warn") and codes(issues) == []
+    assert ("modal_in_evidence", "modality") in codes(C.check(a, spans))  # an obligation with a modal in the evidence needs it
     a["status"] = {"value": "not_a_requirement", "evidence": ["E1"]}  # a non-deontic "can": no modal rule applies
     assert C.check(a, spans) == []
+
+
+def test_class_none_is_only_for_a_modal_free_obligation(R, C):
+    spans = _spans("Rotate keys.")
+    for status in ("recommendation", "permission", "prohibition"):
+        a = copy.deepcopy(R.EXAMPLES[4]["answer"])  # null phrase, class none
+        a["status"] = {"value": status, "evidence": ["E1"]}
+        a["action"] = {"value": "Rotate keys", "evidence": ["E1"]}
+        assert ("modality_class", "status") in codes(C.check(a, spans)), status
+    a = copy.deepcopy(R.EXAMPLES[4]["answer"])
+    a["status"] = {"value": "obligation", "evidence": ["E1"]}
+    a["action"] = {"value": "Rotate keys", "evidence": ["E1"]}
+    assert codes(C.check(a, spans)) == []  # a genuinely modal-free obligation is fine
+    # an obligation inferred from explicit "should" evidence cannot hide behind class none
+    spans = _spans("Administrators should rotate keys.")
+    a["action"] = {"value": "rotate keys", "evidence": ["E1"]}
+    assert ("modal_in_evidence", "modality") in codes(C.check(a, spans))
+
+
+def test_an_extractive_value_must_be_inside_one_cited_span_not_stitched_across_two(R, C):
+    spans = _spans("The Authorizing Official and the Program", "Manager review waivers.")
+    a = copy.deepcopy(R.EXAMPLES[2]["answer"])
+    a["actor"] = {"value": "Program Manager", "evidence": ["E1", "E2"]}
+    assert ("not_in_cited_span", "actor") in codes(C.check(a, spans))
+    spans = _spans("The Authorizing Official and the Program Manager review waivers.")
+    a["actor"] = {"value": "Program Manager", "evidence": ["E1"]}
+    assert ("not_in_cited_span", "actor") not in codes(C.check(a, spans))
+
+
+def test_a_subordinate_modal_the_source_contains_is_a_faithful_copy_but_a_new_one_is_not(R, C):
+    spans = _spans("Administrators must record whether users may obtain access.")
+    a = copy.deepcopy(R.EXAMPLES[1]["answer"])
+    a["status"] = {"value": "obligation", "evidence": ["E1"]}
+    a["actor"] = {"value": "Administrators", "evidence": ["E1"]}
+    a["action"] = {"value": "record whether users may obtain access", "evidence": ["E1"]}
+    a["target"] = {"value": None, "evidence": []}
+    a["exceptions"] = []
+    a["modality"] = {"verbatim": "must", "class": "obligation", "evidence": ["E1"]}
+    a["standalone_statement"] = {"value": "Administrators must record whether users may obtain access.", "evidence": ["E1"]}
+    a["plain_language"] = {"value": "Administrators have to note whether users may get access.", "evidence": []}
+    assert codes(C.check(a, spans)) == []  # the "may" is in the source; "have to" is the same class as "must"
+    a["standalone_statement"] = {"value": "Administrators must record whether users shall obtain access.", "evidence": ["E1"]}
+    assert ("added_token", "standalone_statement") not in codes(C.check(a, spans))
+    a["standalone_statement"] = {"value": "Administrators must record whether users may obtain access and should audit it.", "evidence": ["E1"]}
+    assert ("modality_strengthened", "standalone_statement") in codes(C.check(a, spans))  # a new "should" is a changed modal
+
+
+def test_the_cited_operator_must_match_the_logic_value(R, C):
+    a = copy.deepcopy(R.EXAMPLES[2]["answer"])
+    for key in ("actor", "action", "target", "timing"):
+        a[key] = {"value": None, "evidence": []}
+    a["modality"] = {"verbatim": "must", "class": "obligation", "evidence": ["E1"]}
+    a["status"] = {"value": "obligation", "evidence": ["E1"]}
+    a["standalone_statement"] = {"value": None, "evidence": []}
+    a["plain_language"] = {"value": None, "evidence": []}
+    only_or = _spans("Keys must be stored apart from the data, or custodians shall be named.")
+    a["logic"] = {"value": "and", "evidence": ["E1"]}
+    assert ("logic_without_text", "logic") in codes(C.check(a, only_or))
+    a["logic"] = {"value": "or", "evidence": ["E1"]}
+    assert ("logic_without_text", "logic") not in codes(C.check(a, only_or))
 
 
 def test_status_class_consistency_applies_only_to_requirement_statuses(R, C):
