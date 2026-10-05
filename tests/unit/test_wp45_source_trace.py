@@ -311,5 +311,23 @@ def test_collect_ids_counts_points_without_a_requirement_id(sc):
         def scroll(self, collection, limit, offset, with_payload, with_vectors):
             return self.pages.pop(0)
 
-    ids, seen = sc.collect_ids(Fake())
-    assert ids == {"REQ-1", "REQ-2"} and seen == 4
+    ids, seen, missing = sc.collect_ids(Fake())
+    assert ids == {"REQ-1", "REQ-2"} and seen == 4 and missing == 2
+
+    class Dup(Fake):
+        def __init__(self):
+            self.pages = [([P({"requirement_id": "REQ-1"}), P({"requirement_id": "REQ-1"})], None)]
+
+    # a repeated id is not a missing id
+    assert sc.collect_ids(Dup()) == ({"REQ-1"}, 2, 0)
+
+
+def test_only_consecutive_chunks_can_share_a_piece(lt):
+    half_a = "The Program Manager shall maintain the access roster"
+    half_b = "and report changes to the security office monthly. More."
+    gap = {
+        2: lt.tokens(half_a),
+        4: lt.tokens(half_b),
+    }  # chunk 3 is missing, so 2 and 4 do not follow each other
+    assert lt.chunk_ids_holding(lt.tokens(PIECE), gap) == []
+    assert lt.chunk_ids_holding(lt.tokens(PIECE), {2: gap[2], 3: gap[4]}) == [2, 3]

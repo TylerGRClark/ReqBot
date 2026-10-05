@@ -209,8 +209,8 @@ def load_run(directory, doc):
 
 
 def collect_ids(client, collection="grc_requirements"):
-    """(requirement ids, points seen) from a scroll of the collection; a point with no requirement id is counted, not hidden."""
-    ids, seen, offset = set(), 0, None
+    """(requirement ids, points seen, points with no requirement id) from a scroll of the collection."""
+    ids, seen, missing, offset = set(), 0, 0, None
     while True:
         batch, offset = client.scroll(
             collection, limit=512, offset=offset, with_payload=True, with_vectors=False
@@ -219,8 +219,10 @@ def collect_ids(client, collection="grc_requirements"):
             seen += 1
             if p.payload and "requirement_id" in p.payload:
                 ids.add(p.payload["requirement_id"])
+            else:
+                missing += 1
         if offset is None:
-            return ids, seen
+            return ids, seen, missing
 
 
 def live_ids(qdrant_url, collection="grc_requirements"):
@@ -451,10 +453,12 @@ def main():
     inputs = corpus_inputs("chunks", "extracted", "normalized")
     docs = frozen["documents"]
     production_runs = {d: load_run(inputs[d]["chunks"].parent, d) for d in docs}
-    indexed, live_points = (None, None) if args.no_index else live_ids(_config.load().qdrant_url)
-    if indexed is not None and len(indexed) != live_points:
+    indexed, live_points, live_missing = (
+        (None, None, None) if args.no_index else live_ids(_config.load().qdrant_url)
+    )
+    if live_missing:
         sys.exit(
-            f"{live_points - len(indexed)} live points have no requirement id; the index check would be wrong"
+            f"{live_missing} live points have no requirement id; the index check would be wrong"
         )
     sanity = {}
     for d, run in production_runs.items():
@@ -480,6 +484,7 @@ def main():
         "segmentation_flagged_pieces": len(flagged),
         "sanity": sanity,
         "live_index_points": live_points,
+        "live_index_distinct_requirement_ids": None if indexed is None else len(indexed),
         "density": density(index, final, labels),
         "views": {},
         "secondary": {},

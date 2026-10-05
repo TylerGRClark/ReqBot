@@ -77,6 +77,8 @@ def chunk_ids_holding(piece, chunk_tokens):
     if hits:
         return hits
     for a, b in zip(ids, ids[1:]):
+        if b != a + 1:  # only chunks that follow each other in the document can share a piece
+            continue
         if len(matched_indices(piece, chunk_tokens[a] + chunk_tokens[b])) / n >= COVERED:
             return [a, b]
     return []
