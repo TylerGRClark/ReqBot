@@ -158,3 +158,28 @@ can still answer `unresolved`), and one they mis-read as local would offer the w
 - **Bare control identifiers resolve or are ignored**, so a real control id the document does not contain is never reported as
   missing (AES-256 and AC-2 cannot be told apart otherwise).
 - **Word forms are English** and listed in `_REF_WORD` / `_NAMED`; a new issuance style may need one more word.
+
+## Step 4: the resolver schema, prompt and answer checker (`resolver.py`, `check_resolution.py`)
+
+Offline; no LLM is called. `resolver.py` holds the resolver's JSON Schema (enums for status, modality class and logic; every other
+value a nullable string, each wrapped with its evidence ids), the instructions, and six worked examples with invented text
+(inherited list subject, prohibition with an exception, permission, negative recommendation, an unresolved cross-reference, scope
+text). The examples are strictly valid JSON, no `a | b` placeholder and no comments is ever shown to the model, and each example
+is built into a real `bundle.Bundle` so it renders exactly like a live one. `check_resolution.py` validates an answer against the
+bundle it was given, by field type, as plan section 4.6 specifies: extractive containment on whitespace-normalized text, the
+modal-phrase table (`should not` is a recommendation, `may not` a prohibition), status equals modality class for requirement
+statuses, derivation rules for logic, and for the composed fields no new number, acronym or proper name and no modal of a
+different class. Tests: `tests/unit/test_wp457_resolution_check.py` (19). **Every worked example must pass the checker against its
+own bundle** (a test enforces it), which keeps the prompt and the checker from drifting apart.
+
+Two things the numbers say:
+
+- **The fixed prompt is about 3,380 estimated tokens** (8,446 characters at the builder's conservative 2.5 characters per token),
+  well above the plan's estimate of roughly 450 for the template plus 1,000 for the examples. It still fits: 3,380 for the fixed
+  text, up to 3,000 for the bundle and 600 reserved for the answer is 6,980 of the 8,192 window. The estimate is deliberately
+  pessimistic; the pilot reads Ollama's real `prompt_eval_count`. If it proves too heavy for the 8B, the first lever is fewer
+  examples, then terser JSON.
+- **Not yet tested against a live model:** that Ollama's schema-constrained generation accepts nullable string types and the enum
+  keys on the 8B and the 14B. That is the first thing the 10-call pilot checks, together with structural conformance.
+
+Not in this step: the entailment gate (a model) and the hand audit of faithfulness, which the plan lists separately.
