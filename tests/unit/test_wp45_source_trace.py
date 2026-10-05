@@ -248,3 +248,39 @@ def test_loss_shares_count_each_first_loss_with_a_page_interval(sc):
     assert r["partly_extracted"]["count"] == 1 and r["never_chunked"]["count"] == 0
     lo, hi = r["not_extracted"]["interval"]
     assert lo <= 0.5 <= hi
+
+
+def test_a_step_c_record_with_no_survivor_is_rejected_even_without_a_failure_record(lt, sc):
+    chunks = _chunks(lt, c1=CHUNK)
+    quote = CHUNK[CHUNK.index("The Program") : CHUNK.index(" Other")]
+    recs = [_rec("R-1-0", 1, quote)]
+    t = lt.trace_piece(PIECE, chunks, recs, [], None, {})
+    assert t["first_loss"] == "rejected_step_d" and t["rejected_ids"] == ["R-1-0"]
+    # a survivor with the same chunk and quote, under a new id, means it was not rejected
+    t = lt.trace_piece(PIECE, chunks, recs, [_rec("REQ-abc", 1, quote)], None, {})
+    assert t["first_loss"] is None and t["rejected_ids"] == []
+    # the caller names the code, with a fallback when Step D logged none
+    index = {"X-p001-001": {"document": "D", "page": 1, "text": PIECE}}
+    run = {
+        "chunk_tokens": chunks,
+        "extracted": recs,
+        "normalized": [],
+        "failure_codes": {},
+        "gate_failures": set(),
+        "parse_failed_chunks": set(),
+    }
+    out = sc.trace_all({"X-p001-001"}, index, {"D": run}, None)
+    assert out["X-p001-001"]["rejection_codes"] == ["removed after Step D (no failure record)"]
+
+
+def test_pages_without_obligations_are_resampled_too(sc):
+    traces = {
+        "a": _trace("D", 1, extracted="covered"),
+        "b": _trace("D", 2, extracted="none"),
+    }
+    every = sc.page_bootstrap(traces, False, resamples=400, pages=[("D", 1), ("D", 2), ("D", 3)])
+    assert (
+        every["extracted"]["primary"]["recall"] == 0.5 and every["extracted"]["primary"]["n"] == 2
+    )
+    with pytest.raises(ValueError, match="missing from the page list"):
+        sc.page_bootstrap(traces, False, resamples=50, pages=[("D", 1)])

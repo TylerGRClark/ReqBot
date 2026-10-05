@@ -70,7 +70,7 @@ def main():
     if problems:
         sys.exit("labels are not valid:\n  " + "\n  ".join(problems))
     counts = collections.Counter(
-        json.loads(x)["label"] for x in Path(args.a).read_text().splitlines() if x.strip()
+        json.loads(x)["label"] for x in Path(args.a).read_text(encoding="utf-8").splitlines() if x.strip()
     )
     print("labels are valid:", args.a, dict(sorted(counts.items())))
 

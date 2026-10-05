@@ -6,7 +6,6 @@ import json
 import sys
 from pathlib import Path
 
-import fitz
 import pytest
 
 _DIR = Path(__file__).resolve().parents[2] / "eval/spike_results/wp_45_1e"
@@ -93,6 +92,9 @@ def test_a_uppercase_acronym_in_parentheses_is_not_a_list_marker(seg):
 
 
 def test_segmenting_a_real_page_is_deterministic_and_in_reading_order(seg):
+    fitz = pytest.importorskip(
+        "fitz"
+    )  # PyMuPDF is not a project dependency; CI does not install it
     doc = fitz.open()
     page = doc.new_page()
     y = 80

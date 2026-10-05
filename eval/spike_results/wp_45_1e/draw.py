@@ -26,7 +26,6 @@ for _p in (_ROOT, _HERE):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
-import fitz  # noqa: E402
 import segment as S  # noqa: E402
 
 SEED = "wp45.1e"
@@ -37,6 +36,13 @@ FROZEN = _HERE / "outputs" / "pages_frozen.json"
 
 def sha256_bytes(data):
     return hashlib.sha256(data).hexdigest()
+
+
+def _fitz():
+    """PyMuPDF is only needed to read the PDFs; it is not a project dependency, so it is imported on use."""
+    import fitz
+
+    return fitz
 
 
 def eligible_pages(doc):
@@ -51,6 +57,7 @@ def shuffle_order(pages, document, seed=SEED):
 
 
 def build(pdf_dir, documents=tuple(S.DOC_CODES), n=PAGES_PER_DOC, seed=SEED):
+    fitz = _fitz()
     out = {
         "seed": seed,
         "pages_per_document": n,

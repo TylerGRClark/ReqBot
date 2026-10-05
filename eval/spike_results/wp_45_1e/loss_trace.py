@@ -91,8 +91,8 @@ def trace_piece(text, chunk_tokens, extracted, normalized, indexed=None, failure
     chunk_tokens: {chunk_id: token list}; extracted: Step C records [{requirement_id, chunk_id, source_quote}];
     normalized: the Step D survivors (Step D gives records new ids, so they are matched by chunk and quote text, never by
     id); indexed: the set of normalized requirement ids in the live index, or None when the run was never indexed;
-    failure_codes: {Step C requirement_id: Step D rejection code}. Returns the first loss, the share and status at each
-    stage, and the records involved.
+    failure_codes: {Step C requirement_id: Step D rejection code}, used by the caller to name the code. Returns the
+    first loss, the share and status at each stage, and the records involved.
     """
     piece = tokens(text)
     chunks = chunk_ids_holding(piece, chunk_tokens)
@@ -124,8 +124,13 @@ def trace_piece(text, chunk_tokens, extracted, normalized, indexed=None, failure
 
     out["covering_extracted"] = [r["requirement_id"] for r in here if touches(r)]
     out["covering_surviving"] = [r["requirement_id"] for r in kept if touches(r)]
+    # Step D gives survivors new ids, so a Step C record survived if a survivor has the same chunk and quote; one that did
+    # not is rejected whether or not Step D wrote a failure record for it (a duplicate merge, for example, writes none).
+    kept_quotes = {(r["chunk_id"], r["source_quote"].strip()) for r in normalized}
     out["rejected_ids"] = [
-        i for i in out["covering_extracted"] if failure_codes is not None and i in failure_codes
+        r["requirement_id"]
+        for r in here
+        if touches(r) and (r["chunk_id"], r["source_quote"].strip()) not in kept_quotes
     ]
     out["covered_through_last_stage"] = out["first_loss"] is None
     return out

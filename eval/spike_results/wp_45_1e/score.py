@@ -268,14 +268,18 @@ def stage_flags(trace, with_index):
     return primary, lenient
 
 
-def page_bootstrap(traces, with_index, resamples=RESAMPLES, seed=BOOT_SEED):
-    """Recall by stage with page-level bootstrap intervals; returns {stage: {...}}."""
-    pages = sorted({(t["document"], t["page"]) for t in traces.values()})
+def page_bootstrap(traces, with_index, resamples=RESAMPLES, seed=BOOT_SEED, pages=None):
+    """Recall by stage with page-level bootstrap intervals; returns {stage: {...}}. `pages` is every sampled page (pages
+    with no obligation are part of the sample, so they are resampled too); it defaults to the pages of the traces."""
+    pages = sorted(pages or {(t["document"], t["page"]) for t in traces.values()})
     stages = [s for s in STAGES if s != "indexed" or with_index]
     per_page = {
         p: {"n": 0, "primary": collections.Counter(), "lenient": collections.Counter()}
         for p in pages
     }
+    missing = {(t["document"], t["page"]) for t in traces.values()} - set(per_page)
+    if missing:
+        raise ValueError(f"traced pages missing from the page list: {sorted(missing)}")
     for t in traces.values():
         e = per_page[(t["document"], t["page"])]
         e["n"] += 1
@@ -310,10 +314,10 @@ def loss_table(traces):
     return dict(c)
 
 
-def loss_bootstrap(traces, resamples=RESAMPLES, seed=BOOT_SEED):
+def loss_bootstrap(traces, resamples=RESAMPLES, seed=BOOT_SEED, pages=None):
     """Share of the obligations first lost at each step, with page-level bootstrap intervals (the routing rule uses these)."""
     cats = ["never_chunked", "not_extracted", "partly_extracted", "rejected_step_d", "not_indexed"]
-    pages = sorted({(t["document"], t["page"]) for t in traces.values()})
+    pages = sorted(pages or {(t["document"], t["page"]) for t in traces.values()})
     pos = {p: k for k, p in enumerate(pages)}
     n = np.zeros(len(pages))
     counts = {c: np.zeros(len(pages)) for c in cats}
@@ -353,11 +357,11 @@ def by_document(traces, with_index):
     return out
 
 
-def paired_difference(trace_a, trace_b, stage, resamples=RESAMPLES, seed=BOOT_SEED):
+def paired_difference(trace_a, trace_b, stage, resamples=RESAMPLES, seed=BOOT_SEED, pages=None):
     """Recall(a) - recall(b) at a stage on the same pieces, with a page-level bootstrap interval, plus the pieces only a or
     only b covers. The counts matter because gains and losses on one page cancel in the page-level interval."""
     ids = sorted(set(trace_a) & set(trace_b))
-    pages = sorted({(trace_a[i]["document"], trace_a[i]["page"]) for i in ids})
+    pages = sorted(pages or {(trace_a[i]["document"], trace_a[i]["page"]) for i in ids})
     pos = {p: k for k, p in enumerate(pages)}
     n = np.zeros(len(pages))
     da = np.zeros(len(pages))
@@ -419,6 +423,7 @@ def main():
 
     frozen = json.loads(FROZEN.read_text(encoding="utf-8"))
     index = piece_index(frozen)
+    all_pages = sorted({(i["document"], i["page"]) for i in index.values()})
     labels = load_labels(args.labels_dir)
     missing = [w for w in LABELERS if len(labels[w]) != len(index)]
     if missing:
@@ -475,9 +480,9 @@ def main():
         out["views"][view] = {
             "production": {
                 "obligations": len(traces),
-                "recall": page_bootstrap(traces, indexed is not None),
+                "recall": page_bootstrap(traces, indexed is not None, pages=all_pages),
                 "losses": loss_table(traces),
-                "loss_shares": loss_bootstrap(traces),
+                "loss_shares": loss_bootstrap(traces, pages=all_pages),
                 "by_document": by_document(traces, indexed is not None),
             }
         }
@@ -485,7 +490,7 @@ def main():
     all_traces = trace_all(sets["adjudicated"], index, production_runs, indexed)
     out["views"]["adjudicated"]["production_including_flagged"] = {
         "obligations": len(all_traces),
-        "recall": page_bootstrap(all_traces, indexed is not None),
+        "recall": page_bootstrap(all_traces, indexed is not None, pages=all_pages),
         "losses": loss_table(all_traces),
     }
     # fresh 8B and the 14B: same pieces, steps 1 to 3 only (never indexed)
@@ -497,21 +502,24 @@ def main():
         model_traces[tag] = tr
         out["secondary"][tag] = {
             "obligations": len(tr),
-            "recall": page_bootstrap(tr, False),
+            "recall": page_bootstrap(tr, False, pages=all_pages),
             "losses": loss_table(tr),
-            "loss_shares": loss_bootstrap(tr),
+            "loss_shares": loss_bootstrap(tr, pages=all_pages),
             "by_document": by_document(tr, False),
         }
     out["paired"] = {}
     prod = model_traces["production_8b_july"]
     for tag in ("llama3.1_8b-instruct-q4_K_M", "qwen2.5_14b"):
         out["paired"][f"{tag}_minus_production"] = {
-            s: paired_difference(model_traces[tag], prod, s)
+            s: paired_difference(model_traces[tag], prod, s, pages=all_pages)
             for s in ("extracted", "survived_step_d")
         }
     out["paired"]["qwen2.5_14b_minus_fresh_8b"] = {
         s: paired_difference(
-            model_traces["qwen2.5_14b"], model_traces["llama3.1_8b-instruct-q4_K_M"], s
+            model_traces["qwen2.5_14b"],
+            model_traces["llama3.1_8b-instruct-q4_K_M"],
+            s,
+            pages=all_pages,
         )
         for s in ("extracted", "survived_step_d")
     }

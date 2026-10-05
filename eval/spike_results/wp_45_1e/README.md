@@ -14,7 +14,7 @@ and at which step do the rest drop out?
 On 12 sampled pages of three documents, the production pipeline (the July 8B extraction, as indexed) has **about 60% of the
 obligations** in the source (45 of 74; page-level interval 44% to 77%). Nothing is lost at parsing and chunking (74 of 74
 are in a chunk), almost nothing at Step D (1 piece) and nothing at indexing. The loss is at **extraction**: 26 of 74 (35%;
-interval 20% to 49%) were never extracted, and 3 more were extracted only partly. By document: DODI 8410.03 17 of 20,
+interval 19% to 49%) were never extracted, and 3 more were extracted only partly. By document: DODI 8410.03 17 of 20,
 afman17-2101 22 of 38, NIST SP 800-125 6 of 16. A fresh 8B run gives the same total (the run-to-run noise is one piece
 each way); the 14B from WP-45.6 gives 27%.
 
@@ -39,8 +39,8 @@ each way); the 14B from WP-45.6 gives 27%.
 - **Trace (`loss_trace.py`):** each obligation is followed through Step C records, Step D survivors and the live index. A
   piece counts as covered when records in its chunk(s) reproduce at least 90% of its tokens (union over records; runs of at
   least three tokens), partly covered from 50% to 90%, not covered below 50%. Thresholds were fixed in the plan.
-- **Uncertainty:** a page-level bootstrap (the 12 pages are resampled with their pieces together), because pieces on one
-  page are not independent.
+- **Uncertainty:** a page-level bootstrap (all 12 sampled pages, including the three with no obligations, are resampled with
+  their pieces together), because pieces on one page are not independent.
 
 ## Results
 
@@ -48,10 +48,10 @@ each way); the 14B from WP-45.6 gives 27%.
 |---|---|---|---|
 | In a chunk | 74 | 100% | 100 to 100 |
 | Extracted (Step C) | 45 | 60.8% | 44 to 77 |
-| Survives Step D | 44 | 59.5% | 43 to 76 |
-| In the live index | 44 | 59.5% | 43 to 76 |
+| Survives Step D | 44 | 59.5% | 44 to 76 |
+| In the live index | 44 | 59.5% | 44 to 76 |
 
-Counting partly covered pieces as found: 64.9% extracted. First loss: not extracted 26 (35.1%, interval 20 to 49), partly
+Counting partly covered pieces as found: 64.9% extracted. First loss: not extracted 26 (35.1%, interval 19 to 49), partly
 extracted 3 (4.1%), rejected at Step D 1 (1.4%; AFMAN 2.3.15, `unrepairable_fragment_quote`), never chunked 0, not indexed 0.
 
 How much the labeling choices matter (production, extracted stage):
@@ -59,9 +59,9 @@ How much the labeling choices matter (production, extracted stage):
 | View | Obligations | Extracted share | Interval |
 |---|---|---|---|
 | Adjudicated, segmentation OK (main) | 74 | 60.8% | 44 to 77 |
-| Adjudicated, including the 4 flagged pieces | 78 | 60.3% | 42 to 75 |
-| Only where both labelers say obligation (segmentation OK) | 58 | 67.2% | 45 to 86 |
-| Where either labeler says obligation (segmentation OK) | 78 | 57.7% | 40 to 74 |
+| Adjudicated, including the 4 flagged pieces | 78 | 60.3% | 43 to 76 |
+| Only where both labelers say obligation (segmentation OK) | 58 | 67.2% | 46 to 86 |
+| Where either labeler says obligation (segmentation OK) | 78 | 57.7% | 40 to 75 |
 
 Models, same 74 pieces, steps up to Step D (the runs from WP-45.6 were never indexed):
 
@@ -77,7 +77,7 @@ does not, and the production run covers 26 the 14B does not (difference -33.8 po
 recall against the source that WP-45.6 could not give.
 
 **Routing, from the plan's pre-set rule.** The largest first-loss category is "not extracted"; its interval lower bound
-(20%) is above the next category's point estimate (4.1%), so the rule names **extraction** as the place to work next
+(19%) is above the next category's point estimate (4.1%), so the rule names **extraction** as the place to work next
 (WP-45.2 C4 and prompt work, both of which need Tyler's approval), not parsing, Step D or indexing.
 
 ## An exploratory look, not pre-registered
@@ -112,6 +112,8 @@ the verb-free obligations were found. This was looked at after the main result, 
   the id difference. No result was reported from the bad run.
 - After seeing the two label files I changed the code so that only disagreements about obligation status need a ruling
   (workload only; no number depends on it).
+- `audit_pack/check_labels.py` got a one-line fix after labeling (an explicit UTF-8 encoding on its last read, found in review).
+  The copy the labelers ran was the earlier version; the manifest records the new hash. The pack and rubric are unchanged.
 
 ## Files
 
@@ -121,7 +123,8 @@ the verb-free obligations were found. This was looked at after the main result, 
 - `labels/labels_claude_a.jsonl`, `labels/labels_codex_a.jsonl`, `labels/adjudication.txt`.
 - `outputs/results.json` (all numbers above) and `outputs/traces.jsonl` (one line per obligation per run).
 
-Reproduce (needs the pinned inputs, the Qdrant index and the WP-45.6 scratch runs):
+Reproduce (needs the pinned inputs, the Qdrant index, the WP-45.6 scratch runs and PyMuPDF for `draw.py --check`, which is
+not a project dependency; the tests skip the one test that needs it when it is absent):
 
 ```
 python3 eval/spike_results/wp_45_1e/draw.py --check
