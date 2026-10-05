@@ -56,8 +56,10 @@ def test_keys_change_with_the_run_label_the_model_digest_and_the_prompt(mods):
     assert base == OR.discovery_key("DOC", 3, "p1", "digestA", "r1")
     assert len({base, OR.discovery_key("DOC", 3, "p1", "digestA", "r2"), OR.discovery_key("DOC", 3, "p1", "digestB", "r1"),
                 OR.discovery_key("DOC", 3, "p2", "digestA", "r1"), OR.discovery_key("DOC", 4, "p1", "digestA", "r1")}) == 5
-    r = OR.resolver_key("DOC", "q", "b", "p", "dg", "run")
-    assert r != OR.resolver_key("DOC", "q", "b", "p", "dg", "run2") and r != OR.resolver_key("DOC", "q", "b2", "p", "dg", "run")
+    r = OR.resolver_key("DOC", "c1", 15, "q", "b", "p", "dg", "run")
+    assert r != OR.resolver_key("DOC", "c1", 15, "q", "b", "p", "dg", "run2") and r != OR.resolver_key("DOC", "c1", 15, "q", "b2", "p", "dg", "run")
+    # the same quote in different chunks or as different candidates is a different key
+    assert r != OR.resolver_key("DOC", "c2", 15, "q", "b", "p", "dg", "run") and r != OR.resolver_key("DOC", "c1", 19, "q", "b", "p", "dg", "run")
 
 
 def test_classify_names_overruns_truncation_and_completion(mods):
@@ -304,3 +306,35 @@ def test_a_smaller_context_window_shrinks_the_prompt_cap_for_both_runners(mods, 
     ledger3 = OR.Ledger(tmp_path / "ctx3.jsonl")
     RR.run_candidates(_cand(), _docs(), tier="R2", model="m", digest="dg", run_label="r", ledger=ledger3, ollama_url="http://x", num_ctx=3500, log=lambda *a: None)
     assert gen2.calls == [] and next(iter(ledger3.records.values()))["status"] == "untreatable"
+
+
+def test_repeated_quotes_are_separate_candidates_with_separate_keys(mods, tmp_path, monkeypatch):
+    RR, OR = mods["run_resolver"], mods["ollama_run"]
+    gen = _fake_generate("{}")
+    monkeypatch.setattr(OR, "generate", gen)
+    ledger = OR.Ledger(tmp_path / "dup.jsonl")
+    chunks = {i: {"chunk_id": i, "raw_text": "The DOT&E shall:", "parent_header_text": "", "section_ref_path": [], "section_title_path": []} for i in (15, 19, 21)}
+    docs = {"DOC": (chunks, {})}
+    cands = [{"candidate_id": f"DOC:{i}", "document": "DOC", "chunk_id": i, "quote": "The DOT&E shall:"} for i in (15, 19, 21)]
+    calls = RR.run_candidates(cands, docs, tier="R0", model="m", digest="dg", run_label="dup", ledger=ledger, ollama_url="http://x", log=lambda *a: None)
+    assert calls == 3 and len(ledger.records) == 3  # R0 builds the same bundle for all three, yet none is skipped
+
+
+def test_only_complete_resolver_answers_count_toward_quality_totals(mods, tmp_path, monkeypatch):
+    RR, OR, R = mods["run_resolver"], mods["ollama_run"], mods["resolver"]
+    good = json.dumps(R.EXAMPLES[5]["answer"])
+    for name, meta, expected_valid in (("ok", {}, 1), ("overrun", {"prompt_eval_count": 8000, "eval_count": 300}, 0), ("cut", {"done_reason": "length"}, 0)):
+        monkeypatch.setattr(OR, "generate", _fake_generate(good, **meta))
+        ledger = OR.Ledger(tmp_path / f"{name}.jsonl")
+        RR.run_candidates(_cand(), _docs(), tier="R1", model="m", digest="dg", run_label=name, ledger=ledger, ollama_url="http://x", log=lambda *a: None)
+        s = RR.summarize(ledger)
+        assert s["valid_answers"] == expected_valid and s["shape_conformant"] == expected_valid and s["parsed"] == expected_valid, name
+        assert sum(s["status"].values()) == 1  # the invalid call is still counted by status
+
+
+def test_the_dry_run_report_uses_the_selected_context_cap(mods):
+    RD = mods["run_discovery"]
+    chunk = [("DOC", {"chunk_id": 1, "text": "word " * 2000})]
+    assert RD.prompt_sizes(chunk, "D0", 8192)["over_prompt_cap"] == 0
+    s = RD.prompt_sizes(chunk, "D0", 4096)
+    assert s["cap"] == 3496 and s["over_prompt_cap"] == 1 and s["num_ctx"] == 4096

@@ -95,7 +95,8 @@ def run_candidates(candidates, docs, *, tier, model, digest, run_label, ledger, 
     for cand in candidates:
         chunks, step = docs[cand["document"]]
         bundle = B.build(cand["quote"], cand["chunk_id"], chunks, tier, step_c_by_chunk=step, fixed_tokens=fixed, num_ctx=num_ctx)
-        key = OR.resolver_key(cand["document"], OR.sha(cand["quote"]), bundle.bundle_hash(), phash, digest, run_label)
+        key = OR.resolver_key(cand["document"], cand["candidate_id"], cand["chunk_id"], OR.sha(cand["quote"]),
+                              bundle.bundle_hash(), phash, digest, run_label)
         if ledger.done(key):
             continue
         prompt = R.render_prompt(bundle)
@@ -143,8 +144,10 @@ def summarize(ledger):
     recs = list(ledger.records.values())
     counts, codes = {}, {}
     shape_ok = 0
+    valid = [r for r in recs if r["status"] == "complete"]  # an overrun, a truncation or a failure is a failed resolution
     for r in recs:
         counts[r["status"]] = counts.get(r["status"], 0) + 1
+    for r in valid:
         if r.get("answer") is not None:
             if not any(i["code"] == "shape" for i in r["issues"]):
                 shape_ok += 1
@@ -160,9 +163,10 @@ def summarize(ledger):
         return round(sum(vals) / len(vals), 1) if vals else None
 
     return {
-        "candidates": len(recs), "status": counts, "parsed": sum(1 for r in recs if r.get("answer") is not None),
+        "candidates": len(recs), "status": counts, "valid_answers": len(valid),
+        "parsed": sum(1 for r in valid if r.get("answer") is not None),
         "shape_conformant": shape_ok, "error_codes": dict(sorted(codes.items())),
-        "answers_with_no_error": sum(1 for r in recs if r.get("answer") is not None and not any(i["severity"] == "error" for i in r["issues"])),
+        "answers_with_no_error": sum(1 for r in valid if r.get("answer") is not None and not any(i["severity"] == "error" for i in r["issues"])),
         "mean_prompt_tokens": mean("prompt_eval_count"), "mean_answer_tokens": mean("eval_count"),
         "mean_wall_seconds": mean("wall_seconds"),
         "estimate_over_real": round(sum(est) / sum(real), 2) if real and est else None,

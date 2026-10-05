@@ -213,7 +213,9 @@ hand audit and the entailment gate (a model) are separate and still needed. Know
 
 Measurement only. The shared client records Ollama's own token counts and timings; every run label (arm, model, repeat) has its own directory
 and its own ledger, and a ledger key includes the **model digest** and the run label, so a second repeat or the 14B arm can never reuse
-an earlier answer. A discovery prompt estimated over the prompt cap, or a resolver bundle that cannot fit, is recorded `untreatable` and
+an earlier answer. A resolver key also carries the candidate id and chunk id: the same quote can occur several times in a document ("The DOT&E shall:" in
+chunks 15, 19 and 21), R0 builds the same bundle for each, and each occurrence must still be resolved and counted. Only `complete` resolver answers
+count toward the quality totals; an overrun, a truncation or a failure is a failed resolution, counted by status. A discovery prompt estimated over the prompt cap, or a resolver bundle that cannot fit, is recorded `untreatable` and
 never sent; a call whose prompt plus answer reaches `num_ctx` is `window_overrun`; both stay in every denominator as failures. `failed`
 records are redone on resume. D0 is the production Step C prompt unchanged; D1 is the plan's inclusive prompt (appendix A) with five invented
 examples. Chunk sets: 46 held-out chunks and 38 dev chunks (the chunks that touch the labeled pages). Tests: `tests/unit/test_wp457_runners.py`

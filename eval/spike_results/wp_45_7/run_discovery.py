@@ -124,12 +124,14 @@ def write_extracted(ledger, out_dir):
     return paths
 
 
-def prompt_sizes(chunks, arm):
-    """Estimated prompt tokens over a chunk set (the dry-run report): mean, p95, max and how many exceed the prompt cap."""
+def prompt_sizes(chunks, arm, num_ctx=OR.NUM_CTX):
+    """Estimated prompt tokens over a chunk set (the dry-run report): mean, p95, max and how many exceed the cap that the run
+    itself uses for the selected context window."""
     est = sorted(B.estimate_tokens(len(DP.render(arm, c["text"]))) for _, c in chunks)
+    cap = B.prompt_cap(num_ctx)
     return {
         "mean": round(sum(est) / len(est)), "p95": est[int(0.95 * len(est))], "max": est[-1],
-        "over_prompt_cap": sum(1 for e in est if e > B.PROMPT_TOKEN_CAP), "cap": B.PROMPT_TOKEN_CAP,
+        "over_prompt_cap": sum(1 for e in est if e > cap), "cap": cap, "num_ctx": num_ctx,
     }
 
 
@@ -188,7 +190,7 @@ def main():
         write_extracted(ledger, out_dir)
     summary = summarize(ledger)
     if args.dry_run:
-        summary["estimated_prompt_tokens"] = prompt_sizes(chunks, args.arm)
+        summary["estimated_prompt_tokens"] = prompt_sizes(chunks, args.arm, args.num_ctx)
     summary.update(run_label=args.run_label, arm=args.arm, set=args.set, model=args.model, digest=digest,
                    prompt_hash=DP.prompt_hash(args.arm), chunks_selected=len(chunks), calls_made=calls,
                    wall_seconds=round(time.time() - started, 1))

@@ -112,5 +112,7 @@ def discovery_key(document, chunk_id, prompt_hash, digest, run_label):
     return sha(f"discovery|{document}|{chunk_id}|{prompt_hash}|{digest}|{run_label}", 24)
 
 
-def resolver_key(document, quote_hash, bundle_hash, prompt_hash, digest, run_label):
-    return sha(f"resolver|{document}|{quote_hash}|{bundle_hash}|{prompt_hash}|{digest}|{run_label}", 24)
+def resolver_key(document, candidate_id, chunk_id, quote_hash, bundle_hash, prompt_hash, digest, run_label):
+    """The candidate and its chunk are part of the key: the same quote can occur several times in a document (R0 builds the same
+    bundle for each), and each occurrence is its own candidate that must be resolved and counted."""
+    return sha(f"resolver|{document}|{candidate_id}|{chunk_id}|{quote_hash}|{bundle_hash}|{prompt_hash}|{digest}|{run_label}", 24)
