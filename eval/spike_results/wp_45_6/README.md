@@ -101,7 +101,11 @@ there are fewer chances for a fragment; and the fresh 8B differs from the July b
 - **Nothing here concerns frontier hosted models.**
 - **Speed is confounded by output length.** The 14B writes less, so its time per chunk is not a clean speed comparison.
 - **The matching rule has effects.** A 14B record can contain two 8B records (a merge) and the reverse; the rule counts
-  such records as matched.
+  such records as matched. The shared sample was drawn from the 14B side (143 matched records) but is scaled by the 8B-side
+  count (146) to estimate how many genuine 8B records there are. `score.py` re-runs the estimate with 143 in place of 146
+  (the lower bound if the three extra 8B records were all junk): (a) moves from -0.505 to -0.509 and no verdict changes.
+- **No token counts.** The pipeline's raw ledger does not store Ollama's token counts, so none are reported (an earlier
+  draft of the comparison files showed them as zero; that was removed). Time per chunk comes from the pipeline log.
 
 ## Possible use
 

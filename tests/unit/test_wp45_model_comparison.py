@@ -1,5 +1,6 @@
 """WP-45.6: the pure pieces of the extraction-model comparison (matching rule, per-side overlap counts)."""
 
+import argparse
 import importlib.util
 import logging
 import sys
@@ -82,6 +83,11 @@ def pack():
     return _load("pack")
 
 
+@pytest.fixture(scope="module")
+def run_model():
+    return _load("run_model")
+
+
 def _sh(new_only, base_only, both):
     def one(vals):
         return {"genuine": vals, "complete": [1] * len(vals), "n": len(vals)}
@@ -137,3 +143,36 @@ def test_pack_draw_is_seeded_extendable_and_ids_hide_the_set(pack):
     sets_in_id_order = [ids[k]["set"] for k in sorted(ids)]
     assert sets_in_id_order != sorted(sets_in_id_order)  # ids are shuffled, not grouped by set
     assert pack.assign_ids(a) == ids  # deterministic
+
+
+def test_empty_groups_give_nan_and_fail_the_criterion_instead_of_raising(score):
+    nan = score.diff_interval([], [1, 0])
+    assert all(x != x for x in nan) and all(x != x for x in score.diff_interval([1], []))
+    assert all(x != x for x in score.rate_difference(0, 0, 3, 10))
+    assert all(x != x for x in score.rate_difference(3, 10, 0, 0))
+    # a run with no 14B-only records and no 14B survivors: (b) and (c) are undefined, so neither passes
+    sh = _sh([], [1, 0] * 10, [1] * 20)
+    pop = {"new_only": 0, "base_only": 20, "base_matched": 100, "new_matched": 100, "base_survivors": 120, "new_survivors": 0,
+           "base_fragments": 20, "new_fragments": 0, "chunks": 100, "new_lost": 1}
+    verdict = {k: p for k, _, p in score.evaluate(sh, pop, pop, -0.2, 0.0)[0]}
+    assert not verdict["b"] and not verdict["c"]
+
+
+def test_run_model_rejects_non_positive_numbers(run_model):
+    assert run_model._positive_int("5") == 5
+    for bad in ("0", "-3"):
+        with pytest.raises(argparse.ArgumentTypeError):
+            run_model._positive_int(bad)
+
+
+def test_step_c_summary_reports_states_and_no_token_counts(run_model, tmp_path):
+    ledger = tmp_path / "raw.jsonl"
+    ledger.write_text(
+        '{"chunk_id": 1, "status": "complete", "done_reason": "stop", "prompt_hash": "h"}\n'
+        '{"chunk_id": 2, "status": "truncated", "done_reason": "length", "prompt_hash": "h"}\n',
+        encoding="utf-8",
+    )
+    out = run_model.status_summary(ledger)
+    assert out["status"] == {"complete": 1, "truncated": 1} and out["prompt_hashes"] == ["h"]
+    assert out["done_reason"] == {"stop": 1, "length": 1}
+    assert "prompt_tokens" not in out and "output_tokens" not in out

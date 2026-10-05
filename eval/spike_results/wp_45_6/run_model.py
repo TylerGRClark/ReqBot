@@ -54,13 +54,12 @@ def poll_vram(ollama_url, model, samples, stop):
 
 
 def status_summary(raw_path):
-    """Per-chunk completion states and token counts from Step C's raw_responses.jsonl."""
+    """Per-chunk completion states from Step C's raw_responses.jsonl. Token counts are not in the ledger (the pipeline does
+    not persist them), so none are reported rather than zeros."""
     out = {
         "chunks": 0,
         "status": {},
         "done_reason": {},
-        "prompt_tokens": 0,
-        "output_tokens": 0,
         "prompt_hashes": [],
     }
     if not raw_path.exists():
@@ -75,11 +74,16 @@ def status_summary(raw_path):
         )
         dr = r.get("done_reason") or "n/a"
         out["done_reason"][dr] = out["done_reason"].get(dr, 0) + 1
-        out["prompt_tokens"] += r.get("prompt_eval_count") or 0
-        out["output_tokens"] += r.get("eval_count") or 0
         if r.get("prompt_hash") and r["prompt_hash"] not in out["prompt_hashes"]:
             out["prompt_hashes"].append(r["prompt_hash"])
     return out
+
+
+def _positive_int(value):
+    n = int(value)
+    if n <= 0:
+        raise argparse.ArgumentTypeError(f"{value} must be a positive integer")
+    return n
 
 
 def main():
@@ -93,9 +97,12 @@ def main():
     ap.add_argument("--scratch", default=str(DEFAULT_SCRATCH))
     ap.add_argument("--ollama-url", default=cfg.ollama_url)
     ap.add_argument(
-        "--timeout", type=int, default=300, help="per-request timeout; the 8B baseline ran at 120"
+        "--timeout",
+        type=_positive_int,
+        default=300,
+        help="per-request timeout; the 8B baseline ran at 120",
     )
-    ap.add_argument("--max-chunks", type=int, default=None)
+    ap.add_argument("--max-chunks", type=_positive_int, default=None)
     args = ap.parse_args()
 
     inputs = corpus_inputs("chunks", "extracted", "normalized")
@@ -143,15 +150,19 @@ def main():
         cmd += ["--max-chunks", str(args.max_chunks)]
 
     samples, stop = [], threading.Event()
+    poller = None
     if args.stage == "C":
-        threading.Thread(
+        poller = threading.Thread(
             target=poll_vram, args=(args.ollama_url, args.model, samples, stop), daemon=True
-        ).start()
+        )
+        poller.start()
     started = time.time()
     with open(out_dir / "run.log", "w", encoding="utf-8") as log:
         proc = subprocess.run(cmd, cwd=_ROOT, stdout=log, stderr=subprocess.STDOUT)
     wall = time.time() - started
     stop.set()
+    if poller:
+        poller.join(timeout=15)  # the poller must be done before its samples are read
 
     digests = {}
     try:

@@ -96,9 +96,11 @@ def bootstrap_net(sh, pop, resamples=RESAMPLES, seed=SEED):
 
 
 def diff_interval(a, b, resamples=RESAMPLES, seed=SEED):
-    """Bootstrap 95% interval of mean(a) - mean(b) for two 0/1 lists."""
+    """Bootstrap 95% interval of mean(a) - mean(b) for two 0/1 lists (nan when either is empty; nan fails a criterion)."""
     rng = np.random.default_rng(seed)
     a, b = np.asarray(a, dtype=float), np.asarray(b, dtype=float)
+    if len(a) == 0 or len(b) == 0:
+        return float("nan"), float("nan"), float("nan")
     da = a[rng.integers(0, len(a), size=(resamples, len(a)))].mean(axis=1)
     db = b[rng.integers(0, len(b), size=(resamples, len(b)))].mean(axis=1)
     lo, hi = np.percentile(da - db, [2.5, 97.5])
@@ -106,7 +108,9 @@ def diff_interval(a, b, resamples=RESAMPLES, seed=SEED):
 
 
 def rate_difference(x1, n1, x2, n2, z=1.96):
-    """Wald interval for p1 - p2 (the fragment composite on the 14B survivors against the baseline's)."""
+    """Wald interval for p1 - p2 (the fragment composite on the 14B survivors against the baseline's); nan when n1 or n2 is 0."""
+    if n1 == 0 or n2 == 0:
+        return float("nan"), float("nan"), float("nan")
     p1, p2 = x1 / n1, x2 / n2
     se = math.sqrt(p1 * (1 - p1) / n1 + p2 * (1 - p2) / n2)
     return p1 - p2, p1 - p2 - z * se, p1 - p2 + z * se
@@ -276,6 +280,22 @@ def main():
             f"spot-checks: {len(spot) - len(spot_changes)} of {len(spot)} confirmed; later corrections {len(corrections)}"
         )
         lines += [f"({k}) {'PASS' if p else 'fail'}  {msg}" for k, msg, p in rows]
+        # The shared stratum is sampled from the 14B side but scaled by the 8B-side matched count; a merge or split makes
+        # the two counts differ. Re-run with the 14B-side count (the lower bound on genuine 8B records if the extra ones
+        # were all junk) to show whether any verdict depends on that.
+        alt_rows, alt_ok = evaluate(
+            sh,
+            {**pop_tot, "base_matched": pop_tot["new_matched"]},
+            control_tot,
+            net_unique(args.new),
+            net_unique(CONTROL_TAG),
+        )
+        same = [k for (k, _, p), (_, _, q) in zip(rows, alt_rows) if p == q]
+        lines.append(
+            f"sensitivity: matched 8B records counted as {pop_tot['new_matched']} (the 14B-side count) instead of "
+            f"{pop_tot['base_matched']}: {alt_rows[0][1].split(';')[0]}; verdicts unchanged for {''.join(same)}"
+            + ("" if len(same) == len(rows) else " (CHANGED: see the rows above)")
+        )
         lines.append(
             "RESULT: "
             + (

@@ -68,7 +68,6 @@
    "done_reason": {
     "stop": 63
    },
-   "output_tokens": 0,
    "prompt_hashes": [
     "be9f8d15dd82904b",
     "2aa3d0fb6623680d",
@@ -133,7 +132,6 @@
     "4426f3d1ca8be7e4",
     "8c68c92ce90f17ea"
    ],
-   "prompt_tokens": 0,
    "status": {
     "complete": 63
    }

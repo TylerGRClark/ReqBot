@@ -8,4 +8,5 @@ spot-checks: 10 of 10 confirmed; later corrections 0
 (c) PASS  fragment composite, 14B minus baseline = -0.097 [-0.141, -0.054]; needs the lower bound <= 0
 (d) PASS  chunks lost (failed or cut off): 14B 0.000 vs fresh 8B 0.000; needs the 14B no more than 0.05 above
 (e) fail  net unique difference: 14B -0.595 vs fresh 8B -0.032 (of baseline survivors); needs the 14B above it by >= 0.05
+sensitivity: matched 8B records counted as 143 (the 14B-side count) instead of 146: (G - L) / N8 = -0.509 [-0.555, -0.440]  (G 30, L 210, N8 353); verdicts unchanged for abcde
 RESULT: no demonstrated meaningful improvement under the pre-set rule (not 'no difference')
