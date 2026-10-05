@@ -208,18 +208,25 @@ def load_run(directory, doc):
     }
 
 
-def live_ids(qdrant_url, collection="grc_requirements"):
-    from qdrant_client import QdrantClient
-
-    client = QdrantClient(url=qdrant_url)
-    ids, offset = set(), None
+def collect_ids(client, collection="grc_requirements"):
+    """(requirement ids, points seen) from a scroll of the collection; a point with no requirement id is counted, not hidden."""
+    ids, seen, offset = set(), 0, None
     while True:
         batch, offset = client.scroll(
             collection, limit=512, offset=offset, with_payload=True, with_vectors=False
         )
-        ids.update(p.payload["requirement_id"] for p in batch)
+        for p in batch:
+            seen += 1
+            if p.payload and "requirement_id" in p.payload:
+                ids.add(p.payload["requirement_id"])
         if offset is None:
-            return ids
+            return ids, seen
+
+
+def live_ids(qdrant_url, collection="grc_requirements"):
+    from qdrant_client import QdrantClient
+
+    return collect_ids(QdrantClient(url=qdrant_url), collection)
 
 
 def trace_all(obligation_ids, index, runs, indexed):
@@ -444,7 +451,11 @@ def main():
     inputs = corpus_inputs("chunks", "extracted", "normalized")
     docs = frozen["documents"]
     production_runs = {d: load_run(inputs[d]["chunks"].parent, d) for d in docs}
-    indexed = None if args.no_index else live_ids(_config.load().qdrant_url)
+    indexed, live_points = (None, None) if args.no_index else live_ids(_config.load().qdrant_url)
+    if indexed is not None and len(indexed) != live_points:
+        sys.exit(
+            f"{live_points - len(indexed)} live points have no requirement id; the index check would be wrong"
+        )
     sanity = {}
     for d, run in production_runs.items():
         normalized_ids = {r["requirement_id"] for r in run["normalized"]}
@@ -468,6 +479,7 @@ def main():
         "obligations": {k: len(v) for k, v in sets.items()},
         "segmentation_flagged_pieces": len(flagged),
         "sanity": sanity,
+        "live_index_points": live_points,
         "density": density(index, final, labels),
         "views": {},
         "secondary": {},

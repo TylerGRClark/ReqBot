@@ -284,3 +284,32 @@ def test_pages_without_obligations_are_resampled_too(sc):
     )
     with pytest.raises(ValueError, match="missing from the page list"):
         sc.page_bootstrap(traces, False, resamples=50, pages=[("D", 1)])
+
+
+def test_chunk_ids_must_be_integers_and_a_never_chunked_trace_has_the_full_schema(lt):
+    with pytest.raises(ValueError, match="integers"):
+        lt.chunk_ids_holding(lt.tokens(PIECE), {"doc-1": lt.tokens(CHUNK), "doc-10": []})
+    t = lt.trace_piece(
+        PIECE, _chunks(lt, c1="Entirely different words about something else."), [], []
+    )
+    full = lt.trace_piece(PIECE, _chunks(lt, c1=CHUNK), [], [])
+    assert set(t) == set(full) and t["covered_through_last_stage"] is False
+
+
+def test_collect_ids_counts_points_without_a_requirement_id(sc):
+    class P:
+        def __init__(self, payload):
+            self.payload = payload
+
+    class Fake:
+        def __init__(self):
+            self.pages = [
+                ([P({"requirement_id": "REQ-1"}), P(None)], 7),
+                ([P({"requirement_id": "REQ-2"}), P({})], None),
+            ]
+
+        def scroll(self, collection, limit, offset, with_payload, with_vectors):
+            return self.pages.pop(0)
+
+    ids, seen = sc.collect_ids(Fake())
+    assert ids == {"REQ-1", "REQ-2"} and seen == 4

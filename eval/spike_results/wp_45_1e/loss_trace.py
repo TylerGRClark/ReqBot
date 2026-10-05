@@ -68,6 +68,10 @@ def chunk_ids_holding(piece, chunk_tokens):
     n = len(piece)
     if not n:
         return []
+    if not all(isinstance(c, int) for c in chunk_tokens):
+        raise ValueError(
+            "chunk ids must be integers in document order (consecutive chunks are paired by sort order)"
+        )
     ids = sorted(chunk_tokens)
     hits = [c for c in ids if len(matched_indices(piece, chunk_tokens[c])) / n >= COVERED]
     if hits:
@@ -102,6 +106,11 @@ def trace_piece(text, chunk_tokens, extracted, normalized, indexed=None, failure
         "shares": {},
         "status": {},
         "first_loss": None,
+        "lost_at": None,
+        "covering_extracted": [],
+        "covering_surviving": [],
+        "rejected_ids": [],
+        "covered_through_last_stage": False,
     }
     if not chunks:
         out["first_loss"] = "never_chunked"
