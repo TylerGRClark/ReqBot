@@ -64,3 +64,33 @@ Reproduce (needs `raw_pdfs/`, the pinned processed inputs, the CNSSI 1253 chunk 
 ```
 python3 eval/spike_results/wp_45_7/draw_heldout.py --check
 ```
+
+## Step 2: labeling packs (`pack.py`, `label_pack/`)
+
+Offline; no LLM, no pipeline output in the packs. Two packs, one rubric (version 2), one standalone checker.
+
+| Pack | Pieces | What the labelers give |
+|---|---|---|
+| `pack_heldout.md` | 454 (every piece of the frozen held-out label pages) | `label` (obligation, lead_in, scope, not_obligation), `kind` when it is an obligation, `segment_ok`, `note` |
+| `pack_devkind.md` | 105 marked pieces (78 adjudicated dev obligations plus 27 non-obligations with permission wording), shown with their pages as context | `kind` (obligation, recommendation, permission, prohibition, or none) and `note` |
+
+Decisions worth knowing:
+
+- **Rubric version 2 differs from the 45.1(e) rubric on purpose.** Version 1 excluded "may" and "can"; Tyler's 2026-10-05 ruling
+  is that should-recommendations and may-permissions are requirements and the end user decides what to enforce. Version 2
+  counts anything a reader could act on that the document asks of, allows or advises for a party, and keeps descriptions of
+  what a technology can do as not an obligation. The held-out set is therefore labeled under the new rule from the start.
+- **The dev "kind" pass is also the "may" re-check** the plan asks for (section 0): the 27 extra pieces are the adjudicated
+  non-obligations that contain lowercase "may", "can", "permitted to", "authorized to" or "allowed to" (lowercase, so
+  "22 MAY 2018" is not caught). Many are descriptive and should come back `none`. The marked pieces are listed in page order and
+  carry no earlier label, so the labelers cannot tell which were obligations before. Disagreements go to Tyler, as before.
+- **Lead-in labels are a later pass, not in these packs.** The plan has the labelers see the same bounded neighbor spans the R2
+  bundle contains, and the bundle builder (the next step) defines them. Packing them now would invent a second definition.
+- **Independence protocol (unchanged from 45.1(e)):** each labeler opens only the rubric, one pack and the checker, writes
+  `labels_<name>_heldout.jsonl` or `labels_<name>_devkind.jsonl`, runs `check_labels.py`, and does not look at the other's file.
+  Nothing is labeled in this PR; `outputs/pack_manifest.json` records the hashes of everything the labelers will be given.
+- The adjudication and agreement tooling (disagreement sheet, spot checks) follows with the labels, adapted from the 45.1(e)
+  `score.py` functions the pack builder already reuses for the dev labels.
+
+Reproduce: `python3 eval/spike_results/wp_45_7/pack.py` (rewrites the packs and the manifest; the committed manifest is checked by
+`tests/unit/test_wp457_label_packs.py`).
