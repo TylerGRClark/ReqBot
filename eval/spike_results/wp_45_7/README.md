@@ -172,7 +172,7 @@ statuses (class `none` is only for a modal-free obligation), the cited operator 
 no new number, acronym or proper name and no new or changed modal of a different class (a subordinate modal the source itself
 contains is a faithful copy; the modals are compared per class in both directions, so a dropped primary modal or a subordinate
 modal reassigned to another class is caught too). A wrong primitive type in an answer is a shape issue, never a crash. An extractive value must lie inside ONE cited span; two spans that end and begin with the halves of
-a name do not count. Tests: `tests/unit/test_wp457_resolution_check.py` (27). **Every worked example must pass the checker against its
+a name do not count. Tests: `tests/unit/test_wp457_resolution_check.py` (31). **Every worked example must pass the checker against its
 own bundle** (a test enforces it), which keeps the prompt and the checker from drifting apart.
 
 Two things the numbers say:
@@ -186,3 +186,23 @@ Two things the numbers say:
   keys on the 8B and the 14B. That is the first thing the 10-call pilot checks, together with structural conformance.
 
 Not in this step: the entailment gate (a model) and the hand audit of faithfulness, which the plan lists separately.
+
+### Known limits of the answer checker
+
+The checker is rule-based and was hardened over four review rounds of #215; it is a first filter, not a proof of faithfulness. The
+hand audit and the entailment gate (a model) are separate and still needed. Known gaps:
+
+- **Modal vocabulary is a fixed English table** (`MODAL_TABLE`, with synonyms such as "has to", "needs to", "is advised to"). A
+  paraphrase in words outside it ("is expected to", "is supposed to") is an `unknown_modal_phrase` in the modality field and, in
+  `plain_language`, a `modality_removed` error even if the meaning is kept; the pilot shows how often that happens and the table
+  can be widened. Modality is not validated at all when the status is `unresolved`.
+- **A dropped subordinate modal is not caught.** Modals are compared per class in both directions, and the primary modal must
+  survive in the standalone sentence and in the plain language, but a subordinate "may" that disappears from a sentence whose primary
+  modal is intact passes; faithfulness of conditions and exceptions is left to the hand audit.
+- **The new-name test is a heuristic** (numbers, acronyms and mid-sentence capitalized words that the source lacks). A common word
+  capitalized for another reason, or a lowercase invented party, can slip past or be flagged wrongly; sentence starts after a
+  closing bracket or quote are handled, a start after a colon is not.
+- **Extractive containment is literal.** A value that restates a span in other words fails `not_in_cited_span`; that is intended
+  (the field is supposed to quote), but it will count against a model that paraphrases.
+- **Codes that count toward the zero-tolerance modality gate** are listed in `MODALITY_ERROR_CODES`; `added_token` and shape
+  problems are reported separately and are not part of that rule.

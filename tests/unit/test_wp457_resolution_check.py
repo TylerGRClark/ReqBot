@@ -396,3 +396,44 @@ def test_plain_language_and_unresolved_reason_evidence_is_validated_and_must_sta
 def test_the_requirement_statuses_are_listed_explicitly_not_by_position(R):
     assert R.REQUIREMENT_STATUS == ("obligation", "recommendation", "permission", "prohibition")
     assert set(R.REQUIREMENT_STATUS) <= set(R.STATUS)
+
+
+def test_plain_language_must_keep_the_primary_modal_too(R, C):
+    spans = _spans("The Authorizing Official may grant a waiver.")
+    a = copy.deepcopy(R.EXAMPLES[2]["answer"])
+    a["timing"] = {"value": None, "evidence": []}
+    a["standalone_statement"] = {"value": "The Authorizing Official may grant a waiver.", "evidence": ["E1"]}
+    a["plain_language"] = {"value": "The Authorizing Official is allowed to give a waiver.", "evidence": []}
+    assert codes(C.check(a, spans)) == []
+    a["plain_language"] = {"value": "The Authorizing Official gives a waiver.", "evidence": []}
+    assert ("modality_removed", "plain_language") in codes(C.check(a, spans))  # the permission disappeared
+
+
+def test_an_unresolved_answer_is_not_validated_for_modality(R, C):
+    spans = _spans("Operators are expected to comply with paragraph 4.2.")
+    a = copy.deepcopy(R.EXAMPLES[4]["answer"])
+    a["action"] = {"value": "comply with paragraph 4.2", "evidence": ["E1"]}
+    a["modality"] = {"verbatim": "are expected to", "class": "obligation", "evidence": ["E1"]}  # not in the phrase table
+    a["unresolved_reason"] = {"value": "paragraph 4.2 is not in the evidence", "evidence": []}
+    assert codes(C.check(a, spans)) == []
+    a["status"] = {"value": "obligation", "evidence": ["E1"]}  # resolved: now the phrase must be in the table
+    a["unresolved_reason"] = {"value": None, "evidence": []}
+    assert ("unknown_modal_phrase", "modality") in codes(C.check(a, spans))
+
+
+def test_a_sentence_start_after_a_closing_bracket_or_quote_is_not_a_new_name(C):
+    src = "Operators review logs."
+    assert C.new_tokens("(Operators review logs.) Contractors review logs.", src + " Contractors") == []
+    assert C.new_tokens('The rule says "Operators review logs." Next, review logs.', src) == []
+    assert C.new_tokens("Operators review logs with Acme.", src) == ["Acme"]
+
+
+def test_a_reason_on_a_resolved_answer_is_a_warning_and_the_modality_error_set_is_defined(R, C):
+    spans = _spans("Administrators should not reuse passwords.")
+    a = copy.deepcopy(R.EXAMPLES[3]["answer"])
+    a["unresolved_reason"] = {"value": "something", "evidence": []}
+    assert ("superfluous_reason", "unresolved_reason") in codes(C.check(a, spans), "warn")
+    a["modality"]["class"] = "obligation"
+    got = C.check(a, spans)
+    assert {i.code for i in C.modality_errors(got)} >= {"modality_strengthened"}
+    assert "modality_removed" in C.MODALITY_ERROR_CODES and "added_token" not in C.MODALITY_ERROR_CODES

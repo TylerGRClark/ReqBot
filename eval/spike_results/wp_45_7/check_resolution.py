@@ -33,7 +33,8 @@ import resolver as R  # noqa: E402
 
 # Fixed mapping from modal phrase to class (plan 4.6). Longest phrase wins; matching is on lowercase normalized text.
 MODAL_TABLE = {
-    "obligation": ["shall", "must", "will", "is required to", "are required to", "required to", "is to", "are to", "has to", "have to"],
+    "obligation": ["shall", "must", "will", "is required to", "are required to", "required to", "is to", "are to", "has to", "have to",
+                   "needs to", "need to"],
     "recommendation": ["should", "is recommended", "are recommended", "is encouraged to", "are encouraged to", "ought",
                        "should not", "ought not", "shouldn't", "is advised to", "are advised to", "is advised not to",
                        "are advised not to", "advised not to"],
@@ -95,7 +96,8 @@ def new_tokens(candidate_text, source_text):
         low = tok.lower()
         if low in have or low in _STOP:
             continue
-        initial = m.start() == 0 or text[: m.start()].rstrip().endswith((".", "!", "?"))
+        # a sentence also starts after a full stop that is followed by a closing bracket or quote: (as in this one.) The next
+        initial = m.start() == 0 or text[: m.start()].rstrip().rstrip(")]}\"'\u201d\u2019").rstrip().endswith((".", "!", "?"))
         if any(ch.isdigit() for ch in tok) or (tok.isupper() and len(tok) >= 2) or (tok[0].isupper() and not initial):
             out.append(tok)
     return sorted(set(out))
@@ -202,8 +204,11 @@ def check(answer, spans):
     mod = answer["modality"]
     all_cited = _cited_text(by_id, [i for n in R.ORDER for i in _evidence_of(answer[n])])
 
-    # modality: the phrase is copied from a cited span and its class matches the table
-    if mod["verbatim"]:
+    # modality: the phrase is copied from a cited span and its class matches the table. An unresolved answer keeps whatever the
+    # model could read and is not validated (plan 4.6): the evidence is insufficient by definition.
+    if status == "unresolved":
+        pass
+    elif mod["verbatim"]:
         if not _in_one_span(mod["verbatim"], by_id, mod["evidence"]):
             issues.append(Issue("not_in_cited_span", "modality", f"phrase {mod['verbatim']!r} is not in any one cited span"))
         cls = phrase_class(mod["verbatim"])
@@ -227,6 +232,8 @@ def check(answer, spans):
             issues.append(Issue("modality_strengthened", "status", f"status {status} but modality class {mod['class']}"))
     if status == "unresolved" and not (answer["unresolved_reason"]["value"] or "").strip():
         issues.append(Issue("missing_reason", "unresolved_reason", "status is unresolved but no reason is given", "warn"))
+    if status != "unresolved" and (answer["unresolved_reason"]["value"] or "").strip():
+        issues.append(Issue("superfluous_reason", "unresolved_reason", f"status is {status} but an unresolved reason is given", "warn"))
 
     # logic needs and/or text in a cited span
     logic = answer["logic"]
@@ -245,7 +252,8 @@ def check(answer, spans):
         added = new_tokens(stand_text, source)
         if added:
             issues.append(Issue("added_token", "standalone_statement", f"adds {added} that the cited spans lack"))
-        _modal_issues("standalone_statement", stand_text, mod["class"], source, issues, must_keep=True)
+        if status != "unresolved":
+            _modal_issues("standalone_statement", stand_text, mod["class"], source, issues, must_keep=True)
     plain = answer["plain_language"]["value"]
     if plain:
         if not stand_text:
@@ -254,7 +262,8 @@ def check(answer, spans):
             added = new_tokens(plain, stand_text + " " + _cited_text(by_id, standalone["evidence"]))
             if added:
                 issues.append(Issue("added_token", "plain_language", f"adds {added} that the standalone sentence and its spans lack"))
-            _modal_issues("plain_language", plain, mod["class"], stand_text, issues)
+            if status != "unresolved":
+                _modal_issues("plain_language", plain, mod["class"], stand_text, issues, must_keep=True)
     return issues
 
 
@@ -285,6 +294,15 @@ def _modal_issues(field, text, cls, source, issues, must_keep=False):
             issues.append(Issue(code, field, f"has {n} {c} modal(s) but the source has {want.get(c, 0)}"))
     if must_keep and cls != "none" and have.get(cls, 0) == 0:
         issues.append(Issue("modality_removed", field, f"the {cls} modal of the source is missing from the sentence"))
+
+
+# The codes that count toward the zero-tolerance modality rule of gate G2: a modal that was added, removed, strengthened or
+# reassigned between the source and the resolver's answer, or a status that disagrees with its modality class.
+MODALITY_ERROR_CODES = ("modality_strengthened", "modality_added", "modality_removed", "modality_class", "unknown_modal_phrase")
+
+
+def modality_errors(issues):
+    return [i for i in issues if i.severity == "error" and i.code in MODALITY_ERROR_CODES]
 
 
 def errors(issues):
