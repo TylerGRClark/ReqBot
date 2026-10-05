@@ -66,6 +66,9 @@ measurements decide it.
 
 Nothing here is assumed absent: the neighbor window (C4), the pass-two idea and the heading prefix are *planned*, not built.
 
+The "Kind of change" column names the layer a production fix would touch. This experiment changes only the scratch resolver's
+own output schema; it does not change the discovery output or any production schema (see the table after Call 2).
+
 ### Call 1: Step C extraction (`pipeline/llm_extract_requirements.py`, `PASS1_PROMPT_TEMPLATE`)
 
 Input: one chunk's text (Docling breadcrumb injected into it) plus a regex-found list of candidate source refs. No neighbors.
@@ -244,6 +247,9 @@ function as the bundle builder), so raw Docling spacing or soft hyphens cannot c
   re-enrichment and reindex, follows). If G1 passes and Tyler approves a production change, the migration plan, with the cache
   invalidation and a before/after index comparison, is its own WP and its own PR. This experiment never touches the production
   cache; scratch runs use their own ledger.
+- **How `standalone_statement` and `plain_language` relate to today's `description`.** They are scratch outputs here. If the
+  experiment passes, deciding whether they replace or sit beside `description` (and `source_quote` stays the untouched
+  evidence either way) is a production schema decision with its own approval; nothing in this plan assumes the answer.
 - The model-requested retrieval loop. The unresolved-case labels size it; it is built only if those cases justify it.
 - Any fix to the checklist, which still ignores stems and descriptions (audit F06).
 - Whether the resolver should run on the 14B for precision and the 8B for discovery. The R runs report both; the choice
