@@ -483,3 +483,16 @@ def test_can_counts_when_the_answer_declares_it_and_cannot_always_counts(R, C):
     b["status"] = {"value": "obligation", "evidence": ["E1"]}
     b["action"] = {"value": "share accounts", "evidence": ["E1"]}
     assert ("modal_in_evidence", "modality") in codes(C.check(b, spans))
+
+
+def test_a_longer_phrase_through_the_can_entry_also_activates_can(R, C):
+    spans = _spans("Users can be granted access.")
+    a = copy.deepcopy(R.EXAMPLES[2]["answer"])
+    a["actor"] = {"value": "Users", "evidence": ["E1"]}
+    a["action"] = {"value": "be granted access", "evidence": ["E1"]}
+    a["target"] = {"value": "access", "evidence": ["E1"]}
+    a["timing"] = {"value": None, "evidence": []}
+    a["modality"] = {"verbatim": "can be", "class": "permission", "evidence": ["E1"]}
+    a["standalone_statement"] = {"value": "Users can be granted access.", "evidence": ["E1"]}
+    a["plain_language"] = {"value": "Users are allowed to receive access.", "evidence": []}
+    assert codes(C.check(a, spans)) == []  # "can" is counted for this answer, so the kept permission is not "removed"

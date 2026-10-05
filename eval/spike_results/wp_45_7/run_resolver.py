@@ -94,7 +94,7 @@ def run_candidates(candidates, docs, *, tier, model, digest, run_label, ledger, 
     calls = 0
     for cand in candidates:
         chunks, step = docs[cand["document"]]
-        bundle = B.build(cand["quote"], cand["chunk_id"], chunks, tier, step_c_by_chunk=step, fixed_tokens=fixed)
+        bundle = B.build(cand["quote"], cand["chunk_id"], chunks, tier, step_c_by_chunk=step, fixed_tokens=fixed, num_ctx=num_ctx)
         key = OR.resolver_key(cand["document"], OR.sha(cand["quote"]), bundle.bundle_hash(), phash, digest, run_label)
         if ledger.done(key):
             continue
@@ -106,7 +106,7 @@ def run_candidates(candidates, docs, *, tier, model, digest, run_label, ledger, 
             "estimated_prompt_tokens": B.estimate_tokens(len(prompt)), "num_ctx": num_ctx, "num_predict": num_predict,
             "temperature": temperature, "timestamp": datetime.now(timezone.utc).isoformat(),
         }
-        if bundle.untreatable or not B.preflight(fixed, min(bundle.chars(), 500), num_ctx):
+        if bundle.untreatable or rec["estimated_prompt_tokens"] > B.prompt_cap(num_ctx):  # the full prompt, not a stub
             rec.update(status="untreatable", raw_response="", meta={}, answer=None, issues=[])
             ledger.append(rec)
             continue

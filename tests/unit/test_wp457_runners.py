@@ -252,12 +252,55 @@ def test_the_runners_validate_numeric_options_like_the_project(mods):
         assert m._non_negative_float("0") == 0.0 and m._positive_int("8192") == 8192
 
 
-def test_the_resolver_loader_serves_pinned_and_catalog_documents_and_rejects_others(mods):
+def test_the_resolver_loader_serves_pinned_and_catalog_documents_and_rejects_others(mods, tmp_path, monkeypatch):
+    """Offline: the pinned-input helpers are faked, so this runs in CI where the corpus files do not exist."""
     RR = mods["run_resolver"]
-    docs = RR.load_documents(["DODI 5200.44", "CNSSI_No1253"])
-    chunks, step = docs["DODI 5200.44"]
-    assert chunks and step  # a pinned document has chunks and production Step C records
-    cchunks, cstep = docs["CNSSI_No1253"]
-    assert cchunks and cstep == {}  # the catalog has its pinned chunks and no Step C records
+    import _inputs
+    import chunk_sets as CS
+
+    extracted = tmp_path / "x.jsonl"
+    extracted.write_text(json.dumps({"chunk_id": 1, "requirement_id": "R-1-1", "source_quote": "q"}) + "\n")
+    monkeypatch.setattr(_inputs, "corpus_inputs", lambda *kinds: {"PINNED": {"chunks": tmp_path / "c.jsonl", "extracted": extracted}})
+    fake_chunks = {"PINNED": [{"chunk_id": 1, "raw_text": "a"}], "CATALOG": [{"chunk_id": 7, "raw_text": "b"}]}
+    monkeypatch.setattr(CS, "load_document_chunks", lambda *docs: {d: fake_chunks[d] for d in docs})
+    monkeypatch.setattr(CS.H, "CATALOG_DOCUMENTS", ("CATALOG",))
+    docs = RR.load_documents(["PINNED", "CATALOG"])
+    chunks, step = docs["PINNED"]
+    assert set(chunks) == {1} and set(step) == {1}  # a pinned document has chunks and production Step C records
+    cchunks, cstep = docs["CATALOG"]
+    assert set(cchunks) == {7} and cstep == {}  # the catalog has its pinned chunks and no Step C records
     with pytest.raises(SystemExit):
         RR.load_documents(["not-a-document"])
+
+
+def test_the_resolver_loader_serves_the_real_corpus_when_it_is_present(mods):
+    RR = mods["run_resolver"]
+    import _inputs
+
+    try:
+        _inputs.corpus_inputs("chunks", "extracted")
+    except SystemExit:
+        pytest.skip("the pinned corpus files are not on this machine")
+    docs = RR.load_documents(["DODI 5200.44", "CNSSI_No1253"])
+    assert docs["DODI 5200.44"][0] and docs["DODI 5200.44"][1] and docs["CNSSI_No1253"][0] and docs["CNSSI_No1253"][1] == {}
+
+
+def test_a_smaller_context_window_shrinks_the_prompt_cap_for_both_runners(mods, tmp_path, monkeypatch):
+    RD, RR, OR, B = mods["run_discovery"], mods["run_resolver"], mods["ollama_run"], mods["bundle"]
+    assert B.prompt_cap(8192) == 6500 and B.prompt_cap(4096) == 4096 - B.ANSWER_RESERVE_TOKENS
+    gen = _fake_generate(json.dumps({"requirements": []}))
+    monkeypatch.setattr(OR, "generate", gen)
+    ledger = OR.Ledger(tmp_path / "ctx.jsonl")
+    # a chunk whose discovery prompt is about 5,400 estimated tokens: fine at 8192, untreatable at 4096
+    chunk = [("DOC", {"chunk_id": 1, "text": "word " * 2000})]
+    RD.run_chunks(chunk, arm="D0", model="m", digest="dg", run_label="small", ledger=ledger, ollama_url="http://x", num_ctx=4096, log=lambda *a: None)
+    assert gen.calls == [] and next(iter(ledger.records.values()))["status"] == "untreatable"
+    ledger2 = OR.Ledger(tmp_path / "ctx2.jsonl")
+    RD.run_chunks(chunk, arm="D0", model="m", digest="dg", run_label="big", ledger=ledger2, ollama_url="http://x", num_ctx=8192, log=lambda *a: None)
+    assert len(gen.calls) == 1
+    # the resolver: with a 3,500-token window the full prompt (fixed text alone is about 3,400) cannot fit
+    gen2 = _fake_generate("{}")
+    monkeypatch.setattr(OR, "generate", gen2)
+    ledger3 = OR.Ledger(tmp_path / "ctx3.jsonl")
+    RR.run_candidates(_cand(), _docs(), tier="R2", model="m", digest="dg", run_label="r", ledger=ledger3, ollama_url="http://x", num_ctx=3500, log=lambda *a: None)
+    assert gen2.calls == [] and next(iter(ledger3.records.values()))["status"] == "untreatable"

@@ -210,7 +210,8 @@ def check(answer, spans):
     status = answer["status"]["value"]
     mod = answer["modality"]
     # "can" counts as a modal for this answer only if the answer itself declares it as its modality phrase
-    can_active = B.normalize(mod["verbatim"] or "").lower() == "can"
+    verbatim_norm = B.normalize(mod["verbatim"] or "").lower()
+    can_active = verbatim_norm == "can" or verbatim_norm.startswith("can ")  # "can be granted" is accepted through the "can" entry too
     all_cited = _cited_text(by_id, [i for n in R.ORDER for i in _evidence_of(answer[n])])
 
     # modality: the phrase is copied from a cited span and its class matches the table. An unresolved answer keeps whatever the

@@ -62,7 +62,7 @@ def run_chunks(chunks, *, arm, model, digest, run_label, ledger, ollama_url, num
             "estimated_prompt_tokens": est, "num_ctx": num_ctx, "num_predict": num_predict, "temperature": temperature,
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
-        if est > B.PROMPT_TOKEN_CAP:  # too long to send safely: a failure for this arm, never an exclusion
+        if est > B.prompt_cap(num_ctx):  # too long for the selected window: a failure for this arm, never an exclusion
             rec.update(status="untreatable", raw_response="", meta={})
             ledger.append(rec)
             continue
