@@ -161,6 +161,15 @@ documents; the metric only looks at those chunks. A 10-call pilot measures laten
   excludes zero.
 - No arm is chosen for having more records.
 
+### 4.5 Gates (set now, applied after)
+
+| Gate | Pass | If it fails |
+|---|---|---|
+| **G1 discovery** | D1 recall on held-out at least 10 points above D0 in both repeats, no fall on dev, regurgitation count 0 after Step D, Step D rejection codes not up | Stop the prompt direction; record why; C4 and pass two remain the options |
+| **G2 resolver** | Attachment "right" above today's 40% and "misleading" at or below today's 39%; **zero** strengthened modality (code check, and no case in the hand audit); invented party or number rate at or below 2%; **status accuracy** against the adjudicated labels: at least 90% of real obligations (oracle candidates) must receive a **requirement status** (`obligation`, `recommendation`, `permission` or `prohibition`); at most 5% may be returned `not_a_requirement`; every oracle obligation returned `scope_or_context` or `unresolved` is listed and hand-read, and together those two may not exceed 10% (so no single catch-all label can stand in for a decision, and a resolver that never distinguishes requirements fails); the status must also match the adjudicated kind (`should` as `recommendation`, `may` as `permission`), reported as an agreement rate. On the labeled non-obligation candidates (the 90 disagreement cards plus non-obligation pieces D1 returns) at least 60% must come back `not_a_requirement` or `scope_or_context` rather than `unresolved` or a requirement status | Fix the prompt or tier once on dev; if still failing, stop and report |
+| **G3 separation** | E2E recall keeps at least 80% of D1's recall gain; precision of the kept set, with `unresolved` candidates **counted as kept** (so a resolver that marks everything `unresolved` restores nothing and fails), is within 10 points of D0; and `unresolved` is at most 25% of kept candidates. Tyler's over-extract lean (section 0) is honored by retaining doubtful candidates as flagged and recoverable, never by letting `unresolved` stand in for a decision | Report that broad discovery alone or the resolver alone is the better half, whichever the numbers show |
+| **Evidence limit** | Passing means "improves on these documents and this labeling," not that production quality is proven | State it in the report |
+
 ### 4.6 Resolver validation, by field type
 
 A blanket "value is found in the cited span" check would reject correct output and weaken the provenance claim, so each field
@@ -174,15 +183,6 @@ function as the bundle builder), so raw Docling spacing or soft hyphens cannot c
 | Categorical | status, logic | Derivation rules where a rule exists (`recommendation` needs a recommended phrase, `permission` a permitted phrase, `prohibition` a prohibited phrase; `logic` other than `none` needs and/or text in a cited span); no literal-containment test, since `obligation` or `unresolved` never appear in the text. Statuses with no rule (`scope_or_context`, `not_a_requirement`, `unresolved`) are scored by the labelers, not by code |
 | Composed | standalone_statement, plain_language | Adds no number or capitalized name absent from the cited spans; modal class unchanged; the entailment gate with the evidence bundle as premise (the WP-45.3 change to the gate); hand audit for faithfulness |
 | Explanatory | unresolved_reason | Not validated by code; read in the unresolved-case labeling |
-
-### 4.5 Gates (set now, applied after)
-
-| Gate | Pass | If it fails |
-|---|---|---|
-| **G1 discovery** | D1 recall on held-out at least 10 points above D0 in both repeats, no fall on dev, regurgitation count 0 after Step D, Step D rejection codes not up | Stop the prompt direction; record why; C4 and pass two remain the options |
-| **G2 resolver** | Attachment "right" above today's 40% and "misleading" at or below today's 39%; **zero** strengthened modality (code check, and no case in the hand audit); invented party or number rate at or below 2%; **status accuracy** against the adjudicated labels: at least 90% of real obligations (oracle candidates) must receive a **requirement status** (`obligation`, `recommendation`, `permission` or `prohibition`); at most 5% may be returned `not_a_requirement`; every oracle obligation returned `scope_or_context` or `unresolved` is listed and hand-read, and together those two may not exceed 10% (so no single catch-all label can stand in for a decision, and a resolver that never distinguishes requirements fails); the status must also match the adjudicated kind (`should` as `recommendation`, `may` as `permission`), reported as an agreement rate. On the labeled non-obligation candidates (the 90 disagreement cards plus non-obligation pieces D1 returns) at least 60% must come back `not_a_requirement` or `scope_or_context` rather than `unresolved` or a requirement status | Fix the prompt or tier once on dev; if still failing, stop and report |
-| **G3 separation** | E2E recall keeps at least 80% of D1's recall gain; precision of the kept set, with `unresolved` candidates **counted as kept** (so a resolver that marks everything `unresolved` restores nothing and fails), is within 10 points of D0; and `unresolved` is at most 25% of kept candidates. Tyler's over-extract lean (section 0) is honored by retaining doubtful candidates as flagged and recoverable, never by letting `unresolved` stand in for a decision | Report that broad discovery alone or the resolver alone is the better half, whichever the numbers show |
-| **Evidence limit** | Passing means "improves on these documents and this labeling," not that production quality is proven | State it in the report |
 
 ## 5. Build list (scratch only, each testable)
 
