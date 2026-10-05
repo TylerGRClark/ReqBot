@@ -102,7 +102,7 @@ Input: **only the quote** (batch of N, or single) plus the ref. Output: one-sent
 | **Context assembly** | Deterministic evidence-bundle builder, three tiers (R0, R1, R2) | A model-requested retrieval loop (sized from the unresolved cases, built only if they justify it) |
 | **Schema** | Scratch-only resolver output; scratch-only `kind` field is *not* added to discovery in the first run | Any change to production record fields |
 | **Validation** | Field-specific code checks (section 4.6): cited ids exist; extractive fields found in the cited spans after whitespace normalization of both sides; modality phrase copied verbatim and consistent with its class; categorical fields checked by derivation rules; composed fields checked for added numbers, names and modality; the existing grounding check applied unchanged to discovery quotes | New Step D rules |
-| **Caching** | Scratch cache keyed by chunk id + prompt hash + **model digest + run label** (discovery; each repeat and each model is its own run label with its own ledger, so a second repeat or the 14B arm can never reuse an earlier answer) and quote hash + bundle hash + prompt hash + model digest + run label (resolver) | Changes to the WP-45.0.2 ledger |
+| **Caching** | Scratch cache keyed by chunk id + prompt hash + **model digest + run label** (discovery; "model digest" is the `digest` Ollama reports for the exact model file, a sha256 of its manifest, read from `/api/tags`, so a replaced model file changes the key; each repeat and each model is its own run label with its own ledger, so a second repeat or the 14B arm can never reuse an earlier answer) and quote hash + bundle hash + prompt hash + model digest + run label (resolver) | Changes to the WP-45.0.2 ledger |
 | **Display** | Nothing | Checklist or GUI changes |
 
 ## 4. The experiment
@@ -137,7 +137,14 @@ WP-45.1(e).
 | **E2E** | D1 output through the resolver at the best tier, compared with D0 and D1 alone on the same chunks | 8B discovery; resolver model chosen from the R results | 2 for discovery |
 
 Discovery runs only on the chunks that overlap the sampled pages (their ids are in the frozen manifests), not on whole
-documents; the metric only looks at those chunks. A 10-call pilot measures latency before any full run.
+documents. **Label set closed over the selected chunks:** a Docling chunk can span pages, and a real requirement from an
+unsampled neighboring page has no label to match, so it would be wrongly counted as a false positive (differently for D0 and
+D1). Two rules prevent that. (1) Held-out: after the draw, the page set is extended to every page any selected chunk touches
+(`_chunk_page_range` gives the range) and all of those pages are labeled before any run; the freeze records the closed set.
+(2) Dev: chunks whose page range reaches beyond the 12 labeled pages are listed up front; a record whose quote is found only
+in unlabeled text is **unscored**, reported by count for every arm, and never counted as a false positive or a miss. If unscored
+records exceed 10% of an arm's records, that chunk set is dropped from the precision tally and the report says so. A 10-call
+pilot measures latency, the resolver's structural conformance (below) and these counts before any full run.
 
 ### 4.3 Measures (all against source-labeled pieces, never against record counts)
 
@@ -150,6 +157,7 @@ documents; the metric only looks at those chunks. A 10-call pilot measures laten
 | **Unresolved cases** | Rate; and for each, a labeler says whether wider context would have resolved it and where (same page, previous page, a cross-referenced section). That sizes any later retrieval loop without building it |
 | **Cost** | Ollama's own `prompt_eval_count`, `eval_count` and `total_duration` per call; extrapolated to the corpus (about 1,845 records, which the resolver would call one by one) as a stated estimate, labeled as such |
 | **Health only** | JSON validity, Step D rejection codes, regurgitation count (any 8-word run from a prompt example appearing in an output). Valid JSON is never reported as a success measure |
+| **Structural conformance** (resolver pilot) | Per field, the share of outputs whose shape is what the schema asked for and not merely parseable: arrays where arrays are expected (`conditions`, `exceptions`), `value` and `evidence` both present, evidence ids drawn from the bundle. If `conditions` or `exceptions` are often malformed on the 8B, the fallback is a flat list of strings with the evidence taken from the whole bundle, or more examples, decided before the full run |
 
 ### 4.4 Rules fixed before any run
 
@@ -178,10 +186,10 @@ function as the bundle builder), so raw Docling spacing or soft hyphens cannot c
 
 | Field type | Fields | Check |
 |---|---|---|
-| Extractive | actor, action, target, applicability, conditions, exceptions, timing | Value found in at least one cited span (normalized); cited ids exist |
+| Extractive | actor, action, target, applicability, conditions, exceptions, timing, parent (the governing-clause text must be found in a cited span, so an invented or paraphrased parent fails) | Value found in at least one cited span (normalized); cited ids exist |
 | Modality | modality | `verbatim` found in a cited span (normalized); `class` consistent with the phrase through a fixed mapping table with synonyms (mandatory: shall, must, will, is required to, has to, is to; recommended: should, is recommended; permitted: may, is authorized to, is permitted to; prohibited: shall not, must not, is prohibited from, never, forbidden); a null phrase must come with class `none` and is not string-matched |
 | Categorical | status, logic | Derivation rules where a rule exists (`recommendation` needs a recommended phrase, `permission` a permitted phrase, `prohibition` a prohibited phrase; `logic` other than `none` needs and/or text in a cited span); no literal-containment test, since `obligation` or `unresolved` never appear in the text. Statuses with no rule (`scope_or_context`, `not_a_requirement`, `unresolved`) are scored by the labelers, not by code |
-| Composed | standalone_statement, plain_language | Adds no number or capitalized name absent from the cited spans; modal class unchanged; the entailment gate with the evidence bundle as premise (the WP-45.3 change to the gate); hand audit for faithfulness |
+| Composed | standalone_statement, plain_language | `standalone_statement` adds no number or capitalized name absent from **its cited spans**; `plain_language` is checked against the same set (the spans cited by `standalone_statement`, and the standalone sentence itself), and must be null when `standalone_statement` is null, so a faithful rendering that keeps "90 days" or an actor name passes and an added one fails; modal class unchanged; the entailment gate with the evidence bundle as premise (the WP-45.3 change to the gate); hand audit for faithfulness |
 | Explanatory | unresolved_reason | Not validated by code; read in the unresolved-case labeling |
 
 ## 5. Build list (scratch only, each testable)
