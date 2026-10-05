@@ -54,6 +54,9 @@ EXTRA_PAGES = 2
 CATALOG_EXTRA_PAGES = 1
 CATALOG_DOCUMENTS = ("CNSSI_No1253",)
 # Step B output for CNSSI 1253, produced with docling 2.94.0 / docling-core 2.99.0; filled in after the run.
+# Versions that generated those chunk files: fixed provenance, never read from the verifier's environment, because reading
+# an already-generated, hash-pinned chunk file does not involve Docling at all.
+CATALOG_GENERATED_WITH = {"docling": "2.94.0", "docling_core": "2.99.0"}
 CATALOG_CHUNKS_SHA256 = {
     "CNSSI_No1253": "41dd02157fc7751ef00baccd71310413104f98844f089325513e3c2bc6a46c9d",  # 121 chunks, 80 with tables
 }
@@ -149,15 +152,6 @@ def closed_pages(chunks, selected_ids, drawn_pages, pages_in_pdf):
     return sorted(p for p in pages if 1 <= p <= pages_in_pdf)
 
 
-def _version(package):
-    from importlib import metadata
-
-    try:
-        return metadata.version(package)
-    except metadata.PackageNotFoundError:
-        return ""
-
-
 def _fitz():
     import fitz  # PyMuPDF: needed only to read the PDFs, not a project dependency
 
@@ -216,8 +210,7 @@ def build(pdf_dir, seed=SEED):
         "pymupdf": fitz.__doc__.split()[1] if fitz.__doc__ else "",
         "catalog_chunk_provenance": {
             "documents": list(CATALOG_DOCUMENTS),
-            "docling": _version("docling"),
-            "docling_core": _version("docling-core"),
+            "generated_with": CATALOG_GENERATED_WITH,
             "note": "Step B (pipeline/chunk_text.py) output, pinned by sha256 in CATALOG_CHUNKS_SHA256",
         },
         "documents": {},

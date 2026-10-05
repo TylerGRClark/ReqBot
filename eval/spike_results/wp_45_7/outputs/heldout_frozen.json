@@ -1,10 +1,12 @@
 {
  "catalog_chunk_provenance": {
-  "docling": "2.94.0",
-  "docling_core": "2.99.0",
   "documents": [
    "CNSSI_No1253"
   ],
+  "generated_with": {
+   "docling": "2.94.0",
+   "docling_core": "2.99.0"
+  },
   "note": "Step B (pipeline/chunk_text.py) output, pinned by sha256 in CATALOG_CHUNKS_SHA256"
  },
  "documents": {
