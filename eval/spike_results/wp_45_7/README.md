@@ -307,3 +307,42 @@ are opened (plan section 4.4).
 - **Seven runs, 38 chunks, 12 pages**: the intervals are wide (D1's lower bounds are 77 to 86%, well above D0's point estimate, but the 14B figures overlap).
   The 17 to 19 `unscored` D1 records lie in unlabeled text beside the sampled pages (closure was applied to the held-out set, not to dev).
 - **Step D has not been run on these outputs**, so the plan's check that rejection codes do not rise is still open; recall here is at extraction.
+
+## Step 7: the resolver's development gold and the pre-registered choice rule (`resolver_gold.py`, `score_resolver.py`)
+
+Offline. **This section and the code it describes were written and merged before any resolver run on this gold was scored**, so the rule below
+cannot be tuned to results.
+
+**Gold** (`outputs/resolver_gold.json`, frozen; `resolver_gold.py --check` recomputes it): 220 already-labeled records with their quote and
+chunk recovered from the pinned pipeline files.
+
+- **Audit, 130 records** (WP-45.1(b)): Tyler's adjudicated verdict per record (82 need a lead-in, 30 are complete, 18 are not requirements) with the
+  lead-in text and where it is, and for the 66 records production attached a stem to, his verdict on that stem (25 right, 19 wrong sibling, 12
+  fragment chain, 9 wrong other, 1 not needed). The production stem is the paired baseline: 25 of 66 right is the 38% of WP-45.1(b).
+- **Cards, 90 records** (WP-45.6): records only the 8B kept, only the 14B kept, or both, labeled real requirement or not by two labelers who agree on all 90
+  for that question (79 real, 11 not).
+- **Halves**: each record is in the *selection* or the *evaluation* half by a seeded hash of its id (audit 66 / 64, cards 38 / 52; 104 and 116 candidates).
+  The tier and the model are chosen from the selection halves and the dev pages only; the evaluation halves are scored once, after the choice is
+  frozen, together with the held-out labels (plan 4.4).
+
+**Scoring** (`score_resolver.py`): only `complete` calls count toward quality; an overrun, truncation, failure or untreatable candidate is a failed
+resolution, counted by status. Status: a real requirement should get a requirement status, a non-requirement `not_a_requirement` or `scope_or_context`;
+`unresolved` is reported on its own. Attachment (audit records that are requirements): when the gold needs a lead-in, *right* if the answer's parent or
+actor names Tyler's lead-in (at least 80% of the value's distinctive words, and at least one, are in the lead-in text; function words, modals, generic
+role words such as "Director" and one-letter fragments of an abbreviation do not count, so a bare "Director" or "USD(R&E)" never matches "DIRECTOR, DISA" or "DOT&E"),
+*incomplete* if it names neither, *misleading* if it names a parent or actor that does not overlap; when the gold is complete, right with no parent and misleading with one.
+The baseline is Tyler's verdict on the production stem on the same records (right, or misleading), and by the gold where production attached nothing.
+Two audit records have no adjudicated lead-in text and are scored for status only. A failed resolution (a call that was not `complete`, a missing or malformed
+answer) stays in every denominator and counts **against** every max-style gate, and a gate requires at least 95% of the candidates to be resolved at all.
+Fidelity: answers with a modality error code (zero tolerated); answers with an added token in a generated sentence, or an actor or parent outside the cited spans
+(at most 2%; a paraphrased action or target is not counted as invented).
+
+**The choice rule, fixed now.** From the selection halves only, keep the configurations (tier R0, R1 or R2; model 8B or 14B) that satisfy every gate that
+applies: at least 95% of candidates resolved; at most 5% of real requirements returned `not_a_requirement` (failures counted as such); real requirements returned `scope_or_context` or `unresolved` at most 10% together;
+at least 60% of non-requirements returned `not_a_requirement` or `scope_or_context`; invented party or number rate at most 2%; no modality error; and
+"incomplete" attachment (failures counted as incomplete) at most the baseline's plus 5 points. Among those, take the highest attachment-right rate on the audit selection half; ties go to the
+lower tier and then to the smaller model. If none passes, take the highest right rate and report it as failing the gate. Nothing in the evaluation halves is
+read to choose.
+
+Known limits: 104 selection candidates make every rate wide; the cards carry no attachment gold and the audit records are not the held-out population;
+the gold is of production Step C records, which are not what D1 will produce.
