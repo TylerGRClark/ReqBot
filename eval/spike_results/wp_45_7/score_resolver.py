@@ -230,10 +230,53 @@ def choose(configs):
     return best
 
 
+REGISTERED_CONFIGS = frozenset(f"{t}_{m}" for t in ("r0", "r1", "r2") for m in ("8b", "14b"))  # the six the rule was registered for
+
+
+def parse_config(name):
+    """"r1_8b" -> ("R1", 8): the tier and the model size encoded in a run name."""
+    tier, _, size = name.partition("_")
+    if tier.upper() not in ("R0", "R1", "R2") or not size.endswith("b") or not size[:-1].isdigit():
+        raise SystemExit(f"--choose needs run names like r1_8b or r2_14b, got {name!r}")
+    return tier.upper(), int(size[:-1])
+
+
+def choose_report(results):
+    """Apply the pre-registered rule (docstring) to {name: score_run()} and return the full report: every configuration's selection-half
+    gates, and the chosen one. Only the selection halves are read."""
+    names = {n.lower() for n in results}
+    if names != REGISTERED_CONFIGS or len(names) != len(results):
+        raise SystemExit(
+            "the pre-registered rule applies to exactly these six runs: " + ", ".join(sorted(REGISTERED_CONFIGS))
+            + f"; got {sorted(results)} (missing {sorted(REGISTERED_CONFIGS - names)}, unexpected {sorted(names - REGISTERED_CONFIGS)})"
+        )
+    configs, report = {}, {"configs": {}}
+    for name, r in results.items():
+        tier, size = parse_config(name)
+        sel = r.get("selection")
+        if not sel or "audit" not in sel:
+            raise SystemExit(f"{name} has no selection-half audit results")
+        configs[name] = {"tier": tier, "model_size": size, "selection": sel}
+        audit = sel["audit"]
+        gates = gate_report(sel["all"], audit["baseline_attachment"])
+        att = audit["attachment"]
+        report["configs"][name] = {
+            "gates": {k: {"value": v[0], "threshold": v[1], "passed": bool(v[2])} for k, v in gates.items()},
+            "all_gates_pass": all(v[2] for v in gates.values()),
+            "attachment": att, "attachment_right_rate": rate(att, "right", sum(att.values())),
+            "baseline_attachment": audit["baseline_attachment"],
+        }
+    best = choose(configs)
+    report["chosen"] = None if best is None else {"name": best[1], "passes_every_gate": bool(best[2]), "attachment_right_rate": best[3]}
+    report["rule"] = "from the selection halves only: configurations passing every gate, then the highest audit attachment-right rate, ties to the lower tier then the smaller model; if none passes, the best right rate, reported as failing"
+    return report
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--runs", nargs="+", required=True, metavar="NAME=DIR")
     ap.add_argument("--out")
+    ap.add_argument("--choose", action="store_true", help="apply the pre-registered choice rule (run names like r1_8b) and print the report")
     args = ap.parse_args()
     gold = json.loads(GOLD.read_text(encoding="utf-8"))
     results = {}
@@ -242,6 +285,8 @@ def main():
         if not sep or not name or not directory:
             sys.exit(f"--runs takes NAME=DIR, got {spec!r}")
         results[name] = score_run(directory, gold)
+    if args.choose:
+        results = choose_report(results)
     text = json.dumps(results, indent=1, sort_keys=True)
     if args.out:
         Path(args.out).parent.mkdir(parents=True, exist_ok=True)

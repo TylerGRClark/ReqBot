@@ -237,3 +237,28 @@ def test_gates_compare_exact_fractions_not_rounded_values(mods):
     # the valid-share gate also uses the exact quotient: 95 of 100 passes, 94 of 100 fails
     assert S.gate_report(dict(base, candidates=100, valid=95), {})["valid_answers"][2]
     assert not S.gate_report(dict(base, candidates=100, valid=94), {})["valid_answers"][2]
+
+
+def test_choose_report_applies_the_rule_and_reads_only_the_selection_halves(mods, tmp_path, monkeypatch):
+    S = mods["score"]
+    assert S.parse_config("r1_8b") == ("R1", 8) and S.parse_config("R2_14b") == ("R2", 14)
+    with pytest.raises(SystemExit):
+        S.parse_config("tier1_8")
+
+    def run(right, mod=0):
+        sel = {"all": {"candidates": 40, "valid": 40, "real": {"requirement": 20}, "non_requirement": {"not_a_requirement": 8, "unresolved": 2},
+                       "attachment": {}, "invented_answers": 0, "modality_error_answers": mod},
+               "audit": {"attachment": {"right": right, "misleading": 10 - right}, "baseline_attachment": {"right": 5, "incomplete": 5}}}
+        return {"selection": sel, "evaluation": {"audit": {"attachment": {"right": 99}}}}  # the evaluation half must never decide
+
+    full = {"r0_8b": run(3), "r1_8b": run(6), "r2_8b": run(8), "r0_14b": run(9, mod=1), "r1_14b": run(5), "r2_14b": run(7)}
+    report = S.choose_report(full)
+    assert report["chosen"]["name"] == "r2_8b" and report["chosen"]["passes_every_gate"]
+    assert report["configs"]["r0_14b"]["all_gates_pass"] is False and report["configs"]["r2_8b"]["attachment_right_rate"] == 0.8
+    none_pass = S.choose_report({k: run(v.get("selection")["audit"]["attachment"]["right"], mod=3) for k, v in full.items()})
+    assert none_pass["chosen"] == {"name": "r0_14b", "passes_every_gate": False, "attachment_right_rate": 0.9}
+    # the rule is registered for exactly the six runs: a missing arm, an extra one or a typo fails fast instead of being scored
+    for bad in ({k: v for k, v in full.items() if k != "r1_14b"}, {**full, "r1_7b": run(9)}, {**{k: v for k, v in full.items() if k != "r1_8b"}, "r1_7b": run(9)}):
+        with pytest.raises(SystemExit) as e:
+            S.choose_report(bad)
+        assert "exactly these six runs" in str(e.value)
