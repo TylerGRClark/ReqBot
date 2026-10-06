@@ -3,8 +3,7 @@
 docs/PHASE45_WP457B_PLAN.md section 2, made concrete. The model sees the evidence bundle and a numbered menu of verbatim spans built by
 `menu.py`, and returns only `{status, actor, parent}`: the status from the fixed enum, the actor and the parent each a menu id or "none".
 The Ollama JSON-schema `format` makes the ids an enum, so nothing else can be said. `assemble` then builds the answer in the existing
-resolver shape (`resolver.ORDER`): actor and parent are the chosen menu texts, the modality is read by code from the quote (then the chosen
-spans), and every field the model did not choose is null, so the unchanged checker and scorer apply to it as they are.
+resolver shape (`resolver.ORDER`): actor and parent are the chosen menu texts, the modality is read by code from the quote (then the chosen parent), and every field the model did not choose is null, so the unchanged checker and scorer apply to it as they are.
 
 Every value is a verbatim span by construction. The assembled answer cites exact-text spans only (the candidate quote and one span per
 chosen entry), never a larger span that merely contains the entry: a big chunk cited as evidence would put its own modals in the answer.
@@ -166,13 +165,15 @@ def _span_for(spans, text, kind):
     return new_id
 
 
-def read_modal(quote, *chosen):
-    """The modal the code reads for the record: from the quote, else from the first chosen span that has one. Returns (surface phrase,
-    class, index) with index 0 for the quote and 1.. for the chosen spans, or ("", "none", None). The ambiguous "can" is not read."""
-    for index, text in enumerate((quote,) + chosen):
+def read_modal(quote, parent=None):
+    """The modal the code reads for the record: from the quote, else from the chosen parent (the "The Records Officer will:" lead-in).
+    Returns (surface phrase, class, source) with source "quote" or "parent", or ("", "none", None). The chosen actor is never read: a
+    lead-in picked as the actor with no parent is a malformed choice and must show up as an error, not borrow its modal. The ambiguous
+    "can" is not read. `first_modal` works on the normalized text, so its offsets index the normalized text."""
+    for source, text in (("quote", quote), ("parent", parent)):
         modal = M.first_modal(text) if text else None
         if modal:
-            return B.normalize(text)[modal[0]:modal[1]], modal[3], index
+            return B.normalize(text)[modal[0]:modal[1]], modal[3], source
     return "", "none", None
 
 
@@ -193,11 +194,10 @@ def assemble(selection, menu, bundle_spans, quote):
     node = {name: {"value": None, "evidence": []} for name in ("actor", "parent")}
     for name, entry in chosen.items():
         node[name] = {"value": entry["text"], "evidence": [_span_for(spans, entry["text"], "menu")]}
-    order = [chosen[n] for n in ("parent", "actor") if n in chosen]  # the parent is the likelier holder of a lead-in modal
-    phrase, cls, index = read_modal(quote, *[e["text"] for e in order])
+    phrase, cls, source = read_modal(quote, chosen["parent"]["text"] if "parent" in chosen else None)
     modality = {"verbatim": phrase or None, "class": cls, "evidence": []}
     if phrase:
-        modality["evidence"] = [quote_id] if index == 0 else [_span_for(spans, order[index - 1]["text"], "menu")]
+        modality["evidence"] = [quote_id] if source == "quote" else node["parent"]["evidence"]
     empty = {"value": None, "evidence": []}
     answer = {
         "status": {"value": selection["status"], "evidence": [quote_id]},

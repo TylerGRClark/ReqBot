@@ -93,7 +93,7 @@ def test_none_choices_attach_nothing_and_an_existing_exact_span_is_reused(S):
     assert answer["actor"]["evidence"] == ["E1"] and len(spans) == 1  # the quote itself is already an exact span
 
 
-def test_modality_is_read_by_code_from_the_quote_before_the_chosen_spans(S):
+def test_modality_is_read_by_code_from_the_quote_before_the_chosen_parent(S):
     quote = "The Auditor Should review logs."
     answer, _ = S.assemble({"status": "recommendation", "actor": "none", "parent": "M1"}, _menu("All staff must:"), _spans(quote), quote)
     assert answer["modality"]["verbatim"] == "Should" and answer["modality"]["class"] == "recommendation"  # surface text, quote first
@@ -103,6 +103,26 @@ def test_modality_is_read_by_code_from_the_quote_before_the_chosen_spans(S):
     quote = "The system can run."
     answer, _ = S.assemble({"status": "not_a_requirement", "actor": "none", "parent": "none"}, [], _spans(quote), quote)
     assert answer["modality"]["verbatim"] is None  # "can" is not read as a modal
+
+
+def test_a_lead_in_chosen_as_the_actor_does_not_lend_its_modal(S, C):
+    """Review finding: with parent none, a lead-in picked as the actor must not supply the record's modality; it is a malformed choice."""
+    quote = "(1) Encrypt backups."
+    menu = _menu("Organizations should:")
+    answer, spans = S.assemble({"status": "recommendation", "actor": "M1", "parent": "none"}, menu, _spans(quote), quote)
+    assert answer["modality"] == {"verbatim": None, "class": "none", "evidence": []}
+    codes = {i.code for i in C.check(answer, spans) if i.severity == "error"}
+    assert codes & {"modality_class", "modal_in_evidence"}  # it fails the modality gate instead of passing it
+    right, spans = S.assemble({"status": "recommendation", "actor": "none", "parent": "M1"}, menu, _spans(quote), quote)
+    assert right["modality"]["verbatim"] == "should" and not [i for i in C.check(right, spans) if i.severity == "error"]
+
+
+def test_read_modal_slices_the_normalized_text_its_offsets_belong_to(S):
+    """`first_modal` normalizes before it measures, so the surface phrase must come from the normalized text, whatever the spacing."""
+    assert S.read_modal("  The   Officer   Should\n review   logs.") == ("Should", "recommendation", "quote")
+    assert S.read_modal("(1) Report.", "\t All  staff   must:") == ("must", "obligation", "parent")
+    assert S.read_modal("(1) Report.", "All staff") == ("", "none", None)
+    assert S.read_modal("(1) Report.") == ("", "none", None)
 
 
 def test_a_status_that_contradicts_the_quotes_own_modal_is_still_the_models_error(S, C):

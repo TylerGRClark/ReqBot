@@ -44,7 +44,7 @@ def gold_candidates(half):
 
 
 def run_candidates(candidates, docs, *, tier, model, digest, run_label, ledger, ollama_url, num_ctx=OR.NUM_CTX, num_predict=200,
-                   temperature=0.1, timeout=300, dry_run=False, log=print):
+                   temperature=0.1, timeout=300, log=print):
     phash = S.prompt_hash()
     fixed = S.fixed_tokens()
     calls = 0
@@ -68,8 +68,6 @@ def run_candidates(candidates, docs, *, tier, model, digest, run_label, ledger, 
         if bundle.untreatable or rec["estimated_prompt_tokens"] > B.prompt_cap(num_ctx):
             rec.update(status="untreatable", raw_response="", meta={}, selection=None, answer=None, issues=[])
             ledger.append(rec)
-            continue
-        if dry_run:
             continue
         try:
             text, meta = OR.generate(prompt, model, ollama_url, num_ctx=num_ctx, num_predict=num_predict, temperature=temperature,
@@ -97,6 +95,29 @@ def run_candidates(candidates, docs, *, tier, model, digest, run_label, ledger, 
     return calls
 
 
+def dry_run_report(candidates, docs, tier, num_ctx=OR.NUM_CTX):
+    """What a run would send, without calling anything or writing a ledger: how many candidates are treatable, and the estimated prompt
+    tokens and menu sizes. A dry run keeps no records, so its figures come from here and not from `summarize`."""
+    fixed = S.fixed_tokens()
+    tokens, sizes, untreatable = [], [], 0
+    for cand in candidates:
+        chunks, step = docs[cand["document"]]
+        menu = M.build_menu(cand["quote"], cand["chunk_id"], chunks, tier, step_c_by_chunk=step)
+        bundle = B.build(cand["quote"], cand["chunk_id"], chunks, tier, step_c_by_chunk=step,
+                         fixed_tokens=fixed + B.estimate_tokens(len(S.render_menu(menu))), num_ctx=num_ctx)
+        estimate = B.estimate_tokens(len(S.render_prompt(bundle, menu)))
+        untreatable += bool(bundle.untreatable or estimate > B.prompt_cap(num_ctx))
+        tokens.append(estimate)
+        sizes.append(len(menu))
+    n = len(tokens)
+    return {
+        "dry_run": True, "tier": tier, "candidates": n, "untreatable": untreatable, "empty_menus": sizes.count(0),
+        "mean_estimated_prompt_tokens": round(sum(tokens) / n) if n else None, "max_estimated_prompt_tokens": max(tokens, default=None),
+        "mean_menu_size": round(sum(sizes) / n, 2) if n else None, "max_menu_size": max(sizes, default=None),
+        "fixed_prompt_estimated_tokens": fixed, "prompt_hash": S.prompt_hash(),
+    }
+
+
 def summarize(ledger):
     summary = RR.summarize(ledger)
     recs = list(ledger.records.values())
@@ -122,13 +143,16 @@ def main():
     ap.add_argument("--num-predict", type=RR._positive_int, default=200)
     ap.add_argument("--temperature", type=RR._non_negative_float, default=0.1)
     ap.add_argument("--timeout", type=RR._positive_int, default=300)
-    ap.add_argument("--dry-run", action="store_true", help="build the menus, bundles and prompts; call nothing")
+    ap.add_argument("--dry-run", action="store_true", help="build the menus, bundles and prompts and report their sizes; call nothing, write nothing")
     args = ap.parse_args()
     if args.half == "evaluation" and not args.final:
         sys.exit("the evaluation half is read once, after the choice is frozen: pass --final")
     candidates = gold_candidates(args.half)
     docs = RR.load_documents(sorted({c["document"] for c in candidates}))
-    digest = "dry-run" if args.dry_run else OR.model_digest(args.ollama_url, args.model)
+    if args.dry_run:
+        print(json.dumps(dry_run_report(candidates, docs, args.tier, args.num_ctx), indent=1))
+        return
+    digest = OR.model_digest(args.ollama_url, args.model)
     out_dir = Path(args.scratch) / args.run_label
     out_dir.mkdir(parents=True, exist_ok=True)
     ledger = OR.Ledger(out_dir / "resolver.jsonl")
@@ -136,7 +160,7 @@ def main():
     calls = run_candidates(
         candidates, docs, tier=args.tier, model=args.model, digest=digest, run_label=args.run_label, ledger=ledger,
         ollama_url=args.ollama_url, num_ctx=args.num_ctx, num_predict=args.num_predict, temperature=args.temperature,
-        timeout=args.timeout, dry_run=args.dry_run,
+        timeout=args.timeout,
     )
     summary = summarize(ledger)
     summary.update(run_label=args.run_label, tier=args.tier, model=args.model, digest=digest, prompt_hash=S.prompt_hash(),

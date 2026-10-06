@@ -138,6 +138,19 @@ def test_summary_reports_menu_size_and_the_fixed_prompt(RS, tmp_path, monkeypatc
     assert s["mean_menu_size"] > 1 and s["fixed_prompt_estimated_tokens"] == RS.S.fixed_tokens()
 
 
+def test_the_dry_run_reports_sizes_without_calling_or_writing_anything(RS, monkeypatch):
+    gen = _fake(_pick(None))
+    monkeypatch.setattr(RS.OR, "generate", gen)
+    report = RS.dry_run_report(CANDS, DOCS, "R2")
+    assert report["dry_run"] and report["candidates"] == 2 and report["untreatable"] == 0 and report["empty_menus"] == 0
+    assert report["mean_menu_size"] > 1 and report["max_estimated_prompt_tokens"] >= report["mean_estimated_prompt_tokens"] > 0
+    assert report["fixed_prompt_estimated_tokens"] == RS.S.fixed_tokens() and report["prompt_hash"] == RS.S.prompt_hash()
+    assert gen.calls == []
+    monkeypatch.setattr(RS.B, "prompt_cap", lambda num_ctx=8192: 10)
+    assert RS.dry_run_report(CANDS, DOCS, "R2")["untreatable"] == 2  # an oversized prompt is counted, not hidden
+    assert RS.dry_run_report([], DOCS, "R1")["candidates"] == 0
+
+
 def test_gold_candidates_are_the_frozen_halves(RS):
     sel, ev = RS.gold_candidates("selection"), RS.gold_candidates("evaluation")
     assert (len(sel), len(ev)) == (104, 116)
