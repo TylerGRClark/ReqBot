@@ -1,0 +1,41 @@
+{
+ "commits": {
+  "code_and_inputs": "d97de23478d7b8e0c4edefb0ec7e84424808fa82",
+  "stage_b_artifacts": "7f21da2600566ebe4992afdc643bd57f818a94a2"
+ },
+ "files": {
+  "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "core/config.py": "f9128a21545e158b855c2cb150451385e3847533480d8279cef874030b478854",
+  "core/profiles.py": "0d5607ad23ed85574cc2c3ae99f269dbfc90646b41524c8084f726ac5fafa9e1",
+  "eval/spike_results/wp_44/manifest.json": "7893c6cda39d4c49cf10dba16abecb655e8c2bc9590228d9cb3636a2d3238dd6",
+  "eval/spike_results/wp_45_1e/segment.py": "54d8f67fd66a2bd23df7c5774d24691f3bdda61871a206137bcda0713fb25f72",
+  "eval/spike_results/wp_45_7/bundle.py": "33906ea13b2e3ac0d2e74c17eda9725abe2603e6f7975f0cdfd0a2f979816b3f",
+  "eval/spike_results/wp_45_7/check_resolution.py": "55eba79800332624bc02c3a0e06d899f44dddc133af649309e9e4950191bfdd9",
+  "eval/spike_results/wp_45_7/chunk_sets.py": "5eea6b0674d6bb27fff6cd8d1fe4bee761be8bd20a1585682b7c0aba0cb848e0",
+  "eval/spike_results/wp_45_7/draw_heldout.py": "d41e5a4760d9b68956c2e1bd4c291bca940ced0977b0989623e2b79380635f25",
+  "eval/spike_results/wp_45_7/kind_selection.py": "42ec24b475f7d02e3804af6f470858afefce2b9eb168dc20df5ef8dd4bc2b945",
+  "eval/spike_results/wp_45_7/menu.py": "e6ff087bb3f0fab575cf0c2beaddcab5f36346df79b407537470e20a251e5230",
+  "eval/spike_results/wp_45_7/ollama_run.py": "aae2c52264a04a8e6cc371f9933c3fca156a9fd53244a6174073b5e66548a962",
+  "eval/spike_results/wp_45_7/outputs/heldout_frozen.json": "1018c13e7a9084defa97c50b6cf5ce9b825e901fb8d19d8392481cd4720bcbfc",
+  "eval/spike_results/wp_45_7/outputs/resolver_gold.json": "57e0901b4431496d15e117af0247d98397aa80dc363c947876c35e53b31aec60",
+  "eval/spike_results/wp_45_7/outputs/resolver_selection_v5_choice.json": "ba68abe74dfc6c43bcc9a35f1ebbd9c2c43097695a912ad2d790a398a6e0d91f",
+  "eval/spike_results/wp_45_7/outputs/selection_v5_runs/v5_sel_r1_14b/resolver.jsonl": "88d0d93b897f84acc31a27da8872c125104bf7803612cf8ce0b5e54c971cdffb",
+  "eval/spike_results/wp_45_7/outputs/selection_v5_runs/v5_sel_r1_14b/run_summary.json": "551679e1e8aa54980bc0ee7c61adf1c3862d354a104d88d61c5c94dd5e8dc8f2",
+  "eval/spike_results/wp_45_7/outputs/selection_v5_runs/v5_sel_r1_8b/resolver.jsonl": "573db905a20a2c9827d85105bfa0e693b2ffd0c77ab17639cee0ec2711053f8a",
+  "eval/spike_results/wp_45_7/outputs/selection_v5_runs/v5_sel_r1_8b/run_summary.json": "3181318a4baf8410adba10172655d2b13c919164457cadaf2dd0cb95338884a3",
+  "eval/spike_results/wp_45_7/outputs/selection_v5_runs/v5_sel_r2_14b/resolver.jsonl": "f9c5e8bf8d1891320f709c6a757078e115a491230e3648371e91cd26147c7a19",
+  "eval/spike_results/wp_45_7/outputs/selection_v5_runs/v5_sel_r2_14b/run_summary.json": "85018133446ea0a9164693258f0cc3c92c2e850eb9cdd09c439407ce5ba63b96",
+  "eval/spike_results/wp_45_7/outputs/selection_v5_runs/v5_sel_r2_8b/resolver.jsonl": "68ea2725e728442cfd9fc9046b0e5bdd2fecdb239c33ee5ea4a19ab71d4a6dda",
+  "eval/spike_results/wp_45_7/outputs/selection_v5_runs/v5_sel_r2_8b/run_summary.json": "040680266db288cca5c49c05a54cda368e156cbff72bd687d9fbf02aa2c6fc11",
+  "eval/spike_results/wp_45_7/resolver.py": "ed75d3bf7901823b4e30f54f9b3e831f370f8d6a4669b3d58980f99a422328d9",
+  "eval/spike_results/wp_45_7/run_resolver.py": "0c2509a352e9b55e7d01b78312da7d3cb464d5e24f849b23c814f06d411453f2",
+  "eval/spike_results/wp_45_7/run_selection.py": "f505180c75b6e0142c9ac76cf5b1300a57f3923cc031d2f9019bfc2be3b395c1",
+  "eval/spike_results/wp_45_7/selection.py": "dec03f35ba51f21152b46b5f9b8b50ad6c983982204bfeb960df590e5cbd5258",
+  "eval/spike_results/wp_45_audit/_inputs.py": "88ff62971f3abef4f50490377cdfa4fcca54c57986b0b4261216c161f2fd251e",
+  "pipeline/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "pipeline/chunk_text.py": "2874c8a0e463874ae72cca240da95b0c11a735fd823d2d9da4f0fd38247c88df",
+  "pipeline/enrich_requirements.py": "74a942aacf84cc49b9412ffaccc8a6f0253122ff3e4f0f6dfd7f8ac5a672382a",
+  "pipeline/parse_and_normalize.py": "80c09fe43b8027a266db2a19489aa138f9cc21ad1b8466f5e7922ab52d5990a4"
+ },
+ "note": "sha256 (paths relative to the repository root) of everything that defines the WP-45.7d frozen configuration: the import closure of the runner, the gold and the files that pin the input documents (at commits.code_and_inputs, the commit the Stage B runs used), and the Stage B artifacts that name the choice (the choice report and the four runs' summaries and ledgers, at commits.stage_b_artifacts). The one-shot verdict and the Stage C runner refuse to proceed if any differs. This manifest's own hash is pinned by a test."
+}

@@ -365,3 +365,177 @@ def test_v4_and_v5_refuse_ledgers_written_by_another_design(mods, tmp_path):
     rec = {"entry_id": "k1", "candidate_id": "audit:Z", "status": "complete", "prompt_hash": kind_hash, "answer": None, "issues": []}
     (d / "resolver.jsonl").write_text(json.dumps(rec) + "\n", encoding="utf-8")
     assert S.score_run(d, {"gold": []})["prompt_hashes"] == [kind_hash]
+
+
+def _frozen_outputs(tmp_path, S, registry="v5", name="r2_14b", passes=True, digest="digest-frozen"):
+    """A synthetic outputs directory holding a Stage B choice report and the run summary of the chosen run."""
+    out = tmp_path / "outputs"
+    run = out / f"selection_{registry}_runs" / f"{registry}_sel_{name}"
+    run.mkdir(parents=True, exist_ok=True)
+    (out / S.CHOICE_REPORTS[registry]).write_text(json.dumps({"chosen": {"name": name, "passes_every_gate": passes, "attachment_right_rate": 0.64}}))
+    tier, size = S.parse_config(name)
+    (run / "run_summary.json").write_text(json.dumps({"tier": tier, "model": S.MODELS[size], "digest": digest}))
+    (run / "resolver.jsonl").write_text(json.dumps({"candidate_id": "x", "temperature": 0.1, "num_ctx": 8192, "num_predict": 200}) + "\n")
+    root = tmp_path / "code"  # the code files the frozen runs used, and the manifest of their hashes
+    root.mkdir(exist_ok=True)
+    manifest = {}
+    for rel, text in (("menu.py", "menu v1"), ("check_resolution.py", "checker v1"), ("outputs/resolver_gold.json", "{}")):
+        (root / rel).parent.mkdir(parents=True, exist_ok=True)
+        (root / rel).write_text(text)
+        manifest[rel] = S.hashlib.sha256(text.encode()).hexdigest()
+    (out / S.FROZEN_CODE.get(registry, f"frozen_{registry}.json")).write_text(json.dumps({"files": manifest}))
+    return out
+
+
+def _eval_half(right, misleading, incomplete, real_rej=0, mod=0, invented=0):
+    base = {"right": 20, "misleading": 20, "incomplete": 20}  # production on 60 records of the evaluation half
+    return {"all": {"candidates": 100, "valid": 100, "real": {"requirement": 80 - real_rej, "not_a_requirement": real_rej},
+                    "non_requirement": {"not_a_requirement": 18, "scope_or_context": 2}, "attachment": {}, "status": {"complete": 100},
+                    "invented_answers": invented, "modality_error_answers": mod},
+            "audit": {"attachment": {"right": right, "misleading": misleading, "incomplete": incomplete}, "baseline_attachment": base}}
+
+
+def _eval_result(S, half, hashes=None, tier="R2", model=None, digest="digest-frozen", temperature="0.1", num_ctx="8192", num_predict="200"):
+    return {"prompt_hashes": [S.K.prompt_hash()] if hashes is None else hashes, "evaluation": half,
+            "run_meta": {"tiers": [tier], "models": [model or S.MODELS[14]], "digests": [digest], "temperatures": [temperature],
+                         "num_ctxs": [num_ctx], "num_predicts": [num_predict]},
+            "selection": _eval_half(0, 60, 0, mod=9)}  # a failing selection half that must not matter
+
+
+def test_the_verdict_scores_the_evaluation_half_once_with_the_registered_gates(mods, tmp_path):
+    """WP-45.7d Stage C: one frozen run, the evaluation half only, exact fractions against that half's own production baseline."""
+    S = mods["score"]
+    out = _frozen_outputs(tmp_path, S)
+
+    def verdict(*a, **k):
+        return S.verdict_report(_eval_result(S, _eval_half(*a, **k)), "v5", "r2_14b", out, tmp_path / "code")
+
+    ok = verdict(32, 20, 8)  # 32 of 60 = 20/60 + 1/5 exactly; misleading 20 of 60, within +5 points
+    assert ok["all_gates_pass"] and ok["half"] == "evaluation" and ok["candidates"] == 100 and ok["prompt_hash"] == S.K.prompt_hash()
+    assert ok["configuration"] == {"name": "r2_14b", "tier": "R2", "model": S.MODELS[14], "digest": "digest-frozen",
+                                   "temperatures": ["0.1"], "num_ctxs": ["8192"], "num_predicts": ["200"]}
+    assert ok["gates"]["attachment_gain_over_production"]["passed"] and ok["gates"]["misleading"]["passed"]
+    assert not verdict(31, 20, 9)["gates"]["attachment_gain_over_production"]["passed"]
+    assert verdict(32, 23, 5)["gates"]["misleading"]["passed"]  # 23 of 60 = 38.3% <= 33.3% + 5 points
+    assert not verdict(32, 24, 4)["gates"]["misleading"]["passed"]  # 24 of 60 = 40%
+    assert not verdict(32, 20, 8, real_rej=5)["gates"]["real_rejected"]["passed"]  # 5 of 80 = 6.25% > 5%
+    assert verdict(32, 20, 8, real_rej=4)["gates"]["real_rejected"]["passed"]  # 4 of 80 = 5% exactly
+    assert not verdict(32, 20, 8, mod=1)["all_gates_pass"]
+    assert not verdict(32, 20, 8, invented=3)["all_gates_pass"]  # 3 of 100 > 2%
+    with pytest.raises(SystemExit) as e:  # a ledger that never ran the evaluation half has nothing to score
+        S.verdict_report({**_eval_result(S, None), "evaluation": None}, "v5", "r2_14b", out, tmp_path / "code")
+    assert "no evaluation-half results" in str(e.value)
+
+
+def test_the_verdict_refuses_anything_but_the_frozen_configuration(mods, tmp_path):
+    """Review findings on #235: the wrong run (same prompt, other tier, model, model file or runner parameters), changed frozen code, and a
+    stopped protocol (v4: no configuration passed) must not get or consume the one-shot verdict."""
+    S = mods["score"]
+    out = _frozen_outputs(tmp_path, S)
+    root = tmp_path / "code"
+    half = _eval_half(32, 20, 8)
+    S.verdict_report(_eval_result(S, half), "v5", "r2_14b", out, root)  # the accepted case
+    S.verdict_report(_eval_result(S, half), "v5", "R2_14B", out, root)  # the name is not case-sensitive
+    bad = {
+        "another configuration's name": dict(name="r1_8b"),
+        "another tier": dict(result=_eval_result(S, half, tier="R1")),
+        "another model": dict(result=_eval_result(S, half, model=S.MODELS[8])),
+        "another model file": dict(result=_eval_result(S, half, digest="digest-other")),
+        "another temperature": dict(result=_eval_result(S, half, temperature="0.7")),
+        "another context size": dict(result=_eval_result(S, half, num_ctx="4096")),
+        "another answer limit": dict(result=_eval_result(S, half, num_predict="900")),
+        "the status design's prompt": dict(result=_eval_result(S, half, hashes=[S.SEL.prompt_hash()])),
+        "mixed prompts": dict(result=_eval_result(S, half, hashes=[S.K.prompt_hash(), S.SEL.prompt_hash()])),
+    }
+    for label, k in bad.items():
+        with pytest.raises(SystemExit):
+            S.verdict_report(k.get("result") or _eval_result(S, half), "v5", k.get("name", "r2_14b"), out, root)
+    mixed = _eval_result(S, half)
+    mixed["run_meta"]["models"] = [S.MODELS[14], S.MODELS[8]]  # two models in one ledger
+    with pytest.raises(SystemExit):
+        S.verdict_report(mixed, "v5", "r2_14b", out, root)
+    # frozen code: a changed or missing file is refused, with its name; restoring it makes the verdict possible again
+    (root / "menu.py").write_text("menu v2")
+    with pytest.raises(SystemExit) as e:
+        S.verdict_report(_eval_result(S, half), "v5", "r2_14b", out, root)
+    assert "menu.py" in str(e.value) and "check_resolution.py" not in str(e.value)
+    (root / "menu.py").write_text("menu v1")
+    (root / "check_resolution.py").unlink()
+    with pytest.raises(SystemExit) as e:
+        S.verdict_report(_eval_result(S, half), "v5", "r2_14b", out, root)
+    assert "check_resolution.py" in str(e.value)
+    (root / "check_resolution.py").write_text("checker v1")
+    S.verdict_report(_eval_result(S, half), "v5", "r2_14b", out, root)
+    # a stopped protocol, a missing report, and the registries that have no verdict at all
+    stopped = _frozen_outputs(tmp_path / "stopped", S, registry="v4", passes=False)
+    with pytest.raises(SystemExit) as e:
+        S.verdict_report(_eval_result(S, half, hashes=[S.SEL.prompt_hash()]), "v4", "r2_14b", stopped, root)
+    assert "stopped at Stage B" in str(e.value)
+    with pytest.raises(SystemExit) as e:
+        S.verdict_report(_eval_result(S, half), "v5", "r2_14b", tmp_path / "nowhere", root)
+    assert "no committed choice report" in str(e.value)
+    for registry in ("v2", "v3"):
+        with pytest.raises(SystemExit) as e:
+            S.verdict_report(_eval_result(S, half), registry, "r2_14b", out, root)
+        assert "only for the registries tied to a prompt" in str(e.value)
+
+
+def test_the_committed_stage_b_files_agree_with_the_verdict_guard(mods):
+    """The real repository: v5 froze r2_14b with the kind prompt on the 14B model, and v4 stopped (its evaluation half stays reserved)."""
+    S = mods["score"]
+    frozen = S.frozen_choice("v5")
+    assert frozen["name"] == "r2_14b" and frozen["tier"] == "R2" and frozen["model"] == S.MODELS[14] and frozen["digest"]
+    assert frozen["temperatures"] == ["0.1"] and frozen["num_ctxs"] == ["8192"] and frozen["num_predicts"] == ["200"]
+    summary = json.loads((S.OUTPUTS / "selection_v5_runs" / "v5_sel_r2_14b" / "run_summary.json").read_text())
+    assert summary["prompt_hash"] == S.K.prompt_hash() and summary["half"] == "selection" and summary["design"] == "kind"
+    with pytest.raises(SystemExit) as e:
+        S.frozen_choice("v4")
+    assert "stopped at Stage B" in str(e.value)
+
+
+def test_the_committed_frozen_code_manifest_matches_the_files_in_the_repository(mods):
+    """Editing any frozen file (menu generator, checker, assembler, runner, gold) fails this test and blocks the verdict until someone
+    re-freezes on purpose. The manifest was made from the commit the Stage B runs used."""
+    S = mods["score"]
+    manifest = json.loads((S.OUTPUTS / S.FROZEN_CODE["v5"]).read_text())
+    w = "eval/spike_results/wp_45_7/"
+    assert set(manifest["files"]) >= {w + f for f in ("menu.py", "check_resolution.py", "kind_selection.py", "selection.py", "bundle.py", "run_selection.py",
+                                                       "outputs/resolver_gold.json", "outputs/heldout_frozen.json")}
+    # the transitive imports and the input pins, not only the files named in the experiment (review finding)
+    assert {"pipeline/enrich_requirements.py", "eval/spike_results/wp_45_audit/_inputs.py", "eval/spike_results/wp_44/manifest.json",
+            w + "chunk_sets.py", w + "draw_heldout.py"} <= set(manifest["files"])
+    # the artifacts that name the choice are pinned too, or editing the choice report would change what the verdict scores
+    base = "eval/spike_results/wp_45_7/outputs/"
+    assert base + "resolver_selection_v5_choice.json" in manifest["files"]
+    for run in ("r1_8b", "r1_14b", "r2_8b", "r2_14b"):
+        for f in ("run_summary.json", "resolver.jsonl"):
+            assert f"{base}selection_v5_runs/v5_sel_{run}/{f}" in manifest["files"], (run, f)
+    S.check_frozen_code("v5")  # raises SystemExit naming any file that differs
+    # and the manifest itself: a tampered manifest could pin anything, so its own hash is fixed here (regenerate it only on purpose)
+    own = S.hashlib.sha256((S.OUTPUTS / S.FROZEN_CODE["v5"]).read_bytes()).hexdigest()
+    assert own == "b121e9988eab84d6f73cda8882050b13fdf3aad113fb0d49e26e2cf8a297cf3f", own
+
+
+def test_the_verdict_command_line_paths(mods, tmp_path, monkeypatch):
+    S = mods["score"]
+    d = tmp_path / "run"
+    d.mkdir()
+    rec = {"entry_id": "k1", "candidate_id": "audit:Z", "status": "complete", "prompt_hash": S.K.prompt_hash(), "tier": "R2",
+           "model": S.MODELS[14], "digest": "digest-x", "answer": None, "issues": []}
+    (d / "resolver.jsonl").write_text(json.dumps(rec) + "\n", encoding="utf-8")
+    assert S.score_run(d, {"gold": []})["prompt_hashes"] == [S.K.prompt_hash()]
+    meta = S.score_run(d, {"gold": []})["run_meta"]
+    assert meta["tiers"] == ["R2"] and meta["models"] == [S.MODELS[14]] and meta["digests"] == ["digest-x"]
+    assert meta["temperatures"] == ["None"] and meta["num_ctxs"] == ["None"] and meta["num_predicts"] == ["None"]  # absent fields are visible, not dropped
+    monkeypatch.setattr(S, "OUTPUTS", _frozen_outputs(tmp_path, S))
+    monkeypatch.setattr(sys, "argv", ["score_resolver.py", "--verdict", f"r2_14b={d}", "--registry", "v5"])
+    with pytest.raises(SystemExit):  # the digest differs from the frozen run's, and the ledger holds no evaluation-half records
+        S.main()
+    monkeypatch.setattr(sys, "argv", ["score_resolver.py", "--verdict", "no-equals", "--registry", "v5"])
+    with pytest.raises(SystemExit) as e:
+        S.main()
+    assert "NAME=DIR" in str(e.value)
+    monkeypatch.setattr(sys, "argv", ["score_resolver.py", "--registry", "v5"])
+    with pytest.raises(SystemExit) as e:
+        S.main()
+    assert "--runs" in str(e.value)

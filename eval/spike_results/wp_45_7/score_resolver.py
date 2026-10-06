@@ -23,6 +23,7 @@ highest right rate is chosen and reported as failing G2. The evaluation halves a
 
 import argparse
 import collections
+import hashlib
 import json
 import re
 import sys
@@ -43,6 +44,8 @@ import resolver as R  # noqa: E402
 import selection as SEL  # noqa: E402
 
 GOLD = _HERE / "outputs" / "resolver_gold.json"
+OUTPUTS = _HERE / "outputs"
+REPO = _HERE.parents[2]  # the manifest of frozen files holds paths relative to this
 OVERLAP = 0.8  # of the answer value's distinctive words that must be in the gold lead-in
 GATES = {
     "max_real_rejected": 0.05,        # at most 5% of real requirements returned not_a_requirement
@@ -203,6 +206,12 @@ def load_ledger(directory):
 def score_run(directory, gold):
     records = load_ledger(directory)
     result = {"prompt_hashes": sorted({str(r.get("prompt_hash")) for r in records.values()})}  # which prompt produced these records
+    result["run_meta"] = {"tiers": sorted({str(r.get("tier")) for r in records.values()}),  # and which tier, model and model file
+                          "models": sorted({str(r.get("model")) for r in records.values()}),
+                          "digests": sorted({str(r.get("digest")) for r in records.values()}),
+                          "temperatures": sorted({str(r.get("temperature")) for r in records.values()}),  # and with which parameters
+                          "num_ctxs": sorted({str(r.get("num_ctx")) for r in records.values()}),
+                          "num_predicts": sorted({str(r.get("num_predict")) for r in records.values()})}
     for which in ("selection", "evaluation"):
         golds = [g for g in gold["gold"] if g["half"] == which]
         if not any(g["candidate_id"] in records for g in golds):
@@ -331,15 +340,107 @@ def choose_report(results, registry="v2"):
     return report
 
 
+CHOICE_REPORTS = {"v4": "resolver_selection_v4_choice.json", "v5": "resolver_selection_v5_choice.json"}
+FROZEN_CODE = {"v5": "frozen_wp457d_code.json"}  # sha256 of the code and gold files the Stage B runs used (committed beside the choice)
+MODELS = {8: "llama3.1:8b-instruct-q4_K_M", 14: "qwen2.5:14b"}
+
+
+def frozen_choice(registry, outputs=None):
+    """The configuration Stage B froze for a registry, from its committed choice report, and the run it was chosen from: {name, tier, model,
+    digest}. Only a registry whose Stage B passed every gate has one: a stopped protocol keeps its evaluation half reserved."""
+    outputs = Path(outputs) if outputs else OUTPUTS
+    path = outputs / CHOICE_REPORTS[registry]
+    if not path.exists():
+        raise SystemExit(f"no committed choice report for {registry} ({path.name}): there is no frozen configuration to score")
+    chosen = json.loads(path.read_text(encoding="utf-8")).get("chosen")
+    if not chosen or not chosen.get("passes_every_gate"):
+        raise SystemExit(f"the {registry} protocol stopped at Stage B (no configuration passed every gate), so its evaluation half is reserved and has no verdict")
+    name = chosen["name"]
+    summary = json.loads((outputs / f"selection_{registry}_runs" / f"{registry}_sel_{name}" / "run_summary.json").read_text(encoding="utf-8"))
+    params = {"temperatures": set(), "num_ctxs": set(), "num_predicts": set()}
+    for line in (outputs / f"selection_{registry}_runs" / f"{registry}_sel_{name}" / "resolver.jsonl").read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            rec = json.loads(line)
+            for key, field in (("temperatures", "temperature"), ("num_ctxs", "num_ctx"), ("num_predicts", "num_predict")):
+                params[key].add(str(rec.get(field)))
+    return {"name": name, "tier": summary["tier"], "model": summary["model"], "digest": summary["digest"],
+            **{k: sorted(v) for k, v in params.items()}}
+
+
+def check_frozen_code(registry, outputs=None, root=None):
+    """Refuse to proceed unless every file in the committed manifest is byte-identical to what the Stage B runs used: the import closure of the
+    runner (the menu generator, the checker, the assembler, the bundle builder and the pipeline modules it imports), the gold, and the files that pin
+    the input documents, by sha256 with paths relative to the repository root. Any change needs an explicit re-freeze."""
+    outputs, root = Path(outputs) if outputs else OUTPUTS, Path(root) if root else REPO
+    path = outputs / FROZEN_CODE[registry]
+    if not path.exists():
+        raise SystemExit(f"no frozen-code manifest for {registry} ({path.name})")
+    differ = []
+    for rel, want in json.loads(path.read_text(encoding="utf-8"))["files"].items():
+        file = root / rel
+        have = hashlib.sha256(file.read_bytes()).hexdigest() if file.exists() else None
+        if have != want:
+            differ.append(rel)
+    if differ:
+        raise SystemExit(f"the {registry} verdict needs the code and gold the frozen Stage B runs used; these differ from the manifest: {differ}")
+
+
+def verdict_report(result, registry, name, outputs=None, root=None):
+    """The one-shot verdict of the frozen configuration on the EVALUATION half (WP-45.7c/d Stage C): the registry's gates applied to
+    `result["evaluation"]` (from `score_run`), with the same exact-fraction arithmetic as the choice, plus the checks that make it a verdict
+    and not a second choice: the registry must have a frozen, passing Stage B choice; `name` must be that configuration; the ledger must have been
+    written by the registry's prompt, with that tier, that model and that model file (digest); and the half must exist. The selection half is not read."""
+    if registry not in EXPECTED_PROMPT:
+        raise SystemExit(f"a verdict exists only for the registries tied to a prompt: {sorted(EXPECTED_PROMPT)}")
+    frozen = frozen_choice(registry, outputs)
+    if name.lower() != frozen["name"]:
+        raise SystemExit(f"the {registry} frozen choice is {frozen['name']}, not {name}")
+    want = EXPECTED_PROMPT[registry]()
+    if result.get("prompt_hashes") != [want]:
+        raise SystemExit(f"the {registry} verdict scores ledgers written by prompt {want} only; got {result.get('prompt_hashes')}")
+    meta = result.get("run_meta") or {}
+    expected = {"tiers": [frozen["tier"]], "models": [frozen["model"]], "digests": [frozen["digest"]],
+                "temperatures": frozen["temperatures"], "num_ctxs": frozen["num_ctxs"], "num_predicts": frozen["num_predicts"]}
+    if meta != expected:
+        raise SystemExit(f"the ledger is not the frozen {frozen['name']} configuration: it was written with {meta}, the frozen run used {expected}")
+    check_frozen_code(registry, outputs, root)
+    half = result.get("evaluation")
+    if not half or "audit" not in half or "all" not in half:
+        raise SystemExit("the ledger has no evaluation-half results to score (was it run with --half evaluation --final?)")
+    gates, _ = selection_gates(half, None, V4_RELATIVE)
+    att, base = half["audit"]["attachment"], half["audit"]["baseline_attachment"]
+    return {
+        "half": "evaluation", "registry": registry, "configuration": frozen, "frozen_code": FROZEN_CODE[registry], "prompt_hash": want, "candidates": half["all"]["candidates"],
+        "gates": {k: {"value": v[0], "threshold": v[1], "passed": bool(v[2])} for k, v in gates.items()},
+        "all_gates_pass": all(v[2] for v in gates.values()),
+        "attachment": att, "attachment_right_rate": rate(att, "right", sum(att.values())), "baseline_attachment": base,
+        "status": half["all"]["status"], "real": half["all"]["real"], "non_requirement": half["all"]["non_requirement"],
+    }
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--runs", nargs="+", required=True, metavar="NAME=DIR")
+    ap.add_argument("--runs", nargs="+", metavar="NAME=DIR")
+    ap.add_argument("--verdict", metavar="NAME=DIR",
+                    help="score one frozen run on the evaluation half with the registry's gates (needs --registry v4 or v5); the selection half is not read")
     ap.add_argument("--out")
     ap.add_argument("--choose", action="store_true", help="apply the pre-registered choice rule (run names like r1_8b) and print the report")
     ap.add_argument("--registry", choices=sorted(REGISTRIES), default="v2",
                     help="which registered rule --choose applies to: v2 (six configurations, WP-45.7), v3 (four, WP-45.7b) v4 (the same four with the WP-45.7c bar) or v5 (the v4 bar for the WP-45.7d design)")
     args = ap.parse_args()
     gold = json.loads(GOLD.read_text(encoding="utf-8"))
+    if args.verdict:
+        name, sep, directory = args.verdict.partition("=")
+        if not sep or not name or not directory:
+            sys.exit(f"--verdict takes NAME=DIR, got {args.verdict!r}")
+        text = json.dumps(verdict_report(score_run(directory, gold), args.registry, name), indent=1, sort_keys=True)
+        if args.out:
+            Path(args.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(args.out).write_text(text + "\n", encoding="utf-8")
+        print(text)
+        return
+    if not args.runs:
+        sys.exit("give --runs NAME=DIR ... (or --verdict NAME=DIR)")
     results = {}
     for spec in args.runs:
         name, sep, directory = spec.partition("=")
