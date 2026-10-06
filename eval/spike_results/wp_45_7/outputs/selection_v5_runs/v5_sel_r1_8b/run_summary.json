@@ -1,0 +1,49 @@
+{
+ "candidates": 104,
+ "status": {
+  "complete": 104
+ },
+ "valid_answers": 104,
+ "parsed": 104,
+ "shape_conformant": 104,
+ "error_codes": {
+  "modal_in_evidence": 1
+ },
+ "answers_with_no_error": 103,
+ "mean_prompt_tokens": 2051.6,
+ "mean_answer_tokens": 21.1,
+ "mean_wall_seconds": 0.6,
+ "estimate_over_real": 1.58,
+ "fixed_prompt_estimated_tokens": 2574,
+ "mean_menu_size": 4.85,
+ "answers_with_a_selection": 104,
+ "modal_sources": {
+  "menu lead-in": 2,
+  "none": 50,
+  "parent": 13,
+  "preceding clause": 3,
+  "quote": 36
+ },
+ "multi_modal_candidates": [
+  "audit:R017",
+  "card:R049",
+  "card:R065",
+  "card:R081"
+ ],
+ "inferred_source_candidates": [
+  "audit:R052",
+  "audit:R058",
+  "card:R013",
+  "card:R045",
+  "card:R078"
+ ],
+ "run_label": "v5_sel_r1_8b",
+ "tier": "R1",
+ "model": "llama3.1:8b-instruct-q4_K_M",
+ "digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+ "prompt_hash": "6200fa25a374eb35",
+ "half": "selection",
+ "design": "kind",
+ "calls_made": 104,
+ "wall_seconds": 63.0
+}
