@@ -672,3 +672,24 @@ Plan: `docs/PHASE45_WP457D_PLAN.md`. Offline only: **no model has been run in th
 Next (plan Stage B): the four selection-half runs, the v5 rule, one registered prompt revision if none passes, and the stop-or-continue decision; Stage C (the evaluation half, once) only for a passing choice.
 
 The v4 and v5 rules are the same arithmetic over different designs, so `score_resolver.py` records which prompt hash wrote each ledger (`prompt_hashes` in `score_run`'s result) and `--choose --registry v4` and `--registry v5` **refuse any ledger not written by that design's prompt** (v4: the status design's `435a1561313c6d64`; v5: the kind design's `6200fa25a374eb35`), so `--registry v5` can never quietly score the old status-design runs as a WP-45.7d result (found in review; tests). The v2 and v3 rules are not tied to a prompt: their first runs predate the check.
+
+## Step 20: WP-45.7d Stage B, the four selection-half runs under the v5 rule, and the frozen choice (`outputs/selection_v5_runs/`, `outputs/resolver_selection_v5_choice.json`)
+
+The four configurations ran on the 104 selection candidates with the kind design merged in #233 (`kind_selection.py` prompt hash `6200fa25a374eb35`, menu generator `e6ff087bb3f0fab5`, checker file hash `55eba79800332624`), from a pinned worktree at the merge commit. Every call completed, 104 of 104 shape-conformant, about one second per call. The rule (`--choose --registry v5`, which verified that every ledger was written by the kind prompt) was applied over these four runs.
+
+| Config | Attachment right (misleading / incomplete); gate at least 30 of 55 | Misleading; gate at most 21 of 55 | Non-requirements rejected (60%, 16 of them) | Real wrongly rejected (5%, 88 of them) | Gated modality errors | Invented | Result |
+|---|---|---|---|---|---|---|---|
+| Production stem | 34.5% (19 / 17) | 34.5% | n/a | n/a | n/a | n/a | n/a |
+| Selection R1 8B | 60.0% (20 / 2) | 36.4% | **56.2%** (9) | 2.3% | 0 | 0 | fails non-requirement rejection |
+| Selection R1 14B | 54.5% (21 / 4) | 38.2% | 87.5% | **6.8%** (6) | 0 | 0 | fails real rejected |
+| Selection R2 8B | 50.9% (27 / 0) | 49.1% | 50.0% (8) | 1.1% | 0 | 0 | fails attachment, misleading, non-requirement rejection |
+| **Selection R2 14B** | **63.6%** (19 / 1) | 34.5% | 81.2% (13) | 3.4% (3) | **0** | **0** | **passes every gate** |
+
+**Outcome: one configuration, R2 on the 14B, passes every gate on the selection half, and it is the choice, frozen here** (R2 evidence tier, `qwen2.5:14b`, kind prompt `6200fa25a374eb35`, menu `e6ff087bb3f0fab5`, the v5 gates as registered). The modality gate is zero in all four runs and the invented gate is zero, as they are structural now; the non-gated `modal_in_evidence` appears in one answer on R1 8B and two on R2 8B, none on the 14B.
+**By the plan, Stage C scores this configuration once on the evaluation half (116 candidates, never read); that result is the WP-45.7d verdict.**
+
+How to read this pass, plainly:
+- **It is a selection-half pass, necessary and not sufficient.** The margins are thin: attachment 35 against 30 needed, misleading 19 against at most 21, real wrongly rejected 3 against at most 4 of 88, non-requirements rejected 13 of 16 against at least 10. Only one of four configurations passes, and the others fail on different single gates; the 8B runs reject far fewer non-requirements (9 and 8 of 16) with this prompt than the status design did (13 of 16), so the kind question is not equally easy for every model. With 55 attachment-scored records, a pass this narrow could move with a different draw, which is exactly why the unread half decides.
+- **What changed against the status design (step 18):** the gated modality errors went from 4 to 6 per run to 0 by construction, and R2 on the 14B went from 61.8% to 63.6% attachment with the same real-rejected rate (3.4%).
+- **Spot check the plan promised, for the chosen run:** strength read from the quote in 36 records, from the chosen parent in 23, from an inferred source in 2, from no modal at all (default `obligation`, class `none`) in 43. The two inferred records are audit R052 and card R078 ("ensure that policies are updated accordingly as needed."), where the model picked the subject and no parent, and the code read `should` from the preceding clause "Organizations should also be aware ...": the strength is `recommendation`, which matches the sentence. The four multi-modal quotes (audit R017, card R049, R065, R081) repeat the same class in the first three (should/should, shall/shall, may/may) and mix classes only in card R081 ("shall be modified ... shall not be utilized"), which takes the first modal, `obligation`, as the plan registered.
+- **Not claimed:** that the 43 modal-free records are obligations (they are kept, with class `none`, by the over-extraction-friendly default); anything about the evaluation half or the held-out set.
