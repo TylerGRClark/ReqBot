@@ -74,6 +74,22 @@ def test_a_colon_must_govern_what_follows_it(M):
     assert M.tail_lead_in("Text. The Officer will:") == "The Officer will:"
 
 
+def test_multi_level_numbers_are_list_markers_but_citations_and_times_are_not(M):
+    """WP-45.7c: "2.1.5.1." starts a list item; "see 2.1.5.1." inside a sentence and "10:30 daily" do not."""
+    body = "All Service component support organizations should: 2.1.5.1. Formulate plans. 2.1.5.2. Ensure technical control."
+    assert M.lead_in_before(body, "2.1.5.2. Ensure technical control.") == "All Service component support organizations should:"
+    assert M.lead_in_before("The Officer will: 3) Report. 4) Archive.", "4) Archive.") == "The Officer will:"
+    assert M.lead_in_before("Note: see 2.1.5.1. for details. Encrypt data.", "Encrypt data.") is None
+    assert M.lead_in_before("Meet at 10:30 daily. Encrypt data.", "Encrypt data.") is None
+    assert M.lead_in_before("The Officer will: 30 days later. Encrypt data.", "Encrypt data.") is None  # a bare number is not a marker
+
+
+def test_a_modal_free_hint_is_read_as_a_recommendation_by_the_menu_helpers(M):
+    assert M.first_modal("Consider using TLS.")[2:] == ("consider", "recommendation")
+    assert M.first_modal("Factors to consider are cost.") is None
+    assert M.subject_of("Consider using TLS.") is None  # nothing before the modal, so no subject entry
+
+
 def test_preceding_clause_is_the_clause_before_the_quote(M):
     body = "First sentence. Air Force Chief of Safety, in coordination with AF/A10, will develop standards."
     assert M.preceding_clause(body, "develop standards.") == "Air Force Chief of Safety, in coordination with AF/A10, will"

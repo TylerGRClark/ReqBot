@@ -26,6 +26,7 @@ import collections
 import json
 import re
 import sys
+from fractions import Fraction
 from pathlib import Path
 
 _HERE = Path(__file__).resolve().parent
@@ -212,9 +213,18 @@ def score_run(directory, gold):
     return result
 
 
-def selection_gates(sel, min_right=None):
+def _check_fraction(exact, threshold, upper=True):
+    """Like `_check`, with both sides exact `Fraction`s: (value rounded to three places, threshold rounded, passed)."""
+    passed = exact <= threshold if upper else exact >= threshold
+    return (round(float(exact), 3), round(float(threshold), 3), passed)
+
+
+def selection_gates(sel, min_right=None, relative=None):
     """The selection-half gates of one configuration: `gate_report` plus, when `min_right` is given (the WP-45.7b registry), a gate that the
-    audit attachment-right rate is at least that exact fraction. Returns ({name: (value, threshold, passed)}, the right rate)."""
+    audit attachment-right rate is at least that exact fraction, and, when `relative` is given (the WP-45.7c registry, `V4_RELATIVE`),
+    two gates anchored to the production stems on the same records: the right rate at least production's plus `min_gain`, and the
+    misleading rate (a failed resolution counts as misleading) at most production's plus `max_misleading_margin`. Every comparison is on
+    exact fractions. Works on either half's result dict (`sel["all"]`, `sel["audit"]`). Returns ({name: (value, threshold, passed)}, the right rate)."""
     audit = sel["audit"]
     gates = {**gate_report(sel["all"], audit["baseline_attachment"])}
     att = audit["attachment"]
@@ -222,10 +232,22 @@ def selection_gates(sel, min_right=None):
     if min_right is not None:  # the exact fraction, as in every other gate: 35 of 55 is 0.63636, which `rate` rounds to 0.636
         total = sum(att.values())
         gates["attachment_right"] = _check(att.get("right", 0) / total if total else 0.0, min_right, upper=False)
+    if relative:
+        base = audit["baseline_attachment"]
+        nb, total = sum(base.values()), sum(att.values())
+        if nb and total:
+            gates["attachment_gain_over_production"] = _check_fraction(
+                Fraction(att.get("right", 0), total), Fraction(base.get("right", 0), nb) + relative["min_gain"], upper=False)
+            gates["misleading"] = _check_fraction(
+                Fraction(att.get("misleading", 0) + att.get("failed", 0), total),
+                Fraction(base.get("misleading", 0), nb) + relative["max_misleading_margin"])
+        else:  # nothing to compare (no attachment-scored records, or no production baseline): the gates exist and FAIL, never vanish
+            gates["attachment_gain_over_production"] = (0.0, 1.0, False)
+            gates["misleading"] = (1.0, 0.0, False)
     return gates, right
 
 
-def choose(configs, min_right=None):
+def choose(configs, min_right=None, relative=None):
     """The configuration to freeze, from {name: {"tier", "model_size", "selection": score_run()["selection"]}} (selection halves only)."""
     best = None
     for name, c in configs.items():
@@ -233,7 +255,7 @@ def choose(configs, min_right=None):
         audit = sel.get("audit")
         if not audit:
             continue
-        gates, right = selection_gates(sel, min_right)
+        gates, right = selection_gates(sel, min_right, relative)
         passed = all(v[2] for v in gates.values())
         key = (passed, right or 0, -["R0", "R1", "R2"].index(c["tier"]), -c["model_size"])
         if best is None or key > best[0]:
@@ -247,8 +269,12 @@ REGISTERED_CONFIGS = frozenset(f"{t}_{m}" for t in ("r0", "r1", "r2") for m in (
 REGISTRIES = {
     "v2": REGISTERED_CONFIGS,
     "v3": frozenset(f"{t}_{m}" for t in ("r1", "r2") for m in ("8b", "14b")),
+    "v4": frozenset(f"{t}_{m}" for t in ("r1", "r2") for m in ("8b", "14b")),  # WP-45.7c: the same four, a different bar
 }
 V3_MIN_RIGHT = 35 / 55
+# WP-45.7c (docs/PHASE45_WP457C_PLAN.md section 2): the bar is derived from production, not from the generative resolver: right at least
+# 20 points above the production stems' rate on the same records, and misleading at most production's plus 5 points.
+V4_RELATIVE = {"min_gain": Fraction(1, 5), "max_misleading_margin": Fraction(1, 20)}
 
 
 def parse_config(name):
@@ -265,6 +291,7 @@ def choose_report(results, registry="v2"):
     names = {n.lower() for n in results}
     registered = REGISTRIES[registry]
     min_right = V3_MIN_RIGHT if registry == "v3" else None
+    relative = V4_RELATIVE if registry == "v4" else None
     if names != registered or len(names) != len(results):
         raise SystemExit(
             f"the pre-registered rule ({registry}) applies to exactly these {'six' if len(registered) == 6 else 'four'} runs: " + ", ".join(sorted(registered))
@@ -278,7 +305,7 @@ def choose_report(results, registry="v2"):
             raise SystemExit(f"{name} has no selection-half audit results")
         configs[name] = {"tier": tier, "model_size": size, "selection": sel}
         audit = sel["audit"]
-        gates, _ = selection_gates(sel, min_right)
+        gates, _ = selection_gates(sel, min_right, relative)
         att = audit["attachment"]
         report["configs"][name] = {
             "gates": {k: {"value": v[0], "threshold": v[1], "passed": bool(v[2])} for k, v in gates.items()},
@@ -286,7 +313,7 @@ def choose_report(results, registry="v2"):
             "attachment": att, "attachment_right_rate": rate(att, "right", sum(att.values())),
             "baseline_attachment": audit["baseline_attachment"],
         }
-    best = choose(configs, min_right)
+    best = choose(configs, min_right, relative)
     report["chosen"] = None if best is None else {"name": best[1], "passes_every_gate": bool(best[2]), "attachment_right_rate": best[3]}
     report["rule"] = "from the selection halves only: configurations passing every gate, then the highest audit attachment-right rate, ties to the lower tier then the smaller model; if none passes, the best right rate, reported as failing"
     return report
@@ -298,7 +325,7 @@ def main():
     ap.add_argument("--out")
     ap.add_argument("--choose", action="store_true", help="apply the pre-registered choice rule (run names like r1_8b) and print the report")
     ap.add_argument("--registry", choices=sorted(REGISTRIES), default="v2",
-                    help="which registered set of configurations --choose applies to: v2 (six, WP-45.7) or v3 (four, WP-45.7b)")
+                    help="which registered rule --choose applies to: v2 (six configurations, WP-45.7), v3 (four, WP-45.7b) or v4 (the same four with the WP-45.7c bar)")
     args = ap.parse_args()
     gold = json.loads(GOLD.read_text(encoding="utf-8"))
     results = {}

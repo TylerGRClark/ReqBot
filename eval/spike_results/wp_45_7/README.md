@@ -603,3 +603,23 @@ The evaluation halves were not scored, the resolver was not run on the held-out 
 1. *Adopt the selection resolver for attachment anyway, as a measured improvement rather than a passed gate.* It is better than production on attachment by about 20 points with no invented text, but it did not meet the bar that was registered; adopting it would be a decision to accept a result that is below the registered threshold, with the evaluation half still unread.
 2. *A new, separately registered step that fixes the two defects the gates exposed:* teach the checker's phrase table that a modal-free hint ("consider", "it is advisable") is a recommendation, widen the generator's list-marker rule (multi-level numbers), and re-register the attachment bar from the production baseline and the control above instead of from the generative result. That would be a new pre-registration, with the evaluation half still reserved as the verdict.
 3. *Stop the resolver line here* and spend the effort on the second labeler and the held-out discovery confirmation (the discovery gain, +30 points of 8B recall on the dev pages, is the finding that has held up).
+
+## Step 17: WP-45.7c Stage A, the two fixes and the production-anchored bar (`check_resolution.py`, `menu.py`, `score_resolver.py --registry v4`)
+
+Plan: `docs/PHASE45_WP457C_PLAN.md` (merged in #229). Offline only: no model has been run in this step. The prompt is unchanged (hash `435a1561313c6d64`), as are the schema, the assembler, the gold and its halves, and every other gate.
+
+1. **Checker phrase table** (`check_resolution.py`, file hash `55eba79800332624`): `is advisable` and `are advisable` are recommendation phrases wherever they occur, and `consider` is one **only at the start of the text** (after optional list markers), through a small `_StartOnly` wrapper that sits in the phrase list beside
+   the ordinary patterns, so both the checker and the generator's `first_modal` use it without other changes. "Consider using ..." and "(1) Consider ..." count; "factors to consider", "considering" and "reconsider" do not; "Organizations should consider X" has the one modal `should`. A correct answer on card R025 (a modal-free hint, which made the zero-modality gate unreachable in step 14) now assembles to a
+   clean `recommendation`, and the same answer with `obligation` is still a `modality_strengthened` error (tests).
+2. **Menu generator** (`menu.py`, **new frozen hash `e6ff087bb3f0fab5`**, replacing `92be12cecb3bd841`): one change, a multi-level number ending in a dot or a parenthesis ("2.1.5.1.", "3)") is a list marker; as before the marker is looked for only at the start of the text after a colon, so "see 2.1.5.1." inside a sentence and "10:30 daily" are not markers. **S1 re-measured** (selection half, 55 records), no regression:
+
+   | | Ceiling (revision 2, old hash) | **Ceiling now** (`menu_ceiling_7c_*.json`) | Mean / max menu | Misses now |
+   |---|---|---|---|---|
+   | R1 | 87.3% | **89.1%** | 4.9 / 8 | R009, R043, R089, R090, R109, R112 (R011 regained) |
+   | R2 | 92.7% | **94.5%** | 5.3 / 10 | R043, R090, R112 (R011 regained) |
+
+   The dry run on the 104 selection candidates is unchanged in kind: 0 untreatable, no empty menus, largest estimated prompt 3,734 tokens (R1) and 4,773 (R2).
+3. **The v4 rule** (`score_resolver.py --choose --registry v4`): the same four configurations and the same gates as v3 except that the absolute 35-of-55 bar is replaced by two gates anchored to the production stems on the same records of the same half, as exact fractions:
+   `attachment_gain_over_production` (right at least production's right rate plus 20 points: on the selection half 19/55 + 1/5, so 30 of 55 passes and 29 fails) and `misleading` (misleading plus failed resolutions at most production's misleading rate plus 5 points: 19/55 + 1/20, so 21 of 55 passes and 22 fails). The v2 and v3 rules score as before (tests).
+
+Next (plan Stage B): the four selection-half runs with the unchanged prompt, the v4 rule, and the stop-or-continue decision; Stage C (the evaluation half, once) only for a passing choice.

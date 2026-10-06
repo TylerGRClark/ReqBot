@@ -162,6 +162,16 @@ def test_assemble_rejects_what_the_schema_should_have_made_impossible(S):
         S.assemble({"status": "obligation", "actor": "none"}, [], _spans(quote), quote)
 
 
+def test_a_modal_free_hint_assembles_to_a_clean_recommendation(S, C):
+    """WP-45.7c: card R025's correct answer used to fail the zero-modality gate for lack of a phrase-table entry."""
+    quote = "Consider using introspection capabilities to monitor activity."
+    answer, spans = S.assemble({"status": "recommendation", "actor": "none", "parent": "none"}, [], _spans(quote), quote)
+    assert answer["modality"] == {"verbatim": "Consider", "class": "recommendation", "evidence": ["E1"]}
+    assert not [i for i in C.check(answer, spans) if i.severity == "error"]
+    wrong, spans = S.assemble({"status": "obligation", "actor": "none", "parent": "none"}, [], _spans(quote), quote)
+    assert {i.code for i in C.check(wrong, spans) if i.severity == "error"} == {"modality_strengthened"}  # an overstated hint is still an error
+
+
 def test_assemble_does_not_mutate_its_inputs(S):
     quote = "(1) Report."
     spans = _spans(quote, "The Officer will: (1) Report.")
