@@ -670,3 +670,5 @@ Plan: `docs/PHASE45_WP457D_PLAN.md`. Offline only: **no model has been run in th
   `score_resolver.py --choose --registry v5` is the v4 rule (production-anchored attachment bar, misleading margin, every other gate) for the same four configurations.
 
 Next (plan Stage B): the four selection-half runs, the v5 rule, one registered prompt revision if none passes, and the stop-or-continue decision; Stage C (the evaluation half, once) only for a passing choice.
+
+The v4 and v5 rules are the same arithmetic over different designs, so `score_resolver.py` records which prompt hash wrote each ledger (`prompt_hashes` in `score_run`'s result) and `--choose --registry v4` and `--registry v5` **refuse any ledger not written by that design's prompt** (v4: the status design's `435a1561313c6d64`; v5: the kind design's `6200fa25a374eb35`), so `--registry v5` can never quietly score the old status-design runs as a WP-45.7d result (found in review; tests). The v2 and v3 rules are not tied to a prompt: their first runs predate the check.

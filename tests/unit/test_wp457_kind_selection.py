@@ -222,6 +222,6 @@ def test_the_v5_registry_scores_with_the_v4_bar(SC):
     sel = {"all": {"candidates": 40, "valid": 40, "real": {"requirement": 20}, "non_requirement": {"not_a_requirement": 8, "unresolved": 2},
                    "attachment": {}, "invented_answers": 0, "modality_error_answers": 0},
            "audit": {"attachment": {"right": 30, "misleading": 21, "incomplete": 4}, "baseline_attachment": base}}
-    runs = {k: {"selection": sel} for k in SC.REGISTRIES["v5"]}
+    runs = {k: {"prompt_hashes": [SC.K.prompt_hash()], "selection": sel} for k in SC.REGISTRIES["v5"]}
     report = SC.choose_report(runs, "v5")
     assert report["chosen"]["passes_every_gate"] and "attachment_gain_over_production" in report["configs"]["r1_8b"]["gates"]
