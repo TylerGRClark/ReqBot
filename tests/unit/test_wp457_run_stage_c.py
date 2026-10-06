@@ -84,6 +84,29 @@ def test_preflight_refuses_each_way_the_one_shot_could_be_wasted(SC, tmp_path):
     assert "one-shot" in str(e.value)
 
 
+def test_an_unfinished_ledger_resumes_only_if_every_record_is_the_frozen_configuration(SC, tmp_path):
+    """Review finding: the resume key ignores temperature and answer limit, so a ledger left by another configuration would be silently continued."""
+    out, root = _frozen_world(tmp_path, SC)
+    ok = lambda url, model: "digest-frozen"  # noqa: E731
+    scratch = tmp_path / "s"
+    ledger = scratch / "v5_eval_r2_14b" / "resolver.jsonl"
+    ledger.parent.mkdir(parents=True)
+    good = {"candidate_id": "audit:A1", "run_label": "v5_eval_r2_14b", "kind": "selection", "tier": "R2", "model": SC.SR.MODELS[14],
+            "digest": "digest-frozen", "prompt_hash": SC.K.prompt_hash(), "temperature": 0.1, "num_ctx": 8192, "num_predict": 200}
+    ledger.write_text(json.dumps(good) + "\n\n" + json.dumps({**good, "candidate_id": "audit:A2"}) + "\n")
+    SC.preflight("v5", "http://x", digest_fn=ok, outputs=out, root=root, scratch=scratch)  # a crashed Stage C run resumes
+    for field, value in (("temperature", 0.7), ("num_predict", 900), ("num_ctx", 4096), ("tier", "R1"), ("model", SC.SR.MODELS[8]),
+                         ("digest", "other"), ("prompt_hash", SC.SR.SEL.prompt_hash()), ("run_label", "v5_sel_r2_14b"), ("kind", "resolver")):
+        ledger.write_text(json.dumps(good) + "\n" + json.dumps({**good, "candidate_id": "audit:A9", field: value}) + "\n")
+        with pytest.raises(SystemExit) as e:
+            SC.preflight("v5", "http://x", digest_fn=ok, outputs=out, root=root, scratch=scratch)
+        assert "audit:A9" in str(e.value) and field in str(e.value), field
+    ledger.write_text(json.dumps(good) + "\nnot json\n")
+    with pytest.raises(SystemExit) as e:
+        SC.preflight("v5", "http://x", digest_fn=ok, outputs=out, root=root, scratch=scratch)
+    assert "not JSON" in str(e.value)
+
+
 def test_the_frozen_run_uses_the_frozen_parameters_and_cannot_be_rerun(SC, tmp_path, monkeypatch):
     out, root = _frozen_world(tmp_path, SC)
     frozen, label, out_dir = SC.preflight("v5", "http://x", digest_fn=lambda u, m: "digest-frozen", outputs=out, root=root, scratch=tmp_path / "s")

@@ -9,7 +9,9 @@ options to change them) and refuses, before the evaluation candidates are even l
   - every file in the committed frozen-code manifest (the runner's import closure, the gold and the input pins) is byte-identical to the commit
     the Stage B runs used;
   - the model file Ollama reports for the frozen model has the frozen digest;
-  - no run with this label has already been completed in the scratch directory (the half is one-shot; a crashed run resumes, a finished one does not rerun).
+  - no run with this label has already been completed in the scratch directory (the half is one-shot; a crashed run resumes, a finished one does not
+    rerun), and every record already in an unfinished ledger was written by exactly this configuration (the resume key ignores the temperature and the
+    answer limit, so a ledger left by a differently-configured run would otherwise be silently continued).
 
   python3 eval/spike_results/wp_45_7/run_stage_c.py --ollama-url http://192.168.90.100:11434          # runs the half
   python3 eval/spike_results/wp_45_7/run_stage_c.py --ollama-url ... --preflight-only                  # checks only; reads no candidate
@@ -38,6 +40,25 @@ import score_resolver as SR  # noqa: E402
 DESIGNS = {"v5": K}  # the registries that have a Stage C, and the design each one is for
 
 
+def check_partial_ledger(path, frozen, label):
+    """An unfinished ledger may be resumed only if every record in it was written by the frozen configuration: same label, tier, model, model file,
+    prompt and runner parameters. Raises SystemExit naming the first record that is not."""
+    want = {"run_label": label, "kind": "selection", "tier": frozen["tier"], "model": frozen["model"], "digest": frozen["digest"],
+            "prompt_hash": K.prompt_hash(), "temperature": float(frozen["temperatures"][0]), "num_ctx": int(frozen["num_ctxs"][0]),
+            "num_predict": int(frozen["num_predicts"][0])}
+    for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            rec = json.loads(line)
+        except ValueError:
+            raise SystemExit(f"{path} line {n} is not JSON: an unfinished ledger that cannot be validated is not resumed") from None
+        differ = {k: rec.get(k) for k, v in want.items() if rec.get(k) != v}
+        if differ:
+            raise SystemExit(f"{path} line {n} (candidate {rec.get('candidate_id')}) was not written by the frozen configuration: {differ}; "
+                             "move the ledger away before running, and do not resume it")
+
+
 def preflight(registry, ollama_url, *, digest_fn=OR.model_digest, outputs=None, root=None, scratch=None):
     """Every check, and no model call except the digest lookup. Returns (frozen choice, run label, output directory). Raises SystemExit."""
     if registry not in DESIGNS:
@@ -51,6 +72,8 @@ def preflight(registry, ollama_url, *, digest_fn=OR.model_digest, outputs=None, 
     out_dir = Path(scratch or OR.DEFAULT_SCRATCH) / label
     if (out_dir / "run_summary.json").exists():
         raise SystemExit(f"{label} has already been run ({out_dir}): the evaluation half is one-shot, score that ledger instead of running again")
+    if (out_dir / "resolver.jsonl").exists():
+        check_partial_ledger(out_dir / "resolver.jsonl", frozen, label)
     return frozen, label, out_dir
 
 

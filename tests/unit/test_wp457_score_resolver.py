@@ -504,7 +504,16 @@ def test_the_committed_frozen_code_manifest_matches_the_files_in_the_repository(
     # the transitive imports and the input pins, not only the files named in the experiment (review finding)
     assert {"pipeline/enrich_requirements.py", "eval/spike_results/wp_45_audit/_inputs.py", "eval/spike_results/wp_44/manifest.json",
             w + "chunk_sets.py", w + "draw_heldout.py"} <= set(manifest["files"])
+    # the artifacts that name the choice are pinned too, or editing the choice report would change what the verdict scores
+    base = "eval/spike_results/wp_45_7/outputs/"
+    assert base + "resolver_selection_v5_choice.json" in manifest["files"]
+    for run in ("r1_8b", "r1_14b", "r2_8b", "r2_14b"):
+        for f in ("run_summary.json", "resolver.jsonl"):
+            assert f"{base}selection_v5_runs/v5_sel_{run}/{f}" in manifest["files"], (run, f)
     S.check_frozen_code("v5")  # raises SystemExit naming any file that differs
+    # and the manifest itself: a tampered manifest could pin anything, so its own hash is fixed here (regenerate it only on purpose)
+    own = S.hashlib.sha256((S.OUTPUTS / S.FROZEN_CODE["v5"]).read_bytes()).hexdigest()
+    assert own == "b121e9988eab84d6f73cda8882050b13fdf3aad113fb0d49e26e2cf8a297cf3f", own
 
 
 def test_the_verdict_command_line_paths(mods, tmp_path, monkeypatch):
