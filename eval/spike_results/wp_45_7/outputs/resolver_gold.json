@@ -3,6 +3,7 @@
   "audit": 130,
   "audit_evaluation": 64,
   "audit_selection": 66,
+  "audit_without_adjudicated_lead_in_text": 2,
   "cards": 90,
   "cards_disputed": 0,
   "cards_evaluation": 52,

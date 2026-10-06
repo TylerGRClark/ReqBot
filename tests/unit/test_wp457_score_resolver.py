@@ -84,6 +84,7 @@ def test_attachment_is_right_incomplete_or_misleading_against_the_adjudicated_le
     assert S.attachment(_ans(R), g) == "incomplete"
     assert S.attachment(_ans(R, parent="The Director, DISA, shall:"), g) == "misleading"
     assert S.attachment(_ans(R, actor="Contractors"), g) == "misleading"
+    assert S.attachment(_ans(R, actor="Director"), g) == "misleading"  # a generic role word is not a match
     done = _g(standalone="complete", lead=None)
     assert S.attachment(_ans(R), done) == "right" and S.attachment(_ans(R, parent="The DOT&E shall:"), done) == "misleading"
     assert S.attachment(_ans(R, parent="x"), _g(standalone="not_a_requirement")) is None  # not scored for non-requirements
@@ -104,6 +105,10 @@ def test_overlap_is_symmetric_on_the_shorter_text_and_case_insensitive(mods):
     assert S.overlaps("the DOT&E", "The DOT&E shall: do the following") and not S.overlaps("", "x") and not S.overlaps("a b", "c d")
     assert not S.overlaps("The Director, DISA, shall:", "The DOT&E shall:")  # shared function words and the modal do not count
     assert S.overlaps("Director, DISA", "2.2. DIRECTOR, DISA.")
+    assert not S.overlaps("Director", "DIRECTOR, DISA.")  # a bare generic role word identifies nobody
+    assert not S.overlaps("USD(R&E)", "The DOT&E shall:")  # one-letter fragments of an abbreviation are not identifying
+    assert S.overlaps("USD(R&E)", "Under Secretary of Defense (USD(R&E)) shall:")
+    assert not S.overlaps("The DOT&E and the Chief Information Officer", "The DOT&E shall:")  # extra unrelated identifying words
 
 
 # ---- scoring a half ----------------------------------------------------------------------------------------------------
@@ -143,9 +148,10 @@ def test_modality_and_invented_answers_are_counted_from_the_checker_issues(mods)
 def test_the_gates_apply_the_plan_thresholds(mods):
     S = mods["score"]
     ok = {"real": {"requirement": 19, "not_a_requirement": 1, "scope_or_context": 1, "unresolved": 1}, "non_requirement": {"not_a_requirement": 7, "unresolved": 3},
-          "attachment": {"right": 6, "incomplete": 2, "misleading": 2}, "valid": 40, "invented_answers": 0, "modality_error_answers": 0}
+          "attachment": {"right": 6, "incomplete": 2, "misleading": 2}, "candidates": 40, "valid": 40, "invented_answers": 0, "modality_error_answers": 0}
     g = S.gate_report(ok, {"right": 4, "incomplete": 4, "misleading": 2})
     assert g["real_rejected"][2] and g["real_scope_or_unresolved"][2] and g["non_requirement_rejected"][2] and g["invented"][2] and g["modality_errors"][2]
+    assert g["valid_answers"][2]
     assert g["incomplete"] == (0.2, 0.45, True)  # 20% incomplete against the baseline's 40% plus 5 points
     bad = dict(ok, real={"requirement": 10, "not_a_requirement": 5, "scope_or_context": 5}, modality_error_answers=2, invented_answers=3)
     gb = S.gate_report(bad, {"incomplete": 1, "right": 9})
@@ -157,7 +163,7 @@ def test_the_configuration_choice_prefers_passing_gates_then_right_rate_then_che
 
     def cfg(tier, size, right, rejected=0, mod=0):
         sel = {"all": {"real": {"requirement": 20 - rejected, "not_a_requirement": rejected}, "non_requirement": {"not_a_requirement": 8, "unresolved": 2},
-                       "attachment": {}, "valid": 40, "invented_answers": 0, "modality_error_answers": mod},
+                       "attachment": {}, "candidates": 40, "valid": 40, "invented_answers": 0, "modality_error_answers": mod},
                "audit": {"attachment": {"right": right, "misleading": 10 - right}, "baseline_attachment": {"right": 5, "incomplete": 5}}}
         return {"tier": tier, "model_size": size, "selection": sel}
 
@@ -167,3 +173,54 @@ def test_the_configuration_choice_prefers_passing_gates_then_right_rate_then_che
     only_failing = {"A": cfg("R1", 8, 5, rejected=5), "B": cfg("R2", 8, 7, rejected=5)}
     _, name, passed, _, _ = S.choose(only_failing)
     assert name == "B" and not passed  # none passes: the highest right rate is chosen and reported as failing
+
+
+def test_audit_records_without_adjudicated_lead_in_text_are_not_scored_for_attachment(mods):
+    S, R = mods["score"], mods["R"]
+    g = _g(lead=None)  # needs a lead-in but Tyler gave no text
+    assert S.attachment(_ans(R, parent="anything"), g) is None and S.baseline_attachment(g) is None and not S.attachment_scored(g)
+    s = S.score_half({"audit:R1": _rec(R)}, [g])
+    assert s["attachment"] == {} and s["baseline_attachment"] == {} and s["valid"] == 1  # still scored for status
+
+
+def test_a_malformed_complete_answer_is_a_failed_resolution_not_a_crash(mods):
+    S, R = mods["score"], mods["R"]
+    broken = {"status": "complete", "answer": {"status": "obligation"}, "issues": [{"code": "shape", "field": "actor", "severity": "error", "message": ""}]}
+    good = _rec(R, parent="The DOT&E shall:")
+    s = S.score_half({"a": broken, "b": good}, [_g(cid="a"), _g(cid="b")])
+    assert s["valid"] == 1 and s["nonconformant"] == 1 and s["parsed"] == 2
+    assert s["real"] == {"failed": 1, "requirement": 1} and s["attachment"] == {"failed": 1, "right": 1}
+
+
+def test_failures_count_against_the_gates_and_a_valid_share_gate_exists(mods):
+    S = mods["score"]
+    failing = {"candidates": 20, "valid": 2, "real": {"failed": 18, "requirement": 2}, "non_requirement": {"failed": 0},
+               "attachment": {"failed": 9, "right": 1}, "invented_answers": 0, "modality_error_answers": 0}
+    g = S.gate_report(failing, {"right": 5, "incomplete": 5})
+    assert not g["valid_answers"][2] and not g["real_rejected"][2] and not g["real_scope_or_unresolved"][2] and not g["incomplete"][2]
+    assert g["real_rejected"][0] == 0.9 and g["incomplete"][0] == 0.9  # failures are violations, not absences
+
+
+def test_only_actor_and_parent_spans_and_added_tokens_count_as_invented(mods):
+    S, R = mods["score"], mods["R"]
+
+    def issue(code, field):
+        return {"code": code, "field": field, "severity": "error", "message": ""}
+
+    cases = {
+        "action paraphrase": ([issue("not_in_cited_span", "action")], 0),
+        "actor outside the spans": ([issue("not_in_cited_span", "actor")], 1),
+        "parent outside the spans": ([issue("not_in_cited_span", "parent")], 1),
+        "an added name": ([issue("added_token", "plain_language")], 1),
+    }
+    for name, (issues, expected) in cases.items():
+        s = S.score_half({"a": _rec(R, issues=issues)}, [_g(cid="a")])
+        assert s["invented_answers"] == expected, name
+
+
+def test_the_runs_option_needs_name_equals_dir(mods, monkeypatch, capsys):
+    S = mods["score"]
+    monkeypatch.setattr(sys, "argv", ["score_resolver.py", "--runs", "just_a_name"])
+    with pytest.raises(SystemExit) as e:
+        S.main()
+    assert "NAME=DIR" in str(e.value)

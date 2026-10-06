@@ -328,15 +328,19 @@ chunk recovered from the pinned pipeline files.
 **Scoring** (`score_resolver.py`): only `complete` calls count toward quality; an overrun, truncation, failure or untreatable candidate is a failed
 resolution, counted by status. Status: a real requirement should get a requirement status, a non-requirement `not_a_requirement` or `scope_or_context`;
 `unresolved` is reported on its own. Attachment (audit records that are requirements): when the gold needs a lead-in, *right* if the answer's parent or
-actor shares at least half of the shorter text's content words with Tyler's lead-in (function words and modals do not count), *incomplete* if it names
-neither, *misleading* if it names a parent or actor that does not overlap; when the gold is complete, right with no parent and misleading with one.
+actor names Tyler's lead-in (at least 80% of the value's distinctive words, and at least one, are in the lead-in text; function words, modals, generic
+role words such as "Director" and one-letter fragments of an abbreviation do not count, so a bare "Director" or "USD(R&E)" never matches "DIRECTOR, DISA" or "DOT&E"),
+*incomplete* if it names neither, *misleading* if it names a parent or actor that does not overlap; when the gold is complete, right with no parent and misleading with one.
 The baseline is Tyler's verdict on the production stem on the same records (right, or misleading), and by the gold where production attached nothing.
-Fidelity: answers with a modality error code (zero tolerated), answers with an added token or an actor or parent outside the cited spans (at most 2%).
+Two audit records have no adjudicated lead-in text and are scored for status only. A failed resolution (a call that was not `complete`, a missing or malformed
+answer) stays in every denominator and counts **against** every max-style gate, and a gate requires at least 95% of the candidates to be resolved at all.
+Fidelity: answers with a modality error code (zero tolerated); answers with an added token in a generated sentence, or an actor or parent outside the cited spans
+(at most 2%; a paraphrased action or target is not counted as invented).
 
 **The choice rule, fixed now.** From the selection halves only, keep the configurations (tier R0, R1 or R2; model 8B or 14B) that satisfy every gate that
-applies: at most 5% of real requirements returned `not_a_requirement`; real requirements returned `scope_or_context` or `unresolved` at most 10% together;
+applies: at least 95% of candidates resolved; at most 5% of real requirements returned `not_a_requirement` (failures counted as such); real requirements returned `scope_or_context` or `unresolved` at most 10% together;
 at least 60% of non-requirements returned `not_a_requirement` or `scope_or_context`; invented party or number rate at most 2%; no modality error; and
-"incomplete" attachment at most the baseline's plus 5 points. Among those, take the highest attachment-right rate on the audit selection half; ties go to the
+"incomplete" attachment (failures counted as incomplete) at most the baseline's plus 5 points. Among those, take the highest attachment-right rate on the audit selection half; ties go to the
 lower tier and then to the smaller model. If none passes, take the highest right rate and report it as failing the gate. Nothing in the evaluation halves is
 read to choose.
 

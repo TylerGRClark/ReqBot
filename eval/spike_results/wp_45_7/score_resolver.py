@@ -40,39 +40,46 @@ import ollama_run as OR  # noqa: E402
 import resolver as R  # noqa: E402
 
 GOLD = _HERE / "outputs" / "resolver_gold.json"
-OVERLAP = 0.5  # of the shorter text's content words
+OVERLAP = 0.8  # of the answer value's distinctive words that must be in the gold lead-in
 GATES = {
     "max_real_rejected": 0.05,        # at most 5% of real requirements returned not_a_requirement
     "max_real_scope_or_unresolved": 0.10,  # and at most 10% returned scope_or_context or unresolved, together
     "min_non_requirement_rejected": 0.60,  # at least 60% of non-requirements returned not_a_requirement or scope_or_context
     "max_invented": 0.02,             # invented party or number rate
-    "max_incomplete_over_baseline": 0.05,  # incomplete at most the baseline's plus 5 points
+    "max_incomplete_over_baseline": 0.05,  # incomplete (failures included) at most the baseline's plus 5 points
+    "min_valid_share": 0.95,          # at least 95% of the candidates resolved by a complete, well-shaped answer
 }
 BASELINE_MISLEADING = ("wrong_sibling", "fragment_chain", "wrong_other", "not_needed")
-INVENTED_CODES = ("added_token", "not_in_cited_span")
+INVENTED_CODES = ("added_token",)  # a number, acronym or name the cited spans lack, in a generated sentence
+INVENTED_FIELDS = ("actor", "parent")  # plus a party (actor or parent) that no cited span contains
 
 
 _WORD = re.compile(r"[a-z0-9]+")
 _FUNCTION = set(C._STOP) | {"shall", "must", "will", "should", "may", "following", "responsibilities", "responsible"}
+# Role words every office has: "Director" alone does not identify which one, so it carries no weight in a match.
+_GENERIC = {"director", "directors", "chief", "officer", "officers", "secretary", "commander", "commanders", "head", "heads",
+            "component", "components", "department", "office", "agency", "program", "manager", "managers", "staff", "chairman"}
 
 
-def _content(text):
-    """Content words only: lowercase alphanumeric tokens without function words and modals, so "The ... shall:" never matches."""
-    return {w for w in _WORD.findall(B.normalize(text or "").lower()) if w not in _FUNCTION}
+def _distinctive(text):
+    """Identifying words: lowercase alphanumerics of two or more characters, without function words, modals and generic role
+    words, so "The ... shall:" and a bare "Director" never match, and one-letter fragments of an abbreviation (USD(R&E) -> r, e) are dropped."""
+    return {w for w in _WORD.findall(B.normalize(text or "").lower()) if len(w) >= 2 and w not in _FUNCTION and w not in _GENERIC}
 
 
 def overlaps(value, text):
-    """True if at least half of the shorter text's content words are in the other, and at least one is."""
-    a, b = _content(value), _content(text)
+    """True if the value names the gold text: it has distinctive words, at least one is in the gold text, and at least `OVERLAP`
+    (here 0.8) of its distinctive words are. A value with extra, unrelated identifying words does not match."""
+    a, b = _distinctive(value), _distinctive(text)
     if not a or not b:
         return False
-    return len(a & b) / min(len(a), len(b)) >= OVERLAP
+    return len(a & b) >= 1 and len(a & b) / len(a) >= OVERLAP
 
 
 def attachment(answer, gold):
     """right, misleading or incomplete for an audit record (None when attachment is not scored for it)."""
-    if gold["standalone"] == "not_a_requirement":
-        return None
+    if gold["standalone"] == "not_a_requirement" or (gold["standalone"] == "needs_lead_in" and not gold["lead_in_text"]):
+        return None  # no adjudicated lead-in text to compare with: not scored for attachment
     parent = (answer["parent"]["value"] or "").strip()
     actor = (answer["actor"]["value"] or "").strip()
     if gold["standalone"] == "complete":
@@ -82,8 +89,13 @@ def attachment(answer, gold):
     return "misleading" if (parent or actor) else "incomplete"
 
 
+def attachment_scored(gold):
+    """Attachment is scored for audit records that are requirements and, when they need a lead-in, have adjudicated lead-in text."""
+    return not (gold["standalone"] == "not_a_requirement" or (gold["standalone"] == "needs_lead_in" and not gold["lead_in_text"]))
+
+
 def baseline_attachment(gold):
-    if gold["standalone"] == "not_a_requirement":
+    if gold["standalone"] == "not_a_requirement" or (gold["standalone"] == "needs_lead_in" and not gold["lead_in_text"]):
         return None
     if gold["production_stem"]:
         return "right" if gold["stem_verdict"] == "right" else "misleading"
@@ -95,39 +107,47 @@ def is_real(gold):
 
 
 def score_half(records, golds):
-    """Score one run's ledger records against the gold of one half. `records` is {candidate_id: ledger record}."""
+    """Score one run's ledger records against the gold of one half. `records` is {candidate_id: ledger record}.
+
+    A candidate is *usable* only if its call was `complete`, its answer parsed, and the answer has the schema's shape. Everything else
+    (an overrun, a truncation, a failure, a missing record, a malformed answer) is a failed resolution: it stays in every denominator
+    and is counted in a `failed` bucket, never dropped and never able to make a gate look better.
+    """
     out = {"candidates": len(golds), "status": collections.Counter(), "real": collections.Counter(), "non_requirement": collections.Counter(),
            "attachment": collections.Counter(), "baseline_attachment": collections.Counter(), "modality_error_answers": 0,
-           "invented_answers": 0, "shape_conformant": 0, "valid": 0, "answers_with_no_error": 0}
+           "invented_answers": 0, "shape_conformant": 0, "nonconformant": 0, "parsed": 0, "valid": 0, "answers_with_no_error": 0}
     for g in golds:
         rec = records.get(g["candidate_id"])
         out["status"][rec["status"] if rec else "not_run"] += 1
         base = baseline_attachment(g) if g["set"] == "audit" else None
         if base:
             out["baseline_attachment"][base] += 1
-        if not rec or rec["status"] != "complete" or rec.get("answer") is None:
-            if is_real(g):
-                out["real"]["failed"] += 1
-            else:
-                out["non_requirement"]["failed"] += 1
-            if base:
+        answer = rec.get("answer") if rec else None
+        issues = (rec or {}).get("issues") or []
+        if rec and rec["status"] == "complete" and answer is not None:
+            out["parsed"] += 1
+        shape_bad = answer is not None and any(i["code"] == "shape" for i in issues)
+        if shape_bad:
+            out["nonconformant"] += 1
+        if not (rec and rec["status"] == "complete" and answer is not None and not shape_bad):
+            (out["real"] if is_real(g) else out["non_requirement"])["failed"] += 1
+            if g["set"] == "audit" and attachment_scored(g):
                 out["attachment"]["failed"] += 1
             continue
         out["valid"] += 1
-        ans, issues = rec["answer"], rec["issues"]
-        if not any(i["code"] == "shape" for i in issues):
-            out["shape_conformant"] += 1
+        out["shape_conformant"] += 1
         if not any(i["severity"] == "error" for i in issues):
             out["answers_with_no_error"] += 1
         if any(i["severity"] == "error" and i["code"] in C.MODALITY_ERROR_CODES for i in issues):
             out["modality_error_answers"] += 1
-        if any(i["severity"] == "error" and i["code"] in INVENTED_CODES for i in issues):
+        if any(i["severity"] == "error" and (i["code"] in INVENTED_CODES or (i["code"] == "not_in_cited_span" and i["field"] in INVENTED_FIELDS))
+               for i in issues):
             out["invented_answers"] += 1
-        status = ans["status"]["value"]
+        status = answer["status"]["value"]
         bucket = "requirement" if status in R.REQUIREMENT_STATUS else status
         (out["real"] if is_real(g) else out["non_requirement"])[bucket] += 1
         if g["set"] == "audit":
-            a = attachment(ans, g)
+            a = attachment(answer, g)
             if a:
                 out["attachment"][a] += 1
     return {k: (dict(v) if isinstance(v, collections.Counter) else v) for k, v in out.items()}
@@ -139,13 +159,18 @@ def rate(counter, key, total=None):
 
 
 def gate_report(s, base_counts):
-    """The selection-half gate checks that apply, as {name: (value, threshold, passed)}."""
+    """The selection-half gate checks that apply, as {name: (value, threshold, passed)}. A failed resolution counts AGAINST every
+    max-style gate (rejected, scope or unresolved, incomplete) and in the denominator of every min-style gate, and a separate gate
+    requires almost every candidate to be resolved at all, so a configuration that fails its calls cannot look like it passes."""
     out = {}
     real, non = s["real"], s["non_requirement"]
     nr, nn = sum(real.values()), sum(non.values())
+    if s["candidates"]:
+        valid_share = round(s["valid"] / s["candidates"], 3)
+        out["valid_answers"] = (valid_share, GATES["min_valid_share"], valid_share >= GATES["min_valid_share"])
     if nr:
-        rejected = rate(real, "not_a_requirement", nr)
-        soft = round((real.get("scope_or_context", 0) + real.get("unresolved", 0)) / nr, 3)
+        rejected = round((real.get("not_a_requirement", 0) + real.get("failed", 0)) / nr, 3)
+        soft = round((real.get("scope_or_context", 0) + real.get("unresolved", 0) + real.get("failed", 0)) / nr, 3)
         out["real_rejected"] = (rejected, GATES["max_real_rejected"], rejected <= GATES["max_real_rejected"])
         out["real_scope_or_unresolved"] = (soft, GATES["max_real_scope_or_unresolved"], soft <= GATES["max_real_scope_or_unresolved"])
     if nn:
@@ -158,7 +183,8 @@ def gate_report(s, base_counts):
         out["modality_errors"] = (mod, 0, mod == 0)
     att, nb = s["attachment"], sum(base_counts.values())
     if sum(att.values()) and nb:
-        inc, binc = rate(att, "incomplete"), rate(base_counts, "incomplete", nb)
+        inc = round((att.get("incomplete", 0) + att.get("failed", 0)) / sum(att.values()), 3)
+        binc = rate(base_counts, "incomplete", nb)
         out["incomplete"] = (inc, round(binc + GATES["max_incomplete_over_baseline"], 3), inc <= binc + GATES["max_incomplete_over_baseline"])
     return out
 
@@ -209,7 +235,9 @@ def main():
     gold = json.loads(GOLD.read_text(encoding="utf-8"))
     results = {}
     for spec in args.runs:
-        name, _, directory = spec.partition("=")
+        name, sep, directory = spec.partition("=")
+        if not sep or not name or not directory:
+            sys.exit(f"--runs takes NAME=DIR, got {spec!r}")
         results[name] = score_run(directory, gold)
     text = json.dumps(results, indent=1, sort_keys=True)
     if args.out:

@@ -109,6 +109,9 @@ def card_gold():
 
 
 def build():
+    if not SCRATCH.exists():
+        raise SystemExit(f"the WP-45.6 scratch runs are not on this machine ({SCRATCH}); the card quotes cannot be recovered. "
+                         "Only the frozen outputs/resolver_gold.json is portable.")
     audit = audit_gold()
     cards, disputed = card_gold()
     gold = audit + cards
@@ -119,6 +122,7 @@ def build():
         "counts": {
             "audit": len(audit), "cards": len(cards), "cards_disputed": len(disputed),
             **{f"{s}_{h}": sum(1 for g in gold if g["set"] == s and g["half"] == h) for s in ("audit", "cards") for h in ("selection", "evaluation")},
+            "audit_without_adjudicated_lead_in_text": sum(1 for g in audit if g["standalone"] == "needs_lead_in" and not g["lead_in_text"]),
         },
         "disputed_cards": disputed,
         "gold": gold,
