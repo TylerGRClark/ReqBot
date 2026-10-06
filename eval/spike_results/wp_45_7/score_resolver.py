@@ -230,6 +230,9 @@ def choose(configs):
     return best
 
 
+REGISTERED_CONFIGS = frozenset(f"{t}_{m}" for t in ("r0", "r1", "r2") for m in ("8b", "14b"))  # the six the rule was registered for
+
+
 def parse_config(name):
     """"r1_8b" -> ("R1", 8): the tier and the model size encoded in a run name."""
     tier, _, size = name.partition("_")
@@ -241,6 +244,12 @@ def parse_config(name):
 def choose_report(results):
     """Apply the pre-registered rule (docstring) to {name: score_run()} and return the full report: every configuration's selection-half
     gates, and the chosen one. Only the selection halves are read."""
+    names = {n.lower() for n in results}
+    if names != REGISTERED_CONFIGS or len(names) != len(results):
+        raise SystemExit(
+            "the pre-registered rule applies to exactly these six runs: " + ", ".join(sorted(REGISTERED_CONFIGS))
+            + f"; got {sorted(results)} (missing {sorted(REGISTERED_CONFIGS - names)}, unexpected {sorted(names - REGISTERED_CONFIGS)})"
+        )
     configs, report = {}, {"configs": {}}
     for name, r in results.items():
         tier, size = parse_config(name)
