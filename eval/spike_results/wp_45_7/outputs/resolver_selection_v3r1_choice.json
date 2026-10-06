@@ -1,0 +1,234 @@
+{
+ "chosen": {
+  "attachment_right_rate": 0.6,
+  "name": "r2_14b",
+  "passes_every_gate": false
+ },
+ "configs": {
+  "r1_14b": {
+   "all_gates_pass": false,
+   "attachment": {
+    "incomplete": 3,
+    "misleading": 22,
+    "right": 30
+   },
+   "attachment_right_rate": 0.545,
+   "baseline_attachment": {
+    "incomplete": 17,
+    "misleading": 19,
+    "right": 19
+   },
+   "gates": {
+    "attachment_right": {
+     "passed": false,
+     "threshold": 0.636,
+     "value": 0.545
+    },
+    "incomplete": {
+     "passed": true,
+     "threshold": 0.359,
+     "value": 0.055
+    },
+    "invented": {
+     "passed": true,
+     "threshold": 0.02,
+     "value": 0.0
+    },
+    "modality_errors": {
+     "passed": false,
+     "threshold": 0,
+     "value": 5
+    },
+    "non_requirement_rejected": {
+     "passed": true,
+     "threshold": 0.6,
+     "value": 0.812
+    },
+    "real_rejected": {
+     "passed": false,
+     "threshold": 0.05,
+     "value": 0.08
+    },
+    "real_scope_or_unresolved": {
+     "passed": true,
+     "threshold": 0.1,
+     "value": 0.0
+    },
+    "valid_answers": {
+     "passed": true,
+     "threshold": 0.95,
+     "value": 1.0
+    }
+   }
+  },
+  "r1_8b": {
+   "all_gates_pass": false,
+   "attachment": {
+    "incomplete": 3,
+    "misleading": 20,
+    "right": 32
+   },
+   "attachment_right_rate": 0.582,
+   "baseline_attachment": {
+    "incomplete": 17,
+    "misleading": 19,
+    "right": 19
+   },
+   "gates": {
+    "attachment_right": {
+     "passed": false,
+     "threshold": 0.636,
+     "value": 0.582
+    },
+    "incomplete": {
+     "passed": true,
+     "threshold": 0.359,
+     "value": 0.055
+    },
+    "invented": {
+     "passed": true,
+     "threshold": 0.02,
+     "value": 0.0
+    },
+    "modality_errors": {
+     "passed": false,
+     "threshold": 0,
+     "value": 2
+    },
+    "non_requirement_rejected": {
+     "passed": true,
+     "threshold": 0.6,
+     "value": 0.812
+    },
+    "real_rejected": {
+     "passed": false,
+     "threshold": 0.05,
+     "value": 0.08
+    },
+    "real_scope_or_unresolved": {
+     "passed": true,
+     "threshold": 0.1,
+     "value": 0.011
+    },
+    "valid_answers": {
+     "passed": true,
+     "threshold": 0.95,
+     "value": 1.0
+    }
+   }
+  },
+  "r2_14b": {
+   "all_gates_pass": false,
+   "attachment": {
+    "incomplete": 2,
+    "misleading": 20,
+    "right": 33
+   },
+   "attachment_right_rate": 0.6,
+   "baseline_attachment": {
+    "incomplete": 17,
+    "misleading": 19,
+    "right": 19
+   },
+   "gates": {
+    "attachment_right": {
+     "passed": false,
+     "threshold": 0.636,
+     "value": 0.6
+    },
+    "incomplete": {
+     "passed": true,
+     "threshold": 0.359,
+     "value": 0.036
+    },
+    "invented": {
+     "passed": true,
+     "threshold": 0.02,
+     "value": 0.0
+    },
+    "modality_errors": {
+     "passed": false,
+     "threshold": 0,
+     "value": 5
+    },
+    "non_requirement_rejected": {
+     "passed": true,
+     "threshold": 0.6,
+     "value": 0.812
+    },
+    "real_rejected": {
+     "passed": true,
+     "threshold": 0.05,
+     "value": 0.034
+    },
+    "real_scope_or_unresolved": {
+     "passed": true,
+     "threshold": 0.1,
+     "value": 0.011
+    },
+    "valid_answers": {
+     "passed": true,
+     "threshold": 0.95,
+     "value": 1.0
+    }
+   }
+  },
+  "r2_8b": {
+   "all_gates_pass": false,
+   "attachment": {
+    "incomplete": 5,
+    "misleading": 20,
+    "right": 30
+   },
+   "attachment_right_rate": 0.545,
+   "baseline_attachment": {
+    "incomplete": 17,
+    "misleading": 19,
+    "right": 19
+   },
+   "gates": {
+    "attachment_right": {
+     "passed": false,
+     "threshold": 0.636,
+     "value": 0.545
+    },
+    "incomplete": {
+     "passed": true,
+     "threshold": 0.359,
+     "value": 0.091
+    },
+    "invented": {
+     "passed": true,
+     "threshold": 0.02,
+     "value": 0.0
+    },
+    "modality_errors": {
+     "passed": false,
+     "threshold": 0,
+     "value": 4
+    },
+    "non_requirement_rejected": {
+     "passed": true,
+     "threshold": 0.6,
+     "value": 0.812
+    },
+    "real_rejected": {
+     "passed": false,
+     "threshold": 0.05,
+     "value": 0.091
+    },
+    "real_scope_or_unresolved": {
+     "passed": true,
+     "threshold": 0.1,
+     "value": 0.011
+    },
+    "valid_answers": {
+     "passed": true,
+     "threshold": 0.95,
+     "value": 1.0
+    }
+   }
+  }
+ },
+ "rule": "from the selection halves only: configurations passing every gate, then the highest audit attachment-right rate, ties to the lower tier then the smaller model; if none passes, the best right rate, reported as failing"
+}
