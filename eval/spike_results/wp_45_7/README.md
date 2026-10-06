@@ -569,3 +569,37 @@ What the revision says, in general terms (the examples are invented; a test chec
 Two new invented worked examples (a noun-phrase item under a "must include:" lead-in; a "will not" prohibition under a topic heading with a junk `preceding` entry); the fixed prompt grows from about 1,770 to 2,634 estimated tokens, and every selection-half prompt still fits (0 untreatable; largest 3,734 at R1 and 4,773 at R2 by the conservative estimate).
 
 **What this revision does not do, on purpose:** it does not teach the model to relabel a modal-free hint such as "Consider using ..." as an obligation to get past the checker; that record (card R025) stays a correct `recommendation` that the checker's phrase table cannot accept, so the zero-modality gate may still fail on it. If the revised runs miss only on that, the report says so and leaves the gate alone.
+
+## Step 16: WP-45.7b, the revised prompt on the selection half, and the outcome of the protocol (`outputs/selection_v3r1_runs/`, `outputs/resolver_selection_v3r1_choice.json`)
+
+The revised prompt of step 15 (hash `435a1561313c6d64`, code as merged in #227, run from a pinned worktree) ran on the same four configurations and 104 selection candidates. Every call completed, 104 of 104 shape-conformant in every run. The rule (`--choose --registry v3`) was applied over the revised runs alone.
+
+| Config | Attachment right: first run, revised (misleading / incomplete in the revised run) | Non-requirements rejected (60%) | Real wrongly rejected (5%): first, revised | Gated modality-error answers (0): first, revised | Invented | Gates failed (revised) |
+|---|---|---|---|---|---|---|
+| Production stem | 34.5% | n/a | n/a | n/a | n/a | n/a |
+| Generative v2, R1 14B (best) | 63.6% | 75% | 2.3% | 40 | 29.8% | modality, invented |
+| Selection R1 8B | 54.5%, **58.2%** (20 / 3) | 81.2% | 6.8%, 8.0% | 3, 2 | 0 | attachment, real rejected, modality |
+| Selection R1 14B | 58.2%, 54.5% (22 / 3) | 81.2% | 5.7%, 8.0% | 4, 5 | 0 | attachment, real rejected, modality |
+| Selection R2 8B | 52.7%, 54.5% (20 / 5) | 81.2% | 6.8%, 9.1% | 5, 4 | 0 | attachment, real rejected, modality |
+| Selection R2 14B | 58.2%, **60.0%** (20 / 2) | 81.2% | 6.8%, **3.4%** | 4, 5 | 0 | attachment, modality |
+
+**Outcome.** No configuration passes. The rule's fallback chooses R2 on the 14B (60.0%) and reports it as failing the attachment gate (needs 35 of 55; it has 33) and the modality gate (5 answers). **By the protocol (one prompt revision, no second), G2 for the selection resolver fails on the development side.**
+The evaluation halves were not scored, the resolver was not run on the held-out set, and no end-to-end run was made.
+
+**What the revision did and did not do** (read from the two sets of ledgers):
+- It did not move attachment: the revised rates (54.5 to 60.0%) are within a few records of the first run's (52.7 to 58.2%), and individual records flip both ways (R1 8B: six records became right and four became misleading; R2 8B: eight and seven; R1 14B: two and four; R2 14B: three and two). With 55 records the differences between configurations and between the two prompts are inside this noise; the ranking of the four configurations should not be read as a finding.
+- Real wrongly rejected got worse on three configurations (to 8.0, 8.0 and 9.1%) and better on one (R2 14B, 3.4%, the only configuration that passes that gate); the noun-phrase items were only partly fixed, and new records were rejected (for example card R025, "Consider using ...", on both 8B runs: the revision's "can is no permission" and fragment rules made the model call a modal-free hint a non-requirement instead of a recommendation).
+- Gated modality errors stay at 2 to 5. Card R025 is still in the gated list of both 14B runs (the checker-limit record of step 14), so on the 14B the zero gate cannot be met by a correct answer; audit R052 and card R078 ("ensure that policies are updated accordingly as needed.", labeled `recommendation` with no modal anywhere) are model errors. The non-gated `modal_in_evidence` lead-in-as-actor errors fell on the 8B at R1 (4 to 3) and rose at R2 (9 to 7 answers); they are 0 on the 14B.
+
+**Exploratory control, not a gate, selection half only (the same 55 attachment-scored audit records, the same frozen menus):** how well would a trivial deterministic rule do with those menus, without a model? Choosing nothing is right for the 14 complete records only, 25.5%. "Take the lead-in that ends in a colon as parent, and its subject as actor" gives 27.3% (R1) and 29.1% (R2);
+"lead-in, else the leaf heading" gives 30.9% at both tiers (17 right, 38 misleading); "lead-in, else a preceding clause that ends in a modal" gives 29.1%. Production's stems were 34.5%, and the menu's ceiling is 87.3% (R1) and 92.7% (R2). So **the model adds a lot over simple rules on the same menus (about 54 to 60% against 25 to 31%)**, and the remaining gap to the ceiling, not the ability to attach at all, is what the registered bar of 63.6% was asking about.
+
+**What the two experiments together say, and what they do not** (selection half only; nothing here reaches the evaluation half or the held-out set):
+- *Supported:* for **attachment** (who must act, which clause governs), a model choosing among code-proposed verbatim spans reaches about 55 to 60%, against 35% for production's rules, with **zero invented parties by construction** (the generative resolver had 15 to 30%) and shorter, faster calls (about 1 second against about 12). For **classification**, non-requirements are rejected 81% of the time with all four configurations.
+- *Not supported:* passing the registered G2 as written. The attachment bar (63.6%) is the generative resolver's best result, and the zero-modality gate cannot be met on this half by a correct answer on card R025 because of the checker's phrase table (a limit of the gate, reported, not changed).
+- *Not tested:* the evaluation half (116 candidates), the held-out set, a widened list-marker rule in the generator (the known limit of step 13), and any change to the gates or the checker.
+
+**Decisions this leaves to Tyler** (nothing here is started):
+1. *Adopt the selection resolver for attachment anyway, as a measured improvement rather than a passed gate.* It is better than production on attachment by about 20 points with no invented text, but it did not meet the bar that was registered; adopting it would be a decision to accept a result that is below the registered threshold, with the evaluation half still unread.
+2. *A new, separately registered step that fixes the two defects the gates exposed:* teach the checker's phrase table that a modal-free hint ("consider", "it is advisable") is a recommendation, widen the generator's list-marker rule (multi-level numbers), and re-register the attachment bar from the production baseline and the control above instead of from the generative result. That would be a new pre-registration, with the evaluation half still reserved as the verdict.
+3. *Stop the resolver line here* and spend the effort on the second labeler and the held-out discovery confirmation (the discovery gain, +30 points of 8B recall on the dev pages, is the finding that has held up).
