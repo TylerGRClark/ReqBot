@@ -1,0 +1,316 @@
+{
+ "chosen": {
+  "attachment_right_rate": 0.636,
+  "name": "r1_14b",
+  "passes_every_gate": false
+ },
+ "configs": {
+  "r0_14b": {
+   "all_gates_pass": false,
+   "attachment": {
+    "incomplete": 39,
+    "misleading": 1,
+    "right": 15
+   },
+   "attachment_right_rate": 0.273,
+   "baseline_attachment": {
+    "incomplete": 17,
+    "misleading": 19,
+    "right": 19
+   },
+   "gates": {
+    "incomplete": {
+     "passed": false,
+     "threshold": 0.359,
+     "value": 0.709
+    },
+    "invented": {
+     "passed": false,
+     "threshold": 0.02,
+     "value": 0.144
+    },
+    "modality_errors": {
+     "passed": false,
+     "threshold": 0,
+     "value": 20
+    },
+    "non_requirement_rejected": {
+     "passed": true,
+     "threshold": 0.6,
+     "value": 0.75
+    },
+    "real_rejected": {
+     "passed": false,
+     "threshold": 0.05,
+     "value": 0.114
+    },
+    "real_scope_or_unresolved": {
+     "passed": true,
+     "threshold": 0.1,
+     "value": 0.034
+    },
+    "valid_answers": {
+     "passed": true,
+     "threshold": 0.95,
+     "value": 1.0
+    }
+   }
+  },
+  "r0_8b": {
+   "all_gates_pass": false,
+   "attachment": {
+    "incomplete": 37,
+    "misleading": 3,
+    "right": 15
+   },
+   "attachment_right_rate": 0.273,
+   "baseline_attachment": {
+    "incomplete": 17,
+    "misleading": 19,
+    "right": 19
+   },
+   "gates": {
+    "incomplete": {
+     "passed": false,
+     "threshold": 0.359,
+     "value": 0.673
+    },
+    "invented": {
+     "passed": true,
+     "threshold": 0.02,
+     "value": 0.01
+    },
+    "modality_errors": {
+     "passed": false,
+     "threshold": 0,
+     "value": 20
+    },
+    "non_requirement_rejected": {
+     "passed": true,
+     "threshold": 0.6,
+     "value": 0.688
+    },
+    "real_rejected": {
+     "passed": false,
+     "threshold": 0.05,
+     "value": 0.102
+    },
+    "real_scope_or_unresolved": {
+     "passed": true,
+     "threshold": 0.1,
+     "value": 0.023
+    },
+    "valid_answers": {
+     "passed": true,
+     "threshold": 0.95,
+     "value": 1.0
+    }
+   }
+  },
+  "r1_14b": {
+   "all_gates_pass": false,
+   "attachment": {
+    "incomplete": 1,
+    "misleading": 19,
+    "right": 35
+   },
+   "attachment_right_rate": 0.636,
+   "baseline_attachment": {
+    "incomplete": 17,
+    "misleading": 19,
+    "right": 19
+   },
+   "gates": {
+    "incomplete": {
+     "passed": true,
+     "threshold": 0.359,
+     "value": 0.018
+    },
+    "invented": {
+     "passed": false,
+     "threshold": 0.02,
+     "value": 0.298
+    },
+    "modality_errors": {
+     "passed": false,
+     "threshold": 0,
+     "value": 40
+    },
+    "non_requirement_rejected": {
+     "passed": true,
+     "threshold": 0.6,
+     "value": 0.75
+    },
+    "real_rejected": {
+     "passed": true,
+     "threshold": 0.05,
+     "value": 0.023
+    },
+    "real_scope_or_unresolved": {
+     "passed": true,
+     "threshold": 0.1,
+     "value": 0.045
+    },
+    "valid_answers": {
+     "passed": true,
+     "threshold": 0.95,
+     "value": 1.0
+    }
+   }
+  },
+  "r1_8b": {
+   "all_gates_pass": false,
+   "attachment": {
+    "incomplete": 9,
+    "misleading": 16,
+    "right": 30
+   },
+   "attachment_right_rate": 0.545,
+   "baseline_attachment": {
+    "incomplete": 17,
+    "misleading": 19,
+    "right": 19
+   },
+   "gates": {
+    "incomplete": {
+     "passed": true,
+     "threshold": 0.359,
+     "value": 0.164
+    },
+    "invented": {
+     "passed": false,
+     "threshold": 0.02,
+     "value": 0.212
+    },
+    "modality_errors": {
+     "passed": false,
+     "threshold": 0,
+     "value": 30
+    },
+    "non_requirement_rejected": {
+     "passed": true,
+     "threshold": 0.6,
+     "value": 0.625
+    },
+    "real_rejected": {
+     "passed": false,
+     "threshold": 0.05,
+     "value": 0.068
+    },
+    "real_scope_or_unresolved": {
+     "passed": true,
+     "threshold": 0.1,
+     "value": 0.0
+    },
+    "valid_answers": {
+     "passed": true,
+     "threshold": 0.95,
+     "value": 1.0
+    }
+   }
+  },
+  "r2_14b": {
+   "all_gates_pass": false,
+   "attachment": {
+    "incomplete": 4,
+    "misleading": 17,
+    "right": 34
+   },
+   "attachment_right_rate": 0.618,
+   "baseline_attachment": {
+    "incomplete": 17,
+    "misleading": 19,
+    "right": 19
+   },
+   "gates": {
+    "incomplete": {
+     "passed": true,
+     "threshold": 0.359,
+     "value": 0.073
+    },
+    "invented": {
+     "passed": false,
+     "threshold": 0.02,
+     "value": 0.279
+    },
+    "modality_errors": {
+     "passed": false,
+     "threshold": 0,
+     "value": 35
+    },
+    "non_requirement_rejected": {
+     "passed": true,
+     "threshold": 0.6,
+     "value": 0.812
+    },
+    "real_rejected": {
+     "passed": false,
+     "threshold": 0.05,
+     "value": 0.057
+    },
+    "real_scope_or_unresolved": {
+     "passed": true,
+     "threshold": 0.1,
+     "value": 0.023
+    },
+    "valid_answers": {
+     "passed": true,
+     "threshold": 0.95,
+     "value": 1.0
+    }
+   }
+  },
+  "r2_8b": {
+   "all_gates_pass": false,
+   "attachment": {
+    "incomplete": 20,
+    "misleading": 7,
+    "right": 28
+   },
+   "attachment_right_rate": 0.509,
+   "baseline_attachment": {
+    "incomplete": 17,
+    "misleading": 19,
+    "right": 19
+   },
+   "gates": {
+    "incomplete": {
+     "passed": false,
+     "threshold": 0.359,
+     "value": 0.364
+    },
+    "invented": {
+     "passed": false,
+     "threshold": 0.02,
+     "value": 0.154
+    },
+    "modality_errors": {
+     "passed": false,
+     "threshold": 0,
+     "value": 26
+    },
+    "non_requirement_rejected": {
+     "passed": false,
+     "threshold": 0.6,
+     "value": 0.562
+    },
+    "real_rejected": {
+     "passed": true,
+     "threshold": 0.05,
+     "value": 0.023
+    },
+    "real_scope_or_unresolved": {
+     "passed": true,
+     "threshold": 0.1,
+     "value": 0.08
+    },
+    "valid_answers": {
+     "passed": true,
+     "threshold": 0.95,
+     "value": 1.0
+    }
+   }
+  }
+ },
+ "rule": "from the selection halves only: configurations passing every gate, then the highest audit attachment-right rate, ties to the lower tier then the smaller model; if none passes, the best right rate, reported as failing"
+}
