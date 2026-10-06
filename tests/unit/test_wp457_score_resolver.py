@@ -328,11 +328,40 @@ def test_v4_bar_is_anchored_to_production_with_exact_fractions(mods):
     assert "attachment_gain_over_production" not in S.selection_gates(sel(30, 20, 5))[0]  # v2 and v3 are scored as before
     # the rule over a registry of four: only the passing configuration with the best right rate is chosen
     full = {"r1_8b": sel(29, 20, 6), "r2_8b": sel(30, 20, 5), "r1_14b": sel(33, 22, 0), "r2_14b": sel(32, 20, 3)}
-    runs = {k: {"selection": v, "evaluation": {"audit": {"attachment": {"right": 55}}}} for k, v in full.items()}
+    status_hash = S.SEL.prompt_hash()
+    runs = {k: {"prompt_hashes": [status_hash], "selection": v, "evaluation": {"audit": {"attachment": {"right": 55}}}} for k, v in full.items()}
     report = S.choose_report(runs, "v4")
     assert report["chosen"]["name"] == "r2_14b" and report["chosen"]["passes_every_gate"]  # r1_14b has the best right rate but 22 misleading
     assert report["configs"]["r1_14b"]["gates"]["misleading"]["passed"] is False
-    nobody = S.choose_report({k: {"selection": sel(20, 20, 15)} for k in full}, "v4")
+    nobody = S.choose_report({k: {"prompt_hashes": [status_hash], "selection": sel(20, 20, 15)} for k in full}, "v4")
     assert nobody["chosen"]["passes_every_gate"] is False
     with pytest.raises(SystemExit):
         S.choose_report({k: v for k, v in runs.items() if k != "r1_8b"}, "v4")
+
+
+def test_v4_and_v5_refuse_ledgers_written_by_another_design(mods, tmp_path):
+    """Review finding on WP-45.7d: the v4 and v5 rules are the same arithmetic over different designs, so each must check which prompt wrote the
+    ledgers, or `--registry v5` would quietly score the old status design as a WP-45.7d result."""
+    S = mods["score"]
+    status_hash, kind_hash = S.SEL.prompt_hash(), S.K.prompt_hash()
+    assert status_hash != kind_hash and set(S.EXPECTED_PROMPT) == {"v4", "v5"}
+    base = {"right": 19, "misleading": 19, "incomplete": 17}
+    sel = {"all": {"candidates": 40, "valid": 40, "real": {"requirement": 20}, "non_requirement": {"not_a_requirement": 8, "unresolved": 2},
+                   "attachment": {}, "invented_answers": 0, "modality_error_answers": 0},
+           "audit": {"attachment": {"right": 30, "misleading": 21, "incomplete": 4}, "baseline_attachment": base}}
+
+    def runs(hashes):
+        return {k: ({"prompt_hashes": hashes, "selection": sel} if hashes is not None else {"selection": sel}) for k in S.REGISTRIES["v4"]}
+
+    assert S.choose_report(runs([status_hash]), "v4")["chosen"] and S.choose_report(runs([kind_hash]), "v5")["chosen"]
+    for registry, wrong in (("v5", [status_hash]), ("v4", [kind_hash]), ("v5", [kind_hash, status_hash]), ("v5", ["None"]), ("v4", None)):
+        with pytest.raises(SystemExit) as e:
+            S.choose_report(runs(wrong), registry)
+        assert registry in str(e.value) and "prompt" in str(e.value)
+    assert S.choose_report(runs(None), "v3")["chosen"]["name"]  # v3 is not tied to a prompt: its first runs predate the check and used another hash
+    # score_run reports which prompt wrote a ledger
+    d = tmp_path / "run"
+    d.mkdir()
+    rec = {"entry_id": "k1", "candidate_id": "audit:Z", "status": "complete", "prompt_hash": kind_hash, "answer": None, "issues": []}
+    (d / "resolver.jsonl").write_text(json.dumps(rec) + "\n", encoding="utf-8")
+    assert S.score_run(d, {"gold": []})["prompt_hashes"] == [kind_hash]

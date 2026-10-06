@@ -37,8 +37,10 @@ for _p in (_HERE, _ROOT):
 
 import bundle as B  # noqa: E402
 import check_resolution as C  # noqa: E402
+import kind_selection as K  # noqa: E402
 import ollama_run as OR  # noqa: E402
 import resolver as R  # noqa: E402
+import selection as SEL  # noqa: E402
 
 GOLD = _HERE / "outputs" / "resolver_gold.json"
 OVERLAP = 0.8  # of the answer value's distinctive words that must be in the gold lead-in
@@ -200,7 +202,7 @@ def load_ledger(directory):
 
 def score_run(directory, gold):
     records = load_ledger(directory)
-    result = {}
+    result = {"prompt_hashes": sorted({str(r.get("prompt_hash")) for r in records.values()})}  # which prompt produced these records
     for which in ("selection", "evaluation"):
         golds = [g for g in gold["gold"] if g["half"] == which]
         if not any(g["candidate_id"] in records for g in golds):
@@ -270,11 +272,15 @@ REGISTRIES = {
     "v2": REGISTERED_CONFIGS,
     "v3": frozenset(f"{t}_{m}" for t in ("r1", "r2") for m in ("8b", "14b")),
     "v4": frozenset(f"{t}_{m}" for t in ("r1", "r2") for m in ("8b", "14b")),  # WP-45.7c: the same four, a different bar
+    "v5": frozenset(f"{t}_{m}" for t in ("r1", "r2") for m in ("8b", "14b")),  # WP-45.7d: the same four and the v4 bar, code sets the strength
 }
 V3_MIN_RIGHT = 35 / 55
 # WP-45.7c (docs/PHASE45_WP457C_PLAN.md section 2): the bar is derived from production, not from the generative resolver: right at least
 # 20 points above the production stems' rate on the same records, and misleading at most production's plus 5 points.
 V4_RELATIVE = {"min_gain": Fraction(1, 5), "max_misleading_margin": Fraction(1, 20)}
+# The registries that are tied to one design: the ledgers must have been written by that design's prompt, or the rule would silently score
+# the wrong experiment (the v4 and v5 rules are the same arithmetic over different designs).
+EXPECTED_PROMPT = {"v4": SEL.prompt_hash, "v5": K.prompt_hash}
 
 
 def parse_config(name):
@@ -291,12 +297,18 @@ def choose_report(results, registry="v2"):
     names = {n.lower() for n in results}
     registered = REGISTRIES[registry]
     min_right = V3_MIN_RIGHT if registry == "v3" else None
-    relative = V4_RELATIVE if registry == "v4" else None
+    relative = V4_RELATIVE if registry in ("v4", "v5") else None
     if names != registered or len(names) != len(results):
         raise SystemExit(
             f"the pre-registered rule ({registry}) applies to exactly these {'six' if len(registered) == 6 else 'four'} runs: " + ", ".join(sorted(registered))
             + f"; got {sorted(results)} (missing {sorted(registered - names)}, unexpected {sorted(names - registered)})"
         )
+    if registry in EXPECTED_PROMPT:
+        want = EXPECTED_PROMPT[registry]()
+        for name, r in results.items():
+            if r.get("prompt_hashes") != [want]:
+                raise SystemExit(f"the {registry} rule scores ledgers written by prompt {want} only; {name} has {r.get('prompt_hashes')}"
+                                 + (" (no prompt hashes: was the result made by score_run?)" if "prompt_hashes" not in r else ""))
     configs, report = {}, {"configs": {}}
     for name, r in results.items():
         tier, size = parse_config(name)
@@ -325,7 +337,7 @@ def main():
     ap.add_argument("--out")
     ap.add_argument("--choose", action="store_true", help="apply the pre-registered choice rule (run names like r1_8b) and print the report")
     ap.add_argument("--registry", choices=sorted(REGISTRIES), default="v2",
-                    help="which registered rule --choose applies to: v2 (six configurations, WP-45.7), v3 (four, WP-45.7b) or v4 (the same four with the WP-45.7c bar)")
+                    help="which registered rule --choose applies to: v2 (six configurations, WP-45.7), v3 (four, WP-45.7b) v4 (the same four with the WP-45.7c bar) or v5 (the v4 bar for the WP-45.7d design)")
     args = ap.parse_args()
     gold = json.loads(GOLD.read_text(encoding="utf-8"))
     results = {}
