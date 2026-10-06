@@ -346,3 +346,23 @@ read to choose.
 
 Known limits: 104 selection candidates make every rate wide; the cards carry no attachment gold and the audit records are not the held-out population;
 the gold is of production Step C records, which are not what D1 will produce.
+
+## Step 8: held-out discovery runs, **unscored** (`outputs/heldout_runs/`)
+
+Seven runs on the 46 held-out chunks, 2026-10-06, Tyler's Ollama, temperature 0.1, `num_ctx` 8192, with the **frozen** D1 prompt (hash `7da34da9994793c5`) and the production
+prompt D0 (hash `dae9584ffa32ae9b`). Each run directory holds the ledger (`discovery.jsonl`, every raw answer) and the run summary (model digest, prompt hash, status
+counts, token and time means). Every call in every run was `complete` (46 of 46): no overrun, truncation, failure or untreatable chunk.
+
+| Run | Records |
+|---|---|
+| D0 8B, repeats 1 and 2 | 141, 139 |
+| D1 8B, repeats 1 and 2 | 201, 211 |
+| D0 14B, repeat 1 | 55 |
+| D1 14B, repeats 1 and 2 | 112, 116 |
+
+The committed ledgers name each record's id `entry_id`. The first version of the runners called it `key`, and gitleaks reads a field named `key` that holds a hash as an API key, so the field was
+renamed (the loader still reads old ledgers, and the copies committed here were renamed mechanically; nothing else changed).
+
+These are **counts of records, not scores**: nothing here is measured against labels, and a larger count is not better (plan 4.4). The held-out set is deliberately not scored until
+(1) the two labelers' files exist and Tyler has adjudicated the disagreements, and (2) the resolver tier and model are chosen from the development and audit-selection data and
+frozen, because the plan allows no configuration choice after the held-out labels are opened. They are committed now only so the raw answers survive the working container.

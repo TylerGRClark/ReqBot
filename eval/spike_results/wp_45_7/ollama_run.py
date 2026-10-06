@@ -88,7 +88,9 @@ class Ledger:
             for line in self.path.read_text(encoding="utf-8").splitlines():
                 if line.strip():
                     rec = json.loads(line)
-                    self.records[rec["key"]] = rec
+                    # The field is `entry_id`. Ledgers written before the rename call it `key`: gitleaks reads a field named "key"
+                    # that holds a hash as an API key, so the name was changed; old files are still readable.
+                    self.records[rec.get("entry_id") or rec["key"]] = rec
 
     def done(self, key):
         rec = self.records.get(key)
@@ -105,7 +107,7 @@ class Ledger:
             f.write(json.dumps(rec, ensure_ascii=False, sort_keys=True) + "\n")
             f.flush()
             os.fsync(f.fileno())
-        self.records[rec["key"]] = rec  # a later record for the same key (a redo of a failure) wins
+        self.records[rec["entry_id"]] = rec  # a later record for the same id (a redo of a failure) wins
 
 
 def discovery_key(document, chunk_id, prompt_hash, digest, run_label):
