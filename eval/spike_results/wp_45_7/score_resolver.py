@@ -331,15 +331,53 @@ def choose_report(results, registry="v2"):
     return report
 
 
+def verdict_report(result, registry):
+    """The one-shot verdict of one frozen configuration on the EVALUATION half (WP-45.7c/d Stage C): the registry's gates applied to
+    `result["evaluation"]` (from `score_run`), with the same exact-fraction arithmetic as the choice, plus the checks that make it a verdict
+    and not a second choice: only v4 and v5 have one, the ledger must have been written by that design's prompt, and the half must exist.
+    The selection half is not read."""
+    if registry not in EXPECTED_PROMPT:
+        raise SystemExit(f"a verdict exists only for the registries tied to a prompt: {sorted(EXPECTED_PROMPT)}")
+    want = EXPECTED_PROMPT[registry]()
+    if result.get("prompt_hashes") != [want]:
+        raise SystemExit(f"the {registry} verdict scores ledgers written by prompt {want} only; got {result.get('prompt_hashes')}")
+    half = result.get("evaluation")
+    if not half or "audit" not in half or "all" not in half:
+        raise SystemExit("the ledger has no evaluation-half results to score (was it run with --half evaluation --final?)")
+    gates, _ = selection_gates(half, None, V4_RELATIVE)
+    att, base = half["audit"]["attachment"], half["audit"]["baseline_attachment"]
+    return {
+        "half": "evaluation", "registry": registry, "prompt_hash": want, "candidates": half["all"]["candidates"],
+        "gates": {k: {"value": v[0], "threshold": v[1], "passed": bool(v[2])} for k, v in gates.items()},
+        "all_gates_pass": all(v[2] for v in gates.values()),
+        "attachment": att, "attachment_right_rate": rate(att, "right", sum(att.values())), "baseline_attachment": base,
+        "status": half["all"]["status"], "real": half["all"]["real"], "non_requirement": half["all"]["non_requirement"],
+    }
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--runs", nargs="+", required=True, metavar="NAME=DIR")
+    ap.add_argument("--runs", nargs="+", metavar="NAME=DIR")
+    ap.add_argument("--verdict", metavar="NAME=DIR",
+                    help="score one frozen run on the evaluation half with the registry's gates (needs --registry v4 or v5); the selection half is not read")
     ap.add_argument("--out")
     ap.add_argument("--choose", action="store_true", help="apply the pre-registered choice rule (run names like r1_8b) and print the report")
     ap.add_argument("--registry", choices=sorted(REGISTRIES), default="v2",
                     help="which registered rule --choose applies to: v2 (six configurations, WP-45.7), v3 (four, WP-45.7b) v4 (the same four with the WP-45.7c bar) or v5 (the v4 bar for the WP-45.7d design)")
     args = ap.parse_args()
     gold = json.loads(GOLD.read_text(encoding="utf-8"))
+    if args.verdict:
+        name, sep, directory = args.verdict.partition("=")
+        if not sep or not name or not directory:
+            sys.exit(f"--verdict takes NAME=DIR, got {args.verdict!r}")
+        text = json.dumps(verdict_report(score_run(directory, gold), args.registry), indent=1, sort_keys=True)
+        if args.out:
+            Path(args.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(args.out).write_text(text + "\n", encoding="utf-8")
+        print(text)
+        return
+    if not args.runs:
+        sys.exit("give --runs NAME=DIR ... (or --verdict NAME=DIR)")
     results = {}
     for spec in args.runs:
         name, sep, directory = spec.partition("=")

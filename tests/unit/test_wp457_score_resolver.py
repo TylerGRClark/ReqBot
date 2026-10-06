@@ -365,3 +365,60 @@ def test_v4_and_v5_refuse_ledgers_written_by_another_design(mods, tmp_path):
     rec = {"entry_id": "k1", "candidate_id": "audit:Z", "status": "complete", "prompt_hash": kind_hash, "answer": None, "issues": []}
     (d / "resolver.jsonl").write_text(json.dumps(rec) + "\n", encoding="utf-8")
     assert S.score_run(d, {"gold": []})["prompt_hashes"] == [kind_hash]
+
+
+def test_the_verdict_scores_the_evaluation_half_once_with_the_registered_gates(mods, tmp_path, monkeypatch, capsys):
+    """WP-45.7d Stage C: one frozen run, the evaluation half only, exact fractions against that half's own production baseline."""
+    S = mods["score"]
+    kind_hash, status_hash = S.K.prompt_hash(), S.SEL.prompt_hash()
+    base = {"right": 20, "misleading": 20, "incomplete": 20}  # production on 60 records of the evaluation half
+
+    def half(right, misleading, incomplete, real_rej=0, mod=0, invented=0):
+        return {"all": {"candidates": 100, "valid": 100, "real": {"requirement": 80 - real_rej, "not_a_requirement": real_rej},
+                        "non_requirement": {"not_a_requirement": 18, "scope_or_context": 2}, "attachment": {}, "status": {"complete": 100},
+                        "invented_answers": invented, "modality_error_answers": mod},
+                "audit": {"attachment": {"right": right, "misleading": misleading, "incomplete": incomplete}, "baseline_attachment": base}}
+
+    def result(h, hashes=None):
+        return {"prompt_hashes": [kind_hash] if hashes is None else hashes, "evaluation": h,
+                "selection": half(0, 60, 0, mod=9)}  # a failing selection half that must not matter
+
+    ok = S.verdict_report(result(half(32, 20, 8)), "v5")  # 32 of 60 = 20/60 + 1/5 exactly; misleading 20 of 60 = 20/60, within +5 points
+    assert ok["all_gates_pass"] and ok["half"] == "evaluation" and ok["candidates"] == 100 and ok["prompt_hash"] == kind_hash
+    assert ok["gates"]["attachment_gain_over_production"]["passed"] and ok["gates"]["misleading"]["passed"]
+    assert not S.verdict_report(result(half(31, 20, 9)), "v5")["gates"]["attachment_gain_over_production"]["passed"]
+    assert S.verdict_report(result(half(32, 23, 5)), "v5")["gates"]["misleading"]["passed"]  # 23 of 60 = 38.3% <= 33.3% + 5 points
+    assert not S.verdict_report(result(half(32, 24, 4)), "v5")["gates"]["misleading"]["passed"]  # 24 of 60 = 40%
+    assert not S.verdict_report(result(half(32, 20, 8, real_rej=5)), "v5")["gates"]["real_rejected"]["passed"]  # 5 of 80 = 6.25% > 5%
+    assert S.verdict_report(result(half(32, 20, 8, real_rej=4)), "v5")["gates"]["real_rejected"]["passed"]  # 4 of 80 = 5% exactly
+    assert not S.verdict_report(result(half(32, 20, 8, mod=1)), "v5")["all_gates_pass"]
+    assert not S.verdict_report(result(half(32, 20, 8, invented=3)), "v5")["all_gates_pass"]  # 3 of 100 > 2%
+    # the status design's v4 verdict needs its own prompt; nothing else has a verdict
+    assert S.verdict_report(result(half(32, 20, 8), [status_hash]), "v4")["prompt_hash"] == status_hash
+    for registry, hashes in (("v5", [status_hash]), ("v4", [kind_hash]), ("v5", [kind_hash, status_hash]), ("v5", None)):
+        h = hashes if hashes is not None else ["None"]
+        with pytest.raises(SystemExit):
+            S.verdict_report(result(half(32, 20, 8), h), registry)
+    for registry in ("v2", "v3"):
+        with pytest.raises(SystemExit) as e:
+            S.verdict_report(result(half(32, 20, 8)), registry)
+        assert "only for the registries tied to a prompt" in str(e.value)
+    with pytest.raises(SystemExit) as e:  # a ledger that never ran the evaluation half has nothing to score
+        S.verdict_report({"prompt_hashes": [kind_hash], "selection": half(32, 20, 8)}, "v5")
+    assert "no evaluation-half results" in str(e.value)
+    # through the command line, on a ledger that holds only selection-half records
+    d = tmp_path / "run"
+    d.mkdir()
+    rec = {"entry_id": "k1", "candidate_id": "audit:Z", "status": "complete", "prompt_hash": kind_hash, "answer": None, "issues": []}
+    (d / "resolver.jsonl").write_text(json.dumps(rec) + "\n", encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", ["score_resolver.py", "--verdict", f"r2_14b={d}", "--registry", "v5"])
+    with pytest.raises(SystemExit):
+        S.main()
+    monkeypatch.setattr(sys, "argv", ["score_resolver.py", "--verdict", "no-equals", "--registry", "v5"])
+    with pytest.raises(SystemExit) as e:
+        S.main()
+    assert "NAME=DIR" in str(e.value)
+    monkeypatch.setattr(sys, "argv", ["score_resolver.py", "--registry", "v5"])
+    with pytest.raises(SystemExit) as e:
+        S.main()
+    assert "--runs" in str(e.value)
