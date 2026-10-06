@@ -12,6 +12,7 @@ candidate in the `evaluation` half of a gold that `score_resolver.py --gold` can
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import re
 import sys
@@ -58,10 +59,22 @@ def parse_pack_a(text):
     return cards
 
 
+def rubric_problems(pack, labels):
+    """The audit's own label checker (copied byte for byte into the pack folder) run on both passes: every card labeled once, only allowed values, a lead-in
+    text exactly when the rubric asks for one, a verdict only for cards with a stem. A list of problems, empty when the labels follow the rubric."""
+    spec = importlib.util.spec_from_file_location("fresh_pack_check_labels", Path(pack) / "check_labels.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.check(pack, Path(labels) / "labels_claude_a.jsonl", Path(labels) / "labels_claude_b.jsonl")
+
+
 def build(pack=PACK, labels=LABELS, key_path=KEY, spent_path=SPENT):
     for path in (labels / "labels_claude_a.jsonl", labels / "labels_claude_b.jsonl"):
         if not path.exists():
             raise SystemExit(f"{path} does not exist: the fresh labels are sealed outside the repository until stage C2 of docs/PHASE45_WP457E_PLAN.md commits them")
+    problems = rubric_problems(pack, labels)
+    if problems:
+        raise SystemExit("the labels do not follow the rubric: " + "; ".join(problems[:8]))
     key = json.loads(key_path.read_text(encoding="utf-8"))["items"]
     cards = parse_pack_a((pack / "pack_a.md").read_text(encoding="utf-8"))
     a, b = _jsonl(labels / "labels_claude_a.jsonl"), _jsonl(labels / "labels_claude_b.jsonl")

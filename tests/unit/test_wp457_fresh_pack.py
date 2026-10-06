@@ -142,6 +142,7 @@ def _mini(tmp_path, lead_in="Officers will:", extra_b=False, drop_b=False, spent
     cards = [("R201", "Complete sentence one.", "Chunk text one."), ("R202", "(1) Report it.", f"{lead_in_card} (1) Report it."),
              ("R203", "Defines a term.", "Definition text."), ("R204", "(2) Archive it.", "Unrelated chunk.")]
     (pack / "pack_a.md").write_text("# t\n\n" + "\n".join(f"## {i}\nDocument: D | chunk 1\n\nQuote (the requirement text to judge):\n> {q}\n\nChunk 1:\n~~~~text\n{c}\n~~~~\n" for i, q, c in cards))
+    (pack / "check_labels.py").write_bytes((_DIR / "fresh_pack" / "check_labels.py").read_bytes())  # the audit's checker, as in the real pack folder
     (pack / "pack_b.md").write_text("# t\n\n## R201\nQuote:\n> Complete sentence one.\n\nStem the pipeline attached:\n> A stem.\n")
     key = {"items": {i: {"document": "D", "requirement_id": f"REQ-{i}", "chunk_id": 1, "stratum": "same-chunk", "stem": "A stem." if i == "R201" else ""}
                      for i, _, _ in cards}}
@@ -194,7 +195,7 @@ def test_the_gold_builder_refuses_what_would_corrupt_the_gold(FG, tmp_path):
     (parts["labels"] / "labels_claude_a.jsonl").write_text(json.dumps({"id": "R201", "standalone": "complete"}) + "\n")
     with pytest.raises(SystemExit) as e:
         FG.build(**parts)
-    assert "do not list the same cards" in str(e.value)
+    assert "do not follow the rubric" in str(e.value) and "no label for R202" in str(e.value)  # the rubric checker sees a missing card first
     (parts["labels"] / "labels_claude_a.jsonl").unlink()
     with pytest.raises(SystemExit) as e:
         FG.build(**parts)
@@ -225,3 +226,32 @@ def test_the_sealed_hashes_in_the_plan_are_enforced_before_anything_is_frozen(FG
     assert "does not fix a hash" in str(e.value)
     real = FG.expected_hashes()  # the real plan fixes three 64-hex hashes
     assert set(real) == {"labels_claude_a.jsonl", "labels_claude_b.jsonl", "fresh_gold.json"} and all(len(v) == 64 for v in real.values())
+
+
+def test_labels_that_break_the_rubric_stop_the_builder(FG, tmp_path):
+    """Review finding: valid JSON is not enough; the audit's own checker runs before any gold is built."""
+    def with_a(tmp, change):
+        parts = _mini(tmp)
+        path = parts["labels"] / "labels_claude_a.jsonl"
+        rows = [json.loads(x) for x in path.read_text().splitlines()]
+        change(rows)
+        path.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+        return parts
+
+    cases = {
+        "a complete label with a lead-in text": lambda rows: rows[0].update(lead_in_text="Officers will:"),
+        "a needs_lead_in label with no location": lambda rows: rows[1].update(lead_in_location=None),
+        "a not_shown label with a text": lambda rows: rows[3].update(lead_in_text="Officers will:"),
+        "a same_chunk label with no text": lambda rows: rows[1].update(lead_in_text=None),
+        "an unknown standalone value": lambda rows: rows[2].update(standalone="maybe"),
+    }
+    for label, change in cases.items():
+        with pytest.raises(SystemExit) as e:
+            FG.build(**with_a(tmp_path / label.replace(" ", "_"), change))
+        assert "do not follow the rubric" in str(e.value) or "bad standalone" in str(e.value), label
+    parts = _mini(tmp_path / "verdict")
+    (parts["labels"] / "labels_claude_b.jsonl").write_text(json.dumps({"id": "R201", "stem_verdict": "maybe"}) + "\n")
+    with pytest.raises(SystemExit) as e:
+        FG.build(**parts)
+    assert "do not follow the rubric" in str(e.value)
+    assert FG.rubric_problems(*(lambda m: (m["pack"], m["labels"]))(_mini(tmp_path / "clean"))) == []
