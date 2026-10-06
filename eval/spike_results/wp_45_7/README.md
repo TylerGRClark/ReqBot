@@ -554,3 +554,18 @@ about as high as the generative resolver's, while the model almost never leaves 
 - **Misleading attachments (20 to 22):** for records that need a lead-in, the model often picks a `preceding` entry (the words just before the sentence, sometimes only a list number) or a heading instead of the lead-in; for complete sentences it attaches a heading or a `preceding` entry when `none` is right.
 
 **What the plan allows next:** one prompt revision after this first run (plan section 3, S2), made from these selection-half failures, run on the same four configurations, and judged by the same rule over the revised runs alone. The evaluation half is still unread.
+
+## Step 15: WP-45.7b, the one prompt revision the plan allows (`selection.py`, prompt hash `435a1561313c6d64`)
+
+Made from the selection-half failures of step 14, **before** any run of it, and registered here. Nothing else changes: the generator is still frozen at revision 2, the checker, the gates, the registry and the choice rule are as they were, and the evaluation half is still unread. The revised prompt runs on the same four
+configurations and the rule is applied over those four runs alone (the first-run results stay in the repository as the first-run record).
+
+What the revision says, in general terms (the examples are invented; a test checks that none of the corpus acronyms appear in the prompt):
+1. **Fragments and list items.** A short phrase or list item, even a bare noun phrase, under a lead-in or heading that says what someone must, should or may do or provide is part of that requirement and gets its status, with the lead-in as its parent; `not_a_requirement` only when nothing in the evidence assigns a duty. (Answers the five or six real noun-phrase items rejected in step 14.)
+2. **Actor versus parent.** An entry that ends with a colon or contains a modal word is a governing clause: a parent, never an actor; the shorter entry naming the party is the actor. (Answers the lead-in-as-actor choices, the non-gated `modal_in_evidence` errors.)
+3. **`preceding` entries** are only the words right before the sentence and are chosen only if they end with a colon or name the party; a sentence that is complete by itself gets parent `none` even when a heading is on the menu. (Answers the misleading attachments.)
+4. **Status from the modal word:** "will not", "shall not", "must not" are prohibitions; "can" or "may" in a description of what something can do is no permission. (Answers the model-side modality errors.)
+
+Two new invented worked examples (a noun-phrase item under a "must include:" lead-in; a "will not" prohibition under a topic heading with a junk `preceding` entry); the fixed prompt grows from about 1,770 to 2,634 estimated tokens, and every selection-half prompt still fits (0 untreatable; largest 3,734 at R1 and 4,773 at R2 by the conservative estimate).
+
+**What this revision does not do, on purpose:** it does not teach the model to relabel a modal-free hint such as "Consider using ..." as an obligation to get past the checker; that record (card R025) stays a correct `recommendation` that the checker's phrase table cannot accept, so the zero-modality gate may still fail on it. If the revised runs miss only on that, the report says so and leaves the gate alone.

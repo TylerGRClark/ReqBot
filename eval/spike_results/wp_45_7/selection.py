@@ -27,9 +27,10 @@ NONE = "none"
 INSTRUCTIONS = """You are classifying ONE candidate sentence from a compliance document and choosing, from a numbered menu, the spans that say who must act and which clause governs it. Use only the evidence and the menu below; do not use outside knowledge. Answer with one JSON object: {"status": ..., "actor": "M1" or "none", "parent": "M1" or "none"}. The menu ids are the only values allowed for actor and parent.
 
 - status: obligation (must, shall, will, a mandatory duty), recommendation (should, should not, is recommended, a hint at what to do), permission (may, is authorized to), prohibition (shall not, must not), scope_or_context (says who or what the document covers; it is kept and attached, not a requirement), not_a_requirement (a description, definition, background, or what a technology can do or what may happen; it asks or allows nobody to do anything, even if it contains "can" or "may"), or unresolved (the evidence is not enough to decide). Most descriptive sentences are not_a_requirement.
-- actor: the menu entry that names the party who must act. An approver or authorizer is NOT the actor. Choose "none" when no entry names the actor, or when the sentence is not a requirement.
-- parent: the menu entry that is the governing clause the sentence depends on: a lead-in such as "The Records Officer will:" that the sentence completes, or a heading that names the responsible party. Choose "none" when the sentence is complete by itself (it names who must act and what to do) or when no entry is the governing clause. A heading or lead-in that only names a topic is not a parent.
-- Choose "none" rather than guess. Entries marked "found by rule" may be wrong: choose one only if the evidence agrees. Prefer the shortest entry that names the party over a long one that contains other words.
+- actor: the menu entry that only names the party who must act (for example "The Records Officer"). An approver or authorizer is NOT the actor. An entry that ends with a colon, or contains shall, must, will, should or may, is a governing clause: choose it as the parent, never as the actor; if the party is also on the menu as a shorter entry, choose that as the actor. Choose "none" when no entry names the actor, or when the sentence is not a requirement.
+- parent: the menu entry that is the governing clause the sentence depends on: a lead-in such as "The Records Officer will:" that the sentence completes, or a heading that names the responsible party. Choose "none" when the sentence is complete by itself (it names who must act and what to do), even if a heading is on the menu, or when no entry is the governing clause. A heading or lead-in that only names a topic is not a parent. Entries marked "preceding" are only the words right before the sentence, often a list number or an unrelated sentence: choose one only if it ends with a colon or names the party.
+- A short phrase or list item, even a bare noun phrase, under a lead-in or heading that says what someone must, should or may do or provide is part of that requirement: give it that status and choose the lead-in as its parent. Call a sentence not_a_requirement only when nothing in the evidence assigns it a duty.
+- Read the status from the modal word in the sentence or in the parent you choose: "will not", "shall not" and "must not" are prohibition; "can" or "may" in a description of what something is able to do is not a permission to anyone. Choose "none" rather than guess. Entries marked "found by rule" may be wrong: choose one only if the evidence agrees. Prefer the shortest entry that names the party over a long one that contains other words.
 
 Examples (invented text). Answer with one JSON object."""
 
@@ -71,6 +72,23 @@ EXAMPLES = [
                   ("heading", "heading (leaf)", "6.2 Backups")],
         "menu": [_entry("subject", "Organizations"), _entry("heading", "6.2 Backups"), _entry("heading", "Backups")],
         "answer": {"status": "recommendation", "actor": "M1", "parent": "none"},
+    },
+    {
+        "title": "a bare noun-phrase list item under a lead-in",
+        "quote": "(3) Procedures for revising the plan.",
+        "spans": [("chunk", "same chunk", "The plan must include: (1) Roles and duties. (2) Review schedules. (3) Procedures for revising the plan."),
+                  ("heading", "heading (leaf)", "7.1 Plan contents")],
+        "menu": [_entry("heading", "7.1 Plan contents"), _entry("heading", "Plan contents"),
+                 _entry("lead_in", "The plan must include:"), _entry("lead_in", "The plan"), _entry("preceding", "(2) Review schedules.")],
+        "answer": {"status": "obligation", "actor": "none", "parent": "M3"},
+    },
+    {
+        "title": "a prohibition, and a topic heading that is not a parent",
+        "quote": "The vendor will not store credentials in plain text.",
+        "spans": [("chunk", "same chunk", "5.2.4. The vendor will not store credentials in plain text."),
+                  ("heading", "heading (leaf)", "5. REPORTS")],
+        "menu": [_entry("subject", "The vendor"), _entry("heading", "5. REPORTS"), _entry("heading", "REPORTS"), _entry("preceding", "5.2.4.")],
+        "answer": {"status": "prohibition", "actor": "M1", "parent": "none"},
     },
     {
         "title": "a scope statement",

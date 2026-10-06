@@ -1,6 +1,7 @@
 """WP-45.7b: the selection resolver's schema, prompt, examples and assembler (offline; no LLM, no corpus)."""
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 
@@ -66,6 +67,20 @@ def test_examples_cover_the_choices_the_model_must_make(S):
     assert {a["status"] for a in answers} >= {"obligation", "recommendation", "not_a_requirement", "scope_or_context"}
     assert any(a["parent"] != "none" for a in answers) and any(a["parent"] == "none" and a["actor"] != "none" for a in answers)
     assert any(a["actor"] == "none" and a["parent"] == "none" for a in answers)
+
+
+def test_the_revised_examples_teach_the_failure_patterns_without_using_corpus_text(S):
+    """Prompt revision 1: noun-phrase list items take the lead-in's status, a prohibition is read from "will not", a topic heading is no parent."""
+    by_title = {ex["title"]: ex for ex in S.EXAMPLES}
+    item = by_title["a bare noun-phrase list item under a lead-in"]
+    assert item["answer"]["status"] == "obligation" and item["answer"]["parent"] != "none" and item["answer"]["actor"] == "none"
+    prohibition = by_title["a prohibition, and a topic heading that is not a parent"]
+    assert prohibition["answer"]["status"] == "prohibition" and prohibition["answer"]["parent"] == "none"
+    for rule in ("never as the actor", "Entries marked \"preceding\"", "bare noun phrase", "\"will not\""):
+        assert rule in S.INSTRUCTIONS, rule
+    corpus = " ".join(json.dumps(ex) for ex in S.EXAMPLES) + S.INSTRUCTIONS
+    for real in ("DOT&E", "DISA", "SLA", "AETC", "CARM", "PPSM", "CUI"):  # invented text only: nothing taken from the gold's records
+        assert real not in corpus, real
 
 
 def test_assemble_builds_the_resolver_shape_with_verbatim_actor_and_parent(S):
