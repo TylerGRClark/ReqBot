@@ -647,7 +647,7 @@ The four configurations ran on the 104 selection candidates with the unchanged p
 Also, as before, `modal_in_evidence` (a non-gated checker error: a lead-in picked as actor) appears in 3 answers on R1 8B and 7 on R2 8B and in none on the 14B runs.
 
 **What this says, and what it does not** (selection half only; the evaluation half is still unread):
-- *Supported:* with the two fixes, a model choosing among code-proposed spans beats production on attachment by 20 or more points on this half in three configurations (against 25 to 31% for trivial rules on the same menus), with zero invented parties by construction and a misleading rate no higher than production's plus the registered margin.
+- *Supported:* with the two fixes, a model choosing among code-proposed spans beats production on attachment by 20 or more points on this half in three configurations (against 25 to 31% for trivial rules in step 16's control, which used the menus from before the marker fix and was not rerun), with zero invented parties by construction and a misleading rate no higher than production's plus the registered margin.
 - *Not met:* the zero-modality gate, because in 4 to 6 answers per run the model's **status** disagrees with the modal the code reads from the same text (or cites none). The gate is working as designed; these are real model slips on a status the code could decide itself.
 - *Not tested:* the evaluation half, the held-out set, and any design in which the code, not the model, sets the status class whenever it reads a modal.
 
