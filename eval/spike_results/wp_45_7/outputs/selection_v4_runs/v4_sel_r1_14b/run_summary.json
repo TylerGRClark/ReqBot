@@ -1,0 +1,29 @@
+{
+ "candidates": 104,
+ "status": {
+  "complete": 104
+ },
+ "valid_answers": 104,
+ "parsed": 104,
+ "shape_conformant": 104,
+ "error_codes": {
+  "modality_class": 3,
+  "modality_strengthened": 1
+ },
+ "answers_with_no_error": 100,
+ "mean_prompt_tokens": 2105.7,
+ "mean_answer_tokens": 16.9,
+ "mean_wall_seconds": 1.0,
+ "estimate_over_real": 1.56,
+ "fixed_prompt_estimated_tokens": 2634,
+ "mean_menu_size": 4.85,
+ "answers_with_a_selection": 104,
+ "run_label": "v4_sel_r1_14b",
+ "tier": "R1",
+ "model": "qwen2.5:14b",
+ "digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6",
+ "prompt_hash": "435a1561313c6d64",
+ "half": "selection",
+ "calls_made": 104,
+ "wall_seconds": 99.5
+}

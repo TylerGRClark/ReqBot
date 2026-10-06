@@ -623,3 +623,36 @@ Plan: `docs/PHASE45_WP457C_PLAN.md` (merged in #229). Offline only: no model has
    `attachment_gain_over_production` (right at least production's right rate plus 20 points: on the selection half 19/55 + 1/5, so 30 of 55 passes and 29 fails) and `misleading` (misleading plus failed resolutions at most production's misleading rate plus 5 points: 19/55 + 1/20, so 21 of 55 passes and 22 fails). The v2 and v3 rules score as before (tests).
 
 Next (plan Stage B): the four selection-half runs with the unchanged prompt, the v4 rule, and the stop-or-continue decision; Stage C (the evaluation half, once) only for a passing choice.
+
+## Step 18: WP-45.7c Stage B, the four selection-half runs under the v4 rule and the outcome of the protocol (`outputs/selection_v4_runs/`, `outputs/resolver_selection_v4_choice.json`)
+
+The four configurations ran on the 104 selection candidates with the unchanged prompt (hash `435a1561313c6d64`), the table, generator (`menu.py` hash `e6ff087bb3f0fab5`) and v4 rule of step 17, from a pinned worktree at the merge commit of #230. Every call completed; 104 of 104 answers were shape-conformant in every run. The plan allows no prompt revision at this stage.
+
+| Config | Attachment right (misleading / incomplete); gate: at least 54.5% = 30 of 55 | Misleading; gate at most 39.5% = 21 of 55 | Non-requirements rejected (60%) | Real wrongly rejected (5%) | Gated modality-error answers (0) | Invented | Gates failed |
+|---|---|---|---|---|---|---|---|
+| Production stem | 34.5% (19 / 17) | 34.5% | n/a | n/a | n/a | n/a | n/a |
+| Selection R1 8B | **61.8%** (18 / 3) | 32.7% | 81.2% | 8.0% | 4 | 0 | real rejected, modality |
+| Selection R1 14B | 56.4% (21 / 3) | 38.2% | 81.2% | 8.0% | 4 | 0 | real rejected, modality |
+| Selection R2 8B | 50.9% (22 / 5) | 40.0% | 81.2% | 9.1% | 4 | 0 | attachment, misleading, real rejected, modality |
+| Selection R2 14B | **61.8%** (19 / 2) | 34.5% | 81.2% | **3.4%** | 6 | 0 | **modality only** |
+
+**Outcome.** No configuration passes every gate. The rule's fallback chooses R1 on the 8B (61.8%, tied with R2 on the 14B; ties go to the lower tier, then the smaller model) and reports it as failing the real-rejected and modality gates. **By the plan, the evaluation half is not scored and the held-out set is not run.** What changed since step 16: **three of the four configurations clear the new production-anchored attachment bar and the misleading margin**
+(61.8, 56.4 and 61.8% against 54.5% needed), and **R2 on the 14B fails only the zero-modality gate**. Card R025 is in no run's modality list (the phrase-table fix did what it was meant to), and audit R011 and card R064 (the two records the generator's marker rule had been missing) now get their lead-in.
+
+**The remaining modality errors (4 to 6 answers per run, seven records in all) are mostly model slips, plus one record the design cannot represent** (read from the ledgers; corrected after a Codex review of this step):
+- *The status contradicts a modal the code has already read (audit R011 and its duplicate card R064, on R1 8B and R2 14B):* the model picks the right lead-in "All Service component communication support organizations **should**:" and still answers `obligation` for the imperative item under it.
+- *A `recommendation` that cites no modal (audit R052 and its duplicate card R078, in all four runs; card R089 on one):* the sentence that holds the "should" ("Organizations should also be aware ...") **is on the menu** (R052's M5), but the model picks only the subject entry as actor and leaves the parent empty, so the answer cites no modal.
+- *A permission for a bare noun-phrase item (audit R100, on both 14B runs):* no modal anywhere.
+- *Not a model error: a mixed-modality record (card R081, in three runs).* The quote is "The community strings **shall** be modified from default settings - default 'public' and 'private' strings **shall not** be utilized." It holds an obligation and a prohibition; the model's `prohibition` is defensible, and the assembler reads only the first modal, so the checker reports `modality_strengthened`. A design with one status per candidate cannot represent both requirements; such candidates would need to be split or given more than one modality.
+
+**A gap the gates do not see:** on R2 8B, audit R011 and card R064 choose the subject entry as actor, leave the parent empty and answer `obligation`, while the governing lead-in on the menu says `should`. The checker sees no modal in the cited evidence, so it raises nothing, and attachment scores the actor overlap as right. A wrong status class passes silently whenever the governing modal is not selected.
+
+Also, as before, `modal_in_evidence` (a non-gated checker error: a lead-in picked as actor) appears in 3 answers on R1 8B and 7 on R2 8B and in none on the 14B runs.
+
+**What this says, and what it does not** (selection half only; the evaluation half is still unread):
+- *Supported:* with the two fixes, a model choosing among code-proposed spans beats production on attachment by 20 or more points on this half in three configurations (against 25 to 31% for trivial rules in step 16's control, which used the menus from before the marker fix and was not rerun), with zero invented parties by construction and a misleading rate no higher than production's plus the registered margin.
+- *Not met:* the zero-modality gate, because in 4 to 6 answers per run the model's **status** disagrees with the modal the code reads from the same text, or cites none (one of the seven records is a mixed-modality sentence, which no single status fits).
+- *Not tested:* the evaluation half, the held-out set, and any design in which the code, not the model, sets the status class whenever it reads a modal.
+
+**Decision left to Tyler:** the evidence points at one more design change, not at another threshold change, but it is a larger one than a table lookup. Where the quote or the chosen parent contains a modal, the status class could be set by code (`shall` an obligation, `should` a recommendation, `may` a permission, `shall not` a prohibition), and the model would decide only *whether it is a requirement* plus actor and parent. That would remove the "status contradicts the modal it picked" errors by construction, but two cases need their own design before it is registered:
+(a) **a governing modal the model did not select** (the R2 8B R011 case above): code reading only the quote or the chosen parent never sees it, so the step would also have to infer or require the governing parent, for example by reading the nearest lead-in on the menu; and (b) **mixed-modality quotes** (card R081), which need splitting or more than one modality per candidate. It would be a new, separately registered step with the evaluation half still the verdict, and it is not started.
