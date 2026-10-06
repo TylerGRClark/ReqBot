@@ -35,8 +35,11 @@ The model never writes a value. Code proposes every span; the model picks among 
 4. **Assembly (code).** The answer is assembled in the existing `{value, evidence}` shape with `standalone_statement` and `plain_language` null, then run through the **unchanged**
    `check_resolution.py` and `score_resolver.py` (gates, attachment, ledger). Conditions, exceptions and timing are out of scope for this experiment; the tracked backlog item for them is unchanged.
 
-Because every value is a verbatim span and the modality is read by code, the invented-party and modality gates cannot fail through the model's wording. They are still **computed
-and must be zero** (as a test of the generator and the assembler, not of the model); the model is judged on what it actually chooses: the status and the attachment.
+Because every value is a verbatim span and the modality is read by code, the **invented-party gate and the wording-related modality errors** (a modal added, dropped or strengthened while
+copying) cannot occur through the model's wording; the invented gate is still computed and must be zero, as a test of the generator and the assembler. The **modality gate is not structural**,
+though: the unchanged checker compares the model's `status` with the code-read modal class (for example `obligation` for a quote that says "should" is `modality_strengthened`), so a status
+that contradicts the quote's own modal still counts, at zero tolerance, against the model. That is a real error and is kept as a gate: it measures whether the model's classification respects
+the modality the code found. The model is judged on what it actually chooses: status (including that consistency) and attachment.
 
 ## 3. Staging, gates and stop rules (registered now)
 
@@ -48,7 +51,7 @@ The selection half was already used to design prompts v1 and v2 and to write sec
   **two generator revisions**, made looking only at selection-half misses; then freeze. If S1 fails after the second revision: **stop, no model run**, and report the ceiling.
 - **S2, model gates on the selection half.** Four configurations (R1 and R2 evidence tiers by 8B and 14B; R0 is dropped because it supplies no context and attached 27% in v1 and v2). Same
   gates and thresholds as G2 in the earlier plan section 4.5: valid share at least 95%, real wrongly rejected at most 5%, real scope-or-unresolved at most 10%, non-requirements rejected
-  at least 60%, incomplete at most the production baseline plus 5 points, invented zero and modality errors zero (structural, see above), **plus** attachment right at least **63.6%**
+  at least 60%, incomplete at most the production baseline plus 5 points, invented zero (structural, see above) and modality errors zero (model-dependent through the status, see above), **plus** attachment right at least **63.6%**
   (not worse than the best generative result). One prompt revision allowed after the first run; failures count against gates as before.
 - **Choice rule (same shape as before, from the selection half only).** Keep configurations passing every gate; take the highest attachment-right rate, ties to the lower tier, then the smaller
   model. If none passes, report the best one as failing and **stop**: the evaluation half is not scored and the held-out set is not run. The rule is applied by `score_resolver.py --choose`
@@ -68,5 +71,5 @@ The selection half was already used to design prompts v1 and v2 and to write sec
 
 - Nothing about standalone or plain-language rewriting; those fields are dropped here and stay a separate question.
 - A model that chooses well among code-proposed spans is a smaller claim than "the resolver understands the clause"; the gates measure choices against the audit gold, no more.
-- The code reading of modality is rule-based: its rare misses (an ambiguous `can`, a modal in an unusual place) are reported as a descriptive count, not hidden by the structural zero.
+- The code reading of modality is rule-based: its rare misses (an ambiguous `can`, a modal in an unusual place) are reported as a descriptive count, and when a status/modality conflict traces to the code's reading rather than the model's choice, the run report says so (the gate is not relaxed).
 - If S1 fails, the finding is that the evidence bundle does not reliably contain the right span at all, which would point at Step B (chunking) rather than at the resolver.
