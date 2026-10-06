@@ -101,7 +101,7 @@ def run_candidates(candidates, docs, *, tier, model, digest, run_label, ledger, 
             continue
         prompt = R.render_prompt(bundle)
         rec = {
-            "key": key, "kind": "resolver", "run_label": run_label, "tier": tier, "model": model, "digest": digest,
+            "entry_id": key, "kind": "resolver", "run_label": run_label, "tier": tier, "model": model, "digest": digest,
             "candidate_id": cand["candidate_id"], "document": cand["document"], "chunk_id": cand["chunk_id"],
             "quote": cand["quote"], "prompt_hash": phash, "bundle": bundle.to_dict(), "prompt_chars": len(prompt),
             "estimated_prompt_tokens": B.estimate_tokens(len(prompt)), "num_ctx": num_ctx, "num_predict": num_predict,

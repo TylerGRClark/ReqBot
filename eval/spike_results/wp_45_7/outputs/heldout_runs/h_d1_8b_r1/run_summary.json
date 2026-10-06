@@ -1,0 +1,20 @@
+{
+ "chunks": 46,
+ "status": {
+  "complete": 46
+ },
+ "records": 201,
+ "mean_prompt_tokens": 1251.9,
+ "mean_answer_tokens": 207.5,
+ "mean_wall_seconds": 4.7,
+ "estimate_over_real": 1.76,
+ "run_label": "h_d1_8b_r1",
+ "arm": "D1",
+ "set": "heldout",
+ "model": "llama3.1:8b-instruct-q4_K_M",
+ "digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+ "prompt_hash": "7da34da9994793c5",
+ "chunks_selected": 46,
+ "calls_made": 46,
+ "wall_seconds": 217.4
+}

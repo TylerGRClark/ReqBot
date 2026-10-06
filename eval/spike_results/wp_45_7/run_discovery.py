@@ -57,7 +57,7 @@ def run_chunks(chunks, *, arm, model, digest, run_label, ledger, ollama_url, num
         prompt = DP.render(arm, chunk["text"])
         est = B.estimate_tokens(len(prompt))
         rec = {
-            "key": key, "kind": "discovery", "run_label": run_label, "arm": arm, "model": model, "digest": digest,
+            "entry_id": key, "kind": "discovery", "run_label": run_label, "arm": arm, "model": model, "digest": digest,
             "document": document, "chunk_id": chunk["chunk_id"], "prompt_hash": phash, "prompt_chars": len(prompt),
             "estimated_prompt_tokens": est, "num_ctx": num_ctx, "num_predict": num_predict, "temperature": temperature,
             "timestamp": datetime.now(timezone.utc).isoformat(),

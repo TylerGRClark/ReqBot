@@ -38,16 +38,16 @@ def mods():
 def test_the_ledger_resumes_finished_records_and_redoes_failed_ones(mods, tmp_path):
     OR = mods["ollama_run"]
     ledger = OR.Ledger(tmp_path / "x" / "l.jsonl")
-    ledger.append({"key": "a", "status": "complete"})
-    ledger.append({"key": "b", "status": "failed"})
-    ledger.append({"key": "c", "status": "window_overrun"})
-    ledger.append({"key": "d", "status": "untreatable"})
+    ledger.append({"entry_id": "a", "status": "complete"})
+    ledger.append({"entry_id": "b", "status": "failed"})
+    ledger.append({"entry_id": "c", "status": "window_overrun"})
+    ledger.append({"entry_id": "d", "status": "untreatable"})
     again = OR.Ledger(tmp_path / "x" / "l.jsonl")
     assert [again.done(k) for k in "abcd"] == [True, False, True, True]  # a failure is redone, everything else is kept
-    again.append({"key": "b", "status": "complete"})  # the redo replaces the failure
+    again.append({"entry_id": "b", "status": "complete"})  # the redo replaces the failure
     assert OR.Ledger(tmp_path / "x" / "l.jsonl").done("b")
     with pytest.raises(ValueError):
-        again.append({"key": "e", "status": "maybe"})
+        again.append({"entry_id": "e", "status": "maybe"})
 
 
 def test_keys_change_with_the_run_label_the_model_digest_and_the_prompt(mods):
@@ -166,7 +166,7 @@ def test_an_overrun_a_truncation_a_bad_answer_and_a_failed_request_are_recorded_
     RD.run_chunks(_fake_chunks()[:1], arm="D0", model="m", digest="dg", run_label="f", ledger=ledger, ollama_url="http://x", log=lambda *a: None)
     rec = next(iter(ledger.records.values()))
     assert rec["status"] == "failed" and rec["raw_response"].startswith("ERROR:")
-    assert not ledger.done(rec["key"])  # redone on the next run
+    assert not ledger.done(rec["entry_id"])  # redone on the next run
 
 
 def test_a_prompt_over_the_cap_is_untreatable_and_never_sent(mods, tmp_path, monkeypatch):
@@ -338,3 +338,14 @@ def test_the_dry_run_report_uses_the_selected_context_cap(mods):
     assert RD.prompt_sizes(chunk, "D0", 8192)["over_prompt_cap"] == 0
     s = RD.prompt_sizes(chunk, "D0", 4096)
     assert s["cap"] == 3496 and s["over_prompt_cap"] == 1 and s["num_ctx"] == 4096
+
+
+def test_ledgers_written_before_the_field_was_renamed_are_still_readable(mods, tmp_path):
+    """gitleaks flags a hash in a field named `key`, so records now say `entry_id`; old files (key) still load and resume."""
+    OR = mods["ollama_run"]
+    path = tmp_path / "old.jsonl"
+    path.write_text(json.dumps({"key": "abc", "status": "complete"}) + "\n" + json.dumps({"entry_id": "def", "status": "failed"}) + "\n")
+    ledger = OR.Ledger(path)
+    assert ledger.done("abc") and not ledger.done("def") and ledger.get("abc")["status"] == "complete"
+    ledger.append({"entry_id": "abc", "status": "failed"})  # a redo replaces the old record under the same id
+    assert not OR.Ledger(path).done("abc")
