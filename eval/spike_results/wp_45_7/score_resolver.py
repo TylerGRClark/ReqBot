@@ -294,6 +294,9 @@ EXPECTED_PROMPT = {"v4": SEL.prompt_hash, "v5": K.prompt_hash, "v6": K.prompt_ha
 # fresh labeled set, not the spent gold.
 DECLARED = {"v6": "declared_v6.json"}
 GOLDS = {"v4": GOLD, "v5": GOLD, "v6": OUTPUTS / "fresh_gold.json"}
+# The plan's pre-run minimums for the fresh set (docs/PHASE45_WP457E_PLAN.md section 2): below them a gate could have nothing to measure (an empty category makes
+# `gate_report` omit its gate), so neither a run nor a verdict may proceed.
+SUFFICIENCY = {"v6": {"real": 80, "non_requirements": 8, "attachment_scored": 60}}
 
 
 def parse_config(name):
@@ -389,6 +392,19 @@ def _declared_choice(registry, outputs):
     return {k: d[k] for k in ("name", "tier", "model", "digest", "temperatures", "num_ctxs", "num_predicts")}
 
 
+def check_sufficiency(registry, golds):
+    """Stop unless the gold of a registry that has pre-run minimums meets all of them. `golds` is the list of gold records the run or verdict would use."""
+    need = SUFFICIENCY.get(registry)
+    if not need:
+        return
+    real = sum(1 for g in golds if is_real(g))
+    have = {"real": real, "non_requirements": len(golds) - real,
+            "attachment_scored": sum(1 for g in golds if g.get("set") == "audit" and attachment_scored(g))}
+    short = {k: f"{have[k]} < {need[k]}" for k in need if have[k] < need[k]}
+    if short:
+        raise SystemExit(f"the {registry} gold does not meet the plan's pre-run minimums, so nothing is run or scored: {short}")
+
+
 def check_frozen_code(registry, outputs=None, root=None, include_sealed=True):
     """Refuse to proceed unless every file in the committed manifest is byte-identical to what the Stage B runs used: the import closure of the
     runner (the menu generator, the checker, the assembler, the bundle builder and the pipeline modules it imports), the gold, and the files that pin
@@ -465,6 +481,7 @@ def main():
         sys.exit(f"the gold {gold_path} does not exist yet")
     gold = json.loads(gold_path.read_text(encoding="utf-8"))
     if args.verdict:
+        check_sufficiency(args.registry, [g for g in gold["gold"] if g["half"] == "evaluation"])
         name, sep, directory = args.verdict.partition("=")
         if not sep or not name or not directory:
             sys.exit(f"--verdict takes NAME=DIR, got {args.verdict!r}")

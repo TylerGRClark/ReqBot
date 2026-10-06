@@ -254,12 +254,48 @@ def test_the_v6_run_uses_the_new_menu_and_restores_the_frozen_one(SC, M1, M2, tm
     assert "2.17. MAJCOM/DRUs." in [e["text"] for e in old]
 
 
-def test_candidates_come_from_the_registrys_gold_evaluation_half(SC, tmp_path):
+def test_candidates_come_from_the_registrys_gold_evaluation_half(SC, tmp_path, monkeypatch):
+    monkeypatch.setattr(SC.SR, "SUFFICIENCY", {})  # this test is about which half is read, not about the minimums
     gold = tmp_path / "g.json"
     gold.write_text(json.dumps({"gold": [
         {"candidate_id": "fresh:R201", "document": "D", "chunk_id": 1, "quote": "q1", "half": "evaluation", "set": "audit", "extra": 1},
         {"candidate_id": "fresh:R202", "document": "D", "chunk_id": 2, "quote": "q2", "half": "selection", "set": "audit"}]}))
     assert SC.candidates_for("v6", gold) == [{"candidate_id": "fresh:R201", "document": "D", "chunk_id": 1, "quote": "q1"}]
+
+
+def _gold(real_complete, non_requirements, with_text=True):
+    g = [{"candidate_id": f"fresh:R{n}", "set": "audit", "half": "evaluation", "document": "D", "chunk_id": 1, "quote": f"q{n}", "standalone": "complete",
+          "lead_in_location": None, "lead_in_text": None} for n in range(real_complete)]
+    g += [{"candidate_id": f"fresh:N{n}", "set": "audit", "half": "evaluation", "document": "D", "chunk_id": 1, "quote": f"n{n}",
+           "standalone": "not_a_requirement", "lead_in_location": None, "lead_in_text": None} for n in range(non_requirements)]
+    return g
+
+
+def test_a_gold_below_the_pre_run_minimums_stops_the_run_and_the_verdict(SC, tmp_path, monkeypatch):
+    """Review finding: an empty category would make a gate vanish, and a short set would be consumed for nothing."""
+    S = SC.SR
+    assert S.SUFFICIENCY["v6"] == {"real": 80, "non_requirements": 8, "attachment_scored": 60}
+    S.check_sufficiency("v6", _gold(80, 8))  # exactly the minimums (all complete, so all attachment-scored)
+    S.check_sufficiency("v5", [])  # a registry without minimums is not checked
+    for real, non in ((79, 8), (80, 7), (80, 0)):
+        with pytest.raises(SystemExit) as e:
+            S.check_sufficiency("v6", _gold(real, non))
+        assert "pre-run minimums" in str(e.value)
+    with pytest.raises(SystemExit) as e:  # real requirements that are not attachment-scored do not count toward the 60
+        S.check_sufficiency("v6", [{**g, "standalone": "needs_lead_in"} for g in _gold(90, 8)[:90]] + _gold(0, 8))
+    assert "attachment_scored" in str(e.value)
+    short = tmp_path / "gold.json"
+    short.write_text(json.dumps({"gold": _gold(10, 2)}))
+    with pytest.raises(SystemExit):
+        SC.candidates_for("v6", short)  # the runner stops before any candidate is returned
+    ok = tmp_path / "ok.json"
+    ok.write_text(json.dumps({"gold": _gold(80, 8)}))
+    assert len(SC.candidates_for("v6", ok)) == 88
+    monkeypatch.setattr(S, "GOLDS", {**S.GOLDS, "v6": short})  # the verdict stops too, before it scores anything
+    monkeypatch.setattr(sys, "argv", ["score_resolver.py", "--verdict", f"r2_14b={tmp_path}", "--registry", "v6"])
+    with pytest.raises(SystemExit) as e:
+        S.main()
+    assert "pre-run minimums" in str(e.value)
 
 
 def test_the_committed_v6_manifest_matches_the_repository_and_names_the_sealed_files(SC):
@@ -283,4 +319,4 @@ def test_the_v6_manifest_itself_is_fixed_here(SC):
     """A tampered manifest could pin anything, so its own hash is fixed in this test (regenerate it only on purpose, with freeze_v6.py --force)."""
     S = SC.SR
     own = S.hashlib.sha256((S.OUTPUTS / S.FROZEN_CODE["v6"]).read_bytes()).hexdigest()
-    assert own == "0f24e4f414cf3de89174ea1ff02fdff41036cb150746e1760c120e8f6a9ceee4", own
+    assert own == "08886e0654700cff7e48d9d6260e41111fc66b78fbe687d7625fc32615ce0e02", own

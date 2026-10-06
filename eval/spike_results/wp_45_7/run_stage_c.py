@@ -57,9 +57,11 @@ def _menu_module(menu):
 
 def candidates_for(registry, gold_path=None):
     """{candidate_id, document, chunk_id, quote} for every candidate of the registry's gold (all in its `evaluation` half). Read only after the
-    preflight passes."""
+    preflight passes, and only if the gold meets the plan's pre-run minimums (`score_resolver.SUFFICIENCY`)."""
     gold = json.loads(Path(gold_path or SR.GOLDS[registry]).read_text(encoding="utf-8"))["gold"]
-    return [{k: g[k] for k in ("candidate_id", "document", "chunk_id", "quote")} for g in gold if g["half"] == "evaluation"]
+    half = [g for g in gold if g["half"] == "evaluation"]
+    SR.check_sufficiency(registry, half)  # before the run is built: a set below the plan's minimums must not be consumed
+    return [{k: g[k] for k in ("candidate_id", "document", "chunk_id", "quote")} for g in half]
 
 
 def check_partial_ledger(path, frozen, label):
