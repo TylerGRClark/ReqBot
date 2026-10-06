@@ -1,0 +1,16 @@
+{
+ "commit": "d97de23478d7b8e0c4edefb0ec7e84424808fa82",
+ "files": {
+  "bundle.py": "33906ea13b2e3ac0d2e74c17eda9725abe2603e6f7975f0cdfd0a2f979816b3f",
+  "check_resolution.py": "55eba79800332624bc02c3a0e06d899f44dddc133af649309e9e4950191bfdd9",
+  "kind_selection.py": "42ec24b475f7d02e3804af6f470858afefce2b9eb168dc20df5ef8dd4bc2b945",
+  "menu.py": "e6ff087bb3f0fab575cf0c2beaddcab5f36346df79b407537470e20a251e5230",
+  "ollama_run.py": "aae2c52264a04a8e6cc371f9933c3fca156a9fd53244a6174073b5e66548a962",
+  "outputs/resolver_gold.json": "57e0901b4431496d15e117af0247d98397aa80dc363c947876c35e53b31aec60",
+  "resolver.py": "ed75d3bf7901823b4e30f54f9b3e831f370f8d6a4669b3d58980f99a422328d9",
+  "run_resolver.py": "0c2509a352e9b55e7d01b78312da7d3cb464d5e24f849b23c814f06d411453f2",
+  "run_selection.py": "f505180c75b6e0142c9ac76cf5b1300a57f3923cc031d2f9019bfc2be3b395c1",
+  "selection.py": "dec03f35ba51f21152b46b5f9b8b50ad6c983982204bfeb960df590e5cbd5258"
+ },
+ "note": "sha256 of the code files and the gold the WP-45.7d Stage B runs used (the commit above); the one-shot verdict refuses to score if any differs"
+}
