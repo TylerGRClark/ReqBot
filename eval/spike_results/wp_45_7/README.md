@@ -524,3 +524,28 @@ section numbers such as "2.1.5.1." as list markers, so a chunk whose lead-in is 
 experiment succeeds, widening the marker rule is an obvious follow-up, made after the evaluation-half verdict and measured as its own change. Also, the `preceding` entry sometimes holds only a list number ("2.1.5.2."), which is useless but harmless: the right answer for it is `none`.
 
 Next (plan stage 4): the four runs (R1 and R2, each on the 8B and the 14B) on the selection half, the choice report with `--registry v3`, and the stop-or-continue decision, as in Step 11.
+
+## Step 14: WP-45.7b, the first selection run on the selection half (`outputs/selection_v3_runs/`, `outputs/resolver_selection_v3_choice.json`)
+
+The four configurations (R1 and R2 by the 8B and the 14B) ran on the 104 selection-half candidates with the selection prompt of step 13 (hash `c9ca62bfb5a01a63`, code as merged in #225, run from a pinned worktree). Every call completed and 104 of 104 answers were shape-conformant in
+every run, at about 0.6 to 1.1 seconds per call (the answers are a few tokens). The choice report is `score_resolver.py --choose --registry v3` over these four runs alone. The v2 columns are the best generative result for comparison (R1, 14B).
+
+| Config | Attachment right (misleading / incomplete) | Non-requirements rejected (gate 60%) | Real wrongly rejected (gate 5%) | Answers with a modality error (gate 0) | Invented-party answers (gate 2%) | Gates failed |
+|---|---|---|---|---|---|---|
+| Production stem (baseline) | 34.5% (19 / 17) | n/a | n/a | n/a | n/a | n/a |
+| Generative v2, R1 14B (best) | 63.6% (19 / 1) | 75% | 2.3% | 40 | 29.8% | modality, invented |
+| Selection, R1 8B | 54.5% (22 / 3) | 81.2% | 6.8% | 3 | **0** | attachment, real rejected, modality |
+| Selection, R1 14B | **58.2%** (20 / 3) | 68.8% | 5.7% | 4 | **0** | attachment, real rejected, modality |
+| Selection, R2 8B | 52.7% (21 / 5) | 75.0% | 6.8% | 5 | **0** | attachment, real rejected, modality |
+| Selection, R2 14B | 58.2% (20 / 3) | 75.0% | 6.8% | 4 | **0** | attachment, real rejected, modality |
+
+**Outcome of the first run.** No configuration passes. The rule's fallback chooses R1 on the 14B (58.2%) and reports it as failing three gates. By construction the invented-party rate is zero and the modality errors fell from 20-40 answers to 3-5; the misleading rate is
+about as high as the generative resolver's, while the model almost never leaves attachment empty (3 to 5 incomplete). What follows is read from the ledgers, not tuned on.
+
+- **Real requirements rejected (five or six, the same ones across configurations):** noun-phrase list items such as "Procedures for changing and terminating the SLA." and "developing virtualization policy" are called `not_a_requirement`: the model reads a fragment as a description, although each is a list item under a lead-in or heading that assigns a duty.
+- **Modality errors, two kinds.** (a) *Model errors:* a lead-in such as "The DOT&E shall:" picked as the **actor** with no parent (the actor does not lend its modal, so the checker reports `modal_in_evidence`); `permission` for a descriptive sentence with "can"; `obligation` for "will not". (b) *A limit of the registered checker, not of the model:*
+  card R025 is "Consider using introspection capabilities to monitor the security of ...", a modal-free hint that is correctly a `recommendation` under the project's ruling that hints are requirements, but the checker's phrase table has no entry for "consider", so a `recommendation` with no modal phrase is always reported as `modality_class`. A correct answer on that record fails
+  the zero-modality gate. **So zero modality errors may not be reachable by honest answers on this half**, whatever the prompt does; this is a property of the gate as registered, reported rather than changed.
+- **Misleading attachments (20 to 22):** for records that need a lead-in, the model often picks a `preceding` entry (the words just before the sentence, sometimes only a list number) or a heading instead of the lead-in; for complete sentences it attaches a heading or a `preceding` entry when `none` is right.
+
+**What the plan allows next:** one prompt revision after this first run (plan section 3, S2), made from these selection-half failures, run on the same four configurations, and judged by the same rule over the revised runs alone. The evaluation half is still unread.
