@@ -1,0 +1,562 @@
+{
+ "r0_14b": {
+  "selection": {
+   "all": {
+    "answers_with_no_error": 35,
+    "attachment": {
+     "incomplete": 38,
+     "misleading": 2,
+     "right": 15
+    },
+    "baseline_attachment": {
+     "incomplete": 17,
+     "misleading": 19,
+     "right": 19
+    },
+    "candidates": 104,
+    "invented_answers": 5,
+    "modality_error_answers": 56,
+    "non_requirement": {
+     "not_a_requirement": 9,
+     "requirement": 5,
+     "scope_or_context": 2
+    },
+    "nonconformant": 0,
+    "parsed": 104,
+    "real": {
+     "not_a_requirement": 9,
+     "requirement": 76,
+     "scope_or_context": 1,
+     "unresolved": 2
+    },
+    "shape_conformant": 104,
+    "status": {
+     "complete": 104
+    },
+    "valid": 104
+   },
+   "audit": {
+    "answers_with_no_error": 21,
+    "attachment": {
+     "incomplete": 38,
+     "misleading": 2,
+     "right": 15
+    },
+    "baseline_attachment": {
+     "incomplete": 17,
+     "misleading": 19,
+     "right": 19
+    },
+    "candidates": 66,
+    "invented_answers": 4,
+    "modality_error_answers": 40,
+    "non_requirement": {
+     "not_a_requirement": 6,
+     "requirement": 2,
+     "scope_or_context": 2
+    },
+    "nonconformant": 0,
+    "parsed": 66,
+    "real": {
+     "not_a_requirement": 6,
+     "requirement": 47,
+     "scope_or_context": 1,
+     "unresolved": 2
+    },
+    "shape_conformant": 66,
+    "status": {
+     "complete": 66
+    },
+    "valid": 66
+   },
+   "cards": {
+    "answers_with_no_error": 14,
+    "attachment": {},
+    "baseline_attachment": {},
+    "candidates": 38,
+    "invented_answers": 1,
+    "modality_error_answers": 16,
+    "non_requirement": {
+     "not_a_requirement": 3,
+     "requirement": 3
+    },
+    "nonconformant": 0,
+    "parsed": 38,
+    "real": {
+     "not_a_requirement": 3,
+     "requirement": 29
+    },
+    "shape_conformant": 38,
+    "status": {
+     "complete": 38
+    },
+    "valid": 38
+   }
+  }
+ },
+ "r0_8b": {
+  "selection": {
+   "all": {
+    "answers_with_no_error": 43,
+    "attachment": {
+     "incomplete": 36,
+     "misleading": 4,
+     "right": 15
+    },
+    "baseline_attachment": {
+     "incomplete": 17,
+     "misleading": 19,
+     "right": 19
+    },
+    "candidates": 104,
+    "invented_answers": 0,
+    "modality_error_answers": 43,
+    "non_requirement": {
+     "requirement": 11,
+     "scope_or_context": 4,
+     "unresolved": 1
+    },
+    "nonconformant": 0,
+    "parsed": 104,
+    "real": {
+     "not_a_requirement": 1,
+     "requirement": 79,
+     "scope_or_context": 4,
+     "unresolved": 4
+    },
+    "shape_conformant": 104,
+    "status": {
+     "complete": 104
+    },
+    "valid": 104
+   },
+   "audit": {
+    "answers_with_no_error": 27,
+    "attachment": {
+     "incomplete": 36,
+     "misleading": 4,
+     "right": 15
+    },
+    "baseline_attachment": {
+     "incomplete": 17,
+     "misleading": 19,
+     "right": 19
+    },
+    "candidates": 66,
+    "invented_answers": 0,
+    "modality_error_answers": 30,
+    "non_requirement": {
+     "requirement": 6,
+     "scope_or_context": 4
+    },
+    "nonconformant": 0,
+    "parsed": 66,
+    "real": {
+     "not_a_requirement": 1,
+     "requirement": 49,
+     "scope_or_context": 4,
+     "unresolved": 2
+    },
+    "shape_conformant": 66,
+    "status": {
+     "complete": 66
+    },
+    "valid": 66
+   },
+   "cards": {
+    "answers_with_no_error": 16,
+    "attachment": {},
+    "baseline_attachment": {},
+    "candidates": 38,
+    "invented_answers": 0,
+    "modality_error_answers": 13,
+    "non_requirement": {
+     "requirement": 5,
+     "unresolved": 1
+    },
+    "nonconformant": 0,
+    "parsed": 38,
+    "real": {
+     "requirement": 30,
+     "unresolved": 2
+    },
+    "shape_conformant": 38,
+    "status": {
+     "complete": 38
+    },
+    "valid": 38
+   }
+  }
+ },
+ "r1_14b": {
+  "selection": {
+   "all": {
+    "answers_with_no_error": 33,
+    "attachment": {
+     "incomplete": 1,
+     "misleading": 22,
+     "right": 32
+    },
+    "baseline_attachment": {
+     "incomplete": 17,
+     "misleading": 19,
+     "right": 19
+    },
+    "candidates": 104,
+    "invented_answers": 26,
+    "modality_error_answers": 47,
+    "non_requirement": {
+     "not_a_requirement": 4,
+     "requirement": 6,
+     "scope_or_context": 4,
+     "unresolved": 2
+    },
+    "nonconformant": 0,
+    "parsed": 104,
+    "real": {
+     "not_a_requirement": 1,
+     "requirement": 82,
+     "scope_or_context": 4,
+     "unresolved": 1
+    },
+    "shape_conformant": 104,
+    "status": {
+     "complete": 104
+    },
+    "valid": 104
+   },
+   "audit": {
+    "answers_with_no_error": 20,
+    "attachment": {
+     "incomplete": 1,
+     "misleading": 22,
+     "right": 32
+    },
+    "baseline_attachment": {
+     "incomplete": 17,
+     "misleading": 19,
+     "right": 19
+    },
+    "candidates": 66,
+    "invented_answers": 17,
+    "modality_error_answers": 33,
+    "non_requirement": {
+     "not_a_requirement": 2,
+     "requirement": 3,
+     "scope_or_context": 4,
+     "unresolved": 1
+    },
+    "nonconformant": 0,
+    "parsed": 66,
+    "real": {
+     "not_a_requirement": 1,
+     "requirement": 52,
+     "scope_or_context": 3
+    },
+    "shape_conformant": 66,
+    "status": {
+     "complete": 66
+    },
+    "valid": 66
+   },
+   "cards": {
+    "answers_with_no_error": 13,
+    "attachment": {},
+    "baseline_attachment": {},
+    "candidates": 38,
+    "invented_answers": 9,
+    "modality_error_answers": 14,
+    "non_requirement": {
+     "not_a_requirement": 2,
+     "requirement": 3,
+     "unresolved": 1
+    },
+    "nonconformant": 0,
+    "parsed": 38,
+    "real": {
+     "requirement": 30,
+     "scope_or_context": 1,
+     "unresolved": 1
+    },
+    "shape_conformant": 38,
+    "status": {
+     "complete": 38
+    },
+    "valid": 38
+   }
+  }
+ },
+ "r1_8b": {
+  "selection": {
+   "all": {
+    "answers_with_no_error": 28,
+    "attachment": {
+     "incomplete": 10,
+     "misleading": 7,
+     "right": 38
+    },
+    "baseline_attachment": {
+     "incomplete": 17,
+     "misleading": 19,
+     "right": 19
+    },
+    "candidates": 104,
+    "invented_answers": 20,
+    "modality_error_answers": 50,
+    "non_requirement": {
+     "not_a_requirement": 1,
+     "requirement": 13,
+     "unresolved": 2
+    },
+    "nonconformant": 0,
+    "parsed": 104,
+    "real": {
+     "requirement": 87,
+     "scope_or_context": 1
+    },
+    "shape_conformant": 104,
+    "status": {
+     "complete": 104
+    },
+    "valid": 104
+   },
+   "audit": {
+    "answers_with_no_error": 16,
+    "attachment": {
+     "incomplete": 10,
+     "misleading": 7,
+     "right": 38
+    },
+    "baseline_attachment": {
+     "incomplete": 17,
+     "misleading": 19,
+     "right": 19
+    },
+    "candidates": 66,
+    "invented_answers": 16,
+    "modality_error_answers": 38,
+    "non_requirement": {
+     "not_a_requirement": 1,
+     "requirement": 8,
+     "unresolved": 1
+    },
+    "nonconformant": 0,
+    "parsed": 66,
+    "real": {
+     "requirement": 55,
+     "scope_or_context": 1
+    },
+    "shape_conformant": 66,
+    "status": {
+     "complete": 66
+    },
+    "valid": 66
+   },
+   "cards": {
+    "answers_with_no_error": 12,
+    "attachment": {},
+    "baseline_attachment": {},
+    "candidates": 38,
+    "invented_answers": 4,
+    "modality_error_answers": 12,
+    "non_requirement": {
+     "requirement": 5,
+     "unresolved": 1
+    },
+    "nonconformant": 0,
+    "parsed": 38,
+    "real": {
+     "requirement": 32
+    },
+    "shape_conformant": 38,
+    "status": {
+     "complete": 38
+    },
+    "valid": 38
+   }
+  }
+ },
+ "r2_14b": {
+  "selection": {
+   "all": {
+    "answers_with_no_error": 37,
+    "attachment": {
+     "incomplete": 4,
+     "misleading": 14,
+     "right": 37
+    },
+    "baseline_attachment": {
+     "incomplete": 17,
+     "misleading": 19,
+     "right": 19
+    },
+    "candidates": 104,
+    "invented_answers": 23,
+    "modality_error_answers": 40,
+    "non_requirement": {
+     "not_a_requirement": 4,
+     "requirement": 6,
+     "scope_or_context": 3,
+     "unresolved": 3
+    },
+    "nonconformant": 0,
+    "parsed": 104,
+    "real": {
+     "requirement": 82,
+     "scope_or_context": 2,
+     "unresolved": 4
+    },
+    "shape_conformant": 104,
+    "status": {
+     "complete": 104
+    },
+    "valid": 104
+   },
+   "audit": {
+    "answers_with_no_error": 23,
+    "attachment": {
+     "incomplete": 4,
+     "misleading": 14,
+     "right": 37
+    },
+    "baseline_attachment": {
+     "incomplete": 17,
+     "misleading": 19,
+     "right": 19
+    },
+    "candidates": 66,
+    "invented_answers": 16,
+    "modality_error_answers": 31,
+    "non_requirement": {
+     "not_a_requirement": 2,
+     "requirement": 4,
+     "scope_or_context": 3,
+     "unresolved": 1
+    },
+    "nonconformant": 0,
+    "parsed": 66,
+    "real": {
+     "requirement": 51,
+     "scope_or_context": 2,
+     "unresolved": 3
+    },
+    "shape_conformant": 66,
+    "status": {
+     "complete": 66
+    },
+    "valid": 66
+   },
+   "cards": {
+    "answers_with_no_error": 14,
+    "attachment": {},
+    "baseline_attachment": {},
+    "candidates": 38,
+    "invented_answers": 7,
+    "modality_error_answers": 9,
+    "non_requirement": {
+     "not_a_requirement": 2,
+     "requirement": 2,
+     "unresolved": 2
+    },
+    "nonconformant": 0,
+    "parsed": 38,
+    "real": {
+     "requirement": 31,
+     "unresolved": 1
+    },
+    "shape_conformant": 38,
+    "status": {
+     "complete": 38
+    },
+    "valid": 38
+   }
+  }
+ },
+ "r2_8b": {
+  "selection": {
+   "all": {
+    "answers_with_no_error": 31,
+    "attachment": {
+     "incomplete": 13,
+     "misleading": 7,
+     "right": 35
+    },
+    "baseline_attachment": {
+     "incomplete": 17,
+     "misleading": 19,
+     "right": 19
+    },
+    "candidates": 104,
+    "invented_answers": 14,
+    "modality_error_answers": 40,
+    "non_requirement": {
+     "requirement": 12,
+     "unresolved": 4
+    },
+    "nonconformant": 0,
+    "parsed": 104,
+    "real": {
+     "requirement": 86,
+     "unresolved": 2
+    },
+    "shape_conformant": 104,
+    "status": {
+     "complete": 104
+    },
+    "valid": 104
+   },
+   "audit": {
+    "answers_with_no_error": 16,
+    "attachment": {
+     "incomplete": 13,
+     "misleading": 7,
+     "right": 35
+    },
+    "baseline_attachment": {
+     "incomplete": 17,
+     "misleading": 19,
+     "right": 19
+    },
+    "candidates": 66,
+    "invented_answers": 10,
+    "modality_error_answers": 32,
+    "non_requirement": {
+     "requirement": 6,
+     "unresolved": 4
+    },
+    "nonconformant": 0,
+    "parsed": 66,
+    "real": {
+     "requirement": 54,
+     "unresolved": 2
+    },
+    "shape_conformant": 66,
+    "status": {
+     "complete": 66
+    },
+    "valid": 66
+   },
+   "cards": {
+    "answers_with_no_error": 15,
+    "attachment": {},
+    "baseline_attachment": {},
+    "candidates": 38,
+    "invented_answers": 4,
+    "modality_error_answers": 8,
+    "non_requirement": {
+     "requirement": 6
+    },
+    "nonconformant": 0,
+    "parsed": 38,
+    "real": {
+     "requirement": 32
+    },
+    "shape_conformant": 38,
+    "status": {
+     "complete": 38
+    },
+    "valid": 38
+   }
+  }
+ }
+}

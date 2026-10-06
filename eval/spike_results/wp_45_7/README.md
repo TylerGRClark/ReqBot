@@ -400,3 +400,27 @@ lead-in span an actor came from, so generated sentences "added" names (11 `added
 
 v2 adds about 1,060 estimated tokens to the fixed prompt (4,470 against 3,408), which still leaves the bundle budget at 5,075 characters; with it no R2 bundle in the selection
 half is cut (checked before running).
+
+## Step 10: the pre-registered rule applied to all six v1 configurations (`score_resolver.py --choose`, `outputs/resolver_selection_v1_*.json`, `outputs/resolver_v1_runs/`)
+
+All six v1 runs (R0, R1, R2 on the 8B and on the 14B; the same 104 selection candidates; every call `complete`) are committed with their ledgers, and the scores in
+`outputs/resolver_selection_v1_scores.json` and the choice report in `outputs/resolver_selection_v1_choice.json` are regenerated from those committed ledgers (they match the first
+scoring of the scratch ledgers). The rule of step 7 was applied by code (`--choose`), reading only the selection halves.
+
+| Config | Attachment right (55 audit) | Misleading | Incomplete | Non-requirements rejected (16) | Real wrongly rejected | Answers with a modality error | Invented-party rate | Gates failed |
+|---|---|---|---|---|---|---|---|---|
+| Production stem (baseline) | 19 (34.5%) | 19 | 17 | n/a | n/a | n/a | n/a | n/a |
+| R0, 8B | 15 (27.3%) | 4 | 36 | 4 (25%) | 1% | 43 | 0% | incomplete, modality, non-requirement |
+| R1, 8B | **38 (69.1%)** | 7 | 10 | 1 (6%) | 0% | 50 | 19.2% | modality, invented, non-requirement |
+| R2, 8B | 35 (63.6%) | 7 | 13 | 0 (0%) | 0% | 40 | 13.5% | modality, invented, non-requirement |
+| R0, 14B | 15 (27.3%) | 2 | 38 | 11 (69%) | 10.2% | 56 | 4.8% | incomplete, modality, invented, real rejected |
+| R1, 14B | 32 (58.2%) | 22 | 1 | 8 (50%) | 1.1% | 47 | 25.0% | modality, invented, non-requirement |
+| R2, 14B | 37 (67.3%) | 14 | 4 | 7 (44%) | 0% | 40 | 22.1% | modality, invented, non-requirement |
+
+**Result: no v1 configuration passes G2.** The rule's fallback chooses **R1 on the 8B** (best attachment-right rate, 69.1%) and reports it as failing the gate. What the table shows:
+
+- **Context is what buys the attachment gain**: R0 (quote only) is right 27% of the time, R1 and R2 reach 58 to 69%, against 35% for production's stems; R2's neighbors did not beat R1 on the 8B.
+- **The 14B is not better at attachment** and gives misleading answers more often (22 and 14 of 55 against 7 and 7 for the 8B), but at R0 it is the only configuration that rejects most non-requirements (69%), at the cost of rejecting 10% of real ones.
+- **Every configuration has a modality-error count in the 40s to 50s of 104** and the invented-party rate is far above 2% wherever context is supplied.
+
+Under the protocol of step 9 this triggers the one allowed revision: **prompt v2** (hash `d0fcb1a2b23684f5`) was merged before this step and the six v2 runs on the same candidates were started 2026-10-06 after this table was fixed. The rule is applied to the v2 results alone; if none passes, G2 fails on the development side and the held-out resolver is not run.
