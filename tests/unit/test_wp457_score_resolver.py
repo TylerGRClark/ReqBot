@@ -224,3 +224,16 @@ def test_the_runs_option_needs_name_equals_dir(mods, monkeypatch, capsys):
     with pytest.raises(SystemExit) as e:
         S.main()
     assert "NAME=DIR" in str(e.value)
+
+
+def test_gates_compare_exact_fractions_not_rounded_values(mods):
+    S = mods["score"]
+    base = {"candidates": 101, "valid": 99, "real": {"requirement": 20}, "non_requirement": {"not_a_requirement": 8}, "attachment": {},
+            "invented_answers": 2, "modality_error_answers": 0}
+    g = S.gate_report(base, {})
+    assert g["invented"][0] == 0.02 and not g["invented"][2]  # 2 of 99 = 2.02% exceeds 2%, although it rounds to 0.020
+    ok = dict(base, invented_answers=1)
+    assert S.gate_report(ok, {})["invented"][2]
+    # the valid-share gate also uses the exact quotient: 95 of 100 passes, 94 of 100 fails
+    assert S.gate_report(dict(base, candidates=100, valid=95), {})["valid_answers"][2]
+    assert not S.gate_report(dict(base, candidates=100, valid=94), {})["valid_answers"][2]

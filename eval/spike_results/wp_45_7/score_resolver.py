@@ -158,34 +158,37 @@ def rate(counter, key, total=None):
     return round(counter.get(key, 0) / total, 3) if total else None
 
 
+def _check(exact, threshold, upper=True):
+    """(reported value rounded to three places, threshold, passed). The comparison uses the exact quotient: 2 of 99 is 2.02%, not 2.0%."""
+    passed = exact <= threshold if upper else exact >= threshold
+    return (round(exact, 3), round(threshold, 3), passed)
+
+
 def gate_report(s, base_counts):
     """The selection-half gate checks that apply, as {name: (value, threshold, passed)}. A failed resolution counts AGAINST every
     max-style gate (rejected, scope or unresolved, incomplete) and in the denominator of every min-style gate, and a separate gate
-    requires almost every candidate to be resolved at all, so a configuration that fails its calls cannot look like it passes."""
+    requires almost every candidate to be resolved at all, so a configuration that fails its calls cannot look like it passes.
+    Every comparison is made on the exact fraction; only the reported value is rounded."""
     out = {}
     real, non = s["real"], s["non_requirement"]
     nr, nn = sum(real.values()), sum(non.values())
     if s["candidates"]:
-        valid_share = round(s["valid"] / s["candidates"], 3)
-        out["valid_answers"] = (valid_share, GATES["min_valid_share"], valid_share >= GATES["min_valid_share"])
+        out["valid_answers"] = _check(s["valid"] / s["candidates"], GATES["min_valid_share"], upper=False)
     if nr:
-        rejected = round((real.get("not_a_requirement", 0) + real.get("failed", 0)) / nr, 3)
-        soft = round((real.get("scope_or_context", 0) + real.get("unresolved", 0) + real.get("failed", 0)) / nr, 3)
-        out["real_rejected"] = (rejected, GATES["max_real_rejected"], rejected <= GATES["max_real_rejected"])
-        out["real_scope_or_unresolved"] = (soft, GATES["max_real_scope_or_unresolved"], soft <= GATES["max_real_scope_or_unresolved"])
+        out["real_rejected"] = _check((real.get("not_a_requirement", 0) + real.get("failed", 0)) / nr, GATES["max_real_rejected"])
+        out["real_scope_or_unresolved"] = _check(
+            (real.get("scope_or_context", 0) + real.get("unresolved", 0) + real.get("failed", 0)) / nr, GATES["max_real_scope_or_unresolved"])
     if nn:
-        good = round((non.get("not_a_requirement", 0) + non.get("scope_or_context", 0)) / nn, 3)
-        out["non_requirement_rejected"] = (good, GATES["min_non_requirement_rejected"], good >= GATES["min_non_requirement_rejected"])
+        out["non_requirement_rejected"] = _check(
+            (non.get("not_a_requirement", 0) + non.get("scope_or_context", 0)) / nn, GATES["min_non_requirement_rejected"], upper=False)
     if s["valid"]:
-        inv = round(s["invented_answers"] / s["valid"], 3)
-        out["invented"] = (inv, GATES["max_invented"], inv <= GATES["max_invented"])
+        out["invented"] = _check(s["invented_answers"] / s["valid"], GATES["max_invented"])
         mod = s["modality_error_answers"]
         out["modality_errors"] = (mod, 0, mod == 0)
     att, nb = s["attachment"], sum(base_counts.values())
     if sum(att.values()) and nb:
-        inc = round((att.get("incomplete", 0) + att.get("failed", 0)) / sum(att.values()), 3)
-        binc = rate(base_counts, "incomplete", nb)
-        out["incomplete"] = (inc, round(binc + GATES["max_incomplete_over_baseline"], 3), inc <= binc + GATES["max_incomplete_over_baseline"])
+        inc = (att.get("incomplete", 0) + att.get("failed", 0)) / sum(att.values())
+        out["incomplete"] = _check(inc, base_counts.get("incomplete", 0) / nb + GATES["max_incomplete_over_baseline"])
     return out
 
 
@@ -241,6 +244,7 @@ def main():
         results[name] = score_run(directory, gold)
     text = json.dumps(results, indent=1, sort_keys=True)
     if args.out:
+        Path(args.out).parent.mkdir(parents=True, exist_ok=True)
         Path(args.out).write_text(text + "\n", encoding="utf-8")
     print(text)
 
