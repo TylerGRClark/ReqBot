@@ -43,6 +43,7 @@ import resolver as R  # noqa: E402
 import selection as SEL  # noqa: E402
 
 GOLD = _HERE / "outputs" / "resolver_gold.json"
+OUTPUTS = _HERE / "outputs"
 OVERLAP = 0.8  # of the answer value's distinctive words that must be in the gold lead-in
 GATES = {
     "max_real_rejected": 0.05,        # at most 5% of real requirements returned not_a_requirement
@@ -203,6 +204,9 @@ def load_ledger(directory):
 def score_run(directory, gold):
     records = load_ledger(directory)
     result = {"prompt_hashes": sorted({str(r.get("prompt_hash")) for r in records.values()})}  # which prompt produced these records
+    result["run_meta"] = {"tiers": sorted({str(r.get("tier")) for r in records.values()}),  # and which tier, model and model file
+                          "models": sorted({str(r.get("model")) for r in records.values()}),
+                          "digests": sorted({str(r.get("digest")) for r in records.values()})}
     for which in ("selection", "evaluation"):
         golds = [g for g in gold["gold"] if g["half"] == which]
         if not any(g["candidate_id"] in records for g in golds):
@@ -331,23 +335,49 @@ def choose_report(results, registry="v2"):
     return report
 
 
-def verdict_report(result, registry):
-    """The one-shot verdict of one frozen configuration on the EVALUATION half (WP-45.7c/d Stage C): the registry's gates applied to
+CHOICE_REPORTS = {"v4": "resolver_selection_v4_choice.json", "v5": "resolver_selection_v5_choice.json"}
+MODELS = {8: "llama3.1:8b-instruct-q4_K_M", 14: "qwen2.5:14b"}
+
+
+def frozen_choice(registry, outputs=None):
+    """The configuration Stage B froze for a registry, from its committed choice report, and the run it was chosen from: {name, tier, model,
+    digest}. Only a registry whose Stage B passed every gate has one: a stopped protocol keeps its evaluation half reserved."""
+    outputs = Path(outputs) if outputs else OUTPUTS
+    path = outputs / CHOICE_REPORTS[registry]
+    if not path.exists():
+        raise SystemExit(f"no committed choice report for {registry} ({path.name}): there is no frozen configuration to score")
+    chosen = json.loads(path.read_text(encoding="utf-8")).get("chosen")
+    if not chosen or not chosen.get("passes_every_gate"):
+        raise SystemExit(f"the {registry} protocol stopped at Stage B (no configuration passed every gate), so its evaluation half is reserved and has no verdict")
+    name = chosen["name"]
+    summary = json.loads((outputs / f"selection_{registry}_runs" / f"{registry}_sel_{name}" / "run_summary.json").read_text(encoding="utf-8"))
+    return {"name": name, "tier": summary["tier"], "model": summary["model"], "digest": summary["digest"]}
+
+
+def verdict_report(result, registry, name, outputs=None):
+    """The one-shot verdict of the frozen configuration on the EVALUATION half (WP-45.7c/d Stage C): the registry's gates applied to
     `result["evaluation"]` (from `score_run`), with the same exact-fraction arithmetic as the choice, plus the checks that make it a verdict
-    and not a second choice: only v4 and v5 have one, the ledger must have been written by that design's prompt, and the half must exist.
-    The selection half is not read."""
+    and not a second choice: the registry must have a frozen, passing Stage B choice; `name` must be that configuration; the ledger must have been
+    written by the registry's prompt, with that tier, that model and that model file (digest); and the half must exist. The selection half is not read."""
     if registry not in EXPECTED_PROMPT:
         raise SystemExit(f"a verdict exists only for the registries tied to a prompt: {sorted(EXPECTED_PROMPT)}")
+    frozen = frozen_choice(registry, outputs)
+    if name.lower() != frozen["name"]:
+        raise SystemExit(f"the {registry} frozen choice is {frozen['name']}, not {name}")
     want = EXPECTED_PROMPT[registry]()
     if result.get("prompt_hashes") != [want]:
         raise SystemExit(f"the {registry} verdict scores ledgers written by prompt {want} only; got {result.get('prompt_hashes')}")
+    meta = result.get("run_meta") or {}
+    expected = {"tiers": [frozen["tier"]], "models": [frozen["model"]], "digests": [frozen["digest"]]}
+    if meta != expected:
+        raise SystemExit(f"the ledger is not the frozen {frozen['name']} configuration: it was written with {meta}, the frozen run used {expected}")
     half = result.get("evaluation")
     if not half or "audit" not in half or "all" not in half:
         raise SystemExit("the ledger has no evaluation-half results to score (was it run with --half evaluation --final?)")
     gates, _ = selection_gates(half, None, V4_RELATIVE)
     att, base = half["audit"]["attachment"], half["audit"]["baseline_attachment"]
     return {
-        "half": "evaluation", "registry": registry, "prompt_hash": want, "candidates": half["all"]["candidates"],
+        "half": "evaluation", "registry": registry, "configuration": frozen, "prompt_hash": want, "candidates": half["all"]["candidates"],
         "gates": {k: {"value": v[0], "threshold": v[1], "passed": bool(v[2])} for k, v in gates.items()},
         "all_gates_pass": all(v[2] for v in gates.values()),
         "attachment": att, "attachment_right_rate": rate(att, "right", sum(att.values())), "baseline_attachment": base,
@@ -370,7 +400,7 @@ def main():
         name, sep, directory = args.verdict.partition("=")
         if not sep or not name or not directory:
             sys.exit(f"--verdict takes NAME=DIR, got {args.verdict!r}")
-        text = json.dumps(verdict_report(score_run(directory, gold), args.registry), indent=1, sort_keys=True)
+        text = json.dumps(verdict_report(score_run(directory, gold), args.registry, name), indent=1, sort_keys=True)
         if args.out:
             Path(args.out).parent.mkdir(parents=True, exist_ok=True)
             Path(args.out).write_text(text + "\n", encoding="utf-8")
