@@ -5,8 +5,9 @@ strictly subtractive by construction, including when the old menu hit its entry 
 and nothing else:
 
   (a) an entry with fewer than two letters is removed (a list number, a dash, a lone "c."): such an entry can never be a correct actor or parent;
-  (b) a numbered heading is removed when the same heading without its section number is also on the menu, because the attachment overlap rule counts
-      the number against a match ("2.17. MAJCOM/DRUs." against "MAJCOM/DRUs.").
+  (b) every numbered heading is removed, because the attachment overlap rule counts the section number against a match ("2.17. MAJCOM/DRUs." against
+      "MAJCOM/DRUs."). The old menu offers the plain form next to the numbered one; if the old menu's cap cut the plain form, the heading is simply not
+      offered rather than offered with its number, and nothing is added in its place.
 
 The surviving entries keep their order and are renumbered M1, M2, ...; each is still a verbatim entry of the old menu, hence a substring of its sources.
 """
@@ -32,14 +33,11 @@ def letters(text):
 def build_menu(quote, chunk_id, chunks_by_id, tier="R1", step_c_by_chunk=None):
     """The old menu for one candidate, filtered by the two fixes above and renumbered. Entries are {"id", "kind", "source", "text"} in the old order."""
     old = M1.build_menu(quote, chunk_id, chunks_by_id, tier, step_c_by_chunk)
-    texts = {e["text"] for e in old}
     kept = []
     for e in old:
         if letters(e["text"]) < MIN_LETTERS:
             continue  # (a)
-        if e["kind"] == "heading":
-            bare = M1._SECTION_NUMBER.sub("", e["text"], count=1)
-            if bare != e["text"] and bare in texts:
-                continue  # (b): the plain form is on the menu, so the numbered one is not offered
+        if e["kind"] == "heading" and M1._SECTION_NUMBER.sub("", e["text"], count=1) != e["text"]:
+            continue  # (b): headings are offered only without their section number
         kept.append(e)
     return [{**e, "id": f"M{n}"} for n, e in enumerate(kept, 1)]

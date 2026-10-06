@@ -95,13 +95,26 @@ def test_the_new_menu_stays_subtractive_when_the_old_menu_hit_its_cap(M1, M2):
     old = M1.build_menu("Establish a report.", 2, chunks, "R2")
     new = M2.build_menu("Establish a report.", 2, chunks, "R2")
     assert len(old) == M1.MAX_MENU  # the cap bound
-    assert [e["text"] for e in new] == [e["text"] for e in old if M2.letters(e["text"]) >= 2 and not
-                                         (e["kind"] == "heading" and M1._SECTION_NUMBER.sub("", e["text"], count=1) != e["text"]
-                                          and M1._SECTION_NUMBER.sub("", e["text"], count=1) in {x["text"] for x in old})]
+    def numbered(e):
+        return e["kind"] == "heading" and M1._SECTION_NUMBER.sub("", e["text"], count=1) != e["text"]
+
+    assert [e["text"] for e in new] == [e["text"] for e in old if M2.letters(e["text"]) >= 2 and not numbered(e)]
     assert len(new) < len(old)  # slots were freed ...
     assert {e["text"] for e in new} <= {e["text"] for e in old}  # ... and nothing the old menu never offered came in
     assert not any(e["source"].endswith("(previous)") for e in new)  # the previous-chunk lead-in was beyond the old cap, so it stays out
     assert [e["id"] for e in new] == [f"M{i}" for i in range(1, len(new) + 1)]
+
+
+def test_no_numbered_heading_survives_even_when_its_plain_form_was_cut_by_the_cap(M1, M2):
+    """Review finding: with one subject and seven numbered headings the old menu's last entry is a numbered heading whose plain form fell beyond the cap."""
+    path = [f"{n}.1 Heading number {n}" for n in range(1, 8)]
+    chunks = {2: _chunk(2, "Text here. The Officer shall act on it.", heading="", path=path)}
+    old = M1.build_menu("The Officer shall act on it.", 2, chunks, "R1")
+    assert len(old) == M1.MAX_MENU and old[-1]["kind"] == "heading" and old[-1]["text"][0].isdigit()  # the cap cut the plain form of that heading
+    new = M2.build_menu("The Officer shall act on it.", 2, chunks, "R1")
+    assert not any(e["kind"] == "heading" and e["text"][0].isdigit() for e in new)
+    assert {e["text"] for e in new} <= {e["text"] for e in old}
+    assert [e["text"] for e in new if e["kind"] == "heading"] == [f"Heading number {n}" for n in range(7, 0, -1)][:6]  # six plain headings; the seventh went
 
 
 def test_the_frozen_menu_module_is_reused_not_copied(M1, M2):
@@ -270,4 +283,4 @@ def test_the_v6_manifest_itself_is_fixed_here(SC):
     """A tampered manifest could pin anything, so its own hash is fixed in this test (regenerate it only on purpose, with freeze_v6.py --force)."""
     S = SC.SR
     own = S.hashlib.sha256((S.OUTPUTS / S.FROZEN_CODE["v6"]).read_bytes()).hexdigest()
-    assert own == "a081b94074e5c5b4149ba3f67da572d76d8fb655701d1986f0af998871e6b179", own
+    assert own == "0f24e4f414cf3de89174ea1ff02fdff41036cb150746e1760c120e8f6a9ceee4", own
