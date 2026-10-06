@@ -25,6 +25,7 @@ for _p in (_HERE, _ROOT, _ROOT / "eval/spike_results/wp_45_audit"):
         sys.path.insert(0, str(_p))
 
 import menu as M  # noqa: E402
+import menu_v2 as M2  # noqa: E402
 import score_resolver as S  # noqa: E402
 
 GOLD = _HERE / "outputs/resolver_gold.json"
@@ -39,11 +40,11 @@ def reachable(gold, entries):
     return any(S.overlaps(e["text"], gold["lead_in_text"]) for e in entries)
 
 
-def measure(golds, docs, tier):
+def measure(golds, docs, tier, menu=M):
     rows = []
     for g in golds:
         chunks, step = docs[g["document"]]
-        entries = M.build_menu(g["quote"], g["chunk_id"], chunks, tier, step_c_by_chunk=step)
+        entries = menu.build_menu(g["quote"], g["chunk_id"], chunks, tier, step_c_by_chunk=step)
         rows.append({
             "candidate_id": g["candidate_id"], "standalone": g["standalone"], "lead_in_location": g["lead_in_location"],
             "menu_size": len(entries), "reachable": reachable(g, entries), "menu": entries, "lead_in_text": g["lead_in_text"],
@@ -54,7 +55,7 @@ def measure(golds, docs, tier):
     for r in needs:
         by_location.setdefault(r["lead_in_location"], []).append(r["reachable"])
     return {
-        "tier": tier, "scored": n, "generator_sha256": hashlib.sha256(Path(M.__file__).read_bytes()).hexdigest()[:16],
+        "tier": tier, "scored": n, "generator_sha256": hashlib.sha256(Path(menu.__file__).read_bytes()).hexdigest()[:16],
         "ceiling": sum(r["reachable"] for r in rows) / n if n else 0.0,
         "ceiling_needs_lead_in": sum(r["reachable"] for r in needs) / len(needs) if needs else 0.0,
         "needs_lead_in": len(needs),
@@ -70,6 +71,7 @@ def measure(golds, docs, tier):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--tier", choices=("R1", "R2"), required=True)
+    ap.add_argument("--menu", choices=("v1", "v2"), default="v1", help="v1: menu.py (frozen for WP-45.7d); v2: menu_v2.py (WP-45.7e fixes)")
     ap.add_argument("--half", choices=("selection", "evaluation"), default="selection")
     ap.add_argument("--final", action="store_true", help="allow the evaluation half (only after the choice is frozen)")
     ap.add_argument("--out", type=Path)
@@ -81,7 +83,7 @@ def main():
     import run_resolver as RR
 
     docs = RR.load_documents(sorted({g["document"] for g in golds}))
-    result = measure(golds, docs, args.tier)
+    result = measure(golds, docs, args.tier, M2 if args.menu == "v2" else M)
     print(f"{args.tier} {args.half}: ceiling {result['ceiling']:.1%} of {result['scored']} "
           f"(needs-lead-in only {result['ceiling_needs_lead_in']:.1%} of {result['needs_lead_in']}), "
           f"mean menu {result['mean_menu_size']:.1f}, S1 {'PASS' if result['passes_s1'] else 'FAIL'}")

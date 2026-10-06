@@ -1,0 +1,11 @@
+{
+ "name": "r2_14b",
+ "tier": "R2",
+ "model": "qwen2.5:14b",
+ "digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6",
+ "temperatures": ["0.1"],
+ "num_ctxs": ["8192"],
+ "num_predicts": ["200"],
+ "prompt_hash": "6200fa25a374eb35",
+ "source": "docs/PHASE45_WP457E_PLAN.md section 3: declared, not chosen; the configuration the WP-45.7d runs used (the model digest is the one their ledgers recorded), with the WP-45.7e menu generator"
+}

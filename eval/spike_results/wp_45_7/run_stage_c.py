@@ -13,13 +13,14 @@ options to change them) and refuses, before the evaluation candidates are even l
     rerun), and every record already in an unfinished ledger was written by exactly this configuration (the resume key ignores the temperature and the
     answer limit, so a ledger left by a differently-configured run would otherwise be silently continued).
 
-  python3 eval/spike_results/wp_45_7/run_stage_c.py --ollama-url http://192.168.90.100:11434          # runs the half
-  python3 eval/spike_results/wp_45_7/run_stage_c.py --ollama-url ... --preflight-only                  # checks only; reads no candidate
+  python3 eval/spike_results/wp_45_7/run_stage_c.py --registry v6 --ollama-url http://192.168.90.100:11434   # runs the half
+  python3 eval/spike_results/wp_45_7/run_stage_c.py --registry v6 --ollama-url ... --preflight-only        # checks only; reads no candidate
 
-Then score the ledger once: `score_resolver.py --verdict r2_14b=<dir> --registry v5` (README step 21).
+Then score the ledger once: `score_resolver.py --verdict r2_14b=<dir> --registry v5` or `--registry v6` (README steps 21 and 24).
 """
 
 import argparse
+import contextlib
 import json
 import sys
 import time
@@ -32,12 +33,33 @@ for _p in (_HERE, _ROOT, _ROOT / "eval/spike_results/wp_45_audit"):
         sys.path.insert(0, str(_p))
 
 import kind_selection as K  # noqa: E402
+import menu as M1  # noqa: E402
+import menu_v2 as M2  # noqa: E402
 import ollama_run as OR  # noqa: E402
 import run_resolver as RR  # noqa: E402
 import run_selection as RS  # noqa: E402
 import score_resolver as SR  # noqa: E402
 
-DESIGNS = {"v5": K}  # the registries that have a Stage C, and the design each one is for
+DESIGNS = {"v5": K, "v6": K}  # the registries that have a Stage C, and the design each one is for
+MENUS = {"v5": M1, "v6": M2}  # the menu generator each one uses (v5: frozen menu.py; v6: the WP-45.7e fixes)
+
+
+@contextlib.contextmanager
+def _menu_module(menu):
+    """Run `run_selection`'s functions with another menu generator, without editing that frozen module: it calls `M.build_menu`."""
+    old = RS.M
+    RS.M = menu
+    try:
+        yield
+    finally:
+        RS.M = old
+
+
+def candidates_for(registry, gold_path=None):
+    """{candidate_id, document, chunk_id, quote} for every candidate of the registry's gold (all in its `evaluation` half). Read only after the
+    preflight passes."""
+    gold = json.loads(Path(gold_path or SR.GOLDS[registry]).read_text(encoding="utf-8"))["gold"]
+    return [{k: g[k] for k in ("candidate_id", "document", "chunk_id", "quote")} for g in gold if g["half"] == "evaluation"]
 
 
 def check_partial_ledger(path, frozen, label):
@@ -83,13 +105,14 @@ def run_frozen(registry, frozen, candidates, docs, label, out_dir, ollama_url, l
     out_dir.mkdir(parents=True, exist_ok=True)
     ledger = OR.Ledger(out_dir / "resolver.jsonl")
     started = time.time()
-    calls = RS.run_candidates(
-        candidates, docs, tier=frozen["tier"], model=frozen["model"], digest=frozen["digest"], run_label=label, ledger=ledger,
-        ollama_url=ollama_url, num_ctx=int(frozen["num_ctxs"][0]), num_predict=int(frozen["num_predicts"][0]),
-        temperature=float(frozen["temperatures"][0]), log=log, design=design)
+    with _menu_module(MENUS[registry]):
+        calls = RS.run_candidates(
+            candidates, docs, tier=frozen["tier"], model=frozen["model"], digest=frozen["digest"], run_label=label, ledger=ledger,
+            ollama_url=ollama_url, num_ctx=int(frozen["num_ctxs"][0]), num_predict=int(frozen["num_predicts"][0]),
+            temperature=float(frozen["temperatures"][0]), log=log, design=design)
     summary = RS.summarize(ledger, design)
     summary.update(run_label=label, tier=frozen["tier"], model=frozen["model"], digest=frozen["digest"], prompt_hash=design.prompt_hash(),
-                   half="evaluation", design="kind", calls_made=calls, wall_seconds=round(time.time() - started, 1))
+                   half="evaluation", design="kind", menu=MENUS[registry].__name__, calls_made=calls, wall_seconds=round(time.time() - started, 1))
     (out_dir / "run_summary.json").write_text(json.dumps(summary, indent=1) + "\n", encoding="utf-8")
     return summary
 
@@ -99,7 +122,7 @@ def main():
 
     cfg = _config.load()
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--registry", choices=sorted(DESIGNS), default="v5")
+    ap.add_argument("--registry", choices=sorted(DESIGNS), required=True)
     ap.add_argument("--ollama-url", default=cfg.ollama_url)
     ap.add_argument("--scratch", default=str(OR.DEFAULT_SCRATCH))
     ap.add_argument("--preflight-only", action="store_true", help="run every check and stop; no evaluation candidate is loaded")
@@ -108,7 +131,7 @@ def main():
     print(f"preflight passed: {frozen['name']} ({frozen['tier']}, {frozen['model']}, digest {frozen['digest'][:12]}), run label {label}")
     if args.preflight_only:
         return
-    candidates = RS.gold_candidates("evaluation")
+    candidates = candidates_for(args.registry)
     docs = RR.load_documents(sorted({c["document"] for c in candidates}))
     summary = run_frozen(args.registry, frozen, candidates, docs, label, out_dir, args.ollama_url)
     print(json.dumps(summary, indent=1))
