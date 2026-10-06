@@ -21,6 +21,7 @@ Then score the ledger once: `score_resolver.py --verdict r2_14b=<dir> --registry
 
 import argparse
 import contextlib
+import hashlib
 import json
 import sys
 import time
@@ -44,6 +45,25 @@ DESIGNS = {"v5": K, "v6": K}  # the registries that have a Stage C, and the desi
 MENUS = {"v5": M1, "v6": M2}  # the menu generator each one uses (v5: frozen menu.py; v6: the WP-45.7e fixes)
 
 
+class _StampedLedger(OR.Ledger):
+    """A ledger that stamps every record it writes with the identity of the menu generator files used (see `score_resolver.MENU_FILES`), so a verdict can tell
+    a v6 ledger from one made with the old menu."""
+
+    def __init__(self, path, stamp):
+        super().__init__(path)
+        self.stamp = stamp
+
+    def append(self, rec):
+        super().append({**rec, "menu_generator": self.stamp})
+
+
+def menu_identity(registry):
+    """The stamp for the files in the working tree (the preflight has checked them against the manifest), or None for a registry without one."""
+    if registry not in SR.MENU_FILES:
+        return None
+    return SR.menu_identity(registry, {p: hashlib.sha256((SR.REPO / p).read_bytes()).hexdigest() for p in SR.MENU_FILES[registry]})
+
+
 @contextlib.contextmanager
 def _menu_module(menu):
     """Run `run_selection`'s functions with another menu generator, without editing that frozen module: it calls `M.build_menu`."""
@@ -64,12 +84,14 @@ def candidates_for(registry, gold_path=None):
     return [{k: g[k] for k in ("candidate_id", "document", "chunk_id", "quote")} for g in half]
 
 
-def check_partial_ledger(path, frozen, label):
+def check_partial_ledger(path, frozen, label, menu_stamp=None):
     """An unfinished ledger may be resumed only if every record in it was written by the frozen configuration: same label, tier, model, model file,
     prompt and runner parameters. Raises SystemExit naming the first record that is not."""
     want = {"run_label": label, "kind": "selection", "tier": frozen["tier"], "model": frozen["model"], "digest": frozen["digest"],
             "prompt_hash": K.prompt_hash(), "temperature": float(frozen["temperatures"][0]), "num_ctx": int(frozen["num_ctxs"][0]),
             "num_predict": int(frozen["num_predicts"][0])}
+    if menu_stamp:
+        want["menu_generator"] = menu_stamp  # a record written with another menu (or none) is not this configuration
     for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
         if not line.strip():
             continue
@@ -97,7 +119,7 @@ def preflight(registry, ollama_url, *, digest_fn=OR.model_digest, outputs=None, 
     if (out_dir / "run_summary.json").exists():
         raise SystemExit(f"{label} has already been run ({out_dir}): the evaluation half is one-shot, score that ledger instead of running again")
     if (out_dir / "resolver.jsonl").exists():
-        check_partial_ledger(out_dir / "resolver.jsonl", frozen, label)
+        check_partial_ledger(out_dir / "resolver.jsonl", frozen, label, menu_identity(registry))
     return frozen, label, out_dir
 
 
@@ -105,7 +127,7 @@ def run_frozen(registry, frozen, candidates, docs, label, out_dir, ollama_url, l
     """Run the frozen configuration over `candidates`; the parameters come from the frozen run, not from the caller."""
     design = DESIGNS[registry]
     out_dir.mkdir(parents=True, exist_ok=True)
-    ledger = OR.Ledger(out_dir / "resolver.jsonl")
+    ledger = _StampedLedger(out_dir / "resolver.jsonl", menu_identity(registry)) if menu_identity(registry) else OR.Ledger(out_dir / "resolver.jsonl")
     started = time.time()
     with _menu_module(MENUS[registry]):
         calls = RS.run_candidates(

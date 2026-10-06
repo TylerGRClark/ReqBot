@@ -181,21 +181,29 @@ def test_a_v6_verdict_scores_the_declared_configuration_only(SC, tmp_path):
     root = tmp_path / "code"
     root.mkdir()
     (root / "a.py").write_text("a")
-    (out / S.FROZEN_CODE["v6"]).write_text(json.dumps({"files": {"a.py": S.hashlib.sha256(b"a").hexdigest()}}))
+    menu_hashes = {p: S.hashlib.sha256(p.encode()).hexdigest() for p in S.MENU_FILES["v6"]}  # the menu files the manifest pins
+    for rel in S.MENU_FILES["v6"]:
+        (root / rel).parent.mkdir(parents=True, exist_ok=True)
+        (root / rel).write_bytes(rel.encode())
+    (out / S.FROZEN_CODE["v6"]).write_text(json.dumps({"files": {"a.py": S.hashlib.sha256(b"a").hexdigest(), **menu_hashes}}))
+    stamp = S.menu_identity("v6", menu_hashes)
     declared = S.frozen_choice("v6", out)
     base = {"right": 40, "misleading": 30, "incomplete": 30}  # production on 100 scored records
     half = {"all": {"candidates": 110, "valid": 110, "real": {"requirement": 100}, "non_requirement": {"not_a_requirement": 9, "scope_or_context": 1},
                     "attachment": {}, "status": {"complete": 110}, "invented_answers": 0, "modality_error_answers": 0},
             "audit": {"attachment": {"right": 60, "misleading": 35, "incomplete": 5}, "baseline_attachment": base}}
     meta = {"tiers": [declared["tier"]], "models": [declared["model"]], "digests": [declared["digest"]], "temperatures": declared["temperatures"],
-            "num_ctxs": declared["num_ctxs"], "num_predicts": declared["num_predicts"]}
+            "num_ctxs": declared["num_ctxs"], "num_predicts": declared["num_predicts"], "menu_generators": [stamp]}
     result = {"prompt_hashes": [S.K.prompt_hash()], "run_meta": meta, "evaluation": half}
     report = S.verdict_report(result, "v6", "r2_14b", out, root)
     assert report["all_gates_pass"] and report["registry"] == "v6" and report["frozen_code"] == "frozen_wp457e_code.json"
     assert report["gates"]["attachment_gain_over_production"]["passed"]  # 60 of 100 = 40% + 20 points exactly
     half["audit"]["attachment"] = {"right": 59, "misleading": 35, "incomplete": 6}
     assert not S.verdict_report(result, "v6", "r2_14b", out, root)["gates"]["attachment_gain_over_production"]["passed"]
-    for bad in ({**result, "prompt_hashes": [S.SEL.prompt_hash()]}, {**result, "run_meta": {**meta, "digests": ["other"]}}):
+    old_menu = {**meta, "menu_generators": [S.menu_identity("v6", {p: "0" * 64 for p in S.MENU_FILES["v6"]})]}  # a ledger made with other menu files
+    for bad in ({**result, "prompt_hashes": [S.SEL.prompt_hash()]}, {**result, "run_meta": {**meta, "digests": ["other"]}},
+                {**result, "run_meta": old_menu}, {**result, "run_meta": {**meta, "menu_generators": ["None"]}},  # unstamped: the v5 path writes no stamp
+                {**result, "run_meta": {k: v for k, v in meta.items() if k != "menu_generators"}}):
         with pytest.raises(SystemExit):
             S.verdict_report(bad, "v6", "r2_14b", out, root)
     with pytest.raises(SystemExit):
@@ -252,6 +260,36 @@ def test_the_v6_run_uses_the_new_menu_and_restores_the_frozen_one(SC, M1, M2, tm
     # the same candidate through the v5 path gets the old, numbered and junk entries
     old = SC.RS.M.build_menu(cands[0]["quote"], 2, CHUNKS, "R2")
     assert "2.17. MAJCOM/DRUs." in [e["text"] for e in old]
+
+
+def test_the_v6_run_stamps_every_record_with_the_menu_files_and_a_resume_must_match(SC, tmp_path, monkeypatch):
+    """Review finding: v5 and v6 share every other validated value, so the ledger must say which menu generator wrote it."""
+    S = SC.SR
+    repo = tmp_path / "repo"
+    for rel, text in zip(S.MENU_FILES["v6"], ("menu v2 source", "menu v1 source")):
+        (repo / rel).parent.mkdir(parents=True, exist_ok=True)
+        (repo / rel).write_text(text)
+    monkeypatch.setattr(S, "REPO", repo)
+    stamp = SC.menu_identity("v6")
+    assert stamp.startswith("menu_v2.py:") and "|menu.py:" in stamp and SC.menu_identity("v5") is None
+    (repo / S.MENU_FILES["v6"][0]).write_text("menu v2 source, edited")
+    assert SC.menu_identity("v6") != stamp  # the identity follows the file contents
+    (repo / S.MENU_FILES["v6"][0]).write_text("menu v2 source")
+    ledger = SC._StampedLedger(tmp_path / "l.jsonl", stamp)
+    ledger.append({"entry_id": "k1", "candidate_id": "x", "status": "complete"})
+    assert json.loads((tmp_path / "l.jsonl").read_text())["menu_generator"] == stamp and ledger.records["k1"]["menu_generator"] == stamp
+    # a resume accepts only records stamped with the same menu files
+    frozen = {"tier": "R2", "model": S.MODELS[14], "digest": "d", "temperatures": ["0.1"], "num_ctxs": ["8192"], "num_predicts": ["200"]}
+    rec = {"candidate_id": "audit:A", "run_label": "v6_eval_r2_14b", "kind": "selection", "tier": "R2", "model": S.MODELS[14], "digest": "d",
+           "prompt_hash": S.K.prompt_hash(), "temperature": 0.1, "num_ctx": 8192, "num_predict": 200, "menu_generator": stamp}
+    path = tmp_path / "partial.jsonl"
+    path.write_text(json.dumps(rec) + "\n")
+    SC.check_partial_ledger(path, frozen, "v6_eval_r2_14b", stamp)
+    for bad in ({**rec, "menu_generator": "menu_v2.py:0|menu.py:0"}, {k: v for k, v in rec.items() if k != "menu_generator"}):
+        path.write_text(json.dumps(bad) + "\n")
+        with pytest.raises(SystemExit) as e:
+            SC.check_partial_ledger(path, frozen, "v6_eval_r2_14b", stamp)
+        assert "menu_generator" in str(e.value)
 
 
 def test_candidates_come_from_the_registrys_gold_evaluation_half(SC, tmp_path, monkeypatch):
@@ -319,4 +357,4 @@ def test_the_v6_manifest_itself_is_fixed_here(SC):
     """A tampered manifest could pin anything, so its own hash is fixed in this test (regenerate it only on purpose, with freeze_v6.py --force)."""
     S = SC.SR
     own = S.hashlib.sha256((S.OUTPUTS / S.FROZEN_CODE["v6"]).read_bytes()).hexdigest()
-    assert own == "08886e0654700cff7e48d9d6260e41111fc66b78fbe687d7625fc32615ce0e02", own
+    assert own == "7eb1205cd64b7324f8ab1a2efadf35e88ace32cbae36d284dd9267dc3b98c8f6", own

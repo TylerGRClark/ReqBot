@@ -211,7 +211,8 @@ def score_run(directory, gold):
                           "digests": sorted({str(r.get("digest")) for r in records.values()}),
                           "temperatures": sorted({str(r.get("temperature")) for r in records.values()}),  # and with which parameters
                           "num_ctxs": sorted({str(r.get("num_ctx")) for r in records.values()}),
-                          "num_predicts": sorted({str(r.get("num_predict")) for r in records.values()})}
+                          "num_predicts": sorted({str(r.get("num_predict")) for r in records.values()}),
+                          "menu_generators": sorted({str(r.get("menu_generator")) for r in records.values()})}  # the guarded runner stamps this on v6 records
     for which in ("selection", "evaluation"):
         golds = [g for g in gold["gold"] if g["half"] == which]
         if not any(g["candidate_id"] in records for g in golds):
@@ -297,6 +298,26 @@ GOLDS = {"v4": GOLD, "v5": GOLD, "v6": OUTPUTS / "fresh_gold.json"}
 # The plan's pre-run minimums for the fresh set (docs/PHASE45_WP457E_PLAN.md section 2): below them a gate could have nothing to measure (an empty category makes
 # `gate_report` omit its gate), so neither a run nor a verdict may proceed.
 SUFFICIENCY = {"v6": {"real": 80, "non_requirements": 8, "attachment_scored": 60}}
+# v5 and v6 share every value a verdict validates (prompt, tier, model, digest, parameters) and differ only in the menu generator, so the guarded runner stamps each
+# ledger record with the identity of the menu files it used and the verdict requires that to equal what the frozen manifest pins.
+MENU_FILES = {"v6": ("eval/spike_results/wp_45_7/menu_v2.py", "eval/spike_results/wp_45_7/menu.py")}
+
+
+def menu_identity(registry, hashes):
+    """The stamp for a registry's menu generators: file name and sha256 of each of its `MENU_FILES`, from `hashes` {repo-relative path: sha256}."""
+    return "|".join(f"{Path(p).name}:{hashes[p]}" for p in MENU_FILES[registry])
+
+
+def expected_menu_identity(registry, outputs=None):
+    """The stamp the frozen manifest pins for the registry's menu files (None for a registry without one)."""
+    if registry not in MENU_FILES:
+        return None
+    path = (Path(outputs) if outputs else OUTPUTS) / FROZEN_CODE[registry]
+    files = json.loads(path.read_text(encoding="utf-8"))["files"]
+    missing = [p for p in MENU_FILES[registry] if p not in files]
+    if missing:
+        raise SystemExit(f"the {registry} manifest does not pin the menu files {missing}")
+    return menu_identity(registry, files)
 
 
 def parse_config(name):
@@ -443,7 +464,9 @@ def verdict_report(result, registry, name, outputs=None, root=None):
     meta = result.get("run_meta") or {}
     expected = {"tiers": [frozen["tier"]], "models": [frozen["model"]], "digests": [frozen["digest"]],
                 "temperatures": frozen["temperatures"], "num_ctxs": frozen["num_ctxs"], "num_predicts": frozen["num_predicts"]}
-    if meta != expected:
+    if registry in MENU_FILES:  # the ledger must have been written with the menu generator the manifest pins
+        expected["menu_generators"] = [expected_menu_identity(registry, outputs)]
+    if {k: meta.get(k) for k in expected} != expected:
         raise SystemExit(f"the ledger is not the frozen {frozen['name']} configuration: it was written with {meta}, the frozen run used {expected}")
     check_frozen_code(registry, outputs, root)
     half = result.get("evaluation")
