@@ -241,6 +241,9 @@ def selection_gates(sel, min_right=None, relative=None):
             gates["misleading"] = _check_fraction(
                 Fraction(att.get("misleading", 0) + att.get("failed", 0), total),
                 Fraction(base.get("misleading", 0), nb) + relative["max_misleading_margin"])
+        else:  # nothing to compare (no attachment-scored records, or no production baseline): the gates exist and FAIL, never vanish
+            gates["attachment_gain_over_production"] = (0.0, 1.0, False)
+            gates["misleading"] = (1.0, 0.0, False)
     return gates, right
 
 

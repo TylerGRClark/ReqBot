@@ -320,6 +320,11 @@ def test_v4_bar_is_anchored_to_production_with_exact_fractions(mods):
     assert not gates(30, 22, 3)["misleading"][2]  # 22 of 55 = 40.0% is not
     assert not gates(30, 21, 3, failed=1)["misleading"][2]  # a failed resolution counts as misleading: 22 of 55
     assert "attachment_right" not in gates(30, 20, 5)  # v4 has no absolute bar
+    # nothing to compare: the relative gates still exist and fail, so a run with no scored attachments can never slip through
+    empty = S.selection_gates({**sel(0, 0), "audit": {"attachment": {}, "baseline_attachment": base}}, relative=S.V4_RELATIVE)[0]
+    nobase = S.selection_gates({**sel(30, 20, 5), "audit": {"attachment": {"right": 30}, "baseline_attachment": {}}}, relative=S.V4_RELATIVE)[0]
+    for g in (empty, nobase):
+        assert g["attachment_gain_over_production"][2] is False and g["misleading"][2] is False
     assert "attachment_gain_over_production" not in S.selection_gates(sel(30, 20, 5))[0]  # v2 and v3 are scored as before
     # the rule over a registry of four: only the passing configuration with the best right rate is chosen
     full = {"r1_8b": sel(29, 20, 6), "r2_8b": sel(30, 20, 5), "r1_14b": sel(33, 22, 0), "r2_14b": sel(32, 20, 3)}
