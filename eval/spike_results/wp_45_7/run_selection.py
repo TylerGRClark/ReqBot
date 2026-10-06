@@ -14,6 +14,7 @@ The selection half only, unless `--final` is passed for the one scoring after th
 """
 
 import argparse
+import collections
 import json
 import sys
 import time
@@ -31,7 +32,10 @@ import check_resolution as C  # noqa: E402
 import menu as M  # noqa: E402
 import ollama_run as OR  # noqa: E402
 import run_resolver as RR  # noqa: E402
+import kind_selection as K  # noqa: E402
 import selection as S  # noqa: E402
+
+DESIGNS = {"status": S, "kind": K}  # status: the model also chooses the strength (WP-45.7b/c); kind: code sets it (WP-45.7d)
 
 GOLD = _HERE / "outputs/resolver_gold.json"
 TIERS = ("R1", "R2")  # R0 supplies no context and is not part of this experiment (plan section 3)
@@ -44,20 +48,20 @@ def gold_candidates(half):
 
 
 def run_candidates(candidates, docs, *, tier, model, digest, run_label, ledger, ollama_url, num_ctx=OR.NUM_CTX, num_predict=200,
-                   temperature=0.1, timeout=300, log=print):
-    phash = S.prompt_hash()
-    fixed = S.fixed_tokens()
+                   temperature=0.1, timeout=300, log=print, design=S):
+    phash = design.prompt_hash()
+    fixed = design.fixed_tokens()
     calls = 0
     for cand in candidates:
         chunks, step = docs[cand["document"]]
         menu = M.build_menu(cand["quote"], cand["chunk_id"], chunks, tier, step_c_by_chunk=step)
-        menu_tokens = B.estimate_tokens(len(S.render_menu(menu)))
+        menu_tokens = B.estimate_tokens(len(design.render_menu(menu)))
         bundle = B.build(cand["quote"], cand["chunk_id"], chunks, tier, step_c_by_chunk=step, fixed_tokens=fixed + menu_tokens, num_ctx=num_ctx)
         key = OR.resolver_key(cand["document"], cand["candidate_id"], cand["chunk_id"], OR.sha(cand["quote"]),
-                              bundle.bundle_hash() + S.menu_hash(menu), phash, digest, run_label)
+                              bundle.bundle_hash() + design.menu_hash(menu), phash, digest, run_label)
         if ledger.done(key):
             continue
-        prompt = S.render_prompt(bundle, menu)
+        prompt = design.render_prompt(bundle, menu)
         rec = {
             "entry_id": key, "kind": "selection", "run_label": run_label, "tier": tier, "model": model, "digest": digest,
             "candidate_id": cand["candidate_id"], "document": cand["document"], "chunk_id": cand["chunk_id"],
@@ -71,7 +75,7 @@ def run_candidates(candidates, docs, *, tier, model, digest, run_label, ledger, 
             continue
         try:
             text, meta = OR.generate(prompt, model, ollama_url, num_ctx=num_ctx, num_predict=num_predict, temperature=temperature,
-                                     schema=S.json_schema(menu), timeout=timeout)
+                                     schema=design.json_schema(menu), timeout=timeout)
         except Exception as e:  # noqa: BLE001
             rec.update(status="failed", raw_response=f"ERROR: {e}", meta={}, selection=None, answer=None, issues=[])
             ledger.append(rec)
@@ -80,14 +84,16 @@ def run_candidates(candidates, docs, *, tier, model, digest, run_label, ledger, 
         calls += 1
         status = OR.classify(meta, num_ctx)
         selection = answer = None
-        issues = []
+        issues, extras = [], {}
         try:
             selection = json.loads(text)
-            answer, spans = S.assemble(selection, menu, bundle.to_dict()["spans"], cand["quote"])
+            answer, spans, extras = design.assemble_full(selection, menu, bundle.to_dict()["spans"], cand["quote"])
             issues = [{"code": i.code, "field": i.field, "severity": i.severity, "message": i.message} for i in C.check(answer, spans)]
         except (ValueError, TypeError, KeyError, AttributeError):
             answer, status = None, "failed"  # unparseable, or a choice the schema should have made impossible
         rec.update(status=status, raw_response=text, meta=meta, selection=selection, answer=answer, issues=issues)
+        if extras:  # WP-45.7d: where the code read the strength from, and every modal the quote holds
+            rec["modal_source"], rec["all_modals"] = extras["modal_source"], extras["all_modals"]
         ledger.append(rec)
         errors = [i for i in issues if i["severity"] == "error"]
         log(f"{cand['candidate_id']}: {status}, {meta.get('prompt_eval_count')} prompt tokens, {meta.get('wall_seconds')}s, "
@@ -95,17 +101,17 @@ def run_candidates(candidates, docs, *, tier, model, digest, run_label, ledger, 
     return calls
 
 
-def dry_run_report(candidates, docs, tier, num_ctx=OR.NUM_CTX):
+def dry_run_report(candidates, docs, tier, num_ctx=OR.NUM_CTX, design=S):
     """What a run would send, without calling anything or writing a ledger: how many candidates are treatable, and the estimated prompt
     tokens and menu sizes. A dry run keeps no records, so its figures come from here and not from `summarize`."""
-    fixed = S.fixed_tokens()
+    fixed = design.fixed_tokens()
     tokens, sizes, untreatable = [], [], 0
     for cand in candidates:
         chunks, step = docs[cand["document"]]
         menu = M.build_menu(cand["quote"], cand["chunk_id"], chunks, tier, step_c_by_chunk=step)
         bundle = B.build(cand["quote"], cand["chunk_id"], chunks, tier, step_c_by_chunk=step,
-                         fixed_tokens=fixed + B.estimate_tokens(len(S.render_menu(menu))), num_ctx=num_ctx)
-        estimate = B.estimate_tokens(len(S.render_prompt(bundle, menu)))
+                         fixed_tokens=fixed + B.estimate_tokens(len(design.render_menu(menu))), num_ctx=num_ctx)
+        estimate = B.estimate_tokens(len(design.render_prompt(bundle, menu)))
         untreatable += bool(bundle.untreatable or estimate > B.prompt_cap(num_ctx))
         tokens.append(estimate)
         sizes.append(len(menu))
@@ -114,16 +120,21 @@ def dry_run_report(candidates, docs, tier, num_ctx=OR.NUM_CTX):
         "dry_run": True, "tier": tier, "candidates": n, "untreatable": untreatable, "empty_menus": sizes.count(0),
         "mean_estimated_prompt_tokens": round(sum(tokens) / n) if n else None, "max_estimated_prompt_tokens": max(tokens, default=None),
         "mean_menu_size": round(sum(sizes) / n, 2) if n else None, "max_menu_size": max(sizes, default=None),
-        "fixed_prompt_estimated_tokens": fixed, "prompt_hash": S.prompt_hash(),
+        "fixed_prompt_estimated_tokens": fixed, "prompt_hash": design.prompt_hash(),
     }
 
 
-def summarize(ledger):
+def summarize(ledger, design=S):
     summary = RR.summarize(ledger)
     recs = list(ledger.records.values())
-    summary["fixed_prompt_estimated_tokens"] = S.fixed_tokens()
+    summary["fixed_prompt_estimated_tokens"] = design.fixed_tokens()
     summary["mean_menu_size"] = round(sum(len(r.get("menu") or []) for r in recs) / len(recs), 2) if recs else None
     summary["answers_with_a_selection"] = sum(1 for r in recs if r.get("selection") is not None)
+    if any("modal_source" in r for r in recs):  # WP-45.7d: where each requirement's strength came from, for the owner's spot check
+        summary["modal_sources"] = dict(sorted(collections.Counter(r["modal_source"] for r in recs if "modal_source" in r).items()))
+        summary["multi_modal_candidates"] = sorted(r["candidate_id"] for r in recs if len(r.get("all_modals") or []) > 1)
+        summary["inferred_source_candidates"] = sorted(
+            r["candidate_id"] for r in recs if r.get("modal_source") in ("menu lead-in", "preceding clause"))
     return summary
 
 
@@ -132,6 +143,8 @@ def main():
 
     cfg = _config.load()
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--design", choices=sorted(DESIGNS), default="status",
+                    help="status: the model also chooses the strength (WP-45.7b/c); kind: code sets it from the modal word (WP-45.7d)")
     ap.add_argument("--tier", choices=TIERS, required=True)
     ap.add_argument("--model", required=True)
     ap.add_argument("--run-label", required=True)
@@ -147,10 +160,11 @@ def main():
     args = ap.parse_args()
     if args.half == "evaluation" and not args.final:
         sys.exit("the evaluation half is read once, after the choice is frozen: pass --final")
+    design = DESIGNS[args.design]
     candidates = gold_candidates(args.half)
     docs = RR.load_documents(sorted({c["document"] for c in candidates}))
     if args.dry_run:
-        print(json.dumps(dry_run_report(candidates, docs, args.tier, args.num_ctx), indent=1))
+        print(json.dumps(dry_run_report(candidates, docs, args.tier, args.num_ctx, design), indent=1))
         return
     digest = OR.model_digest(args.ollama_url, args.model)
     out_dir = Path(args.scratch) / args.run_label
@@ -160,11 +174,11 @@ def main():
     calls = run_candidates(
         candidates, docs, tier=args.tier, model=args.model, digest=digest, run_label=args.run_label, ledger=ledger,
         ollama_url=args.ollama_url, num_ctx=args.num_ctx, num_predict=args.num_predict, temperature=args.temperature,
-        timeout=args.timeout,
+        timeout=args.timeout, design=design,
     )
-    summary = summarize(ledger)
-    summary.update(run_label=args.run_label, tier=args.tier, model=args.model, digest=digest, prompt_hash=S.prompt_hash(),
-                   half=args.half, calls_made=calls, wall_seconds=round(time.time() - started, 1))
+    summary = summarize(ledger, design)
+    summary.update(run_label=args.run_label, tier=args.tier, model=args.model, digest=digest, prompt_hash=design.prompt_hash(),
+                   half=args.half, design=args.design, calls_made=calls, wall_seconds=round(time.time() - started, 1))
     (out_dir / "run_summary.json").write_text(json.dumps(summary, indent=1) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=1))
 

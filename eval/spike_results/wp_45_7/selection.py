@@ -225,3 +225,9 @@ def assemble(selection, menu, bundle_spans, quote):
         "standalone_statement": dict(empty), "plain_language": dict(empty), "unresolved_reason": dict(empty),
     }
     return answer, spans
+
+
+def assemble_full(selection, menu, bundle_spans, quote):
+    """Uniform entry point for the runner: (answer, spans, extras), with no extras for this design."""
+    answer, spans = assemble(selection, menu, bundle_spans, quote)
+    return answer, spans, {}

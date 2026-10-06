@@ -270,6 +270,7 @@ REGISTRIES = {
     "v2": REGISTERED_CONFIGS,
     "v3": frozenset(f"{t}_{m}" for t in ("r1", "r2") for m in ("8b", "14b")),
     "v4": frozenset(f"{t}_{m}" for t in ("r1", "r2") for m in ("8b", "14b")),  # WP-45.7c: the same four, a different bar
+    "v5": frozenset(f"{t}_{m}" for t in ("r1", "r2") for m in ("8b", "14b")),  # WP-45.7d: the same four and the v4 bar, code sets the strength
 }
 V3_MIN_RIGHT = 35 / 55
 # WP-45.7c (docs/PHASE45_WP457C_PLAN.md section 2): the bar is derived from production, not from the generative resolver: right at least
@@ -291,7 +292,7 @@ def choose_report(results, registry="v2"):
     names = {n.lower() for n in results}
     registered = REGISTRIES[registry]
     min_right = V3_MIN_RIGHT if registry == "v3" else None
-    relative = V4_RELATIVE if registry == "v4" else None
+    relative = V4_RELATIVE if registry in ("v4", "v5") else None
     if names != registered or len(names) != len(results):
         raise SystemExit(
             f"the pre-registered rule ({registry}) applies to exactly these {'six' if len(registered) == 6 else 'four'} runs: " + ", ".join(sorted(registered))
@@ -325,7 +326,7 @@ def main():
     ap.add_argument("--out")
     ap.add_argument("--choose", action="store_true", help="apply the pre-registered choice rule (run names like r1_8b) and print the report")
     ap.add_argument("--registry", choices=sorted(REGISTRIES), default="v2",
-                    help="which registered rule --choose applies to: v2 (six configurations, WP-45.7), v3 (four, WP-45.7b) or v4 (the same four with the WP-45.7c bar)")
+                    help="which registered rule --choose applies to: v2 (six configurations, WP-45.7), v3 (four, WP-45.7b) v4 (the same four with the WP-45.7c bar) or v5 (the v4 bar for the WP-45.7d design)")
     args = ap.parse_args()
     gold = json.loads(GOLD.read_text(encoding="utf-8"))
     results = {}
