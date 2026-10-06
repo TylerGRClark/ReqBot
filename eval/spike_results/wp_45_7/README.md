@@ -424,3 +424,48 @@ scoring of the scratch ledgers). The rule of step 7 was applied by code (`--choo
 - **Every configuration has a modality-error count in the 40s to 50s of 104** and the invented-party rate is far above 2% wherever context is supplied.
 
 Under the protocol of step 9 this triggers the one allowed revision: **prompt v2** (hash `d0fcb1a2b23684f5`) was merged before this step and the six v2 runs on the same candidates were started 2026-10-06 after this table was fixed. The rule is applied to the v2 results alone; if none passes, G2 fails on the development side and the held-out resolver is not run.
+
+## Step 11: the v2 resolver on the selection half, and the outcome of the protocol (`outputs/resolver_selection_v2_*.json`, `outputs/resolver_v2_runs/`)
+
+Prompt v2 (hash `d0fcb1a2b23684f5`, merged in #220 before this step) was run in all six configurations on the same 104 selection candidates (2026-10-06; every call `complete`,
+104 of 104 shape-conformant in every run). The ledgers are committed; the scores and the choice report (`score_resolver.py --choose`, the six registered configurations, the selection
+halves only) are regenerated from them.
+
+| Config | v1 attachment right | **v2 attachment right** (misleading / incomplete) | v2 non-requirements rejected (16) | v2 real wrongly rejected | v2 answers with a modality error | v2 invented-party rate | v2 gates failed |
+|---|---|---|---|---|---|---|---|
+| Production stem (baseline) | 34.5% | 34.5% (19 / 17) | n/a | n/a | n/a | n/a | n/a |
+| R0, 8B | 27.3% | 27.3% (3 / 37) | 11 (69%) | 10.2% | 20 | 1% | real rejected, modality, incomplete |
+| R1, 8B | 69.1% | 54.5% (16 / 9) | 10 (62.5%) | 6.8% | 30 | 21.2% | real rejected, modality, invented |
+| R2, 8B | 63.6% | 50.9% (7 / 20) | 9 (56%) | 2.3% | 26 | 15.4% | non-requirement, modality, invented, incomplete |
+| R0, 14B | 27.3% | 27.3% (1 / 39) | 12 (75%) | 11.4% | 20 | 14.4% | real rejected, modality, invented, incomplete |
+| R1, 14B | 58.2% | **63.6% (19 / 1)** | 12 (75%) | 2.3% | 40 | 29.8% | modality, invented |
+| R2, 14B | 67.3% | 61.8% (17 / 4) | 13 (81%) | 5.7% | 35 | 27.9% | real rejected, modality, invented |
+
+**Outcome.** No v2 configuration passes every gate. The rule's fallback chooses R1 on the 14B (the best attachment-right rate) and reports it as failing the invented-party and modality gates.
+By the protocol of step 9 (one revision, no second): **G2 fails on the development side.** The evaluation halves of the gold were not scored, the resolver was not run on the held-out set,
+and no end-to-end run was made.
+
+**What v2 changed.** It fixed what the prompt could fix: non-requirements are now rejected 56 to 81% of the time (v1: 0 to 69%, and 0 to 6% on the 8B at R1 and R2), modality-error answers fell on most
+configurations (v1 40 to 56, v2 20 to 40), and the 8B's R0 invented-party rate is 1%. It did not fix the invented-party rate wherever context is supplied (15 to 30%) or the modality errors (never zero), and
+it lowered the 8B's attachment (R1: 69% to 55%), probably because "copy word for word" made the model leave actors and parents empty more often; the 14B's R1 moved the other way (58% to 64%).
+
+**Where the failures are** (from the committed ledgers; not tuned on): they concentrate in the *composed* fields, `standalone_statement` and `plain_language`, and in the actor and parent values taken from headings, not in
+classification. The models expand acronyms from outside knowledge in the plain-language paraphrase ("Controlled Unclassified Information", "Air Force Global Strike Command": `added_token`), drop or add a modal
+when paraphrasing (`modality_removed`, `modality_added`, `modality_strengthened`), take an actor from a heading but cite only the quote span for the sentence they build from it, and write an actor
+with a leading article ("The Director, DISA" for the heading "DIRECTOR, DISA") that fails the literal containment test.
+
+**What this says about the architecture hypothesis, and what it does not.**
+
+- *Supported:* separating discovery from resolution is worth it for **discovery** (step 6: D1 raises 8B recall on the development pages by about 30 points, at a precision cost that the resolver is meant to recover), and a resolver
+  that is given the chunk, heading and stem **attaches the governing clause or party far better than production's rules** (v1 R1 8B 69% and v2 R1 14B 64%, against 35%, with far fewer misleading answers than the production
+  stem's 35% for the 8B).
+- *Not supported:* a resolver that also **writes** a faithful standalone sentence and plain-language paraphrase under zero tolerance for modality changes and a 2% limit on invented parties, with these models and this prompt. No
+  configuration is close on the invented-party gate except the 8B at R0 (which attaches almost nothing).
+- *Not tested:* anything on the held-out set; whether the discovery gain holds on documents not used to design D1 (the held-out discovery runs exist but are unscored until labels exist); an extractive-only resolver.
+
+**Decisions this leaves to Tyler** (nothing here is started):
+
+1. *Stop at discovery and attachment.* Treat D1 as the production candidate for discovery (it still needs the held-out confirmation, which needs the two labelers), and do not adopt a generative resolver.
+2. *A new, separately pre-registered experiment: an extractive-only resolver.* Return status, actor, parent, modality phrase and class, conditions, exceptions and timing as spans copied from the evidence, with **no** standalone sentence or plain-language
+   field; keep the same gold and halves; the fidelity gates then apply to verbatim fields only. This keeps the attachment gain and the non-requirement filtering that v2 showed and removes the fields where the failures concentrate.
+3. *The second labeler for the held-out set*, which is needed for the discovery confirmation regardless.
