@@ -262,3 +262,36 @@ def test_choose_report_applies_the_rule_and_reads_only_the_selection_halves(mods
         with pytest.raises(SystemExit) as e:
             S.choose_report(bad)
         assert "exactly these six runs" in str(e.value)
+
+
+def test_v3_registry_has_four_runs_and_an_attachment_gate(mods):
+    """WP-45.7b: R0 is dropped, and attachment right must be at least 35 of 55 (the best generative result) to pass."""
+    S = mods["score"]
+    assert S.REGISTRIES["v3"] == {"r1_8b", "r1_14b", "r2_8b", "r2_14b"} and len(S.REGISTRIES["v2"]) == 6
+    assert S.V3_MIN_RIGHT == 35 / 55
+
+    def run(right, total=55, mod=0):
+        sel = {"all": {"candidates": 40, "valid": 40, "real": {"requirement": 20}, "non_requirement": {"not_a_requirement": 8, "unresolved": 2},
+                       "attachment": {}, "invented_answers": 0, "modality_error_answers": mod},
+               "audit": {"attachment": {"right": right, "misleading": total - right}, "baseline_attachment": {"right": 5, "incomplete": 5}}}
+        return {"selection": sel, "evaluation": {"audit": {"attachment": {"right": 99}}}}
+
+    full = {"r1_8b": run(34), "r2_8b": run(35), "r1_14b": run(40), "r2_14b": run(41, mod=1)}
+    report = S.choose_report(full, "v3")
+    assert report["configs"]["r1_8b"]["gates"]["attachment_right"]["passed"] is False  # 34 of 55 is under 35 of 55
+    assert report["configs"]["r2_8b"]["gates"]["attachment_right"]["passed"] is True  # exactly 35 of 55 passes
+    assert report["configs"]["r2_14b"]["all_gates_pass"] is False  # the best right rate, but a modality error
+    assert report["chosen"] == {"name": "r1_14b", "passes_every_gate": True, "attachment_right_rate": pytest.approx(40 / 55, abs=1e-3)}
+    # v2 reports no attachment gate, so the merged v2 results are scored exactly as before
+    v2_gates = S.selection_gates(run(10, total=10)["selection"])[0]
+    assert "attachment_right" not in v2_gates
+    # none passing: the highest right rate is reported as failing
+    nobody = S.choose_report({k: run(v["selection"]["audit"]["attachment"]["right"], mod=2) for k, v in full.items()}, "v3")
+    assert nobody["chosen"]["name"] == "r2_14b" and nobody["chosen"]["passes_every_gate"] is False
+    # the v3 rule is registered for exactly these four runs
+    for bad in ({k: v for k, v in full.items() if k != "r1_14b"}, {**full, "r0_8b": run(9)}):
+        with pytest.raises(SystemExit) as e:
+            S.choose_report(bad, "v3")
+        assert "exactly these four runs" in str(e.value)
+    with pytest.raises(SystemExit):
+        S.choose_report(full)  # the default registry is v2: four runs are not the six

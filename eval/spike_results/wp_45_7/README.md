@@ -503,3 +503,24 @@ How to read it:
 - **S1 is per tier.** Both tiers pass; had one failed it would have been dropped from the model runs, and if both failed the plan stops with no model run.
 
 Next (plan stage 3): the selection prompt, the assembler and the runner, with the `--choose` registry for the four configurations.
+
+## Step 13: WP-45.7b, the selection prompt, the assembler, the runner and the registry for four configurations (`selection.py`, `run_selection.py`, `score_resolver.py --registry v3`)
+
+Plan stage 3. **No model has been run yet**; this step is the code and its tests, so that the runs of stage 4 are mechanical.
+
+- `selection.py`: the model sees the evidence bundle plus the menu and answers only `{status, actor, parent}`; actor and parent are an enum of this candidate's menu ids plus `"none"` (Ollama `format`), the status the same enum as before. Five invented worked examples
+  (a list item under a named lead-in, a complete sentence, a description, a recommendation, a scope statement) are checked by a test to be valid answers that the **unchanged** checker accepts after assembly. The fixed part of the prompt is about
+  1,770 estimated tokens (the generative resolver's was about 4,470); prompt hash `c9ca62bfb5a01a63`.
+- `assemble`: actor and parent are the chosen menu texts; the **modality is read by code** (the quote first, then the chosen parent; the chosen actor is never read, so a lead-in picked as the actor with no parent is a malformed choice that fails the checker instead of lending its modal; the ambiguous `can` is not read); every field the model did not choose is null. The answer cites exact-text spans only (the quote
+  and one span per chosen entry), never a larger span that contains the entry, because a whole chunk cited as evidence would put its own modals into the answer and be counted against it. A status that contradicts the quote's own modal (for example `obligation` for "should") is
+  still a modality error through the checker's status/class check, so the modality gate stays model-dependent, as the plan says after the Codex review.
+- `run_selection.py`: the same ledger fields as `run_resolver.py` plus the menu and the raw selection, so `score_resolver.py` reads it as it is. Tiers R1 and R2 only. It reads the selection half of the frozen gold; the evaluation half is refused without `--final`.
+  `--num-predict` defaults to 200 (the answers are a few tokens). `--dry-run` builds every menu, bundle and prompt and prints the sizes (it calls nothing and writes nothing). On the 104 selection candidates: no empty menus, **0 untreatable**, mean estimated prompt 2,429 tokens (max 2,871) at R1 and 3,000 (max 3,910) at R2, mean menu 4.8 and 5.0 entries.
+- `score_resolver.py --choose --registry v3`: the registry of the four configurations (r1_8b, r1_14b, r2_8b, r2_14b), the same gates as before, plus a gate that the audit attachment-right rate is at least **35 of 55** (63.6%, the best generative result), compared as an exact fraction.
+  The default registry is still the six of WP-45.7, so the merged v2 results score exactly as before.
+
+**Known limit of the frozen generator** (found by reading one live prompt, after the generator was frozen at revision 2; **not fixed**, so as not to exceed the plan's two revisions): the revision-2 rule that a colon governs only when list items follow it does not recognize multi-level
+section numbers such as "2.1.5.1." as list markers, so a chunk whose lead-in is followed by such numbering gets no `lead_in` entry. On the 104 selection candidates this affects two (audit R011, already on the revision-2 miss list, and card R064); with the rule widened they would gain their lead-in. If the
+experiment succeeds, widening the marker rule is an obvious follow-up, made after the evaluation-half verdict and measured as its own change. Also, the `preceding` entry sometimes holds only a list number ("2.1.5.2."), which is useless but harmless: the right answer for it is `none`.
+
+Next (plan stage 4): the four runs (R1 and R2, each on the 8B and the 14B) on the selection half, the choice report with `--registry v3`, and the stop-or-continue decision, as in Step 11.
