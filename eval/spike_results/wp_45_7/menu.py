@@ -33,6 +33,7 @@ MAX_SPAN_CHARS = 300  # a lead-in or stem longer than this is cut back to its la
 MAX_MENU = 14
 _LIST_MARKER = re.compile(r"^\(?(?:[0-9]{1,2}(?:\.[0-9]{1,2})*|[a-zA-Z]{1,2}|[ivxIVX]{1,5})[.)]\s+")
 _SENTENCE_START = re.compile(r"(?<=[.;!?])\s+")
+_LIST_START = re.compile(r"^(?:\(\w{1,4}\)|\w{1,3}[.)]|[-\u2022*\u2013\u2014])\s")
 _SECTION_NUMBER = re.compile(r"^(?:section\s+)?[0-9]+(?:\.[0-9]+)*\.?\s+", re.IGNORECASE)
 
 
@@ -69,17 +70,29 @@ def _cap(text):
     return cut[cut.find(" ") + 1:] if " " in cut else cut
 
 
+def _governing_colon(text, end):
+    """Index of the nearest colon before `end` that governs what follows it, or -1. A colon governs when what comes after it, up to `end`,
+    is empty or starts with a list marker ("(1)", "a.", "-"): "Note: background text. (1) Encrypt data." has a colon that governs
+    nothing, and "https://..." and "10:30" are not lead-ins. An earlier colon is tried when the nearest does not govern."""
+    colon = text.rfind(":", 0, end)
+    while colon >= 0:
+        after = text[colon + 1:end]
+        if not text.startswith("//", colon + 1) and (not after.strip() or _LIST_START.match(after.lstrip() + " ")):
+            return colon
+        colon = text.rfind(":", 0, colon)
+    return -1
+
+
 def lead_in_before(body, quote):
-    """The nearest sentence that ends in a colon before the quote's position in `body`, from its sentence start to the colon, or None.
+    """The nearest governing colon sentence before the quote's position in `body`, from its sentence start to the colon, or None.
     `body` and `quote` are normalized. When the quote is not found, there is no position and so no lead-in."""
     pos = body.find(quote)
     if pos <= 0:
         return None
-    colon = body.rfind(":", 0, pos)
+    colon = _governing_colon(body, pos)
     if colon < 0:
         return None
-    before = body[:colon]
-    parts = _SENTENCE_START.split(before)
+    parts = _SENTENCE_START.split(body[:colon])
     return _cap(parts[-1].strip() + ":") if parts and parts[-1].strip() else None
 
 
@@ -95,8 +108,8 @@ def preceding_clause(body, quote):
 
 
 def tail_lead_in(text):
-    """The last colon-ending sentence in a stretch of text (a previous chunk's tail), or None."""
-    colon = text.rfind(":")
+    """The last governing colon sentence in a stretch of text (a previous chunk's tail), or None."""
+    colon = _governing_colon(text, len(text))
     if colon < 0:
         return None
     parts = _SENTENCE_START.split(text[:colon])

@@ -1,0 +1,289 @@
+{
+ "tier": "R1",
+ "scored": 55,
+ "generator_sha256": "92be12cecb3bd841",
+ "ceiling": 0.8727272727272727,
+ "ceiling_needs_lead_in": 0.8292682926829268,
+ "needs_lead_in": 41,
+ "by_lead_in_location": {
+  "previous_chunk": {
+   "n": 9,
+   "reachable": 6
+  },
+  "same_chunk": {
+   "n": 15,
+   "reachable": 12
+  },
+  "section_heading": {
+   "n": 17,
+   "reachable": 16
+  }
+ },
+ "mean_menu_size": 4.909090909090909,
+ "max_menu_size": 8,
+ "passes_s1": true,
+ "misses": [
+  {
+   "candidate_id": "audit:R009",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "previous_chunk",
+   "menu_size": 4,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 50",
+     "text": "3.6. GENERAL DOD CUI PROCEDURES."
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 50 (without its section number)",
+     "text": "GENERAL DOD CUI PROCEDURES."
+    },
+    {
+     "id": "M3",
+     "kind": "heading",
+     "source": "chunk 50",
+     "text": "SECTION 3: PROGRAMMATICS"
+    },
+    {
+     "id": "M4",
+     "kind": "preceding",
+     "source": "chunk 50",
+     "text": "-"
+    }
+   ],
+   "lead_in_text": "In accordance with ISOO Notice 2016-01, CUI training standards must, at minimum:"
+  },
+  {
+   "candidate_id": "audit:R011",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "same_chunk",
+   "menu_size": 2,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 15",
+     "text": "ROLES AND RESPONSIBILITIES"
+    },
+    {
+     "id": "M2",
+     "kind": "preceding",
+     "source": "chunk 15",
+     "text": "2.1.5.2."
+    }
+   ],
+   "lead_in_text": "All Service component communication support organizations should:"
+  },
+  {
+   "candidate_id": "audit:R043",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "same_chunk",
+   "menu_size": 5,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 37",
+     "text": "5. NM SECURITY"
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 37 (without its section number)",
+     "text": "NM SECURITY"
+    },
+    {
+     "id": "M3",
+     "kind": "preceding",
+     "source": "chunk 37",
+     "text": "as defined in DoD 8570.01-M (Reference (ad)) shall be designated IA Technical Category Level 2 and IA Management Category Level 2 positions and as critical sensitive positions as defined by DoD 5200.2-R (Reference (ae)), and military, government civilian, and contractor personnel filling them shall"
+    },
+    {
+     "id": "M4",
+     "kind": "preceding",
+     "source": "chunk 37 (its subject)",
+     "text": "as defined in DoD 8570.01-M (Reference (ad))"
+    },
+    {
+     "id": "M5",
+     "kind": "stem",
+     "source": "same chunk",
+     "text": "shall be designated IA Technical Category Level 2 and IA Management Category Level 2 positions and as critical sensitive positions as defined by DoD 5200.2-R"
+    }
+   ],
+   "lead_in_text": "military, government civilian, and contractor personnel filling them shall"
+  },
+  {
+   "candidate_id": "audit:R089",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "previous_chunk",
+   "menu_size": 6,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 25",
+     "text": "2.2.4. Deputy Chief of Staff for Operations ( AF/A3 ) will:"
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 25 (without its section number)",
+     "text": "Deputy Chief of Staff for Operations ( AF/A3 ) will:"
+    },
+    {
+     "id": "M3",
+     "kind": "heading",
+     "source": "chunk 25",
+     "text": "2.2. Responsibilities."
+    },
+    {
+     "id": "M4",
+     "kind": "heading",
+     "source": "chunk 25 (without its section number)",
+     "text": "Responsibilities."
+    },
+    {
+     "id": "M5",
+     "kind": "heading",
+     "source": "chunk 25",
+     "text": "GENERAL ROLES AND RESPONSIBILITIES"
+    },
+    {
+     "id": "M6",
+     "kind": "preceding",
+     "source": "chunk 25",
+     "text": "IAW AFI 63-101 / 20-101, Integrated Life Cycle Management ,"
+    }
+   ],
+   "lead_in_text": "AFNC3C , as the designated lead organization for centralized organize, train and equip functions for the AN/USQ/225, will:"
+  },
+  {
+   "candidate_id": "audit:R090",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "section_heading",
+   "menu_size": 4,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 23",
+     "text": "2.3. AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron/SCC (38 CYRS/SCC). The AF LHC Flight is the Air Force's DISN LHC Program manager who:"
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 23 (without its section number)",
+     "text": "AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron/SCC (38 CYRS/SCC). The AF LHC Flight is the Air Force's DISN LHC Program manager who:"
+    },
+    {
+     "id": "M3",
+     "kind": "heading",
+     "source": "chunk 23",
+     "text": "ROLES AND RESPONSIBILITIES"
+    },
+    {
+     "id": "M4",
+     "kind": "preceding",
+     "source": "chunk 23",
+     "text": "- 2.3.11.6."
+    }
+   ],
+   "lead_in_text": "The AF LHC Flight is the Air Force's DISN LHC Program manager who:"
+  },
+  {
+   "candidate_id": "audit:R109",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "previous_chunk",
+   "menu_size": 6,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 6",
+     "text": "1.2. POLICY."
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 6 (without its section number)",
+     "text": "POLICY."
+    },
+    {
+     "id": "M3",
+     "kind": "heading",
+     "source": "chunk 6",
+     "text": "SECTION 1: GENERAL ISSUANCE INFORMATION"
+    },
+    {
+     "id": "M4",
+     "kind": "preceding",
+     "source": "chunk 6",
+     "text": "-"
+    },
+    {
+     "id": "M5",
+     "kind": "stem",
+     "source": "previous chunk",
+     "text": "d. Risk to the assurance of applicable systems will be considered as part of the risk management process used throughout the entire system life cycle. Risk management will include TSN processes, tools, and techniques to:"
+    },
+    {
+     "id": "M6",
+     "kind": "stem",
+     "source": "previous chunk (its subject)",
+     "text": "Risk to the assurance of applicable systems"
+    }
+   ],
+   "lead_in_text": "Risk management will include TSN processes, tools, and techniques to:"
+  },
+  {
+   "candidate_id": "audit:R112",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "same_chunk",
+   "menu_size": 5,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 12",
+     "text": "1. UNDER SECRETARY OF DEFENSE FOR INTELLIGENCE AND SECURITY (USD(I&S))."
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 12 (without its section number)",
+     "text": "UNDER SECRETARY OF DEFENSE FOR INTELLIGENCE AND SECURITY (USD(I&S))."
+    },
+    {
+     "id": "M3",
+     "kind": "lead_in",
+     "source": "chunk 12",
+     "text": "Under the authority, direction, and control of the USD(I&S), in addition to the responsibilities in sections 6 and 11 of this enclosure and in accordance with References (a), (c), and DoDD 5100.20 (Reference (y)), the DIRNSA/CHCSS:"
+    },
+    {
+     "id": "M4",
+     "kind": "preceding",
+     "source": "chunk 12",
+     "text": "- b."
+    },
+    {
+     "id": "M5",
+     "kind": "stem",
+     "source": "previous chunk",
+     "text": "Operates SCI security programs to support other DoD activities and federal agencies by special agreement, in accordance with Reference (n)"
+    }
+   ],
+   "lead_in_text": "the DIRNSA/CHCSS:"
+  }
+ ]
+}

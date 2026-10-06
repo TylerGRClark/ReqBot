@@ -58,6 +58,22 @@ def test_lead_in_before_is_the_nearest_colon_sentence(M):
     assert M.lead_in_before(body, "not in the body") is None
 
 
+def test_a_colon_must_govern_what_follows_it(M):
+    """Review finding: the nearest colon is not always a lead-in. Prose after it, a URL or a time are not governed items."""
+    assert M.lead_in_before("Note: background text. (1) Encrypt data.", "(1) Encrypt data.") is None
+    assert M.lead_in_before("See https://example.org/page for details. (1) Encrypt data.", "(1) Encrypt data.") is None
+    assert M.lead_in_before("Meet at 10:30 daily. Encrypt data.", "Encrypt data.") is None
+    # a nested colon that governs nothing falls back to the earlier colon that does
+    body = "The Officer will: (a) do this: details follow; (b) report."
+    assert M.lead_in_before(body, "(b) report.") == "The Officer will:"
+    # list markers: numbered, lettered, bulleted, and the quote directly after the colon
+    assert M.lead_in_before("The Officer will: - report.", "report.") == "The Officer will:"
+    assert M.lead_in_before("The Officer will: report.", "report.") == "The Officer will:"
+    assert M.tail_lead_in("Text. Note: prose here.") is None
+    assert M.tail_lead_in("Text. The Officer will: (1) report;") == "The Officer will:"
+    assert M.tail_lead_in("Text. The Officer will:") == "The Officer will:"
+
+
 def test_preceding_clause_is_the_clause_before_the_quote(M):
     body = "First sentence. Air Force Chief of Safety, in coordination with AF/A10, will develop standards."
     assert M.preceding_clause(body, "develop standards.") == "Air Force Chief of Safety, in coordination with AF/A10, will"

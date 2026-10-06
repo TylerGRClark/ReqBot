@@ -481,17 +481,24 @@ record, could a perfect choice from the menu be marked *right* by the same `atta
 |---|---|---|---|---|---|
 | Revision 0, R1 (first look, `menu_ceiling_rev0_r1.json`) | 55 | 74.5% | 65.9% of 41 | 3.0 / n/a | FAIL (41 of 55; 42 were needed) |
 | Revision 0, R2 (`menu_ceiling_rev0_r2.json`) | 55 | 78.2% | 70.7% | 3.4 / n/a | PASS |
-| **Revision 1, R1** (`menu_ceiling_rev1_r1.json`, generator hash `a6edfba17feb68d1`) | 55 | **89.1%** | 85.4% | 4.9 / 8 | **PASS** |
-| **Revision 1, R2** (`menu_ceiling_rev1_r2.json`) | 55 | **92.7%** | 90.2% | 5.4 / 10 | **PASS** |
+| Revision 1, R1 (`menu_ceiling_rev1_r1.json`, hash `a6edfba17feb68d1`; superseded) | 55 | 89.1% | 85.4% | 4.9 / 8 | PASS |
+| Revision 1, R2 (`menu_ceiling_rev1_r2.json`; superseded) | 55 | 92.7% | 90.2% | 5.4 / 10 | PASS |
+| **Revision 2, R1** (`menu_ceiling_rev2_r1.json`, generator hash `92be12cecb3bd841`) | 55 | **87.3%** | 82.9% | 4.9 / 8 | **PASS** |
+| **Revision 2, R2** (`menu_ceiling_rev2_r2.json`) | 55 | **92.7%** | 90.2% | 5.2 / 10 | **PASS** |
 
-**Revision 1** (one of the two the plan allows) was made from the revision 0 misses on the selection half: a leading section number ("11.", "2.20.") counted as an identifying word and defeated the
+**Revision 1** (the first of the two the plan allows) was made from the revision 0 misses on the selection half: a leading section number ("11.", "2.20.") counted as an identifying word and defeated the
 0.8 overlap rule, so each heading is now also offered without its number; and a list item whose lead-in is the clause right before it with no colon had no menu entry, so the clause between the previous
-sentence boundary and the quote is now offered. No other change. **The generator is frozen at this version** (hash above, recorded in each output); any further change would be the second revision.
+sentence boundary and the quote is now offered.
+
+**Revision 2** (the second and last) answers a Codex review finding on #224, not a miss: the nearest colon before the quote was taken as the lead-in even when it governed nothing ("Note: background text. (1) Encrypt data." offered
+"Note:"; "https:" and "10:30" produced malformed spans). A colon now counts only when what follows it, up to the quote, is empty or starts with a list marker, and an earlier colon is tried when the nearest does not govern.
+It cost the R1 ceiling one record (89.1% to 87.3%) and changed which R2 records are reachable (R089 gained, R011 lost) without changing the R2 total. **The generator is frozen at revision 2** (hash `92be12cecb3bd841`,
+recorded in each output); both revisions the plan allows are used, so any further change is out of bounds for this experiment.
 
 How to read it:
 - **A ceiling, not a score.** It says the right span is *in* the menu, not that a model will choose it; the model run (S2) measures that, and several plausible spans in one menu is where misleading answers will come from.
 - **The 55 include the 14 `complete` records**, which are right by choosing nothing, so the "needs a lead-in only" column is the harder number (85 to 90%). The v2 resolver's best attachment-right rate (63.6%) was over the same 55.
-- **Remaining misses** (R1 six, R2 four: R043, R089, R090, R112, and at R1 only R009 and R109) are listed with their menus in the outputs. They were not inspected further and are not chased: that would be a second revision.
+- **Remaining misses** (R1 seven: R009, R011, R043, R089, R090, R109, R112; R2 four: R011, R043, R090, R112) are listed with their menus in the outputs. They were not inspected further and are not chased.
 - The "lead-in location" column describes where the human found the lead-in; a different span (for example a heading) can name the same actor, so a record can be reachable from a source other than the labeled one.
 - **S1 is per tier.** Both tiers pass; had one failed it would have been dropped from the model runs, and if both failed the plan stops with no model run.
 
