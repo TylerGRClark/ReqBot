@@ -76,13 +76,32 @@ def test_the_new_menu_only_ever_removes_entries_and_every_one_is_verbatim(M1, M2
             new = M2.build_menu(quote, cid, CHUNKS, tier)
             assert {e["text"] for e in new} <= old, (cid, tier)
             assert [e["id"] for e in new] == [f"M{i}" for i in range(1, len(new) + 1)] and len(new) <= M2.MAX_MENU
-            sources = [M2.B.normalize(quote)] + [M2.B.normalize(c["raw_text"]) for c in CHUNKS.values()]
-            sources += [M2.B.normalize(h) for c in CHUNKS.values() for h in c["section_title_path"] + [c["parent_header_text"]]]
+            sources = [M1.B.normalize(quote)] + [M1.B.normalize(c["raw_text"]) for c in CHUNKS.values()]
+            sources += [M1.B.normalize(h) for c in CHUNKS.values() for h in c["section_title_path"] + [c["parent_header_text"]]]
             sources += [M2.M1._SECTION_NUMBER.sub("", s, count=1) for s in sources]
             assert all(any(e["text"] in s for s in sources) for e in new), (cid, tier)
     assert M2.build_menu("x", 1, CHUNKS, "R0") == [] or all(e["kind"] == "subject" for e in M2.build_menu("The Officer shall act.", 1, CHUNKS, "R0"))
     with pytest.raises(ValueError):
         M2.build_menu("x", 1, CHUNKS, "R9")
+
+
+def test_the_new_menu_stays_subtractive_when_the_old_menu_hit_its_cap(M1, M2):
+    """Review finding: removing an early entry must not let a later candidate in that the old menu never offered."""
+    path = [f"{n}.1 Heading number {n}" for n in range(1, 9)]  # 8 numbered headings: 16 old entries (numbered and plain) before anything else
+    chunks = {
+        1: _chunk(1, "Earlier text. The Officer will:", path=["PART 1"]),
+        2: _chunk(2, "Text here. - 7.3.4.3. Establish a report.", heading="9.1 Leaf heading", path=path),
+    }
+    old = M1.build_menu("Establish a report.", 2, chunks, "R2")
+    new = M2.build_menu("Establish a report.", 2, chunks, "R2")
+    assert len(old) == M1.MAX_MENU  # the cap bound
+    assert [e["text"] for e in new] == [e["text"] for e in old if M2.letters(e["text"]) >= 2 and not
+                                         (e["kind"] == "heading" and M1._SECTION_NUMBER.sub("", e["text"], count=1) != e["text"]
+                                          and M1._SECTION_NUMBER.sub("", e["text"], count=1) in {x["text"] for x in old})]
+    assert len(new) < len(old)  # slots were freed ...
+    assert {e["text"] for e in new} <= {e["text"] for e in old}  # ... and nothing the old menu never offered came in
+    assert not any(e["source"].endswith("(previous)") for e in new)  # the previous-chunk lead-in was beyond the old cap, so it stays out
+    assert [e["id"] for e in new] == [f"M{i}" for i in range(1, len(new) + 1)]
 
 
 def test_the_frozen_menu_module_is_reused_not_copied(M1, M2):
@@ -251,4 +270,4 @@ def test_the_v6_manifest_itself_is_fixed_here(SC):
     """A tampered manifest could pin anything, so its own hash is fixed in this test (regenerate it only on purpose, with freeze_v6.py --force)."""
     S = SC.SR
     own = S.hashlib.sha256((S.OUTPUTS / S.FROZEN_CODE["v6"]).read_bytes()).hexdigest()
-    assert own == "2cc4ad0834970e9604f5b8189dac7dc2a1193a729c894f77699da1727ba74cc9", own
+    assert own == "a081b94074e5c5b4149ba3f67da572d76d8fb655701d1986f0af998871e6b179", own

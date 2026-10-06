@@ -1,7 +1,7 @@
 {
  "tier": "R2",
  "scored": 55,
- "generator_sha256": "bf59ef20434fe2a0",
+ "generator_sha256": "21ab0018ebf386d7",
  "ceiling": 0.9454545454545454,
  "ceiling_needs_lead_in": 0.926829268292683,
  "needs_lead_in": 41,
@@ -19,7 +19,7 @@
    "reachable": 16
   }
  },
- "mean_menu_size": 3.6363636363636362,
+ "mean_menu_size": 3.618181818181818,
  "max_menu_size": 8,
  "passes_s1": true,
  "misses": [
@@ -33,7 +33,7 @@
     {
      "id": "M1",
      "kind": "heading",
-     "source": "chunk 37",
+     "source": "chunk 37 (without its section number)",
      "text": "NM SECURITY"
     },
     {
@@ -67,7 +67,7 @@
     {
      "id": "M1",
      "kind": "heading",
-     "source": "chunk 23",
+     "source": "chunk 23 (without its section number)",
      "text": "AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron/SCC (38 CYRS/SCC). The AF LHC Flight is the Air Force's DISN LHC Program manager who:"
     },
     {
@@ -89,7 +89,7 @@
     {
      "id": "M1",
      "kind": "heading",
-     "source": "chunk 12",
+     "source": "chunk 12 (without its section number)",
      "text": "UNDER SECRETARY OF DEFENSE FOR INTELLIGENCE AND SECURITY (USD(I&S))."
     },
     {

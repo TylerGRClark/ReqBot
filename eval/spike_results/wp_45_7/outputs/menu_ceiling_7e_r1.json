@@ -1,7 +1,7 @@
 {
  "tier": "R1",
  "scored": 55,
- "generator_sha256": "bf59ef20434fe2a0",
+ "generator_sha256": "21ab0018ebf386d7",
  "ceiling": 0.8909090909090909,
  "ceiling_needs_lead_in": 0.8536585365853658,
  "needs_lead_in": 41,
@@ -19,7 +19,7 @@
    "reachable": 16
   }
  },
- "mean_menu_size": 3.309090909090909,
+ "mean_menu_size": 3.290909090909091,
  "max_menu_size": 6,
  "passes_s1": true,
  "misses": [
@@ -33,7 +33,7 @@
     {
      "id": "M1",
      "kind": "heading",
-     "source": "chunk 50",
+     "source": "chunk 50 (without its section number)",
      "text": "GENERAL DOD CUI PROCEDURES."
     },
     {
@@ -55,7 +55,7 @@
     {
      "id": "M1",
      "kind": "heading",
-     "source": "chunk 37",
+     "source": "chunk 37 (without its section number)",
      "text": "NM SECURITY"
     },
     {
@@ -89,13 +89,13 @@
     {
      "id": "M1",
      "kind": "heading",
-     "source": "chunk 25",
+     "source": "chunk 25 (without its section number)",
      "text": "Deputy Chief of Staff for Operations ( AF/A3 ) will:"
     },
     {
      "id": "M2",
      "kind": "heading",
-     "source": "chunk 25",
+     "source": "chunk 25 (without its section number)",
      "text": "Responsibilities."
     },
     {
@@ -123,7 +123,7 @@
     {
      "id": "M1",
      "kind": "heading",
-     "source": "chunk 23",
+     "source": "chunk 23 (without its section number)",
      "text": "AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron/SCC (38 CYRS/SCC). The AF LHC Flight is the Air Force's DISN LHC Program manager who:"
     },
     {
@@ -145,7 +145,7 @@
     {
      "id": "M1",
      "kind": "heading",
-     "source": "chunk 6",
+     "source": "chunk 6 (without its section number)",
      "text": "POLICY."
     },
     {
@@ -179,7 +179,7 @@
     {
      "id": "M1",
      "kind": "heading",
-     "source": "chunk 12",
+     "source": "chunk 12 (without its section number)",
      "text": "UNDER SECRETARY OF DEFENSE FOR INTELLIGENCE AND SECURITY (USD(I&S))."
     },
     {
