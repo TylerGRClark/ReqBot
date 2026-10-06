@@ -366,3 +366,37 @@ renamed (the loader still reads old ledgers, and the copies committed here were 
 These are **counts of records, not scores**: nothing here is measured against labels, and a larger count is not better (plan 4.4). The held-out set is deliberately not scored until
 (1) the two labelers' files exist and Tyler has adjudicated the disagreements, and (2) the resolver tier and model are chosen from the development and audit-selection data and
 frozen, because the plan allows no configuration choice after the held-out labels are opened. They are committed now only so the raw answers survive the working container.
+
+## Step 9: resolver v1 on the selection half, and the one allowed prompt revision (pre-registered before any v2 result)
+
+**What v1 did on the 8B** (`outputs/resolver_selection_v1_8b.json`, with every ledger behind it in `outputs/resolver_v1_runs/`: each raw answer, evidence bundle, issue list, model digest and run label; the selection half only, 104 candidates; run 2026-10-06 with the v1 resolver prompt, hash
+`abaa18ac67ef857a`; every call `complete`, 104 of 104 shape-conformant in all three tiers):
+
+| 8B tier | Attachment right / misleading / incomplete (55 scorable audit records) | Non-requirements rejected | Answers with a modality error | Invented-party rate |
+|---|---|---|---|---|
+| Production stem (baseline) | 19 / 19 / 17 | n/a | n/a | n/a |
+| R0 quote only | 15 / 4 / 36 | 4 of 16 | 43 of 104 | 0% |
+| R1 | **38 / 7 / 10** | 1 of 16 | 50 of 104 | 19% |
+| R2 | 35 / 7 / 13 | 0 of 16 | 40 of 104 | 14% |
+
+Attachment is much better than production at R1 and R2 (right 69% and 64% against 35%; misleading 13% against 35%). **No 8B configuration passes G2**: all fail the
+non-requirement gate (60% needed), the modality gate (zero needed), and R1 and R2 the invented-party gate (2%); R0 also fails the incomplete gate.
+
+**Why, from the answers** (not a re-tuning on the evaluation halves, which are untouched): the v1 prompt had no example of an imperative with no modal, so the 8B gave
+class `obligation` with a null phrase (19 answers) and then dropped the modal from its standalone sentence (29); it had no `not_a_requirement` example, so descriptive
+sentences were kept as requirements; it never said to copy actor, action and target word for word (29 `not_in_cited_span` on action and target); and it never said to cite the
+lead-in span an actor came from, so generated sentences "added" names (11 `added_token`).
+
+**The protocol, fixed now.**
+
+1. The 14B v1 runs were still going when v2 was written. The pre-registered choice rule (step 7) is applied to **all six v1 configurations first**. If any passes
+   every gate, it is chosen and v2 is not used.
+2. Otherwise this is the plan's one allowed fix on the dev side (plan 4.5, G2): **prompt v2** (this PR) changes only the instructions and adds two invented examples (an
+   imperative with no modal; a descriptive sentence that contains "can"), saying to copy values word for word, to cite every span used, to give a null phrase when no
+   modal word is cited, and what `not_a_requirement` means. The checker, the phrase table, the gold, the gates and the choice rule are **not** changed.
+3. All six configurations are re-run on the same 104 selection candidates with v2 and the rule is applied to the v2 results alone; the v1 numbers stay in the record.
+4. If some v2 configuration passes every gate it is frozen with its hash; then the evaluation halves are scored once, and the held-out resolver and end-to-end runs follow.
+   **If none passes, G2 is failed on the development side: stop, report it, and do not run the held-out resolver.** No second revision.
+
+v2 adds about 1,060 estimated tokens to the fixed prompt (4,470 against 3,408), which still leaves the bundle budget at 5,075 characters; with it no R2 bundle in the selection
+half is cut (checked before running).

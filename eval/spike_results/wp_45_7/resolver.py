@@ -59,16 +59,16 @@ def json_schema():
     return {"type": "object", "properties": {k: props[k] for k in ORDER}, "required": list(ORDER)}
 
 
-INSTRUCTIONS = """You are resolving ONE candidate requirement from a compliance document, using only the evidence below. Do not use outside knowledge. Every field is an object with a "value" and the evidence ids ("E1", "E2", ...) that support it. If the evidence does not support a field, its value is null and its evidence list is empty. plain_language and unresolved_reason always have an empty evidence list. Spans marked "unverified" were found by a rule and may be wrong: use one only if the other evidence agrees.
+INSTRUCTIONS = """You are resolving ONE candidate requirement from a compliance document, using only the evidence below. Do not use outside knowledge. Every field is an object with a "value" and the evidence ids ("E1", "E2", ...) that support it. In "evidence" list EVERY span you used for that field, including the lead-in or heading span that names the actor or the governing clause, not only the candidate quote. If the evidence does not support a field, its value is null and its evidence list is empty. plain_language and unresolved_reason always have an empty evidence list. Copy these values word for word from a cited span, never paraphrase them: actor, action, target, applicability, conditions, exceptions, timing, parent, and the modality phrase. Only plain_language is a paraphrase. Spans marked "unverified" were found by a rule and may be wrong: use one only if the other evidence agrees.
 
 Fields:
-- status: obligation (must, shall, will, a mandatory duty), recommendation (should, should not, is recommended, a hint at what to do), permission (may, is authorized to), prohibition (shall not, must not), scope_or_context (says who or what the document covers; it is kept and attached, not a requirement), not_a_requirement (a description or background, not something anyone is asked or allowed to do), or unresolved (the evidence is not enough to decide).
+- status: obligation (must, shall, will, a mandatory duty), recommendation (should, should not, is recommended, a hint at what to do), permission (may, is authorized to), prohibition (shall not, must not), scope_or_context (says who or what the document covers; it is kept and attached, not a requirement), not_a_requirement (a description, definition, background, or what a technology can do or what may happen; it asks or allows nobody to do anything, even if it contains "can" or "may"), or unresolved (the evidence is not enough to decide). Most descriptive sentences are not_a_requirement.
 - actor: the party that must act. An approver or authorizer is NOT the actor. A list item with no subject inherits it from the lead-in span you cite.
 - action, target: what is done, and to what.
-- modality: "verbatim" is the exact modal phrase copied from a cited span (shall, must, will, is required to, should, should not, may, is authorized to, shall not, is prohibited from), or null for an imperative with no modal anywhere in the cited spans. "class" is the strength it carries, in the same words as status: obligation, recommendation, permission, prohibition, or none. Never turn "may" or "should" into "shall"; "should not" is a recommendation, not a prohibition.
+- modality: "verbatim" is the exact modal phrase copied from a cited span (shall, must, will, is required to, should, should not, may, is authorized to, shall not, is prohibited from), or null when no modal word appears in any span you cite: an imperative such as "Disable unused services." has verbatim null and class none, and phrases like "as required" or "in accordance with" are not modals. If a lead-in span you cite holds the modal (for example "The Records Officer will:"), copy that modal from it and give its class. "class" is the strength it carries, in the same words as status: obligation, recommendation, permission, prohibition, or none. Never turn "may" or "should" into "shall"; "should not" is a recommendation, not a prohibition.
 - applicability: who or what it applies to. conditions, exceptions: copy them; do not drop an exception. timing: when or how often.
 - parent: the governing clause text, if one of the spans is it. logic: and or or if the text says how sibling items combine, otherwise none.
-- standalone_statement: one sentence built only from the cited spans that keeps the modality, conditions and exceptions; null if it cannot be built without adding a fact. plain_language: the same meaning in simpler words, adding no number, name or party; null when standalone_statement is null.
+- standalone_statement: one sentence built only from the cited spans that keeps the modality, conditions and exceptions (it contains the modal phrase you copied, for example "The Records Officer will review ..."; an imperative with no modal stays an imperative); null if it cannot be built without adding a fact. plain_language: the same meaning in simpler words, adding no number, name or party; null when standalone_statement is null.
 - unresolved_reason: what is missing and where it might be, only when status is unresolved.
 
 Examples (invented text). Answer with one JSON object in the same shape."""
@@ -171,6 +171,23 @@ EXAMPLES = [
         "spans": [_span("candidate", "candidate quote", "This manual applies to all network operators.")],
         "unresolved": [],
         "answer": _answer("scope_or_context", ("E1",), applicability=("all network operators", ("E1",))),
+    },
+    {
+        "title": "an imperative with no modal anywhere (verbatim null, class none)",
+        "spans": [_span("candidate", "candidate quote", "Disable unused services.")],
+        "unresolved": [],
+        "answer": _answer(
+            "obligation", ("E1",),
+            action=("Disable unused services", ("E1",)), target=("unused services", ("E1",)),
+            standalone=("Disable unused services.", ("E1",)),
+            plain=("Turn off any services that are not being used.", ()),
+        ),
+    },
+    {
+        "title": "a description, not a requirement, although it contains \"can\"",
+        "spans": [_span("candidate", "candidate quote", "A hypervisor can pause a guest system and save its state.")],
+        "unresolved": [],
+        "answer": _answer("not_a_requirement", ("E1",)),
     },
 ]
 

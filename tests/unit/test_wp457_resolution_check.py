@@ -87,7 +87,7 @@ def test_the_schema_enforces_the_enums_and_accepts_the_examples(R):
 def test_the_fixed_prompt_fits_beside_the_bundle_budget_and_the_hash_is_stable(R):
     B = sys.modules["bundle"]
     tokens = R.fixed_tokens()
-    assert 1000 < tokens < 4000
+    assert 1000 < tokens < 5000  # v2 has eight examples and the copy-word-for-word and cite-every-span rules
     assert tokens + B.BUNDLE_TOKEN_CAP + B.ANSWER_RESERVE_TOKENS < B.NUM_CTX  # instructions + full bundle + answer fit the window
     assert R.prompt_hash() == R.prompt_hash() and len(R.prompt_hash()) == 16
     assert B.preflight(tokens, 500)
@@ -496,3 +496,18 @@ def test_a_longer_phrase_through_the_can_entry_also_activates_can(R, C):
     a["standalone_statement"] = {"value": "Users can be granted access.", "evidence": ["E1"]}
     a["plain_language"] = {"value": "Users are allowed to receive access.", "evidence": []}
     assert codes(C.check(a, spans)) == []  # "can" is counted for this answer, so the kept permission is not "removed"
+
+
+def test_prompt_v2_covers_the_failure_shapes_the_v1_selection_runs_showed(R):
+    """v1 had no imperative example and no not_a_requirement example, never said to copy values word for word, and never said to cite
+    the lead-in span an actor came from. v2 adds exactly those, with invented text."""
+    titles = " | ".join(e["title"] for e in R.EXAMPLES)
+    assert "imperative with no modal" in titles and "a description, not a requirement" in titles
+    imperative = next(e for e in R.EXAMPLES if "imperative" in e["title"])["answer"]
+    assert imperative["modality"] == {"verbatim": None, "class": "none", "evidence": []}
+    assert imperative["status"]["value"] == "obligation" and imperative["standalone_statement"]["value"] == "Disable unused services."
+    descriptive = next(e for e in R.EXAMPLES if e["title"].startswith("a description"))["answer"]
+    assert descriptive["status"]["value"] == "not_a_requirement" and descriptive["actor"]["value"] is None
+    for phrase in ("word for word", "EVERY span", "even if it contains \"can\" or \"may\"", "as required"):
+        assert phrase in R.INSTRUCTIONS, phrase
+    assert R.EXAMPLES[4]["title"].startswith("a cross-reference") and R.EXAMPLES[5]["title"].startswith("scope")  # the older indexes the tests use are unchanged
