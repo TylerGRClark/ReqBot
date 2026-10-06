@@ -709,3 +709,37 @@ the attachment-right rate at least production's plus 20 points, the misleading r
 *Not done:* the verdict does not replay the menu, bundle and assembly for each evaluation candidate to compare them with the ledger; it relies on the pinned code, the prompt hash and the recorded run parameters, and on the run being made from the pinned worktree.
 
 The verdict is **pass** only if every gate passes. A pass is the WP-45.7d verdict: on candidates the design never saw (the same 13 documents; the halves were split by candidate, not by document), the frozen configuration beats production on attachment by at least 20 points with no invented text and no gated modality error. A fail is reported as a fail, with the gates that failed; there is no second try on this half. Neither outcome says anything about unseen documents or the held-out set.
+
+## Step 22: WP-45.7d Stage C, the one-shot verdict on the evaluation half: FAIL by one record on one gate (`outputs/eval_v5_run/`, `outputs/verdict_v5_eval.json`)
+
+The frozen configuration (R2, `qwen2.5:14b`, kind prompt `6200fa25a374eb35`, menu `e6ff087bb3f0fab5`) ran once on the 116 evaluation-half candidates, never read by any earlier step, from a worktree pinned at the merge commit of #235, through `run_stage_c.py` (whose preflight passed: frozen choice, all 32 pinned files byte-identical, model digest `7cdf5a0187d5`, no earlier run). All 116 calls completed, 116 of 116 answers shape-conformant, no checker error of any kind, about one second per call, 121 seconds in all.
+It was scored once with `score_resolver.py --verdict r2_14b=... --registry v5`, against this half's own production baseline.
+
+| Gate (registered) | Value | Threshold | |
+|---|---|---|---|
+| Attachment right at least production's plus 20 points | 35 of 55 = 63.6% | 24/55 + 20 points = 35 of 55 | **pass, exactly on the bar** |
+| **Misleading (failures included) at most production's plus 5 points** | **16 of 55 = 29.1%** | 13/55 + 5 points = at most 15 of 55 (28.6%) | **FAIL by one record** |
+| Incomplete at most production's plus 5 points | 4 of 55 = 7.3% | 37.7% | pass |
+| Real requirements wrongly rejected | 3 of 103 = 2.9% | 5% | pass |
+| Real scope-or-unresolved | 1 of 103 = 1.0% | 10% | pass |
+| Non-requirements rejected | 10 of 13 = 76.9% | 60% | pass |
+| Valid answers | 116 of 116 | 95% | pass |
+| Invented parties | 0 | 2% | pass |
+| Gated modality errors | 0 | 0 | pass |
+
+**The verdict is a fail, and it stands.** One gate failed, by one record (and that record is a scoring-rule artifact, below), and a second passed exactly on its bar; the plan allows no second try on this half, and none is made. Nothing in this step changes a threshold or a rule.
+
+How to read it, plainly:
+- **On the same 55 attachment-scored records, against production's stems:** right 35 against 24 (11 more), misleading 16 against 13 (3 more), incomplete 4 against 18 (14 fewer). The resolver turned most of production's "attached nothing" cases into right answers, and added three more wrong attachments than production makes. Production is stronger on this half than on the selection half (right 43.6% against 34.5%), so the registered rule, which scales with the half's own baseline, asked for more here (35 right, at most 15 misleading) than on the selection half (30 right, at most 21).
+- **Everything the design makes structural held:** zero invented parties and zero gated modality errors on unseen candidates, as constructed. Strength came from the quote in 52 records, from the chosen parent in 27, and from no modal (default `obligation`, class `none`) in 37; no record needed an inferred source. Seven quotes hold more than one modal (audit R013, cards R031, R044, R047, R068, R069, R087), first modal used, as registered.
+- **The evidence is noisy at this size.** 55 records move a rate by 1.8 points each; a margin of one record, in either direction, is inside the noise that showed up between prompts earlier (two to eight records flipping each way). This is not an argument for a different verdict; it is why a pass or fail this narrow should be read as "about at the bar".
+
+**What the 16 misleading records show (exploratory, after the verdict, and not a result):**
+- **Seven pick a `preceding` menu entry that is only a list number or a dash** ("2.17.22.", "- 7.3.4.3.", "-", "3.7.1.4.", "- c." and similar: audit R019, R023, R031, R048, R077, R121, R125). Such an entry can never be a correct parent, and the generator offers it. The same entries appeared in earlier menus ("2.1.5.2."). This is a defect in the menu, not a model judgment.
+- **Four attach a heading to a sentence that is complete by itself** (audit R002, R047, R074, R126). Of the other five: **audit R050 names the right party but is scored misleading by the overlap rule**: the model picked the heading "2.17. MAJCOM/DRUs." while the plain "MAJCOM/DRUs." (which matches the gold lead-in exactly) was also on the menu, and the rule counts the section number "2.17" against a match. The same artifact led the generator, early on, to offer headings both with and without their numbers; here the numbered one was chosen. **The verdict therefore rests on exactly one record, and that record is a case the rule scores as wrong although its party is right.** The rule is as registered and the verdict stands; this is reported so that the margin is read for what it is. The other four are an earlier sentence picked for a complete record (R007), a lead-in "AF/A10 will:" attached to a complete sentence (R064), and a lead-in or stem that names a different clause (R061, R108).
+- *Illustration, not a score:* if the seven list-number picks had been `none`, five needs-lead-in records would have been incomplete rather than misleading and two complete records would have been right, so misleading would be 9 of 55 and right 37 of 55. That is arithmetic on this half, which can no longer be used to test anything; any change to the menu has to be tested on candidates this analysis never saw.
+
+**Decisions this leaves to Tyler** (nothing is started):
+1. *Treat it as a near miss with a clear, cheap cause.* Remove menu entries with no letters (list numbers, dashes) in the generator, a deterministic rule, and test the change on **fresh** labeled candidates, since both halves of the gold are now spent. That needs new labels; the held-out pack (454 pieces) is already waiting on the second labeler, and could serve.
+2. *Adopt it in the product as a flagged suggestion rather than a replacement* (for example, show the suggested parent with its source and let the existing stem stand where the resolver chose nothing). That is a product decision; nothing here is integrated into the pipeline, and a registered gate was not passed.
+3. *Stop the resolver line here* and spend the effort on the second labeler and the held-out discovery confirmation, which is the finding that has held up so far (D1, plus 30 points of 8B recall on the development pages).
