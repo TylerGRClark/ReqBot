@@ -1,0 +1,31 @@
+{
+  "script": "eval/spike_results/wp_45_7/fresh_pack.py",
+  "plan": "docs/PHASE45_WP457E_PLAN.md",
+  "drawn": 114,
+  "pass_b_cards": 58,
+  "by_stratum": {
+    "not-a-candidate+signal": 8,
+    "cross-chunk": 28,
+    "same-chunk": 30,
+    "none+nosignal": 12,
+    "none+signal": 28,
+    "not-a-candidate+nosignal": 8
+  },
+  "skipped_as_duplicates_of_spent_gold": {
+    "same-chunk": 1,
+    "cross-chunk": 0,
+    "heading": 0,
+    "none+signal": 3,
+    "none+nosignal": 1,
+    "not-a-candidate+signal": 1,
+    "not-a-candidate+nosignal": 0
+  },
+  "audit_records_excluded_as_the_audit_took_them": 130,
+  "file_sha256": {
+    "pack_a.md": "04142d6c6cbfc120cb876af8115dabb0a7403bf632f3566d452f77c4c100a1d6",
+    "pack_b.md": "ec9d95cbd02ef32420eaa3a3aaf53aca6b6d1389076a0e19066b8bae055e26fc",
+    "RUBRIC.md": "e7b7e15ac349c66cf1183e997be0035b3072699664b84d737cd34738d0477e00",
+    "check_labels.py": "d45b2e58390b9531ab9b1849221cac51da894ed36a53f5af3f3115d2111ec4b0",
+    "fresh_draw_map.json": "2911e4a9036c4f35c1bf826b865a82a75cbe684a385c338ebaf3c699b6b3cccb"
+  }
+}
