@@ -511,3 +511,35 @@ def test_prompt_v2_covers_the_failure_shapes_the_v1_selection_runs_showed(R):
     for phrase in ("word for word", "EVERY span", "even if it contains \"can\" or \"may\"", "as required"):
         assert phrase in R.INSTRUCTIONS, phrase
     assert R.EXAMPLES[4]["title"].startswith("a cross-reference") and R.EXAMPLES[5]["title"].startswith("scope")  # the older indexes the tests use are unchanged
+
+
+def test_modal_free_hints_are_recommendations_but_only_where_they_are_hints(C):
+    """WP-45.7c: "consider" counts at the start of the text (after list markers), never mid-sentence; "is/are advisable" count anywhere."""
+    rec = [("consider", "recommendation")]
+    for text in ("Consider using TLS.", "(1) Consider using TLS.", "2.1.5.2. Consider the options.", "a. Consider logging."):
+        assert C.modals_in(text) == rec, text
+    for text in ("Factors to consider are cost.", "Considering costs, act.", "We reconsider this.", "The list to consider: (1) cost."):
+        assert C.modals_in(text) == [], text
+    assert C.modals_in("Organizations should consider X.") == [("should", "recommendation")]  # the mid-sentence word is not a second modal
+    assert C.modals_in("Encryption is advisable.") == [("is advisable", "recommendation")]
+    assert C.modals_in("Backups are advisable here.") == [("are advisable", "recommendation")]
+    assert C.phrase_class("Consider") == "recommendation" and C.phrase_class("consider using") == "recommendation"
+    assert C.phrase_class("is advisable") == "recommendation"
+
+
+def test_a_correct_answer_on_a_modal_free_hint_now_passes_the_checker(R, C):
+    """The record that made the zero-modality gate unreachable (WP-45.7b card R025): the right answer is a recommendation."""
+    spans = [{"id": "E1", "kind": "candidate", "label": "candidate quote", "text": "Consider using introspection capabilities to monitor activity.",
+              "source": "", "unverified": False}]
+    answer = copy.deepcopy(R.EXAMPLES[0]["answer"])
+    for name in R.VALUE_FIELDS:
+        answer[name] = {"value": None, "evidence": []}
+    answer["conditions"], answer["exceptions"] = [], []
+    for name in ("standalone_statement", "plain_language", "unresolved_reason"):
+        answer[name] = {"value": None, "evidence": []}
+    answer["logic"] = {"value": "none", "evidence": []}
+    answer["status"] = {"value": "recommendation", "evidence": ["E1"]}
+    answer["modality"] = {"verbatim": "Consider", "class": "recommendation", "evidence": ["E1"]}
+    assert not [i for i in C.check(answer, spans) if i.severity == "error"]
+    answer["modality"] = {"verbatim": None, "class": "none", "evidence": []}  # leaving the hint's modal out is now the error
+    assert {i.code for i in C.check(answer, spans) if i.severity == "error"} == {"modality_class", "modal_in_evidence"}

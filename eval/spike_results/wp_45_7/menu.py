@@ -33,7 +33,7 @@ MAX_SPAN_CHARS = 300  # a lead-in or stem longer than this is cut back to its la
 MAX_MENU = 14
 _LIST_MARKER = re.compile(r"^\(?(?:[0-9]{1,2}(?:\.[0-9]{1,2})*|[a-zA-Z]{1,2}|[ivxIVX]{1,5})[.)]\s+")
 _SENTENCE_START = re.compile(r"(?<=[.;!?])\s+")
-_LIST_START = re.compile(r"^(?:\(\w{1,4}\)|\w{1,3}[.)]|[-\u2022*\u2013\u2014])\s")
+_LIST_START = re.compile(r"^(?:\(\w{1,4}\)|\d+(?:\.\d+)*[.)]|\w{1,3}[.)]|[-\u2022*\u2013\u2014])\s")  # WP-45.7c: "2.1.5.1." is a marker
 _SECTION_NUMBER = re.compile(r"^(?:section\s+)?[0-9]+(?:\.[0-9]+)*\.?\s+", re.IGNORECASE)
 
 

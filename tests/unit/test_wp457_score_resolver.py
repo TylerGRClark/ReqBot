@@ -295,3 +295,39 @@ def test_v3_registry_has_four_runs_and_an_attachment_gate(mods):
         assert "exactly these four runs" in str(e.value)
     with pytest.raises(SystemExit):
         S.choose_report(full)  # the default registry is v2: four runs are not the six
+
+
+def test_v4_bar_is_anchored_to_production_with_exact_fractions(mods):
+    """WP-45.7c: right at least production's right rate plus 20 points; misleading at most production's plus 5 points."""
+    S = mods["score"]
+    assert S.REGISTRIES["v4"] == S.REGISTRIES["v3"] and S.V4_RELATIVE["min_gain"] == S.Fraction(1, 5) and S.V4_RELATIVE["max_misleading_margin"] == S.Fraction(1, 20)
+    base = {"right": 19, "misleading": 19, "incomplete": 17}  # production on 55 records
+
+    def sel(right, misleading, incomplete=0, failed=0):
+        att = {"right": right, "misleading": misleading, "incomplete": incomplete}
+        if failed:
+            att["failed"] = failed
+        return {"all": {"candidates": 40, "valid": 40, "real": {"requirement": 20}, "non_requirement": {"not_a_requirement": 8, "unresolved": 2},
+                        "attachment": {}, "invented_answers": 0, "modality_error_answers": 0},
+                "audit": {"attachment": att, "baseline_attachment": base}}
+
+    def gates(*a, **k):
+        return S.selection_gates(sel(*a, **k), relative=S.V4_RELATIVE)[0]
+
+    assert gates(30, 20, 5)["attachment_gain_over_production"][2]  # 30 of 55 = production's 19/55 + 20 points exactly
+    assert not gates(29, 20, 6)["attachment_gain_over_production"][2]
+    assert gates(30, 21, 4)["misleading"][2]  # 21 of 55 = 38.2% is within 19/55 + 5 points = 39.5%
+    assert not gates(30, 22, 3)["misleading"][2]  # 22 of 55 = 40.0% is not
+    assert not gates(30, 21, 3, failed=1)["misleading"][2]  # a failed resolution counts as misleading: 22 of 55
+    assert "attachment_right" not in gates(30, 20, 5)  # v4 has no absolute bar
+    assert "attachment_gain_over_production" not in S.selection_gates(sel(30, 20, 5))[0]  # v2 and v3 are scored as before
+    # the rule over a registry of four: only the passing configuration with the best right rate is chosen
+    full = {"r1_8b": sel(29, 20, 6), "r2_8b": sel(30, 20, 5), "r1_14b": sel(33, 22, 0), "r2_14b": sel(32, 20, 3)}
+    runs = {k: {"selection": v, "evaluation": {"audit": {"attachment": {"right": 55}}}} for k, v in full.items()}
+    report = S.choose_report(runs, "v4")
+    assert report["chosen"]["name"] == "r2_14b" and report["chosen"]["passes_every_gate"]  # r1_14b has the best right rate but 22 misleading
+    assert report["configs"]["r1_14b"]["gates"]["misleading"]["passed"] is False
+    nobody = S.choose_report({k: {"selection": sel(20, 20, 15)} for k in full}, "v4")
+    assert nobody["chosen"]["passes_every_gate"] is False
+    with pytest.raises(SystemExit):
+        S.choose_report({k: v for k, v in runs.items() if k != "r1_8b"}, "v4")

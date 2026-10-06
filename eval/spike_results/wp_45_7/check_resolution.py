@@ -37,7 +37,7 @@ MODAL_TABLE = {
                    "needs to", "need to"],
     "recommendation": ["should", "is recommended", "are recommended", "is encouraged to", "are encouraged to", "ought",
                        "should not", "ought not", "shouldn't", "is advised to", "are advised to", "is advised not to",
-                       "are advised not to", "advised not to"],
+                       "are advised not to", "advised not to", "is advisable", "are advisable", "consider"],
     "permission": ["may", "can", "is authorized to", "are authorized to", "is permitted to", "are permitted to",
                    "is allowed to", "are allowed to"],
     "prohibition": ["shall not", "must not", "may not", "cannot", "will not", "never", "must never", "shall never",
@@ -48,7 +48,33 @@ MODAL_TABLE = {
 # (`modality.verbatim == "can"`); otherwise it is ignored. "cannot" is always counted: it is rarely anything but deontic.
 AMBIGUOUS = {"can"}
 _PHRASES = sorted(((p, c) for c, ps in MODAL_TABLE.items() for p in ps), key=lambda pc: -len(pc[0]))
-_PHRASE_RE = [(re.compile(rf"(?<![\w']){re.escape(p)}(?![\w'])"), p, c) for p, c in _PHRASES]
+
+# WP-45.7c: a modal-free hint such as "Consider using ..." is a recommendation (the project's ruling), but "consider" in the middle of a
+# sentence ("the factors to consider") is not. These phrases count only at the start of the text, optionally after list markers.
+START_ONLY = {"consider"}
+_MARKER_PREFIX = re.compile(r"^\s*(?:(?:\(\w{1,4}\)|\d+(?:\.\d+)*[.)]|\w{1,3}[.)]|[-\u2022*\u2013\u2014])\s+)*$")
+
+
+class _StartOnly:
+    """A compiled phrase pattern that accepts a match only at the start of the text (after optional list markers). It has the two methods
+    the callers use, `search` and `finditer`, so it can sit in `_PHRASE_RE` beside the ordinary patterns."""
+
+    def __init__(self, rx):
+        self.rx = rx
+
+    def finditer(self, text):
+        return (m for m in self.rx.finditer(text) if _MARKER_PREFIX.match(text[: m.start()]))
+
+    def search(self, text):
+        return next(self.finditer(text), None)
+
+
+def _phrase_regex(phrase):
+    rx = re.compile(rf"(?<![\w']){re.escape(phrase)}(?![\w'])")
+    return _StartOnly(rx) if phrase in START_ONLY else rx
+
+
+_PHRASE_RE = [(_phrase_regex(p), p, c) for p, c in _PHRASES]
 
 _STOP = {
     "the", "a", "an", "this", "that", "these", "those", "it", "they", "if", "when", "unless", "each", "any", "all", "such",

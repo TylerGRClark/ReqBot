@@ -1,0 +1,141 @@
+{
+ "tier": "R2",
+ "scored": 55,
+ "generator_sha256": "e6ff087bb3f0fab5",
+ "ceiling": 0.9454545454545454,
+ "ceiling_needs_lead_in": 0.926829268292683,
+ "needs_lead_in": 41,
+ "by_lead_in_location": {
+  "previous_chunk": {
+   "n": 9,
+   "reachable": 9
+  },
+  "same_chunk": {
+   "n": 15,
+   "reachable": 13
+  },
+  "section_heading": {
+   "n": 17,
+   "reachable": 16
+  }
+ },
+ "mean_menu_size": 5.2727272727272725,
+ "max_menu_size": 10,
+ "passes_s1": true,
+ "misses": [
+  {
+   "candidate_id": "audit:R043",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "same_chunk",
+   "menu_size": 5,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 37",
+     "text": "5. NM SECURITY"
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 37 (without its section number)",
+     "text": "NM SECURITY"
+    },
+    {
+     "id": "M3",
+     "kind": "preceding",
+     "source": "chunk 37",
+     "text": "as defined in DoD 8570.01-M (Reference (ad)) shall be designated IA Technical Category Level 2 and IA Management Category Level 2 positions and as critical sensitive positions as defined by DoD 5200.2-R (Reference (ae)), and military, government civilian, and contractor personnel filling them shall"
+    },
+    {
+     "id": "M4",
+     "kind": "preceding",
+     "source": "chunk 37 (its subject)",
+     "text": "as defined in DoD 8570.01-M (Reference (ad))"
+    },
+    {
+     "id": "M5",
+     "kind": "stem",
+     "source": "same chunk",
+     "text": "shall be designated IA Technical Category Level 2 and IA Management Category Level 2 positions and as critical sensitive positions as defined by DoD 5200.2-R"
+    }
+   ],
+   "lead_in_text": "military, government civilian, and contractor personnel filling them shall"
+  },
+  {
+   "candidate_id": "audit:R090",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "section_heading",
+   "menu_size": 4,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 23",
+     "text": "2.3. AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron/SCC (38 CYRS/SCC). The AF LHC Flight is the Air Force's DISN LHC Program manager who:"
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 23 (without its section number)",
+     "text": "AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron/SCC (38 CYRS/SCC). The AF LHC Flight is the Air Force's DISN LHC Program manager who:"
+    },
+    {
+     "id": "M3",
+     "kind": "heading",
+     "source": "chunk 23",
+     "text": "ROLES AND RESPONSIBILITIES"
+    },
+    {
+     "id": "M4",
+     "kind": "preceding",
+     "source": "chunk 23",
+     "text": "- 2.3.11.6."
+    }
+   ],
+   "lead_in_text": "The AF LHC Flight is the Air Force's DISN LHC Program manager who:"
+  },
+  {
+   "candidate_id": "audit:R112",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "same_chunk",
+   "menu_size": 5,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 12",
+     "text": "1. UNDER SECRETARY OF DEFENSE FOR INTELLIGENCE AND SECURITY (USD(I&S))."
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 12 (without its section number)",
+     "text": "UNDER SECRETARY OF DEFENSE FOR INTELLIGENCE AND SECURITY (USD(I&S))."
+    },
+    {
+     "id": "M3",
+     "kind": "lead_in",
+     "source": "chunk 12",
+     "text": "Under the authority, direction, and control of the USD(I&S), in addition to the responsibilities in sections 6 and 11 of this enclosure and in accordance with References (a), (c), and DoDD 5100.20 (Reference (y)), the DIRNSA/CHCSS:"
+    },
+    {
+     "id": "M4",
+     "kind": "preceding",
+     "source": "chunk 12",
+     "text": "- b."
+    },
+    {
+     "id": "M5",
+     "kind": "stem",
+     "source": "previous chunk",
+     "text": "Operates SCI security programs to support other DoD activities and federal agencies by special agreement, in accordance with Reference (n)"
+    }
+   ],
+   "lead_in_text": "the DIRNSA/CHCSS:"
+  }
+ ]
+}
