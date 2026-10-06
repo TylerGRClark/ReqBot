@@ -369,7 +369,7 @@ frozen, because the plan allows no configuration choice after the held-out label
 
 ## Step 9: resolver v1 on the selection half, and the one allowed prompt revision (pre-registered before any v2 result)
 
-**What v1 did on the 8B** (`outputs/resolver_selection_v1_8b.json`; the selection half only, 104 candidates; run 2026-10-06 with the v1 resolver prompt, hash
+**What v1 did on the 8B** (`outputs/resolver_selection_v1_8b.json`, with every ledger behind it in `outputs/resolver_v1_runs/`: each raw answer, evidence bundle, issue list, model digest and run label; the selection half only, 104 candidates; run 2026-10-06 with the v1 resolver prompt, hash
 `abaa18ac67ef857a`; every call `complete`, 104 of 104 shape-conformant in all three tiers):
 
 | 8B tier | Attachment right / misleading / incomplete (55 scorable audit records) | Non-requirements rejected | Answers with a modality error | Invented-party rate |
