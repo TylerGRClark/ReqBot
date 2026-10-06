@@ -1,0 +1,42 @@
+{
+ "candidates": 116,
+ "status": {
+  "complete": 116
+ },
+ "valid_answers": 116,
+ "parsed": 116,
+ "shape_conformant": 116,
+ "error_codes": {},
+ "answers_with_no_error": 116,
+ "mean_prompt_tokens": 2393.1,
+ "mean_answer_tokens": 16.3,
+ "mean_wall_seconds": 1.0,
+ "estimate_over_real": 1.59,
+ "fixed_prompt_estimated_tokens": 2574,
+ "mean_menu_size": 5.1,
+ "answers_with_a_selection": 116,
+ "modal_sources": {
+  "none": 37,
+  "parent": 27,
+  "quote": 52
+ },
+ "multi_modal_candidates": [
+  "audit:R013",
+  "card:R031",
+  "card:R044",
+  "card:R047",
+  "card:R068",
+  "card:R069",
+  "card:R087"
+ ],
+ "inferred_source_candidates": [],
+ "run_label": "v5_eval_r2_14b",
+ "tier": "R2",
+ "model": "qwen2.5:14b",
+ "digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6",
+ "prompt_hash": "6200fa25a374eb35",
+ "half": "evaluation",
+ "design": "kind",
+ "calls_made": 116,
+ "wall_seconds": 121.1
+}

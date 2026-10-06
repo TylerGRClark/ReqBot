@@ -1,0 +1,93 @@
+{
+ "all_gates_pass": false,
+ "attachment": {
+  "incomplete": 4,
+  "misleading": 16,
+  "right": 35
+ },
+ "attachment_right_rate": 0.636,
+ "baseline_attachment": {
+  "incomplete": 18,
+  "misleading": 13,
+  "right": 24
+ },
+ "candidates": 116,
+ "configuration": {
+  "digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6",
+  "model": "qwen2.5:14b",
+  "name": "r2_14b",
+  "num_ctxs": [
+   "8192"
+  ],
+  "num_predicts": [
+   "200"
+  ],
+  "temperatures": [
+   "0.1"
+  ],
+  "tier": "R2"
+ },
+ "frozen_code": "frozen_wp457d_code.json",
+ "gates": {
+  "attachment_gain_over_production": {
+   "passed": true,
+   "threshold": 0.636,
+   "value": 0.636
+  },
+  "incomplete": {
+   "passed": true,
+   "threshold": 0.377,
+   "value": 0.073
+  },
+  "invented": {
+   "passed": true,
+   "threshold": 0.02,
+   "value": 0.0
+  },
+  "misleading": {
+   "passed": false,
+   "threshold": 0.286,
+   "value": 0.291
+  },
+  "modality_errors": {
+   "passed": true,
+   "threshold": 0,
+   "value": 0
+  },
+  "non_requirement_rejected": {
+   "passed": true,
+   "threshold": 0.6,
+   "value": 0.769
+  },
+  "real_rejected": {
+   "passed": true,
+   "threshold": 0.05,
+   "value": 0.029
+  },
+  "real_scope_or_unresolved": {
+   "passed": true,
+   "threshold": 0.1,
+   "value": 0.01
+  },
+  "valid_answers": {
+   "passed": true,
+   "threshold": 0.95,
+   "value": 1.0
+  }
+ },
+ "half": "evaluation",
+ "non_requirement": {
+  "not_a_requirement": 10,
+  "requirement": 3
+ },
+ "prompt_hash": "6200fa25a374eb35",
+ "real": {
+  "not_a_requirement": 3,
+  "requirement": 99,
+  "scope_or_context": 1
+ },
+ "registry": "v5",
+ "status": {
+  "complete": 116
+ }
+}
