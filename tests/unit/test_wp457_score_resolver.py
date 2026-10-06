@@ -498,8 +498,12 @@ def test_the_committed_frozen_code_manifest_matches_the_files_in_the_repository(
     re-freezes on purpose. The manifest was made from the commit the Stage B runs used."""
     S = mods["score"]
     manifest = json.loads((S.OUTPUTS / S.FROZEN_CODE["v5"]).read_text())
-    assert set(manifest["files"]) >= {"menu.py", "check_resolution.py", "kind_selection.py", "selection.py", "bundle.py", "run_selection.py",
-                                       "outputs/resolver_gold.json"}
+    w = "eval/spike_results/wp_45_7/"
+    assert set(manifest["files"]) >= {w + f for f in ("menu.py", "check_resolution.py", "kind_selection.py", "selection.py", "bundle.py", "run_selection.py",
+                                                       "outputs/resolver_gold.json", "outputs/heldout_frozen.json")}
+    # the transitive imports and the input pins, not only the files named in the experiment (review finding)
+    assert {"pipeline/enrich_requirements.py", "eval/spike_results/wp_45_audit/_inputs.py", "eval/spike_results/wp_44/manifest.json",
+            w + "chunk_sets.py", w + "draw_heldout.py"} <= set(manifest["files"])
     S.check_frozen_code("v5")  # raises SystemExit naming any file that differs
 
 

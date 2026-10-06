@@ -45,6 +45,7 @@ import selection as SEL  # noqa: E402
 
 GOLD = _HERE / "outputs" / "resolver_gold.json"
 OUTPUTS = _HERE / "outputs"
+REPO = _HERE.parents[2]  # the manifest of frozen files holds paths relative to this
 OVERLAP = 0.8  # of the answer value's distinctive words that must be in the gold lead-in
 GATES = {
     "max_real_rejected": 0.05,        # at most 5% of real requirements returned not_a_requirement
@@ -367,9 +368,10 @@ def frozen_choice(registry, outputs=None):
 
 
 def check_frozen_code(registry, outputs=None, root=None):
-    """Refuse to score unless every code file and the gold are byte-identical to what the Stage B runs used: the menu generator, the checker,
-    the assembler, the runner and the rest, by sha256 from the committed manifest. Any change to them needs an explicit re-freeze."""
-    outputs, root = Path(outputs) if outputs else OUTPUTS, Path(root) if root else _HERE
+    """Refuse to proceed unless every file in the committed manifest is byte-identical to what the Stage B runs used: the import closure of the
+    runner (the menu generator, the checker, the assembler, the bundle builder and the pipeline modules it imports), the gold, and the files that pin
+    the input documents, by sha256 with paths relative to the repository root. Any change needs an explicit re-freeze."""
+    outputs, root = Path(outputs) if outputs else OUTPUTS, Path(root) if root else REPO
     path = outputs / FROZEN_CODE[registry]
     if not path.exists():
         raise SystemExit(f"no frozen-code manifest for {registry} ({path.name})")
