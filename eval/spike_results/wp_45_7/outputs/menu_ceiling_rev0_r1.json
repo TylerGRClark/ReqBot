@@ -1,0 +1,364 @@
+{
+ "tier": "R1",
+ "scored": 55,
+ "ceiling": 0.7454545454545455,
+ "ceiling_needs_lead_in": 0.6585365853658537,
+ "needs_lead_in": 41,
+ "by_lead_in_location": {
+  "previous_chunk": {
+   "n": 9,
+   "reachable": 4
+  },
+  "same_chunk": {
+   "n": 15,
+   "reachable": 9
+  },
+  "section_heading": {
+   "n": 17,
+   "reachable": 14
+  }
+ },
+ "mean_menu_size": 2.963636363636364,
+ "max_menu_size": 5,
+ "passes_s1": false,
+ "misses": [
+  {
+   "candidate_id": "audit:R009",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "previous_chunk",
+   "menu_size": 2,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 50",
+     "text": "3.6. GENERAL DOD CUI PROCEDURES."
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 50",
+     "text": "SECTION 3: PROGRAMMATICS"
+    }
+   ],
+   "lead_in_text": "In accordance with ISOO Notice 2016-01, CUI training standards must, at minimum:"
+  },
+  {
+   "candidate_id": "audit:R036",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "section_heading",
+   "menu_size": 2,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 21",
+     "text": "11. DOD COMPONENT HEADS. The DoD Component heads:"
+    },
+    {
+     "id": "M2",
+     "kind": "stem",
+     "source": "previous chunk",
+     "text": "Designate a senior agency official to be responsible for the direction, administration, and oversight of the DoD Component's information security program, to include:"
+    }
+   ],
+   "lead_in_text": "The DoD Component heads:"
+  },
+  {
+   "candidate_id": "audit:R043",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "same_chunk",
+   "menu_size": 2,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 37",
+     "text": "5. NM SECURITY"
+    },
+    {
+     "id": "M2",
+     "kind": "stem",
+     "source": "same chunk",
+     "text": "shall be designated IA Technical Category Level 2 and IA Management Category Level 2 positions and as critical sensitive positions as defined by DoD 5200.2-R"
+    }
+   ],
+   "lead_in_text": "military, government civilian, and contractor personnel filling them shall"
+  },
+  {
+   "candidate_id": "audit:R052",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "same_chunk",
+   "menu_size": 2,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 94",
+     "text": "5.1 Initiation"
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 94",
+     "text": "5. Secure Virtualization Planning and Deployment"
+    }
+   ],
+   "lead_in_text": "Organizations should also be aware of the emergence of new types of virtualization solutions and of major changes to existing virtualization technologies, and"
+  },
+  {
+   "candidate_id": "audit:R054",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "section_heading",
+   "menu_size": 2,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 63",
+     "text": "2.20. FOAs."
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 63",
+     "text": "ROLES AND RESPONSIBILITIES"
+    }
+   ],
+   "lead_in_text": "FOAs."
+  },
+  {
+   "candidate_id": "audit:R058",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "same_chunk",
+   "menu_size": 2,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 30",
+     "text": "3.3. HANDLING REQUIREMENTS."
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 30",
+     "text": "SECTION 3: PROGRAMMATICS"
+    }
+   ],
+   "lead_in_text": "The DoD CUI Information Security Program will promote, to the maximum extent possible, information sharing, facilitate informed resource use, and simplify its management and implementation while"
+  },
+  {
+   "candidate_id": "audit:R063",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "same_chunk",
+   "menu_size": 4,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "subject",
+     "source": "candidate quote",
+     "text": "develop and establish Air Force nuclear surety standards and policies for safety, and"
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 21",
+     "text": "2.2.4. Deputy Chief of Staff for Operations ( AF/A3 ) will:"
+    },
+    {
+     "id": "M3",
+     "kind": "heading",
+     "source": "chunk 21",
+     "text": "2.2. Responsibilities."
+    },
+    {
+     "id": "M4",
+     "kind": "heading",
+     "source": "chunk 21",
+     "text": "GENERAL ROLES AND RESPONSIBILITIES"
+    }
+   ],
+   "lead_in_text": "Air Force Chief of Safety ( AF/SE ), in coordination with AF/A10, will"
+  },
+  {
+   "candidate_id": "audit:R067",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "previous_chunk",
+   "menu_size": 1,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 26",
+     "text": "UNCLASSIFIED"
+    }
+   ],
+   "lead_in_text": "5.  Director, NSA (DIRNSA) will: | In coordination with the Joint Staff,"
+  },
+  {
+   "candidate_id": "audit:R082",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "previous_chunk",
+   "menu_size": 2,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 21",
+     "text": "2.10. OSD AND DOD COMPONENT HEADS."
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 21",
+     "text": "SECTION 2: RESPONSIBILITIES"
+    }
+   ],
+   "lead_in_text": "OSD and DoD Component heads:"
+  },
+  {
+   "candidate_id": "audit:R089",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "previous_chunk",
+   "menu_size": 3,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 25",
+     "text": "2.2.4. Deputy Chief of Staff for Operations ( AF/A3 ) will:"
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 25",
+     "text": "2.2. Responsibilities."
+    },
+    {
+     "id": "M3",
+     "kind": "heading",
+     "source": "chunk 25",
+     "text": "GENERAL ROLES AND RESPONSIBILITIES"
+    }
+   ],
+   "lead_in_text": "AFNC3C , as the designated lead organization for centralized organize, train and equip functions for the AN/USQ/225, will:"
+  },
+  {
+   "candidate_id": "audit:R090",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "section_heading",
+   "menu_size": 2,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 23",
+     "text": "2.3. AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron/SCC (38 CYRS/SCC). The AF LHC Flight is the Air Force's DISN LHC Program manager who:"
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 23",
+     "text": "ROLES AND RESPONSIBILITIES"
+    }
+   ],
+   "lead_in_text": "The AF LHC Flight is the Air Force's DISN LHC Program manager who:"
+  },
+  {
+   "candidate_id": "audit:R107",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "same_chunk",
+   "menu_size": 2,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 30",
+     "text": "GOVERNANCE"
+    },
+    {
+     "id": "M2",
+     "kind": "stem",
+     "source": "same chunk",
+     "text": "Under authority vested in Title 10 United States Code Section 171a"
+    }
+   ],
+   "lead_in_text": "Subordinate to the Council, DoD Chief Information Officer (CIO) chairs a NLCC Executive Management Board, Senior Steering Group, and numerous working groups"
+  },
+  {
+   "candidate_id": "audit:R109",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "previous_chunk",
+   "menu_size": 4,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 6",
+     "text": "1.2. POLICY."
+    },
+    {
+     "id": "M2",
+     "kind": "heading",
+     "source": "chunk 6",
+     "text": "SECTION 1: GENERAL ISSUANCE INFORMATION"
+    },
+    {
+     "id": "M3",
+     "kind": "stem",
+     "source": "previous chunk",
+     "text": "d. Risk to the assurance of applicable systems will be considered as part of the risk management process used throughout the entire system life cycle. Risk management will include TSN processes, tools, and techniques to:"
+    },
+    {
+     "id": "M4",
+     "kind": "stem",
+     "source": "previous chunk (its subject)",
+     "text": "Risk to the assurance of applicable systems"
+    }
+   ],
+   "lead_in_text": "Risk management will include TSN processes, tools, and techniques to:"
+  },
+  {
+   "candidate_id": "audit:R112",
+   "standalone": "needs_lead_in",
+   "lead_in_location": "same_chunk",
+   "menu_size": 3,
+   "reachable": false,
+   "menu": [
+    {
+     "id": "M1",
+     "kind": "heading",
+     "source": "chunk 12",
+     "text": "1. UNDER SECRETARY OF DEFENSE FOR INTELLIGENCE AND SECURITY (USD(I&S))."
+    },
+    {
+     "id": "M2",
+     "kind": "lead_in",
+     "source": "chunk 12",
+     "text": "Under the authority, direction, and control of the USD(I&S), in addition to the responsibilities in sections 6 and 11 of this enclosure and in accordance with References (a), (c), and DoDD 5100.20 (Reference (y)), the DIRNSA/CHCSS:"
+    },
+    {
+     "id": "M3",
+     "kind": "stem",
+     "source": "previous chunk",
+     "text": "Operates SCI security programs to support other DoD activities and federal agencies by special agreement, in accordance with Reference (n)"
+    }
+   ],
+   "lead_in_text": "the DIRNSA/CHCSS:"
+  }
+ ]
+}

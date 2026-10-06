@@ -469,3 +469,30 @@ with a leading article ("The Director, DISA" for the heading "DIRECTOR, DISA") t
 2. *A new, separately pre-registered experiment: an extractive-only resolver.* Return status, actor, parent, modality phrase and class, conditions, exceptions and timing as spans copied from the evidence, with **no** standalone sentence or plain-language
    field; keep the same gold and halves; the fidelity gates then apply to verbatim fields only. This keeps the attachment gain and the non-requirement filtering that v2 showed and removes the fields where the failures concentrate.
 3. *The second labeler for the held-out set*, which is needed for the discovery confirmation regardless.
+
+## Step 12: WP-45.7b, the candidate menu and its offline ceiling (S1) (`menu.py`, `measure_menu.py`, `outputs/menu_ceiling_*.json`)
+
+Plan: `docs/PHASE45_WP457B_PLAN.md` (merged in #223). `menu.py` is the deterministic generator that builds, for one candidate quote, a numbered menu of verbatim spans the selection
+resolver may pick (the quote's own subject, headings with and without their section number, the nearest colon lead-in, the clause just before the quote, the rule stems, and at R2 the previous
+chunk's lead-in). Nothing in it is generated; a unit test checks that every entry is a substring of its source. `measure_menu.py` is S1: for each attachment-scored **selection-half** audit
+record, could a perfect choice from the menu be marked *right* by the same `attachment()` rule the resolver is scored with? The evaluation half is refused without `--final`.
+
+| | Scored | Ceiling (all) | Ceiling (needs a lead-in only) | Mean / max menu size | S1 (at least 75%, mean at most 8) |
+|---|---|---|---|---|---|
+| Revision 0, R1 (first look, `menu_ceiling_rev0_r1.json`) | 55 | 74.5% | 65.9% of 41 | 3.0 / n/a | FAIL (41 of 55; 42 were needed) |
+| Revision 0, R2 (`menu_ceiling_rev0_r2.json`) | 55 | 78.2% | 70.7% | 3.4 / n/a | PASS |
+| **Revision 1, R1** (`menu_ceiling_rev1_r1.json`, generator hash `a6edfba17feb68d1`) | 55 | **89.1%** | 85.4% | 4.9 / 8 | **PASS** |
+| **Revision 1, R2** (`menu_ceiling_rev1_r2.json`) | 55 | **92.7%** | 90.2% | 5.4 / 10 | **PASS** |
+
+**Revision 1** (one of the two the plan allows) was made from the revision 0 misses on the selection half: a leading section number ("11.", "2.20.") counted as an identifying word and defeated the
+0.8 overlap rule, so each heading is now also offered without its number; and a list item whose lead-in is the clause right before it with no colon had no menu entry, so the clause between the previous
+sentence boundary and the quote is now offered. No other change. **The generator is frozen at this version** (hash above, recorded in each output); any further change would be the second revision.
+
+How to read it:
+- **A ceiling, not a score.** It says the right span is *in* the menu, not that a model will choose it; the model run (S2) measures that, and several plausible spans in one menu is where misleading answers will come from.
+- **The 55 include the 14 `complete` records**, which are right by choosing nothing, so the "needs a lead-in only" column is the harder number (85 to 90%). The v2 resolver's best attachment-right rate (63.6%) was over the same 55.
+- **Remaining misses** (R1 six, R2 four: R043, R089, R090, R112, and at R1 only R009 and R109) are listed with their menus in the outputs. They were not inspected further and are not chased: that would be a second revision.
+- The "lead-in location" column describes where the human found the lead-in; a different span (for example a heading) can name the same actor, so a record can be reachable from a source other than the labeled one.
+- **S1 is per tier.** Both tiers pass; had one failed it would have been dropped from the model runs, and if both failed the plan stops with no model run.
+
+Next (plan stage 3): the selection prompt, the assembler and the runner, with the `--choose` registry for the four configurations.
