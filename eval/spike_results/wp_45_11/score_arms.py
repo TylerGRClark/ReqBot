@@ -5,7 +5,7 @@
   python3 score_arms.py --arms B0a B0b --pair B0a B0b          # print the obligations that differ between two arms
 
 Recall: the 74 adjudicated, unflagged obligations of WP-45.1(e) (`wp_45_1e/`), traced through each arm's Step C records and Step D survivors exactly as that
-work did (`loss_trace.trace_piece`). Run level (all 13 documents): chunks, Step C calls, records, Step D survivors and failure codes, and the overlap of the
+work did (`loss_trace.trace_piece`). Run level (all 13 documents): chunks, Step C ledger rows (one per chunk; the pipeline does not persist the number of model requests, so cost is wall time), records, Step D survivors and failure codes, and the overlap of the
 normalized quote sets between two arms. Every number is a count; differences are reported as pairs, never as rates of change, and the noise floor is the
 difference between the two replicate arms.
 """
@@ -92,6 +92,16 @@ def check_complete(arm, scratch=SCRATCH):
         rec = d / "arm_record.json"
         if rec.exists() and json.loads(rec.read_text(encoding="utf-8")).get("returncode") != 0:
             problems.append(f"{arm}/{doc}: the pipeline did not exit 0")
+        raw_path, chunks_path = d / f"{doc}_raw_responses.jsonl", d / f"{doc}_chunks.jsonl"
+        if raw_path.exists() and chunks_path.exists():
+            raw = [json.loads(x) for x in raw_path.read_text(encoding="utf-8").splitlines() if x.strip()]
+            n_chunks = sum(1 for x in chunks_path.read_text(encoding="utf-8").splitlines() if x.strip())
+            # run_pipeline exits 0 even when a chunk's requests were exhausted (status "failed"); such a chunk is a missing observation, not a finding
+            failed = [r.get("chunk_id") for r in raw if r.get("status") == "failed"]
+            if failed:
+                problems.append(f"{arm}/{doc}: Step C failed on chunks {failed}")
+            if len(raw) != n_chunks:
+                problems.append(f"{arm}/{doc}: {len(raw)} Step C ledger rows for {n_chunks} chunks")
     if problems:
         raise SystemExit("the arm is not complete, so it is not scored:\n  " + "\n  ".join(problems))
 
@@ -105,7 +115,7 @@ def run_level(arm, scratch=SCRATCH):
         extracted, normalized, failures = rd(f"{doc}_extracted_requirements.jsonl"), rd(f"{doc}_requirements_normalized.jsonl"), rd(f"{doc}_normalization_failures.jsonl")
         raw = rd(f"{doc}_raw_responses.jsonl")
         record = json.loads((d / "arm_record.json").read_text(encoding="utf-8")) if (d / "arm_record.json").exists() else {}
-        out[doc] = {"chunks": len(rd(f"{doc}_chunks.jsonl")), "step_c_calls": len(raw), "records": len(extracted), "survivors": len(normalized),
+        out[doc] = {"chunks": len(rd(f"{doc}_chunks.jsonl")), "step_c_ledger_rows": len(raw), "records": len(extracted), "survivors": len(normalized),
                     "failure_codes": dict(collections.Counter(f.get("error", "unknown") for f in failures)), "wall_seconds": record.get("wall_seconds")}
         quotes[doc] = {norm(r.get("source_quote", "")) for r in normalized}
     return out, quotes
@@ -139,7 +149,7 @@ def main():
         levels[arm], quotes[arm] = run_level(arm, args.scratch)
     report = {"obligations": len(ids), "arms": {}, "pairs": {}}
     for arm in args.arms:
-        tot = {k: sum(v[k] for v in levels[arm].values()) for k in ("chunks", "step_c_calls", "records", "survivors")}
+        tot = {k: sum(v[k] for v in levels[arm].values()) for k in ("chunks", "step_c_ledger_rows", "records", "survivors")}
         codes = collections.Counter()
         for v in levels[arm].values():
             codes.update(v["failure_codes"])

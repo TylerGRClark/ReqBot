@@ -79,3 +79,25 @@ def test_a_failed_pipeline_return_code_is_listed(tmp_path):
     with pytest.raises(SystemExit) as e:
         SA.check_complete("A", scratch=tmp_path)
     assert "DODI 5200.01: the pipeline did not exit 0" in str(e.value)
+
+
+def test_failed_step_c_chunks_and_missing_ledger_rows_are_rejected(tmp_path):
+    import json as _json
+    for doc in SA.common.pinned_documents():
+        d = tmp_path / "A" / doc
+        d.mkdir(parents=True)
+        for pattern in SA.ARTIFACTS:
+            (d / pattern.format(doc=doc)).write_text("{}" if pattern.endswith(".json") else "")
+        (d / "arm_record.json").write_text(_json.dumps({"returncode": 0}))
+        (d / f"{doc}_chunks.jsonl").write_text('{"chunk_id": 0}\n{"chunk_id": 1}\n')
+        (d / f"{doc}_raw_responses.jsonl").write_text('{"chunk_id": 0, "status": "complete"}\n{"chunk_id": 1, "status": "complete"}\n')
+    SA.check_complete("A", scratch=tmp_path)
+    bad = tmp_path / "A" / "DODI 5200.01"
+    (bad / "DODI 5200.01_raw_responses.jsonl").write_text('{"chunk_id": 0, "status": "complete"}\n{"chunk_id": 1, "status": "failed"}\n')
+    with pytest.raises(SystemExit) as e:
+        SA.check_complete("A", scratch=tmp_path)
+    assert "Step C failed on chunks [1]" in str(e.value)
+    (bad / "DODI 5200.01_raw_responses.jsonl").write_text('{"chunk_id": 0, "status": "complete"}\n')
+    with pytest.raises(SystemExit) as e:
+        SA.check_complete("A", scratch=tmp_path)
+    assert "1 Step C ledger rows for 2 chunks" in str(e.value)
