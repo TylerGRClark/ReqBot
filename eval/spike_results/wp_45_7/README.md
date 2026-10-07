@@ -832,3 +832,38 @@ Run exactly as step 26 fixed it, from a worktree pinned at the merge commit of t
 **What this does not show.** One labeler (the audit's second labeler and the owner's adjudication are not available for this set); the same 13 documents, so the claim is about unseen *candidates*, not unseen documents; the held-out set is untouched; the menu change was motivated by the spent halves (which is why the test used fresh candidates); the labels challenged in review and kept (R243, R264, R245) are judgment calls; and nothing here is integrated into the production pipeline.
 
 **What is left, for the owner to decide:** whether and how to integrate the selection resolver into the pipeline (a separate work package with its own plan: it would replace the production stem attachment, and the 39 misleading answers say where a reviewer pass or a menu tightening could help); a second labeler for this set and for the held-out pack; and the owner's optional spot check of the 20 cards listed in step 25.
+
+
+## Step 28 (after the verdict): a second labeler, and what it does to the result (information only; not a gate, the verdict is unchanged)
+
+**What was done.** A second, blind labeler labeled the same 114 fresh cards (`fresh_labels_second/`, labeler name `claude2`). It was a Claude subagent given only a copy of `pack_a.md`, `pack_b.md`, the rubric and the label checker, in a folder of its own, and told not to open anything else. The isolation was an instruction, not a lock (the subagent could read the machine); its transcript shows it opened only those four files. It is the same model family as the first labeler, so shared habits and blind spots are not independent evidence. It was not adjudicated and no label of either labeler was changed. `second_labeler_compare.py` reads both label sets, builds a gold from the second one with the frozen gold's own builder and rubric checker, and scores the **saved** one-shot answers (`outputs/eval_v6_run`; the model was not run again) against both golds with the registered gates. Report: `outputs/second_labeler_report.json`, tests: `tests/unit/test_wp457_second_labeler.py` (which also checks that the rescore under the first labels reproduces the verdict, 65 right and 39 misleading).
+
+**Agreement.**
+- Complete / needs a lead-in / not a requirement: **109 of 114** agree. The five differences: three cards the first labeler called complete and the second needs-lead-in, two the first called complete and the second not-a-requirement.
+- Where the lead-in is, among the 66 cards both say need one: **59 of 66** agree on the location; the exact lead-in text is identical on 41.
+- Is production's attached stem right (58 cards): **44 of 58** agree. The largest gap: 7 stems the first labeler called a fragment chain and the second called right.
+
+**Rescoring the saved answers.**
+
+| | First labels (the verdict) | Second labels |
+|---|---|---|
+| Attachment scored | 104 | 100 |
+| Resolver right | **65** (62.5%) | **58** (58.0%) |
+| Production right on the same records | 41 | 42 |
+| Bar: production's rate + 20 points | at least 62 | at least 62 |
+| Resolver misleading | 39 (37.5%) | 42 (42.0%) |
+| Production misleading | 36 | 29 |
+| Limit: production's rate + 5 points | at most 41 | at most 34 |
+| Resolver incomplete (production) | 0 (27) | 0 (29) |
+| Real rejected / non-requirements rejected | 1 of 105 / 8 of 9 | 0 of 103 / 9 of 11 |
+| Invented, modality errors, valid | 0, 0, 114 of 114 | 0, 0, 114 of 114 |
+| Gates | all pass | **attachment-gain and misleading fail; the other seven pass** |
+
+**Why the two gates move.** Per candidate, the resolver's attachment class under the first versus the second labels: 55 right in both, 36 misleading in both, 6 right to misleading (R241, R243, R247, R249, R254, R270: four because the second labeler chose a different lead-in text, two because it called the quote complete or not shown), 3 misleading to right (R212, R252, R272), 4 right to unscored (R217, R251, R257, R303: the second labeler judged no lead-in shown, or the quote not a requirement). The second labeler also rated production's stems more generously (7 more "right"), which lowers production's misleading rate to 29 of 100 and raises the bar the resolver must clear. R243 is one of the cards the first labeler's label was challenged on in review and kept.
+
+**Read it plainly.**
+- The verdict stands as registered: it was fixed against the first labels, run once, and passed. This step does not reopen it.
+- The *size* of the gain depends on who labels. Under the first labels the resolver clears the attachment bar by 3 records and the misleading limit by 2; under the second it misses them by 4 and 8. Margins of 2 to 3 records could not have survived a different labeler, and did not.
+- The *direction* does not depend on the labeler: 65 or 58 right against production's 41 or 42 (23 or 16 points more), nothing left unconnected (production 27 or 29), no invented party, no gated modality error, the same zero-by-construction properties.
+- The misleading rate is the weak spot. The resolver attaches something on almost every record, so it turns "no stem" into "right" or "misleading"; under the second labels its misleading rate (42%) is above production's (29%), which production avoids partly by attaching less. Whether those extra misleading stems cost retrieval is not known; WP-45.1(c) found a wrong stem did not hurt its own record's rank, but could not see effects on other records.
+- Not done: no adjudication of the 25 lead-in text differences or the 14 stem-verdict differences, and no third labeler. The owner adjudicated the earlier audit's disagreements; the same could be done here if it is worth the time.

@@ -1,0 +1,204 @@
+{
+ "agreement": {
+  "both_need_lead_in": 66,
+  "lead_in_text_identical": 41,
+  "location_agree": 59,
+  "location_pairs": {
+   "not_shown -> not_shown": 1,
+   "previous_chunk -> previous_chunk": 14,
+   "same_chunk -> previous_chunk": 3,
+   "same_chunk -> same_chunk": 20,
+   "section_heading -> not_shown": 2,
+   "section_heading -> same_chunk": 2,
+   "section_heading -> section_heading": 24
+  },
+  "pass_a_cards": 114,
+  "pass_b_cards": 58,
+  "standalone_agree": 109,
+  "standalone_pairs": {
+   "complete -> complete": 34,
+   "complete -> needs_lead_in": 3,
+   "complete -> not_a_requirement": 2,
+   "needs_lead_in -> needs_lead_in": 66,
+   "not_a_requirement -> not_a_requirement": 9
+  },
+  "stem_verdict_agree": 44,
+  "stem_verdict_pairs": {
+   "fragment_chain -> fragment_chain": 2,
+   "fragment_chain -> right": 7,
+   "fragment_chain -> wrong_other": 1,
+   "not_needed -> not_needed": 7,
+   "right -> fragment_chain": 1,
+   "right -> right": 17,
+   "right -> wrong_other": 2,
+   "wrong_other -> wrong_other": 4,
+   "wrong_sibling -> not_needed": 3,
+   "wrong_sibling -> wrong_sibling": 14
+  }
+ },
+ "gold_counts": {
+  "first": {
+   "attachment_scored": 104,
+   "candidates": 114,
+   "complete": 39,
+   "needs_lead_in": 66,
+   "needs_lead_in_not_shown": 1,
+   "non_requirements": 9,
+   "not_a_requirement": 9,
+   "real": 105,
+   "stem_verdicts": {
+    "fragment_chain": 10,
+    "not_needed": 7,
+    "right": 20,
+    "wrong_other": 4,
+    "wrong_sibling": 17
+   },
+   "with_production_stem": 58
+  },
+  "second": {
+   "attachment_scored": 100,
+   "candidates": 114,
+   "complete": 34,
+   "needs_lead_in": 69,
+   "needs_lead_in_not_shown": 3,
+   "non_requirements": 11,
+   "not_a_requirement": 11,
+   "real": 103,
+   "stem_verdicts": {
+    "fragment_chain": 3,
+    "not_needed": 10,
+    "right": 24,
+    "wrong_other": 7,
+    "wrong_sibling": 14
+   },
+   "with_production_stem": 58
+  }
+ },
+ "note": "sensitivity analysis on the saved one-shot answers; not a verdict (the verdict was registered against the first labels)",
+ "rescored": {
+  "first_labels": {
+   "attachment": {
+    "misleading": 39,
+    "right": 65
+   },
+   "baseline_attachment": {
+    "incomplete": 27,
+    "misleading": 36,
+    "right": 41
+   },
+   "gates": {
+    "attachment_gain_over_production": {
+     "passed": true,
+     "threshold": 0.594,
+     "value": 0.625
+    },
+    "incomplete": {
+     "passed": true,
+     "threshold": 0.31,
+     "value": 0.0
+    },
+    "invented": {
+     "passed": true,
+     "threshold": 0.02,
+     "value": 0.0
+    },
+    "misleading": {
+     "passed": true,
+     "threshold": 0.396,
+     "value": 0.375
+    },
+    "modality_errors": {
+     "passed": true,
+     "threshold": 0,
+     "value": 0
+    },
+    "non_requirement_rejected": {
+     "passed": true,
+     "threshold": 0.6,
+     "value": 0.889
+    },
+    "real_rejected": {
+     "passed": true,
+     "threshold": 0.05,
+     "value": 0.01
+    },
+    "real_scope_or_unresolved": {
+     "passed": true,
+     "threshold": 0.1,
+     "value": 0.0
+    },
+    "valid_answers": {
+     "passed": true,
+     "threshold": 0.95,
+     "value": 1.0
+    }
+   }
+  },
+  "second_labels": {
+   "attachment": {
+    "misleading": 42,
+    "right": 58
+   },
+   "baseline_attachment": {
+    "incomplete": 29,
+    "misleading": 29,
+    "right": 42
+   },
+   "gates": {
+    "attachment_gain_over_production": {
+     "passed": false,
+     "threshold": 0.62,
+     "value": 0.58
+    },
+    "incomplete": {
+     "passed": true,
+     "threshold": 0.34,
+     "value": 0.0
+    },
+    "invented": {
+     "passed": true,
+     "threshold": 0.02,
+     "value": 0.0
+    },
+    "misleading": {
+     "passed": false,
+     "threshold": 0.34,
+     "value": 0.42
+    },
+    "modality_errors": {
+     "passed": true,
+     "threshold": 0,
+     "value": 0
+    },
+    "non_requirement_rejected": {
+     "passed": true,
+     "threshold": 0.6,
+     "value": 0.818
+    },
+    "real_rejected": {
+     "passed": true,
+     "threshold": 0.05,
+     "value": 0.0
+    },
+    "real_scope_or_unresolved": {
+     "passed": true,
+     "threshold": 0.1,
+     "value": 0.0
+    },
+    "valid_answers": {
+     "passed": true,
+     "threshold": 0.95,
+     "value": 1.0
+    }
+   }
+  }
+ },
+ "resolver_attachment_moves_first_to_second": {
+  "misleading -> misleading": 36,
+  "misleading -> right": 3,
+  "right -> misleading": 6,
+  "right -> right": 55,
+  "right -> unscored": 4,
+  "unscored -> unscored": 10
+ }
+}
