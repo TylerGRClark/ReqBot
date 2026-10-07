@@ -493,9 +493,10 @@ def test_the_committed_stage_b_files_agree_with_the_verdict_guard(mods):
     assert "stopped at Stage B" in str(e.value)
 
 
-def test_the_committed_frozen_code_manifest_matches_the_files_in_the_repository(mods):
-    """Editing any frozen file (menu generator, checker, assembler, runner, gold) fails this test and blocks the verdict until someone
-    re-freezes on purpose. The manifest was made from the commit the Stage B runs used."""
+def test_the_committed_frozen_code_manifest_matches_the_files_in_the_repository(mods, tree_at_commit):
+    """The manifest pins the files as the Stage B runs used them; it is checked against the repository as of the commit it was frozen at (6783fb1, #235), not
+    the live tree, so a later legitimate edit to a shared production module does not fail it. The runtime guards (verdict, preflight) still compare with the
+    live tree, as they should for a one-shot that has run."""
     S = mods["score"]
     manifest = json.loads((S.OUTPUTS / S.FROZEN_CODE["v5"]).read_text())
     w = "eval/spike_results/wp_45_7/"
@@ -510,7 +511,7 @@ def test_the_committed_frozen_code_manifest_matches_the_files_in_the_repository(
     for run in ("r1_8b", "r1_14b", "r2_8b", "r2_14b"):
         for f in ("run_summary.json", "resolver.jsonl"):
             assert f"{base}selection_v5_runs/v5_sel_{run}/{f}" in manifest["files"], (run, f)
-    S.check_frozen_code("v5")  # raises SystemExit naming any file that differs
+    S.check_frozen_code("v5", root=tree_at_commit("6783fb1", manifest["files"]))  # raises SystemExit naming any file that differs
     # and the manifest itself: a tampered manifest could pin anything, so its own hash is fixed here (regenerate it only on purpose)
     own = S.hashlib.sha256((S.OUTPUTS / S.FROZEN_CODE["v5"]).read_bytes()).hexdigest()
     assert own == "b121e9988eab84d6f73cda8882050b13fdf3aad113fb0d49e26e2cf8a297cf3f", own

@@ -62,6 +62,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0  # the WP-45.7 frozen-manifest tests compare pins with the tree of the commit they were frozen at (git show)
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
