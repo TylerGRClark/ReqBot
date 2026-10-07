@@ -1,0 +1,44 @@
+# WP-45.10 — Docling configuration audit: what ReqBot runs on defaults, which defaults matter for requirement extraction, and how to measure each (plan, pre-registered)
+
+*Status: plan only; no code, no conversion runs, no model runs. Raised by the owner (a Codex conversation asked whether Docling is configured as well as it can be and whether its documentation has been read). Measurement only: nothing here changes the pipeline.*
+
+## 1. What is configured today (checked in the code and the installed package)
+
+- **Everything is on Docling's defaults.** `pipeline/section_parser.py` calls `DocumentConverter()` with no options; `pipeline/chunk_text.py` calls `HybridChunker()` with no arguments. No option, tokenizer or token limit is set anywhere in the repository.
+- **Version.** `pyproject.toml` pins `docling==2.94.0`. The latest release on PyPI is 2.135.0. The documentation site describes the current release: for example the pages mention a heading-hierarchy option, a native (no-model) PDF pipeline and rule-based reading-order separators, none of which exist in 2.94.0 (searched the installed `docling`, `docling_core` and `docling_slim`). Documentation must be read against the pinned version, and moving the pin is its own decision (section 5).
+- **Defaults read from the installed 2.94.0** (`PdfPipelineOptions()`; `HybridChunker()`): OCR on with the automatic engine (`rapidocr` is installed), table structure on in `ACCURATE` mode with cell matching on, picture description, picture classification, code, formula and chart enrichment all off, page images off, 4 threads with automatic device, no document timeout; chunker `merge_peers=True`, `repeat_table_header=True`, and the default tokenizer is `sentence-transformers/all-MiniLM-L6-v2` with a **256-token limit**.
+
+## 2. Candidate findings, each a hypothesis until measured
+
+| # | Setting | Why it may matter for requirement extraction | Evidence so far |
+|---|---|---|---|
+| H1 | Chunker tokenizer and `max_tokens` (default MiniLM, 256) | The documentation says the tokenizer should match the embedding model; ReqBot embeds with `nomic-embed-text` and sends chunks to Step C with an 8,192-token window, so the 256 limit is an accident of Docling's default, not a ReqBot decision. A small limit splits a lead-in clause from its list items across chunks, and cross-chunk lead-ins are what the resolver and the stem finders have to recover. | Observed: the median chunk is 869 characters, 86% are 1,200 characters or fewer (1,763 chunks across the processed document folders), as a 256-token cap would give; WP-42's table serialization already bypasses the cap for tables. In the fresh gold, 14 of the 66 lead-ins are in the previous chunk. **Not observed:** that a larger limit would put them in the same chunk, or that extraction improves. |
+| H2 | OCR (`do_ocr`, `ocr_options`, `force_full_page_ocr`, `bitmap_area_threshold`) | OCR is on by default. For born-digital PDFs it should be inert; for scanned pages or embedded bitmaps it decides whether text exists at all or is mis-recognised. | Not measured. Unknown which of the 13 pinned documents trigger OCR on any region. |
+| H3 | Table structure (`TableFormerMode`, `do_cell_matching`) | The documentation says `do_cell_matching=False` can fix columns that merge wrongly; WP-39.1 found two `GARBLED_TABLE` examples whose source tables Docling itself mangled and left them out of scope. | Prior art: `eval/audit_wp39_1/check_garbled_table_source.py`; two examples. Not tested against the options. |
+| H4 | Heading levels and reading order | The section ancestry map (and so every heading-based lead-in, 24 of 66 in the fresh gold) is built from Docling's heading levels. Newer releases document heading-hierarchy recovery and reading-order rules. | Not measured. Not available in 2.94.0 (section 1). |
+| H5 | Offline use (`artifacts_path`, `DOCLING_ARTIFACTS_PATH`) | Models are downloaded on first use; ReqBot targets self-hosted and possibly air-gapped installs. | A deployment question, not an extraction one; `docs/DEPLOYMENT.md` covers the OpenCV libraries only. Out of scope for quality, listed so it is not lost. |
+| H6 | Threads, device, batch sizes, timeout | Speed and robustness only. | Not a quality lever; out of scope except to record the current speed. |
+
+Options judged not relevant to this corpus (policy PDFs, requirement text): picture description and classification, chart extraction, code and formula enrichment (off by default; formulas could matter only if a document carries equations). Listed so the review is complete, not because anything is proposed.
+
+## 3. Method (offline, no LLM, scratch only)
+
+- Scratch scripts in `eval/spike_results/wp_45_10/`; nothing in `pipeline/`, no Step C cache, no corpus file and no Qdrant collection is touched.
+- The 13 pinned documents (the same set the earlier phases used) are converted once per variant with the pinned 2.94.0, each variant changing **one** option from the defaults, and the converter output is cached to scratch so later steps do not repeat the conversion. A variant that cannot run in 2.94.0 is reported as unavailable, not substituted.
+- **Variants:** H1 re-chunk the unchanged converted document at several limits (the same conversion, only the chunker changes; for example 256 as is, 512, 1,024, 2,048 and 4,096 tokens, with the tokenizer matched to the embedding model's family where one is available offline, otherwise stated); H2 `do_ocr=False` and `force_full_page_ocr=True`; H3 `do_cell_matching=False` and `FAST`.
+- **Measures, fixed before any run:** (a) text preservation against the default conversion: the share of paragraphs and table cells identical, and every paragraph present in one and absent in the other listed for reading; (b) for H1, the number of chunks, the chunk-size distribution, how many of the labeled gold lead-ins (the audit's and the fresh gold's, the labels already in the repository) fall in the same chunk as their quote, and how many lists are split; (c) for H2, which documents and pages have OCR-sourced text at all, and any text differences; (d) for H3, the two known garbled tables and a count of tables whose cell grid differs; (e) conversion time per document.
+- **Decision rule, registered now:** a setting is called *worth a pilot* only if it improves a measure the existing labels can score (more gold lead-ins in the same chunk; a garbled table repaired) **and** loses no text the default conversion had, with every lost paragraph listed. *Worth a pilot* means a separate plan, not a change.
+
+## 4. What this plan does not claim
+
+- It does not say any default is wrong. H1 to H4 are reasons to look, not results.
+- Better chunk or table structure does not by itself mean better requirements: that needs Step C re-extraction on the affected documents, which is a separate, measured pilot.
+- The fresh-gold and audit labels have the limits already recorded (one labeler for the fresh set; 13 documents).
+
+## 5. Needs the owner's decision before any change (stop-and-ask list)
+
+1. **Changing chunking** changes every chunk id, so it forces Step C re-extraction (hours of model time), invalidates the Step C resume cache and changes `chunk_id` in every JSONL record and the Qdrant context collection (a reindex).
+2. **Moving the Docling pin** from 2.94.0 to a newer release is a dependency change and may alter every conversion; it needs a changelog review and its own comparison on the pinned documents.
+3. **Any new default** (an OCR or table option) changes the extracted text of already-indexed documents.
+
+Also requested: the specific items the Codex conversation raised, if it listed any, so this plan covers them rather than only what the code review turned up.
