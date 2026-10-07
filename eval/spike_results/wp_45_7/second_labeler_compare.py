@@ -33,6 +33,13 @@ RUN = _HERE / "outputs" / "eval_v6_run"
 FROZEN = FG.FROZEN
 REPORT = _HERE / "outputs" / "second_labeler_report.json"
 
+# Pass B verdicts of the second labeler that contradict the rubric (RUBRIC.md "right": stem plus quote read as one complete statement) because neither the
+# stem nor the quote names a party: the stem is a list item or a verb-initial clause with no subject, and the labeler's own pass A notes say the party sits
+# only in a heading. Found by the Codex review of PR #244 and checked against the cards; the same defect was corrected in the first labeler's R265 before
+# any run. The submitted label files are never edited; these are applied in memory as a sensitivity variant, and the first six are the review's finding.
+ACTORLESS_RIGHT = ("R212", "R265", "R274", "R286", "R301", "R302")
+ARGUABLE = ("R281",)  # the stem names a role ("the PPSM CCB chairperson") but its subject is only in the heading; the second labeler noted "'their' = chairperson"
+
 
 def _by_id(path):
     return FG._jsonl(path)  # {card id: label}
@@ -58,11 +65,16 @@ def agreement(first=FIRST, second=SECOND):
     }
 
 
-def second_gold(second=SECOND):
-    """The gold the second labeler's labels give, built exactly as the frozen one (the builder expects the first labeler's file names)."""
+def second_gold(second=SECOND, fragment_chain=()):
+    """The gold the second labeler's labels give, built exactly as the frozen one (the builder expects the first labeler's file names). Cards named in
+    `fragment_chain` have their pass B verdict set to fragment_chain in memory (a sensitivity variant; the label files are not touched)."""
     with tempfile.TemporaryDirectory() as tmp:
-        for part in ("a", "b"):
-            shutil.copy(second / f"labels_claude2_{part}.jsonl", Path(tmp) / f"labels_claude_{part}.jsonl")
+        shutil.copy(second / "labels_claude2_a.jsonl", Path(tmp) / "labels_claude_a.jsonl")
+        rows = [json.loads(line) for line in (second / "labels_claude2_b.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
+        for row in rows:
+            if row["id"] in fragment_chain:
+                row["stem_verdict"] = "fragment_chain"
+        (Path(tmp) / "labels_claude_b.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
         return FG.build(labels=Path(tmp))
 
 
@@ -95,7 +107,13 @@ def report():
         "note": "sensitivity analysis on the saved one-shot answers; not a verdict (the verdict was registered against the first labels)",
         "agreement": agreement(),
         "gold_counts": {"first": first["counts"], "second": second["counts"]},
-        "rescored": {"first_labels": rescore(first), "second_labels": rescore(second)},
+        "rescored": {
+            "first_labels": rescore(first),
+            "second_labels_as_submitted": rescore(second),
+            "second_labels_with_actorless_right_corrected": rescore(second_gold(fragment_chain=ACTORLESS_RIGHT)),
+            "second_labels_with_those_and_R281_corrected": rescore(second_gold(fragment_chain=ACTORLESS_RIGHT + ARGUABLE)),
+        },
+        "corrected_cards": {"actorless_right": list(ACTORLESS_RIGHT), "arguable": list(ARGUABLE)},
         "resolver_attachment_moves_first_to_second": per_candidate(first, second),
     }
 

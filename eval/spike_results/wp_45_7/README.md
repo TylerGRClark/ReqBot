@@ -843,27 +843,27 @@ Run exactly as step 26 fixed it, from a worktree pinned at the merge commit of t
 - Where the lead-in is, among the 66 cards both say need one: **59 of 66** agree on the location; the exact lead-in text is identical on 41.
 - Is production's attached stem right (58 cards): **44 of 58** agree. The largest gap: 7 stems the first labeler called a fragment chain and the second called right.
 
-**Rescoring the saved answers.**
+**Rescoring the saved answers.** Three views of the second labeler: as submitted, and two in-memory variants in which the pass B verdicts that contradict the rubric are corrected (the submitted files are never edited). The Codex review of this PR found six second-labeler `right` verdicts (R212, R265, R274, R286, R301, R302) where neither the stem nor the quote names a party (a list item, or a verb-initial clause with no subject, and the labeler's own pass A notes say the party is only in a heading); `RUBRIC.md` requires stem plus quote to read as one complete statement, so they are `fragment_chain`. I checked the six against their cards and agree. It is the same defect corrected in the first labeler's R265 before any run. A seventh disagreement, R281 (the stem names "the PPSM CCB chairperson" but its subject is only in the heading), is arguable and is shown as its own variant. The correction is applied by me, the first labeler, to the other labeler's labels, so the as-submitted column is the primary one and the corrected columns are sensitivity.
 
-| | First labels (the verdict) | Second labels |
-|---|---|---|
-| Attachment scored | 104 | 100 |
-| Resolver right | **65** (62.5%) | **58** (58.0%) |
-| Production right on the same records | 41 | 42 |
-| Bar: production's rate + 20 points | at least 62 | at least 62 |
-| Resolver misleading | 39 (37.5%) | 42 (42.0%) |
-| Production misleading | 36 | 29 |
-| Limit: production's rate + 5 points | at most 41 | at most 34 |
-| Resolver incomplete (production) | 0 (27) | 0 (29) |
-| Real rejected / non-requirements rejected | 1 of 105 / 8 of 9 | 0 of 103 / 9 of 11 |
-| Invented, modality errors, valid | 0, 0, 114 of 114 | 0, 0, 114 of 114 |
-| Gates | all pass | **attachment-gain and misleading fail; the other seven pass** |
+| | First labels (the verdict) | Second, as submitted | Second, six corrected | Second, seven corrected |
+|---|---|---|---|---|
+| Attachment scored | 104 | 100 | 100 | 100 |
+| Resolver right | **65** (62.5%) | **58** | **58** | **58** |
+| Production right on the same records | 41 | 42 | 36 | 35 |
+| Bar: production's rate + 20 points | at least 62 | at least 62 | at least 56 | at least 55 |
+| Resolver misleading | 39 | 42 | 42 | 42 |
+| Production misleading | 36 | 29 | 35 | 36 |
+| Limit: production's rate + 5 points | at most 41 | at most 34 | at most 40 | at most 41 |
+| Resolver incomplete (production) | 0 (27) | 0 (29) | 0 (29) | 0 (29) |
+| Real rejected / non-requirements rejected | 1 of 105 / 8 of 9 | 0 of 103 / 9 of 11 | same | same |
+| Invented, modality errors, valid | 0, 0, 114 of 114 | same | same | same |
+| Gates failing | none | **attachment-gain and misleading** | **misleading only** (42 against at most 40) | **misleading only** (42 against at most 41) |
 
-**Why the two gates move.** Per candidate, the resolver's attachment class under the first versus the second labels: 55 right in both, 36 misleading in both, 6 right to misleading (R241, R243, R247, R249, R254, R270: four because the second labeler chose a different lead-in text, two because it called the quote complete or not shown), 3 misleading to right (R212, R252, R272), 4 right to unscored (R217, R251, R257, R303: the second labeler judged no lead-in shown, or the quote not a requirement). The second labeler also rated production's stems more generously (7 more "right"), which lowers production's misleading rate to 29 of 100 and raises the bar the resolver must clear. R243 is one of the cards the first labeler's label was challenged on in review and kept.
+**Why the numbers move.** Per candidate, the resolver's attachment class under the first versus the second labels: 55 right in both, 36 misleading in both, 6 right to misleading (R241, R243, R247, R249, R254, R270: four because the second labeler chose a different lead-in text, two because it called the quote complete or not shown), 3 misleading to right (R212, R252, R272), 4 right to unscored (R217, R251, R257, R303: the second labeler judged no lead-in shown, or the quote not a requirement). The second labeler also rated production's stems more generously (7 more "right"), which lowers production's misleading rate to 29 of 100 (as submitted) and raises the bar the resolver must clear; six of those seven are the actorless verdicts corrected in the variants. R243 is one of the cards the first labeler's label was challenged on in review and kept.
 
 **Read it plainly.**
 - The verdict stands as registered: it was fixed against the first labels, run once, and passed. This step does not reopen it.
-- The *size* of the gain depends on who labels. Under the first labels the resolver clears the attachment bar by 3 records and the misleading limit by 2; under the second it misses them by 4 and 8. Margins of 2 to 3 records could not have survived a different labeler, and did not.
+- The *size* of the gain depends on who labels. Under the first labels the resolver clears the attachment bar by 3 records and the misleading limit by 2. Under the second, as submitted, it misses them by 4 and 8. With the rubric-contradicting pass B verdicts corrected the attachment bar is cleared (58 against at least 56) but the misleading limit is still missed (42 against at most 40, or at most 41 with R281): the misleading result does not survive a different labeler under any of the three views. Margins of 2 to 3 records could not have been expected to survive one.
 - The *direction* does not depend on the labeler: 65 or 58 right against production's 41 or 42 (23 or 16 points more), nothing left unconnected (production 27 or 29), no invented party, no gated modality error, the same zero-by-construction properties.
 - The misleading rate is the weak spot. The resolver attaches something on almost every record, so it turns "no stem" into "right" or "misleading"; under the second labels its misleading rate (42%) is above production's (29%), which production avoids partly by attaching less. Whether those extra misleading stems cost retrieval is not known; WP-45.1(c) found a wrong stem did not hurt its own record's rank, but could not see effects on other records.
 - Not done: no adjudication of the 25 lead-in text differences or the 14 stem-verdict differences, and no third labeler. The owner adjudicated the earlier audit's disagreements; the same could be done here if it is worth the time.

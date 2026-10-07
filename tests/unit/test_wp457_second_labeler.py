@@ -42,11 +42,25 @@ def test_agreement_counts():
     assert a["pass_a_cards"] == 114 and a["pass_b_cards"] == 58
 
 
-def test_under_the_second_labels_two_gates_fail():
+def test_under_the_second_labels_as_submitted_two_gates_fail():
     second = SL.rescore(SL.second_gold())
     failed = sorted(k for k, g in second["gates"].items() if not g["passed"])
     assert failed == ["attachment_gain_over_production", "misleading"]
     assert second["attachment"] == {"right": 58, "misleading": 42}
+
+
+def test_correcting_the_actorless_right_verdicts_leaves_only_the_misleading_gate_failing():
+    for extra, limit in ((SL.ACTORLESS_RIGHT, 0.4), (SL.ACTORLESS_RIGHT + SL.ARGUABLE, 0.41)):
+        gold = SL.second_gold(fragment_chain=extra)
+        assert sum(g["stem_verdict"] == "fragment_chain" for g in gold["gold"]) == 3 + len(extra)  # the second labeler's own three, plus the corrected cards
+        result = SL.rescore(gold)
+        assert [k for k, g in result["gates"].items() if not g["passed"]] == ["misleading"]
+        assert result["gates"]["misleading"]["threshold"] == limit and result["gates"]["misleading"]["value"] == 0.42
+
+
+def test_the_corrected_cards_are_right_in_the_submitted_file_and_are_not_edited_there():
+    rows = SL._by_id(SL.SECOND / "labels_claude2_b.jsonl")
+    assert all(rows[c]["stem_verdict"] == "right" for c in SL.ACTORLESS_RIGHT + SL.ARGUABLE)
 
 
 def test_the_committed_report_is_the_recomputed_one():
