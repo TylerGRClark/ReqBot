@@ -68,7 +68,22 @@ def tag():
     return "d" + (versions()["docling"] or "none")
 
 
-def cache_dir(kind, variant):
-    path = CACHE / tag() / kind / variant
-    path.mkdir(parents=True, exist_ok=True)
+def cache_dir(kind, variant, release_tag=None, create=True):
+    """Cache directory of `release_tag` (default: the installed release's tag), so a comparison can read two releases' files side by side."""
+    path = CACHE / (release_tag or tag()) / kind / variant
+    if create:
+        path.mkdir(parents=True, exist_ok=True)
     return path
+
+
+def check_manifest(directory, variant):
+    """Write the version manifest of a new cache directory; for an existing one, refuse to reuse it unless every recorded package version matches the
+    installed set (a release can stay at the same `docling` version while an unpinned dependency such as `docling-core` changes)."""
+    path = directory / "_manifest.json"
+    now = {"variant": variant, "versions": versions()}
+    if path.exists():
+        saved = json.loads(path.read_text(encoding="utf-8"))
+        if saved != now:
+            raise SystemExit(f"{path} records {saved}, but the installed set is {now}: refusing to reuse cached files from a different dependency set")
+    else:
+        path.write_text(json.dumps(now, indent=1), encoding="utf-8")

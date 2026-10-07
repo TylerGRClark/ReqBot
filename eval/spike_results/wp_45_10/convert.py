@@ -77,7 +77,7 @@ def main():
     except (AttributeError, ImportError) as exc:
         sys.exit(f"variant {args.variant} is unavailable in docling {common.versions()['docling']}: {exc}")
     out = common.cache_dir("docs", args.variant)
-    (out / "_manifest.json").write_text(json.dumps({"variant": args.variant, "versions": common.versions()}, indent=1), encoding="utf-8")
+    common.check_manifest(out, args.variant)
     names = args.docs or sorted(common.pinned_documents())
     for name in names:
         target = out / f"{name}.json"

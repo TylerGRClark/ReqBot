@@ -6,8 +6,7 @@
   python3 analyze_docs.py --headings                 # H4: Docling's heading level against the numbering-based depth the pipeline uses
   python3 analyze_docs.py --across baseline          # upgrade: this release's baseline against another release's (--other-tag d2.135.0)
 
-Reads `~/wp45_10_cache/<tag>/docs/<variant>/<doc>.json` written by convert.py. Every difference is counted and the first few are printed; the full list is
-in the JSON output. Nothing here scores quality beyond what the labeled cases allow (see docs/PHASE45_WP4510_PLAN.md section 3).
+Reads `~/wp45_10_cache/<tag>/docs/<variant>/<doc>.json` written by convert.py. Every difference is counted and kept in full in the JSON output (`--out`). Nothing here scores quality beyond what the labeled cases allow (see docs/PHASE45_WP4510_PLAN.md section 3).
 """
 
 import argparse
@@ -64,7 +63,7 @@ def no_grid_regions(doc):
 def diff_counters(a, b):
     lost = sum((a - b).values())
     extra = sum((b - a).values())
-    return lost, extra, list((a - b).elements())[:5], list((b - a).elements())[:5]
+    return lost, extra, sorted((a - b).elements()), sorted((b - a).elements())  # every difference, never a sample
 
 
 def compare(tag, variant, other_tag=None, other_variant=None):
@@ -72,12 +71,12 @@ def compare(tag, variant, other_tag=None, other_variant=None):
     rows, totals = {}, collections.Counter()
     for name in sorted(common.pinned_documents()):
         base, var = load(base_tag, "baseline", name), load(v_tag, v_var, name)
-        lost, extra, lost_ex, extra_ex = diff_counters(text_items(base), text_items(var))
+        lost, extra, lost_all, extra_all = diff_counters(text_items(base), text_items(var))
         sb, sv = table_signatures(base), table_signatures(var)
         differing = sum(1 for x, y in zip(sb, sv) if x != y) if len(sb) == len(sv) else None
         hb, hv = table_headers(base), table_headers(var)
         caption_hdr = (sum(any(CAPTION_PHRASE in c.lower() for c in row) for row in hb), sum(any(CAPTION_PHRASE in c.lower() for c in row) for row in hv))
-        rows[name] = {"text_items_lost": lost, "text_items_extra": extra, "lost_examples": lost_ex, "extra_examples": extra_ex,
+        rows[name] = {"text_items_lost": lost, "text_items_extra": extra, "lost_items": lost_all, "extra_items": extra_all,
                       "tables": (len(sb), len(sv)), "tables_with_different_grid": differing, "caption_in_header_tables": caption_hdr,
                       "no_grid_regions": (no_grid_regions(base), no_grid_regions(var))}
         totals["lost"] += lost
@@ -128,6 +127,10 @@ def main():
     ap.add_argument("--out")
     args = ap.parse_args()
     tag = common.tag()
+    if args.across and not args.other_tag:
+        raise SystemExit("--across needs --other-tag (otherwise a release is compared with itself)")
+    if args.across and args.other_tag == tag:
+        raise SystemExit("--other-tag is this release's own tag")
     if args.headings:
         rows, totals = headings(tag)
     elif args.across:
@@ -137,7 +140,7 @@ def main():
     else:
         raise SystemExit("give --variant, --across or --headings")
     for name, r in rows.items():
-        print(name, {k: v for k, v in r.items() if k not in ("lost_examples", "extra_examples", "examples", "docling_levels")})
+        print(name, {k: v for k, v in r.items() if k not in ("lost_items", "extra_items", "examples", "docling_levels")})
     print("TOTALS", totals)
     if args.out:
         Path(common.HERE / args.out).write_text(json.dumps({"versions": common.versions(), "tag": tag, "rows": rows, "totals": totals}, indent=1, default=str), encoding="utf-8")

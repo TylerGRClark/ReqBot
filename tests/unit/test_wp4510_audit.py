@@ -62,3 +62,29 @@ def test_pinned_documents_are_the_thirteen_and_the_check_reports_a_missing_pdf(m
 def test_every_variant_has_a_description_and_baseline_is_unmodified():
     assert "baseline" in CV.VARIANTS and all(CV.VARIANTS.values())
     CV._mutate(object(), "baseline")  # the baseline changes nothing
+
+
+def test_a_cache_directory_from_a_different_dependency_set_is_refused(monkeypatch, tmp_path):
+    import json
+
+    import pytest
+    monkeypatch.setattr(CM, "versions", lambda: {"docling": "2.94.0", "docling-core": "2.99.0", "docling-parse": "5.7.0", "docling-ibm-models": "3.13.0"})
+    CM.check_manifest(tmp_path, "baseline")  # a new directory records the set
+    CM.check_manifest(tmp_path, "baseline")  # the same set is accepted
+    monkeypatch.setattr(CM, "versions", lambda: {"docling": "2.94.0", "docling-core": "2.100.0", "docling-parse": "5.7.0", "docling-ibm-models": "3.13.0"})
+    with pytest.raises(SystemExit):
+        CM.check_manifest(tmp_path, "baseline")
+    assert json.loads((tmp_path / "_manifest.json").read_text())["versions"]["docling-core"] == "2.99.0"
+
+
+def test_diff_counters_keeps_every_difference():
+    lost, extra, lost_all, extra_all = AD.diff_counters(AD.collections.Counter(list("abcdefgh")), AD.collections.Counter())
+    assert lost == 8 and lost_all == list("abcdefgh") and extra_all == []
+
+
+def test_load_chunks_reads_the_named_release_tag(tmp_path, monkeypatch):
+    monkeypatch.setattr(AC.common, "CACHE", tmp_path)  # the module analyze_chunks itself imported, not the copy loaded above
+    d = tmp_path / "d9.9.9" / "chunks" / "default"
+    d.mkdir(parents=True)
+    (d / "x_chunks.jsonl").write_text('{"raw_text": "hello", "text": "hello"}\n', encoding="utf-8")
+    assert AC.load_chunks("d9.9.9:default", "x") == [{"raw_text": "hello", "text": "hello"}]

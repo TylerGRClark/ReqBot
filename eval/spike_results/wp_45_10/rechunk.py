@@ -56,19 +56,29 @@ def skip_sections():
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--limit", type=int, required=True)
+    ap.add_argument("--limit", type=int)
+    ap.add_argument("--default", action="store_true", help="chunk with this release's own default HybridChunker() into chunks/default (the upgrade comparison)")
     ap.add_argument("--control", action="store_true", help="also chunk with the default HybridChunker() and require identical records")
     ap.add_argument("--docs", nargs="*")
     args = ap.parse_args()
+    if args.default == (args.limit is not None):
+        raise SystemExit("give exactly one of --limit and --default")
     names = args.docs or sorted(common.pinned_documents())
-    out = common.cache_dir("chunks", str(args.limit))
+    label = "default" if args.default else str(args.limit)
+    out = common.cache_dir("chunks", label)
+    common.check_manifest(out, label)
     skips = skip_sections()
+    if args.default:
+        for name in names:
+            n = chunk(name, None, out / f"{name}_chunks.jsonl", skip_sections=skips)
+            print(name, "default ->", n, "chunks", flush=True)
+        return
     for name in names:
         target = out / f"{name}_chunks.jsonl"
         n = chunk(name, args.limit, target, skip_sections=skips)
         print(name, args.limit, "->", n, "chunks", flush=True)
         if args.control:
-            ctrl = common.cache_dir("chunks", "default") / f"{name}_chunks.jsonl"
+            ctrl = common.cache_dir("chunks", "control_default") / f"{name}_chunks.jsonl"
             chunk(name, None, ctrl, skip_sections=skips)
             same = target.read_text(encoding="utf-8") == ctrl.read_text(encoding="utf-8")
             print("  control (explicit 256 vs default HybridChunker()):", "IDENTICAL" if same else "DIFFERENT")

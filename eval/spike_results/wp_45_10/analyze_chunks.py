@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """WP-45.10 H1: score re-chunked outputs against the labeled lead-ins and the baseline's text (offline; no LLM).
 
-  python3 analyze_chunks.py --limits 256 512 1024 2048 4096 --out chunks_report.json
+  python3 analyze_chunks.py --runs d2.94.0:256 d2.94.0:512 d2.94.0:1024 d2.94.0:2048 d2.94.0:4096 --out chunks_report.json
+  python3 analyze_chunks.py --runs d2.94.0:default d2.135.0:default --out upgrade_chunks_report.json      # the upgrade comparison
+
+A run is RELEASE_TAG:LABEL (a token limit, or `default` for that release's own HybridChunker()); the first run is the baseline every other is compared with,
+so a comparison can span two Docling releases (files under ~/wp45_10_cache/<tag>/chunks/<label>/).
 
 Measures per token limit (all through the production chunk function, so its filters apply):
   * chunk count and size distribution (characters and the repository's own token estimate), and how many chunks leave less than the answer allowance of
@@ -32,8 +36,9 @@ def norm(text):
     return re.sub(r"\s+", " ", (text or "")).strip().lower()
 
 
-def load_chunks(limit, name):
-    path = common.cache_dir("chunks", str(limit)) / f"{name}_chunks.jsonl"
+def load_chunks(run, name):
+    tag, _, label = run.partition(":")
+    path = common.cache_dir("chunks", label, tag, create=False) / f"{name}_chunks.jsonl"
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
@@ -62,11 +67,11 @@ def pieces(lead_in):
     return [norm(p) for part in re.split(r"\s*\|\s*", lead_in) for p in re.split(r"\s*\.\.\.\s*", part) if norm(p)]
 
 
-def colocation(limit, items, cache):
-    """{candidate id: 'colocated' | 'apart' | 'quote_not_found'} at this limit."""
+def colocation(run, items, cache):
+    """{candidate id: 'colocated' | 'apart' | 'quote_not_found'} for this run."""
     out = {}
     for it in items:
-        chunks = cache.setdefault((limit, it["document"]), load_chunks(limit, it["document"]))
+        chunks = cache.setdefault((run, it["document"]), load_chunks(run, it["document"]))
         q = norm(it["quote"])
         hit = next((c for c in chunks if q in norm(c["raw_text"])), None) or next((c for c in chunks if q[:60] in norm(c["raw_text"])), None)
         if hit is None:
@@ -103,16 +108,18 @@ def preservation(base, other):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--limits", nargs="+", type=int, required=True)
+    ap.add_argument("--runs", nargs="+", required=True, help="RELEASE_TAG:LABEL, the first is the baseline")
     ap.add_argument("--out")
     args = ap.parse_args()
     names = sorted(common.pinned_documents())
     items = gold_items()
     fixed = fixed_prompt_tokens()
     cache, report = {}, {"versions": common.versions(), "gold_items": len(items), "fixed_prompt_tokens": fixed, "limits": {}}
-    base_limit = args.limits[0]
-    base = {n: load_chunks(base_limit, n) for n in names}
-    for limit in args.limits:
+    for run in args.runs:
+        if ":" not in run:
+            raise SystemExit(f"{run!r}: a run is RELEASE_TAG:LABEL, for example d2.94.0:256")
+    base = {n: load_chunks(args.runs[0], n) for n in names}
+    for limit in args.runs:
         per_doc = {n: load_chunks(limit, n) for n in names}
         allc = [c for chunks in per_doc.values() for c in chunks]
         sizes = sorted(len(c["raw_text"]) for c in allc)
@@ -129,7 +136,7 @@ def main():
             "preservation_vs_baseline": preservation(base, per_doc),
         }
         r = report["limits"][limit]
-        print(f"limit {limit:5d}: {r['chunks']:5d} chunks, median {r['median_chars']:.0f} chars, max {r['max_chars']}, over-window {r['over_window_after_prompt']}, "
+        print(f"{limit:16s}: {r['chunks']:5d} chunks, median {r['median_chars']:.0f} chars, max {r['max_chars']}, over-window {r['over_window_after_prompt']}, "
               f"list-continuations {r['list_continuation_chunks']}, colocated {by.get('colocated', 0)}/{len(items)} (not found {by.get('quote_not_found', 0)}), "
               f"lost {r['preservation_vs_baseline']['lost']} extra {r['preservation_vs_baseline']['extra']}", flush=True)
     if args.out:
