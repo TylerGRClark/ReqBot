@@ -18,7 +18,11 @@ from pathlib import Path
 
 import common
 
-CAPTION_PHRASE = "incident handling and support activities"  # afi17-203 Table 3.2: the caption merged into every header cell (docs/PHASE42_REQUIREMENTS.md)
+# afi17-203 Table 3.2 (page 20): Docling's table model merges the table's caption sentence into the column headers (docs/PHASE42_REQUIREMENTS.md). The first
+# detector looked for the table's title and found 0 in every release, which did not reproduce the documented defect; checking the 2.94.0 table showed the merged
+# text is the caption sentence below, in the dataframe column headers. This is the corrected detector (changed after reading the first output, disclosed in the
+# results).
+CAPTION_PHRASE = "this table presents the relationship between the ongoing support activities"
 
 
 def norm(text):
@@ -43,11 +47,24 @@ def table_signatures(doc):
 
 
 def table_headers(doc):
+    """Per table: the first grid row's cells plus the dataframe column headers (where the caption merge shows)."""
     out = []
     for t in doc.tables:
         rows = t.data.grid if t.data else []
-        out.append([norm(c.text) for c in rows[0]] if rows else [])
+        cells = [norm(c.text) for c in rows[0]] if rows else []
+        try:
+            cells += [str(c) for c in t.export_to_dataframe(doc).columns] if t.data and t.data.table_cells else []
+        except Exception:
+            pass
+        out.append(cells)
     return out
+
+
+def label_profile(doc):
+    """Item counts by label, and the characters held in `code` items (a legal-policy document has no code; a large share points to mis-labeled prose)."""
+    counts = collections.Counter(str(t.label.value) for t in doc.texts)
+    code_chars = sum(len(t.text) for t in doc.texts if str(t.label.value) == "code")
+    return {"counts": dict(counts), "code_items": counts.get("code", 0), "code_chars": code_chars, "text_chars": sum(len(t.text) for t in doc.texts)}
 
 
 def no_grid_regions(doc):
@@ -55,9 +72,28 @@ def no_grid_regions(doc):
     from docling_core.types.doc import TableItem
     n = 0
     for item, _level in doc.iterate_items():
-        if getattr(item, "label", None) is not None and str(getattr(item.label, "value", item.label)) == "table" and not isinstance(item, TableItem):
+        if getattr(item, "label", None) is None or str(getattr(item.label, "value", item.label)) != "table":
+            continue
+        if not isinstance(item, TableItem) or not (item.data and item.data.table_cells):
             n += 1
     return n
+
+
+def text_shingles(doc, n=6):
+    """Word n-gram multiset of the document's text items in reading order: a measure that does not depend on how a release splits paragraphs into items."""
+    # alphanumeric words only: the first version split on whitespace and counted "release ." (2.94.0) and "release." (2.135.0) as different text, which is
+    # spacing, not content (changed after reading the first output; disclosed in the results)
+    words = re.findall(r"\w+", " ".join(norm(t.text).lower() for t in doc.texts if norm(t.text)))
+    return collections.Counter(tuple(words[i:i + n]) for i in range(max(0, len(words) - n + 1)))
+
+
+def shingle_diff(a, b):
+    lost = sum(max(0, v - b.get(k, 0)) for k, v in a.items())
+    extra = sum(max(0, v - a.get(k, 0)) for k, v in b.items())
+    absent = sum(v for k, v in a.items() if k not in b)
+    total = sum(a.values())
+    return {"base": total, "lost": lost, "lost_share": round(lost / total, 5) if total else 0.0, "absent_entirely": absent, "extra": extra,
+            "extra_share": round(extra / total, 5) if total else 0.0}
 
 
 def diff_counters(a, b):
@@ -72,13 +108,24 @@ def compare(tag, variant, other_tag=None, other_variant=None):
     for name in sorted(common.pinned_documents()):
         base, var = load(base_tag, "baseline", name), load(v_tag, v_var, name)
         lost, extra, lost_all, extra_all = diff_counters(text_items(base), text_items(var))
+        shingles = shingle_diff(text_shingles(base), text_shingles(var))
         sb, sv = table_signatures(base), table_signatures(var)
         differing = sum(1 for x, y in zip(sb, sv) if x != y) if len(sb) == len(sv) else None
         hb, hv = table_headers(base), table_headers(var)
         caption_hdr = (sum(any(CAPTION_PHRASE in c.lower() for c in row) for row in hb), sum(any(CAPTION_PHRASE in c.lower() for c in row) for row in hv))
-        rows[name] = {"text_items_lost": lost, "text_items_extra": extra, "lost_items": lost_all, "extra_items": extra_all,
+        lp = (label_profile(base), label_profile(var))
+        base_items = sum(text_items(base).values())
+        rows[name] = {"text_items_base": base_items, "text_items_lost_share": round(lost / base_items, 5) if base_items else 0.0, "code_items": (lp[0]["code_items"], lp[1]["code_items"]), "code_share_of_chars": (round(lp[0]["code_chars"] / lp[0]["text_chars"], 3), round(lp[1]["code_chars"] / lp[1]["text_chars"], 3)),
+                      "list_items": (lp[0]["counts"].get("list_item", 0), lp[1]["counts"].get("list_item", 0)), "text_items_lost": lost, "text_items_extra": extra, "text_6gram": shingles, "lost_items": lost_all, "extra_items": extra_all,
                       "tables": (len(sb), len(sv)), "tables_with_different_grid": differing, "caption_in_header_tables": caption_hdr,
                       "no_grid_regions": (no_grid_regions(base), no_grid_regions(var))}
+        for k in ("base", "lost", "absent_entirely", "extra"):
+            totals["sh_" + k] += shingles[k]
+        totals["code_items_base"] += lp[0]["code_items"]
+        totals["code_items_var"] += lp[1]["code_items"]
+        totals["list_items_base"] += lp[0]["counts"].get("list_item", 0)
+        totals["list_items_var"] += lp[1]["counts"].get("list_item", 0)
+        totals["text_items_base"] += base_items
         totals["lost"] += lost
         totals["extra"] += extra
         totals["tables_differ"] += differing or 0
@@ -140,7 +187,7 @@ def main():
     else:
         raise SystemExit("give --variant, --across or --headings")
     for name, r in rows.items():
-        print(name, {k: v for k, v in r.items() if k not in ("lost_items", "extra_items", "examples", "docling_levels")})
+        print(name, {k: v for k, v in r.items() if k not in ("lost_items", "extra_items", "examples", "docling_levels", "text_items_lost", "text_items_extra")})
     print("TOTALS", totals)
     if args.out:
         Path(common.HERE / args.out).write_text(json.dumps({"versions": common.versions(), "tag": tag, "rows": rows, "totals": totals}, indent=1, default=str), encoding="utf-8")

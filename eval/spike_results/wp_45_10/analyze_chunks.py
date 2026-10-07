@@ -46,11 +46,12 @@ def est_tokens(chars):
     return -(-int(chars) * 2 // 5)  # the repository's estimate (bundle.estimate_tokens): ceil(chars / 2.5)
 
 
-def fixed_prompt_tokens():
+def prompt_renderer():
+    """chunk text -> estimated tokens of the fully rendered Step C prompt (the template plus the chunk-dependent source-reference hint block)."""
     from pipeline import llm_extract_requirements as llm
     from core.profiles import default_profile
     template = llm.PASS1_PROMPT_TEMPLATE.replace("{obligation_verbs}", ", ".join(default_profile()["obligation_verbs"]))
-    return est_tokens(len(llm._render_prompt(template, "")))
+    return lambda chunk_text: est_tokens(len(llm._render_prompt(template, chunk_text)))
 
 
 def gold_items():
@@ -96,13 +97,18 @@ def shingles(chunks, n=6):
     return collections.Counter(tuple(words[i:i + n]) for i in range(max(0, len(words) - n + 1)))
 
 
-def preservation(base, other):
+def preservation(base, other, details=None):
+    """Totals, and (when `details` is a dict) every differing 6-gram per document with its multiplicity difference, so each can be read."""
     lost = dup = total = 0
     for name in base:
         b, o = shingles(base[name]), shingles(other[name])
         total += sum(b.values())
-        lost += sum(max(0, v - o.get(k, 0)) for k, v in b.items())
-        dup += sum(max(0, v - b.get(k, 0)) for k, v in o.items())
+        lost_here = {" ".join(k): v - o.get(k, 0) for k, v in b.items() if v > o.get(k, 0)}
+        extra_here = {" ".join(k): v - b.get(k, 0) for k, v in o.items() if v > b.get(k, 0)}
+        lost += sum(lost_here.values())
+        dup += sum(extra_here.values())
+        if details is not None:
+            details[name] = {"lost": lost_here, "extra": extra_here}
     return {"baseline_shingles": total, "lost": lost, "extra": dup, "lost_share": round(lost / total, 5), "extra_share": round(dup / total, 5)}
 
 
@@ -113,8 +119,8 @@ def main():
     args = ap.parse_args()
     names = sorted(common.pinned_documents())
     items = gold_items()
-    fixed = fixed_prompt_tokens()
-    cache, report = {}, {"versions": common.versions(), "gold_items": len(items), "fixed_prompt_tokens": fixed, "limits": {}}
+    render = prompt_renderer()
+    cache, report = {}, {"versions": common.versions(), "gold_items": len(items), "empty_prompt_tokens": render(""), "limits": {}, "differences": {}}
     for run in args.runs:
         if ":" not in run:
             raise SystemExit(f"{run!r}: a run is RELEASE_TAG:LABEL, for example d2.94.0:256")
@@ -124,17 +130,19 @@ def main():
         allc = [c for chunks in per_doc.values() for c in chunks]
         sizes = sorted(len(c["raw_text"]) for c in allc)
         co = colocation(limit, items, cache)
+        details = {}
         by = collections.Counter(co.values())
         by_loc = collections.defaultdict(collections.Counter)
         for it in items:
             by_loc[it["location"]][co[it["id"]]] += 1
         report["limits"][limit] = {
             "chunks": len(allc), "median_chars": statistics.median(sizes), "p90_chars": sizes[int(len(sizes) * 0.9)], "max_chars": sizes[-1],
-            "over_window_after_prompt": sum(1 for c in allc if fixed + est_tokens(len(c["text"])) + ANSWER_ALLOWANCE > WINDOW),
+            "over_window_after_prompt": sum(1 for c in allc if render(c["text"]) + ANSWER_ALLOWANCE > WINDOW),
             "list_continuation_chunks": sum(list_continuations(v) for v in per_doc.values()),
             "colocation": dict(by), "colocation_by_labeled_location": {k: dict(v) for k, v in sorted(by_loc.items())},
-            "preservation_vs_baseline": preservation(base, per_doc),
+            "preservation_vs_baseline": preservation(base, per_doc, details),
         }
+        report["differences"][limit] = details
         r = report["limits"][limit]
         print(f"{limit:16s}: {r['chunks']:5d} chunks, median {r['median_chars']:.0f} chars, max {r['max_chars']}, over-window {r['over_window_after_prompt']}, "
               f"list-continuations {r['list_continuation_chunks']}, colocated {by.get('colocated', 0)}/{len(items)} (not found {by.get('quote_not_found', 0)}), "

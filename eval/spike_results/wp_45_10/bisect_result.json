@@ -1,0 +1,105 @@
+{
+ "document": "DODI 5200.01",
+ "last_good": "2.122.0",
+ "first_bad": "2.123.0",
+ "profiles": {
+  "2.94.0": {
+   "document": "DODI 5200.01",
+   "versions": {
+    "docling": "2.94.0",
+    "docling-core": "2.99.0",
+    "docling-parse": "5.7.0",
+    "docling-ibm-models": "3.13.0"
+   },
+   "code": 0,
+   "list_item": 136,
+   "text": 23,
+   "tables": 1,
+   "items": 220
+  },
+  "2.115.0": {
+   "document": "DODI 5200.01",
+   "versions": {
+    "docling": "2.115.0",
+    "docling-core": "2.99.0",
+    "docling-parse": "7.22.2",
+    "docling-ibm-models": "3.13.0"
+   },
+   "code": 0,
+   "list_item": 136,
+   "text": 23,
+   "tables": 1,
+   "items": 220
+  },
+  "2.123.1": {
+   "document": "DODI 5200.01",
+   "versions": {
+    "docling": "2.123.1",
+    "docling-core": "2.99.0",
+    "docling-parse": "7.22.2",
+    "docling-ibm-models": "3.13.0"
+   },
+   "code": 6,
+   "list_item": 26,
+   "text": 21,
+   "tables": 0,
+   "items": 80
+  },
+  "2.120.1": {
+   "document": "DODI 5200.01",
+   "versions": {
+    "docling": "2.120.1",
+    "docling-core": "2.99.0",
+    "docling-parse": "7.22.2",
+    "docling-ibm-models": "3.13.0"
+   },
+   "code": 0,
+   "list_item": 136,
+   "text": 27,
+   "tables": 1,
+   "items": 224
+  },
+  "2.121.0": {
+   "document": "DODI 5200.01",
+   "versions": {
+    "docling": "2.121.0",
+    "docling-core": "2.99.0",
+    "docling-parse": "7.22.2",
+    "docling-ibm-models": "3.13.0"
+   },
+   "code": 0,
+   "list_item": 136,
+   "text": 27,
+   "tables": 1,
+   "items": 224
+  },
+  "2.122.0": {
+   "document": "DODI 5200.01",
+   "versions": {
+    "docling": "2.122.0",
+    "docling-core": "2.99.0",
+    "docling-parse": "7.22.2",
+    "docling-ibm-models": "3.13.0"
+   },
+   "code": 0,
+   "list_item": 136,
+   "text": 27,
+   "tables": 1,
+   "items": 224
+  },
+  "2.123.0": {
+   "document": "DODI 5200.01",
+   "versions": {
+    "docling": "2.123.0",
+    "docling-core": "2.99.0",
+    "docling-parse": "7.22.2",
+    "docling-ibm-models": "3.13.0"
+   },
+   "code": 6,
+   "list_item": 26,
+   "text": 20,
+   "tables": 0,
+   "items": 79
+  }
+ }
+}

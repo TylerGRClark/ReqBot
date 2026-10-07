@@ -88,3 +88,12 @@ def test_load_chunks_reads_the_named_release_tag(tmp_path, monkeypatch):
     d.mkdir(parents=True)
     (d / "x_chunks.jsonl").write_text('{"raw_text": "hello", "text": "hello"}\n', encoding="utf-8")
     assert AC.load_chunks("d9.9.9:default", "x") == [{"raw_text": "hello", "text": "hello"}]
+
+
+def test_preservation_details_list_every_differing_shingle_with_multiplicity():
+    base = {"d": [{"raw_text": "a b c d e f g a b c d e f g"}]}
+    other = {"d": [{"raw_text": "a b c d e f g"}]}
+    details = {}
+    result = AC.preservation(base, other, details)
+    assert result["lost"] == 7 and result["extra"] == 0
+    assert details["d"]["lost"]["a b c d e f"] == 1 and details["d"]["extra"] == {}

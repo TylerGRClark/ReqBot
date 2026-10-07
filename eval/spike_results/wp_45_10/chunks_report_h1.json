@@ -1,0 +1,171 @@
+{
+ "fixed_prompt_tokens": 1387,
+ "gold_items": 145,
+ "limits": {
+  "d2.94.0:1024": {
+   "chunks": 390,
+   "colocation": {
+    "apart": 2,
+    "colocated": 143
+   },
+   "colocation_by_labeled_location": {
+    "previous_chunk": {
+     "apart": 1,
+     "colocated": 30
+    },
+    "same_chunk": {
+     "apart": 1,
+     "colocated": 54
+    },
+    "section_heading": {
+     "colocated": 59
+    }
+   },
+   "list_continuation_chunks": 0,
+   "max_chars": 5158,
+   "median_chars": 1258.0,
+   "over_window_after_prompt": 0,
+   "p90_chars": 4048,
+   "preservation_vs_baseline": {
+    "baseline_shingles": 96864,
+    "extra": 2237,
+    "extra_share": 0.02309,
+    "lost": 3731,
+    "lost_share": 0.03852
+   }
+  },
+  "d2.94.0:2048": {
+   "chunks": 362,
+   "colocation": {
+    "apart": 2,
+    "colocated": 143
+   },
+   "colocation_by_labeled_location": {
+    "previous_chunk": {
+     "apart": 1,
+     "colocated": 30
+    },
+    "same_chunk": {
+     "apart": 1,
+     "colocated": 54
+    },
+    "section_heading": {
+     "colocated": 59
+    }
+   },
+   "list_continuation_chunks": 0,
+   "max_chars": 10191,
+   "median_chars": 1117.0,
+   "over_window_after_prompt": 0,
+   "p90_chars": 4114,
+   "preservation_vs_baseline": {
+    "baseline_shingles": 96864,
+    "extra": 2770,
+    "extra_share": 0.0286,
+    "lost": 3685,
+    "lost_share": 0.03804
+   }
+  },
+  "d2.94.0:256": {
+   "chunks": 839,
+   "colocation": {
+    "apart": 38,
+    "colocated": 107
+   },
+   "colocation_by_labeled_location": {
+    "previous_chunk": {
+     "apart": 31
+    },
+    "same_chunk": {
+     "apart": 7,
+     "colocated": 48
+    },
+    "section_heading": {
+     "colocated": 59
+    }
+   },
+   "list_continuation_chunks": 31,
+   "max_chars": 10689,
+   "median_chars": 856,
+   "over_window_after_prompt": 0,
+   "p90_chars": 1185,
+   "preservation_vs_baseline": {
+    "baseline_shingles": 96864,
+    "extra": 0,
+    "extra_share": 0.0,
+    "lost": 0,
+    "lost_share": 0.0
+   }
+  },
+  "d2.94.0:4096": {
+   "chunks": 356,
+   "colocation": {
+    "apart": 2,
+    "colocated": 143
+   },
+   "colocation_by_labeled_location": {
+    "previous_chunk": {
+     "apart": 1,
+     "colocated": 30
+    },
+    "same_chunk": {
+     "apart": 1,
+     "colocated": 54
+    },
+    "section_heading": {
+     "colocated": 59
+    }
+   },
+   "list_continuation_chunks": 0,
+   "max_chars": 13224,
+   "median_chars": 1107.0,
+   "over_window_after_prompt": 0,
+   "p90_chars": 4484,
+   "preservation_vs_baseline": {
+    "baseline_shingles": 96864,
+    "extra": 4380,
+    "extra_share": 0.04522,
+    "lost": 3689,
+    "lost_share": 0.03808
+   }
+  },
+  "d2.94.0:512": {
+   "chunks": 514,
+   "colocation": {
+    "apart": 11,
+    "colocated": 134
+   },
+   "colocation_by_labeled_location": {
+    "previous_chunk": {
+     "apart": 9,
+     "colocated": 22
+    },
+    "same_chunk": {
+     "apart": 2,
+     "colocated": 53
+    },
+    "section_heading": {
+     "colocated": 59
+    }
+   },
+   "list_continuation_chunks": 11,
+   "max_chars": 10689,
+   "median_chars": 1219.0,
+   "over_window_after_prompt": 0,
+   "p90_chars": 2288,
+   "preservation_vs_baseline": {
+    "baseline_shingles": 96864,
+    "extra": 1191,
+    "extra_share": 0.0123,
+    "lost": 3613,
+    "lost_share": 0.0373
+   }
+  }
+ },
+ "versions": {
+  "docling": "2.94.0",
+  "docling-core": "2.99.0",
+  "docling-ibm-models": "3.13.0",
+  "docling-parse": "5.7.0"
+ }
+}
