@@ -221,3 +221,49 @@ def test_oversized_table_markdown_logs_warning(caplog):
         result = _chunk_raw_text(_MockChunk([table]), None)
     assert result == huge_markdown
     assert any("approaching" in rec.message for rec in caplog.records)
+
+
+# ---- WP-45.11 (T2): merged chunks carry generic DocItem objects --------------------------------------------------------
+
+
+def _merged_chunk_fixture():
+    """A real document with a paragraph, a heading and a table, and a chunk whose doc_items are the generic `DocItem` objects HybridChunker produces when it
+    merges elements (same self_ref and label, but not the TextItem / TableItem / SectionHeaderItem subclasses)."""
+    from docling_core.types.doc import DoclingDocument
+    from docling_core.types.doc.document import DocItem
+
+    doc = DoclingDocument(name="t")
+    heading = doc.add_heading("2.1. APPLICABILITY", level=1)
+    para = doc.add_text(label=DocItemLabel.TEXT, text="This issuance applies to all components.")
+    table = doc.add_table(data=_table_item().data)
+    generic = [DocItem(self_ref=i.self_ref, label=i.label, prov=[]) for i in (heading, para, table)]
+    return doc, generic
+
+
+def test_generic_items_in_a_merged_chunk_are_resolved_so_a_table_stays_a_grid():
+    doc, generic = _merged_chunk_fixture()
+    flat = "2.1. APPLICABILITY\nThis issuance applies to all components.\nCol A, Col B = val1"
+    result = _chunk_raw_text(_MockChunk(generic, text=flat), doc)
+    assert "| Col A" in result and "---" in result  # the grid, not the chunker's flat form
+    assert "This issuance applies to all components." in result
+    assert "2.1. APPLICABILITY" not in result  # the heading is excluded once its real type is known
+    assert "Col B = val1" not in result
+
+
+def test_without_the_document_generic_items_behave_as_before_the_fix():
+    _doc, generic = _merged_chunk_fixture()
+    flat = "flat chunk text"
+    assert _chunk_raw_text(_MockChunk(generic, text=flat), None) == flat
+
+
+def test_an_item_that_cannot_be_resolved_is_kept_as_it_is():
+    doc, _generic = _merged_chunk_fixture()
+    item = _MockTextItem("mock paragraph")  # no self_ref: nothing to resolve
+    assert _chunk_raw_text(_MockChunk([item]), doc) == "mock paragraph"
+
+
+def test_resolution_leaves_real_items_alone():
+    doc, _generic = _merged_chunk_fixture()
+    chunk = _MockChunk([doc.tables[0], doc.texts[1]])
+    result = _chunk_raw_text(chunk, doc)
+    assert "| Col A" in result and "This issuance applies to all components." in result

@@ -188,6 +188,38 @@ def _format_breadcrumb(section_title_path: list[str], parent_header_text: str | 
     return ""
 
 
+def _resolve_chunk_items(chunk: object, doc: object) -> list:
+    """The chunk's doc_items with each generic reference replaced by the real item in `doc`.
+
+    WP-45.11 (T2): a chunk that HybridChunker made by merging several elements carries its
+    doc_items as generic `DocItem` objects, not `TableItem` / `TextItem`, so the
+    isinstance() checks in _chunk_raw_text() matched nothing and a table in a merged chunk
+    reached Step C as the chunker's flat "Header = Value" text (9 of 56 tables in the 13
+    pinned documents at the 256-token default; the table grid exists in the document).
+    Resolving each item by its `self_ref` restores its real type. An item that cannot be
+    resolved (no self_ref, no document, a lookup error) is kept as it is, which is the
+    behavior before this function existed.
+    """
+    items = list(chunk.meta.doc_items)
+    if doc is None:
+        return items
+    try:
+        from docling_core.types.doc.document import RefItem
+    except ImportError:
+        return items
+    resolved = []
+    for item in items:
+        real = None
+        ref = getattr(item, "self_ref", None)
+        if ref:
+            try:
+                real = RefItem(cref=ref).resolve(doc)
+            except Exception:
+                real = None
+        resolved.append(real if real is not None else item)
+    return resolved
+
+
 def _chunk_raw_text(chunk: object, doc: object = None, *, seen_table_refs: set | None = None) -> str:
     """Extract body text from a DocChunk, excluding heading items.
 
@@ -234,7 +266,7 @@ def _chunk_raw_text(chunk: object, doc: object = None, *, seen_table_refs: set |
 
     parts: list[str] = []
     suppressed_duplicate_table = False
-    for item in chunk.meta.doc_items:
+    for item in _resolve_chunk_items(chunk, doc):
         if isinstance(item, (TitleItem, SectionHeaderItem)):
             continue
         text = ""
