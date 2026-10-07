@@ -1,0 +1,40 @@
+{
+ "candidates": 114,
+ "status": {
+  "complete": 114
+ },
+ "valid_answers": 114,
+ "parsed": 114,
+ "shape_conformant": 114,
+ "error_codes": {},
+ "answers_with_no_error": 114,
+ "mean_prompt_tokens": 2380.1,
+ "mean_answer_tokens": 16.2,
+ "mean_wall_seconds": 1.0,
+ "estimate_over_real": 1.6,
+ "fixed_prompt_estimated_tokens": 2574,
+ "mean_menu_size": 3.8,
+ "answers_with_a_selection": 114,
+ "modal_sources": {
+  "none": 43,
+  "parent": 29,
+  "quote": 42
+ },
+ "multi_modal_candidates": [
+  "fresh:R213",
+  "fresh:R226",
+  "fresh:R258",
+  "fresh:R271"
+ ],
+ "inferred_source_candidates": [],
+ "run_label": "v6_eval_r2_14b",
+ "tier": "R2",
+ "model": "qwen2.5:14b",
+ "digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6",
+ "prompt_hash": "6200fa25a374eb35",
+ "half": "evaluation",
+ "design": "kind",
+ "menu": "menu_v2",
+ "calls_made": 114,
+ "wall_seconds": 117.7
+}

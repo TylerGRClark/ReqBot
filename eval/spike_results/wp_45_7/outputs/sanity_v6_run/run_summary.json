@@ -1,0 +1,41 @@
+{
+ "candidates": 220,
+ "status": {
+  "complete": 220
+ },
+ "valid_answers": 220,
+ "parsed": 220,
+ "shape_conformant": 220,
+ "error_codes": {},
+ "answers_with_no_error": 220,
+ "mean_prompt_tokens": 2362.4,
+ "mean_answer_tokens": 16.3,
+ "mean_wall_seconds": 1.0,
+ "estimate_over_real": 1.6,
+ "fixed_prompt_estimated_tokens": 2574,
+ "mean_menu_size": 3.54,
+ "answers_with_a_selection": 220,
+ "modal_sources": {
+  "none": 81,
+  "parent": 51,
+  "quote": 88
+ },
+ "multi_modal_candidates": [
+  "audit:R013",
+  "audit:R017",
+  "card:R031",
+  "card:R044",
+  "card:R047",
+  "card:R049",
+  "card:R065",
+  "card:R068",
+  "card:R069",
+  "card:R081",
+  "card:R087"
+ ],
+ "inferred_source_candidates": [],
+ "run_label": "v6sanity_r2_14b",
+ "half": "selection+evaluation (spent)",
+ "menu": "menu_v2",
+ "calls_made": 220
+}
