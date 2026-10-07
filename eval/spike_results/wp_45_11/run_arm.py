@@ -69,7 +69,8 @@ def run_doc(arm, doc, spec, model, ollama_url, timeout, max_chunks, scratch=SCRA
             digest = {m["name"]: m.get("digest") for m in json.load(r).get("models", [])}.get(model)
     except Exception:
         pass
-    record = {"arm": arm, "doc": doc, "chunks_spec": spec, "chunks_sha256": sha256_file(chunks), "chunk_manifest": common.read_manifest("chunks", label, tag),
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=_ROOT, capture_output=True, text=True).stdout.strip() or None
+    record = {"git_head": head, "arm": arm, "doc": doc, "chunks_spec": spec, "chunks_sha256": sha256_file(chunks), "chunk_manifest": common.read_manifest("chunks", label, tag),
               "docs_manifest": common.read_manifest("docs", "baseline", tag), "model": model, "model_digest": digest, "returncode": proc.returncode,
               "wall_seconds": round(time.time() - started, 1), "max_chunks": max_chunks, "step_c": status_summary(out_dir / f"{doc}_raw_responses.jsonl"),
               "command": cmd[1:]}
