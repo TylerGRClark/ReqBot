@@ -357,4 +357,4 @@ def test_the_v6_manifest_itself_is_fixed_here(SC):
     """A tampered manifest could pin anything, so its own hash is fixed in this test (regenerate it only on purpose, with freeze_v6.py --force)."""
     S = SC.SR
     own = S.hashlib.sha256((S.OUTPUTS / S.FROZEN_CODE["v6"]).read_bytes()).hexdigest()
-    assert own == "80d0f73639293cd456b88de5ff9bc071cc5a55a11ca669473fe35710e1a4d84b", own
+    assert own == "73a9a6a63749df5f491ec0a281a5040f20d8a0e51f04608c80f80356e267c534", own

@@ -31,7 +31,7 @@
   "pack_a.md": "04142d6c6cbfc120cb876af8115dabb0a7403bf632f3566d452f77c4c100a1d6",
   "pack_b.md": "ec9d95cbd02ef32420eaa3a3aaf53aca6b6d1389076a0e19066b8bae055e26fc",
   "outputs/fresh_draw_map.json": "2911e4a9036c4f35c1bf826b865a82a75cbe684a385c338ebaf3c699b6b3cccb",
-  "labels_claude_a.jsonl": "058f38ee1530143481688ffc8230e78ff777bc0f5b7d2a6b4621aabf8f1ce785",
+  "labels_claude_a.jsonl": "d1d01c740f73fa6c14a9275cd2bfb90dcd4ddb30125f5e88bcfa5736533df18b",
   "labels_claude_b.jsonl": "f0587320e684b164678a43e639535f4c8e39f0a7eff452d158e6e7e8334a16c6"
  },
  "gold": [
@@ -211,7 +211,7 @@
    "stratum": "cross-chunk",
    "standalone": "needs_lead_in",
    "lead_in_location": "previous_chunk",
-   "lead_in_text": "Blocks all externally visible PPS ... When required:",
+   "lead_in_text": "Blocks all externally visible PPS ... When required: | COMMANDER, UNITED STATES CYBER COMMAND.",
    "production_stem": "e. Blocks all externally visible PPS not correctly implemented or enabled in accordance with this issuance and disconnects connections to, on, or through the DODIN transport. When required:",
    "stem_verdict": "fragment_chain"
   },
@@ -301,7 +301,7 @@
    "stratum": "none+signal",
    "standalone": "needs_lead_in",
    "lead_in_location": "same_chunk",
-   "lead_in_text": "In coordination with the USD(A&S), ensures:",
+   "lead_in_text": "In coordination with the USD(A&S), ensures: | the USD(R&E):",
    "production_stem": null,
    "stem_verdict": null
   },
@@ -1006,7 +1006,7 @@
    "stratum": "cross-chunk",
    "standalone": "needs_lead_in",
    "lead_in_location": "previous_chunk",
-   "lead_in_text": "Establish TSN processes to assess vulnerabilities and manage risk to the assurance in the applicable system by:",
+   "lead_in_text": "Establish TSN processes to assess vulnerabilities and manage risk to the assurance in the applicable system by: | DOD COMPONENT HEADS.",
    "production_stem": "e. Establish TSN processes to assess vulnerabilities and manage risk to the assurance in the applicable system by:",
    "stem_verdict": "right"
   },
@@ -1246,7 +1246,7 @@
    "stratum": "cross-chunk",
    "standalone": "needs_lead_in",
    "lead_in_location": "previous_chunk",
-   "lead_in_text": "Appoints a DoD military officer ... as the PPSM CCB chairperson to:",
+   "lead_in_text": "Appoints a DoD military officer ... as the PPSM CCB chairperson to: | DIRECTOR, DISA.",
    "production_stem": "Appoints a DoD military officer in the grade of O-6, or civilian employee equivalent, possessing a Top Secret clearance with sensitive compartmented information access as the PPSM CCB chairperson to:",
    "stem_verdict": "fragment_chain"
   },
@@ -1306,7 +1306,7 @@
    "stratum": "none+signal",
    "standalone": "needs_lead_in",
    "lead_in_location": "same_chunk",
-   "lead_in_text": "In coordination with the USD(A&S), ensures:",
+   "lead_in_text": "In coordination with the USD(A&S), ensures: | the USD(R&E):",
    "production_stem": null,
    "stem_verdict": null
   },

@@ -297,13 +297,30 @@ def test_the_fresh_gold_works_with_the_scorers_and_the_v6_guards(FG):
     S.check_frozen_code("v6")  # now that the sealed files are committed, the manifest pins and every sealed file match
 
 
-def test_the_reserialized_gold_has_exactly_the_substance_of_the_first_sealed_serialization(FG):
-    """The plan's stage C2 amendment: only the name of one input-hash entry changed (a secret-scanner trap). The first serialization is kept outside the repository, so
-    its digests are pinned here: every gold record, the counts, the sufficiency and the input hashes must equal them."""
+def test_the_gold_differs_from_the_first_serialization_in_exactly_the_five_amended_lead_in_texts(FG):
+    """The plan's stage C2 amendments, pinned: the gold was re-serialized once (a secret-scanner trap on one key name), then five pass A lead-in texts were
+    completed with their party passage. The first serialization is kept outside the repository; its per-record digests are in
+    `outputs/fresh_gold_first_serialization_digests.json`. Every record must equal it, except these five, whose only difference is the lead-in text."""
     digest = lambda o: hashlib.sha256(json.dumps(o, sort_keys=True, ensure_ascii=False).encode()).hexdigest()  # noqa: E731
+    first = json.loads((_DIR / "outputs/fresh_gold_first_serialization_digests.json").read_text())
     gold = json.loads(FG.FROZEN.read_text(encoding="utf-8"))
-    assert digest(gold["gold"]) == "ee5fe16917bb9ae8c1781172c4eb5d6d2bf94d6cc355ce25e6be50e1c8a003a1"
-    assert digest(gold["counts"]) == "696746fd879ae8527190cd35a2b1b57ade588c94df8b624f76843791bc67a537"
+    amended = {
+        "fresh:R212": "Blocks all externally visible PPS ... When required:",
+        "fresh:R218": "In coordination with the USD(A&S), ensures:",
+        "fresh:R265": "Establish TSN processes to assess vulnerabilities and manage risk to the assurance in the applicable system by:",
+        "fresh:R281": "Appoints a DoD military officer ... as the PPSM CCB chairperson to:",
+        "fresh:R285": "In coordination with the USD(A&S), ensures:",
+    }
+    records = gold["gold"]
+    assert set(first) == {g["candidate_id"] for g in records} and len(first) == 114
+    for g in records:
+        cid = g["candidate_id"]
+        if cid in amended:
+            assert g["lead_in_text"].startswith(amended[cid] + " | ") and digest(g) != first[cid], cid  # the party passage was added
+            assert digest({**g, "lead_in_text": amended[cid]}) == first[cid], cid  # and nothing else changed
+        else:
+            assert digest(g) == first[cid], cid  # every other record is exactly as first serialized
+    counts = digest(gold["counts"])
+    assert counts == "696746fd879ae8527190cd35a2b1b57ade588c94df8b624f76843791bc67a537"  # the counts did not change
     assert digest(gold["sufficiency"]) == "ee0538dba14ab608bfcf299109496aa9f1dd9ce1388079c5ee996c13d8890a93"
-    assert digest(sorted(gold["inputs_sha256"].values())) == "77354850e48e9c1909800450f394990f6cead56f2823f6ce8be0e9d8d281e947"
     assert "outputs/fresh_draw_map.json" in gold["inputs_sha256"] and "outputs/fresh_key.json" not in gold["inputs_sha256"]
