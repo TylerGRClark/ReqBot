@@ -1,0 +1,462 @@
+{
+ "tag": "d2.94.0",
+ "other_tag": "d2.122.0-core2.100.0",
+ "items": [
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "cJCSr 6510.O2c 20 March 2025",
+   "words": 6,
+   "three_gram_coverage": 0.25
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "In the submission of the request, the petitioning Service will address the same requirements outlined in the PO responsibilities as described in Enclosure A of this instruction.",
+   "words": 27,
+   "three_gram_coverage": 0.52
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "Responsibilities. All DoD Components must adhere to the specif\u00eec guidance contained in Enclosures A, B, C, and D of this instruction.",
+   "words": 21,
+   "three_gram_coverage": 0.84
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "Summary of Changes. Updates to CJCSI 6510.02G include clariSring authority, roles, responsibilities, and procedures for the Services and CCMDs for submission of a KER for continued use of communication security devices whose cryptographic algorithms have reached the LYOU or have been decertified. Added KER close out template to references (reference (d)). References dates have also been updated.",
+   "words": 58,
+   "three_gram_coverage": 0.95
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "Releasabilitv. UNRESTRICTED. This directive is approved for public release; distribution is unlimited on the Non-classif\u00eeed Internet Protocol Router Network (NIPRNET). DoD Components (to include the CCMDs), other Federal agencies, and the public may obtain copies of this directive through the Internet from the CJCS Directives Electronic Library at <http://wwwjcs.mlll library>. Joint Staff activities may also obtain access via the SECRET internet Protocol Router Network (SIPRNET) directives Electronic Library web sites.",
+   "words": 73,
+   "three_gram_coverage": 0.89
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "Effective Date. This INSTRUCTION is effective upon sisnature.",
+   "words": 8,
+   "three_gram_coverage": 0.83
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "KER is required",
+   "words": 3,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "petitions the MC4EB viaJ-6",
+   "words": 5,
+   "three_gram_coverage": 0.33
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "Decision Point",
+   "words": 2,
+   "three_gram_coverage": null
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "Approval for key extension",
+   "words": 4,
+   "three_gram_coverage": 0.5
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "communityincludingallies",
+   "words": 1,
+   "three_gram_coverage": null
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "Authorizing Official Analysis of Alternatives",
+   "words": 5,
+   "three_gram_coverage": 0.33
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "Chairman of the Joint Chief of Staff",
+   "words": 7,
+   "three_gram_coverage": 0.4
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "Chairman of the Joint Chief of Staff Instruction",
+   "words": 8,
+   "three_gram_coverage": 0.5
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "Chairman of the Joint Chief of Staff Notice",
+   "words": 8,
+   "three_gram_coverage": 0.33
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "CND",
+   "words": 1,
+   "three_gram_coverage": null
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "Director, NSA Defense Information Systems Agency Department of Defense",
+   "words": 9,
+   "three_gram_coverage": 0.43
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "Intelligence Community information technology",
+   "words": 4,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "JROC",
+   "words": 1,
+   "three_gram_coverage": null
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "lead organization last year of use",
+   "words": 6,
+   "three_gram_coverage": 0.5
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "NC2 NIPRNET NSA/CSS NSS",
+   "words": 5,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "text": "nuclear command and control Non-Classified Internet Protocol Router Network National Security Agency/Central Security Service National Security Systems",
+   "words": 19,
+   "three_gram_coverage": 0.47
+  },
+  {
+   "document": "DODI 5200.44",
+   "text": "intelligence community information and communications technology",
+   "words": 6,
+   "three_gram_coverage": 0.5
+  },
+  {
+   "document": "DODI 5200.48",
+   "text": "c. Each OSD and DoD Component will annually submit the CUI Implementation Status the report will be made available on Intelink at",
+   "words": 22,
+   "three_gram_coverage": 0.9
+  },
+  {
+   "document": "DODI 5200.48",
+   "text": "Report to the USD(I&S) for inclusion in the DoD CUI Program report to the CUI EA. A copy of https://intelshare.intelink.gov/sites/ousdi/hcis/sec/icdirect/information/CUI/Forms/AllItems.aspx.",
+   "words": 35,
+   "three_gram_coverage": 0.94
+  },
+  {
+   "document": "DODI 5200.48",
+   "text": "original classification authority Office of the Inspector General of the Department of Defense",
+   "words": 13,
+   "three_gram_coverage": 0.82
+  },
+  {
+   "document": "DODI 5200.48",
+   "text": "TERM DEFINITION",
+   "words": 2,
+   "three_gram_coverage": null
+  },
+  {
+   "document": "DODI 5200.48",
+   "text": "contract Defined in Section 252.204- 2008 and 7012 of the FARS/DFARS.",
+   "words": 13,
+   "three_gram_coverage": 0.91
+  },
+  {
+   "document": "DODI 5200.48",
+   "text": "CNSI Defined in E.O. 13526.",
+   "words": 6,
+   "three_gram_coverage": 0.75
+  },
+  {
+   "document": "DODI 5200.48",
+   "text": "CPM Defined in Section 2002.4 of Title 32 CFR",
+   "words": 10,
+   "three_gram_coverage": 1.0
+  },
+  {
+   "document": "DODI 5200.48",
+   "text": "CUI category Defined in Section 2002.4 of Title 32 CFR",
+   "words": 11,
+   "three_gram_coverage": 0.78
+  },
+  {
+   "document": "DODI 5200.48",
+   "text": "TERM DEFINITION",
+   "words": 2,
+   "three_gram_coverage": null
+  },
+  {
+   "document": "DODI 5200.48",
+   "text": "TERM DEFINITION",
+   "words": 2,
+   "three_gram_coverage": null
+  },
+  {
+   "document": "DODI 5200.48",
+   "text": "public release Defined in Section 2002.4 of Title 32 CFR",
+   "words": 11,
+   "three_gram_coverage": 0.78
+  },
+  {
+   "document": "DODI 8410.03",
+   "text": "DoD Information Technology Standards Registry",
+   "words": 5,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "DODI 8410.03",
+   "text": "Intelligence Community Chief Information Officer",
+   "words": 5,
+   "three_gram_coverage": 0.33
+  },
+  {
+   "document": "DODI 8410.03",
+   "text": "IEEE",
+   "words": 1,
+   "three_gram_coverage": null
+  },
+  {
+   "document": "DODI 8410.03",
+   "text": "Institute of Electrical and Electronics Engineers",
+   "words": 6,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "NIST.SP.800-125",
+   "text": "Personal Computer Personally Identifiable Information",
+   "words": 5,
+   "three_gram_coverage": 0.33
+  },
+  {
+   "document": "afi10-2402",
+   "text": "2 ) In addition:",
+   "words": 3,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "afman17-2101",
+   "text": "3.1.1.2.2.3. For Internet access in dormitories, refer to AFI 326005, Unaccompanied Housing Management.",
+   "words": 18,
+   "three_gram_coverage": 0.81
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "VUNITED",
+   "words": 1,
+   "three_gram_coverage": null
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "MCMXLVII",
+   "words": 1,
+   "three_gram_coverage": null
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "AMERICAY",
+   "words": 1,
+   "three_gram_coverage": null
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "Abbreviations and Acronyms",
+   "words": 3,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "AETC -Air Education and Training Command",
+   "words": 6,
+   "three_gram_coverage": 0.75
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "AFECD -Air Force Enlisted Classification Directory",
+   "words": 6,
+   "three_gram_coverage": 0.25
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "AFI -Air Force Instruction",
+   "words": 4,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "AFIN -Air Force Information Network",
+   "words": 5,
+   "three_gram_coverage": 0.33
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "AFMAN -Air Force Manual",
+   "words": 4,
+   "three_gram_coverage": 0.5
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "AFOCD -Air Force Officer Classification",
+   "words": 5,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "AFPC -Air Force Personnel Center",
+   "words": 5,
+   "three_gram_coverage": 0.67
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "AFPD -Air Force Policy Directive",
+   "words": 5,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "AFR -Air Force Reserve",
+   "words": 4,
+   "three_gram_coverage": 0.5
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "AFSC -Air Force Specialty Code",
+   "words": 5,
+   "three_gram_coverage": 0.33
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "AI -Artificial Intelligence",
+   "words": 3,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "ANG -Air National Guard",
+   "words": 4,
+   "three_gram_coverage": 0.5
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "AO -Authorizing Official",
+   "words": 3,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "CBT -Computer Based Training",
+   "words": 4,
+   "three_gram_coverage": 0.5
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "CDRL -Contract Data Requirement List",
+   "words": 5,
+   "three_gram_coverage": 0.67
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "CEU -Continuing Education Units",
+   "words": 4,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "CIO -Chief Information Officer",
+   "words": 4,
+   "three_gram_coverage": 0.5
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "CISO -Chief Information Security Officer",
+   "words": 5,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "CCMD -Combatant Command",
+   "words": 3,
+   "three_gram_coverage": 0.0
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "CPD -Core Personnel Document",
+   "words": 4,
+   "three_gram_coverage": 0.5
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "CPE -Continuing Professional Education",
+   "words": 4,
+   "three_gram_coverage": 0.5
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "CPS -Civilian Personnel Section",
+   "words": 4,
+   "three_gram_coverage": 0.5
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "CTA -Cyber Training Academy",
+   "words": 4,
+   "three_gram_coverage": 0.5
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "CWMB -Cyberspace Workforce Management Board",
+   "words": 5,
+   "three_gram_coverage": 0.67
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "DAF -Department of Air Force",
+   "words": 5,
+   "three_gram_coverage": 0.67
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "DAFCWIG -DAF Cyberspace Workforce Improvement Group",
+   "words": 6,
+   "three_gram_coverage": 0.75
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "DAFDPO -Department of Air Force Departmental Publishing Office",
+   "words": 8,
+   "three_gram_coverage": 0.33
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "DC3 -DoD Cyber Crime Center",
+   "words": 5,
+   "three_gram_coverage": 0.67
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "DCHRMS -Defense Civilian Human Resource Management System",
+   "words": 7,
+   "three_gram_coverage": 0.8
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "DCWF -DoD Cyberspace Workforce Framework",
+   "words": 5,
+   "three_gram_coverage": 0.67
+  },
+  {
+   "document": "dafman17-1305",
+   "text": "DoD -Department of Defense",
+   "words": 4,
+   "three_gram_coverage": 0.5
+  }
+ ]
+}
