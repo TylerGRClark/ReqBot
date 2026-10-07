@@ -196,9 +196,8 @@ def headings(tag):
                 agree += 1
             else:
                 disagree += 1
-                if len(examples) < 4:
-                    examples.append({"text": norm(item.text)[:60], "docling_level": lv, "numbering_depth": est})
-        out[name] = {"headings": agree + disagree, "agree": agree, "disagree": disagree, "docling_levels": dict(levels), "examples": examples}
+                examples.append({"text": norm(item.text), "docling_level": lv, "numbering_depth": est})  # every disagreement, not a sample
+        out[name] = {"headings": agree + disagree, "agree": agree, "disagree": disagree, "docling_levels": dict(levels), "disagreements": examples}
         total["headings"] += agree + disagree
         total["agree"] += agree
         total["disagree"] += disagree
@@ -236,7 +235,7 @@ def main():
     else:
         raise SystemExit("give --variant, --across or --headings")
     for name, r in rows.items():
-        print(name, {k: v for k, v in r.items() if k not in ("lost_items", "extra_items", "examples", "docling_levels", "text_items_lost", "text_items_extra", "table_differences")})
+        print(name, {k: v for k, v in r.items() if k not in ("lost_items", "extra_items", "disagreements", "docling_levels", "text_items_lost", "text_items_extra", "table_differences")})
     print("TOTALS", totals)
     if args.out:
         compared = {"baseline": common.read_manifest("docs", "baseline", tag)}

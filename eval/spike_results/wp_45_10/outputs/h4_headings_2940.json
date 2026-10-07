@@ -26,7 +26,7 @@
    "docling_levels": {
     "1": 52
    },
-   "examples": []
+   "disagreements": []
   },
   "DODI 5200.01": {
    "headings": 14,
@@ -35,7 +35,7 @@
    "docling_levels": {
     "1": 14
    },
-   "examples": []
+   "disagreements": []
   },
   "DODI 5200.44": {
    "headings": 23,
@@ -44,7 +44,7 @@
    "docling_levels": {
     "1": 23
    },
-   "examples": [
+   "disagreements": [
     {
      "text": "1.1. APPLICABILITY.",
      "docling_level": 1,
@@ -56,12 +56,57 @@
      "numbering_depth": 2
     },
     {
-     "text": "2.1. UNDER SECRETARY OF DEFENSE FOR RESEARCH AND ENGINEERING",
+     "text": "2.1. UNDER SECRETARY OF DEFENSE FOR RESEARCH AND ENGINEERING (USD(R&E)).",
      "docling_level": 1,
      "numbering_depth": 2
     },
     {
      "text": "2.2. DOD CIO.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.3. USD(A&S).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.4. USD(I&S).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.5. DIRECTOR, NATIONAL SECURITY AGENCY/CHIEF, CENTRAL SECURITY SERVICE (DIRNSA/CHCSS).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.6. DIRECTOR, DEFENSE INTELLIGENCE AGENCY (DIA).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.7. DIRECTOR, DEFENSE COUNTERINTELLIGENCE AND SECURITY AGENCY.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.8. UNDER SECRETARY OF DEFENSE FOR POLICY.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.9. DOD COMPONENT HEADS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.10. SECRETARIES OF THE MILITARY DEPARTMENTS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.11. COMMANDER, USCYBERCOM.",
      "docling_level": 1,
      "numbering_depth": 2
     }
@@ -74,7 +119,7 @@
    "docling_levels": {
     "1": 65
    },
-   "examples": [
+   "disagreements": [
     {
      "text": "1.1. APPLICABILITY.",
      "docling_level": 1,
@@ -91,7 +136,147 @@
      "numbering_depth": 2
     },
     {
-     "text": "2.2. DIRECTOR FOR DEFENSE INTELLIGENCE (COUNTERINTELLIGENCE,",
+     "text": "2.2. DIRECTOR FOR DEFENSE INTELLIGENCE (COUNTERINTELLIGENCE, LAW ENFORCEMENT, AND SECURITY (DDI(CL&S)).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.3. DIRECTOR, DEFENSE COUNTERINTELLIGENCE AND SECURITY AGENCY (DSCA).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.4. CHIEF MANAGEMENT OFFICER OF THE DEPARTMENT OF DEFENSE (CMO).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.5. PFPA.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.6. UNDER SECRETARY OF DEFENSE FOR POLICY.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.7. USD(A&S).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.8. USD(R&E).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.9. DOD CIO.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.10. OSD AND DOD COMPONENT HEADS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.11. SECRETARIES OF THE MILITARY DEPARTMENTS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.12. CHAIRMAN OF THE JOINT CHIEFS OF STAFF.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.1. BACKGROUND.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.2. LEGACY INFORMATION REQUIREMENTS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.3. HANDLING REQUIREMENTS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.4. MARKING REQUIREMENTS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.5. GENERAL DOD CUI ADMINISTRATIVE REQUIREMENTS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.6. GENERAL DOD CUI PROCEDURES.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.7. GENERAL DOD CUI REQUIREMENTS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.8. OCA.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.9. GENERAL RELEASE AND DISCLOSURE REQUIREMENTS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.10. GENERAL SYSTEM AND NETWORK CUI REQUIREMENTS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.1. GENERAL.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.2. DISSEMINATION REQUIREMENTS FOR DOD CUI.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.3. LEGACY DISTRIBUTION STATEMENTS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.4. DECONTROLLING.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.5. DESTRUCTION.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.1. GENERAL.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.2. MISUSE OR UD OF CUI.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.3. REQUIREMENTS FOR DOD CONTRACTORS.",
      "docling_level": 1,
      "numbering_depth": 2
     }
@@ -104,7 +289,7 @@
    "docling_levels": {
     "1": 20
    },
-   "examples": []
+   "disagreements": []
   },
   "DODI 8551.01": {
    "headings": 24,
@@ -113,7 +298,7 @@
    "docling_levels": {
     "1": 24
    },
-   "examples": [
+   "disagreements": [
     {
      "text": "1.1. APPLICABILITY.",
      "docling_level": 1,
@@ -133,6 +318,56 @@
      "text": "2.2. DIRECTOR, DISA.",
      "docling_level": 1,
      "numbering_depth": 2
+    },
+    {
+     "text": "2.3. DIRECTOR, NATIONAL SECURITY AGENCY/CHIEF, CENTRAL SECURITY SERVICE.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.4. DOD COMPONENT HEADS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.5. CJCS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.6. COMMANDER, UNITED STATES CYBER COMMAND.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.1. PPSM.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.2. DECLARATION.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.3. DISCOVERY AND ANALYSIS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.4. VULNERABILITY ASSESSMENTS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.5. PPSM EXCEPTION MANAGEMENT PROCESS.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.6. RMF KS PPSM SUPPORT.",
+     "docling_level": 1,
+     "numbering_depth": 2
     }
    ]
   },
@@ -143,7 +378,7 @@
    "docling_levels": {
     "1": 46
    },
-   "examples": [
+   "disagreements": [
     {
      "text": "1.1 Authority",
      "docling_level": 1,
@@ -163,6 +398,121 @@
      "text": "1.4 Document Structure",
      "docling_level": 1,
      "numbering_depth": 2
+    },
+    {
+     "text": "2.1 Motivations for Full Virtualization",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.2 Types of Full Virtualization",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.3 Virtualizing Hardware",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.3.1 Virtualized Networking",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "2.3.2 Virtualized Storage",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "2.3.3 Guest OS Images",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "2.4 Full Virtualization Use Cases",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.4.1 Server Virtualization",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "2.4.1.1 Single Server Virtualization",
+     "docling_level": 1,
+     "numbering_depth": 4
+    },
+    {
+     "text": "2.4.1.2 Multiple Server Virtualization",
+     "docling_level": 1,
+     "numbering_depth": 4
+    },
+    {
+     "text": "2.4.2 Desktop Virtualization",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "3.1 Guest OS Isolation",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.2 Guest OS Monitoring",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.3 Image and Snapshot Management",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.1 Hypervisor Security",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.2 Guest OS Security",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.3 Virtualized Infrastructure Security",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.4 Desktop Virtualization Security",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.1 Initiation",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.2 Planning and Design",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.3 Implementation",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.4 Operations and Maintenance",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.5 Disposition",
+     "docling_level": 1,
+     "numbering_depth": 2
     }
    ]
   },
@@ -173,7 +523,7 @@
    "docling_levels": {
     "1": 64
    },
-   "examples": [
+   "disagreements": [
     {
      "text": "1.1. Executive Summary",
      "docling_level": 1,
@@ -193,6 +543,156 @@
      "text": "1.4. CARM and MA Integration Strategy",
      "docling_level": 1,
      "numbering_depth": 2
+    },
+    {
+     "text": "2.1. Secretary of the Air Force (SECAF).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.2. Chief of Staff of the Air Force (CSAF).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.3. Assistant Secretary of the Air Force for Acquisition (SAF/AQ).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.4. Administrative Assistant to the Secretary of the Air Force (SAF/AA).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.5. Chief, Information Dominance and Chief Information Officer (SAF/CIO A6).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.6. Assistant Secretary of the Air Force, Financial Management and Comptroller (SAF/FM).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.7. Secretary of the Air Force, Inspector General (SAF/IG).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.8. Secretary of the Air Force, Installations, Environment and Energy (SAF/IE).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.9. Air Force Surgeon General (AF/SG).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.10. Deputy Chief of Staff, Manpower, Personnel and Services (AF/A1).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.11. Deputy Chief of Staff, Intelligence, Surveillance, and Reconnaissance (ISR) (AF/A2).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.12. Air Force Deputy Chief of Staff, Operations (AF/A3).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.13. Deputy Chief of Staff for Logistics, Civil Engineering, and Force Protection (AF/A4).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.14. Deputy Chief of Staff for Strategic Plans and Requirements (AF/5/8).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.15. Director, Air Force Studies, Analyses, and Assessments (AF/9).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.16. Deputy Chief of Staff, Strategic Deterrence and Nuclear Integration (AF/A10).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.17. MAJCOM/DRUs.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.18. AF Installation and Mission Support Center (IMSC).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.19. Air Force Components to the Combatant Commands.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.20. FOAs.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.21. Air Force Critical Asset Owning Centers and Wings.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.22. Air Force Host Centers and Wings.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.1. The CARM Cycle.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.2. Identification of TCAs.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.3. TCA Assessment Processes.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.4. Mission Risk Analysis.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.5. Risk Management.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.6. CARM WG.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.7. Classification Guidance.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.8. Baseline Elements of Information (BEI).",
+     "docling_level": 1,
+     "numbering_depth": 2
     }
    ]
   },
@@ -203,7 +703,7 @@
    "docling_levels": {
     "1": 51
    },
-   "examples": [
+   "disagreements": [
     {
      "text": "1.4. Objectives.",
      "docling_level": 1,
@@ -223,6 +723,131 @@
      "text": "2.2.4. Deputy Chief of Staff for Operations ( AF/A3 ) will:",
      "docling_level": 1,
      "numbering_depth": 3
+    },
+    {
+     "text": "3.3. Responsibilities.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.2. The AF will holistically assess and evaluate NC3 resourcing needs across all affected service core functions.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.3. Responsibilities.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.3.4. AFGSC will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "4.3.5. Air Combat Command (ACC) will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "4.3.6. Air Education and Training Command (AETC) will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "4.3.7. AFMC will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "4.3.8. Air Force Reserve Command (AFRC) will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "4.3.9. Air National Guard (ANG) will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "4.3.10. Air Force Space Command (AFSPC) will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "4.3.11. Air Mobility Command (AMC) will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "4.3.12. Pacific Air Forces (PACAF) will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "4.3.13. United States Air Forces in Europe (USAFE) will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "5.2. The AF will develop and maintain an AF NC3 architecture and implement a configuration management process.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.3. Responsibilities.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.3.1. AF/A10 will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "5.3.2. SAF/CIO A6 will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "5.3.3. AFGSC will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "5.3.4. AFNC3C will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "6.3. Responsibilities.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "6.3.6. AFGSC will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "6.3.7. AFMC will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "6.3.8. AFSPC will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "7.3. Responsibilities.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "7.3.1. AF/A10 will:",
+     "docling_level": 1,
+     "numbering_depth": 3
     }
    ]
   },
@@ -233,9 +858,9 @@
    "docling_levels": {
     "1": 27
    },
-   "examples": [
+   "disagreements": [
     {
-     "text": "2.2. Directorate of Security, Special Access Program Oversig",
+     "text": "2.2. Directorate of Security, Special Access Program Oversight and Information Protection (SAF/AAZ).",
      "docling_level": 1,
      "numbering_depth": 2
     },
@@ -253,6 +878,41 @@
      "text": "3.4.4. Methodology.",
      "docling_level": 1,
      "numbering_depth": 3
+    },
+    {
+     "text": "3.5.1. Objectives.",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "3.5.2. Methodology.",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "3.6.1. Objectives.",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "3.6.2. Methodology.",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "3.7.1. Objectives.",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "3.7.2. Methodology.",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "3.7.3. Post-Incident Analysis.",
+     "docling_level": 1,
+     "numbering_depth": 3
     }
    ]
   },
@@ -263,7 +923,7 @@
    "docling_levels": {
     "1": 25
    },
-   "examples": [
+   "disagreements": [
     {
      "text": "1.3. Evolution of DOD and AF AFIN/DODIN Networks.",
      "docling_level": 1,
@@ -275,12 +935,62 @@
      "numbering_depth": 2
     },
     {
-     "text": "2.3. AF Long Haul Communications Flight, 38th Cyberspace Rea",
+     "text": "2.3. AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron/SCC (38 CYRS/SCC). The AF LHC Flight is the Air Force's DISN LHC Program manager who:",
      "docling_level": 1,
      "numbering_depth": 2
     },
     {
-     "text": "2.4. Major Commands, Management Headquarters (MHQ), AF level",
+     "text": "2.4. Major Commands, Management Headquarters (MHQ), AF level Organizations will:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.5. AF Installations will:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.6. All AF Organizations that own/fund DISN LHC circuits/services must:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.7. All Air Force Centers, Agencies, and Other Key Stakeholder will:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.8. Functional LHC Circuit Management Office (CMO) Responsibilities.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.9. AF DISN Node Site Coordinator (NSC) responsibilities with DISN equipment presence.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.10. Authorized Funding Official (AFO) for organizations who fund and own DISN AF LHC circuits and/or services must:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.10.1.1. AFO's will:",
+     "docling_level": 1,
+     "numbering_depth": 4
+    },
+    {
+     "text": "2.11. Lead Authorized Funding Official (LAFO) are located at:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.11.1.2. The LAFO responsibilities are to:",
+     "docling_level": 1,
+     "numbering_depth": 4
+    },
+    {
+     "text": "3.1. Commercial Internet Service Provider (CISP) Connection",
      "docling_level": 1,
      "numbering_depth": 2
     }
@@ -293,9 +1003,9 @@
    "docling_levels": {
     "1": 18
    },
-   "examples": [
+   "disagreements": [
     {
-     "text": "3.3. Deputy Chief of Staff for Intelligence, Surveillance, a",
+     "text": "3.3. Deputy Chief of Staff for Intelligence, Surveillance, and Reconnaissance (AF/A2) will:",
      "docling_level": 1,
      "numbering_depth": 2
     },
@@ -305,12 +1015,47 @@
      "numbering_depth": 2
     },
     {
-     "text": "3.5. The Deputy Chief of Staff for Strategic Plans and Requi",
+     "text": "3.5. The Deputy Chief of Staff for Strategic Plans and Requirements (A5/8) will:",
      "docling_level": 1,
      "numbering_depth": 2
     },
     {
-     "text": "3.6. Air Force, Director of Test and Evaluation (AF/TE) will",
+     "text": "3.6. Air Force, Director of Test and Evaluation (AF/TE) will:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.7. The Administrative Assistant to the Secretary of the Air Force (SAF/AA) will:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.8. Assistant Secretary of the Air Force for Acquisition (SAF/AQ) will:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.9. Assistant Secretary of the Air Force, Financial Management and Comptroller (SAF/FM) will:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.10. Director of Business Transformation and Deputy Chief Management Officer (SAF/MG) will:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.11. Air Force Space Command (AFSPC) will:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.13. CFLs will:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.14. All HAF Functionals, MAJCOMs, DRUs, and FOAs will:",
      "docling_level": 1,
      "numbering_depth": 2
     }
@@ -323,7 +1068,7 @@
    "docling_levels": {
     "1": 63
    },
-   "examples": [
+   "disagreements": [
     {
      "text": "1.1. Overview.",
      "docling_level": 1,
@@ -341,6 +1086,186 @@
     },
     {
      "text": "2.1. The Secretary of the Air Force shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.2. The DAF Chief Information Officer (SAF/CN) shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.3. Deputy Chief of Staff for Intelligence, Surveillance, Reconnaissance and Cyber Effects Operations (AF/A2/6) shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.4. Deputy Chief of Space Operations for Operations, Cyber and Nuclear (SF/COO):",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.5. Deputy Chief of Space Operations for Human Capital (SF/S1) shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.6. Deputy Chief of Staff for Manpower, Personnel and Services (AF/A1) shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.7. Assistant Secretary of the Air Force, Acquisition, Technology & Logistics (SAF/AQ) shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.8. DAF Cyber Career Field Managers shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.9. Major Commands, Field Commands, Field Operating Agency, Direct Reporting Units shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.10. Air Combat Command shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.11. Air Education and Training Command shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.12. Air Force Personnel Center shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.13. Authorizing Officials shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.14. Wing/Delta Cyberspace Offices (formerly known as Cybersecurity Offices) (WCO/DCO) shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.15. Program or Project Managers (PMs), System Managers, Program Management Offices (PMOs), Developmental or Operational Test Agencies and all Units shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.16. Contracting Officers shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.17. Information System Security Managers (ISSMs) shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.18. Civilian Personnel Sections shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.19. Supervisors shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.20. Individuals (Civilian and Military) shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.21. Individuals (Contractor Personnel) shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.1. Description of the DoD Cyberspace Workforce Framework",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.2. Structure of the Workforce",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.3. Position Identification",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.4. Cyberspace Workforce Qualification and Management Program",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.1. Normal and Amplified Procedures",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.2. Exceptional Procedures",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.3. Waivers to procedure",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "4.4. Failure to meet or maintain qualifications",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.1. Skills Training and Learning Resources",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.2. Military Specific Training Options",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.3. Civilian Specific Training Options",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "5.4. Contractor Specific Training Options",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "6.1. DAF Internal Reporting",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "6.2. Reporting Formats",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "6.3. DAF External Reporting",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "A2.3. Privileged User agreement addendum",
      "docling_level": 1,
      "numbering_depth": 2
     }

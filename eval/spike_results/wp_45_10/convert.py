@@ -86,6 +86,8 @@ def main():
             continue
         t0 = time.time()
         result = conv.convert(str(common.pdf_path(name)))
+        if str(result.status) != "ConversionStatus.SUCCESS":  # a partial conversion must not enter the cache or be counted among the 13
+            sys.exit(f"{name}: conversion status {result.status}, not cached")
         result.document.save_as_json(target)
         meta = {"seconds": round(time.time() - t0, 1), "status": str(result.status), "pages": len(result.pages)}
         (out / f"{name}.meta.json").write_text(json.dumps(meta), encoding="utf-8")
