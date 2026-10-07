@@ -1,0 +1,687 @@
+{
+ "obligations": 74,
+ "arms": {
+  "B0a": {
+   "recall": {
+    "chunked": 74,
+    "extracted_covered": 45,
+    "extracted_partial": 3,
+    "survived_step_d_covered": 44
+   },
+   "totals": {
+    "chunks": 839,
+    "step_c_ledger_rows": 839,
+    "records": 2024,
+    "survivors": 1867
+   },
+   "failure_codes": {
+    "quote_not_grounded_in_chunk": 67,
+    "unrepairable_fragment_quote": 37,
+    "quote_words_not_in_chunk": 1,
+    "heading_echo_quote": 25,
+    "orphaned_list_item_quote": 4
+   },
+   "per_document": {
+    "CJCSI 6510.02G": {
+     "chunks": 47,
+     "step_c_ledger_rows": 47,
+     "records": 110,
+     "survivors": 90,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 18,
+      "unrepairable_fragment_quote": 2
+     },
+     "wall_seconds": 132.1
+    },
+    "DODI 5200.01": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 75,
+     "survivors": 67,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 5,
+      "quote_not_grounded_in_chunk": 3
+     },
+     "wall_seconds": 93.6
+    },
+    "DODI 5200.44": {
+     "chunks": 36,
+     "step_c_ledger_rows": 36,
+     "records": 101,
+     "survivors": 96,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 136.4
+    },
+    "DODI 5200.48": {
+     "chunks": 100,
+     "step_c_ledger_rows": 100,
+     "records": 240,
+     "survivors": 225,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 10,
+      "unrepairable_fragment_quote": 3,
+      "quote_words_not_in_chunk": 1,
+      "heading_echo_quote": 1
+     },
+     "wall_seconds": 357.2
+    },
+    "DODI 8410.03": {
+     "chunks": 42,
+     "step_c_ledger_rows": 42,
+     "records": 156,
+     "survivors": 144,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 3,
+      "unrepairable_fragment_quote": 9
+     },
+     "wall_seconds": 184.1
+    },
+    "DODI 8551.01": {
+     "chunks": 30,
+     "step_c_ledger_rows": 30,
+     "records": 65,
+     "survivors": 58,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 2,
+      "quote_not_grounded_in_chunk": 5
+     },
+     "wall_seconds": 91.5
+    },
+    "NIST.SP.800-125": {
+     "chunks": 109,
+     "step_c_ledger_rows": 109,
+     "records": 152,
+     "survivors": 146,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 1,
+      "heading_echo_quote": 1
+     },
+     "wall_seconds": 167.6
+    },
+    "afi10-2402": {
+     "chunks": 129,
+     "step_c_ledger_rows": 129,
+     "records": 314,
+     "survivors": 287,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 8,
+      "heading_echo_quote": 5,
+      "orphaned_list_item_quote": 4,
+      "unrepairable_fragment_quote": 4
+     },
+     "wall_seconds": 404.6
+    },
+    "afi13-550": {
+     "chunks": 71,
+     "step_c_ledger_rows": 71,
+     "records": 180,
+     "survivors": 169,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 4,
+      "heading_echo_quote": 2
+     },
+     "wall_seconds": 240.9
+    },
+    "afi17-203": {
+     "chunks": 55,
+     "step_c_ledger_rows": 55,
+     "records": 121,
+     "survivors": 110,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 8,
+      "heading_echo_quote": 2
+     },
+     "wall_seconds": 157.6
+    },
+    "afman17-2101": {
+     "chunks": 63,
+     "step_c_ledger_rows": 63,
+     "records": 153,
+     "survivors": 135,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 4,
+      "heading_echo_quote": 5,
+      "unrepairable_fragment_quote": 5
+     },
+     "wall_seconds": 205.1
+    },
+    "afpd_17-1": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 75,
+     "survivors": 66,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "heading_echo_quote": 6,
+      "unrepairable_fragment_quote": 1
+     },
+     "wall_seconds": 82.2
+    },
+    "dafman17-1305": {
+     "chunks": 107,
+     "step_c_ledger_rows": 107,
+     "records": 282,
+     "survivors": 274,
+     "failure_codes": {
+      "heading_echo_quote": 3,
+      "unrepairable_fragment_quote": 2
+     },
+     "wall_seconds": 396.2
+    }
+   }
+  },
+  "B0b": {
+   "recall": {
+    "chunked": 74,
+    "extracted_covered": 50,
+    "extracted_partial": 2,
+    "survived_step_d_covered": 49
+   },
+   "totals": {
+    "chunks": 839,
+    "step_c_ledger_rows": 839,
+    "records": 2015,
+    "survivors": 1869
+   },
+   "failure_codes": {
+    "quote_not_grounded_in_chunk": 58,
+    "unrepairable_fragment_quote": 35,
+    "quote_words_not_in_chunk": 3,
+    "heading_echo_quote": 27,
+    "orphaned_list_item_quote": 4
+   },
+   "per_document": {
+    "CJCSI 6510.02G": {
+     "chunks": 47,
+     "step_c_ledger_rows": 47,
+     "records": 104,
+     "survivors": 86,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 16,
+      "unrepairable_fragment_quote": 2
+     },
+     "wall_seconds": 127.6
+    },
+    "DODI 5200.01": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 75,
+     "survivors": 66,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 5,
+      "quote_not_grounded_in_chunk": 4
+     },
+     "wall_seconds": 93.5
+    },
+    "DODI 5200.44": {
+     "chunks": 36,
+     "step_c_ledger_rows": 36,
+     "records": 98,
+     "survivors": 93,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 134.2
+    },
+    "DODI 5200.48": {
+     "chunks": 100,
+     "step_c_ledger_rows": 100,
+     "records": 248,
+     "survivors": 235,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 8,
+      "unrepairable_fragment_quote": 3,
+      "quote_words_not_in_chunk": 2
+     },
+     "wall_seconds": 368.0
+    },
+    "DODI 8410.03": {
+     "chunks": 42,
+     "step_c_ledger_rows": 42,
+     "records": 146,
+     "survivors": 137,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 1,
+      "unrepairable_fragment_quote": 8
+     },
+     "wall_seconds": 176.8
+    },
+    "DODI 8551.01": {
+     "chunks": 30,
+     "step_c_ledger_rows": 30,
+     "records": 64,
+     "survivors": 59,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 2,
+      "quote_not_grounded_in_chunk": 3
+     },
+     "wall_seconds": 89.8
+    },
+    "NIST.SP.800-125": {
+     "chunks": 109,
+     "step_c_ledger_rows": 109,
+     "records": 152,
+     "survivors": 147,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "unrepairable_fragment_quote": 1,
+      "heading_echo_quote": 1
+     },
+     "wall_seconds": 164.1
+    },
+    "afi10-2402": {
+     "chunks": 129,
+     "step_c_ledger_rows": 129,
+     "records": 296,
+     "survivors": 274,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 5,
+      "heading_echo_quote": 5,
+      "orphaned_list_item_quote": 4,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 383.3
+    },
+    "afi13-550": {
+     "chunks": 71,
+     "step_c_ledger_rows": 71,
+     "records": 183,
+     "survivors": 171,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 5,
+      "heading_echo_quote": 2
+     },
+     "wall_seconds": 247.9
+    },
+    "afi17-203": {
+     "chunks": 55,
+     "step_c_ledger_rows": 55,
+     "records": 122,
+     "survivors": 112,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 6,
+      "heading_echo_quote": 2,
+      "quote_words_not_in_chunk": 1
+     },
+     "wall_seconds": 159.1
+    },
+    "afman17-2101": {
+     "chunks": 63,
+     "step_c_ledger_rows": 63,
+     "records": 162,
+     "survivors": 143,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 4,
+      "heading_echo_quote": 6,
+      "unrepairable_fragment_quote": 5
+     },
+     "wall_seconds": 218.5
+    },
+    "afpd_17-1": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 78,
+     "survivors": 69,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "heading_echo_quote": 6,
+      "unrepairable_fragment_quote": 1
+     },
+     "wall_seconds": 86.3
+    },
+    "dafman17-1305": {
+     "chunks": 107,
+     "step_c_ledger_rows": 107,
+     "records": 287,
+     "survivors": 277,
+     "failure_codes": {
+      "heading_echo_quote": 5,
+      "unrepairable_fragment_quote": 2
+     },
+     "wall_seconds": 395.4
+    }
+   }
+  }
+ },
+ "pairs": {
+  "B0a vs B0b": {
+   "recall_extracted": {
+    "only_first": [],
+    "only_second": [
+     {
+      "id": "AFMAN-p004-007",
+      "document": "afman17-2101",
+      "page": 4,
+      "text": "1.1.2. DOD policy assigns Defense Information Systems Agency (DISA) the responsibility to provide end-to-end DOD Information Network (DODIN) infrastructure and to provision, manage and sustain DISN transport, services, facilities, and equipment in direct support of DOD missions, the Joint warfighter and AF operational readiness.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-6-0",
+        "R-6-1"
+       ],
+       "covering_surviving": [
+        "REQ-6a0f9a3c0f22",
+        "REQ-ad6e7236c0b5"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-6-0",
+        "chunk_id": 6,
+        "source_quote": "The AF centrally provisions, manages and funds the AF enterprise Long Haul Communications transport portion of the DOD network and services called the Defense Information Systems Network (DISN) and the AF segment called the AF Information Networks (AFIN) which uses the DISN for transport.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-6-1",
+        "chunk_id": 6,
+        "source_quote": "DOD policy assigns Defense Information Systems Agency (DISA) the responsibility to provide end-to-end DOD Information Network (DODIN) infrastructure and to provision, manage and sustain DISN transport, services, facilities, and equipment in direct support of DOD missions, the Joint warfighter and AF operational readiness.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-002",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.10. Provides direct provisioning oversight and management of all corporately funded enterprise SBU IP Data (formerly NIPRNET), Secret IP Data (formerly SIPRNET) and DISN Virtual Private Network (VPN) requirements for all MAJCOMs.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-21-0"
+       ],
+       "covering_surviving": [
+        "REQ-6667e37fdac7"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-21-0",
+        "chunk_id": 21,
+        "source_quote": "Provides direct provisioning oversight and management of all corporately funded enterprise SBU IP Data (formerly NIPRNET), Secret IP Data (formerly SIPRNET) and DISN Virtual Private Network (VPN) requirements for all MAJCOMs.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-014",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.11.5. Receive financial/execution plan (D-22s) from MAJCOMs.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-22-6"
+       ],
+       "covering_surviving": [
+        "REQ-94f569dd0f4c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-22-6",
+        "chunk_id": 22,
+        "source_quote": "Receive financial/execution plan (D-22s) from MAJCOMs. Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-015",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-22-6"
+       ],
+       "covering_surviving": [
+        "REQ-94f569dd0f4c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-22-6",
+        "chunk_id": 22,
+        "source_quote": "Receive financial/execution plan (D-22s) from MAJCOMs. Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-023",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-24-1"
+       ],
+       "covering_surviving": [
+        "REQ-18414b99a3fa"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-24-1",
+        "chunk_id": 24,
+        "source_quote": "Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process.",
+        "step_d_failure": null
+       }
+      ]
+     }
+    ],
+    "both": 45,
+    "neither": 24
+   },
+   "quote_overlap": {
+    "overall_jaccard": 0.8489,
+    "per_document": {
+     "CJCSI 6510.02G": {
+      "shared": 78,
+      "only_first": 12,
+      "only_second": 8,
+      "jaccard": 0.796
+     },
+     "DODI 5200.01": {
+      "shared": 63,
+      "only_first": 3,
+      "only_second": 2,
+      "jaccard": 0.926
+     },
+     "DODI 5200.44": {
+      "shared": 88,
+      "only_first": 8,
+      "only_second": 5,
+      "jaccard": 0.871
+     },
+     "DODI 5200.48": {
+      "shared": 208,
+      "only_first": 17,
+      "only_second": 27,
+      "jaccard": 0.825
+     },
+     "DODI 8410.03": {
+      "shared": 122,
+      "only_first": 22,
+      "only_second": 15,
+      "jaccard": 0.767
+     },
+     "DODI 8551.01": {
+      "shared": 57,
+      "only_first": 1,
+      "only_second": 2,
+      "jaccard": 0.95
+     },
+     "NIST.SP.800-125": {
+      "shared": 123,
+      "only_first": 23,
+      "only_second": 24,
+      "jaccard": 0.724
+     },
+     "afi10-2402": {
+      "shared": 249,
+      "only_first": 27,
+      "only_second": 15,
+      "jaccard": 0.856
+     },
+     "afi13-550": {
+      "shared": 159,
+      "only_first": 4,
+      "only_second": 6,
+      "jaccard": 0.941
+     },
+     "afi17-203": {
+      "shared": 106,
+      "only_first": 4,
+      "only_second": 6,
+      "jaccard": 0.914
+     },
+     "afman17-2101": {
+      "shared": 124,
+      "only_first": 10,
+      "only_second": 18,
+      "jaccard": 0.816
+     },
+     "afpd_17-1": {
+      "shared": 61,
+      "only_first": 1,
+      "only_second": 4,
+      "jaccard": 0.924
+     },
+     "dafman17-1305": {
+      "shared": 253,
+      "only_first": 17,
+      "only_second": 20,
+      "jaccard": 0.872
+     }
+    }
+   }
+  }
+ }
+}
