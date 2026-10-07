@@ -77,7 +77,8 @@ def paired(ta, tb, key="extracted"):
     return {"only_first": sorted(a - b), "only_second": sorted(b - a), "both": len(a & b), "neither": len(set(ta) - a - b)}
 
 
-ARTIFACTS = ("{doc}_chunks.jsonl", "{doc}_extracted_requirements.jsonl", "{doc}_requirements_normalized.jsonl", "{doc}_raw_responses.jsonl", "arm_record.json")
+ARTIFACTS = ("{doc}_chunks.jsonl", "{doc}_extracted_requirements.jsonl", "{doc}_requirements_normalized.jsonl", "{doc}_normalization_failures.jsonl",
+             "{doc}_raw_responses.jsonl", "arm_record.json")
 
 
 def check_complete(arm, scratch=SCRATCH):
@@ -104,6 +105,20 @@ def check_complete(arm, scratch=SCRATCH):
                 problems.append(f"{arm}/{doc}: {len(raw)} Step C ledger rows for {n_chunks} chunks")
     if problems:
         raise SystemExit("the arm is not complete, so it is not scored:\n  " + "\n  ".join(problems))
+
+
+def check_same_model(arms, scratch=SCRATCH):
+    """One recorded model name and one non-null digest across every document of every compared arm: the arms may differ in chunk files only, so a model that
+    changed between runs (a pulled tag, a different --model) must not be read as an effect of the arm."""
+    seen = collections.defaultdict(set)
+    for arm in arms:
+        for doc in sorted(common.pinned_documents()):
+            rec = json.loads((arm_dir(arm, doc, scratch) / "arm_record.json").read_text(encoding="utf-8"))
+            seen[(rec.get("model"), rec.get("model_digest"))].add(arm)
+    models = {m for m, _ in seen}
+    digests = {d for _, d in seen}
+    if len(models) != 1 or len(digests) != 1 or None in digests:
+        raise SystemExit(f"the arms did not all run the same model file: {sorted((str(k), sorted(v)) for k, v in seen.items())}")
 
 
 def run_level(arm, scratch=SCRATCH):
@@ -143,6 +158,7 @@ def main():
     assert len(ids) == 74, f"expected the 74 adjudicated unflagged obligations, got {len(ids)}"
     for arm in args.arms:
         check_complete(arm, args.scratch)  # before anything is traced: a partial run must not produce recall numbers
+    check_same_model(args.arms, args.scratch)
     traces = {arm: recall_traces(arm, index, ids, args.scratch) for arm in args.arms}
     levels, quotes = {}, {}
     for arm in args.arms:

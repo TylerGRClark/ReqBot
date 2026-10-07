@@ -101,3 +101,23 @@ def test_failed_step_c_chunks_and_missing_ledger_rows_are_rejected(tmp_path):
     with pytest.raises(SystemExit) as e:
         SA.check_complete("A", scratch=tmp_path)
     assert "1 Step C ledger rows for 2 chunks" in str(e.value)
+
+
+def _arm_with_model(root, arm, model, digest):
+    import json as _json
+    for doc in SA.common.pinned_documents():
+        d = root / arm / doc
+        d.mkdir(parents=True)
+        (d / "arm_record.json").write_text(_json.dumps({"returncode": 0, "model": model, "model_digest": digest}))
+
+
+def test_arms_must_share_one_model_file(tmp_path):
+    _arm_with_model(tmp_path, "A", "m", "d1")
+    _arm_with_model(tmp_path, "B", "m", "d1")
+    SA.check_same_model(["A", "B"], scratch=tmp_path)
+    _arm_with_model(tmp_path, "C", "m", "d2")  # the tag was re-pulled between runs
+    with pytest.raises(SystemExit):
+        SA.check_same_model(["A", "C"], scratch=tmp_path)
+    _arm_with_model(tmp_path, "D", "m", None)  # digest not recorded
+    with pytest.raises(SystemExit):
+        SA.check_same_model(["D"], scratch=tmp_path)
