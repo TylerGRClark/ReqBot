@@ -64,6 +64,17 @@ def status_counts(traces):
     return dict(c)
 
 
+def record_excerpts(arm, doc, ids, scratch=SCRATCH):
+    """The Step C records (and, when present, the Step D failure codes) behind the given requirement ids, with their quotes, so a paired difference can be read
+    without opening the scratch files."""
+    d = arm_dir(arm, doc, scratch)
+    rd = lambda name: [json.loads(x) for x in (d / name).read_text(encoding="utf-8").splitlines() if x.strip()] if (d / name).exists() else []  # noqa: E731
+    extracted = {r["requirement_id"]: r for r in rd(f"{doc}_extracted_requirements.jsonl")}
+    codes = {f.get("requirement_id"): f.get("error", "unknown") for f in rd(f"{doc}_normalization_failures.jsonl")}
+    return [{"requirement_id": i, "chunk_id": extracted[i].get("chunk_id"), "source_quote": extracted[i].get("source_quote"), "step_d_failure": codes.get(i)}
+            for i in ids if i in extracted]
+
+
 def trace_excerpt(trace):
     """What explains an obligation's status in one arm: its status at each stage and the Step C / Step D records that cover or reject it."""
     return {"status": trace["status"], "shares": trace["shares"], "first_loss": trace["first_loss"], "covering_extracted": trace["covering_extracted"],
@@ -105,6 +116,18 @@ def check_complete(arm, scratch=SCRATCH):
                 problems.append(f"{arm}/{doc}: {len(raw)} Step C ledger rows for {n_chunks} chunks")
     if problems:
         raise SystemExit("the arm is not complete, so it is not scored:\n  " + "\n  ".join(problems))
+
+
+def check_one_spec_per_arm(arm, scratch=SCRATCH):
+    """Every document of an arm must have been run from the same chunk specification, chunk manifest and code revision: an arm assembled over several
+    invocations could otherwise mix, say, the baseline's chunk files for one document and the treatment's for another and be attributed to one treatment."""
+    seen = collections.defaultdict(list)
+    for doc in sorted(common.pinned_documents()):
+        rec = json.loads((arm_dir(arm, doc, scratch) / "arm_record.json").read_text(encoding="utf-8"))
+        key = (rec.get("chunks_spec"), json.dumps(rec.get("chunk_manifest"), sort_keys=True), rec.get("git_head"))
+        seen[key].append(doc)
+    if len(seen) != 1:
+        raise SystemExit(f"arm {arm} mixes chunk specifications, manifests or code revisions: " + "; ".join(f"{k[0]} @ {k[2]}: {v}" for k, v in seen.items()))
 
 
 def check_same_model(arms, scratch=SCRATCH):
@@ -158,6 +181,7 @@ def main():
     assert len(ids) == 74, f"expected the 74 adjudicated unflagged obligations, got {len(ids)}"
     for arm in args.arms:
         check_complete(arm, args.scratch)  # before anything is traced: a partial run must not produce recall numbers
+        check_one_spec_per_arm(arm, args.scratch)
     check_same_model(args.arms, args.scratch)
     traces = {arm: recall_traces(arm, index, ids, args.scratch) for arm in args.arms}
     levels, quotes = {}, {}
@@ -175,7 +199,10 @@ def main():
             p = paired(traces[a], traces[b])
             for k in ("only_first", "only_second"):
                 p[k] = [{"id": x, "document": index[x]["document"], "page": index[x]["page"], "text": index[x]["text"], "trace_first": trace_excerpt(traces[a][x]),
-                         "trace_second": trace_excerpt(traces[b][x])} for x in p[k]]
+                         "trace_second": trace_excerpt(traces[b][x]),
+                         "records_first": record_excerpts(a, index[x]["document"], traces[a][x]["covering_extracted"] + traces[a][x]["rejected_ids"], args.scratch),
+                         "records_second": record_excerpts(b, index[x]["document"], traces[b][x]["covering_extracted"] + traces[b][x]["rejected_ids"], args.scratch)}
+                        for x in p[k]]
             report["pairs"][f"{a} vs {b}"] = {"recall_extracted": p, "quote_overlap": overlap(quotes[a], quotes[b])}
     for arm, v in report["arms"].items():
         print(arm, v["recall"], v["totals"])

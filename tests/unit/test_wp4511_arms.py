@@ -121,3 +121,27 @@ def test_arms_must_share_one_model_file(tmp_path):
     _arm_with_model(tmp_path, "D", "m", None)  # digest not recorded
     with pytest.raises(SystemExit):
         SA.check_same_model(["D"], scratch=tmp_path)
+
+
+def test_an_arm_mixing_chunk_specifications_is_rejected(tmp_path):
+    import json as _json
+    for i, doc in enumerate(sorted(SA.common.pinned_documents())):
+        d = tmp_path / "A" / doc
+        d.mkdir(parents=True)
+        (d / "arm_record.json").write_text(_json.dumps({"chunks_spec": "d2.94.0:256", "chunk_manifest": {"v": 1}, "git_head": "abc"}))
+    SA.check_one_spec_per_arm("A", scratch=tmp_path)
+    odd = tmp_path / "A" / "DODI 5200.01" / "arm_record.json"
+    odd.write_text(_json.dumps({"chunks_spec": "d2.122.0:default", "chunk_manifest": {"v": 1}, "git_head": "abc"}))
+    with pytest.raises(SystemExit) as e:
+        SA.check_one_spec_per_arm("A", scratch=tmp_path)
+    assert "mixes chunk specifications" in str(e.value)
+
+
+def test_record_excerpts_carry_the_quotes_and_step_d_codes(tmp_path):
+    import json as _json
+    d = tmp_path / "A" / "docX"
+    d.mkdir(parents=True)
+    (d / "docX_extracted_requirements.jsonl").write_text(_json.dumps({"requirement_id": "R1", "chunk_id": 3, "source_quote": "The Director shall act."}) + "\n")
+    (d / "docX_normalization_failures.jsonl").write_text(_json.dumps({"requirement_id": "R1", "error": "heading_echo_quote"}) + "\n")
+    out = SA.record_excerpts("A", "docX", ["R1", "R2"], scratch=tmp_path)
+    assert out == [{"requirement_id": "R1", "chunk_id": 3, "source_quote": "The Director shall act.", "step_d_failure": "heading_echo_quote"}]
