@@ -21,15 +21,16 @@ Stage A must have produced a resolver string for every record of the live index 
 
 Computed for the **resolver minus production** paired change in recall@10, topic and party questions separately, in the plain run and in each of the three production-path repeats (four runs), per group and for the pooled stemmed groups (right, misleading, incomplete).
 
-- **Evaluation order.** A cell (a group, a question style and a run) whose 95% interval is wider than 0.40 is marked **inconclusive** and is **excluded before H and G are evaluated**; it counts neither as harm nor as gain.
+- **Evaluation order.** A cell (a group, a question style and a run) is marked **inconclusive** when **either** its best-case-ties interval **or** its worst-case-ties interval is wider than 0.40 (the apparatus computes both); a cell is *meaningful* only if both tie readings agree on direction, size (at least 0.10) and an interval excluding zero, as the apparatus' own rule says. An inconclusive cell is **excluded before H, G and R are evaluated** (R uses point estimates, not intervals, so it ignores the exclusion); it counts neither as harm nor as gain in H and G.
 - **H (harm).** Among the cells that remain, any group, or the pooled stemmed groups, shows a *meaningful decrease* (at most -0.10, interval excluding zero, same direction at both tie ranks) in **two or more of the four runs** on the same question style. Harm on a single run is reported but does not alone fail.
+- **R (observed regression, point estimates).** The approved plan asked for a tolerance on the right, pooled-stemmed and control groups, and an interval rule alone would let a consistent but statistically unproven loss through. R is **triggered** when, in any of the right, pooled-stemmed or control groups, the *point estimate* of the paired change is at most -0.10 in **all four runs** for the same question style, whatever the intervals. A triggered R is an *observed regression, not demonstrated*: no integration proposal; the records behind it are read.
 - **G (gain).** The no-stem-needs-lead-in group shows a *meaningful increase* in **at least three of the four runs** for at least one question style.
 - **C (cohort check; triggered = harm).** On the 35 gold topical queries (cohort mode, paired per query), C is **triggered** when the interval of the resolver's change in recall@10 lies wholly below -0.02 (its upper bound is below -0.02) in **at least two of the four runs** (the plain run and the three production-path repeats; a consensus of the production-path repeats alone is enough, since those exercise the deployed default of rewriting queries). An interval that reaches -0.02 or above, such as [-0.05, 0.00], does not trigger C. Policies earlier measured here (a lead-in on the 80 oracle records, -0.017 [-0.049, 0.000]) are the reference scale.
 
 **Outcomes, fixed in advance.**
-- *Proposal for integration* only if **G holds and neither H nor C is triggered**.
-- If **H or C is triggered**: no proposal; the harm is read record by record.
-- If **G does not hold and neither H nor C is triggered**: *no demonstrated benefit*. The resolver is not proposed on retrieval grounds; its case would rest on display and trust (attachment accuracy), which the owner decides separately.
+- *Proposal for integration* only if **G holds and none of H, R and C is triggered**.
+- If **H, R or C is triggered**: no proposal; the harm is read record by record.
+- If **G does not hold and none of H, R and C is triggered**: *no demonstrated benefit*. The resolver is not proposed on retrieval grounds; its case would rest on display and trust (attachment accuracy), which the owner decides separately.
 - A cell whose interval is wider than 0.40 is marked **inconclusive** in the report (see the evaluation order above); it is neither a pass nor a harm.
 
 ## 4. What this does and does not claim
