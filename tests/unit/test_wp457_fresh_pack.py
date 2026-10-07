@@ -284,7 +284,7 @@ def test_the_committed_gold_equals_the_recomputed_one_and_meets_the_plans_minimu
     assert all(bool(g["production_stem"]) == bool(g["stem_verdict"]) for g in gold)
 
 
-def test_the_fresh_gold_works_with_the_scorers_and_the_v6_guards(FG):
+def test_the_fresh_gold_works_with_the_scorers_and_the_v6_guards(FG, tree_at_commit):
     S = _load("score_resolver")
     gold = json.loads(FG.FROZEN.read_text(encoding="utf-8"))["gold"]
     assert sum(1 for g in gold if S.attachment_scored(g)) == 104 and sum(1 for g in gold if S.is_real(g)) == 105
@@ -294,7 +294,9 @@ def test_the_fresh_gold_works_with_the_scorers_and_the_v6_guards(FG):
             base[S.baseline_attachment(g)] = base.get(S.baseline_attachment(g), 0) + 1
     assert base == {"right": 41, "misleading": 36, "incomplete": 27}  # production on the fresh set, from pass B: the verdict's anchors
     S.check_sufficiency("v6", gold)
-    S.check_frozen_code("v6")  # now that the sealed files are committed, the manifest pins and every sealed file match
+    manifest = json.loads((S.OUTPUTS / S.FROZEN_CODE["v6"]).read_text())
+    # the manifest pins and every sealed file match the tree of the stage D protocol commit (224e5a8, #241), the tree the one-shot ran from
+    S.check_frozen_code("v6", root=tree_at_commit("224e5a8", {**manifest["files"], **manifest["sealed_until_c2"]}))
 
 
 def test_the_gold_differs_from_the_first_serialization_only_in_the_disclosed_amendments(FG):

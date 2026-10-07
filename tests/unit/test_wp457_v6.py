@@ -336,13 +336,14 @@ def test_a_gold_below_the_pre_run_minimums_stops_the_run_and_the_verdict(SC, tmp
     assert "pre-run minimums" in str(e.value)
 
 
-def test_the_committed_v6_manifest_matches_the_repository_and_names_the_sealed_files(SC):
+def test_the_committed_v6_manifest_matches_the_repository_and_names_the_sealed_files(SC, tree_at_commit):
     S = SC.SR
     manifest = json.loads((S.OUTPUTS / S.FROZEN_CODE["v6"]).read_text())
     w = "eval/spike_results/wp_45_7/"
     assert {w + f for f in ("menu.py", "menu_v2.py", "kind_selection.py", "check_resolution.py", "run_selection.py", "run_stage_c.py", "score_resolver.py",
                             "outputs/declared_v6.json", "outputs/fresh_draw_map.json")} <= set(manifest["files"])
-    S.check_frozen_code("v6", include_sealed=False)
+    # checked against the repository as of the stage D protocol commit (224e5a8, #241), the tree the one-shot ran from, not the live tree
+    S.check_frozen_code("v6", include_sealed=False, root=tree_at_commit("224e5a8", manifest["files"]))
     plan = (_ROOT / "docs/PHASE45_WP457E_PLAN.md").read_text()
     sealed = manifest["sealed_until_c2"]
     assert sealed[w + "outputs/fresh_gold.json"] in plan  # the hashes in the manifest are the ones fixed in the plan
