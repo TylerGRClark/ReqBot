@@ -820,7 +820,7 @@ Run exactly as step 26 fixed it, from a worktree pinned at the merge commit of t
 | Invented parties | 0 | at most 2% | pass |
 | Gated modality errors | 0 | 0 | pass |
 
-**The verdict is a pass: every registered gate passes, on candidates nobody designed against, from a configuration declared in advance.**
+**The verdict is a pass: every registered gate passes, on fresh candidates that no menu or model was measured against during development, from a configuration declared in advance.** That is narrower than "nobody designed against them": the labeler knew these labels while writing stage B (step 25), and the sealed hashes and the order make adaptation detectable, not impossible. The evidence is that the menu rules were registered before the labels were committed, were checked only on the spent gold, and that nothing was run on this set until the one-shot.
 
 **Read it for what it is, plainly:**
 - *Against production's stems on the same 104 records:* right **65 against 41** (24 more), misleading **39 against 36** (3 more), incomplete **0 against 27**. The resolver turns production's 27 "attached nothing" cases into attachments, most of them right, and it **almost never leaves attachment empty** (103 of 104 records get one), so it also adds three wrong attachments over production. That is the trade, and it is why the misleading gate, with a margin of two records, is the tight one.
