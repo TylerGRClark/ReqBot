@@ -53,6 +53,10 @@
    "R251",
    "R257",
    "R303"
+  ],
+  "pass_b_follows": [
+   "R217",
+   "R303"
   ]
  },
  "gold_counts": {
@@ -218,13 +222,13 @@
    },
    "baseline_attachment": {
     "incomplete": 29,
-    "misleading": 38,
-    "right": 37
+    "misleading": 36,
+    "right": 39
    },
    "gates": {
     "attachment_gain_over_production": {
      "passed": true,
-     "threshold": 0.556,
+     "threshold": 0.575,
      "value": 0.596
     },
     "incomplete": {
@@ -238,8 +242,8 @@
      "value": 0.0
     },
     "misleading": {
-     "passed": true,
-     "threshold": 0.415,
+     "passed": false,
+     "threshold": 0.396,
      "value": 0.404
     },
     "modality_errors": {
@@ -452,8 +456,8 @@
    },
    "attachment_gain": [
     0.558,
-    0.556,
-    true
+    0.575,
+    false
    ],
    "demoted": [
     "R212",
@@ -462,11 +466,12 @@
     "R286"
    ],
    "gates_failing": [
+    "attachment_gain_over_production",
     "misleading"
    ],
    "misleading": [
     0.442,
-    0.415,
+    0.396,
     false
    ]
   },

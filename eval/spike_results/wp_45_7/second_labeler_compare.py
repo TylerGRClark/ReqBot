@@ -50,6 +50,9 @@ PASS_A_DEPARTURES = {
     "R251": {"standalone": "complete", "lead_in_location": None, "lead_in_text": None},
     "R257": {"standalone": "complete", "lead_in_location": None, "lead_in_text": None},
 }
+# With the heading accepted as R217's and R303's governing lead-in, the production stem on both is exactly that heading text ("The DOT&E shall:"), which the second
+# labeler's pass B called wrong_other only because it had called the lead-in not shown; the first labeler called both right.
+PASS_B_FOLLOWS = ("R217", "R303")
 ARGUABLE = ("R281",)  # the stem names a role ("the PPSM CCB chairperson") but its subject is only in the heading; the second labeler noted "'their' = chairperson"
 
 
@@ -77,9 +80,9 @@ def agreement(first=FIRST, second=SECOND):
     }
 
 
-def second_gold(second=SECOND, fragment_chain=(), pass_a=None):
+def second_gold(second=SECOND, fragment_chain=(), pass_a=None, right=()):
     """The gold the second labeler's labels give, built exactly as the frozen one (the builder expects the first labeler's file names). Cards named in
-    `fragment_chain` have their pass B verdict set to fragment_chain, and cards in `pass_a` their pass A fields replaced, in memory (a sensitivity variant; the
+    `fragment_chain` have their pass B verdict set to fragment_chain, cards in `right` to right, and cards in `pass_a` their pass A fields replaced, in memory (a sensitivity variant; the
     label files are not touched)."""
     with tempfile.TemporaryDirectory() as tmp:
         rows_a = [json.loads(line) for line in (second / "labels_claude2_a.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
@@ -90,6 +93,8 @@ def second_gold(second=SECOND, fragment_chain=(), pass_a=None):
         for row in rows:
             if row["id"] in fragment_chain:
                 row["stem_verdict"] = "fragment_chain"
+            elif row["id"] in right:
+                row["stem_verdict"] = "right"
         (Path(tmp) / "labels_claude_b.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
         return FG.build(labels=Path(tmp))
 
@@ -146,7 +151,7 @@ def per_candidate(first_gold, other_gold, run=RUN):
 def conformant_gold():
     """The second labeler's labels with every departure from the rubric that review found and the cards confirm corrected (the actorless `right` verdicts, R217
     and R303's location, R251 and R257 under the may-rule). Made by the first labeler, who knows the verdict, so it is a sensitivity view, never a replacement."""
-    return second_gold(fragment_chain=ACTORLESS_RIGHT, pass_a=PASS_A_DEPARTURES)
+    return second_gold(fragment_chain=ACTORLESS_RIGHT, pass_a=PASS_A_DEPARTURES, right=PASS_B_FOLLOWS)
 
 
 def report():
@@ -170,7 +175,7 @@ def report():
             "second_labels_with_actorless_right_corrected": strict_rescore(second_gold(fragment_chain=ACTORLESS_RIGHT)),
             "second_labels_rubric_conformant": strict_rescore(conformant),
         },
-        "corrected_cards": {"actorless_right": list(ACTORLESS_RIGHT), "arguable": list(ARGUABLE), "pass_a_departures": sorted(PASS_A_DEPARTURES)},
+        "corrected_cards": {"actorless_right": list(ACTORLESS_RIGHT), "arguable": list(ARGUABLE), "pass_a_departures": sorted(PASS_A_DEPARTURES), "pass_b_follows": list(PASS_B_FOLLOWS)},
         "resolver_attachment_moves_first_to_second": per_candidate(first, second),
     }
 

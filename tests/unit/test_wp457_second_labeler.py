@@ -72,12 +72,13 @@ def test_strict_scorer_variant_demotes_actorless_list_item_parents_without_a_mod
     assert second["demoted"] == ["R212", "R265", "R274", "R286"] and second["attachment"] == {"right": 54, "misleading": 46}
 
 
-def test_the_rubric_conformant_view_passes_every_gate():
+def test_the_rubric_conformant_view_fails_only_the_misleading_gate_by_one_record():
     gold = SL.conformant_gold()
-    assert gold["counts"]["real"] == 103 + 2 and gold["counts"]["non_requirements"] == 9
+    assert gold["counts"]["real"] == 105 and gold["counts"]["non_requirements"] == 9
     result = SL.rescore(gold)
     assert result["attachment"] == {"right": 62, "misleading": 42}
-    assert all(g["passed"] for g in result["gates"].values())
+    assert result["baseline_attachment"]["right"] == 39  # R217 and R303's pass B verdicts follow their pass A correction
+    assert [k for k, g in result["gates"].items() if not g["passed"]] == ["misleading"]
 
 
 def test_the_committed_report_is_the_recomputed_one():
