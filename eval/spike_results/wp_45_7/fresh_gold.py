@@ -7,7 +7,7 @@ requirement) and `labels_claude_b.jsonl` (pass B: the verdict on the production 
 candidate in the `evaluation` half of a gold that `score_resolver.py --gold` can read, plus the sufficiency check the plan requires before any run.
 
   python3 eval/spike_results/wp_45_7/fresh_gold.py            # writes outputs/fresh_gold.json (refuses to overwrite)
-  python3 eval/spike_results/wp_45_7/fresh_gold.py --check    # recompute and compare with the frozen file
+  python3 eval/spike_results/wp_45_7/fresh_gold.py --check    # the committed gold must be the sealed file (sha256 fixed in the plan), and equal the recomputed one
 """
 
 import argparse
@@ -151,11 +151,15 @@ def main():
     args = ap.parse_args()
     data = build()
     text = json.dumps(data, indent=1, ensure_ascii=False) + "\n"
-    verify_sealed(LABELS, text)  # before anything is compared or written
     if args.check:
-        same = FROZEN.exists() and FROZEN.read_text(encoding="utf-8") == text
-        print("recomputed fresh gold equals the frozen file" if same else "DIFFERENT from the frozen file")
+        if not FROZEN.exists():
+            sys.exit("there is no committed fresh gold to check")
+        frozen_text = FROZEN.read_text(encoding="utf-8")
+        verify_sealed(LABELS, frozen_text)  # the committed bytes and the label files are the sealed ones the plan fixed
+        same = frozen_text == text
+        print("the committed fresh gold is the sealed file and equals the recomputed one" if same else "DIFFERENT from the recomputed gold")
         sys.exit(0 if same else 1)
+    verify_sealed(LABELS, text)  # before anything is written
     if not data["sufficiency"]["met"]:
         sys.exit(f"the fresh set is not sufficient ({data['counts']}); the plan stops here, nothing is frozen")
     if FROZEN.exists():

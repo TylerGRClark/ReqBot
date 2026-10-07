@@ -255,3 +255,55 @@ def test_labels_that_break_the_rubric_stop_the_builder(FG, tmp_path):
         FG.build(**parts)
     assert "do not follow the rubric" in str(e.value)
     assert FG.rubric_problems(*(lambda m: (m["pack"], m["labels"]))(_mini(tmp_path / "clean"))) == []
+
+
+# ---- stage C2: the committed labels and gold are the sealed ones (real files) ----------------------------------------------------------------
+
+
+def test_the_committed_labels_and_gold_are_exactly_the_sealed_ones(FG):
+    """The plan fixed three sha256 before the code was frozen; the committed files must be those files, byte for byte, and follow the rubric."""
+    want = FG.expected_hashes()
+    labels = FG.LABELS
+    assert FG._sha(labels / "labels_claude_a.jsonl") == want["labels_claude_a.jsonl"]
+    assert FG._sha(labels / "labels_claude_b.jsonl") == want["labels_claude_b.jsonl"]
+    assert FG._sha(FG.FROZEN) == want["fresh_gold.json"]
+    FG.verify_sealed(labels, FG.FROZEN.read_text(encoding="utf-8"))
+    assert FG.rubric_problems(FG.PACK, labels) == []
+
+
+def test_the_committed_gold_equals_the_recomputed_one_and_meets_the_plans_minimums(FG):
+    frozen = json.loads(FG.FROZEN.read_text(encoding="utf-8"))
+    assert FG.FROZEN.read_text(encoding="utf-8") == json.dumps(FG.build(), indent=1, ensure_ascii=False) + "\n"  # byte for byte
+    c = frozen["counts"]
+    assert (c["candidates"], c["real"], c["non_requirements"], c["attachment_scored"]) == (114, 105, 9, 104)
+    assert frozen["sufficiency"]["met"] is True and c["with_production_stem"] == 58 and c["needs_lead_in_not_shown"] == 1
+    gold = frozen["gold"]
+    assert [g["candidate_id"] for g in gold] == [f"fresh:R{n}" for n in range(201, 315)]
+    assert {g["half"] for g in gold} == {"evaluation"} and {g["set"] for g in gold} == {"audit"}
+    # every record of a stem has its verdict and no record without a stem has one
+    assert all(bool(g["production_stem"]) == bool(g["stem_verdict"]) for g in gold)
+
+
+def test_the_fresh_gold_works_with_the_scorers_and_the_v6_guards(FG):
+    S = _load("score_resolver")
+    gold = json.loads(FG.FROZEN.read_text(encoding="utf-8"))["gold"]
+    assert sum(1 for g in gold if S.attachment_scored(g)) == 104 and sum(1 for g in gold if S.is_real(g)) == 105
+    base = {}
+    for g in gold:
+        if S.attachment_scored(g):
+            base[S.baseline_attachment(g)] = base.get(S.baseline_attachment(g), 0) + 1
+    assert base == {"right": 42, "misleading": 35, "incomplete": 27}  # production on the fresh set, from pass B: the verdict's anchors
+    S.check_sufficiency("v6", gold)
+    S.check_frozen_code("v6")  # now that the sealed files are committed, the manifest pins and every sealed file match
+
+
+def test_the_reserialized_gold_has_exactly_the_substance_of_the_first_sealed_serialization(FG):
+    """The plan's stage C2 amendment: only the name of one input-hash entry changed (a secret-scanner trap). The first serialization is kept outside the repository, so
+    its digests are pinned here: every gold record, the counts, the sufficiency and the input hashes must equal them."""
+    digest = lambda o: hashlib.sha256(json.dumps(o, sort_keys=True, ensure_ascii=False).encode()).hexdigest()  # noqa: E731
+    gold = json.loads(FG.FROZEN.read_text(encoding="utf-8"))
+    assert digest(gold["gold"]) == "ee5fe16917bb9ae8c1781172c4eb5d6d2bf94d6cc355ce25e6be50e1c8a003a1"
+    assert digest(gold["counts"]) == "696746fd879ae8527190cd35a2b1b57ade588c94df8b624f76843791bc67a537"
+    assert digest(gold["sufficiency"]) == "ee0538dba14ab608bfcf299109496aa9f1dd9ce1388079c5ee996c13d8890a93"
+    assert digest(sorted(gold["inputs_sha256"].values())) == "77354850e48e9c1909800450f394990f6cead56f2823f6ce8be0e9d8d281e947"
+    assert "outputs/fresh_draw_map.json" in gold["inputs_sha256"] and "outputs/fresh_key.json" not in gold["inputs_sha256"]

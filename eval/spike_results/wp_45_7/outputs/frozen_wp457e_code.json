@@ -35,6 +35,6 @@
  "sealed_until_c2": {
   "eval/spike_results/wp_45_7/fresh_labels/labels_claude_a.jsonl": "058f38ee1530143481688ffc8230e78ff777bc0f5b7d2a6b4621aabf8f1ce785",
   "eval/spike_results/wp_45_7/fresh_labels/labels_claude_b.jsonl": "f0587320e684b164678a43e639535f4c8e39f0a7eff452d158e6e7e8334a16c6",
-  "eval/spike_results/wp_45_7/outputs/fresh_gold.json": "811a672f9ebd447ff89d063340547b4ec7784303c56f4853a3bbaa6b1788d518"
+  "eval/spike_results/wp_45_7/outputs/fresh_gold.json": "7a8d9db73415373f4f23564d3f213aa0c9d4980cf46c7197de3d685ed5a42c93"
  }
 }
