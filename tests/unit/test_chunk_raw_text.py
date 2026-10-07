@@ -223,57 +223,83 @@ def test_oversized_table_markdown_logs_warning(caplog):
     assert any("approaching" in rec.message for rec in caplog.records)
 
 
-# ---- WP-45.11 (T2): merged chunks carry generic DocItem objects --------------------------------------------------------
+# ---- WP-45.11 (T2): tables in merged chunks (generic DocItem references) ---------------------------------------------------
 
 
-def _merged_chunk_fixture():
-    """A real document with a paragraph, a heading and a table, and a chunk whose doc_items are the generic `DocItem` objects HybridChunker produces when it
-    merges elements (same self_ref and label, but not the TextItem / TableItem / SectionHeaderItem subclasses)."""
+def _merged_doc():
+    """A real document whose chunks the real HybridChunker merges, so their doc_items really are generic `DocItem` objects: a heading, a paragraph, a list
+    and a small table, in one section."""
     from docling_core.types.doc import DoclingDocument
-    from docling_core.types.doc.document import DocItem
 
     doc = DoclingDocument(name="t")
-    heading = doc.add_heading("2.1. APPLICABILITY", level=1)
-    para = doc.add_text(label=DocItemLabel.TEXT, text="This issuance applies to all components.")
-    table = doc.add_table(data=_table_item().data)
-    generic = [DocItem(self_ref=i.self_ref, label=i.label, prov=[]) for i in (heading, para, table)]
-    return doc, generic
+    doc.add_heading("2.1. APPLICABILITY", level=1)
+    doc.add_text(label=DocItemLabel.TEXT, text="This issuance applies to all components.")
+    group = doc.add_list_group()
+    doc.add_list_item(" Establish policy.", enumerated=True, marker="a.", parent=group)
+    doc.add_list_item(" Assign responsibilities.", enumerated=True, marker="b.", parent=group)
+    doc.add_table(data=_table_item().data)
+    return doc
 
 
-def test_generic_items_in_a_merged_chunk_are_resolved_so_a_table_stays_a_grid():
-    doc, generic = _merged_chunk_fixture()
-    flat = "2.1. APPLICABILITY\nThis issuance applies to all components.\nCol A, Col B = val1"
-    result = _chunk_raw_text(_MockChunk(generic, text=flat), doc)
-    assert "| Col A" in result and "---" in result  # the grid, not the chunker's flat form
-    assert "This issuance applies to all components." in result
-    assert "2.1. APPLICABILITY" not in result  # the heading is excluded once its real type is known
-    assert "Col B = val1" not in result
+FLAT = "Col B = val2"  # how the chunker's default serializer writes the fixture table's row ("val1, Col B = val2")
 
 
-def test_without_the_document_generic_items_behave_as_before_the_fix():
-    _doc, generic = _merged_chunk_fixture()
-    flat = "flat chunk text"
-    assert _chunk_raw_text(_MockChunk(generic, text=flat), None) == flat
+def _chunks(doc):
+    from docling.chunking import HybridChunker
+
+    return list(HybridChunker().chunk(doc))
 
 
-def test_an_item_that_cannot_be_resolved_is_kept_as_it_is():
-    doc, _generic = _merged_chunk_fixture()
-    item = _MockTextItem("mock paragraph")  # no self_ref: nothing to resolve
-    assert _chunk_raw_text(_MockChunk([item]), doc) == "mock paragraph"
+def test_a_table_in_a_merged_chunk_comes_out_as_a_grid_and_the_rest_exactly_as_the_chunker_wrote_it():
+    doc = _merged_doc()
+    chunks = _chunks(doc)
+    merged = [c for c in chunks if any(type(i).__name__ == "DocItem" for i in c.meta.doc_items) and FLAT in c.text]
+    assert merged, "premise: the chunker merged the table into a chunk of generic items and wrote it in its flat form"
+    chunk = merged[0]
+    raw = _chunk_raw_text(chunk, doc)
+    assert "| Col A" in raw and "---" in raw
+    assert FLAT not in raw
+    # everything outside the table is the chunker's own text, list markers included
+    assert raw.startswith(chunk.text.split(FLAT)[0].rstrip().split("\n")[0])
+    assert "a.  Establish policy." in raw and "b.  Assign responsibilities." in raw
 
 
-def test_resolution_leaves_real_items_alone():
-    doc, _generic = _merged_chunk_fixture()
-    chunk = _MockChunk([doc.tables[0], doc.texts[1]])
-    result = _chunk_raw_text(chunk, doc)
-    assert "| Col A" in result and "This issuance applies to all components." in result
+def test_a_merged_chunk_without_a_table_is_byte_identical_to_the_chunkers_text():
+    from docling_core.types.doc import DoclingDocument
+
+    doc = DoclingDocument(name="t")
+    doc.add_heading("2.1. RESPONSIBILITIES", level=1)
+    doc.add_text(label=DocItemLabel.TEXT, text="The Director shall:")
+    group = doc.add_list_group()
+    doc.add_list_item(" Establish policy.", enumerated=True, marker="a.", parent=group)
+    for chunk in _chunks(doc):
+        assert any(type(i).__name__ == "DocItem" for i in chunk.meta.doc_items)
+        assert _chunk_raw_text(chunk, doc) == chunk.text
 
 
-def test_a_merged_chunk_with_one_unresolvable_generic_item_keeps_the_chunker_fallback():
-    """All or nothing: resolving the other items must not turn the chunk into a partial reconstruction that drops the unresolved item's text."""
+def test_without_the_document_a_merged_chunk_behaves_as_before_the_fix():
+    doc = _merged_doc()
+    chunk = next(c for c in _chunks(doc) if FLAT in c.text)
+    assert _chunk_raw_text(chunk, None) == chunk.text
+
+
+def test_a_table_referenced_by_a_second_chunk_is_emitted_once():
+    doc = _merged_doc()
+    chunk = next(c for c in _chunks(doc) if FLAT in c.text)
+    seen = set()
+    first = _chunk_raw_text(chunk, doc, seen_table_refs=seen)
+    assert "| Col A" in first and seen == {"#/tables/0"}
+    again = _chunk_raw_text(chunk, doc, seen_table_refs=seen)
+    assert "| Col A" not in again and FLAT not in again and "Establish policy" in again  # the block is dropped, the rest of the chunk stays
+
+
+def test_a_chunk_with_a_real_typed_item_or_an_unresolvable_reference_is_left_alone():
     from docling_core.types.doc.document import DocItem
 
-    doc, generic = _merged_chunk_fixture()
-    ghost = DocItem(self_ref="#/texts/999", label=DocItemLabel.TEXT, prov=[])  # not in the document
-    flat = "full chunker text including the ghost item"
-    assert _chunk_raw_text(_MockChunk([*generic, ghost], text=flat), doc) == flat
+    doc = _merged_doc()
+    ghost = DocItem(self_ref="#/texts/999", label=DocItemLabel.TEXT, prov=[])
+    table = DocItem(self_ref="#/tables/0", label=DocItemLabel.TABLE, prov=[])
+    flat = "flat chunker text"
+    assert _chunk_raw_text(_MockChunk([table, ghost], text=flat), doc) == flat  # unresolvable reference: today's fallback
+    assert _chunk_raw_text(_MockChunk([doc.tables[0], table], text=flat), doc) != flat  # a real TableItem in the chunk: today's per-item path
+
