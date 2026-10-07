@@ -216,6 +216,10 @@ def _resolve_chunk_items(chunk: object, doc: object) -> list:
                 real = RefItem(cref=ref).resolve(doc)
             except Exception:
                 real = None
+        if real is None and type(item).__name__ == "DocItem":
+            # All or nothing: a generic item that cannot be resolved contributes no text, so mixing it with resolved items would return a partial
+            # reconstruction instead of falling back to chunk.text, and drop that item's content silently. Keep the whole chunk as it was.
+            return items
         resolved.append(real if real is not None else item)
     return resolved
 

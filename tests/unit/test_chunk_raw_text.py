@@ -267,3 +267,13 @@ def test_resolution_leaves_real_items_alone():
     chunk = _MockChunk([doc.tables[0], doc.texts[1]])
     result = _chunk_raw_text(chunk, doc)
     assert "| Col A" in result and "This issuance applies to all components." in result
+
+
+def test_a_merged_chunk_with_one_unresolvable_generic_item_keeps_the_chunker_fallback():
+    """All or nothing: resolving the other items must not turn the chunk into a partial reconstruction that drops the unresolved item's text."""
+    from docling_core.types.doc.document import DocItem
+
+    doc, generic = _merged_chunk_fixture()
+    ghost = DocItem(self_ref="#/texts/999", label=DocItemLabel.TEXT, prov=[])  # not in the document
+    flat = "full chunker text including the ghost item"
+    assert _chunk_raw_text(_MockChunk([*generic, ghost], text=flat), doc) == flat
