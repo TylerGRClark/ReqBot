@@ -145,3 +145,32 @@ def test_record_excerpts_carry_the_quotes_and_step_d_codes(tmp_path):
     (d / "docX_normalization_failures.jsonl").write_text(_json.dumps({"requirement_id": "R1", "error": "heading_echo_quote"}) + "\n")
     out = SA.record_excerpts("A", "docX", ["R1", "R2"], scratch=tmp_path)
     assert out == [{"requirement_id": "R1", "chunk_id": 3, "source_quote": "The Director shall act.", "step_d_failure": "heading_echo_quote"}]
+
+
+def _records_with_head(root, arm, head):
+    import json as _json
+    for doc in SA.common.pinned_documents():
+        d = root / arm / doc
+        d.mkdir(parents=True, exist_ok=True)
+        rec = {"returncode": 0}
+        if head:
+            rec["git_head"] = head
+        (d / "arm_record.json").write_text(_json.dumps(rec))
+
+
+def test_compared_arms_must_have_run_identical_pipeline_code(tmp_path):
+    import subprocess
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=SA._ROOT, capture_output=True, text=True).stdout.strip()
+    older = subprocess.run(["git", "rev-parse", "HEAD~30"], cwd=SA._ROOT, capture_output=True, text=True).stdout.strip()
+    _records_with_head(tmp_path, "A", head)
+    _records_with_head(tmp_path, "B", head)
+    SA.check_same_code(["A", "B"], scratch=tmp_path)  # same revision
+    _records_with_head(tmp_path, "C", None)
+    with pytest.raises(SystemExit):
+        SA.check_same_code(["A", "C"], scratch=tmp_path)  # no revision recorded and none declared
+    SA.check_same_code(["A", "C"], scratch=tmp_path, unrecorded_head=head)  # declared
+    differs = subprocess.run(["git", "diff", "--quiet", older, head, "--", *SA.CODE_PATHS], cwd=SA._ROOT).returncode != 0
+    if differs:  # only meaningful when the two commits really differ in pipeline code
+        _records_with_head(tmp_path, "D", older)
+        with pytest.raises(SystemExit):
+            SA.check_same_code(["A", "D"], scratch=tmp_path)

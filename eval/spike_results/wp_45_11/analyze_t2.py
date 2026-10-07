@@ -13,7 +13,10 @@ import collections
 import json
 import re
 import statistics
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 DOCS = {"DODI 5200.48": [76, 87], "DODI 8551.01": [26], "afi10-2402": [121, 123]}
 SCRATCH = Path.home() / "wp45_11_scratch"
@@ -37,7 +40,17 @@ def in_table(quote, trows):
     return bool(q) and any(len([w for w in q if w in set(r)]) / len(q) >= 0.8 for r in trows)
 
 
+def check_repeats(repeats, scratch):
+    """All ten runs must be complete and successful for the three documents before any number is computed (a missing output would otherwise read as zero)."""
+    import score_arms
+
+    for version in ("T2base", "T2new"):
+        for i in range(1, repeats + 1):
+            score_arms.check_complete(f"{version}_{i}", scratch=scratch, docs=list(DOCS))
+
+
 def analyze(repeats, scratch=SCRATCH):
+    check_repeats(repeats, scratch)
     out = {}
     for doc, chunk_ids in DOCS.items():
         new_chunks = {c["chunk_id"]: c for c in rows(scratch / "T2new_1" / doc / f"{doc}_chunks.jsonl")}

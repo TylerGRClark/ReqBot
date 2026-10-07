@@ -92,11 +92,11 @@ ARTIFACTS = ("{doc}_chunks.jsonl", "{doc}_extracted_requirements.jsonl", "{doc}_
              "{doc}_raw_responses.jsonl", "arm_record.json")
 
 
-def check_complete(arm, scratch=SCRATCH):
+def check_complete(arm, scratch=SCRATCH, docs=None):
     """Refuse to score an arm unless all 13 documents finished: every artifact present and the pipeline's return code 0 (an interrupted or failed run would
     otherwise read as zero or partial counts and as recall losses). Every problem is listed at once."""
     problems = []
-    for doc in sorted(common.pinned_documents()):
+    for doc in sorted(docs or common.pinned_documents()):
         d = arm_dir(arm, doc, scratch)
         for pattern in ARTIFACTS:
             if not (d / pattern.format(doc=doc)).exists():
@@ -128,6 +128,30 @@ def check_one_spec_per_arm(arm, scratch=SCRATCH):
         seen[key].append(doc)
     if len(seen) != 1:
         raise SystemExit(f"arm {arm} mixes chunk specifications, manifests or code revisions: " + "; ".join(f"{k[0]} @ {k[2]}: {v}" for k, v in seen.items()))
+
+
+CODE_PATHS = ("pipeline", "core", "services")
+
+
+def check_same_code(arms, scratch=SCRATCH, unrecorded_head=None):
+    """The arms may differ in chunk files only, so the pipeline code they ran must be identical: each arm's recorded git revision is compared with the others by
+    `git diff` over pipeline/, core/ and services/ (different commits are fine if those directories are byte-identical). An arm whose records carry no revision
+    (the first two baseline runs, made before the field existed) needs `unrecorded_head`, the revision it ran at, stated by the person who ran it."""
+    import subprocess
+
+    heads = {}
+    for arm in arms:
+        recorded = {json.loads((arm_dir(arm, doc, scratch) / "arm_record.json").read_text(encoding="utf-8")).get("git_head") for doc in sorted(common.pinned_documents())}
+        if len(recorded) != 1:
+            raise SystemExit(f"arm {arm} has more than one recorded revision: {sorted(map(str, recorded))}")
+        head = recorded.pop() or unrecorded_head
+        if not head:
+            raise SystemExit(f"arm {arm} records no git revision; pass --unrecorded-head with the revision it ran at")
+        heads[arm] = head
+    first = next(iter(heads.values()))
+    for arm, head in heads.items():
+        if head != first and subprocess.run(["git", "diff", "--quiet", first, head, "--", *CODE_PATHS], cwd=_ROOT).returncode != 0:
+            raise SystemExit(f"arm {arm} ran pipeline code that differs from the other arms ({first[:8]} against {head[:8]} over {', '.join(CODE_PATHS)})")
 
 
 def check_same_model(arms, scratch=SCRATCH):
@@ -174,6 +198,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--arms", nargs="+", required=True)
     ap.add_argument("--pair", nargs=2, metavar=("A", "B"), help="also print the obligations found in only one of the two arms (both must be in --arms, in that order)")
+    ap.add_argument("--unrecorded-head", help="git revision that arms with no recorded revision ran at")
     ap.add_argument("--scratch", default=str(SCRATCH))
     ap.add_argument("--out")
     args = ap.parse_args()
@@ -183,6 +208,7 @@ def main():
         check_complete(arm, args.scratch)  # before anything is traced: a partial run must not produce recall numbers
         check_one_spec_per_arm(arm, args.scratch)
     check_same_model(args.arms, args.scratch)
+    check_same_code(args.arms, args.scratch, args.unrecorded_head)
     traces = {arm: recall_traces(arm, index, ids, args.scratch) for arm in args.arms}
     levels, quotes = {}, {}
     for arm in args.arms:
