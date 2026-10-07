@@ -1,0 +1,355 @@
+{
+ "analyzer_versions": {
+  "docling": "2.94.0",
+  "docling-core": "2.99.0",
+  "docling-parse": "5.7.0",
+  "docling-ibm-models": "3.13.0"
+ },
+ "tag": "d2.94.0",
+ "other_tag": null,
+ "run_manifests": {
+  "baseline": {
+   "variant": "baseline",
+   "versions": {
+    "docling": "2.94.0",
+    "docling-core": "2.99.0",
+    "docling-parse": "5.7.0",
+    "docling-ibm-models": "3.13.0"
+   }
+  }
+ },
+ "rows": {
+  "CJCSI 6510.02G": {
+   "headings": 52,
+   "agree": 52,
+   "disagree": 0,
+   "docling_levels": {
+    "1": 52
+   },
+   "examples": []
+  },
+  "DODI 5200.01": {
+   "headings": 14,
+   "agree": 14,
+   "disagree": 0,
+   "docling_levels": {
+    "1": 14
+   },
+   "examples": []
+  },
+  "DODI 5200.44": {
+   "headings": 23,
+   "agree": 10,
+   "disagree": 13,
+   "docling_levels": {
+    "1": 23
+   },
+   "examples": [
+    {
+     "text": "1.1. APPLICABILITY.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "1.2. POLICY.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.1. UNDER SECRETARY OF DEFENSE FOR RESEARCH AND ENGINEERING",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.2. DOD CIO.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    }
+   ]
+  },
+  "DODI 5200.48": {
+   "headings": 65,
+   "agree": 33,
+   "disagree": 32,
+   "docling_levels": {
+    "1": 65
+   },
+   "examples": [
+    {
+     "text": "1.1. APPLICABILITY.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "1.2. POLICY.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.1. USD(I&S)",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.2. DIRECTOR FOR DEFENSE INTELLIGENCE (COUNTERINTELLIGENCE,",
+     "docling_level": 1,
+     "numbering_depth": 2
+    }
+   ]
+  },
+  "DODI 8410.03": {
+   "headings": 20,
+   "agree": 20,
+   "disagree": 0,
+   "docling_levels": {
+    "1": 20
+   },
+   "examples": []
+  },
+  "DODI 8551.01": {
+   "headings": 24,
+   "agree": 10,
+   "disagree": 14,
+   "docling_levels": {
+    "1": 24
+   },
+   "examples": [
+    {
+     "text": "1.1. APPLICABILITY.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "1.2. POLICY.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.1. DOD CHIEF INFORMATION SECURITY OFFICER (DOD CISO).",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.2. DIRECTOR, DISA.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    }
+   ]
+  },
+  "NIST.SP.800-125": {
+   "headings": 46,
+   "agree": 19,
+   "disagree": 27,
+   "docling_levels": {
+    "1": 46
+   },
+   "examples": [
+    {
+     "text": "1.1 Authority",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "1.2 Purpose and Scope",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "1.3 Audience",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "1.4 Document Structure",
+     "docling_level": 1,
+     "numbering_depth": 2
+    }
+   ]
+  },
+  "afi10-2402": {
+   "headings": 64,
+   "agree": 30,
+   "disagree": 34,
+   "docling_levels": {
+    "1": 64
+   },
+   "examples": [
+    {
+     "text": "1.1. Executive Summary",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "1.2. Program Objectives",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "1.3. Scope",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "1.4. CARM and MA Integration Strategy",
+     "docling_level": 1,
+     "numbering_depth": 2
+    }
+   ]
+  },
+  "afi13-550": {
+   "headings": 51,
+   "agree": 22,
+   "disagree": 29,
+   "docling_levels": {
+    "1": 51
+   },
+   "examples": [
+    {
+     "text": "1.4. Objectives.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "1.5. Key Terms and Definitions.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.2. Responsibilities.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.2.4. Deputy Chief of Staff for Operations ( AF/A3 ) will:",
+     "docling_level": 1,
+     "numbering_depth": 3
+    }
+   ]
+  },
+  "afi17-203": {
+   "headings": 27,
+   "agree": 16,
+   "disagree": 11,
+   "docling_levels": {
+    "1": 27
+   },
+   "examples": [
+    {
+     "text": "2.2. Directorate of Security, Special Access Program Oversig",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.3.1. Objectives.",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "3.4.3. Objectives.",
+     "docling_level": 1,
+     "numbering_depth": 3
+    },
+    {
+     "text": "3.4.4. Methodology.",
+     "docling_level": 1,
+     "numbering_depth": 3
+    }
+   ]
+  },
+  "afman17-2101": {
+   "headings": 25,
+   "agree": 11,
+   "disagree": 14,
+   "docling_levels": {
+    "1": 25
+   },
+   "examples": [
+    {
+     "text": "1.3. Evolution of DOD and AF AFIN/DODIN Networks.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.2. Headquarters Air Force/Secretary of the Air Force.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.3. AF Long Haul Communications Flight, 38th Cyberspace Rea",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.4. Major Commands, Management Headquarters (MHQ), AF level",
+     "docling_level": 1,
+     "numbering_depth": 2
+    }
+   ]
+  },
+  "afpd_17-1": {
+   "headings": 18,
+   "agree": 7,
+   "disagree": 11,
+   "docling_levels": {
+    "1": 18
+   },
+   "examples": [
+    {
+     "text": "3.3. Deputy Chief of Staff for Intelligence, Surveillance, a",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.4. Deputy Chief of Staff for Operations (AF/A3) will:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.5. The Deputy Chief of Staff for Strategic Plans and Requi",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "3.6. Air Force, Director of Test and Evaluation (AF/TE) will",
+     "docling_level": 1,
+     "numbering_depth": 2
+    }
+   ]
+  },
+  "dafman17-1305": {
+   "headings": 63,
+   "agree": 23,
+   "disagree": 40,
+   "docling_levels": {
+    "1": 63
+   },
+   "examples": [
+    {
+     "text": "1.1. Overview.",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "1.2. Network Access Requirements",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "1.3. Identification",
+     "docling_level": 1,
+     "numbering_depth": 2
+    },
+    {
+     "text": "2.1. The Secretary of the Air Force shall:",
+     "docling_level": 1,
+     "numbering_depth": 2
+    }
+   ]
+  }
+ },
+ "totals": {
+  "headings": 492,
+  "agree": 267,
+  "disagree": 225
+ }
+}

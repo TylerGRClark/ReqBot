@@ -93,7 +93,9 @@ def list_continuations(chunks):
 
 
 def shingles(chunks, n=6):
-    words = " ".join(norm(c["raw_text"]) for c in chunks).split()
+    # alphanumeric words only (the first version split on whitespace and so counted "release ." and "release." as different text; changed after reading the first
+    # upgrade output, disclosed in the results; it does not change the same-release comparisons)
+    words = re.findall(r"\w+", " ".join(norm(c["raw_text"]) for c in chunks))
     return collections.Counter(tuple(words[i:i + n]) for i in range(max(0, len(words) - n + 1)))
 
 
@@ -120,7 +122,9 @@ def main():
     names = sorted(common.pinned_documents())
     items = gold_items()
     render = prompt_renderer()
-    cache, report = {}, {"versions": common.versions(), "gold_items": len(items), "empty_prompt_tokens": render(""), "limits": {}, "differences": {}}
+    manifests = {run: {"chunks": common.read_manifest("chunks", run.partition(":")[2], run.partition(":")[0]),
+                       "docs_baseline": common.read_manifest("docs", "baseline", run.partition(":")[0])} for run in args.runs}
+    cache, report = {}, {"analyzer_versions": common.versions(), "run_manifests": manifests, "gold_items": len(items), "empty_prompt_tokens": render(""), "limits": {}, "differences": {}}
     for run in args.runs:
         if ":" not in run:
             raise SystemExit(f"{run!r}: a run is RELEASE_TAG:LABEL, for example d2.94.0:256")

@@ -31,6 +31,8 @@ def profile(version, document):
     if not (venv / "bin" / "python").exists():
         subprocess.run([sys.executable, "-m", "venv", "--system-site-packages", str(venv)], check=True)
         subprocess.run([str(venv / "bin" / "pip"), "install", "-q", f"docling=={version}"], check=True, timeout=1800)
+    # system site-packages are shared, so pip keeps an already-satisfying docling-core; upgrade it to the newest release the version allows, as a fresh install would
+    subprocess.run([str(venv / "bin" / "pip"), "install", "-q", "-U", f"docling=={version}", "docling-core"], check=True, timeout=1800)
     # TORCHDYNAMO_DISABLE: some releases try to compile a torch kernel, which needs Python.h (python3-dev); this sandbox has none. It affects speed, not output.
     env = {**os.environ, "TORCHDYNAMO_DISABLE": "1"}
     out = subprocess.run([str(venv / "bin" / "python"), str(HERE / "probe_release.py"), document], capture_output=True, text=True, timeout=1800, cwd=HERE, env=env).stdout

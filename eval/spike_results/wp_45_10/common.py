@@ -7,6 +7,7 @@ the repository; nothing here touches `pipeline/`, a Step C cache, a corpus file 
 
 import hashlib
 import json
+import os
 import sys
 from importlib import metadata
 from pathlib import Path
@@ -64,8 +65,9 @@ def versions():
 
 
 def tag():
-    """Cache tag from the installed docling version, so 2.94.0 and a newer release never share files."""
-    return "d" + (versions()["docling"] or "none")
+    """Cache tag from the installed docling version, so 2.94.0 and a newer release never share files. `WP4510_TAG_SUFFIX` (for example `-core2.100.0`) separates
+    runs of the same release made with a different dependency set; the manifest check still refuses a cache whose recorded versions differ."""
+    return "d" + (versions()["docling"] or "none") + os.environ.get("WP4510_TAG_SUFFIX", "")
 
 
 def cache_dir(kind, variant, release_tag=None, create=True):
@@ -74,6 +76,12 @@ def cache_dir(kind, variant, release_tag=None, create=True):
     if create:
         path.mkdir(parents=True, exist_ok=True)
     return path
+
+
+def read_manifest(kind, label, release_tag):
+    """The version manifest recorded in a cache directory (None when absent): what a saved report must carry for each run it compared."""
+    path = CACHE / release_tag / kind / label / "_manifest.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
 
 
 def check_manifest(directory, variant):

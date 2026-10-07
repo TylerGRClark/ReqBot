@@ -1,0 +1,6626 @@
+{
+ "analyzer_versions": {
+  "docling": "2.94.0",
+  "docling-core": "2.99.0",
+  "docling-parse": "5.7.0",
+  "docling-ibm-models": "3.13.0"
+ },
+ "tag": "d2.94.0",
+ "other_tag": null,
+ "run_manifests": {
+  "baseline": {
+   "variant": "baseline",
+   "versions": {
+    "docling": "2.94.0",
+    "docling-core": "2.99.0",
+    "docling-parse": "5.7.0",
+    "docling-ibm-models": "3.13.0"
+   }
+  },
+  "variant": {
+   "variant": "table_fast",
+   "versions": {
+    "docling": "2.94.0",
+    "docling-core": "2.99.0",
+    "docling-parse": "5.7.0",
+    "docling-ibm-models": "3.13.0"
+   }
+  }
+ },
+ "rows": {
+  "CJCSI 6510.02G": {
+   "text_items_base": 444,
+   "text_items_lost_share": 0.0,
+   "code_items": [
+    0,
+    0
+   ],
+   "code_share_of_chars": [
+    0.0,
+    0.0
+   ],
+   "list_items": [
+    125,
+    125
+   ],
+   "text_items_lost": 0,
+   "text_items_extra": 0,
+   "text_6gram": {
+    "base": 5005,
+    "lost": 0,
+    "lost_share": 0.0,
+    "absent_entirely": 0,
+    "extra": 0,
+    "extra_share": 0.0
+   },
+   "lost_items": [],
+   "extra_items": [],
+   "tables": [
+    0,
+    0
+   ],
+   "tables_with_different_grid": 0,
+   "table_differences": [],
+   "caption_in_header_tables": [
+    0,
+    0
+   ],
+   "no_grid_regions": [
+    0,
+    0
+   ]
+  },
+  "DODI 5200.01": {
+   "text_items_base": 220,
+   "text_items_lost_share": 0.0,
+   "code_items": [
+    0,
+    0
+   ],
+   "code_share_of_chars": [
+    0.0,
+    0.0
+   ],
+   "list_items": [
+    136,
+    136
+   ],
+   "text_items_lost": 0,
+   "text_items_extra": 0,
+   "text_6gram": {
+    "base": 4290,
+    "lost": 0,
+    "lost_share": 0.0,
+    "absent_entirely": 0,
+    "extra": 0,
+    "extra_share": 0.0
+   },
+   "lost_items": [],
+   "extra_items": [],
+   "tables": [
+    1,
+    1
+   ],
+   "tables_with_different_grid": 1,
+   "table_differences": [
+    {
+     "index": 0,
+     "self_ref": "#/tables/0",
+     "page": 12,
+     "shape": [
+      [
+       12,
+       2
+      ],
+      [
+       10,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "CUI",
+       "controlled unclassified information"
+      ],
+      [
+       "DNI",
+       "Director of National Intelligence"
+      ],
+      [
+       "DIA",
+       "Defense Intelligence Agency"
+      ],
+      [
+       "DoDD",
+       "DoD Directive"
+      ],
+      [
+       "DoDI",
+       "DoD Instruction"
+      ],
+      [
+       "IC",
+       "Intelligence Community"
+      ],
+      [
+       "NDC",
+       "National Declassification Center"
+      ],
+      [
+       "NGA",
+       "National Geospatial-Intelligence Agency"
+      ],
+      [
+       "NRO",
+       "National Reconnaissance Office"
+      ],
+      [
+       "NSA/CSS",
+       "National Security Agency/Central Security Service"
+      ],
+      [
+       "SCI",
+       "sensitive compartmented information"
+      ],
+      [
+       "USD(I&S)",
+       "Under Secretary of Defense for Intelligence and Security"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "CUI",
+       "controlled unclassified information"
+      ],
+      [
+       "DNI",
+       "Director of National Intelligence"
+      ],
+      [
+       "DIA DoDD DoDI",
+       "Defense Intelligence Agency DoD Directive DoD Instruction"
+      ],
+      [
+       "IC",
+       "Intelligence Community"
+      ],
+      [
+       "NDC",
+       "National Declassification Center"
+      ],
+      [
+       "NGA NRO",
+       "National Geospatial-Intelligence Agency National Reconnaissance Office National Security Agency/Central Security"
+      ],
+      [
+       "NSA/CSS",
+       "Service"
+      ],
+      [
+       "SCI",
+       "sensitive compartmented information"
+      ],
+      [
+       "USD(I&S)",
+       "Under Secretary of Defense for Intelligence and"
+      ],
+      [
+       "",
+       "Security"
+      ]
+     ]
+    }
+   ],
+   "caption_in_header_tables": [
+    0,
+    0
+   ],
+   "no_grid_regions": [
+    0,
+    0
+   ]
+  },
+  "DODI 5200.44": {
+   "text_items_base": 312,
+   "text_items_lost_share": 0.0,
+   "code_items": [
+    0,
+    0
+   ],
+   "code_share_of_chars": [
+    0.0,
+    0.0
+   ],
+   "list_items": [
+    146,
+    146
+   ],
+   "text_items_lost": 0,
+   "text_items_extra": 0,
+   "text_6gram": {
+    "base": 5461,
+    "lost": 0,
+    "lost_share": 0.0,
+    "absent_entirely": 0,
+    "extra": 0,
+    "extra_share": 0.0
+   },
+   "lost_items": [],
+   "extra_items": [],
+   "tables": [
+    4,
+    4
+   ],
+   "tables_with_different_grid": 3,
+   "table_differences": [
+    {
+     "index": 0,
+     "self_ref": "#/tables/0",
+     "page": 3,
+     "shape": [
+      [
+       19,
+       1
+      ],
+      [
+       20,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "SECTION 1: GENERAL ISSUANCE INFORMATION .............................................................................. 4"
+      ],
+      [
+       "1.1. Applicability. .................................................................................................................... 4"
+      ],
+      [
+       "1.2. Policy. ............................................................................................................................... 5"
+      ],
+      [
+       "SECTION 2: RESPONSIBILITIES ......................................................................................................... 7"
+      ],
+      [
+       "2.1. Under Secretary of Defense for Research and Engineering (USD(R&E))....................... 7"
+      ],
+      [
+       "2.2. DoD CIO........................................................................................................................... 8"
+      ],
+      [
+       "2.3. USD(A&S)........................................................................................................................ 9"
+      ],
+      [
+       "2.4. USD(I&S)....................................................................................................................... 11"
+      ],
+      [
+       "2.5. Director, National Security Agency/Chief, Central Security Service (DIRNSA/CHCSS). ........................................................................................................................................... 12"
+      ],
+      [
+       "2.6. Director, Defense Intelligence Agency (DIA)................................................................ 12"
+      ],
+      [
+       "2.7. Director, Defense Counterintelligence and Security Agency......................................... 13"
+      ],
+      [
+       "2.8. Under Secretary of Defense for Policy. .......................................................................... 13"
+      ],
+      [
+       "2.9. DoD Component Heads.................................................................................................. 13"
+      ],
+      [
+       "2.10. Secretaries of the Military Departments. ...................................................................... 15"
+      ],
+      [
+       "2.11. Commander, USCYBERCOM..................................................................................... 15"
+      ],
+      [
+       "GLOSSARY ..................................................................................................................................... 17"
+      ],
+      [
+       "G.1. Acronyms....................................................................................................................... 17"
+      ],
+      [
+       "G.2. Definitions...................................................................................................................... 17"
+      ],
+      [
+       "REFERENCES .................................................................................................................................. 21"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "SECTION 1: GENERAL ISSUANCE INFORMATION ..............................................................................",
+       "4"
+      ],
+      [
+       "1.1. Applicability. ....................................................................................................................",
+       "4"
+      ],
+      [
+       "1.2. Policy. ............................................................................................................................... 5",
+       ""
+      ],
+      [
+       "SECTION 2: RESPONSIBILITIES ......................................................................................................... 7",
+       ""
+      ],
+      [
+       "2.1. Under Secretary of Defense for Research and Engineering (USD(R&E))....................... 7",
+       ""
+      ],
+      [
+       "2.2. DoD CIO........................................................................................................................... 8",
+       ""
+      ],
+      [
+       "2.3. USD(A&S)........................................................................................................................ 9",
+       ""
+      ],
+      [
+       "2.4. USD(I&S)....................................................................................................................... 11",
+       ""
+      ],
+      [
+       "2.5. Director, National Security Agency/Chief, Central Security Service (DIRNSA/CHCSS).",
+       ""
+      ],
+      [
+       "12",
+       ""
+      ],
+      [
+       "2.6. Director, Defense Intelligence Agency (DIA)................................................................",
+       ""
+      ],
+      [
+       "2.7. Director, Defense Counterintelligence and Security Agency......................................... 13",
+       ""
+      ],
+      [
+       "2.8. Under Secretary of Defense for Policy. ..........................................................................",
+       "13"
+      ],
+      [
+       "2.9. DoD Component Heads.................................................................................................. 13",
+       ""
+      ],
+      [
+       "2.10. Secretaries of the Military Departments. ......................................................................",
+       "15"
+      ],
+      [
+       "2.11. Commander, USCYBERCOM.....................................................................................",
+       "15"
+      ],
+      [
+       "GLOSSARY .....................................................................................................................................",
+       "17"
+      ],
+      [
+       "G.1. Acronyms.......................................................................................................................",
+       "17"
+      ],
+      [
+       "G.2. Definitions......................................................................................................................",
+       "17"
+      ],
+      [
+       "REFERENCES ..................................................................................................................................",
+       "21"
+      ]
+     ]
+    },
+    {
+     "index": 1,
+     "self_ref": "#/tables/1",
+     "page": 18,
+     "shape": [
+      [
+       10,
+       2
+      ],
+      [
+       10,
+       2
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 5,
+       "col": 1,
+       "base": "Defined in Committee on National Security Systems Instruction (CNSSI) No. 4009.",
+       "variant": "Defined in Committee on National Security Systems Instruction"
+      }
+     ]
+    },
+    {
+     "index": 2,
+     "self_ref": "#/tables/2",
+     "page": 19,
+     "shape": [
+      [
+       10,
+       2
+      ],
+      [
+       10,
+       2
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 2,
+       "col": 1,
+       "base": "Also called 'cyber SCRM,' it is the process of identifying, assessing, and mitigating the supply chain risks associated with the development and use of distributed and interconnected information technology/operational technology and ICT product and service supply chains. The term is derived and modified for DoD use from National Institute of Standards and Technology documents and publications, to include National Institute of Standards and Technology Special Publication 800-161 and National Institute of Standards and Technology Interagency or Internal Report 8276.",
+       "variant": "Also called 'cyber SCRM,' it is the process of identifying, assessing, and mitigating the supply chain risks associated with the development and use of distributed and interconnected information technology/operational technology and ICT product and service supply chains. The term is derived and modified for DoD use from National Institute of Standards and Technology documents and publications, to include National Institute of Standards and Technology Special Publication 800-161 and National Institute of"
+      }
+     ]
+    }
+   ],
+   "caption_in_header_tables": [
+    0,
+    0
+   ],
+   "no_grid_regions": [
+    0,
+    0
+   ]
+  },
+  "DODI 5200.48": {
+   "text_items_base": 615,
+   "text_items_lost_share": 0.0,
+   "code_items": [
+    0,
+    0
+   ],
+   "code_share_of_chars": [
+    0.0,
+    0.0
+   ],
+   "list_items": [
+    214,
+    214
+   ],
+   "text_items_lost": 0,
+   "text_items_extra": 0,
+   "text_6gram": {
+    "base": 11927,
+    "lost": 0,
+    "lost_share": 0.0,
+    "absent_entirely": 0,
+    "extra": 0,
+    "extra_share": 0.0
+   },
+   "lost_items": [],
+   "extra_items": [],
+   "tables": [
+    6,
+    6
+   ],
+   "tables_with_different_grid": 4,
+   "table_differences": [
+    {
+     "index": 0,
+     "self_ref": "#/tables/0",
+     "page": 2,
+     "shape": [
+      [
+       40,
+       2
+      ],
+      [
+       39,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "SECTION 1: GENERAL ISSUANCE INFORMATION ..............................................................................",
+       "4"
+      ],
+      [
+       "1.1. Applicability. ....................................................................................................................",
+       "4"
+      ],
+      [
+       "1.2. Policy. ...............................................................................................................................",
+       "4"
+      ],
+      [
+       "SECTION 2: RESPONSIBILITIES .........................................................................................................",
+       "6"
+      ],
+      [
+       "2.1. USD(I&S).........................................................................................................................",
+       "6"
+      ],
+      [
+       "2.2. Director for Defense Intelligence (Counterintelligence, Law Enforcement, and Security (DDI(CL&S))......................................................................................................................",
+       "6"
+      ],
+      [
+       "2.3. Director, Defense Counterintelligence and Security Agency (DSCA).............................",
+       "7"
+      ],
+      [
+       "2.4. Chief Management Officer of the Department of Defense (CMO)..................................",
+       "8"
+      ],
+      [
+       "2.5. PFPA.................................................................................................................................",
+       "8"
+      ],
+      [
+       "2.6. Under Secretary of Defense for Policy. ............................................................................",
+       "8"
+      ],
+      [
+       "2.7. USD(A&S)........................................................................................................................",
+       "8"
+      ],
+      [
+       "2.8. USD(R&E)........................................................................................................................",
+       "9"
+      ],
+      [
+       "2.9. DoD CIO...........................................................................................................................",
+       "9"
+      ],
+      [
+       "2.10. OSD and DoD Component Heads. ...............................................................................",
+       "10"
+      ],
+      [
+       "2.11. Secretaries of the Military Departments. ......................................................................",
+       "11"
+      ],
+      [
+       "2.12. Chairman of the Joint Chiefs of Staff. ..........................................................................",
+       "11"
+      ],
+      [
+       "SECTION 3: PROGRAMMATICS .......................................................................................................",
+       "12"
+      ],
+      [
+       "3.1. Background.....................................................................................................................",
+       "12"
+      ],
+      [
+       "3.2. Legacy Information Requirements. ................................................................................",
+       "12"
+      ],
+      [
+       "3.3. Handling Requirements. .................................................................................................",
+       "13"
+      ],
+      [
+       "3.4. Marking Requirements....................................................................................................",
+       "14"
+      ],
+      [
+       "3.5. General DoD CUI Administrative Requirements...........................................................",
+       "17"
+      ],
+      [
+       "3.6. General DoD CUI Procedures. .......................................................................................",
+       "17"
+      ],
+      [
+       "3.7. General DoD CUI Requirements....................................................................................",
+       "19"
+      ],
+      [
+       "3.8. OCA................................................................................................................................",
+       "23"
+      ],
+      [
+       "3.9. General Release and Disclosure Requirements. .............................................................",
+       "23"
+      ],
+      [
+       "3.10. General System and Network CUI Requirements. .......................................................",
+       "24"
+      ],
+      [
+       "SECTION 4: DISSEMINATION, DECONTROLLING, AND DESTRUCTION OF CUI................................",
+       "27"
+      ],
+      [
+       "4.1. General............................................................................................................................",
+       "27"
+      ],
+      [
+       "4.2. Dissemination Requirements for DoD CUI....................................................................",
+       "28"
+      ],
+      [
+       "4.3. Legacy Distribution Statements......................................................................................",
+       "28"
+      ],
+      [
+       "4.4. Decontrolling. .................................................................................................................",
+       "29"
+      ],
+      [
+       "4.5. Destruction......................................................................................................................",
+       "30"
+      ],
+      [
+       "SECTION 5: APPLICATION OF DODINDUSTRY ...............................................................................",
+       "31"
+      ],
+      [
+       "5.1. General............................................................................................................................",
+       "31"
+      ],
+      [
+       "5.2. Misuse or UD of CUI......................................................................................................",
+       "32"
+      ],
+      [
+       "5.3. Requirements for DoD Contractors. ...............................................................................",
+       "32"
+      ],
+      [
+       "GLOSSARY .....................................................................................................................................",
+       "33"
+      ],
+      [
+       "G.1. Acronyms.......................................................................................................................",
+       "33 34"
+      ],
+      [
+       "G.2. Definitions......................................................................................................................",
+       ""
+      ]
+     ],
+     "variant_grid": [
+      [
+       "SECTION 1: GENERAL ISSUANCE INFORMATION ..............................................................................",
+       "4"
+      ],
+      [
+       "1.1. Applicability.",
+       ".................................................................................................................... 4"
+      ],
+      [
+       "1.2. Policy. ...............................................................................................................................",
+       "4"
+      ],
+      [
+       "SECTION 2: RESPONSIBILITIES .........................................................................................................",
+       "6"
+      ],
+      [
+       "2.1. USD(I&S).........................................................................................................................",
+       "6"
+      ],
+      [
+       "2.2. Director for Defense Intelligence (Counterintelligence, Law Enforcement, and Security (DDI(CL&S))......................................................................................................................",
+       "6"
+      ],
+      [
+       "2.3. Director, Defense Counterintelligence and Security Agency (DSCA).............................",
+       "7"
+      ],
+      [
+       "2.4. Chief Management Officer of the Department of Defense (CMO)..................................",
+       "8"
+      ],
+      [
+       "2.5. PFPA.................................................................................................................................",
+       "8"
+      ],
+      [
+       "2.6. Under Secretary of Defense for Policy. ............................................................................",
+       "8"
+      ],
+      [
+       "2.7. USD(A&S)........................................................................................................................",
+       "8"
+      ],
+      [
+       "2.8. USD(R&E)........................................................................................................................",
+       "9"
+      ],
+      [
+       "2.9. DoD CIO...........................................................................................................................",
+       "9"
+      ],
+      [
+       "2.10. OSD and DoD Component Heads. ...............................................................................",
+       "10"
+      ],
+      [
+       "2.11. Secretaries of the Military Departments. ......................................................................",
+       "11"
+      ],
+      [
+       "2.12. Chairman of the Joint Chiefs of Staff. ..........................................................................",
+       "11"
+      ],
+      [
+       "SECTION 3: PROGRAMMATICS .......................................................................................................",
+       "12"
+      ],
+      [
+       "3.1. Background.....................................................................................................................",
+       "12"
+      ],
+      [
+       "3.2. Legacy Information Requirements. ................................................................................",
+       "12"
+      ],
+      [
+       "3.3. Handling Requirements. .................................................................................................",
+       "13"
+      ],
+      [
+       "3.4. Marking Requirements....................................................................................................",
+       "14"
+      ],
+      [
+       "3.5. General DoD CUI Administrative Requirements...........................................................",
+       "17"
+      ],
+      [
+       "3.6. General DoD CUI Procedures. .......................................................................................",
+       "17"
+      ],
+      [
+       "3.7. General DoD CUI Requirements....................................................................................",
+       "19"
+      ],
+      [
+       "3.8. OCA................................................................................................................................",
+       "23"
+      ],
+      [
+       "3.9. General Release and Disclosure Requirements. .............................................................",
+       "23"
+      ],
+      [
+       "3.10. General System and Network CUI Requirements. .......................................................",
+       "24"
+      ],
+      [
+       "SECTION 4: DISSEMINATION, DECONTROLLING, AND DESTRUCTION OF CUI................................",
+       "27"
+      ],
+      [
+       "4.1. General............................................................................................................................",
+       "27"
+      ],
+      [
+       "4.2. Dissemination Requirements for DoD CUI....................................................................",
+       "28"
+      ],
+      [
+       "4.3. Legacy Distribution Statements......................................................................................",
+       "28"
+      ],
+      [
+       "4.4. Decontrolling. .................................................................................................................",
+       "29"
+      ],
+      [
+       "4.5. Destruction......................................................................................................................",
+       "30"
+      ],
+      [
+       "SECTION 5: APPLICATION OF DODINDUSTRY ............................................................................... 5.1. General............................................................................................................................",
+       "31 31"
+      ],
+      [
+       "5.2. Misuse or UD of CUI......................................................................................................",
+       "32"
+      ],
+      [
+       "5.3. Requirements for DoD Contractors. ...............................................................................",
+       "32"
+      ],
+      [
+       "GLOSSARY .....................................................................................................................................",
+       "33"
+      ],
+      [
+       "G.1. Acronyms.......................................................................................................................",
+       "33"
+      ],
+      [
+       "G.2. Definitions......................................................................................................................",
+       "34"
+      ]
+     ]
+    },
+    {
+     "index": 1,
+     "self_ref": "#/tables/1",
+     "page": 3,
+     "shape": [
+      [
+       6,
+       3
+      ],
+      [
+       6,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "Table 1.",
+       "DoD CUI Registry Category Examples......................................................................... 22",
+       ""
+      ],
+      [
+       "Table 2.",
+       "Dissemination Control and Distribution Statement Markings.......................................",
+       "29"
+      ],
+      [
+       "FIGURES",
+       "",
+       ""
+      ],
+      [
+       "Figure 1.",
+       "CUI Warning Box for Classified Material ...................................................................",
+       "15"
+      ],
+      [
+       "Figure 2.",
+       "CUI Designation Indicator for All Documents and Material .......................................",
+       "16"
+      ],
+      [
+       "Figure 3.",
+       "Notice and Consent.......................................................................................................",
+       "26"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "Table 1. DoD CUI Registry Category Examples......................................................................... 22",
+       ""
+      ],
+      [
+       "Table 2. Dissemination Control and Distribution Statement Markings....................................... 29",
+       ""
+      ],
+      [
+       "FIGURES",
+       ""
+      ],
+      [
+       "Figure 1. CUI Warning Box for Classified Material ...................................................................",
+       "15"
+      ],
+      [
+       "Figure 2. CUI Designation Indicator for All Documents and Material .......................................",
+       "16"
+      ],
+      [
+       "Figure 3. Notice and Consent.......................................................................................................",
+       "26"
+      ]
+     ]
+    },
+    {
+     "index": 2,
+     "self_ref": "#/tables/2",
+     "page": 22,
+     "shape": [
+      [
+       3,
+       6
+      ],
+      [
+       3,
+       6
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 0,
+       "col": 1,
+       "base": "Proposed Defense Description",
+       "variant": "Defense Description"
+      },
+      {
+       "row": 0,
+       "col": 2,
+       "base": "Additional Information (How Used, Examples, etc.)",
+       "variant": "Information (How"
+      },
+      {
+       "row": 0,
+       "col": 5,
+       "base": "Miscellaneous Information",
+       "variant": "Miscellaneous"
+      },
+      {
+       "row": 1,
+       "col": 1,
+       "base": "Related to the safety of reactors and associated naval nuclear propulsion plants, and control of radiation and radioactivity associated with naval nuclear propulsion activities, including prescribing and enforcing standards and regulations for these areas as they affect the environment and the safety and health of workers, operators, and the general public. This subcategory of Defense CUI relates to the protection of information concerning nuclear reactors, materials, or security and concerns the safeguarding of nuclear reactors, materials, or security. Refer to Office of the Chief of Naval Operations Instruction N9210.3, and CG-RN-1, Revision 3, Department of Energy-DoD Classification Guide for the Naval Nuclear Propulsion Program for guidance on determining",
+       "variant": "Proposed Related to the safety of reactors and associated naval nuclear propulsion plants, and control of radiation and radioactivity associated with naval nuclear propulsion activities, including prescribing and enforcing standards and regulations for these areas as they affect the environment and the safety and health of workers, operators, and the general public. This subcategory of Defense CUI relates to the protection of information concerning nuclear reactors, materials, or security and concerns the safeguarding of nuclear reactors, materials, or security. Refer to Office of the Chief of Naval Operations Instruction N9210.3, and CG-RN-1, Revision 3, Department of Energy-DoD Classification Guide for the Naval Nuclear Propulsion Program for guidance on determining information as Unclassified Defense-NNPI. Relating to Department of Defense special nuclear material (SNM), equipment, and facilities, as"
+      },
+      {
+       "row": 1,
+       "col": 2,
+       "base": "Data and information related to the safety of reactors and associated naval nuclear propulsion plants, the control of radiation and radioactivity associated with Defense naval nuclear propulsion activities containing prescriptive and enforcement standards and regulations for these areas as they affect the environment and the safety and health of workers, operators, and the general public.",
+       "variant": "Additional Used, Examples, etc.) Data and information related to the safety of reactors and associated naval nuclear propulsion plants, the control of radiation and radioactivity associated with Defense naval nuclear propulsion activities containing prescriptive and enforcement standards and regulations for these areas as they affect the environment and the safety and health of workers, operators, and the general public."
+      },
+      {
+       "row": 1,
+       "col": 5,
+       "base": "Sanctions: Section 2168 and 2168(b) of Title 42, U.S.C. The DoD NNPI is unique as it is exempt from mandatory public disclosure under Exemption 3 of the FOIA.",
+       "variant": "Information Sanctions: Section 2168 and 2168(b) of Title 42, U.S.C. The DoD NNPI is unique as it is exempt from mandatory public disclosure under Exemption 3 of the FOIA."
+      },
+      {
+       "row": 2,
+       "col": 1,
+       "base": "information as Unclassified Defense-NNPI. Relating to Department of Defense special nuclear material (SNM), equipment, and facilities, as defined by Part 223 of Title 32, CFR. This type of Defense CUI is unclassified information about SNM security measures, DoD SNM equipment, DoD SNM facilities, or nuclear weapons in DoD custody. Information is designated DoD unclassified controlled nuclear information (UCNI) in accordance with DoDI 5210.83 only when it is determined its UD could reasonably be expected to have a significant adverse effect on the health and safety of the public or the common defense and security by significantly increasing the likelihood of the illegal production of nuclear weapons or the theft, diversion, or sabotage of DoD SNM, DoD SNM equipment, DoD SNM facilities, or nuclear weapons in DoD custody.",
+       "variant": "defined by Part 223 of Title 32, CFR. This type of Defense CUI is unclassified information about SNM security measures, DoD SNM equipment, DoD SNM facilities, or nuclear weapons in DoD custody. Information is designated DoD unclassified controlled nuclear information (UCNI) in accordance with DoDI 5210.83 only when it is determined its UD could reasonably be expected to have a significant adverse effect on the health and safety of the public or the common defense and security by significantly increasing the likelihood of the illegal production of nuclear be safeguarding"
+      },
+      {
+       "row": 2,
+       "col": 2,
+       "base": "This type of Defense CUI may be designated UCNI by the Heads of the DoD Components and individuals delegated authority in accordance with DoDD 5210.83. Some specific examples include: Security plans, procedures, and equipment used for the physical safeguarding of DoD SNM.",
+       "variant": "This type of Defense CUI may designated UCNI by the Heads of the DoD Components and individuals delegated authority in accordance with DoDD 5210.83. Some specific examples include: Security plans, procedures, and equipment used for the physical of DoD SNM."
+      }
+     ]
+    },
+    {
+     "index": 3,
+     "self_ref": "#/tables/3",
+     "page": 29,
+     "shape": [
+      [
+       12,
+       2
+      ],
+      [
+       12,
+       2
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 0,
+       "col": 1,
+       "base": "ALIGNMENT TO CURRENT",
+       "variant": "ALIGNMENT TO CURRENT DISTRIBUTION STATEMENTS*"
+      }
+     ]
+    }
+   ],
+   "caption_in_header_tables": [
+    0,
+    0
+   ],
+   "no_grid_regions": [
+    0,
+    0
+   ]
+  },
+  "DODI 8410.03": {
+   "text_items_base": 469,
+   "text_items_lost_share": 0.0,
+   "code_items": [
+    0,
+    0
+   ],
+   "code_share_of_chars": [
+    0.0,
+    0.0
+   ],
+   "list_items": [
+    202,
+    202
+   ],
+   "text_items_lost": 0,
+   "text_items_extra": 0,
+   "text_6gram": {
+    "base": 6862,
+    "lost": 0,
+    "lost_share": 0.0,
+    "absent_entirely": 0,
+    "extra": 0,
+    "extra_share": 0.0
+   },
+   "lost_items": [],
+   "extra_items": [],
+   "tables": [
+    1,
+    1
+   ],
+   "tables_with_different_grid": 1,
+   "table_differences": [
+    {
+     "index": 0,
+     "self_ref": "#/tables/0",
+     "page": 4,
+     "shape": [
+      [
+       24,
+       2
+      ],
+      [
+       24,
+       2
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 9,
+       "col": 0,
+       "base": "HEADS OF THE DEFENSE INTELLIGENCE COMPONENTS\u2026\u2026\u2026",
+       "variant": "HEADS OF THE DEFENSE INTELLIGENCE COMPONENTS\u2026\u2026\u2026 \u2026\u2026\u2026\u2026\u2026\u2026....10"
+      },
+      {
+       "row": 9,
+       "col": 1,
+       "base": "\u2026\u2026\u2026\u2026\u2026\u2026....10",
+       "variant": ""
+      },
+      {
+       "row": 13,
+       "col": 0,
+       "base": "CDRUSSTRATCOM..............................................................................................................12",
+       "variant": ""
+      },
+      {
+       "row": 13,
+       "col": 1,
+       "base": "",
+       "variant": "CDRUSSTRATCOM..............................................................................................................12"
+      },
+      {
+       "row": 18,
+       "col": 0,
+       "base": "SLAs",
+       "variant": "SLAs ........................................................................................................................................17"
+      },
+      {
+       "row": 18,
+       "col": 1,
+       "base": "........................................................................................................................................17",
+       "variant": ""
+      }
+     ]
+    }
+   ],
+   "caption_in_header_tables": [
+    0,
+    0
+   ],
+   "no_grid_regions": [
+    0,
+    0
+   ]
+  },
+  "DODI 8551.01": {
+   "text_items_base": 201,
+   "text_items_lost_share": 0.0,
+   "code_items": [
+    0,
+    0
+   ],
+   "code_share_of_chars": [
+    0.0,
+    0.0
+   ],
+   "list_items": [
+    103,
+    103
+   ],
+   "text_items_lost": 0,
+   "text_items_extra": 0,
+   "text_6gram": {
+    "base": 2997,
+    "lost": 0,
+    "lost_share": 0.0,
+    "absent_entirely": 0,
+    "extra": 0,
+    "extra_share": 0.0
+   },
+   "lost_items": [],
+   "extra_items": [],
+   "tables": [
+    4,
+    4
+   ],
+   "tables_with_different_grid": 1,
+   "table_differences": [
+    {
+     "index": 0,
+     "self_ref": "#/tables/0",
+     "page": 2,
+     "shape": [
+      [
+       20,
+       1
+      ],
+      [
+       21,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "SECTION 1: GENERAL ISSUANCE INFORMATION .............................................................................. 3"
+      ],
+      [
+       "1.1. Applicability. .................................................................................................................... 3"
+      ],
+      [
+       "1.2. Policy. ............................................................................................................................... 3"
+      ],
+      [
+       "SECTION 2: RESPONSIBILITIES ......................................................................................................... 4"
+      ],
+      [
+       "2.1. DoD Chief Information Security Officer (DoD CISO). ................................................... 4"
+      ],
+      [
+       "2.2. Director, DISA.................................................................................................................. 4"
+      ],
+      [
+       "2.3. Director, National Security Agency/Chief, Central Security Service............................... 5"
+      ],
+      [
+       "2.4. DoD Component Heads.................................................................................................... 5"
+      ],
+      [
+       "2.5. CJCS. ................................................................................................................................ 6"
+      ],
+      [
+       "2.6. Commander, United States Cyber Command................................................................... 7"
+      ],
+      [
+       "SECTION 3: PPSMPROGRAM.......................................................................................................... 8"
+      ],
+      [
+       "3.1. PPSM. ............................................................................................................................... 8"
+      ],
+      [
+       "3.2. Declaration........................................................................................................................ 8"
+      ],
+      [
+       "3.3. Discovery and Analysis. ................................................................................................... 9"
+      ],
+      [
+       "3.4. Vulnerability Assessments................................................................................................ 9"
+      ],
+      [
+       "3.5. PPSM Exception Management Process............................................................................ 9"
+      ],
+      [
+       "3.6. RMF KS PPSM Support................................................................................................. 10"
+      ],
+      [
+       "GLOSSARY ..................................................................................................................................... 11"
+      ],
+      [
+       "G.1. Acronyms....................................................................................................................... 11"
+      ],
+      [
+       "G.2. Definitions...................................................................................................................... 12"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "SECTION 1: GENERAL ISSUANCE INFORMATION .............................................................................. 3",
+       ""
+      ],
+      [
+       "1.1. Applicability. ....................................................................................................................",
+       "3"
+      ],
+      [
+       "1.2. Policy. ............................................................................................................................... 3",
+       ""
+      ],
+      [
+       "SECTION 2: RESPONSIBILITIES ......................................................................................................... 4",
+       ""
+      ],
+      [
+       "2.1. DoD Chief Information Security Officer (DoD CISO). ................................................... 4",
+       ""
+      ],
+      [
+       "2.2. Director, DISA.................................................................................................................. 4",
+       ""
+      ],
+      [
+       "2.3. Director, National Security Agency/Chief, Central Security Service............................... 5",
+       ""
+      ],
+      [
+       "2.4. DoD Component Heads.................................................................................................... 5",
+       ""
+      ],
+      [
+       "2.5. CJCS. ................................................................................................................................ 6",
+       ""
+      ],
+      [
+       "2.6. Commander, United States Cyber Command................................................................... 7",
+       ""
+      ],
+      [
+       "SECTION 3: PPSMPROGRAM..........................................................................................................",
+       "8"
+      ],
+      [
+       "3.1. PPSM. ...............................................................................................................................",
+       "8"
+      ],
+      [
+       "3.2. Declaration........................................................................................................................",
+       "8"
+      ],
+      [
+       "3.3. Discovery and Analysis. ...................................................................................................",
+       "9"
+      ],
+      [
+       "3.4. Vulnerability Assessments................................................................................................",
+       "9"
+      ],
+      [
+       "3.5. PPSM Exception Management Process............................................................................",
+       "9"
+      ],
+      [
+       "3.6. RMF KS PPSM Support.................................................................................................",
+       "10"
+      ],
+      [
+       "GLOSSARY .....................................................................................................................................",
+       "11"
+      ],
+      [
+       "G.1. Acronyms.......................................................................................................................",
+       "11"
+      ],
+      [
+       "G.2. Definitions......................................................................................................................",
+       "12"
+      ],
+      [
+       "REFERENCES ..................................................................................................................................",
+       "15"
+      ]
+     ]
+    }
+   ],
+   "caption_in_header_tables": [
+    0,
+    0
+   ],
+   "no_grid_regions": [
+    0,
+    0
+   ]
+  },
+  "NIST.SP.800-125": {
+   "text_items_base": 421,
+   "text_items_lost_share": 0.0,
+   "code_items": [
+    0,
+    0
+   ],
+   "code_share_of_chars": [
+    0.0,
+    0.0
+   ],
+   "list_items": [
+    54,
+    54
+   ],
+   "text_items_lost": 0,
+   "text_items_extra": 0,
+   "text_6gram": {
+    "base": 15288,
+    "lost": 0,
+    "lost_share": 0.0,
+    "absent_entirely": 0,
+    "extra": 0,
+    "extra_share": 0.0
+   },
+   "lost_items": [],
+   "extra_items": [],
+   "tables": [
+    1,
+    1
+   ],
+   "tables_with_different_grid": 1,
+   "table_differences": [
+    {
+     "index": 0,
+     "self_ref": "#/tables/0",
+     "page": 5,
+     "shape": [
+      [
+       35,
+       4
+      ],
+      [
+       33,
+       4
+      ]
+     ],
+     "base_grid": [
+      [
+       "Executive Summary............................................................................................................ES-1",
+       "Executive Summary............................................................................................................ES-1",
+       "Executive Summary............................................................................................................ES-1",
+       ""
+      ],
+      [
+       "1.",
+       "Introduction ................................................................................................................... 1-1",
+       "",
+       ""
+      ],
+      [
+       "",
+       "1.1",
+       "Authority.................................................................................................................1-1",
+       ""
+      ],
+      [
+       "",
+       "1.2",
+       "Purpose and Scope................................................................................................1-1",
+       ""
+      ],
+      [
+       "",
+       "1.3",
+       "Audience ................................................................................................................1-1",
+       ""
+      ],
+      [
+       "",
+       "1.4",
+       "Document Structure",
+       "...............................................................................................1-1"
+      ],
+      [
+       "2.",
+       "Introduction to Full",
+       "Virtualization.................................................................................",
+       "2-1"
+      ],
+      [
+       "",
+       "2.1",
+       "Motivations for Full Virtualization ............................................................................2-1",
+       ""
+      ],
+      [
+       "",
+       "2.2",
+       "Types of Full Virtualization .....................................................................................2-2",
+       ""
+      ],
+      [
+       "",
+       "2.3",
+       "Virtualizing Hardware",
+       ".............................................................................................2-4"
+      ],
+      [
+       "",
+       "",
+       "2.3.1 Virtualized Networking................................................................................",
+       "2-4"
+      ],
+      [
+       "",
+       "",
+       "2.3.2 Virtualized Storage.....................................................................................",
+       "2-5"
+      ],
+      [
+       "",
+       "",
+       "2.3.3 Guest OS Images.......................................................................................",
+       "2-6"
+      ],
+      [
+       "",
+       "2.4",
+       "Full Virtualization Use Cases..................................................................................2-6",
+       ""
+      ],
+      [
+       "",
+       "",
+       "2.4.1 Server Virtualization ...................................................................................",
+       "2-6"
+      ],
+      [
+       "",
+       "",
+       "",
+       "2-8"
+      ],
+      [
+       "",
+       "",
+       "2.4.2 Desktop Virtualization ................................................................................",
+       ""
+      ],
+      [
+       "3.",
+       "Virtualization Security Overview..................................................................................",
+       "Virtualization Security Overview..................................................................................",
+       "3-1"
+      ],
+      [
+       "",
+       "3.1",
+       "Guest OS Isolation .................................................................................................3-1",
+       ""
+      ],
+      [
+       "",
+       "3.2",
+       "Guest OS Monitoring..............................................................................................3-2",
+       ""
+      ],
+      [
+       "",
+       "3.3",
+       "Image and Snapshot Management.........................................................................3-2",
+       ""
+      ],
+      [
+       "4.",
+       "Security",
+       "Recommendations for Virtualization Components......................................",
+       "4-1"
+      ],
+      [
+       "",
+       "4.1",
+       "Hypervisor Security ................................................................................................4-1",
+       ""
+      ],
+      [
+       "",
+       "4.2",
+       "Guest OS Security..................................................................................................4-3",
+       ""
+      ],
+      [
+       "",
+       "4.3",
+       "Virtualized Infrastructure Security...........................................................................4-4",
+       ""
+      ],
+      [
+       "",
+       "4.4",
+       "",
+       ""
+      ],
+      [
+       "",
+       "",
+       "Desktop Virtualization Security...............................................................................4-5",
+       ""
+      ],
+      [
+       "5.",
+       "Secure",
+       "Virtualization Planning and Deployment.........................................................",
+       "5-1"
+      ],
+      [
+       "",
+       "5.1",
+       "Initiation..................................................................................................................5-2",
+       ""
+      ],
+      [
+       "",
+       "5.2",
+       "Planning and Design",
+       ""
+      ],
+      [
+       "",
+       "5.3",
+       "..............................................................................................5-2 Implementation.......................................................................................................5-3",
+       ""
+      ],
+      [
+       "",
+       "5.4",
+       "Operations and Maintenance..................................................................................5-4",
+       ""
+      ],
+      [
+       "",
+       "5.5",
+       "Disposition..............................................................................................................5-5",
+       ""
+      ],
+      [
+       "",
+       "List of Appendices",
+       "List of Appendices",
+       "List of Appendices"
+      ],
+      [
+       "Appendix A- Glossary ........................................................................................................A-1",
+       "Appendix A- Glossary ........................................................................................................A-1",
+       "Appendix A- Glossary ........................................................................................................A-1",
+       "Appendix A- Glossary ........................................................................................................A-1"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "Executive Summary............................................................................................................ES-1",
+       "Executive Summary............................................................................................................ES-1",
+       "Executive Summary............................................................................................................ES-1",
+       ""
+      ],
+      [
+       "1.",
+       "Introduction ...................................................................................................................",
+       "Introduction ...................................................................................................................",
+       "1-1"
+      ],
+      [
+       "",
+       "1.1",
+       "Authority.................................................................................................................1-1",
+       ""
+      ],
+      [
+       "",
+       "1.2",
+       "Purpose and Scope................................................................................................1-1",
+       ""
+      ],
+      [
+       "",
+       "1.3",
+       "Audience ................................................................................................................1-1",
+       ""
+      ],
+      [
+       "",
+       "1.4",
+       "Document Structure ...............................................................................................1-1",
+       ""
+      ],
+      [
+       "2.",
+       "Introduction to Full Virtualization.................................................................................",
+       "Introduction to Full Virtualization.................................................................................",
+       "2-1"
+      ],
+      [
+       "",
+       "2.1",
+       "Motivations for Full Virtualization ............................................................................2-1",
+       ""
+      ],
+      [
+       "",
+       "2.2",
+       "Types of Full Virtualization .....................................................................................2-2",
+       ""
+      ],
+      [
+       "",
+       "2.3",
+       "Virtualizing Hardware .............................................................................................2-4",
+       ""
+      ],
+      [
+       "",
+       "",
+       "2.3.1 Virtualized Networking................................................................................",
+       "2-4"
+      ],
+      [
+       "",
+       "",
+       "2.3.2 Virtualized Storage.....................................................................................",
+       "2-5"
+      ],
+      [
+       "",
+       "",
+       "2.3.3 Guest OS Images.......................................................................................",
+       "2-6"
+      ],
+      [
+       "",
+       "2.4",
+       "Full Virtualization Use Cases..................................................................................2-6",
+       ""
+      ],
+      [
+       "",
+       "",
+       "2.4.1 Server Virtualization ...................................................................................",
+       "2-6"
+      ],
+      [
+       "3.",
+       "Virtualization Security Overview..................................................................................",
+       "Virtualization Security Overview..................................................................................",
+       "3-1"
+      ],
+      [
+       "",
+       "3.1",
+       "Guest OS Isolation .................................................................................................3-1",
+       ""
+      ],
+      [
+       "",
+       "3.2",
+       "Guest OS Monitoring..............................................................................................3-2",
+       ""
+      ],
+      [
+       "",
+       "3.3",
+       "Image and Snapshot Management.........................................................................3-2",
+       ""
+      ],
+      [
+       "4.",
+       "Security Recommendations for Virtualization Components......................................",
+       "Security Recommendations for Virtualization Components......................................",
+       "4-1"
+      ],
+      [
+       "",
+       "4.1",
+       "Hypervisor Security ................................................................................................4-1",
+       ""
+      ],
+      [
+       "",
+       "4.2",
+       "Guest OS Security..................................................................................................4-3",
+       ""
+      ],
+      [
+       "",
+       "4.3",
+       "Virtualized Infrastructure Security...........................................................................4-4",
+       ""
+      ],
+      [
+       "",
+       "4.4",
+       "Desktop Virtualization Security...............................................................................4-5",
+       ""
+      ],
+      [
+       "5.",
+       "Secure Virtualization Planning and Deployment.........................................................",
+       "Secure Virtualization Planning and Deployment.........................................................",
+       "5-1"
+      ],
+      [
+       "",
+       "5.1",
+       "Initiation..................................................................................................................5-2",
+       ""
+      ],
+      [
+       "",
+       "5.2",
+       "Planning and Design ..............................................................................................5-2",
+       ""
+      ],
+      [
+       "",
+       "5.3",
+       "Implementation.......................................................................................................5-3",
+       ""
+      ],
+      [
+       "",
+       "5.4",
+       "Operations and Maintenance..................................................................................5-4",
+       ""
+      ],
+      [
+       "",
+       "",
+       "Disposition..............................................................................................................5-5",
+       ""
+      ],
+      [
+       "",
+       "5.5",
+       "",
+       ""
+      ],
+      [
+       "List of Appendices",
+       "List of Appendices",
+       "List of Appendices",
+       "List of Appendices"
+      ],
+      [
+       "AppendixB- Acronyms and Abbreviations ......................................................................B-1",
+       "AppendixB- Acronyms and Abbreviations ......................................................................B-1",
+       "AppendixB- Acronyms and Abbreviations ......................................................................B-1",
+       ""
+      ]
+     ]
+    }
+   ],
+   "caption_in_header_tables": [
+    0,
+    0
+   ],
+   "no_grid_regions": [
+    0,
+    0
+   ]
+  },
+  "afi10-2402": {
+   "text_items_base": 579,
+   "text_items_lost_share": 0.0,
+   "code_items": [
+    0,
+    0
+   ],
+   "code_share_of_chars": [
+    0.0,
+    0.0
+   ],
+   "list_items": [
+    194,
+    194
+   ],
+   "text_items_lost": 0,
+   "text_items_extra": 0,
+   "text_6gram": {
+    "base": 15479,
+    "lost": 0,
+    "lost_share": 0.0,
+    "absent_entirely": 0,
+    "extra": 0,
+    "extra_share": 0.0
+   },
+   "lost_items": [],
+   "extra_items": [],
+   "tables": [
+    12,
+    12
+   ],
+   "tables_with_different_grid": 11,
+   "table_differences": [
+    {
+     "index": 1,
+     "self_ref": "#/tables/1",
+     "page": 5,
+     "shape": [
+      [
+       28,
+       3
+      ],
+      [
+       28,
+       3
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 0,
+       "col": 0,
+       "base": "AFI10-2402 29 AUGUST 2017 3",
+       "variant": "AFI10-2402"
+      },
+      {
+       "row": 0,
+       "col": 1,
+       "base": "AFI10-2402 29 AUGUST 2017 3",
+       "variant": "29 AUGUST 2017"
+      },
+      {
+       "row": 0,
+       "col": 2,
+       "base": "AFI10-2402 29 AUGUST 2017 3",
+       "variant": "3"
+      }
+     ]
+    },
+    {
+     "index": 2,
+     "self_ref": "#/tables/2",
+     "page": 34,
+     "shape": [
+      [
+       20,
+       1
+      ],
+      [
+       21,
+       1
+      ]
+     ],
+     "base_grid": [
+      [
+       "U.S.C. Title 10, United States Code Title 10, Armed Forces , August 10, 1956"
+      ],
+      [
+       "PPD-21, Presidential Policy Directive 21 , February 12, 2013"
+      ],
+      [
+       "DoDD 3020.26, Department of Defense Continuity Programs , January 9, 2009"
+      ],
+      [
+       "DoDD 3020.40, Mission Assurance (MA) , November 29, 2016 DoDD 4180.01, DoD Energy Policy , April 16, 2014 DoDD 5200.43, Management of the Defense Security Enterprise , October 1, 2012,"
+      ],
+      [
+       "Incorporating Change 1, April 24, 2013"
+      ],
+      [
+       "DoDD 5205.16 , The DoD Insider Threat Program , September 20, 2014"
+      ],
+      [
+       "DoDD 6200.04, Force Health Protection (FHP) , October 9, 2004"
+      ],
+      [
+       "DoDD 7730.65, Department of Defense Readiness Reporting System (DRRS) , May 11, 2015 ,"
+      ],
+      [
+       "DoDI O-2000.16, DoD Antiterrorism (AT) Program Implementation: DoD AT Standards November 17, 2016"
+      ],
+      [
+       "DoDI 2000.26, Suspicious Activity Reporting , September 23, 2014"
+      ],
+      [
+       "DoDI 3000.08, Balanced Survivability Assessments (BSAs) , January 5, 2010, Incorporating Change 1, November 19, 2010"
+      ],
+      [
+       "DoDI 3020.52, DOD Installation Chemical, Biological, Radiological, Nuclear, and High-Yield Explosive (CBRNE) Preparedness Standards , May 18, 2012"
+      ],
+      [
+       "DoDI 3020.45, Defense Critical Infrastructure Program (DCIP) Management , April 21, 2008"
+      ],
+      [
+       "DoDI 3150.09, The Chemical, Biological, Radiological, and Nuclear (CBRN) Survivability Policy , April 8, 2015"
+      ],
+      [
+       "DoDI 4170.11, Installation Energy Management , December 11, 2009 DoDI 5200.01, DoD Information Security Program and Protection of Sensitive Compartmented Information (SCI) , October 9, 2008"
+      ],
+      [
+       "DoDI 5240.19, Counterintelligence Support to the Defense Critical Infrastructure Program , January 31, 2014"
+      ],
+      [
+       "DoDI 6055.17, DoD Installation Emergency Management Program , January 13, 2009; Incorporating Change 1, November 19, 2010"
+      ],
+      [
+       "DODI 6200.03, Public Health Emergency Management Within the DoD , March 5, 2010, Incorporating Change 2, October 2, 2013"
+      ],
+      [
+       "DoDI 8500.01, Cybersecurity , March 14, 2014 DoDM 3020.45, V1 Defense Critical Infrastructure Program (DCIP): DoD"
+      ],
+      [
+       "Mission-Based Critical Asset Identification Process (CAIP) , October 24, 2008"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "U.S.C. Title 10, United States Code Title 10, Armed Forces , August 10, 1956"
+      ],
+      [
+       "PPD-21, Presidential Policy Directive 21 , February 12, 2013"
+      ],
+      [
+       "DoDD 3020.26, Department of Defense Continuity Programs , January 9, 2009"
+      ],
+      [
+       "DoDD 3020.40, Mission Assurance (MA) , November 29, 2016"
+      ],
+      [
+       "DoDD 4180.01, DoD Energy Policy , April 16, 2014"
+      ],
+      [
+       "DoDD 5200.43, Management of the Defense Security Enterprise , October 1, 2012, Incorporating Change 1, April 24, 2013"
+      ],
+      [
+       "DoDD 5205.16 , The DoD Insider Threat Program , September 20, 2014"
+      ],
+      [
+       "DoDD 6200.04, Force Health Protection (FHP) , October 9, 2004"
+      ],
+      [
+       "DoDD 7730.65, Department of Defense Readiness Reporting System (DRRS) , May 11, 2015"
+      ],
+      [
+       "DoDI 2000.26, Suspicious Activity Reporting , September 23, 2014"
+      ],
+      [
+       "DoDI 3000.08, Balanced Survivability Assessments (BSAs) , January 5, 2010, Incorporating Change 1, November 19, 2010"
+      ],
+      [
+       "DoDI 3020.52, DOD Installation Chemical, Biological, Radiological, Nuclear, and High-Yield Explosive (CBRNE) Preparedness Standards , May 18, 2012"
+      ],
+      [
+       "DoDI 3020.45, Defense Critical Infrastructure Program (DCIP) Management , April 21, 2008"
+      ],
+      [
+       "DoDI 3150.09, The Chemical, Biological, Radiological, and Nuclear (CBRN) Survivability Policy , April 8, 2015"
+      ],
+      [
+       "DoDI 4170.11, Installation Energy Management , December 11, 2009"
+      ],
+      [
+       "DoDI 5200.01, DoD Information Security Program and Protection of Sensitive Compartmented Information (SCI) , October 9, 2008"
+      ],
+      [
+       "DoDI 5240.19, Counterintelligence Support to the Defense Critical Infrastructure Program , January 31, 2014"
+      ],
+      [
+       "DoDI 6055.17, DoD Installation Emergency Management Program , January 13, 2009; Incorporating Change 1, November 19, 2010"
+      ],
+      [
+       "DODI 6200.03, Public Health Emergency Management Within the DoD , March 5, 2010, Incorporating Change 2, October 2, 2013"
+      ],
+      [
+       "DoDI 8500.01, Cybersecurity , March 14, 2014"
+      ],
+      [
+       "DoDM 3020.45, V1 Defense Critical Infrastructure Program (DCIP): DoD Mission-Based Critical Asset Identification Process (CAIP) , October 24, 2008"
+      ]
+     ]
+    },
+    {
+     "index": 3,
+     "self_ref": "#/tables/3",
+     "page": 35,
+     "shape": [
+      [
+       21,
+       1
+      ],
+      [
+       29,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "DoDM 3020.45, V3 Defense Critical Infrastructure Program (DCIP): Security Classification Manual (SCM) , February 15, 2011 CJCSI 3209.01, Defense Critical Infrastructure Program , December 18, 2014 AFPD 10-25, Air Force Emergency Management Program , April 28, 2014 AFPD 16-14, Security Enterprise Governance , July 24, 2014 AFI 10-201, Force Readiness Reporting , March 3, 2016 AFI 10-206, Operational Reporting , June 11, 2014"
+      ],
+      [
+       "Adopted Forms"
+      ],
+      [
+       "AF Form 679, Air Force Publication Compliance Item Waiver Request AF Form 847, Recommendation for Change of Publication"
+      ],
+      [
+       "Abbreviations and Acronyms AF -Air Force"
+      ],
+      [
+       "AF/A1 -Deputy Chief of Staff, Manpower and Personnel AF/A2 -Deputy Chief of Staff, Intelligence, Surveillance, and"
+      ],
+      [
+       "Reconnaissance AF/A3 -The Air Force Deputy Chief of Staff, Operations"
+      ],
+      [
+       "AF/A4 -Deputy Chief of Staff, Logistics, Civil Engineering, and Force"
+      ],
+      [
+       "Protection AF/A5/8 -Deputy Chief of Staff, Strategic Plans and Requirements"
+      ],
+      [
+       "AF/A10 -Deputy Chief of Staff of Strategic Deterrence and Nuclear"
+      ],
+      [
+       "Integration AF/SG -Surgeon General of the Air Force AFCS -Air Force Corporate Structure"
+      ],
+      [
+       "AFI -Air Force Instruction"
+      ],
+      [
+       "AFIN -Air Force Information Networks AFMAA -Air Force Mission Assurance"
+      ],
+      [
+       "Assessment"
+      ],
+      [
+       "AFMAN -Air Force Manual AFPD -Air Force Policy Directive"
+      ],
+      [
+       "AFPDO -Air Force Policy Directive Office"
+      ],
+      [
+       "AFRIMS -Air Force Records Information Office"
+      ],
+      [
+       "Management"
+      ],
+      [
+       "AFS -Assessment Focus Statement"
+      ],
+      [
+       "AHTA -All Hazard Threat Assessment"
+      ],
+      [
+       "ANGRC -Air National Guard Readiness Center"
+      ],
+      [
+       "AOR -Area of Responsibility"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "DoDM 3020.45, V3 Defense Critical Infrastructure Program (DCIP): Security Classification Manual (SCM) , February 15, 2011",
+       ""
+      ],
+      [
+       "CJCSI 3209.01, Defense Critical Infrastructure Program , December 18, 2014",
+       ""
+      ],
+      [
+       "AFPD 10-25, Air Force Emergency Management Program , April 28, 2014",
+       ""
+      ],
+      [
+       "AFPD 16-14, Security Enterprise Governance , July 24, 2014",
+       ""
+      ],
+      [
+       "AFI 10-201, Force Readiness Reporting , March 3, 2016",
+       ""
+      ],
+      [
+       "AFI 10-206, Operational Reporting , June 11, 2014",
+       ""
+      ],
+      [
+       "AFI 10-245, Antiterrorism (AT) , June 25, 2015",
+       ""
+      ],
+      [
+       "Adopted Forms",
+       ""
+      ],
+      [
+       "AF Form 679, Air Force Publication Compliance Item Waiver Request",
+       ""
+      ],
+      [
+       "AF Form 847, Recommendation for Change of Publication",
+       ""
+      ],
+      [
+       "Abbreviations and Acronyms",
+       ""
+      ],
+      [
+       "AF -Air Force",
+       ""
+      ],
+      [
+       "AF/A2 -Deputy Chief of Staff, Intelligence, Surveillance, and Reconnaissance",
+       ""
+      ],
+      [
+       "AF/A4 -Deputy Chief of Staff, Logistics, Civil Engineering, and Force Protection",
+       ""
+      ],
+      [
+       "AF/A5/8 -Deputy Chief of Staff, Strategic Plans and Requirements",
+       ""
+      ],
+      [
+       "AF/A10 -Deputy Chief of Staff of Strategic Deterrence and Nuclear Integration",
+       ""
+      ],
+      [
+       "AF/SG -Surgeon General of the Air Force",
+       ""
+      ],
+      [
+       "AFCS -Air Force Corporate Structure",
+       ""
+      ],
+      [
+       "AFI -Air Force Instruction",
+       ""
+      ],
+      [
+       "AFIN -Air Force Information Networks",
+       ""
+      ],
+      [
+       "AFMAA -Air Force Mission Assurance Assessment",
+       ""
+      ],
+      [
+       "AFMAN -Air Force Manual",
+       ""
+      ],
+      [
+       "AFPD -Air Force Policy Directive",
+       ""
+      ],
+      [
+       "AFPDO -Air Force Policy Directive Office",
+       ""
+      ],
+      [
+       "AFRIMS -Air Force Records Information Management Office",
+       "AFRIMS -Air Force Records Information Management Office"
+      ],
+      [
+       "AFS -Assessment Focus Statement",
+       ""
+      ],
+      [
+       "AHTA -All Hazard Threat Assessment",
+       "AHTA -All Hazard Threat Assessment"
+      ],
+      [
+       "ANGRC -Air National Guard Readiness Center",
+       ""
+      ],
+      [
+       "AOR -Area of Responsibility",
+       ""
+      ]
+     ]
+    },
+    {
+     "index": 4,
+     "self_ref": "#/tables/4",
+     "page": 36,
+     "shape": [
+      [
+       30,
+       1
+      ],
+      [
+       29,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "ASD (HD&GS) -Assistant Secretary of Defense (Homeland Defense &Global Security)"
+      ],
+      [
+       "AT -Antiterrorism"
+      ],
+      [
+       "ATO -Antiterrorism Officer"
+      ],
+      [
+       "BEI -Baseline Element of Information"
+      ],
+      [
+       "BSA -Balanced Survivability Assessment"
+      ],
+      [
+       "CA -Critical Asset"
+      ],
+      [
+       "CAIP -Critical Asset Identification Process"
+      ],
+      [
+       "CARM -Critical Asset Risk Management"
+      ],
+      [
+       "CARMWG -Critical Asset Risk Management Working Group"
+      ],
+      [
+       "CBRN -Chemical, Biological, Radiological, and Nuclear"
+      ],
+      [
+       "COCOM -Combatant Command"
+      ],
+      [
+       "CE -Civil Engineer"
+      ],
+      [
+       "CI -Counter-Intelligence"
+      ],
+      [
+       "CJCS -Chairman of the Joint Chiefs of Staff"
+      ],
+      [
+       "COAs -Courses of Action"
+      ],
+      [
+       "CONPLAN -Contingency Plans"
+      ],
+      [
+       "COOP -Continuity of Operations"
+      ],
+      [
+       "CSAF -Chief of Staff of the Air Force"
+      ],
+      [
+       "DCI -Defense Critical Infrastructure"
+      ],
+      [
+       "DCIP -DoD Critical Infrastructure Program"
+      ],
+      [
+       "DFC -Defense Force Commander"
+      ],
+      [
+       "DIB -Defense Industrial Base"
+      ],
+      [
+       "DIA -Defense Intelligence Agency"
+      ],
+      [
+       "DHS -Department of Homeland Security"
+      ],
+      [
+       "DISLA -Defense Infrastructure Sector Lead Agents"
+      ],
+      [
+       "DoD -Department of Defense"
+      ],
+      [
+       "DoDI -Department of Defense Instruction"
+      ],
+      [
+       "DRU -Direct Reporting Unit"
+      ],
+      [
+       "FAQ -Frequently Asked Question"
+      ],
+      [
+       "FBI -Federal Bureau of Investigation"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "ASD (HD&GS) -Assistant Secretary of Defense (Homeland Defense &Global Security)",
+       ""
+      ],
+      [
+       "AT -Antiterrorism",
+       ""
+      ],
+      [
+       "ATO -Antiterrorism Officer",
+       ""
+      ],
+      [
+       "BEI -Baseline Element of Information",
+       ""
+      ],
+      [
+       "BSA -Balanced Survivability Assessment CA -Critical Asset",
+       ""
+      ],
+      [
+       "CAIP -Critical Asset Identification Process",
+       ""
+      ],
+      [
+       "CARM -Critical Asset Risk Management",
+       ""
+      ],
+      [
+       "CARMWG -Critical Asset Risk Management Working Group",
+       ""
+      ],
+      [
+       "CBRN -Chemical, Biological, Radiological, and Nuclear",
+       ""
+      ],
+      [
+       "CE -Civil Engineer",
+       ""
+      ],
+      [
+       "CI -Counter-Intelligence",
+       ""
+      ],
+      [
+       "CJCS -Chairman of the Joint Chiefs of Staff",
+       ""
+      ],
+      [
+       "COAs -Courses of Action",
+       ""
+      ],
+      [
+       "CONPLAN -Contingency Plans",
+       ""
+      ],
+      [
+       "COOP -Continuity of Operations",
+       ""
+      ],
+      [
+       "CSAF -Chief of Staff of the Air Force",
+       ""
+      ],
+      [
+       "DCI -Defense Critical Infrastructure",
+       ""
+      ],
+      [
+       "DCIP -DoD Critical Infrastructure Program",
+       "DCIP -DoD Critical Infrastructure Program"
+      ],
+      [
+       "DFC -Defense Force Commander",
+       ""
+      ],
+      [
+       "DIA -Defense Intelligence Agency",
+       ""
+      ],
+      [
+       "DHS -Department of Homeland Security",
+       ""
+      ],
+      [
+       "DISLA -Defense Infrastructure Sector Lead Agents",
+       ""
+      ],
+      [
+       "DoD -Department of Defense",
+       "DoD -Department of Defense"
+      ],
+      [
+       "DoDD -Department of Defense Directive",
+       ""
+      ],
+      [
+       "DoDI -Department of Defense Instruction",
+       "DoDI -Department of Defense Instruction"
+      ],
+      [
+       "DRU -Direct Reporting Unit",
+       ""
+      ],
+      [
+       "EM -Emergency Management",
+       ""
+      ],
+      [
+       "FAQ -Frequently Asked Question",
+       ""
+      ],
+      [
+       "FBI -Federal Bureau of Investigation",
+       ""
+      ]
+     ]
+    },
+    {
+     "index": 5,
+     "self_ref": "#/tables/5",
+     "page": 37,
+     "shape": [
+      [
+       28,
+       1
+      ],
+      [
+       29,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "FOA -Field Operating Agency"
+      ],
+      [
+       "FYDP -Future Year Defense Planning"
+      ],
+      [
+       "HAF -Headquarters Air Force"
+      ],
+      [
+       "HHQ -Higher Headquarters"
+      ],
+      [
+       "IA -Information Assurance"
+      ],
+      [
+       "IAW -In Accordance With"
+      ],
+      [
+       "ID -Integrated Defense"
+      ],
+      [
+       "IG -Inspector General"
+      ],
+      [
+       "IMSC -Installation Mission Support Center"
+      ],
+      [
+       "ISR -Intelligence, Surveillance, and Reconnaissance"
+      ],
+      [
+       "IT -Information Technology"
+      ],
+      [
+       "JCS -Joint Chiefs of Staff"
+      ],
+      [
+       "JS -Joint Staff"
+      ],
+      [
+       "LE -Law Enforcement"
+      ],
+      [
+       "MA -Mission Assurance"
+      ],
+      [
+       "MAA -Mission Assurance Assessment"
+      ],
+      [
+       "MAJCOM -Major Command"
+      ],
+      [
+       "MEF -Mission Essential Functions"
+      ],
+      [
+       "MET -Mission Essential Tasks"
+      ],
+      [
+       "MTT -Mobile Training Team"
+      ],
+      [
+       "OPR -Office of Primary Responsibility"
+      ],
+      [
+       "OSD -Office of Secretary of Defense"
+      ],
+      [
+       "PBR -Program Budget Review"
+      ],
+      [
+       "PEM -Program Element Monitors"
+      ],
+      [
+       "PMO -Program Management Office"
+      ],
+      [
+       "POC -Point of Contact"
+      ],
+      [
+       "POM -Program Objective Memorandum"
+      ],
+      [
+       "PSS -Pre-Assessment Site Survey"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "FOA -Field Operating Agency",
+       ""
+      ],
+      [
+       "FYDP -Future Year Defense Planning",
+       ""
+      ],
+      [
+       "HAF -Headquarters Air Force",
+       ""
+      ],
+      [
+       "HHQ -Higher Headquarters",
+       ""
+      ],
+      [
+       "IA -Information Assurance",
+       ""
+      ],
+      [
+       "IAW -In Accordance With",
+       ""
+      ],
+      [
+       "ID -Integrated Defense",
+       ""
+      ],
+      [
+       "IDRMP -Integrated Defense Risk Management Process",
+       ""
+      ],
+      [
+       "IG -Inspector General",
+       ""
+      ],
+      [
+       "IMSC -Installation Mission Support Center",
+       ""
+      ],
+      [
+       "ISR -Intelligence, Surveillance, and Reconnaissance",
+       ""
+      ],
+      [
+       "JCS -Joint Chiefs of Staff",
+       ""
+      ],
+      [
+       "JMAA -Joint Mission Assurance Assessment",
+       ""
+      ],
+      [
+       "JWICS -Joint Worldwide Intelligence Communications",
+       ""
+      ],
+      [
+       "MA -Mission",
+       ""
+      ],
+      [
+       "Assurance",
+       ""
+      ],
+      [
+       "MAA -Mission Assurance Assessment",
+       ""
+      ],
+      [
+       "MAJCOM -Major Command",
+       ""
+      ],
+      [
+       "MEF -Mission Essential Functions",
+       ""
+      ],
+      [
+       "MTT -Mobile Training Team",
+       "MTT -Mobile Training Team"
+      ],
+      [
+       "OPR -Office of Primary Responsibility",
+       ""
+      ],
+      [
+       "OSD -Office of Secretary of Defense",
+       ""
+      ],
+      [
+       "PBR -Program Budget Review",
+       "PBR -Program Budget Review"
+      ],
+      [
+       "PEM -Program Element Monitors",
+       ""
+      ],
+      [
+       "PMO -Program Management Office",
+       "PMO -Program Management Office"
+      ],
+      [
+       "POC -Point of Contact",
+       ""
+      ],
+      [
+       "POM -Program Objective Memorandum",
+       ""
+      ],
+      [
+       "PPBE -Planning, Programming, Budget and Execution",
+       ""
+      ],
+      [
+       "PSS -Pre-Assessment Site Survey",
+       ""
+      ]
+     ]
+    },
+    {
+     "index": 6,
+     "self_ref": "#/tables/6",
+     "page": 38,
+     "shape": [
+      [
+       24,
+       1
+      ],
+      [
+       23,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "PSU -Primary Subordinate Unit"
+      ],
+      [
+       "RRP -Risk Response Plans"
+      ],
+      [
+       "SAF/AQ -Assistant Secretary of the Air Force, Acquisition"
+      ],
+      [
+       "SAF/CIO A6 -Chief, Information Dominance and Chief Information Officer"
+      ],
+      [
+       "SAF/FM -Assistant Secretary of the Air Force, Financial Management and Comptroller"
+      ],
+      [
+       "SAF/IG -Secretary of The Air Force Office of The Inspector General"
+      ],
+      [
+       "SCI -Special Compartmented Information"
+      ],
+      [
+       "SCM -Security Classification Manual"
+      ],
+      [
+       "SECAF -Secretary of the Air Force"
+      ],
+      [
+       "SECDEF -Secretary of Defense"
+      ],
+      [
+       "SE/MA -Security Enterprise / Mission Assurance"
+      ],
+      [
+       "SICA -Supporting Infrastructure Critical Asset"
+      ],
+      [
+       "SIPRNet -Secret Internet Protocol Routed Network"
+      ],
+      [
+       "SMADS -Strategic Mission Assurance Database System"
+      ],
+      [
+       "SME -Subject Matter Expert"
+      ],
+      [
+       "SPO -Special Program Office"
+      ],
+      [
+       "SRM -Sustainment, Restoration, and Modernization"
+      ],
+      [
+       "S&T -Science and Technology"
+      ],
+      [
+       "TCA -Task Critical Asset"
+      ],
+      [
+       "TDY -Temporary Duty"
+      ],
+      [
+       "TTP -Tactics, Techniques, and Procedures"
+      ],
+      [
+       "USAF -U.S. Air Force"
+      ],
+      [
+       "USD -Under Secretary of Defense"
+      ],
+      [
+       "VA -Vulnerability Assessment"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "PSU -Primary Subordinate Unit",
+       ""
+      ],
+      [
+       "RRP -Risk Response Plans",
+       ""
+      ],
+      [
+       "SAF/AQ -Assistant Secretary of the Air Force, Acquisition",
+       ""
+      ],
+      [
+       "SAF/CIO A6 -Chief, Information Dominance and Chief Information Officer",
+       ""
+      ],
+      [
+       "SAF/FM -Assistant Secretary of the Air Force, Financial Management and Comptroller",
+       ""
+      ],
+      [
+       "SAF/IG -Secretary of The Air Force Office of The Inspector General",
+       ""
+      ],
+      [
+       "SCI -Special Compartmented Information",
+       ""
+      ],
+      [
+       "SCM -Security Classification Manual",
+       ""
+      ],
+      [
+       "SECAF -Secretary of the Air Force",
+       ""
+      ],
+      [
+       "SECDEF -Secretary of Defense",
+       ""
+      ],
+      [
+       "SE/MA -Security Enterprise / Mission Assurance",
+       ""
+      ],
+      [
+       "SICA -Supporting Infrastructure Critical Asset",
+       ""
+      ],
+      [
+       "SMADS -Strategic Mission Assurance Database System",
+       ""
+      ],
+      [
+       "SME -Subject Matter Expert",
+       ""
+      ],
+      [
+       "SPO -Special Program Office",
+       ""
+      ],
+      [
+       "SRM -Sustainment, Restoration, and Modernization",
+       ""
+      ],
+      [
+       "S&T -Science and Technology",
+       ""
+      ],
+      [
+       "TCA -Task Critical Asset",
+       ""
+      ],
+      [
+       "TDY -Temporary Duty",
+       ""
+      ],
+      [
+       "TTP -Tactics, Techniques, and Procedures",
+       ""
+      ],
+      [
+       "USD -Under Secretary of Defense",
+       ""
+      ],
+      [
+       "VA -Vulnerability Assessment",
+       ""
+      ],
+      [
+       "WG -Working Group",
+       "WG -Working Group"
+      ]
+     ]
+    },
+    {
+     "index": 7,
+     "self_ref": "#/tables/7",
+     "page": 42,
+     "shape": [
+      [
+       10,
+       2
+      ],
+      [
+       10,
+       2
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 1,
+       "col": 0,
+       "base": "1",
+       "variant": "Mission owners decompose assigned missions to identify capabilities required to implement each mission. ( T-1 ) Deliverable: A list of validated missions, as applicable, executed at each command level down to the Center/Wing level (Wing roll-up of Squadron mission tasks). OPRs, where formal METs/MEFs do not apply, identify to the HAF CARM Program office how these are expressed (e.g., OPLANS or CONPLANs)."
+      },
+      {
+       "row": 1,
+       "col": 1,
+       "base": "Mission owners decompose assigned missions to identify capabilities required to implement each mission. ( T-1 ) Deliverable: A list of validated missions, as applicable, executed at each command level down to the Center/Wing level (Wing roll-up of Squadron mission tasks). OPRs, where formal METs/MEFs do not apply, identify to the HAF CARM Program office how these are expressed (e.g., OPLANS or CONPLANs).",
+       "variant": "1"
+      },
+      {
+       "row": 2,
+       "col": 0,
+       "base": "2",
+       "variant": "MAJCOM/DRUs, FOAs, ANGRC, and functional areas initiate Task Asset identification and analysis. ( T-1 ) Deliverable: MAJCOM/DRUs, FOAs and ANGRC, (as appropriate) A3 Division Chief memorandum/email confirmation."
+      },
+      {
+       "row": 2,
+       "col": 1,
+       "base": "MAJCOM/DRUs, FOAs, ANGRC, and functional areas initiate Task Asset identification and analysis. ( T-1 ) Deliverable: MAJCOM/DRUs, FOAs and ANGRC, (as appropriate) A3 Division Chief memorandum/email confirmation.",
+       "variant": "2"
+      },
+      {
+       "row": 3,
+       "col": 0,
+       "base": "3",
+       "variant": "MAJCOM/DRUs, FOAs, ANGRC, and functional areas submit nominated to HAF from Step 2 based on the mission data from Step 1. ( T-1 )"
+      },
+      {
+       "row": 3,
+       "col": 1,
+       "base": "MAJCOM/DRUs, FOAs, ANGRC, and functional areas submit nominated TCAs to HAF from Step 2 based on the mission data from Step 1. ( T-1 ) Deliverable: MAJCOM/DRU, FOA, ANGRC, and (as appropriate) CV approves TCA nominations and releases report. All TCA nominations, including recommended tier level, are loaded into AF-CAMS NG. System- generated TCA reports are sent to the HAF CARM Program office.",
+       "variant": "3 TCAs"
+      },
+      {
+       "row": 4,
+       "col": 0,
+       "base": "4",
+       "variant": "HAF, MAJCOM/DRUs, FOAs (as appropriate), ANGRC, and functional areas review/validate nominated TCAs. ( T-1 ) Deliverable: AF-validated"
+      },
+      {
+       "row": 4,
+       "col": 1,
+       "base": "HAF, MAJCOM/DRUs, FOAs (as appropriate), ANGRC, and functional areas review/validate nominated TCAs. ( T-1 ) Deliverable: AF-validated TCA nominations and updated AF TCA data in AF-CAMS NG.",
+       "variant": "4"
+      },
+      {
+       "row": 5,
+       "col": 0,
+       "base": "5",
+       "variant": "HAF submits AF TCA validated data to the JS/J33. Deliverable: AF- validated TCA data and AF/A3 approval and release of AF TCA validated data to JS ."
+      },
+      {
+       "row": 5,
+       "col": 1,
+       "base": "HAF submits AF TCA validated data to the JS/J33. Deliverable: AF- validated TCA data and AF/A3 approval and release of AF TCA validated data to JS .",
+       "variant": "5"
+      },
+      {
+       "row": 6,
+       "col": 0,
+       "base": "6",
+       "variant": "JS/J33 compiles TCA submissions (COCOMs, Military Departments, Defense Agencies, and DISLAs) consolidates duplicates and coordinates updates. Deliverable: JS release of TCA list to DCI community."
+      },
+      {
+       "row": 6,
+       "col": 1,
+       "base": "JS/J33 compiles TCA submissions (COCOMs, Military Departments, Defense Agencies, and DISLAs) consolidates duplicates and coordinates updates. Deliverable: JS release of TCA list to DCI community.",
+       "variant": "6"
+      },
+      {
+       "row": 7,
+       "col": 0,
+       "base": "7",
+       "variant": "Defense infrastructure functional area lead conducts an interdependency analysis of TCAs, when requested. Deliverable: Request interdependency"
+      },
+      {
+       "row": 7,
+       "col": 1,
+       "base": "Defense infrastructure functional area lead conducts an interdependency analysis of TCAs, when requested. Deliverable: Request interdependency analysis through the JS and ASD (HD&GS) as required.",
+       "variant": "7"
+      },
+      {
+       "row": 8,
+       "col": 0,
+       "base": "8",
+       "variant": "analysis through the JS and ASD (HD&GS) as required. MAJCOM/FOAs (as appropriate), ANGRC, and functional areas review and submit DCA nominations to HAF. ( T-1 ) HAF submits AF-approved DCA nominations to JS/J33. Deliverable: MAJCOM CV-approved DCA nomination listing. AF-approved DCA nominations submitted to JS."
+      },
+      {
+       "row": 8,
+       "col": 1,
+       "base": "MAJCOM/FOAs (as appropriate), ANGRC, and functional areas review and submit DCA nominations to HAF. ( T-1 ) HAF submits AF-approved DCA nominations to JS/J33. Deliverable: MAJCOM CV-approved DCA nomination listing. AF-approved DCA nominations submitted to JS.",
+       "variant": "8"
+      },
+      {
+       "row": 9,
+       "col": 0,
+       "base": "9",
+       "variant": "JS Submits DCA nominations list to ASD (HD&GS) and is reviewed and approved. Deliverable: ASD (HD&GS)-approved DCA list to the DCI community."
+      },
+      {
+       "row": 9,
+       "col": 1,
+       "base": "JS Submits DCA nominations list to ASD (HD&GS) and is reviewed and approved. Deliverable: ASD (HD&GS)-approved DCA list to the DCI community.",
+       "variant": "9"
+      }
+     ]
+    },
+    {
+     "index": 8,
+     "self_ref": "#/tables/8",
+     "page": 46,
+     "shape": [
+      [
+       9,
+       4
+      ],
+      [
+       9,
+       4
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 0,
+       "col": 0,
+       "base": "Asset Name",
+       "variant": "Self-explanatory"
+      },
+      {
+       "row": 1,
+       "col": 0,
+       "base": "Asset Owner",
+       "variant": "Self-explanatory"
+      },
+      {
+       "row": 1,
+       "col": 1,
+       "base": "Self-explanatory",
+       "variant": "Asset Number"
+      },
+      {
+       "row": 1,
+       "col": 2,
+       "base": "Asset Number",
+       "variant": "SMADS or CAMS ID #"
+      },
+      {
+       "row": 1,
+       "col": 3,
+       "base": "SMADS or CAMS ID #",
+       "variant": "Asset Owner"
+      },
+      {
+       "row": 2,
+       "col": 0,
+       "base": "Asset Description",
+       "variant": "Describe the asset and what it does, ex. 'Key C3ISR node enabling the tasking, collection, exploitation, and dissemination of ISR data.' Describe it"
+      },
+      {
+       "row": 2,
+       "col": 1,
+       "base": "Describe the asset and what it does, ex. 'Key C3ISR node enabling the tasking, collection, exploitation, and dissemination of ISR data.' Describe it to the uninitiated.",
+       "variant": "Describe the asset and what it does, ex. 'Key C3ISR node enabling the tasking, collection, exploitation, and dissemination of ISR data.' Describe it"
+      },
+      {
+       "row": 2,
+       "col": 2,
+       "base": "Describe the asset and what it does, ex. 'Key C3ISR node enabling the tasking, collection, exploitation, and dissemination of ISR data.' Describe it to the uninitiated.",
+       "variant": "Describe the asset and what it does, ex. 'Key C3ISR node enabling the tasking, collection, exploitation, and dissemination of ISR data.' Describe it"
+      },
+      {
+       "row": 2,
+       "col": 3,
+       "base": "Describe the asset and what it does, ex. 'Key C3ISR node enabling the tasking, collection, exploitation, and dissemination of ISR data.' Describe it to the uninitiated.",
+       "variant": "Asset Description"
+      },
+      {
+       "row": 3,
+       "col": 0,
+       "base": "Asset Location",
+       "variant": "Bldg., Base, State/Country (for terrestrial assets), AOR"
+      },
+      {
+       "row": 3,
+       "col": 3,
+       "base": "Bldg., Base, State/Country (for terrestrial assets), AOR",
+       "variant": "Asset Location"
+      },
+      {
+       "row": 4,
+       "col": 0,
+       "base": "Mission Owners",
+       "variant": "List all mission owners (CCMDs, Services, Agencies, etc.)"
+      },
+      {
+       "row": 4,
+       "col": 3,
+       "base": "List all mission owners (CCMDs, Services, Agencies, etc.)",
+       "variant": "Mission Owners"
+      },
+      {
+       "row": 5,
+       "col": 0,
+       "base": "METs/MEFs Supported PLANS",
+       "variant": "What is/are the impacted METs/MEFs Supported PLANs, along with Condition(s) and Standard(s) identified this asset?"
+      },
+      {
+       "row": 5,
+       "col": 1,
+       "base": "What is/are the impacted METs/MEFs Supported PLANs, along with Condition(s) and Standard(s) identified for this asset?",
+       "variant": "Mission Impact"
+      },
+      {
+       "row": 5,
+       "col": 2,
+       "base": "Mission Impact",
+       "variant": "Tier I (mission failure) or Tier II (severe degradation)?"
+      },
+      {
+       "row": 5,
+       "col": 3,
+       "base": "Tier I (mission failure) or Tier II (severe degradation)?",
+       "variant": "METs/MEFs Supported PLANS"
+      },
+      {
+       "row": 6,
+       "col": 0,
+       "base": "METs/MEFs Supported PLANS",
+       "variant": "What is/are the impacted METs/MEFs Supported PLANs, along with Condition(s) and Standard(s) identified this asset?"
+      },
+      {
+       "row": 6,
+       "col": 1,
+       "base": "What is/are the impacted METs/MEFs Supported PLANs, along with Condition(s) and Standard(s) identified for this asset?",
+       "variant": "Mission Impact"
+      },
+      {
+       "row": 7,
+       "col": 0,
+       "base": "METs/MEFs Supported PLANS",
+       "variant": "What is/are the impacted METs/MEFs Supported PLANs, along with Condition(s) and Standard(s) identified this asset?"
+      },
+      {
+       "row": 7,
+       "col": 1,
+       "base": "What is/are the impacted METs/MEFs Supported PLANs, along with Condition(s) and Standard(s) identified for this asset?",
+       "variant": "Mission Impact"
+      },
+      {
+       "row": 7,
+       "col": 2,
+       "base": "Time to Restore",
+       "variant": "Time to"
+      },
+      {
+       "row": 7,
+       "col": 3,
+       "base": "Time to Restore Critical Asset Capability",
+       "variant": "for Time to Restore Critical Asset Capability"
+      },
+      {
+       "row": 8,
+       "col": 0,
+       "base": "Consequence of Loss Statement",
+       "variant": "Restore of Describe what happens to the mission should the asset fail, ex. 'Loss of the asset would result in the inability to operationally align expertise with specific theater collection priorities and assets. This results in failure to satisfy joint and coalition intelligence needs, as well as production with other"
+      },
+      {
+       "row": 8,
+       "col": 1,
+       "base": "Describe what happens to the mission should the asset fail, ex. 'Loss of the asset would result in the inability to operationally align expertise with specific theater collection priorities and assets. This results in failure to satisfy joint and coalition intelligence needs, as well as production with other services and national agencies.'",
+       "variant": "Restore of Describe what happens to the mission should the asset fail, ex. 'Loss of the asset would result in the inability to operationally align expertise with specific theater collection priorities and assets. This results in failure to satisfy joint and coalition intelligence needs, as well as production with other"
+      },
+      {
+       "row": 8,
+       "col": 2,
+       "base": "Describe what happens to the mission should the asset fail, ex. 'Loss of the asset would result in the inability to operationally align expertise with specific theater collection priorities and assets. This results in failure to satisfy joint and coalition intelligence needs, as well as production with other services and national agencies.'",
+       "variant": "Restore of Describe what happens to the mission should the asset fail, ex. 'Loss of the asset would result in the inability to operationally align expertise with specific theater collection priorities and assets. This results in failure to satisfy joint and coalition intelligence needs, as well as production with other"
+      },
+      {
+       "row": 8,
+       "col": 3,
+       "base": "Describe what happens to the mission should the asset fail, ex. 'Loss of the asset would result in the inability to operationally align expertise with specific theater collection priorities and assets. This results in failure to satisfy joint and coalition intelligence needs, as well as production with other services and national agencies.'",
+       "variant": "Consequence Loss Statement"
+      }
+     ]
+    },
+    {
+     "index": 9,
+     "self_ref": "#/tables/9",
+     "page": 46,
+     "shape": [
+      [
+       5,
+       3
+      ],
+      [
+       5,
+       3
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 1,
+       "col": 0,
+       "base": "Asset A (Bldg. 1)",
+       "variant": "Asset A A/C Failure"
+      },
+      {
+       "row": 1,
+       "col": 1,
+       "base": "A/C Failure",
+       "variant": "High"
+      },
+      {
+       "row": 1,
+       "col": 2,
+       "base": "High",
+       "variant": "(Bldg. 1)"
+      },
+      {
+       "row": 2,
+       "col": 0,
+       "base": "Asset A (Bldg. 1)",
+       "variant": "Terrorism - VBIED"
+      },
+      {
+       "row": 2,
+       "col": 1,
+       "base": "Terrorism - VBIED",
+       "variant": "Low"
+      },
+      {
+       "row": 2,
+       "col": 2,
+       "base": "Low",
+       "variant": "(Bldg. 1)"
+      },
+      {
+       "row": 3,
+       "col": 0,
+       "base": "Asset B (Bldg. 2)",
+       "variant": "Asset B A/C Failure"
+      },
+      {
+       "row": 3,
+       "col": 1,
+       "base": "A/C Failure",
+       "variant": "High"
+      },
+      {
+       "row": 3,
+       "col": 2,
+       "base": "High",
+       "variant": "(Bldg. 1)"
+      },
+      {
+       "row": 4,
+       "col": 0,
+       "base": "Asset B (Bldg. 2)",
+       "variant": "(Bldg. 2) Fire Damage"
+      },
+      {
+       "row": 4,
+       "col": 1,
+       "base": "Fire Damage",
+       "variant": "Medium"
+      },
+      {
+       "row": 4,
+       "col": 2,
+       "base": "Medium",
+       "variant": "(Bldg. 1)"
+      }
+     ]
+    },
+    {
+     "index": 10,
+     "self_ref": "#/tables/10",
+     "page": 47,
+     "shape": [
+      [
+       5,
+       3
+      ],
+      [
+       5,
+       3
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 1,
+       "col": 0,
+       "base": "Asset A (Bldg. 1)",
+       "variant": "Rm. 100 no longer has adequate redundancy with its A/C units and if one unit fails mission equipment will receive insufficient cooling and could overheat and fail."
+      },
+      {
+       "row": 1,
+       "col": 1,
+       "base": "Rm. 100 no longer has adequate redundancy with its A/C units and if one unit fails mission equipment will receive insufficient cooling and could overheat and fail.",
+       "variant": "High"
+      },
+      {
+       "row": 1,
+       "col": 2,
+       "base": "High",
+       "variant": "Asset A (Bldg. 1)"
+      },
+      {
+       "row": 2,
+       "col": 0,
+       "base": "Asset A (Bldg. 1)",
+       "variant": "Vehicles can park within 10 feet of the building due to lack of barriers or fencing."
+      },
+      {
+       "row": 2,
+       "col": 1,
+       "base": "Vehicles can park within 10 feet of the building due to lack of barriers or fencing.",
+       "variant": "Medium"
+      },
+      {
+       "row": 2,
+       "col": 2,
+       "base": "Medium",
+       "variant": "Asset A (Bldg. 1)"
+      },
+      {
+       "row": 3,
+       "col": 0,
+       "base": "Asset B (Bldg. 2)",
+       "variant": "Asset B One of three A/C units supporting Rms. 10, 11, and 15 have been malfunctioning and personnel have had to open doors and bring in portable fans to prevent mission equipment from overheating and failing."
+      },
+      {
+       "row": 3,
+       "col": 1,
+       "base": "One of three A/C units supporting Rms. 10, 11, and 15 have been malfunctioning and personnel have had to open doors and bring in portable fans to prevent mission equipment from overheating and failing.",
+       "variant": "Critical"
+      },
+      {
+       "row": 3,
+       "col": 2,
+       "base": "Critical",
+       "variant": "Asset A (Bldg. 1)"
+      },
+      {
+       "row": 4,
+       "col": 0,
+       "base": "Asset B (Bldg. 2)",
+       "variant": "(Bldg. 2) This building lacks an automatic fire suppression system. While fire extinguishers are present for personnel to utilize, should an alarm sound this facility is not manned 24/7."
+      },
+      {
+       "row": 4,
+       "col": 1,
+       "base": "This building lacks an automatic fire suppression system. While fire extinguishers are present for personnel to utilize, should an alarm sound this facility is not manned 24/7.",
+       "variant": "Medium"
+      },
+      {
+       "row": 4,
+       "col": 2,
+       "base": "Medium",
+       "variant": "Asset A (Bldg. 1)"
+      }
+     ]
+    },
+    {
+     "index": 11,
+     "self_ref": "#/tables/11",
+     "page": 48,
+     "shape": [
+      [
+       5,
+       7
+      ],
+      [
+       5,
+       7
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 1,
+       "col": 1,
+       "base": "Inadequate Cooling High",
+       "variant": "Inadequate Cooling"
+      },
+      {
+       "row": 1,
+       "col": 2,
+       "base": "Critical",
+       "variant": "High"
+      },
+      {
+       "row": 1,
+       "col": 3,
+       "base": "Have load- shedding plan",
+       "variant": "Critical"
+      },
+      {
+       "row": 1,
+       "col": 4,
+       "base": "High",
+       "variant": "Have load- shedding plan"
+      },
+      {
+       "row": 1,
+       "col": 5,
+       "base": "",
+       "variant": "High"
+      }
+     ]
+    }
+   ],
+   "caption_in_header_tables": [
+    0,
+    0
+   ],
+   "no_grid_regions": [
+    0,
+    0
+   ]
+  },
+  "afi13-550": {
+   "text_items_base": 385,
+   "text_items_lost_share": 0.0,
+   "code_items": [
+    0,
+    0
+   ],
+   "code_share_of_chars": [
+    0.0,
+    0.0
+   ],
+   "list_items": [
+    131,
+    131
+   ],
+   "text_items_lost": 0,
+   "text_items_extra": 0,
+   "text_6gram": {
+    "base": 9190,
+    "lost": 0,
+    "lost_share": 0.0,
+    "absent_entirely": 0,
+    "extra": 0,
+    "extra_share": 0.0
+   },
+   "lost_items": [],
+   "extra_items": [],
+   "tables": [
+    5,
+    5
+   ],
+   "tables_with_different_grid": 3,
+   "table_differences": [
+    {
+     "index": 2,
+     "self_ref": "#/tables/2",
+     "page": 24,
+     "shape": [
+      [
+       21,
+       1
+      ],
+      [
+       21,
+       1
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 4,
+       "col": 0,
+       "base": "Presidential Policy Directive-35, United States Nuclear Weapons Command and Control, Safety, and Security , 8 December 2015",
+       "variant": "and Security , 8 December 2015 CJCSI 6811.0lC, Nuclear Command and Control System Technical Performance Criteria"
+      },
+      {
+       "row": 5,
+       "col": 0,
+       "base": "CJCSI 6811.0lC, Nuclear Command and Control System Technical Performance Criteria , 7 February 2014 (S)",
+       "variant": "February 2014 (S) DoDI S-3730.01, Nuclear Command, Control, and Communications (NC3) System , 6 November"
+      },
+      {
+       "row": 6,
+       "col": 0,
+       "base": "DoDI S-3730.01, Nuclear Command, Control, and Communications (NC3) System , 6 November 2015",
+       "variant": "April 2017"
+      },
+      {
+       "row": 7,
+       "col": 0,
+       "base": "CJCSI 3280.01D, National Military Command System (NMCS), 7 April 2017",
+       "variant": "CJCSI 3280.01D, National Military Command System (NMCS), 7"
+      },
+      {
+       "row": 8,
+       "col": 0,
+       "base": "AFI 16-1404, Air Force Information Security Program, 29 May 2015 CJCSI 3231.01B, Safeguarding Nuclear Command and Control Extremely Sensitive Information",
+       "variant": "CJCSI 3231.01B, Safeguarding Nuclear Command and Control Extremely Sensitive Information 6 June 2007"
+      },
+      {
+       "row": 9,
+       "col": 0,
+       "base": "6 June 2007 AFI 13-502, Safeguarding Nuclear Command and Control Extremely Sensitive Information , 2",
+       "variant": "AFI 13-502, Safeguarding Nuclear Command and Control Extremely Sensitive Information February 2018"
+      },
+      {
+       "row": 10,
+       "col": 0,
+       "base": "February 2018",
+       "variant": "DoDI 5200.01, DoD Information Security Program and Protection of Sensitive Compartmented Information , 21 April 2016"
+      },
+      {
+       "row": 11,
+       "col": 0,
+       "base": "DoDI 5210.02, Access to and Dissemination of Restricted Data and Formerly Restricted Data , 3 June 2011",
+       "variant": "DoDI 5210.02, Access to and Dissemination of Restricted Data and Formerly Restricted June 2011"
+      },
+      {
+       "row": 14,
+       "col": 0,
+       "base": "DoDM 5200.45, Instructions for Developing Security Classification Guides , 2 April 2013",
+       "variant": "5200.45, Instructions for Developing Security Classification Guides , 2 April 2013"
+      },
+      {
+       "row": 15,
+       "col": 0,
+       "base": "DoDM 5205.07, Volumes 1-4, DoD Special Access Program Security Manual , dates vary by volume",
+       "variant": "DoDM"
+      },
+      {
+       "row": 16,
+       "col": 0,
+       "base": "AFI 35-102, Security and Policy Review Process , 4 May 2016",
+       "variant": "DoDM 5205.07, Volumes 1-4, DoD Special Access Program Security Manual , dates vary volume"
+      },
+      {
+       "row": 17,
+       "col": 0,
+       "base": "AFI 61-201, Management of Scientific and Technical Information (STINFO) , 29 January 2016",
+       "variant": "AFI 35-102, Security and Policy Review Process , 4 May 2016"
+      }
+     ]
+    },
+    {
+     "index": 3,
+     "self_ref": "#/tables/3",
+     "page": 25,
+     "shape": [
+      [
+       23,
+       1
+      ],
+      [
+       21,
+       1
+      ]
+     ],
+     "base_grid": [
+      [
+       "CJCSI 5123.01H, Charter of the Joint Requirements Oversight Council (JROC) and Implementation of the Joint Capabilities Integration and Development System (JCIDS) , 31 August 2018"
+      ],
+      [
+       "AFI 17-130, Cybersecurity Program Management, 31 August 2015"
+      ],
+      [
+       "AFPD 10-9, Lead Command Designation and Responsibilities for Weapon Systems , 8 Mar 2007 AFI 63-101 / 20-101, Integrated Life Cycle Management , 9 May 2017"
+      ],
+      [
+       "AFGM 2018-90-01 to AFPD 90-6, Air Force Strategy, Planning, Programming, Budgeting and Execution (SPPBE) Process , 31 May 2018"
+      ],
+      [
+       "Title 10 United States Code, Section 171a, Council on Oversight of the National Leadership Command, Control, and Communications System"
+      ],
+      [
+       "National Defense Authorization Act, Section 1052, Public Law 113-66, Council on Oversight of the National Leadership Command, Control, and Communications System , December 2013"
+      ],
+      [
+       "DoDI S-5100.92, Defense and National Leadership Command Capability Governance , 12 May 2009"
+      ],
+      [
+       "AFI 17-140, Architecting , 29 June 2018"
+      ],
+      [
+       "DoDI 8510.01, Risk Management Framework for DoD Information Technology , 12 March 2014"
+      ],
+      [
+       "DoDI 3150.09, The Chemical, Biological, Radiological, and Nuclear (CBRN) Survivability Policy , 8 April 2015"
+      ],
+      [
+       "Nuclear C3 Nodes and Systems, 1 May 2013 (S) USSTRATCOM SI 501-2, Operations, Planning, and Command and Control Survivability Certification , 22 February 2012"
+      ],
+      [
+       "USSTRATCOM SI 513-3, USSTRATCOM Communications Continuing Evaluation Program (CEP) , 8 February 2011"
+      ],
+      [
+       "CJCSI 3264.01F, Nuclear Command, Control, and Communications (NC3) Operational"
+      ],
+      [
+       "Assessment Programs , 7 October 2016"
+      ],
+      [
+       "AFI 90-201, The Air Force Inspection System, 20 November 2018 AFMAN 10-206, Operational Reporting , 18 June 2018"
+      ],
+      [
+       "AFI 13-500, Air Force Nuclear Mission Responsibilities , 14 November 2018"
+      ],
+      [
+       "DoDD 3020.26, Department of Defense Continuity Policy , 14 February"
+      ],
+      [
+       "2018"
+      ],
+      [
+       "Adopted Forms"
+      ],
+      [
+       "AF Form 847, Recommendation for Change of Publication, 22 September 2009"
+      ],
+      [
+       "Abbreviations and Acronyms"
+      ],
+      [
+       "ACC -Air Combat Command"
+      ],
+      [
+       "AETC -Air Education and Training Command"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "CJCSI 5123.01H, Charter of the Joint Requirements Oversight Council (JROC) and Implementation of the Joint Capabilities Integration and Development System (JCIDS) , 31 August 2018"
+      ],
+      [
+       "AFI 17-130, Cybersecurity Program Management, 31 August 2015"
+      ],
+      [
+       "AFPD 10-9, Lead Command Designation and Responsibilities for Weapon Systems , 8 Mar 2007"
+      ],
+      [
+       "AFI 63-101 / 20-101, Integrated Life Cycle Management , 9 May 2017"
+      ],
+      [
+       "AFGM 2018-90-01 to AFPD 90-6, Air Force Strategy, Planning, Programming, Budgeting and Execution (SPPBE) Process , 31 May 2018"
+      ],
+      [
+       "Title 10 United States Code, Section 171a, Council on Oversight of the National Leadership Command, Control, and Communications System"
+      ],
+      [
+       "National Defense Authorization Act, Section 1052, Public Law 113-66, Council on Oversight the National Leadership Command, Control, and Communications System , December 2013"
+      ],
+      [
+       "DoDI S-5100.92, Defense and National Leadership Command Capability Governance , 12 May 2009"
+      ],
+      [
+       "AFI 17-140, Architecting , 29 June 2018"
+      ],
+      [
+       "DoDI 8510.01, Risk Management Framework for DoD Information Technology , 12 March 2014"
+      ],
+      [
+       "DoDI 3150.09, The Chemical, Biological, Radiological, and Nuclear (CBRN) Survivability Policy , 8 April 2015"
+      ],
+      [
+       "Nuclear C3 Nodes and Systems, 1 May 2013 (S) USSTRATCOM SI 501-2, Operations, Planning, and Command and Control Survivability"
+      ],
+      [
+       "SI 513-3, USSTRATCOM Communications Continuing Evaluation Program"
+      ],
+      [
+       "USSTRATCOM (CEP) , 8 February 2011"
+      ],
+      [
+       "AFI 90-201, The Air Force Inspection System, 20 November 2018"
+      ],
+      [
+       "AFI 13-500, Air Force Nuclear Mission Responsibilities , 14 November 2018"
+      ],
+      [
+       "DoDD 3020.26, Department of Defense Continuity Policy , 14 February 2018"
+      ],
+      [
+       "Adopted Forms"
+      ],
+      [
+       "Abbreviations and Acronyms"
+      ],
+      [
+       "ACC -Air Combat Command"
+      ],
+      [
+       "AETC -Air Education and Training Command"
+      ]
+     ]
+    },
+    {
+     "index": 4,
+     "self_ref": "#/tables/4",
+     "page": 26,
+     "shape": [
+      [
+       23,
+       1
+      ],
+      [
+       30,
+       4
+      ]
+     ],
+     "base_grid": [
+      [
+       "AFGSC -Air Force Global Strike Command AF -Air Force"
+      ],
+      [
+       "AFI -Air Force Instruction AFIMSC -Air Force Installation and Mission Support Center"
+      ],
+      [
+       "AFMAN -Air Force Manual"
+      ],
+      [
+       "AFMC -Air Force Materiel Command -Air Force Nuclear Command, Control, and Communications"
+      ],
+      [
+       "AFNC3C Center AFNWC -Air Force Nuclear Weapons Center AFPD -Air Force Policy Directive AFPEO -Air Force Program Executive Office AFRC -Air Force Reserve Command"
+      ],
+      [
+       "-Air Force Safety Center -Air Force Space Command"
+      ],
+      [
+       "AFSEC AFSPC"
+      ],
+      [
+       "AMC -Air Mobility Command"
+      ],
+      [
+       "C2 -Command and Control"
+      ],
+      [
+       "C3 -Command, Control, and"
+      ],
+      [
+       "Communications C4 -Command, Control, Communications, and"
+      ],
+      [
+       "Computers"
+      ],
+      [
+       "CBRN -Chemical, Biological, Radiological, and Nuclear"
+      ],
+      [
+       "CCB -Configuration Control Board"
+      ],
+      [
+       "CCMD -Combatant Command CEP -Continuing Evaluation Programs"
+      ],
+      [
+       "CIO -Chief Information Officer"
+      ],
+      [
+       "CJCS -Chairman of the Joint Chiefs of Staff"
+      ],
+      [
+       "CJCSI -Chairman of the Joint Chiefs of Staff Instruction CSAF -Chief of Staff of the Air Force"
+      ],
+      [
+       "DISA -Defense Information Systems Agency"
+      ],
+      [
+       "DoD -Department of Defense"
+      ],
+      [
+       "DoDCIO -Department of Defense Chief Information Officer DoDI -Department of Defense Instruction"
+      ],
+      [
+       "DoDM -Department of Defense Manual"
+      ],
+      [
+       "DRU -Direct Reporting Unit"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "AFGSC -Air Force Global Strike Command",
+       "",
+       "",
+       ""
+      ],
+      [
+       "AF -Air Force",
+       "",
+       "",
+       ""
+      ],
+      [
+       "AFI -Air Force Instruction",
+       "",
+       "",
+       ""
+      ],
+      [
+       "AFIMSC -Air Force Installation and Mission Support Center",
+       "",
+       "",
+       ""
+      ],
+      [
+       "AFMAN -Air Force Manual",
+       "",
+       "",
+       ""
+      ],
+      [
+       "AFMC -Air Force Materiel Command",
+       "",
+       "",
+       ""
+      ],
+      [
+       "AFNC3C -Air Force Nuclear Command, Control, and Communications",
+       "",
+       "",
+       ""
+      ],
+      [
+       "AFNWC -Air Force Nuclear Weapons Center",
+       "",
+       "",
+       ""
+      ],
+      [
+       "AFPD -Air Force Policy Directive",
+       "",
+       "",
+       ""
+      ],
+      [
+       "AFPEO -Air Force Program Executive Office",
+       "",
+       "",
+       ""
+      ],
+      [
+       "AFRC -Air Force Reserve Command",
+       "",
+       "",
+       ""
+      ],
+      [
+       "AFSEC -Air Force Safety Center",
+       "",
+       "",
+       ""
+      ],
+      [
+       "AFSPC -Air Force Space Command",
+       "",
+       "",
+       ""
+      ],
+      [
+       "AMC -Air Mobility Command",
+       "",
+       "",
+       ""
+      ],
+      [
+       "ANG -Air National Guard",
+       "",
+       "",
+       ""
+      ],
+      [
+       "C3 -Command, Control, and Communications",
+       "",
+       "",
+       ""
+      ],
+      [
+       "C4 -Command, Control, Communications, and Computers",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CBRN -Chemical, Biological, Radiological, and Nuclear",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CCMD -Combatant Command",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CEP -Continuing Evaluation Programs",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CIO -Chief Information Officer",
+       "CIO -Chief Information Officer",
+       "CIO -Chief Information Officer",
+       "CIO -Chief Information Officer"
+      ],
+      [
+       "CJCS -Chairman of the Joint Chiefs of Staff",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CJCSI -Chairman of the Joint Chiefs of Staff Instruction",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CSAF -Chief of Staff of the Air Force",
+       "CSAF -Chief of Staff of the Air Force",
+       "CSAF -Chief of Staff of the Air Force",
+       "CSAF -Chief of Staff of the Air Force"
+      ],
+      [
+       "DISA -Defense Information Systems Agency",
+       "",
+       "",
+       ""
+      ],
+      [
+       "DoD -Department of Defense",
+       "DoD -Department of Defense",
+       "DoD -Department of Defense",
+       "DoD -Department of Defense"
+      ],
+      [
+       "DoDCIO -Department of Defense Chief Information Officer",
+       "",
+       "",
+       ""
+      ],
+      [
+       "DoDI -Department of Defense Instruction",
+       "",
+       "",
+       ""
+      ],
+      [
+       "DoDM -Department of Defense Manual",
+       "",
+       "",
+       ""
+      ],
+      [
+       "DRU -Direct Reporting Unit",
+       "",
+       "",
+       ""
+      ]
+     ]
+    }
+   ],
+   "caption_in_header_tables": [
+    0,
+    0
+   ],
+   "no_grid_regions": [
+    0,
+    0
+   ]
+  },
+  "afi17-203": {
+   "text_items_base": 289,
+   "text_items_lost_share": 0.0,
+   "code_items": [
+    0,
+    0
+   ],
+   "code_share_of_chars": [
+    0.0,
+    0.0
+   ],
+   "list_items": [
+    36,
+    36
+   ],
+   "text_items_lost": 0,
+   "text_items_extra": 0,
+   "text_6gram": {
+    "base": 7410,
+    "lost": 0,
+    "lost_share": 0.0,
+    "absent_entirely": 0,
+    "extra": 0,
+    "extra_share": 0.0
+   },
+   "lost_items": [],
+   "extra_items": [],
+   "tables": [
+    9,
+    9
+   ],
+   "tables_with_different_grid": 8,
+   "table_differences": [
+    {
+     "index": 0,
+     "self_ref": "#/tables/0",
+     "page": 2,
+     "shape": [
+      [
+       27,
+       4
+      ],
+      [
+       27,
+       4
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 7,
+       "col": 0,
+       "base": "Chapter 2- ROLES AND RESPONSIBILITIES",
+       "variant": "Chapter"
+      },
+      {
+       "row": 7,
+       "col": 1,
+       "base": "Chapter 2- ROLES AND RESPONSIBILITIES",
+       "variant": "2- ROLES AND RESPONSIBILITIES"
+      },
+      {
+       "row": 7,
+       "col": 2,
+       "base": "Chapter 2- ROLES AND RESPONSIBILITIES",
+       "variant": "2- ROLES AND RESPONSIBILITIES"
+      }
+     ]
+    },
+    {
+     "index": 1,
+     "self_ref": "#/tables/1",
+     "page": 3,
+     "shape": [
+      [
+       6,
+       3
+      ],
+      [
+       6,
+       3
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 0,
+       "col": 0,
+       "base": "AFI17-203",
+       "variant": "AFI17-203 16 MARCH2017"
+      },
+      {
+       "row": 0,
+       "col": 1,
+       "base": "16 MARCH2017",
+       "variant": "AFI17-203 16 MARCH2017"
+      }
+     ]
+    },
+    {
+     "index": 2,
+     "self_ref": "#/tables/2",
+     "page": 5,
+     "shape": [
+      [
+       6,
+       2
+      ],
+      [
+       5,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "Category",
+       "Description"
+      ],
+      [
+       "0",
+       "Training and Exercises (Event): Operations performed for training purposes and support to Combatant Command/Service/Agency/Field Activity (CC/S/A/FA) exercises."
+      ],
+      [
+       "1",
+       "Root-Level Intrusion (Incident): Privileged access, often referred to as administrative or root access, provides unrestricted access to an IS. This category includes unauthorized access to information or unauthorized access to account credentials that could be used to perform administrative functions (e.g., domain administrator). If the IS is compromised with malicious code that provides remote interactive control, it will be reported in this category."
+      ],
+      [
+       "2",
+       "User-Level Intrusion (Incident): Unauthorized non-privileged access to an IS. Non-privileged access, often referred to as user-level access, provides restricted access to the IS based on the privileges granted to the user. This includes unauthorized access to information or unauthorized access to account credentials that could be used to perform user functions such as accessing Web applications, Web portals, or other similar information resources. If the IS is compromised with malicious code that provides remote interactive control, it will be reported in this category."
+      ],
+      [
+       "3",
+       "Unsuccessful Activity Attempt (Event): Deliberate attempts to gain unauthorized access to an IS that are defeated by normal defensive mechanisms. Attacker fails to gain access to the IS (i.e., attacker attempts valid or potentially valid username and password combinations) and the activity cannot be characterized as exploratory scanning. Note the above CAT 3 explanation does not cover the 'run-of-the-mill' virus that is defeated/deleted byAV software. 'Run-of-the-mill' viruses that are defeated/deleted byAV software are not reportable events or incidents and should not be annotated in the Joint Information Management System (JIMS)."
+      ],
+      [
+       "4",
+       "Denial of Service (Incident): Activity that denies, degrades, or disrupts normal functionality of an IS or DoD information network."
+      ]
+     ],
+     "variant_grid": [
+      [
+       "Category",
+       "Description"
+      ],
+      [
+       "Training and Exercises (Event): Operations performed for training purposes support to Combatant Command/Service/Agency/Field Activity (CC/S/A/FA) exercises.",
+       "0 and"
+      ],
+      [
+       "Root-Level Intrusion (Incident): Privileged access, often referred to as administrative or root access, provides unrestricted access to an IS. This category includes unauthorized access to information or unauthorized access to account credentials that could be used to perform administrative functions (e.g., domain administrator). If the IS is compromised with malicious code that provides remote interactive control, it will be reported in this category.",
+       "1"
+      ],
+      [
+       "User-Level Intrusion (Incident): Unauthorized non-privileged access to an IS. Non-privileged access, often referred to as user-level access, provides access to the IS based on the privileges granted to the user. This unauthorized access to information or unauthorized access to credentials that could be used to perform user functions such as Web applications, Web portals, or other similar information resources. If the IS is compromised with malicious code that provides remote interactive control, it will be reported in this category. Attempt (Event): Deliberate attempts to gain",
+       "2 restricted includes account accessing 3 Unsuccessful Activity"
+      ],
+      [
+       "Denial of Service (Incident): Activity that denies, degrades, or disrupts normal functionality of an IS or DoD information network.",
+       "4"
+      ]
+     ]
+    },
+    {
+     "index": 3,
+     "self_ref": "#/tables/3",
+     "page": 6,
+     "shape": [
+      [
+       5,
+       2
+      ],
+      [
+       5,
+       2
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 0,
+       "col": 0,
+       "base": "5",
+       "variant": "5 Non-Compliance Activity (Event): Activity that potentially exposes ISs or networks to increased risk as a result of the action or inaction of authorized users. This includes administrative and user actions such as failure to apply security patches, connections across security domains, installation of vulnerable applications, and other breaches of existing AF or DoD policy."
+      },
+      {
+       "row": 0,
+       "col": 1,
+       "base": "Non-Compliance Activity (Event): Activity that potentially exposes ISs or networks to increased risk as a result of the action or inaction of authorized users. This includes administrative and user actions such as failure to apply security patches, connections across security domains, installation of vulnerable applications, and other breaches of existing AF or DoD policy.",
+       "variant": ""
+      },
+      {
+       "row": 1,
+       "col": 0,
+       "base": "6",
+       "variant": "Reconnaissance (Event): Activity that seeks to gather information used to characterize ISs, applications, DoD information networks, and users that may be useful in formulating an attack. This includes activity such as mapping DoD information networks, IS devices and applications, interconnectivity, and their users or reporting structure. This activity does not directly result in"
+      },
+      {
+       "row": 1,
+       "col": 1,
+       "base": "Reconnaissance (Event): Activity that seeks to gather information used to characterize ISs, applications, DoD information networks, and users that may be useful in formulating an attack. This includes activity such as mapping DoD information networks, IS devices and applications, interconnectivity, and their users or reporting structure. This activity does not directly result in a compromise.",
+       "variant": "6"
+      },
+      {
+       "row": 2,
+       "col": 0,
+       "base": "7",
+       "variant": "Malicious Logic (Incident): Installation of software designed and/or deployed by adversaries with malicious intentions for the purpose of gaining access to resources or information without the consent or knowledge of the user. This only includes malicious code that does not provide remote"
+      },
+      {
+       "row": 2,
+       "col": 1,
+       "base": "Malicious Logic (Incident): Installation of software designed and/or deployed by adversaries with malicious intentions for the purpose of gaining access to resources or information without the consent or knowledge of the user. This only includes malicious code that does not provide remote interactive control of the compromised IS. Malicious code that has allowed interactive access should be categorized as Category 1 or Category 2 incidents, not Category 7. Interactive active access may include automated tools that establish an open channel of communications to and/or from an IS. Unless otherwise directed, only those computers that were infected will be reported as a Category 7 incident.",
+       "variant": "7"
+      },
+      {
+       "row": 3,
+       "col": 0,
+       "base": "8",
+       "variant": "Investigating (Event): Events that are potentially malicious or anomalous activity deemed suspicious and warrant, or are undergoing, further review. No event will be closed out as a Category 8. Category 8 will be re-"
+      },
+      {
+       "row": 3,
+       "col": 1,
+       "base": "Investigating (Event): Events that are potentially malicious or anomalous activity deemed suspicious and warrant, or are undergoing, further review. No event will be closed out as a Category 8. Category 8 will be re- categorized to appropriate Category 1-7 or 9 prior to closure.",
+       "variant": "8"
+      },
+      {
+       "row": 4,
+       "col": 0,
+       "base": "9",
+       "variant": "Explained Anomaly (Event): Suspicious events that, after further investigation, are determined to be non-malicious activity and do not fit the criteria for any other categories. This includes events such as system malfunctions and false alarms. When reporting these events, clearly specify"
+      },
+      {
+       "row": 4,
+       "col": 1,
+       "base": "Explained Anomaly (Event): Suspicious events that, after further investigation, are determined to be non-malicious activity and do not fit the criteria for any other categories. This includes events such as system malfunctions and false alarms. When reporting these events, clearly specify the reason for which it cannot be otherwise categorized.",
+       "variant": "9"
+      }
+     ]
+    },
+    {
+     "index": 5,
+     "self_ref": "#/tables/5",
+     "page": 20,
+     "shape": [
+      [
+       8,
+       4
+      ],
+      [
+       8,
+       4
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 1,
+       "col": 1,
+       "base": "Reporting& Notification",
+       "variant": "Reporting&"
+      },
+      {
+       "row": 2,
+       "col": 1,
+       "base": "Submission of report of events of interest",
+       "variant": "Notification Submission of report of events of interest"
+      }
+     ]
+    },
+    {
+     "index": 6,
+     "self_ref": "#/tables/6",
+     "page": 22,
+     "shape": [
+      [
+       23,
+       1
+      ],
+      [
+       21,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "References"
+      ],
+      [
+       "DoDD 3600.01, Information Operations , 2 May 2013"
+      ],
+      [
+       "DoDD 5400.7-R_AFMAN 33-302, Freedom of Information Act Program , 21 October 2010"
+      ],
+      [
+       "DoDD 5400.11, DoD Privacy Program , 29 October 2014"
+      ],
+      [
+       "DoDD 5505.13E, DoD Executive Agent (EA) for the DoD Cyber Crime Center (DC3), 1 March 2010"
+      ],
+      [
+       "DoDD O-8530.1, Computer Network Defense (CND) , 8 January 2001"
+      ],
+      [
+       "DoDD O-8530.1-M, DoD Computer Network Defense (CND) Service Provider Certification and Accreditation Process, 8 January 2001"
+      ],
+      [
+       "DoDI O-3600.02, Information Operations (IO) Security Classification Guidance , 28 November 2005"
+      ],
+      [
+       "DoDI 8500.01, Cybersecurity , 14 March 2014"
+      ],
+      [
+       "DoDI O-8530.2, Support to Computer Network Defense (CND) , 9 March 2001"
+      ],
+      [
+       "Office of the Secretary of Defense (OSD) Memorandum OSD 06227-09, Safeguarding Against and Responding to the Breach of Personally Identifiable Information , 5 June 2009"
+      ],
+      [
+       "CJCSI 3121.01B, Standing Rules Of Engagement/Standing Rules For The Use Of Force For US Forces , 13 Jun 2005"
+      ],
+      [
+       "CJCSI 3213.01D, Joint Operations Security , 7 May 2012"
+      ],
+      [
+       "CJCSI 6510.01F, Information Assurance (IA) and Support to Computer Network Defense (CND) , 09 February 2011"
+      ],
+      [
+       "CJCSM 6510.01B, Cyber Incident Handling Program , 10 July 2012 (current as of 18 December 2014)"
+      ],
+      [
+       "National Security Telecommunications and Information Systems Security Directive 503, Incident Response and Vulnerability Reporting for National Security Systems Security"
+      ],
+      [
+       "Committee on National Security Systems (CNSS) Instruction 4009 , Jun 06 (revised 26 April 2010)"
+      ],
+      [
+       "JP 3-12, Cyberspace Operations , 5 February 2013"
+      ],
+      [
+       "AF Doctrine Annex 3-12, Cyberspace Operations , 30 November 2011"
+      ],
+      [
+       "AFPD 10-9, Lead Command Designation and Responsibilities for Weapon Systems , 8 March 2007"
+      ],
+      [
+       "AFPD 17-2, Cyberspace Operations , 31 July 2012"
+      ],
+      [
+       "AFI 10-206, Operational Reporting , 11 June 2014"
+      ],
+      [
+       "AFI 17-201, Command and Control for Cyberspace Operations , 5 March 2014"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "DoDD 3600.01, Information Operations , 2 May 2013",
+       "DoDD 3600.01, Information Operations , 2 May 2013"
+      ],
+      [
+       "Information Act Program , 21 October 2010",
+       "Information Act Program , 21 October 2010"
+      ],
+      [
+       "DoDD 5400.11, DoD Privacy Program , 29 October 2014",
+       ""
+      ],
+      [
+       "DoDD O-8530.1, Computer Network Defense (CND) , 8 January 2001",
+       "DoDD O-8530.1, Computer Network Defense (CND) , 8 January 2001"
+      ],
+      [
+       "O-8530.1-M, DoD Computer Network Defense (CND) Service Provider Certification and",
+       "O-8530.1-M, DoD Computer Network Defense (CND) Service Provider Certification and"
+      ],
+      [
+       "Accreditation Process, 8 January 2001 DoDI O-3600.02, Information Operations (IO) Security Classification Guidance , 28 November",
+       "Accreditation Process, 8 January 2001 DoDI O-3600.02, Information Operations (IO) Security Classification Guidance , 28 November"
+      ],
+      [
+       "2005",
+       "2005"
+      ],
+      [
+       "DoDI O-8530.2, Support to Computer Network Defense (CND) , 9 March 2001",
+       ""
+      ],
+      [
+       "of Personally Identifiable Information , 5 June 2009",
+       ""
+      ],
+      [
+       "Office of the Secretary of Defense (OSD) Memorandum OSD 06227-09, Safeguarding Against and Responding to the Breach",
+       ""
+      ],
+      [
+       "CJCSI 3121.01B, Standing Rules Of Engagement/Standing Rules For The Use Of Force For US",
+       ""
+      ],
+      [
+       "CJCSI 3213.01D, Joint Operations Security , 7 May 2012",
+       ""
+      ],
+      [
+       "CJCSI 6510.01F, Information Assurance (IA) and Support to 09",
+       ""
+      ],
+      [
+       "Computer Network Defense (CND) February 2011",
+       ""
+      ],
+      [
+       "CJCSM 6510.01B, Cyber Incident Handling Program , 10 July 2012 (current as of 18 December",
+       ""
+      ],
+      [
+       "National Security Telecommunications and Information Systems Security Directive 503,",
+       ""
+      ],
+      [
+       "Committee on National Security Systems (CNSS) Instruction 4009 , Jun 06 (revised 26 April 2010)",
+       ""
+      ],
+      [
+       "AF Doctrine Annex 3-12, Cyberspace Operations , 30 November 2011",
+       ""
+      ],
+      [
+       "AFPD 10-9, Lead Command Designation and Responsibilities for Weapon Systems , 8 March",
+       ""
+      ],
+      [
+       "AFPD 17-2, Cyberspace Operations , 31 July 2012",
+       ""
+      ],
+      [
+       "AFI 17-201, Command and Control for Cyberspace Operations , 5 March 2014",
+       ""
+      ]
+     ]
+    },
+    {
+     "index": 7,
+     "self_ref": "#/tables/7",
+     "page": 23,
+     "shape": [
+      [
+       22,
+       3
+      ],
+      [
+       29,
+       1
+      ]
+     ],
+     "base_grid": [
+      [
+       "AFI 16-1404, Air Force Information Security Program , 29 May 2015 AFI 17-100, Air Force Information Technology (IT) Service Management , 16 September 2014 AFI 17-130, Air Force Cybersecurity Program Management , 31 August 2015 AFI 33-360, Publications and Forms Management , 1 December 2015 AFMAN 17-1301, Computer Security (COMPUSEC) , 27 March 2012 AFI 33-332, The Air Force Privacy and Civil Liberties Program , 12 January 2015 AFMAN 33-363, Management of Records , 1 March 2008 USAF Interim Computer Network Attack (CNA) Security Classification Guidance, 3 June 2002, with Change 2, 1 June 2006",
+       "",
+       ""
+      ],
+      [
+       "Adopted Form",
+       "",
+       ""
+      ],
+      [
+       "Abbreviations and Acronyms 25AF -25th Air Force",
+       "",
+       ""
+      ],
+      [
+       "624 OC -624 Operations Center",
+       "",
+       ""
+      ],
+      [
+       "ACC -Air Combat Command ACCC -AFFOR Communications Coordination Center ACT -AFNETOPS Compliance Tracker",
+       "",
+       ""
+      ],
+      [
+       "AETC -Air Education and Training Command",
+       "",
+       ""
+      ],
+      [
+       "AF -Air Force",
+       "",
+       ""
+      ],
+      [
+       "AFCERT -Air Force Computer Emergency Team",
+       "",
+       ""
+      ],
+      [
+       "Response AFCYBER -Air Forces Cyber (24AF)",
+       "",
+       ""
+      ],
+      [
+       "AFDD -Air Force Doctrine Document",
+       "",
+       ""
+      ],
+      [
+       "AFI -Air Force Instruction",
+       "",
+       ""
+      ],
+      [
+       "AFIN -Air Force Information Network",
+       "",
+       ""
+      ],
+      [
+       "AFMAN -Air Force Manual",
+       "",
+       ""
+      ],
+      [
+       "AFMC -Air Force Materiel Command",
+       "",
+       ""
+      ],
+      [
+       "AFNIC -Air Force Network Integration",
+       "",
+       ""
+      ],
+      [
+       "AFOSI -Air Force Office of Special",
+       "",
+       ""
+      ],
+      [
+       "AFPD -Air Force Policy Directive",
+       "",
+       ""
+      ],
+      [
+       "AFRC -Air Force Reserve",
+       "",
+       ""
+      ],
+      [
+       "Command",
+       "",
+       ""
+      ],
+      [
+       "AFSPC -Air Force Space Command",
+       "",
+       ""
+      ],
+      [
+       "ANG -Air National Guard",
+       "",
+       ""
+      ],
+      [
+       "",
+       "Investigations",
+       "Center"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "AFI 16-1404, Air Force Information Security Program , 29 May 2015"
+      ],
+      [
+       "AFI 17-100, Air Force Information Technology (IT) Service Management , 16 September 2014"
+      ],
+      [
+       "AFI 17-130, Air Force Cybersecurity Program Management , 31 August 2015"
+      ],
+      [
+       "AFI 33-360, Publications and Forms Management , 1 December 2015"
+      ],
+      [
+       "AFI 33-332, The Air Force Privacy and Civil Liberties Program , 12 January 2015"
+      ],
+      [
+       "AFMAN 33-363, Management of Records , 1 March 2008"
+      ],
+      [
+       "USAF Interim Computer Network Attack (CNA) Security Classification Guidance, 3 June 2002, with Change 2, 1 June 2006"
+      ],
+      [
+       "Adopted Form"
+      ],
+      [
+       "AF Form 847, Recommendation for Change of Publication"
+      ],
+      [
+       "Abbreviations and Acronyms"
+      ],
+      [
+       "624 OC -624 Operations Center"
+      ],
+      [
+       "ACC -Air Combat Command"
+      ],
+      [
+       "ACCC -AFFOR Communications Coordination Center"
+      ],
+      [
+       "ACT -AFNETOPS Compliance Tracker"
+      ],
+      [
+       "AETC -Air Education and Training Command"
+      ],
+      [
+       "AF -Air Force"
+      ],
+      [
+       "AFCERT -Air Force Computer Emergency Response Team"
+      ],
+      [
+       "AFCYBER -Air Forces Cyber (24AF)"
+      ],
+      [
+       "AFDD -Air Force Doctrine Document"
+      ],
+      [
+       "AFI -Air Force Instruction"
+      ],
+      [
+       "AFIN -Air Force Information Network"
+      ],
+      [
+       "AFMAN -Air Force Manual"
+      ],
+      [
+       "AFMC -Air Force Materiel Command"
+      ],
+      [
+       "AFNIC -Air Force Network Integration Center"
+      ],
+      [
+       "AFOSI -Air Force Office of Special Investigations"
+      ],
+      [
+       "AFPD -Air Force Policy Directive"
+      ],
+      [
+       "AFRC -Air Force Reserve Command"
+      ],
+      [
+       "AFSPC -Air Force Space Command"
+      ],
+      [
+       "ANG -Air National Guard"
+      ]
+     ]
+    },
+    {
+     "index": 8,
+     "self_ref": "#/tables/8",
+     "page": 24,
+     "shape": [
+      [
+       32,
+       1
+      ],
+      [
+       32,
+       4
+      ]
+     ],
+     "base_grid": [
+      [
+       "C2 -Command and Control"
+      ],
+      [
+       "CAT -Category (i.e., CAT 1 root level intrusion)"
+      ],
+      [
+       "CCDR -Combatant Commander"
+      ],
+      [
+       "CCIR -Commander's Critical Information Requirements"
+      ],
+      [
+       "CERT -Computer Emergency Response Team"
+      ],
+      [
+       "CFP -Communications Focal Point"
+      ],
+      [
+       "CI -Counterintelligence"
+      ],
+      [
+       "CIO -Chief Information Officer"
+      ],
+      [
+       "CIR -Cyber Incident Report"
+      ],
+      [
+       "CJCS -Chairman, Joint Chiefs of Staff"
+      ],
+      [
+       "CJCSI -Chairman, Joint Chiefs of Staff Instruction"
+      ],
+      [
+       "CJCSM -Chairman, Joint Chiefs of Staff Manual"
+      ],
+      [
+       "CNDSP -Computer Network Defense Service Provider"
+      ],
+      [
+       "CNA -Computer Network Attack"
+      ],
+      [
+       "CNSS -Committee on National Security Systems"
+      ],
+      [
+       "COA -Course of Action"
+      ],
+      [
+       "CoR -Certificate of Reconstitution"
+      ],
+      [
+       "CORA -Cyber Operations Risk Assessment"
+      ],
+      [
+       "C/S/As -Combatant Commands/Services/Agencies"
+      ],
+      [
+       "CSL -Cybersecurity Liaison"
+      ],
+      [
+       "CST -Client Service Technician"
+      ],
+      [
+       "CTO -Communications Tasking Order"
+      ],
+      [
+       "DC3 -Defense Cyber Crime Center"
+      ],
+      [
+       "DCO -Defensive Cyberspace Operations"
+      ],
+      [
+       "DoD -Department of Defense"
+      ],
+      [
+       "DoDD -Department of Defense Directive"
+      ],
+      [
+       "DoDI -Department of Defense Instruction"
+      ],
+      [
+       "DoDIN -Department of Defense Information Networks"
+      ],
+      [
+       "HQ -Headquarters"
+      ],
+      [
+       "I&W -Indications &Warnings"
+      ],
+      [
+       "Assurance"
+      ],
+      [
+       "IA -Information"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "C2 -Command and Control",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CAT -Category (i.e., CAT 1 root level intrusion)",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CCDR -Combatant Commander",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CCIR -Commander's Critical Information Requirements",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CERT -Computer Emergency Response Team",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CFP -Communications Focal Point",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CI -Counterintelligence",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CIO -Chief Information Officer",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CIR -Cyber Incident Report",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CJCS -Chairman, Joint Chiefs of Staff",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CJCSI -Chairman, Joint Chiefs of Staff Instruction",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CJCSM -Chairman, Joint Chiefs of Staff Manual",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CNDSP -Computer Network Defense Service Provider",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CNA -Computer Network Attack",
+       "",
+       "",
+       ""
+      ],
+      [
+       "COA -Course of Action",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CoR -Certificate of Reconstitution",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CORA -Cyber Operations Risk Assessment",
+       "",
+       "",
+       ""
+      ],
+      [
+       "C/S/As -Combatant Commands/Services/Agencies",
+       "C/S/As -Combatant Commands/Services/Agencies",
+       "C/S/As -Combatant Commands/Services/Agencies",
+       "C/S/As -Combatant Commands/Services/Agencies"
+      ],
+      [
+       "CSL -Cybersecurity Liaison",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CST -Client Service Technician",
+       "",
+       "",
+       ""
+      ],
+      [
+       "CTO -Communications Tasking Order",
+       "",
+       "",
+       ""
+      ],
+      [
+       "DC3 -Defense Cyber Crime Center",
+       "",
+       "",
+       ""
+      ],
+      [
+       "DCO -Defensive Cyberspace Operations",
+       "",
+       "",
+       ""
+      ],
+      [
+       "DoD -Department of Defense",
+       "",
+       "",
+       ""
+      ],
+      [
+       "DoDD -Department of Defense Directive",
+       "DoDD -Department of Defense Directive",
+       "DoDD -Department of Defense Directive",
+       "DoDD -Department of Defense Directive"
+      ],
+      [
+       "DoDI -Department of Defense Instruction",
+       "",
+       "",
+       ""
+      ],
+      [
+       "DoDIN -Department of Defense Information Networks",
+       "DoDIN -Department of Defense Information Networks",
+       "DoDIN -Department of Defense Information Networks",
+       "DoDIN -Department of Defense Information Networks"
+      ],
+      [
+       "EITSM -Enterprise Information Technology Service Management",
+       "",
+       "",
+       ""
+      ],
+      [
+       "HQ -Headquarters",
+       "HQ -Headquarters",
+       "HQ -Headquarters",
+       "HQ -Headquarters"
+      ],
+      [
+       "I&W -Indications",
+       "I&W -Indications",
+       "I&W -Indications",
+       "I&W -Indications"
+      ],
+      [
+       "&Warnings",
+       "&Warnings",
+       "&Warnings",
+       "&Warnings"
+      ],
+      [
+       "IA -Information",
+       "Assurance",
+       "",
+       ""
+      ]
+     ]
+    }
+   ],
+   "caption_in_header_tables": [
+    1,
+    1
+   ],
+   "no_grid_regions": [
+    0,
+    0
+   ]
+  },
+  "afman17-2101": {
+   "text_items_base": 312,
+   "text_items_lost_share": 0.0,
+   "code_items": [
+    0,
+    0
+   ],
+   "code_share_of_chars": [
+    0.0,
+    0.0
+   ],
+   "list_items": [
+    104,
+    104
+   ],
+   "text_items_lost": 0,
+   "text_items_extra": 0,
+   "text_6gram": {
+    "base": 7627,
+    "lost": 0,
+    "lost_share": 0.0,
+    "absent_entirely": 0,
+    "extra": 0,
+    "extra_share": 0.0
+   },
+   "lost_items": [],
+   "extra_items": [],
+   "tables": [
+    6,
+    6
+   ],
+   "tables_with_different_grid": 5,
+   "table_differences": [
+    {
+     "index": 1,
+     "self_ref": "#/tables/1",
+     "page": 3,
+     "shape": [
+      [
+       4,
+       3
+      ],
+      [
+       4,
+       3
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 0,
+       "col": 0,
+       "base": "Chapter 3- COMMERCIAL INTERNET SERVICE PROVIDER (ISP)",
+       "variant": "Chapter 3-"
+      },
+      {
+       "row": 0,
+       "col": 1,
+       "base": "Chapter 3- COMMERCIAL INTERNET SERVICE PROVIDER (ISP)",
+       "variant": "COMMERCIAL INTERNET SERVICE PROVIDER (ISP)"
+      },
+      {
+       "row": 2,
+       "col": 1,
+       "base": "Air Education and Training Command (HQ AETC) and the United States Air Force Academy (USAFA) are authorized to operate networks specifically designed to IT enable their education and training missions...................................",
+       "variant": "Air Education and Training Command (HQ AETC) and the United States Air Academy (USAFA) are authorized to operate networks specifically to IT enable their education and training"
+      },
+      {
+       "row": 3,
+       "col": 0,
+       "base": "Attachment 1- GLOSSARY OF REFERENCES AND SUPPORTING INFORMATION",
+       "variant": "Attachment 1-"
+      },
+      {
+       "row": 3,
+       "col": 1,
+       "base": "Attachment 1- GLOSSARY OF REFERENCES AND SUPPORTING INFORMATION",
+       "variant": "Force designed missions................................... GLOSSARY OF REFERENCES AND SUPPORTING INFORMATION"
+      }
+     ]
+    },
+    {
+     "index": 2,
+     "self_ref": "#/tables/2",
+     "page": 22,
+     "shape": [
+      [
+       20,
+       1
+      ],
+      [
+       21,
+       1
+      ]
+     ],
+     "base_grid": [
+      [
+       "Joint Publication 3-12, Cyberspace Operations, 5 February 2013"
+      ],
+      [
+       "Joint Publication 6-0, Joint Communication System, 10 June 2015 CJCSI 6211.02D, Defense Information System Network (DISN) Responsibilities, 24 January 2012"
+      ],
+      [
+       "DoDI 5000.64, Accountability and Management of DoD Equipment and other Accountable Property, 27 April 2017"
+      ],
+      [
+       "DoDI 8010.ab, Department of Defense Information Network (DODIN) Transport, draft"
+      ],
+      [
+       "DoDI 8100.04, DoD Unified Capabilities (UC), 9 December 2010"
+      ],
+      [
+       "ASD (C3I) Memo, Policy Clarification Letter - Long-Haul and Regional Telecommunications Systems and Services for the Department of Defense (DoD), 5 May 1997"
+      ],
+      [
+       "NCS Directive 3-1, Telecommunications Service Priority (TSP) System for National Security Emergency Preparedness (NS/EP), 10 Aug 2000"
+      ],
+      [
+       "NCS Manual 3-1-1, TSP Service User Manual for the Telecommunications Service Priority (TSP) Systems, 5 May 2000"
+      ],
+      [
+       "DISAC 310-55-1, Enterprise Operational Reporting for the Department of Defense Information Network 9 Dec 2014"
+      ],
+      [
+       "DISAC 310-55-9, Base Level Support for the Defense Information System Network Services, 4 April 2014"
+      ],
+      [
+       "DISAC 310-70-1, Global Information Grid (GIG) Technical Control, 21 April 2012"
+      ],
+      [
+       "DISAC 310-130-1, Submission of Telecommunications Service Requests, 19 August 2009"
+      ],
+      [
+       "DISAC 310-130-2, Management Thresholds (MT5) and Performance Objectives (POs), 1 October 2012 DISAC 310-130-4, Defense User's Guide to the Telecommunications Service Priority (TSP) System, 21 October 2014"
+      ],
+      [
+       "DISA-DITCO Procurement Guide for Telecommunications January 2017 replaces Circular 350- 135-1,"
+      ],
+      [
+       "Commercial Communications, Defense Commercial Communications Acquisition Procedures, 12 Feb 1996, includes Change 11, 14 Aug 2013"
+      ],
+      [
+       "Procurement Guide - Telecommunications, January 2017"
+      ],
+      [
+       "DISA/DAF Memorandum of Agreement, Property Accountability of DISA-owned Equipment (MPS- 12-011), December 2012 in effect until December 2021"
+      ],
+      [
+       "AFPD 17-2, Cyberspace Operations, 12 April 2016"
+      ],
+      [
+       "AFI 17-210, Radio Management, 26 May 2016"
+      ],
+      [
+       "AFI 65-501, Economic Analysis, 29 Aug 2011"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "Joint Publication 3-12, Cyberspace Operations, 5 February 2013"
+      ],
+      [
+       "Joint Publication 6-0, Joint Communication System, 10 June 2015"
+      ],
+      [
+       "CJCSI 6211.02D, Defense Information System Network (DISN) Responsibilities, 24 January 2012"
+      ],
+      [
+       "DoDI 5000.64, Accountability and Management of DoD Equipment and other Accountable Property, 27 April 2017"
+      ],
+      [
+       "DoDI 8010.ab, Department of Defense Information Network (DODIN) Transport, draft"
+      ],
+      [
+       "DoDI 8100.04, DoD Unified Capabilities (UC), 9 December 2010"
+      ],
+      [
+       "ASD (C3I) Memo, Policy Clarification Letter - Long-Haul and Regional Telecommunications Systems and Services for the Department of Defense (DoD), 5 May 1997"
+      ],
+      [
+       "NCS Directive 3-1, Telecommunications Service Priority (TSP) System for National Security Emergency Preparedness (NS/EP), 10 Aug 2000"
+      ],
+      [
+       "NCS Manual 3-1-1, TSP Service User Manual for the Telecommunications Service Priority (TSP) Systems, 5 May 2000"
+      ],
+      [
+       "DISAC 310-55-1, Enterprise Operational Reporting for the Department of Defense Information Network 9 Dec 2014"
+      ],
+      [
+       "DISAC 310-55-9, Base Level Support for the Defense Information System Network Services, 4 April 2014"
+      ],
+      [
+       "DISAC 310-70-1, Global Information Grid (GIG) Technical Control, 21 April 2012 DISAC 310-130-1, Submission of Telecommunications Service Requests, 19 August 2009"
+      ],
+      [
+       "DISAC 310-130-2, Management Thresholds (MT5) and Performance Objectives (POs), 1 October 2012 DISAC 310-130-4, Defense User's Guide to the Telecommunications Service October 2014"
+      ],
+      [
+       "Priority (TSP) System, 21"
+      ],
+      [
+       "DISA-DITCO Procurement Guide for Telecommunications January 2017 replaces Circular 350- 135-1,"
+      ],
+      [
+       "Commercial Communications, Defense Commercial Communications Acquisition Procedures, 12 Feb 1996, includes Change 11, 14 Aug 2013"
+      ],
+      [
+       "Procurement Guide - Telecommunications, January 2017"
+      ],
+      [
+       "(MPS- 12-011), December 2012 in effect until December 2021"
+      ],
+      [
+       "AFPD 17-2, Cyberspace Operations, 12 April 2016"
+      ],
+      [
+       "AFI 17-210, Radio Management, 26 May 2016"
+      ],
+      [
+       "AFI 65-501, Economic Analysis, 29 Aug 2011"
+      ]
+     ]
+    },
+    {
+     "index": 3,
+     "self_ref": "#/tables/3",
+     "page": 23,
+     "shape": [
+      [
+       23,
+       1
+      ],
+      [
+       29,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "Directive-Type Memorandum (DTM) 09-012, Interim Policy Guidance for DOD Physical Access Control."
+      ],
+      [
+       "DoDI 1015.10, Military Morale, Welfare, and Recreation (MWR)"
+      ],
+      [
+       "DoDI 1015.15, Establishment, Management, and Control of Non-Appropriated Fund Instrumentalities and Financial Management of Supporting Resources"
+      ],
+      [
+       "DoDI 5535.10 Coordination of DoD Efforts to Identify, Evaluate, and Transfer DoD Technology Items, Equipment, and Services to Federal State, and Local First Responders"
+      ],
+      [
+       "DODI 6055.17, DoD Emergency Management (EM) Program DODI 8220.02, Information and Communications Technology (ICT) Capabilities for Support of Stabilization and Reconstruction, Disaster Relief, and Humanitarian and Civic Assistance Operations"
+      ],
+      [
+       "DODI 8510.01, Risk Management Framework"
+      ],
+      [
+       "DoDI 8550.01, DoD Internet Services and Internet-Based Capabilities"
+      ],
+      [
+       "Federal Information Processing Standard (FIPS) 140-2 encryption AFI 17-101, Risk Management Framework (RMF) for AF Information Technology"
+      ],
+      [
+       "(IT), 02 Feb 2017 AFI 32-6005, Unaccompanied Housing Management, 29 Jan 2016 AFI 65-106, Appropriated Fund Support of Morale, Welfare, and Recreation (MWR) and"
+      ],
+      [
+       "Prescribed Forms"
+      ],
+      [
+       "No forms are prescribed by this publication"
+      ],
+      [
+       "Adopted Forms AF Form 847, Recommendation for Change of Publication AF Form 406 Miscellaneous Obligation/Reimbursement Document"
+      ],
+      [
+       "(MORD)"
+      ],
+      [
+       "Abbreviations and Acronyms"
+      ],
+      [
+       "ABO -Authorized Billing Official"
+      ],
+      [
+       "ADO -Address Directory Official"
+      ],
+      [
+       "AFO -Authorized Funding Official"
+      ],
+      [
+       "AHC -Agency Hierarchy Code"
+      ],
+      [
+       "ARO -Authorized Requesting Official"
+      ],
+      [
+       "ASI -Authorized Service Interruption"
+      ],
+      [
+       "ATC -Authority to Connect"
+      ],
+      [
+       "ATO -Authority to Operate"
+      ],
+      [
+       "CCO -Circuit Control Office"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "Directive-Type Memorandum (DTM) 09-012, Interim Policy Guidance for DOD Access Control.",
+       "Physical"
+      ],
+      [
+       "DoDI 1015.10, Military Morale, Welfare, and Recreation",
+       "(MWR)"
+      ],
+      [
+       "DoDI 1015.15, Establishment, Management, and Control of Instrumentalities and Financial Management of Supporting Resources",
+       "Non-Appropriated Fund"
+      ],
+      [
+       "DoDI 5535.10 Coordination of DoD Efforts to Identify, Items, Equipment, and Services to Federal State, and Local",
+       "Evaluate, and Transfer DoD Technology First Responders DoD"
+      ],
+      [
+       "DODI 6055.17,",
+       "Emergency Management (EM) Program"
+      ],
+      [
+       "DODI 8220.02, Information and Communications Stabilization and Reconstruction, Disaster Relief, Operations",
+       "Technology (ICT) Capabilities for Support of and Humanitarian and Civic Assistance"
+      ],
+      [
+       "DODI 8510.01, Risk Management Framework",
+       ""
+      ],
+      [
+       "DoDI 8550.01, DoD Internet Services and Internet-Based",
+       "Capabilities"
+      ],
+      [
+       "Federal Information Processing Standard (FIPS) AFI 17-101, Risk Management 2017",
+       "140-2 encryption Framework (RMF) for AF Information Technology (IT), 02 Feb"
+      ],
+      [
+       "AFI 32-6005, Unaccompanied Housing Management, 29",
+       "Jan 2016 and"
+      ],
+      [
+       "AFI 65-106, Appropriated Fund Support of Morale, Welfare, and Recreation (MWR) Nonappropriated Fund Instrumentalities (NAFIS), 06 May 2009",
+       ""
+      ],
+      [
+       "Prescribed",
+       "Forms"
+      ],
+      [
+       "No forms are",
+       "prescribed by this publication"
+      ],
+      [
+       "Adopted Forms",
+       ""
+      ],
+      [
+       "AF Form 847, Recommendation for Change of",
+       "Publication"
+      ],
+      [
+       "AF Form 406 Miscellaneous Obligation/Reimbursement Document",
+       "(MORD)"
+      ],
+      [
+       "",
+       "Abbreviations and Acronyms"
+      ],
+      [
+       "ABO -Authorized Billing",
+       "Official"
+      ],
+      [
+       "ADO -Address Directory Official",
+       ""
+      ],
+      [
+       "AFO -Authorized Funding Official",
+       ""
+      ],
+      [
+       "AHC -Agency Hierarchy",
+       "Code"
+      ],
+      [
+       "ARO -Authorized Requesting",
+       "ARO -Authorized Requesting"
+      ],
+      [
+       "Official",
+       "Official"
+      ],
+      [
+       "Interruption",
+       "Interruption"
+      ],
+      [
+       "ASI -Authorized Service",
+       "ASI -Authorized Service"
+      ],
+      [
+       "ATC -Authority to Connect",
+       "ATC -Authority to Connect"
+      ],
+      [
+       "ATO -Authority to Operate",
+       "ATO -Authority to Operate"
+      ],
+      [
+       "CCO -Circuit Control",
+       "CCO -Circuit Control"
+      ],
+      [
+       "Office",
+       "Office"
+      ]
+     ]
+    },
+    {
+     "index": 4,
+     "self_ref": "#/tables/4",
+     "page": 24,
+     "shape": [
+      [
+       29,
+       1
+      ],
+      [
+       28,
+       1
+      ]
+     ],
+     "base_grid": [
+      [
+       "CCSD -Command and Control Service Designated"
+      ],
+      [
+       "CFLI -Core Function Lead Integrator"
+      ],
+      [
+       "CIO -Chief Information Officer"
+      ],
+      [
+       "CIPS -Cyberspace Infrastructure Planning System"
+      ],
+      [
+       "CJCS -Chairman of the Joint Chiefs of Staff"
+      ],
+      [
+       "CMO -Circuit Management Office"
+      ],
+      [
+       "COCOM -Combatant Command"
+      ],
+      [
+       "CIPS -Cyberspace Infrastructure Planning System"
+      ],
+      [
+       "CJCS -Chairman of the Joint Chiefs of Staff"
+      ],
+      [
+       "CMO -Circuit Management Office"
+      ],
+      [
+       "COCOM -Combatant Command"
+      ],
+      [
+       "CoP -Community of Practice"
+      ],
+      [
+       "CSA -Communications Service Authorization"
+      ],
+      [
+       "DCN -DISA Control Number"
+      ],
+      [
+       "DISA -Defense Information Systems Agency"
+      ],
+      [
+       "DISAC -Defense Information Systems Agency Circular"
+      ],
+      [
+       "DISN -Defense Information Systems Network"
+      ],
+      [
+       "DITCO -Defense Information Technology Contracting Office"
+      ],
+      [
+       "DODIN -Department of Defense Information Networks"
+      ],
+      [
+       "DSAWG -Defense Information Assurance Security Accreditation Working Group"
+      ],
+      [
+       "DSF -DISA StoreFront"
+      ],
+      [
+       "DSR -Delayed Service Report"
+      ],
+      [
+       "DWCF -Defense Working Capital Fund"
+      ],
+      [
+       "DWP -DODIN Waiver Panel"
+      ],
+      [
+       "EA -Economic Analysis"
+      ],
+      [
+       "EXC -Exception Report"
+      ],
+      [
+       "FYDP -Future Year Defense Program"
+      ],
+      [
+       "IbCs -Internet-based Capabilities"
+      ],
+      [
+       "IS -Internet Service"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "CCSD -Command and Control Service Designated"
+      ],
+      [
+       "CFLI -Core Function Lead Integrator"
+      ],
+      [
+       "CIO -Chief Information Officer"
+      ],
+      [
+       "CIPS -Cyberspace Infrastructure Planning System"
+      ],
+      [
+       "CJCS -Chairman of the Joint Chiefs of Staff"
+      ],
+      [
+       "CMO -Circuit Management Office"
+      ],
+      [
+       "COCOM -Combatant Command"
+      ],
+      [
+       "CIPS -Cyberspace Infrastructure Planning System"
+      ],
+      [
+       "CJCS -Chairman of the Joint Chiefs of Staff"
+      ],
+      [
+       "CMO -Circuit Management Office"
+      ],
+      [
+       "COCOM -Combatant Command"
+      ],
+      [
+       "CSA -Communications Service Authorization"
+      ],
+      [
+       "DCN -DISA Control Number"
+      ],
+      [
+       "DISA -Defense Information Systems Agency"
+      ],
+      [
+       "DISAC -Defense Information Systems Agency Circular"
+      ],
+      [
+       "DISN -Defense Information Systems Network"
+      ],
+      [
+       "DITCO -Defense Information Technology Contracting Office"
+      ],
+      [
+       "DODIN -Department of Defense Information Networks"
+      ],
+      [
+       "DSAWG -Defense Information Assurance Security Accreditation Working Group"
+      ],
+      [
+       "DSF -DISA StoreFront"
+      ],
+      [
+       "DSR -Delayed Service Report"
+      ],
+      [
+       "DWCF -Defense Working Capital Fund"
+      ],
+      [
+       "EA -Economic Analysis"
+      ],
+      [
+       "EXC -Exception Report"
+      ],
+      [
+       "FYDP -Future Year Defense Program"
+      ],
+      [
+       "IbCs -Internet-based Capabilities"
+      ],
+      [
+       "IER-In -Effect Report"
+      ],
+      [
+       "IS -Internet Service"
+      ]
+     ]
+    },
+    {
+     "index": 5,
+     "self_ref": "#/tables/5",
+     "page": 25,
+     "shape": [
+      [
+       31,
+       1
+      ],
+      [
+       30,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "IT -Information Technology"
+      ],
+      [
+       "LAFO -Lead Authorized Funding Official"
+      ],
+      [
+       "LHC -Long Haul Communications"
+      ],
+      [
+       "LOA -Line of Accounting"
+      ],
+      [
+       "MHQ -Management Headquarters"
+      ],
+      [
+       "MILDEP -Military Departments (aka sister services)"
+      ],
+      [
+       "MOB -Main Operating Base"
+      ],
+      [
+       "MORD -Miscellaneous Obligation Reimbursement Document"
+      ],
+      [
+       "MRC -Monthly Recurring Charge"
+      ],
+      [
+       "NCS -National Communications System"
+      ],
+      [
+       "NRC -Non-Recurring Charge"
+      ],
+      [
+       "NSC -Node Site Coordinator"
+      ],
+      [
+       "NS/EP -National Security/Emergency Preparedness"
+      ],
+      [
+       "PDC -Program Designator Code"
+      ],
+      [
+       "POM -Program Objective Memorandum"
+      ],
+      [
+       "POP -Point of Presence"
+      ],
+      [
+       "PTF -Patch and Test Facility"
+      ],
+      [
+       "R&R -Review and Revalidation"
+      ],
+      [
+       "RFU -Ready for Use"
+      ],
+      [
+       "SAM -Status of Acquisition Message"
+      ],
+      [
+       "SBU -Sensitive but Unclassified"
+      ],
+      [
+       "SDB -Satellite Data Base"
+      ],
+      [
+       "SDP -Service Delivery Point"
+      ],
+      [
+       "SR -Service Request"
+      ],
+      [
+       "SRG -Security Recommendation Guides"
+      ],
+      [
+       "STIG -Security Technical Implementation Guide"
+      ],
+      [
+       "TCF -Technical Control Facility"
+      ],
+      [
+       "TCOSS -Telecommunications Certification Office Support System"
+      ],
+      [
+       "TIBI -Telecommunication Services Enterprise Acquisition Services (TSEAS) Inventory Billing Information"
+      ],
+      [
+       "TRAO -Top Registration Authorization Official"
+      ],
+      [
+       "TSO -Telecommunications Service Order"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "IT -Information Technology",
+       ""
+      ],
+      [
+       "LAFO -Lead Authorized Funding Official",
+       ""
+      ],
+      [
+       "LHC -Long Haul Communications",
+       ""
+      ],
+      [
+       "LOA -Line of Accounting",
+       ""
+      ],
+      [
+       "MHQ -Management Headquarters",
+       ""
+      ],
+      [
+       "MOB -Main Operating Base",
+       ""
+      ],
+      [
+       "MORD -Miscellaneous Obligation Reimbursement Document",
+       ""
+      ],
+      [
+       "MRC -Monthly Recurring Charge",
+       ""
+      ],
+      [
+       "NCS -National Communications System",
+       ""
+      ],
+      [
+       "NRC -Non-Recurring Charge",
+       ""
+      ],
+      [
+       "NS/EP -National Security/Emergency Preparedness",
+       ""
+      ],
+      [
+       "PDC -Program Designator Code",
+       ""
+      ],
+      [
+       "POM -Program Objective Memorandum",
+       ""
+      ],
+      [
+       "POP -Point of Presence",
+       ""
+      ],
+      [
+       "PTF -Patch and Test Facility",
+       ""
+      ],
+      [
+       "R&R -Review and Revalidation",
+       ""
+      ],
+      [
+       "RFU -Ready for Use",
+       ""
+      ],
+      [
+       "SBU -Sensitive but Unclassified",
+       ""
+      ],
+      [
+       "SDB -Satellite Data Base",
+       ""
+      ],
+      [
+       "SDP -Service Delivery Point",
+       ""
+      ],
+      [
+       "SR -Service Request",
+       ""
+      ],
+      [
+       "SRG -Security Recommendation Guides",
+       "SRG -Security Recommendation Guides"
+      ],
+      [
+       "STIG -Security Technical Implementation Guide",
+       ""
+      ],
+      [
+       "TCF -Technical Control",
+       "TCF -Technical Control"
+      ],
+      [
+       "Facility",
+       ""
+      ],
+      [
+       "TCOSS -Telecommunications Certification Office Support System",
+       "TCOSS -Telecommunications Certification Office Support System"
+      ],
+      [
+       "TIBI -Telecommunication Services Enterprise Acquisition Services (TSEAS) Inventory Billing Information",
+       ""
+      ],
+      [
+       "TRAO -Top Registration Authorization Official",
+       ""
+      ],
+      [
+       "TSEAS -Telecommunications Services Enterprise Acquisition Services",
+       "TSEAS -Telecommunications Services Enterprise Acquisition Services"
+      ],
+      [
+       "TSO -Telecommunications Service Order",
+       "TSO -Telecommunications Service Order"
+      ]
+     ]
+    }
+   ],
+   "caption_in_header_tables": [
+    0,
+    0
+   ],
+   "no_grid_regions": [
+    0,
+    0
+   ]
+  },
+  "afpd_17-1": {
+   "text_items_base": 178,
+   "text_items_lost_share": 0.0,
+   "code_items": [
+    0,
+    0
+   ],
+   "code_share_of_chars": [
+    0.0,
+    0.0
+   ],
+   "list_items": [
+    30,
+    30
+   ],
+   "text_items_lost": 0,
+   "text_items_extra": 0,
+   "text_6gram": {
+    "base": 4536,
+    "lost": 0,
+    "lost_share": 0.0,
+    "absent_entirely": 0,
+    "extra": 0,
+    "extra_share": 0.0
+   },
+   "lost_items": [],
+   "extra_items": [],
+   "tables": [
+    3,
+    3
+   ],
+   "tables_with_different_grid": 3,
+   "table_differences": [
+    {
+     "index": 0,
+     "self_ref": "#/tables/0",
+     "page": 9,
+     "shape": [
+      [
+       20,
+       1
+      ],
+      [
+       22,
+       1
+      ]
+     ],
+     "base_grid": [
+      [
+       "Title 10, USC, Section 2223(b), 'Information Technology: Additional Responsibilities of Chief Information Officers of Military Department, 2007"
+      ],
+      [
+       "Title 44, USC, Section 3541, Federal Information Security Management Act (FISMA) , 2002"
+      ],
+      [
+       "National Defense Authorization Act (NDAA), Published Annually"
+      ],
+      [
+       "Clinger-Cohen Act (CCA) , 1996"
+      ],
+      [
+       "OMBCircular A-11 , Preparation, Submission, and Execution of the Budget, August 3, 2012"
+      ],
+      [
+       "OMBCircular A-130, Management of Federal Information Resources, November 28, 2000"
+      ],
+      [
+       "OMBMemorandum M-11-29, Chief Information Officer Authorities, August 8, 2011"
+      ],
+      [
+       "NIST Special Publication 800-59, Guideline for Identifying an Information System as a National Security System, August 2003"
+      ],
+      [
+       "DoDD 3700.01, DoD Command and Control (C2) Enabling Capabilities , October 22, 2014"
+      ],
+      [
+       "DoDD 5000.01, The Defense Acquisition System, May 12, 2003"
+      ],
+      [
+       "DoDD 5144.02, DoD Chief Information Officer (DoD CIO) , November 21, 2014 DoDD 7045.20, Capability Portfolio Management , September 25, 2008; DoDD 8000.01, Management of the Department of Defense Information Enterprise, February"
+      ],
+      [
+       "DoDD 8115.01, Information Technology Portfolio Management, October 10, 2005"
+      ],
+      [
+       "DoDD 8140.01, Cyberspace Workforce Management, August 11, 2015 DoDD 8521.01E, Department of Defense Biometrics , February 21, 2008"
+      ],
+      [
+       "DoDI O-3780.01, Senior Leader Secure Communications Modernization (SLSCM) , May 22, 2014"
+      ],
+      [
+       "DoDI S-4460.01, Encryption of Imagery Transmitted by Airborne Systems and Unmanned Aircraft Control Communications , July 27, 2011"
+      ],
+      [
+       "DoDI 5000.02, Operation of the Defense Acquisition System , January 7, 2015"
+      ],
+      [
+       "DoDI S-5100.92, Defense and National Leadership Command Capability (DNLCC) Governance , May 11, 2009"
+      ],
+      [
+       "DoDI S-5200.16, Objectives and Minimum Standards for Communications Security (COMSEC) Measures Used in Nuclear Command and Control (NC2) Communications (U) , November 14, 2007;"
+      ],
+      [
+       "DoDI 5200.44, Protection of Mission Critical Functions to Achieve Trusted Systems and Networks, November 5, 2012 ;"
+      ],
+      [
+       "DoDI 5205.8, Access to Classified Cryptographic Information , November 8, 2007;"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "Title 10, USC, Section 2223(b), 'Information Technology: Additional Responsibilities of Chief"
+      ],
+      [
+       "Title 44, USC, Section 3541, Federal Information Security Management Act (FISMA) , 2002"
+      ],
+      [
+       "National Defense Authorization Act (NDAA), Published Annually"
+      ],
+      [
+       "Clinger-Cohen Act (CCA) , 1996"
+      ],
+      [
+       "OMBCircular A-11 , Preparation, Submission, and Execution of the Budget, August 3, 2012"
+      ],
+      [
+       "OMBCircular A-130, Management of Federal Information Resources, November 28, 2000"
+      ],
+      [
+       "OMBMemorandum M-11-29, Chief Information Officer Authorities, August 8, 2011"
+      ],
+      [
+       "NIST Special Publication 800-59, Guideline for Identifying an Information System as a National Security System, August 2003"
+      ],
+      [
+       "DoDD 3700.01, DoD Command and Control (C2) Enabling Capabilities , October 22, 2014"
+      ],
+      [
+       "DoDD 5000.01, The Defense Acquisition System, May 12, 2003"
+      ],
+      [
+       "DoDD 7045.20, Capability Portfolio Management , September 25, 2008;"
+      ],
+      [
+       "DoDD 8000.01, Management of the Department of Defense Information Enterprise, February 10, 2009"
+      ],
+      [
+       "DoDD 8115.01, Information Technology Portfolio Management, October 10, 2005"
+      ],
+      [
+       "DoDD 8140.01, Cyberspace Workforce Management, August 11, 2015"
+      ],
+      [
+       "DoDD 8521.01E, Department of Defense Biometrics , February 21, 2008"
+      ],
+      [
+       "DoDI O-3780.01, Senior Leader Secure Communications Modernization (SLSCM) , May 22, 2014"
+      ],
+      [
+       "DoDI S-4460.01, Encryption of Imagery Transmitted by Airborne Systems and Unmanned Aircraft Control Communications , July 27, 2011"
+      ],
+      [
+       "DoDI 5000.02, Operation of the Defense Acquisition System , January 7, 2015"
+      ],
+      [
+       "DoDI S-5100.92, Defense and National Leadership Command Capability (DNLCC) Governance , May 11, 2009"
+      ],
+      [
+       "DoDI S-5200.16, Minimum Standards for Communications Security (COMSEC) Measures Used in and Control (NC2) Communications (U) , November 14,"
+      ],
+      [
+       "Objectives and Nuclear Command"
+      ],
+      [
+       "DoDI 5200.44, Protection of Mission Critical Functions to Achieve Trusted Systems and Networks, November 5, 2012 ;"
+      ]
+     ]
+    },
+    {
+     "index": 1,
+     "self_ref": "#/tables/1",
+     "page": 10,
+     "shape": [
+      [
+       28,
+       1
+      ],
+      [
+       28,
+       2
+      ]
+     ],
+     "base_grid": [
+      [
+       "DoDI 8115.02, Information Technology Portfolio Management Implementation, October 30, 2006"
+      ],
+      [
+       "DoDD 8220.1, Single Agency Manager (SAF) for Pentagon Information Technology Services (ITS) , March 1, 1995;"
+      ],
+      [
+       "DoDI 8310.01, Information Technology Standards in the DoD , February 2, 2015"
+      ],
+      [
+       "DoDI 8320.05, Electromagnetic Spectrum Data Sharing , August 18, 2011"
+      ],
+      [
+       "DoDI 8330.01, Interoperability of Information Technology (IT), including National Security Systems (NSS) , May 21, 2014"
+      ],
+      [
+       "DoDI 8500.01, Cybersecurity , March 14, 2014"
+      ],
+      [
+       "DoDI 8510.01, Risk Management Framework (RMF) for DoD Information Technology (IT) , March 12, 2014"
+      ],
+      [
+       "CJCSI 5116.05, Military Command, Control, Communications, and Computers Executive Board April 23, 2014"
+      ],
+      [
+       "CJCSI 5123.01G Charter of the Joint Requirements Oversight Council, February 12, 2015 JP 3-12, Cyberspace Operations , February 5, 2013"
+      ],
+      [
+       "AFPD 16-14, Security Enterprise Governance , July 24, 2014"
+      ],
+      [
+       "AFI 31-101, Integrated Defense , October 8, 2009"
+      ],
+      [
+       "AFI 38-101, Air Force Organization , March 16, 2011"
+      ],
+      [
+       "AFMAN 33-363, Management of Records, March 1, 2008"
+      ],
+      [
+       "AF Information Dominance Flight Plan (IDFP), v2.0, May 1, 2015"
+      ],
+      [
+       "Prescribed Forms"
+      ],
+      [
+       "None"
+      ],
+      [
+       "Adopted Forms"
+      ],
+      [
+       "AF Form 847, Recommendation for Change of Publication"
+      ],
+      [
+       "Abbreviations and Acronyms"
+      ],
+      [
+       "AF -Air Force"
+      ],
+      [
+       "AFI -Air Force Instruction"
+      ],
+      [
+       "AFIN -Air Force Information Network"
+      ],
+      [
+       "AFMAN -Air Force Manual"
+      ],
+      [
+       "AFPD -Air Force Policy Directive"
+      ],
+      [
+       "AFRIMS -Air Force Records Information Management System"
+      ],
+      [
+       "AFSPC -Air Force Space Command"
+      ],
+      [
+       "BMA -Business Mission Area"
+      ],
+      [
+       "C2 -Command and Control"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "DoDI 8115.02, Information Technology Portfolio Management Implementation, October 30, 2006",
+       ""
+      ],
+      [
+       "DoDD 8220.1, Single Agency Manager (SAF) for Pentagon Information Technology Services (ITS) , March 1, 1995;",
+       ""
+      ],
+      [
+       "DoDI 8310.01, Information Technology Standards in the DoD , February 2, 2015",
+       ""
+      ],
+      [
+       "DoDI 8320.05, Electromagnetic Spectrum Data Sharing , August 18, 2011",
+       ""
+      ],
+      [
+       "DoDI 8330.01, Interoperability of Information Technology (IT), including National Security Systems (NSS) , May 21, 2014",
+       ""
+      ],
+      [
+       "DoDI 8500.01, Cybersecurity , March 14, 2014",
+       ""
+      ],
+      [
+       "DoDI 8510.01, Risk Management Framework (RMF) for DoD Information Technology (IT) , March 12, 2014",
+       ""
+      ],
+      [
+       "CJCSI 5116.05, Military Command, Control, Communications, and Computers Executive Board April 23, 2014",
+       ""
+      ],
+      [
+       "CJCSI 5123.01G Charter of the Joint Requirements Oversight Council, February 12, 2015",
+       ""
+      ],
+      [
+       "JP 3-12, Cyberspace Operations , February 5, 2013",
+       ""
+      ],
+      [
+       "AFPD 16-14, Security Enterprise Governance , July 24, 2014 AFI 31-101, Integrated Defense , October 8, 2009",
+       ""
+      ],
+      [
+       "AFI 38-101, Air Force Organization , March 16, 2011",
+       ""
+      ],
+      [
+       "AFMAN 33-363, Management of Records, March 1, 2008",
+       ""
+      ],
+      [
+       "AF Information Dominance Flight Plan (IDFP), v2.0, May 1, 2015",
+       ""
+      ],
+      [
+       "Prescribed Forms",
+       ""
+      ],
+      [
+       "None",
+       ""
+      ],
+      [
+       "Adopted Forms",
+       ""
+      ],
+      [
+       "AF Form 847, Recommendation for Change of Publication",
+       ""
+      ],
+      [
+       "Abbreviations and Acronyms",
+       ""
+      ],
+      [
+       "AF -Air Force",
+       ""
+      ],
+      [
+       "AFI -Air Force Instruction",
+       ""
+      ],
+      [
+       "AFIN -Air Force Information Network",
+       "AFIN -Air Force Information Network"
+      ],
+      [
+       "AFMAN -Air Force Manual",
+       ""
+      ],
+      [
+       "AFPD -Air Force Policy Directive",
+       ""
+      ],
+      [
+       "AFRIMS -Air Force Records Information Management System",
+       "AFRIMS -Air Force Records Information Management System"
+      ],
+      [
+       "AFSPC -Air Force Space Command",
+       "AFSPC -Air Force Space Command"
+      ],
+      [
+       "BMA -Business Mission Area",
+       "BMA -Business Mission Area"
+      ],
+      [
+       "C2 -Command and Control",
+       ""
+      ]
+     ]
+    },
+    {
+     "index": 2,
+     "self_ref": "#/tables/2",
+     "page": 11,
+     "shape": [
+      [
+       30,
+       1
+      ],
+      [
+       31,
+       1
+      ]
+     ],
+     "base_grid": [
+      [
+       "CCA -Clinger-Cohen Act"
+      ],
+      [
+       "CFL -Core Function Lead"
+      ],
+      [
+       "CIO -Chief Information Officer"
+      ],
+      [
+       "DBS -Defense Business System"
+      ],
+      [
+       "DCMO -Deputy Chief Management Officer"
+      ],
+      [
+       "DoD -Department of Defense"
+      ],
+      [
+       "DoDD -Department of Defense Directive"
+      ],
+      [
+       "DoDI -Department of Defense Instruction"
+      ],
+      [
+       "DIMA -Defense Intelligence Mission Area"
+      ],
+      [
+       "DRU -Direct Report Units"
+      ],
+      [
+       "EA -Enterprise Architecture"
+      ],
+      [
+       "FISMA -Federal Information Security Management Act"
+      ],
+      [
+       "FOA -Field Operating Agency"
+      ],
+      [
+       "HAF -Headquarters Air Force"
+      ],
+      [
+       "IB -Implementation Baseline"
+      ],
+      [
+       "IDFP -Information Dominance Flight Plan"
+      ],
+      [
+       "IEMA -Information Environment Mission Area"
+      ],
+      [
+       "IS -Information System"
+      ],
+      [
+       "ISR -Intelligence, Surveillance, and Reconnaissance"
+      ],
+      [
+       "IT -Information Technology"
+      ],
+      [
+       "ITIL -Information Technology Infrastructure Library MAJCOM -Major Command"
+      ],
+      [
+       "NDAA -National Defense Authorization"
+      ],
+      [
+       "Act"
+      ],
+      [
+       "NSS -National Security System"
+      ],
+      [
+       "OB -Operational Baseline OMB -Office of Management and Budget"
+      ],
+      [
+       "OPR -Office of Primary Responsibility"
+      ],
+      [
+       "PEO -Program Executive Officer"
+      ],
+      [
+       "PIT -Platform Information Technology"
+      ],
+      [
+       "SCF -Service Core Function"
+      ],
+      [
+       "T&E -Test and Evaluation"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "CCA -Clinger-Cohen Act"
+      ],
+      [
+       "CFL -Core Function Lead"
+      ],
+      [
+       "CIO -Chief Information Officer"
+      ],
+      [
+       "DBS -Defense Business System"
+      ],
+      [
+       "DCMO -Deputy Chief Management Officer"
+      ],
+      [
+       "DoD -Department of Defense"
+      ],
+      [
+       "DoDD -Department of Defense Directive"
+      ],
+      [
+       "DoDI -Department of Defense Instruction"
+      ],
+      [
+       "DIMA -Defense Intelligence Mission Area"
+      ],
+      [
+       "DRU -Direct Report Units"
+      ],
+      [
+       "EA -Enterprise Architecture"
+      ],
+      [
+       "FISMA -Federal Information Security Management Act"
+      ],
+      [
+       "FOA -Field Operating Agency"
+      ],
+      [
+       "HAF -Headquarters Air Force"
+      ],
+      [
+       "IB -Implementation Baseline"
+      ],
+      [
+       "IDFP -Information Dominance Flight Plan"
+      ],
+      [
+       "IEMA -Information Environment Mission Area"
+      ],
+      [
+       "IS -Information System"
+      ],
+      [
+       "ISR -Intelligence, Surveillance, and Reconnaissance"
+      ],
+      [
+       "IT -Information Technology"
+      ],
+      [
+       "ITIL -Information Technology Infrastructure Library"
+      ],
+      [
+       "MAJCOM -Major Command"
+      ],
+      [
+       "NDAA -National Defense Authorization Act"
+      ],
+      [
+       "NSS -National Security System"
+      ],
+      [
+       "OB -Operational Baseline"
+      ],
+      [
+       "OMB -Office of Management and Budget"
+      ],
+      [
+       "OPR -Office of Primary Responsibility"
+      ],
+      [
+       "PEO -Program Executive Officer"
+      ],
+      [
+       "PIT -Platform Information Technology"
+      ],
+      [
+       "SCF -Service Core Function"
+      ],
+      [
+       "T&E -Test and Evaluation"
+      ]
+     ]
+    }
+   ],
+   "caption_in_header_tables": [
+    0,
+    0
+   ],
+   "no_grid_regions": [
+    0,
+    0
+   ]
+  },
+  "dafman17-1305": {
+   "text_items_base": 612,
+   "text_items_lost_share": 0.0,
+   "code_items": [
+    0,
+    0
+   ],
+   "code_share_of_chars": [
+    0.0,
+    0.0
+   ],
+   "list_items": [
+    129,
+    129
+   ],
+   "text_items_lost": 0,
+   "text_items_extra": 0,
+   "text_6gram": {
+    "base": 14942,
+    "lost": 0,
+    "lost_share": 0.0,
+    "absent_entirely": 0,
+    "extra": 0,
+    "extra_share": 0.0
+   },
+   "lost_items": [],
+   "extra_items": [],
+   "tables": [
+    4,
+    4
+   ],
+   "tables_with_different_grid": 2,
+   "table_differences": [
+    {
+     "index": 1,
+     "self_ref": "#/tables/1",
+     "page": 3,
+     "shape": [
+      [
+       30,
+       3
+      ],
+      [
+       30,
+       3
+      ]
+     ],
+     "changed_cells": [
+      {
+       "row": 10,
+       "col": 1,
+       "base": "Program or Project Managers (PMs), System Managers, Program Management Offices (PMOs), Developmental or Operational Test Agencies and all Units",
+       "variant": "Program or Project Managers (PMs), System Managers, Program Management Offices (PMOs), Developmental or Operational Test Agencies and all Units shall:........................................................................................................................."
+      },
+      {
+       "row": 11,
+       "col": 1,
+       "base": "shall:......................................................................................................................... Contracting Officers shall:.......................................................................................",
+       "variant": "Contracting Officers shall:......................................................................................."
+      },
+      {
+       "row": 17,
+       "col": 0,
+       "base": "Chapter",
+       "variant": "Chapter 3-GUIDANCE AND PROCEDURES"
+      },
+      {
+       "row": 17,
+       "col": 1,
+       "base": "3-GUIDANCE AND PROCEDURES",
+       "variant": "Chapter 3-GUIDANCE AND PROCEDURES"
+      },
+      {
+       "row": 20,
+       "col": 0,
+       "base": "3.3. 3.4.",
+       "variant": "3.3."
+      },
+      {
+       "row": 21,
+       "col": 0,
+       "base": "",
+       "variant": "3.4."
+      },
+      {
+       "row": 29,
+       "col": 0,
+       "base": "5.2.",
+       "variant": "5.2. Military Specific Training"
+      },
+      {
+       "row": 29,
+       "col": 1,
+       "base": "Military Specific Training Options..........................................................................",
+       "variant": "Options.........................................................................."
+      }
+     ]
+    },
+    {
+     "index": 3,
+     "self_ref": "#/tables/3",
+     "page": 36,
+     "shape": [
+      [
+       18,
+       1
+      ],
+      [
+       29,
+       1
+      ]
+     ],
+     "base_grid": [
+      [
+       "DoDD -Department of Defense Directive DoDI -Department of Defense Instruction DoDM -Department of Defense Manual DRU -Direct Reporting Unit FAR -Federal Acquisition Regulation FCWAA -Federal Cyber Workforce Assessment FLDCOM -Field Command (USSF only) FOA -Field Operating Agency HR -Human Resources"
+      ],
+      [
+       "MAJCOM -Major Command (USAF only) MCR -Manpower Change Requests MOU -Memorandum of Understanding MPES -Manpower Programming and Execution System OPR -Office of Primary Responsibility OPM -Office of Personnel Management PEM -Program Element Monitor"
+      ],
+      [
+       "Act"
+      ],
+      [
+       "ISSM -Information Systems Security Manager"
+      ],
+      [
+       "IST -Initial Skills Training IT -Information Technology"
+      ],
+      [
+       "KSA -Knowledge, Skills, Ability"
+      ],
+      [
+       "PIT -Platform IT (System)"
+      ],
+      [
+       "PME -Professional Military Education"
+      ],
+      [
+       "PMO -Program Management Office POM -Program Objective Memorandum"
+      ],
+      [
+       "PRD -Position Requirements Document"
+      ],
+      [
+       "PWS -Performance Work Statement"
+      ],
+      [
+       "SAP -Special Access Programs"
+      ],
+      [
+       "SCPD -Standard Core Personnel Documents"
+      ],
+      [
+       "SEI -Special Experience Identifier"
+      ],
+      [
+       "SFSC -Space Force Specialty Code"
+      ],
+      [
+       "SOW -Statement of Work"
+      ],
+      [
+       "-Space Training and Readiness Command"
+      ],
+      [
+       "STARCOM"
+      ]
+     ],
+     "variant_grid": [
+      [
+       "DoDD -Department of Defense Directive"
+      ],
+      [
+       "DoDI -Department of Defense Instruction"
+      ],
+      [
+       "DoDM -Department of Defense Manual"
+      ],
+      [
+       "DRU -Direct Reporting Unit"
+      ],
+      [
+       "FCWAA -Federal Cyber Workforce Assessment Act"
+      ],
+      [
+       "FLDCOM -Field Command (USSF only)"
+      ],
+      [
+       "FOA -Field Operating Agency"
+      ],
+      [
+       "HR -Human Resources"
+      ],
+      [
+       "ISSM -Information Systems Security Manager"
+      ],
+      [
+       "IST -Initial Skills Training"
+      ],
+      [
+       "KSA -Knowledge, Skills, Ability"
+      ],
+      [
+       "MAJCOM -Major Command (USAF only)"
+      ],
+      [
+       "MCR -Manpower Change Requests"
+      ],
+      [
+       "MOU -Memorandum of Understanding"
+      ],
+      [
+       "MPES -Manpower Programming and Execution System"
+      ],
+      [
+       "OPR -Office of Primary Responsibility"
+      ],
+      [
+       "OPM -Office of Personnel"
+      ],
+      [
+       "Management"
+      ],
+      [
+       "PIT -Platform IT (System)"
+      ],
+      [
+       "PMO -Program Management Office"
+      ],
+      [
+       "POM -Program Objective Memorandum"
+      ],
+      [
+       "PRD -Position Requirements Document"
+      ],
+      [
+       "PWS"
+      ],
+      [
+       "-Performance Work Statement"
+      ],
+      [
+       "SAP -Special Access Programs"
+      ],
+      [
+       "SCPD -Standard Core Personnel Documents"
+      ],
+      [
+       "SEI -Special Experience Identifier"
+      ],
+      [
+       "SOW -Statement of Work"
+      ],
+      [
+       "STARCOM -Space Training and Readiness Command"
+      ]
+     ]
+    }
+   ],
+   "caption_in_header_tables": [
+    0,
+    0
+   ],
+   "no_grid_regions": [
+    0,
+    0
+   ]
+  }
+ },
+ "totals": {
+  "sh_base": 111014,
+  "sh_lost": 0,
+  "sh_absent_entirely": 0,
+  "sh_extra": 0,
+  "code_items_base": 0,
+  "code_items_var": 0,
+  "list_items_base": 1604,
+  "list_items_var": 1604,
+  "text_items_base": 5037,
+  "lost": 0,
+  "extra": 0,
+  "tables_differ": 43,
+  "tables_count_mismatch": 0,
+  "caption_hdr_base": 1,
+  "caption_hdr_var": 1,
+  "nogrid_base": 0,
+  "nogrid_var": 0
+ }
+}

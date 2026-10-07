@@ -67,6 +67,23 @@ def label_profile(doc):
     return {"counts": dict(counts), "code_items": counts.get("code", 0), "code_chars": code_chars, "text_chars": sum(len(t.text) for t in doc.texts)}
 
 
+def table_diffs(base, var):
+    """Every table whose cell text differs between two conversions with the same table count: its index, self_ref, page, grid shapes and each changed cell."""
+    out = []
+    for i, (tb, tv) in enumerate(zip(base.tables, var.tables)):
+        gb = [[norm(c.text) for c in row] for row in (tb.data.grid if tb.data else [])]
+        gv = [[norm(c.text) for c in row] for row in (tv.data.grid if tv.data else [])]
+        if gb == gv:
+            continue
+        rec = {"index": i, "self_ref": tb.self_ref, "page": tb.prov[0].page_no if tb.prov else None, "shape": [[len(gb), len(gb[0]) if gb else 0], [len(gv), len(gv[0]) if gv else 0]]}
+        if rec["shape"][0] == rec["shape"][1]:
+            rec["changed_cells"] = [{"row": r, "col": c, "base": gb[r][c], "variant": gv[r][c]} for r in range(len(gb)) for c in range(len(gb[r])) if gb[r][c] != gv[r][c]]
+        else:
+            rec["base_grid"], rec["variant_grid"] = gb, gv
+        out.append(rec)
+    return out
+
+
 def no_grid_regions(doc):
     """Items labeled table that are not TableItems (no cell grid): the 'no table grid at all' defect of docs/PHASE42_REQUIREMENTS.md."""
     from docling_core.types.doc import TableItem
@@ -110,6 +127,7 @@ def compare(tag, variant, other_tag=None, other_variant=None):
         lost, extra, lost_all, extra_all = diff_counters(text_items(base), text_items(var))
         shingles = shingle_diff(text_shingles(base), text_shingles(var))
         sb, sv = table_signatures(base), table_signatures(var)
+        tdiffs = table_diffs(base, var) if len(sb) == len(sv) else None
         differing = sum(1 for x, y in zip(sb, sv) if x != y) if len(sb) == len(sv) else None
         hb, hv = table_headers(base), table_headers(var)
         caption_hdr = (sum(any(CAPTION_PHRASE in c.lower() for c in row) for row in hb), sum(any(CAPTION_PHRASE in c.lower() for c in row) for row in hv))
@@ -117,7 +135,7 @@ def compare(tag, variant, other_tag=None, other_variant=None):
         base_items = sum(text_items(base).values())
         rows[name] = {"text_items_base": base_items, "text_items_lost_share": round(lost / base_items, 5) if base_items else 0.0, "code_items": (lp[0]["code_items"], lp[1]["code_items"]), "code_share_of_chars": (round(lp[0]["code_chars"] / lp[0]["text_chars"], 3), round(lp[1]["code_chars"] / lp[1]["text_chars"], 3)),
                       "list_items": (lp[0]["counts"].get("list_item", 0), lp[1]["counts"].get("list_item", 0)), "text_items_lost": lost, "text_items_extra": extra, "text_6gram": shingles, "lost_items": lost_all, "extra_items": extra_all,
-                      "tables": (len(sb), len(sv)), "tables_with_different_grid": differing, "caption_in_header_tables": caption_hdr,
+                      "tables": (len(sb), len(sv)), "tables_with_different_grid": differing, "table_differences": tdiffs, "caption_in_header_tables": caption_hdr,
                       "no_grid_regions": (no_grid_regions(base), no_grid_regions(var))}
         for k in ("base", "lost", "absent_entirely", "extra"):
             totals["sh_" + k] += shingles[k]
@@ -135,6 +153,28 @@ def compare(tag, variant, other_tag=None, other_variant=None):
         totals["nogrid_base"] += rows[name]["no_grid_regions"][0]
         totals["nogrid_var"] += rows[name]["no_grid_regions"][1]
     return rows, dict(totals)
+
+
+def words_of(text):
+    return re.findall(r"\w+", (text or "").lower())
+
+
+def items_not_found(tag, other_tag):
+    """Baseline text items whose word sequence (spacing and punctuation ignored) is not found in the other release's document text, each with the share of its
+    word 3-grams found anywhere in that text (1.0 = present but re-segmented or reordered, 0.0 = absent), so each can be read."""
+    out = []
+    for name in sorted(common.pinned_documents()):
+        base, other = load(tag, "baseline", name), load(other_tag, "baseline", name)
+        other_words = words_of(" ".join(t.text for t in other.texts))
+        other_text = " ".join(other_words)
+        grams = {tuple(other_words[i:i + 3]) for i in range(len(other_words) - 2)}
+        for t in base.texts:
+            w = words_of(t.text)
+            if not w or " ".join(w) in other_text:
+                continue
+            g = [tuple(w[i:i + 3]) for i in range(len(w) - 2)]
+            out.append({"document": name, "text": norm(t.text), "words": len(w), "three_gram_coverage": round(sum(x in grams for x in g) / len(g), 2) if g else None})
+    return out
 
 
 def headings(tag):
@@ -169,11 +209,20 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--variant")
     ap.add_argument("--headings", action="store_true")
+    ap.add_argument("--missing-items", action="store_true", help="list baseline text items not found (spacing and punctuation ignored) in --other-tag's baseline")
     ap.add_argument("--across", help="compare this release's baseline to --other-tag's variant of this name")
     ap.add_argument("--other-tag")
     ap.add_argument("--out")
     args = ap.parse_args()
     tag = common.tag()
+    if args.missing_items:
+        if not args.other_tag or not args.out:
+            raise SystemExit("--missing-items needs --other-tag and --out")
+        rows = items_not_found(tag, args.other_tag)
+        Path(common.HERE / args.out).write_text(json.dumps({"tag": tag, "other_tag": args.other_tag, "items": rows}, indent=1), encoding="utf-8")
+        cat = collections.Counter("absent or recognised differently" if (r["three_gram_coverage"] or 0) < 0.8 else "present, re-segmented or reordered" for r in rows)
+        print(f"{len(rows)} items not found;", dict(cat))
+        return
     if args.across and not args.other_tag:
         raise SystemExit("--across needs --other-tag (otherwise a release is compared with itself)")
     if args.across and args.other_tag == tag:
@@ -187,10 +236,16 @@ def main():
     else:
         raise SystemExit("give --variant, --across or --headings")
     for name, r in rows.items():
-        print(name, {k: v for k, v in r.items() if k not in ("lost_items", "extra_items", "examples", "docling_levels", "text_items_lost", "text_items_extra")})
+        print(name, {k: v for k, v in r.items() if k not in ("lost_items", "extra_items", "examples", "docling_levels", "text_items_lost", "text_items_extra", "table_differences")})
     print("TOTALS", totals)
     if args.out:
-        Path(common.HERE / args.out).write_text(json.dumps({"versions": common.versions(), "tag": tag, "rows": rows, "totals": totals}, indent=1, default=str), encoding="utf-8")
+        compared = {"baseline": common.read_manifest("docs", "baseline", tag)}
+        if args.variant:
+            compared["variant"] = common.read_manifest("docs", args.variant, tag)
+        if args.across:
+            compared["other_release"] = common.read_manifest("docs", args.across, args.other_tag)
+        Path(common.HERE / args.out).write_text(json.dumps({"analyzer_versions": common.versions(), "tag": tag, "other_tag": args.other_tag, "run_manifests": compared,
+                                                            "rows": rows, "totals": totals}, indent=1, default=str), encoding="utf-8")
 
 
 if __name__ == "__main__":
