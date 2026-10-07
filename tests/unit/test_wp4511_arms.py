@@ -57,3 +57,25 @@ def test_paired_reports_each_direction_and_the_rest():
 def test_the_recall_sample_is_the_74_adjudicated_unflagged_obligations():
     index, ids = SA.obligations()
     assert len(ids) == 74 and ids <= set(index)
+
+
+def test_an_incomplete_arm_is_not_scored(tmp_path):
+    (tmp_path / "A" / "DODI 5200.01").mkdir(parents=True)
+    with pytest.raises(SystemExit) as e:
+        SA.check_complete("A", scratch=tmp_path)
+    assert "not complete" in str(e.value) and "DODI 5200.01_chunks.jsonl" in str(e.value) and "CJCSI 6510.02G" in str(e.value)
+
+
+def test_a_failed_pipeline_return_code_is_listed(tmp_path):
+    import json as _json
+    for doc in SA.common.pinned_documents():
+        d = tmp_path / "A" / doc
+        d.mkdir(parents=True)
+        for pattern in SA.ARTIFACTS:
+            (d / pattern.format(doc=doc)).write_text("{}" if pattern.endswith(".json") else "")
+        (d / "arm_record.json").write_text(_json.dumps({"returncode": 0}))
+    SA.check_complete("A", scratch=tmp_path)  # a complete, successful arm passes
+    (tmp_path / "A" / "DODI 5200.01" / "arm_record.json").write_text(_json.dumps({"returncode": 1}))
+    with pytest.raises(SystemExit) as e:
+        SA.check_complete("A", scratch=tmp_path)
+    assert "DODI 5200.01: the pipeline did not exit 0" in str(e.value)

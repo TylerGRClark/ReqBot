@@ -64,6 +64,12 @@ def status_counts(traces):
     return dict(c)
 
 
+def trace_excerpt(trace):
+    """What explains an obligation's status in one arm: its status at each stage and the Step C / Step D records that cover or reject it."""
+    return {"status": trace["status"], "shares": trace["shares"], "first_loss": trace["first_loss"], "covering_extracted": trace["covering_extracted"],
+            "covering_surviving": trace["covering_surviving"], "rejected_ids": trace["rejected_ids"]}
+
+
 def paired(ta, tb, key="extracted"):
     """Obligations found (covered) in A and not in B, and the reverse."""
     a = {i for i, t in ta.items() if t["status"].get(key) == "covered"}
@@ -71,7 +77,27 @@ def paired(ta, tb, key="extracted"):
     return {"only_first": sorted(a - b), "only_second": sorted(b - a), "both": len(a & b), "neither": len(set(ta) - a - b)}
 
 
+ARTIFACTS = ("{doc}_chunks.jsonl", "{doc}_extracted_requirements.jsonl", "{doc}_requirements_normalized.jsonl", "{doc}_raw_responses.jsonl", "arm_record.json")
+
+
+def check_complete(arm, scratch=SCRATCH):
+    """Refuse to score an arm unless all 13 documents finished: every artifact present and the pipeline's return code 0 (an interrupted or failed run would
+    otherwise read as zero or partial counts and as recall losses). Every problem is listed at once."""
+    problems = []
+    for doc in sorted(common.pinned_documents()):
+        d = arm_dir(arm, doc, scratch)
+        for pattern in ARTIFACTS:
+            if not (d / pattern.format(doc=doc)).exists():
+                problems.append(f"{arm}/{doc}: missing {pattern.format(doc=doc)}")
+        rec = d / "arm_record.json"
+        if rec.exists() and json.loads(rec.read_text(encoding="utf-8")).get("returncode") != 0:
+            problems.append(f"{arm}/{doc}: the pipeline did not exit 0")
+    if problems:
+        raise SystemExit("the arm is not complete, so it is not scored:\n  " + "\n  ".join(problems))
+
+
 def run_level(arm, scratch=SCRATCH):
+    check_complete(arm, scratch)
     out, quotes = {}, {}
     for doc in sorted(common.pinned_documents()):
         d = arm_dir(arm, doc, scratch)
@@ -81,7 +107,7 @@ def run_level(arm, scratch=SCRATCH):
         record = json.loads((d / "arm_record.json").read_text(encoding="utf-8")) if (d / "arm_record.json").exists() else {}
         out[doc] = {"chunks": len(rd(f"{doc}_chunks.jsonl")), "step_c_calls": len(raw), "records": len(extracted), "survivors": len(normalized),
                     "failure_codes": dict(collections.Counter(f.get("error", "unknown") for f in failures)), "wall_seconds": record.get("wall_seconds")}
-        quotes[doc] = {norm(r["source_quote"]) for r in normalized}
+        quotes[doc] = {norm(r.get("source_quote", "")) for r in normalized}
     return out, quotes
 
 
@@ -99,12 +125,14 @@ def overlap(qa, qb):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--arms", nargs="+", required=True)
-    ap.add_argument("--pair", nargs=2, metavar=("A", "B"))
+    ap.add_argument("--pair", nargs=2, metavar=("A", "B"), help="also print the obligations found in only one of the two arms (both must be in --arms, in that order)")
     ap.add_argument("--scratch", default=str(SCRATCH))
     ap.add_argument("--out")
     args = ap.parse_args()
     index, ids = obligations()
     assert len(ids) == 74, f"expected the 74 adjudicated unflagged obligations, got {len(ids)}"
+    for arm in args.arms:
+        check_complete(arm, args.scratch)  # before anything is traced: a partial run must not produce recall numbers
     traces = {arm: recall_traces(arm, index, ids, args.scratch) for arm in args.arms}
     levels, quotes = {}, {}
     for arm in args.arms:
@@ -120,10 +148,18 @@ def main():
         for b in args.arms[i + 1:]:
             p = paired(traces[a], traces[b])
             for k in ("only_first", "only_second"):
-                p[k] = [{"id": x, "document": index[x]["document"], "page": index[x]["page"], "text": index[x]["text"]} for x in p[k]]
+                p[k] = [{"id": x, "document": index[x]["document"], "page": index[x]["page"], "text": index[x]["text"], "trace_first": trace_excerpt(traces[a][x]),
+                         "trace_second": trace_excerpt(traces[b][x])} for x in p[k]]
             report["pairs"][f"{a} vs {b}"] = {"recall_extracted": p, "quote_overlap": overlap(quotes[a], quotes[b])}
     for arm, v in report["arms"].items():
         print(arm, v["recall"], v["totals"])
+    if args.pair:
+        want = f"{args.pair[0]} vs {args.pair[1]}"
+        if want not in report["pairs"]:
+            raise SystemExit(f"--pair {args.pair}: both arms must be in --arms and the order must follow it (looked for {want!r} in {sorted(report['pairs'])})")
+        for side in ("only_first", "only_second"):
+            for o in report["pairs"][want]["recall_extracted"][side]:
+                print(f"{side}: {o['id']} ({o['document']}, p{o['page']}): {o['text'][:200]}")
     for k, v in report["pairs"].items():
         print(k, "| only first:", len(v["recall_extracted"]["only_first"]), "only second:", len(v["recall_extracted"]["only_second"]), "| quote Jaccard", v["quote_overlap"]["overall_jaccard"])
     if args.out:
