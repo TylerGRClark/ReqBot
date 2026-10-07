@@ -142,16 +142,16 @@ def test_main_runs_every_check_before_it_loads_any_evaluation_candidate(SC, tmp_
         return frozen, "v5_eval_r2_14b", tmp_path / "out"
 
     monkeypatch.setattr(SC, "preflight", fake_preflight)
-    monkeypatch.setattr(SC.RS, "gold_candidates", lambda half: order.append(f"candidates:{half}") or [])
+    monkeypatch.setattr(SC, "candidates_for", lambda registry: order.append(f"candidates:{registry}") or [])
     monkeypatch.setattr(SC.RR, "load_documents", lambda docs: order.append("documents") or {})
     monkeypatch.setattr(SC, "run_frozen", lambda *a, **k: order.append("run") or {"ok": True})
-    monkeypatch.setattr(sys, "argv", ["run_stage_c.py", "--ollama-url", "http://x", "--preflight-only"])
+    monkeypatch.setattr(sys, "argv", ["run_stage_c.py", "--registry", "v5", "--ollama-url", "http://x", "--preflight-only"])
     SC.main()
     assert order == ["preflight"]  # --preflight-only reads no candidate at all
     order.clear()
-    monkeypatch.setattr(sys, "argv", ["run_stage_c.py", "--ollama-url", "http://x"])
+    monkeypatch.setattr(sys, "argv", ["run_stage_c.py", "--registry", "v5", "--ollama-url", "http://x"])
     SC.main()
-    assert order == ["preflight", "candidates:evaluation", "documents", "run"]
+    assert order == ["preflight", "candidates:v5", "documents", "run"]
     assert "--verdict r2_14b=" in capsys.readouterr().out
     order.clear()
 
@@ -167,7 +167,7 @@ def test_main_runs_every_check_before_it_loads_any_evaluation_candidate(SC, tmp_
 
 def test_the_runner_has_no_option_to_change_the_frozen_configuration(SC, monkeypatch):
     for flag in ("--tier", "--model", "--design", "--temperature", "--num-ctx", "--num-predict", "--half", "--final"):
-        monkeypatch.setattr(sys, "argv", ["run_stage_c.py", flag, "x"])
+        monkeypatch.setattr(sys, "argv", ["run_stage_c.py", "--registry", "v6", flag, "x"])
         with pytest.raises(SystemExit) as e:
             SC.main()
         assert e.value.code == 2  # argparse: unrecognized arguments

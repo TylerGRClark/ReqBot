@@ -1,0 +1,40 @@
+{
+ "files": {
+  "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "core/config.py": "f9128a21545e158b855c2cb150451385e3847533480d8279cef874030b478854",
+  "core/profiles.py": "0d5607ad23ed85574cc2c3ae99f269dbfc90646b41524c8084f726ac5fafa9e1",
+  "eval/spike_results/wp_44/manifest.json": "7893c6cda39d4c49cf10dba16abecb655e8c2bc9590228d9cb3636a2d3238dd6",
+  "eval/spike_results/wp_45_1e/segment.py": "54d8f67fd66a2bd23df7c5774d24691f3bdda61871a206137bcda0713fb25f72",
+  "eval/spike_results/wp_45_7/bundle.py": "33906ea13b2e3ac0d2e74c17eda9725abe2603e6f7975f0cdfd0a2f979816b3f",
+  "eval/spike_results/wp_45_7/check_resolution.py": "55eba79800332624bc02c3a0e06d899f44dddc133af649309e9e4950191bfdd9",
+  "eval/spike_results/wp_45_7/chunk_sets.py": "5eea6b0674d6bb27fff6cd8d1fe4bee761be8bd20a1585682b7c0aba0cb848e0",
+  "eval/spike_results/wp_45_7/draw_heldout.py": "d41e5a4760d9b68956c2e1bd4c291bca940ced0977b0989623e2b79380635f25",
+  "eval/spike_results/wp_45_7/freeze_v6.py": "f5d5099480ff5811d26256e4a4eba244173edce4712f00a8d7cd6b5f04f655db",
+  "eval/spike_results/wp_45_7/fresh_pack/pack_a.md": "04142d6c6cbfc120cb876af8115dabb0a7403bf632f3566d452f77c4c100a1d6",
+  "eval/spike_results/wp_45_7/fresh_pack/pack_b.md": "ec9d95cbd02ef32420eaa3a3aaf53aca6b6d1389076a0e19066b8bae055e26fc",
+  "eval/spike_results/wp_45_7/kind_selection.py": "42ec24b475f7d02e3804af6f470858afefce2b9eb168dc20df5ef8dd4bc2b945",
+  "eval/spike_results/wp_45_7/menu.py": "e6ff087bb3f0fab575cf0c2beaddcab5f36346df79b407537470e20a251e5230",
+  "eval/spike_results/wp_45_7/menu_v2.py": "46224ae676b19cf7dca864ed733bb8bfb3a0aa4e70d5d5ee52ccfc793c05ba1c",
+  "eval/spike_results/wp_45_7/ollama_run.py": "aae2c52264a04a8e6cc371f9933c3fca156a9fd53244a6174073b5e66548a962",
+  "eval/spike_results/wp_45_7/outputs/declared_v6.json": "536a8bc9e547be3d2a2ba13a3feb9b8c6a3c150a05545de98b9a6b409b17267e",
+  "eval/spike_results/wp_45_7/outputs/fresh_draw_map.json": "2911e4a9036c4f35c1bf826b865a82a75cbe684a385c338ebaf3c699b6b3cccb",
+  "eval/spike_results/wp_45_7/outputs/heldout_frozen.json": "1018c13e7a9084defa97c50b6cf5ce9b825e901fb8d19d8392481cd4720bcbfc",
+  "eval/spike_results/wp_45_7/resolver.py": "ed75d3bf7901823b4e30f54f9b3e831f370f8d6a4669b3d58980f99a422328d9",
+  "eval/spike_results/wp_45_7/run_resolver.py": "0c2509a352e9b55e7d01b78312da7d3cb464d5e24f849b23c814f06d411453f2",
+  "eval/spike_results/wp_45_7/run_selection.py": "f505180c75b6e0142c9ac76cf5b1300a57f3923cc031d2f9019bfc2be3b395c1",
+  "eval/spike_results/wp_45_7/run_stage_c.py": "a297eb3b456d6441aeb960e9a50790f297d952f670e4ed95239d099e79634f34",
+  "eval/spike_results/wp_45_7/score_resolver.py": "5110133953b5448124bdbf712cf5644563b778f0203cdab2f8ddbb1919364ccb",
+  "eval/spike_results/wp_45_7/selection.py": "dec03f35ba51f21152b46b5f9b8b50ad6c983982204bfeb960df590e5cbd5258",
+  "eval/spike_results/wp_45_audit/_inputs.py": "88ff62971f3abef4f50490377cdfa4fcca54c57986b0b4261216c161f2fd251e",
+  "pipeline/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "pipeline/chunk_text.py": "2874c8a0e463874ae72cca240da95b0c11a735fd823d2d9da4f0fd38247c88df",
+  "pipeline/enrich_requirements.py": "74a942aacf84cc49b9412ffaccc8a6f0253122ff3e4f0f6dfd7f8ac5a672382a",
+  "pipeline/parse_and_normalize.py": "80c09fe43b8027a266db2a19489aa138f9cc21ad1b8466f5e7922ab52d5990a4"
+ },
+ "note": "sha256 (paths relative to the repository root) of everything that defines the WP-45.7e frozen configuration: the import closure of the guarded runner, the declaration, the unlabeled draw and pack, and the files that pin the input documents. `sealed_until_c2` lists the files that exist only after the labels are committed, with the hashes fixed in docs/PHASE45_WP457E_PLAN.md. The v6 preflight and verdict refuse to proceed if any differs.",
+ "sealed_until_c2": {
+  "eval/spike_results/wp_45_7/fresh_labels/labels_claude_a.jsonl": "058f38ee1530143481688ffc8230e78ff777bc0f5b7d2a6b4621aabf8f1ce785",
+  "eval/spike_results/wp_45_7/fresh_labels/labels_claude_b.jsonl": "f0587320e684b164678a43e639535f4c8e39f0a7eff452d158e6e7e8334a16c6",
+  "eval/spike_results/wp_45_7/outputs/fresh_gold.json": "811a672f9ebd447ff89d063340547b4ec7784303c56f4853a3bbaa6b1788d518"
+ }
+}

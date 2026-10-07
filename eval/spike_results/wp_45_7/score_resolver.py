@@ -211,7 +211,8 @@ def score_run(directory, gold):
                           "digests": sorted({str(r.get("digest")) for r in records.values()}),
                           "temperatures": sorted({str(r.get("temperature")) for r in records.values()}),  # and with which parameters
                           "num_ctxs": sorted({str(r.get("num_ctx")) for r in records.values()}),
-                          "num_predicts": sorted({str(r.get("num_predict")) for r in records.values()})}
+                          "num_predicts": sorted({str(r.get("num_predict")) for r in records.values()}),
+                          "menu_generators": sorted({str(r.get("menu_generator")) for r in records.values()})}  # the guarded runner stamps this on v6 records
     for which in ("selection", "evaluation"):
         golds = [g for g in gold["gold"] if g["half"] == which]
         if not any(g["candidate_id"] in records for g in golds):
@@ -289,7 +290,34 @@ V3_MIN_RIGHT = 35 / 55
 V4_RELATIVE = {"min_gain": Fraction(1, 5), "max_misleading_margin": Fraction(1, 20)}
 # The registries that are tied to one design: the ledgers must have been written by that design's prompt, or the rule would silently score
 # the wrong experiment (the v4 and v5 rules are the same arithmetic over different designs).
-EXPECTED_PROMPT = {"v4": SEL.prompt_hash, "v5": K.prompt_hash}
+EXPECTED_PROMPT = {"v4": SEL.prompt_hash, "v5": K.prompt_hash, "v6": K.prompt_hash}
+# WP-45.7e (docs/PHASE45_WP457E_PLAN.md section 3): v6 has no Stage B choice. Its configuration is DECLARED in a committed file, and its candidates are the
+# fresh labeled set, not the spent gold.
+DECLARED = {"v6": "declared_v6.json"}
+GOLDS = {"v4": GOLD, "v5": GOLD, "v6": OUTPUTS / "fresh_gold.json"}
+# The plan's pre-run minimums for the fresh set (docs/PHASE45_WP457E_PLAN.md section 2): below them a gate could have nothing to measure (an empty category makes
+# `gate_report` omit its gate), so neither a run nor a verdict may proceed.
+SUFFICIENCY = {"v6": {"real": 80, "non_requirements": 8, "attachment_scored": 60}}
+# v5 and v6 share every value a verdict validates (prompt, tier, model, digest, parameters) and differ only in the menu generator, so the guarded runner stamps each
+# ledger record with the identity of the menu files it used and the verdict requires that to equal what the frozen manifest pins.
+MENU_FILES = {"v6": ("eval/spike_results/wp_45_7/menu_v2.py", "eval/spike_results/wp_45_7/menu.py")}
+
+
+def menu_identity(registry, hashes):
+    """The stamp for a registry's menu generators: file name and sha256 of each of its `MENU_FILES`, from `hashes` {repo-relative path: sha256}."""
+    return "|".join(f"{Path(p).name}:{hashes[p]}" for p in MENU_FILES[registry])
+
+
+def expected_menu_identity(registry, outputs=None):
+    """The stamp the frozen manifest pins for the registry's menu files (None for a registry without one)."""
+    if registry not in MENU_FILES:
+        return None
+    path = (Path(outputs) if outputs else OUTPUTS) / FROZEN_CODE[registry]
+    files = json.loads(path.read_text(encoding="utf-8"))["files"]
+    missing = [p for p in MENU_FILES[registry] if p not in files]
+    if missing:
+        raise SystemExit(f"the {registry} manifest does not pin the menu files {missing}")
+    return menu_identity(registry, files)
 
 
 def parse_config(name):
@@ -341,7 +369,7 @@ def choose_report(results, registry="v2"):
 
 
 CHOICE_REPORTS = {"v4": "resolver_selection_v4_choice.json", "v5": "resolver_selection_v5_choice.json"}
-FROZEN_CODE = {"v5": "frozen_wp457d_code.json"}  # sha256 of the code and gold files the Stage B runs used (committed beside the choice)
+FROZEN_CODE = {"v5": "frozen_wp457d_code.json", "v6": "frozen_wp457e_code.json"}  # sha256 of the code and gold files the Stage B runs used (committed beside the choice)
 MODELS = {8: "llama3.1:8b-instruct-q4_K_M", 14: "qwen2.5:14b"}
 
 
@@ -349,6 +377,8 @@ def frozen_choice(registry, outputs=None):
     """The configuration Stage B froze for a registry, from its committed choice report, and the run it was chosen from: {name, tier, model,
     digest}. Only a registry whose Stage B passed every gate has one: a stopped protocol keeps its evaluation half reserved."""
     outputs = Path(outputs) if outputs else OUTPUTS
+    if registry in DECLARED:
+        return _declared_choice(registry, outputs)
     path = outputs / CHOICE_REPORTS[registry]
     if not path.exists():
         raise SystemExit(f"no committed choice report for {registry} ({path.name}): there is no frozen configuration to score")
@@ -367,7 +397,36 @@ def frozen_choice(registry, outputs=None):
             **{k: sorted(v) for k, v in params.items()}}
 
 
-def check_frozen_code(registry, outputs=None, root=None):
+def _declared_choice(registry, outputs):
+    """A registry whose configuration is declared in the plan, not chosen: read it from the committed declaration and check it names this
+    registry's prompt. Returns the same dict as a frozen Stage B choice."""
+    path = outputs / DECLARED[registry]
+    if not path.exists():
+        raise SystemExit(f"no committed declaration for {registry} ({path.name}): there is no configuration to score")
+    d = json.loads(path.read_text(encoding="utf-8"))
+    missing = [k for k in ("name", "tier", "model", "digest", "temperatures", "num_ctxs", "num_predicts", "prompt_hash") if k not in d]
+    if missing:
+        raise SystemExit(f"{path.name} lacks {missing}")
+    want = EXPECTED_PROMPT[registry]()
+    if d["prompt_hash"] != want:
+        raise SystemExit(f"{path.name} declares prompt {d['prompt_hash']}, but the {registry} design's prompt is {want}")
+    return {k: d[k] for k in ("name", "tier", "model", "digest", "temperatures", "num_ctxs", "num_predicts")}
+
+
+def check_sufficiency(registry, golds):
+    """Stop unless the gold of a registry that has pre-run minimums meets all of them. `golds` is the list of gold records the run or verdict would use."""
+    need = SUFFICIENCY.get(registry)
+    if not need:
+        return
+    real = sum(1 for g in golds if is_real(g))
+    have = {"real": real, "non_requirements": len(golds) - real,
+            "attachment_scored": sum(1 for g in golds if g.get("set") == "audit" and attachment_scored(g))}
+    short = {k: f"{have[k]} < {need[k]}" for k in need if have[k] < need[k]}
+    if short:
+        raise SystemExit(f"the {registry} gold does not meet the plan's pre-run minimums, so nothing is run or scored: {short}")
+
+
+def check_frozen_code(registry, outputs=None, root=None, include_sealed=True):
     """Refuse to proceed unless every file in the committed manifest is byte-identical to what the Stage B runs used: the import closure of the
     runner (the menu generator, the checker, the assembler, the bundle builder and the pipeline modules it imports), the gold, and the files that pin
     the input documents, by sha256 with paths relative to the repository root. Any change needs an explicit re-freeze."""
@@ -375,8 +434,12 @@ def check_frozen_code(registry, outputs=None, root=None):
     path = outputs / FROZEN_CODE[registry]
     if not path.exists():
         raise SystemExit(f"no frozen-code manifest for {registry} ({path.name})")
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    pinned = dict(manifest["files"])
+    if include_sealed:  # files that exist only after a later stage commits them (the fresh labels and gold); a verdict needs them present
+        pinned.update(manifest.get("sealed_until_c2", {}))
     differ = []
-    for rel, want in json.loads(path.read_text(encoding="utf-8"))["files"].items():
+    for rel, want in pinned.items():
         file = root / rel
         have = hashlib.sha256(file.read_bytes()).hexdigest() if file.exists() else None
         if have != want:
@@ -401,7 +464,9 @@ def verdict_report(result, registry, name, outputs=None, root=None):
     meta = result.get("run_meta") or {}
     expected = {"tiers": [frozen["tier"]], "models": [frozen["model"]], "digests": [frozen["digest"]],
                 "temperatures": frozen["temperatures"], "num_ctxs": frozen["num_ctxs"], "num_predicts": frozen["num_predicts"]}
-    if meta != expected:
+    if registry in MENU_FILES:  # the ledger must have been written with the menu generator the manifest pins
+        expected["menu_generators"] = [expected_menu_identity(registry, outputs)]
+    if {k: meta.get(k) for k in expected} != expected:
         raise SystemExit(f"the ledger is not the frozen {frozen['name']} configuration: it was written with {meta}, the frozen run used {expected}")
     check_frozen_code(registry, outputs, root)
     half = result.get("evaluation")
@@ -421,15 +486,25 @@ def verdict_report(result, registry, name, outputs=None, root=None):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--runs", nargs="+", metavar="NAME=DIR")
+    ap.add_argument("--gold", metavar="PATH", help="the gold to score against (default: outputs/resolver_gold.json); a verdict always uses its registry's own")
     ap.add_argument("--verdict", metavar="NAME=DIR",
                     help="score one frozen run on the evaluation half with the registry's gates (needs --registry v4 or v5); the selection half is not read")
     ap.add_argument("--out")
     ap.add_argument("--choose", action="store_true", help="apply the pre-registered choice rule (run names like r1_8b) and print the report")
-    ap.add_argument("--registry", choices=sorted(REGISTRIES), default="v2",
+    ap.add_argument("--registry", choices=sorted(set(REGISTRIES) | set(EXPECTED_PROMPT)), default="v2",
                     help="which registered rule --choose applies to: v2 (six configurations, WP-45.7), v3 (four, WP-45.7b) v4 (the same four with the WP-45.7c bar) or v5 (the v4 bar for the WP-45.7d design)")
     args = ap.parse_args()
-    gold = json.loads(GOLD.read_text(encoding="utf-8"))
+    if args.choose and args.registry not in REGISTRIES:
+        sys.exit(f"--choose does not apply to {args.registry}: its configuration is declared, not chosen (use --verdict)")
+    if args.verdict and args.registry in GOLDS:
+        gold_path = GOLDS[args.registry]  # a verdict is scored against its registry's gold, whatever --gold says
+    else:
+        gold_path = Path(args.gold) if args.gold else GOLD
+    if not gold_path.exists():
+        sys.exit(f"the gold {gold_path} does not exist yet")
+    gold = json.loads(gold_path.read_text(encoding="utf-8"))
     if args.verdict:
+        check_sufficiency(args.registry, [g for g in gold["gold"] if g["half"] == "evaluation"])
         name, sep, directory = args.verdict.partition("=")
         if not sep or not name or not directory:
             sys.exit(f"--verdict takes NAME=DIR, got {args.verdict!r}")

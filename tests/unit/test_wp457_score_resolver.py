@@ -344,7 +344,7 @@ def test_v4_and_v5_refuse_ledgers_written_by_another_design(mods, tmp_path):
     ledgers, or `--registry v5` would quietly score the old status design as a WP-45.7d result."""
     S = mods["score"]
     status_hash, kind_hash = S.SEL.prompt_hash(), S.K.prompt_hash()
-    assert status_hash != kind_hash and set(S.EXPECTED_PROMPT) == {"v4", "v5"}
+    assert status_hash != kind_hash and set(S.EXPECTED_PROMPT) == {"v4", "v5", "v6"}
     base = {"right": 19, "misleading": 19, "incomplete": 17}
     sel = {"all": {"candidates": 40, "valid": 40, "real": {"requirement": 20}, "non_requirement": {"not_a_requirement": 8, "unresolved": 2},
                    "attachment": {}, "invented_answers": 0, "modality_error_answers": 0},
