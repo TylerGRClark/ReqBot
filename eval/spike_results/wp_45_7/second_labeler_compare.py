@@ -14,6 +14,7 @@ was registered against the first labels and is unchanged.
 import argparse
 import collections
 import json
+import re
 import shutil
 import sys
 import tempfile
@@ -85,6 +86,32 @@ def rescore(gold, run=RUN):
             "gates": {k: {"value": v[0], "threshold": v[1], "passed": bool(v[2])} for k, v in gates.items()}}
 
 
+_LIST_ITEM = re.compile(r"^\(?[A-Za-z0-9]{1,3}[.)]\s")
+
+
+def strict_rescore(gold, run=RUN):
+    """The registered scorer credits a resolver answer as right when the chosen actor or parent overlaps the labeler's lead-in text, whether or not the
+    chosen text names a party; production's stems are judged on whether stem plus quote read as one complete statement. Found in the review of PR #244.
+    This variant is the mechanical, partial correction: a needs-lead-in answer that chose no actor and whose parent is itself a list item (starts with a
+    marker such as "d." or "(2)") is counted misleading. It misses party-less fragments with no marker (R301), so it is a floor on the effect."""
+    records = SR.load_ledger(str(run))
+    half = SR.score_run(str(run), gold)["evaluation"]
+    attachment = collections.Counter(half["audit"]["attachment"])
+    demoted = []
+    for g in gold["gold"]:
+        if not (SR.attachment_scored(g) and g["standalone"] == "needs_lead_in"):
+            continue
+        answer = records[g["candidate_id"]]["answer"]
+        if SR.attachment(answer, g) == "right" and not (answer["actor"]["value"] or "").strip() and _LIST_ITEM.match((answer["parent"]["value"] or "").strip()):
+            demoted.append(g["candidate_id"].split(":")[1])
+    attachment["right"] -= len(demoted)
+    attachment["misleading"] += len(demoted)
+    half["audit"]["attachment"] = dict(attachment)
+    gates, _ = SR.selection_gates(half, None, SR.V4_RELATIVE)
+    return {"demoted": sorted(demoted), "attachment": dict(attachment), "gates_failing": sorted(k for k, v in gates.items() if not v[2]),
+            "attachment_gain": gates["attachment_gain_over_production"], "misleading": gates["misleading"]}
+
+
 def per_candidate(first_gold, other_gold, run=RUN):
     """How each candidate's resolver attachment class moves between the two golds (unscored = attachment not scored under that gold)."""
     records = SR.load_ledger(str(run))
@@ -112,6 +139,11 @@ def report():
             "second_labels_as_submitted": rescore(second),
             "second_labels_with_actorless_right_corrected": rescore(second_gold(fragment_chain=ACTORLESS_RIGHT)),
             "second_labels_with_those_and_R281_corrected": rescore(second_gold(fragment_chain=ACTORLESS_RIGHT + ARGUABLE)),
+        },
+        "strict_scorer_variant": {
+            "first_labels": strict_rescore(first),
+            "second_labels_as_submitted": strict_rescore(second),
+            "second_labels_with_actorless_right_corrected": strict_rescore(second_gold(fragment_chain=ACTORLESS_RIGHT)),
         },
         "corrected_cards": {"actorless_right": list(ACTORLESS_RIGHT), "arguable": list(ARGUABLE)},
         "resolver_attachment_moves_first_to_second": per_candidate(first, second),

@@ -329,5 +329,87 @@
   "right -> right": 55,
   "right -> unscored": 4,
   "unscored -> unscored": 10
+ },
+ "strict_scorer_variant": {
+  "first_labels": {
+   "attachment": {
+    "misleading": 43,
+    "right": 61
+   },
+   "attachment_gain": [
+    0.587,
+    0.594,
+    false
+   ],
+   "demoted": [
+    "R245",
+    "R265",
+    "R274",
+    "R286"
+   ],
+   "gates_failing": [
+    "attachment_gain_over_production",
+    "misleading"
+   ],
+   "misleading": [
+    0.413,
+    0.396,
+    false
+   ]
+  },
+  "second_labels_as_submitted": {
+   "attachment": {
+    "misleading": 47,
+    "right": 53
+   },
+   "attachment_gain": [
+    0.53,
+    0.62,
+    false
+   ],
+   "demoted": [
+    "R212",
+    "R245",
+    "R265",
+    "R274",
+    "R286"
+   ],
+   "gates_failing": [
+    "attachment_gain_over_production",
+    "misleading"
+   ],
+   "misleading": [
+    0.47,
+    0.34,
+    false
+   ]
+  },
+  "second_labels_with_actorless_right_corrected": {
+   "attachment": {
+    "misleading": 47,
+    "right": 53
+   },
+   "attachment_gain": [
+    0.53,
+    0.56,
+    false
+   ],
+   "demoted": [
+    "R212",
+    "R245",
+    "R265",
+    "R274",
+    "R286"
+   ],
+   "gates_failing": [
+    "attachment_gain_over_production",
+    "misleading"
+   ],
+   "misleading": [
+    0.47,
+    0.4,
+    false
+   ]
+  }
  }
 }

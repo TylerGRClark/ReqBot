@@ -63,5 +63,14 @@ def test_the_corrected_cards_are_right_in_the_submitted_file_and_are_not_edited_
     assert all(rows[c]["stem_verdict"] == "right" for c in SL.ACTORLESS_RIGHT + SL.ARGUABLE)
 
 
+def test_strict_scorer_variant_demotes_actorless_list_item_parents():
+    first = SL.strict_rescore(json.loads(SL.FROZEN.read_text(encoding="utf-8")))
+    assert first["demoted"] == ["R245", "R265", "R274", "R286"]
+    assert first["attachment"] == {"right": 61, "misleading": 43}
+    assert first["gates_failing"] == ["attachment_gain_over_production", "misleading"]
+    second = SL.strict_rescore(SL.second_gold())
+    assert second["demoted"] == ["R212", "R245", "R265", "R274", "R286"] and second["attachment"] == {"right": 53, "misleading": 47}
+
+
 def test_the_committed_report_is_the_recomputed_one():
     assert json.loads(SL.REPORT.read_text(encoding="utf-8")) == json.loads(json.dumps(SL.report()))
