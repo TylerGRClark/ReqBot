@@ -799,3 +799,36 @@ All of the frozen state is merged and verified on main (`318adb9`): the fresh go
 2. **The one-shot run.** `python3 eval/spike_results/wp_45_7/run_stage_c.py --registry v6 --ollama-url http://192.168.90.100:11434`, from a worktree pinned at the merge commit, after `--preflight-only` passes. The guarded runner refuses unless the declaration, every manifest file and every sealed file match, the model digest equals the declared one, no earlier v6 run exists and any partial ledger is stamped with the pinned menu files; it stops before any model call if the gold is below the plan's minimums. Run once; a finished run is never rerun.
 3. **The verdict.** `python3 eval/spike_results/wp_45_7/score_resolver.py --verdict r2_14b=<dir> --registry v6 --out outputs/verdict_v6_eval.json`, once, against the fresh gold and its own production baseline (from pass B): attachment right at least 62 of 104, misleading at most 41, incomplete at most 32, real wrongly rejected at most 5 of 105, real scope-or-unresolved at most 10%, non-requirements rejected at least 6 of 9, valid at least 95%, invented at most 2%, gated modality errors zero. It requires the ledger's prompt, tier, model, digest, parameters and menu-file stamp to be the declared and pinned ones. **A pass is the WP-45.7e verdict and a fail is a fail, with no second try on this set**; either is reported with every gate.
 4. **What the report will say, whatever happens:** the table of all gates; production against the resolver on the same 104 records (right, misleading, incomplete); the records that decided any gate that passed or failed by one record; the labels challenged in review and kept (R243, R264, R245), because on a set this size one record can move a bar; and the limits stated in step 25 (one labeler; same 13 documents; candidates not documents). A post-verdict look at the misleading answers is allowed and will be labeled exploratory.
+
+## Step 27: WP-45.7e stage D, the sanity run and the one-shot verdict on the fresh set: PASS (`outputs/eval_v6_run/`, `outputs/verdict_v6_eval.json`, `outputs/sanity_v6_run/`)
+
+Run exactly as step 26 fixed it, from a worktree pinned at the merge commit of that step (`224e5a8`), after the guarded preflight passed (declaration, all 30 pinned files and the three sealed files, model digest `7cdf5a01...`, no earlier v6 run).
+
+**The sanity run (information only; not a gate).** The declared configuration with the new menu ran on both spent halves, 220 candidates: all 220 calls completed, all 220 answers are shape-conformant, the checker raised nothing, and **0 of 220 menus are empty** (mean menu 3.5 entries, against 5.1 before). No malfunction, so the one-shot proceeded as fixed. As information only: on the spent halves, which are what motivated the menu change and so prove nothing, attachment right was 38 of 55 (selection) and 39 of 55 (evaluation), against 35 of 55 and 35 of 55 with the old menu.
+
+**The one-shot run.** `run_stage_c.py --registry v6`, once: R2, `qwen2.5:14b`, kind prompt `6200fa25a374eb35`, the new menu (every ledger record carries the pinned menu-file stamp). All **114** calls completed and are shape-conformant, no checker error of any kind, about one second per call, 118 seconds in all. Scored once with `score_resolver.py --verdict r2_14b=... --registry v6`.
+
+| Gate (registered) | Value | Threshold | |
+|---|---|---|---|
+| Attachment right at least production's plus 20 points | **65 of 104 = 62.5%** | 41/104 + 20 points: at least 62 of 104 | **pass** (margin 3 records) |
+| Misleading (failures included) at most production's plus 5 points | **39 of 104 = 37.5%** | 36/104 + 5 points: at most 41 of 104 | **pass** (margin 2 records) |
+| Incomplete at most production's plus 5 points | 0 of 104 | at most 32 | pass |
+| Real requirements wrongly rejected | 1 of 105 = 1.0% | at most 5% (5 of 105) | pass |
+| Real scope-or-unresolved | 0 of 105 | at most 10% | pass |
+| Non-requirements rejected | **8 of 9** = 88.9% | at least 60% (6 of 9) | pass |
+| Valid answers | 114 of 114 | at least 95% | pass |
+| Invented parties | 0 | at most 2% | pass |
+| Gated modality errors | 0 | 0 | pass |
+
+**The verdict is a pass: every registered gate passes, on candidates nobody designed against, from a configuration declared in advance.**
+
+**Read it for what it is, plainly:**
+- *Against production's stems on the same 104 records:* right **65 against 41** (24 more), misleading **39 against 36** (3 more), incomplete **0 against 27**. The resolver turns production's 27 "attached nothing" cases into attachments, most of them right, and it **almost never leaves attachment empty** (103 of 104 records get one), so it also adds three wrong attachments over production. That is the trade, and it is why the misleading gate, with a margin of two records, is the tight one.
+- *The margins are thin and the set is small.* One record moves a rate by about one point; margins of 3 and 2 records are inside the noise that earlier runs showed between prompts. Read as "clears the registered bars with a small margin", not as an exact rate.
+- *Robust to the label amendments (exploratory, after the verdict):* under the gold's first serialization, before the three disclosed amendments, the resolver's counts are the same (65 right, 39 misleading) and the bars would have been 63 and 40, so it passes either way. The model's answers on the challenged-and-kept R243, R245 and R264 and on the amended R265 were all right under the labels as committed.
+- *Structural zeros held on unseen candidates:* no invented party and no gated modality error by construction. Strength came from the quote in 42 records, from the chosen parent in 29, and from no modal (default `obligation`, class `none`) in 43; no record needed an inferred source; four quotes hold more than one modal (R213, R226, R258, R271), first modal used as registered.
+- *What the 39 misleading answers look like (exploratory, not a result):* 19 are attachments made to a sentence that was already complete (a heading, a lead-in, a rule-found stem, a preceding clause); 20 are wrong attachments to a sentence that needed one, 13 of them involving a `stem` entry (the production rule's own stem is on the menu, and the model sometimes trusts it where production was wrong).
+
+**What this does not show.** One labeler (the audit's second labeler and the owner's adjudication are not available for this set); the same 13 documents, so the claim is about unseen *candidates*, not unseen documents; the held-out set is untouched; the menu change was motivated by the spent halves (which is why the test used fresh candidates); the labels challenged in review and kept (R243, R264, R245) are judgment calls; and nothing here is integrated into the production pipeline.
+
+**What is left, for the owner to decide:** whether and how to integrate the selection resolver into the pipeline (a separate work package with its own plan: it would replace the production stem attachment, and the 39 misleading answers say where a reviewer pass or a menu tightening could help); a second labeler for this set and for the held-out pack; and the owner's optional spot check of the 20 cards listed in step 25.
