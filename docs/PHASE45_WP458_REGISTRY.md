@@ -4,7 +4,7 @@
 
 ## 1. The apparatus and what it can resolve
 
-Stage B reuses the WP-45.1(c)/(d) retrieval test unchanged (`eval/spike_results/wp_45_1c/`): 111 tested records in frozen groups (right stem 25, misleading stem 22, incomplete chain stem 11, no stem but needs a lead-in 36, no stem and complete 18), two blind-written questions per record (topic and party plus topic), an in-memory copy of the live index, target-only mode as the primary view (only the queried record's text changes), and one plain run plus three production-path repeats. That work fixed its own rule for a difference: **"meaningful" = a paired change in recall@10 of at least 0.10 whose 95% record-bootstrap interval excludes zero, in the same direction under best- and worst-case tie ranks; anything else is "no demonstrated difference", never "no effect".**
+Stage B reuses the WP-45.1(c)/(d) retrieval test unchanged (`eval/spike_results/wp_45_1c/`): 111 tested records in frozen groups (right stem 25, misleading stem 22, incomplete chain stem 11, no stem but needs a lead-in 36, no stem and complete 17: the control record R053 is in the pinned corpus files but not in the live index, as in the apparatus), two blind-written questions per record (topic and party plus topic), an in-memory copy of the live index, target-only mode as the primary view (only the queried record's text changes), and one plain run plus three production-path repeats. That work fixed its own rule for a difference: **"meaningful" = a paired change in recall@10 of at least 0.10 whose 95% record-bootstrap interval excludes zero, in the same direction under best- and worst-case tie ranks; anything else is "no demonstrated difference", never "no effect".**
 
 Its intervals on these groups are wide (for example +0.17 with interval [+0.06, +0.31] at n=35; [-0.36, -0.05] at n=22). **A rule that demanded proof that the resolver is "not worse" within a small margin on groups of 11 to 36 records could not be passed whatever the resolver does.** The rules below therefore ask for evidence of harm or benefit at the apparatus's own resolution and say in advance what an inconclusive result means.
 
@@ -21,15 +21,16 @@ Stage A must have produced a resolver string for every record of the live index 
 
 Computed for the **resolver minus production** paired change in recall@10, topic and party questions separately, in the plain run and in each of the three production-path repeats (four runs), per group and for the pooled stemmed groups (right, misleading, incomplete).
 
-- **H (harm).** Any group, or the pooled stemmed groups, shows a *meaningful decrease* (at most -0.10, interval excluding zero, same direction at both tie ranks) in **two or more of the four runs** on the same question style. Harm on a single run is reported but does not alone fail.
+- **Evaluation order.** A cell (a group, a question style and a run) whose 95% interval is wider than 0.40 is marked **inconclusive** and is **excluded before H and G are evaluated**; it counts neither as harm nor as gain.
+- **H (harm).** Among the cells that remain, any group, or the pooled stemmed groups, shows a *meaningful decrease* (at most -0.10, interval excluding zero, same direction at both tie ranks) in **two or more of the four runs** on the same question style. Harm on a single run is reported but does not alone fail.
 - **G (gain).** The no-stem-needs-lead-in group shows a *meaningful increase* in **at least three of the four runs** for at least one question style.
-- **C (cohort check).** On the 35 gold topical queries (cohort mode, paired per query), the resolver's change in recall@10 has an interval that does not exclude zero on the harm side: its upper bound is not below -0.02 in the plain run and in at least two of the three repeats. Policies earlier measured here (a lead-in on the 80 oracle records, -0.017 [-0.049, 0.000]) are the reference scale.
+- **C (cohort check; triggered = harm).** On the 35 gold topical queries (cohort mode, paired per query), C is **triggered** when the interval of the resolver's change in recall@10 lies wholly below -0.02 (its upper bound is below -0.02) in the plain run and in at least two of the three repeats. An interval that reaches -0.02 or above, such as [-0.05, 0.00], does not trigger C. Policies earlier measured here (a lead-in on the 80 oracle records, -0.017 [-0.049, 0.000]) are the reference scale.
 
 **Outcomes, fixed in advance.**
 - *Proposal for integration* only if **G holds and neither H nor C is triggered**.
 - If **H or C is triggered**: no proposal; the harm is read record by record.
 - If **G does not hold and neither H nor C is triggered**: *no demonstrated benefit*. The resolver is not proposed on retrieval grounds; its case would rest on display and trust (attachment accuracy), which the owner decides separately.
-- A group too small to resolve a meaningful difference (the interval is wider than 0.40) is marked **inconclusive** in the report and is neither a pass nor a harm.
+- A cell whose interval is wider than 0.40 is marked **inconclusive** in the report (see the evaluation order above); it is neither a pass nor a harm.
 
 ## 4. What this does and does not claim
 
