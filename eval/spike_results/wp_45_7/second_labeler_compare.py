@@ -26,6 +26,7 @@ for _p in (_HERE, _HERE.parents[2]):
         sys.path.insert(0, str(_p))
 
 import fresh_gold as FG  # noqa: E402
+import menu as M  # noqa: E402
 import score_resolver as SR  # noqa: E402
 
 FIRST = FG.LABELS
@@ -39,6 +40,16 @@ REPORT = _HERE / "outputs" / "second_labeler_report.json"
 # only in a heading. Found by the Codex review of PR #244 and checked against the cards; the same defect was corrected in the first labeler's R265 before
 # any run. The submitted label files are never edited; these are applied in memory as a sensitivity variant, and the first six are the review's finding.
 ACTORLESS_RIGHT = ("R212", "R265", "R274", "R286", "R301", "R302")
+# Pass A departures from the rubric found in the same review, checked against the cards: R217 and R303 show "[4. DIRECTOR, OPERATIONAL TEST AND EVALUATION (DOT&E).
+# The DOT&E shall:]" as the section heading, but the second labeler answered not_shown after inferring the heading "looks stale" (the rubric says judge from the text
+# shown, and section_heading when that is the governing context); R251 and R257 are permissive "may" sentences marked not_a_requirement because the rubric given to a
+# blind labeler did not carry the project's ruling that "may" statements are requirements.
+PASS_A_DEPARTURES = {
+    "R217": {"standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "The DOT&E shall:"},
+    "R303": {"standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "The DOT&E shall:"},
+    "R251": {"standalone": "complete", "lead_in_location": None, "lead_in_text": None},
+    "R257": {"standalone": "complete", "lead_in_location": None, "lead_in_text": None},
+}
 ARGUABLE = ("R281",)  # the stem names a role ("the PPSM CCB chairperson") but its subject is only in the heading; the second labeler noted "'their' = chairperson"
 
 
@@ -66,11 +77,15 @@ def agreement(first=FIRST, second=SECOND):
     }
 
 
-def second_gold(second=SECOND, fragment_chain=()):
+def second_gold(second=SECOND, fragment_chain=(), pass_a=None):
     """The gold the second labeler's labels give, built exactly as the frozen one (the builder expects the first labeler's file names). Cards named in
-    `fragment_chain` have their pass B verdict set to fragment_chain in memory (a sensitivity variant; the label files are not touched)."""
+    `fragment_chain` have their pass B verdict set to fragment_chain, and cards in `pass_a` their pass A fields replaced, in memory (a sensitivity variant; the
+    label files are not touched)."""
     with tempfile.TemporaryDirectory() as tmp:
-        shutil.copy(second / "labels_claude2_a.jsonl", Path(tmp) / "labels_claude_a.jsonl")
+        rows_a = [json.loads(line) for line in (second / "labels_claude2_a.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
+        for row in rows_a:
+            row.update((pass_a or {}).get(row["id"], {}))
+        (Path(tmp) / "labels_claude_a.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows_a), encoding="utf-8")
         rows = [json.loads(line) for line in (second / "labels_claude2_b.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
         for row in rows:
             if row["id"] in fragment_chain:
@@ -93,7 +108,7 @@ def strict_rescore(gold, run=RUN):
     """The registered scorer credits a resolver answer as right when the chosen actor or parent overlaps the labeler's lead-in text, whether or not the
     chosen text names a party; production's stems are judged on whether stem plus quote read as one complete statement. Found in the review of PR #244.
     This variant is the mechanical, partial correction: a needs-lead-in answer that chose no actor and whose parent is itself a list item (starts with a
-    marker such as "d." or "(2)") is counted misleading. It misses party-less fragments with no marker (R301), so it is a floor on the effect."""
+    marker such as "d." or "(2)") and states no modal (a lead-in with "must" or "shall" states the requirement, as R245's does) is counted misleading. It misses party-less fragments with no marker (R301), so it is a floor on the effect."""
     records = SR.load_ledger(str(run))
     half = SR.score_run(str(run), gold)["evaluation"]
     attachment = collections.Counter(half["audit"]["attachment"])
@@ -102,7 +117,8 @@ def strict_rescore(gold, run=RUN):
         if not (SR.attachment_scored(g) and g["standalone"] == "needs_lead_in"):
             continue
         answer = records[g["candidate_id"]]["answer"]
-        if SR.attachment(answer, g) == "right" and not (answer["actor"]["value"] or "").strip() and _LIST_ITEM.match((answer["parent"]["value"] or "").strip()):
+        if SR.attachment(answer, g) == "right" and not (answer["actor"]["value"] or "").strip() \
+                and _LIST_ITEM.match((answer["parent"]["value"] or "").strip()) and not M.first_modal(answer["parent"]["value"] or ""):
             demoted.append(g["candidate_id"].split(":")[1])
     attachment["right"] -= len(demoted)
     attachment["misleading"] += len(demoted)
@@ -127,9 +143,16 @@ def per_candidate(first_gold, other_gold, run=RUN):
     return {" -> ".join(k): v for k, v in sorted(moves.items())}
 
 
+def conformant_gold():
+    """The second labeler's labels with every departure from the rubric that review found and the cards confirm corrected (the actorless `right` verdicts, R217
+    and R303's location, R251 and R257 under the may-rule). Made by the first labeler, who knows the verdict, so it is a sensitivity view, never a replacement."""
+    return second_gold(fragment_chain=ACTORLESS_RIGHT, pass_a=PASS_A_DEPARTURES)
+
+
 def report():
     first = json.loads(FROZEN.read_text(encoding="utf-8"))
     second = second_gold()
+    conformant = conformant_gold()
     return {
         "note": "sensitivity analysis on the saved one-shot answers; not a verdict (the verdict was registered against the first labels)",
         "agreement": agreement(),
@@ -139,13 +162,15 @@ def report():
             "second_labels_as_submitted": rescore(second),
             "second_labels_with_actorless_right_corrected": rescore(second_gold(fragment_chain=ACTORLESS_RIGHT)),
             "second_labels_with_those_and_R281_corrected": rescore(second_gold(fragment_chain=ACTORLESS_RIGHT + ARGUABLE)),
+            "second_labels_rubric_conformant": rescore(conformant),
         },
         "strict_scorer_variant": {
             "first_labels": strict_rescore(first),
             "second_labels_as_submitted": strict_rescore(second),
             "second_labels_with_actorless_right_corrected": strict_rescore(second_gold(fragment_chain=ACTORLESS_RIGHT)),
+            "second_labels_rubric_conformant": strict_rescore(conformant),
         },
-        "corrected_cards": {"actorless_right": list(ACTORLESS_RIGHT), "arguable": list(ARGUABLE)},
+        "corrected_cards": {"actorless_right": list(ACTORLESS_RIGHT), "arguable": list(ARGUABLE), "pass_a_departures": sorted(PASS_A_DEPARTURES)},
         "resolver_attachment_moves_first_to_second": per_candidate(first, second),
     }
 
