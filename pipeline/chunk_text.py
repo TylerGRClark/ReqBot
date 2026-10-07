@@ -267,6 +267,13 @@ def _raw_text_with_table_grids(chunk: object, doc: object, tables: list, table_o
             continue
         if grid and seen_table_refs is not None and ref is not None:
             seen_table_refs.add(ref)
+        if len(grid) > _TABLE_MARKDOWN_WARN_CHARS:  # the same warning the per-item path gives for a typed table
+            log.warning(
+                "Table markdown for %s is %d chars (~%d tokens) -- approaching "
+                "Step C's context budget. Extraction quality for this table "
+                "should be spot-checked.",
+                ref, len(grid), len(grid) // 4,
+            )
     return text.strip()
 
 

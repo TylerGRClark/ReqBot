@@ -303,3 +303,14 @@ def test_a_chunk_with_a_real_typed_item_or_an_unresolvable_reference_is_left_alo
     assert _chunk_raw_text(_MockChunk([table, ghost], text=flat), doc) == flat  # unresolvable reference: today's fallback
     assert _chunk_raw_text(_MockChunk([doc.tables[0], table], text=flat), doc) != flat  # a real TableItem in the chunk: today's per-item path
 
+
+
+def test_an_oversized_grid_from_a_merged_chunk_logs_the_same_warning(caplog, monkeypatch):
+    import pipeline.chunk_text as ct
+
+    doc = _merged_doc()
+    chunk = next(c for c in _chunks(doc) if FLAT in c.text)
+    monkeypatch.setattr(ct, "_TABLE_MARKDOWN_WARN_CHARS", 5)
+    with caplog.at_level("WARNING", logger=ct.log.name):
+        ct._chunk_raw_text(chunk, doc)
+    assert any("approaching" in r.message for r in caplog.records)
