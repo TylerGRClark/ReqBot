@@ -1,0 +1,194 @@
+#!/usr/bin/env python3
+"""WP-45.7e after the verdict: a second labeler's agreement with the first, and a sensitivity rescore of the saved answers (offline; no LLM).
+
+The second labeler is a blind Claude subagent given only the pack and rubric (`fresh_labels_second/`). This reads both label sets, reports agreement
+(pass A: complete / needs a lead-in / not a requirement, the location, the lead-in text; pass B: the verdict on the production stem), builds a gold
+from the second labeler's labels with the same builder and rubric checker as the frozen gold (`fresh_gold.build`), and scores the **saved** one-shot
+answers (`outputs/eval_v6_run`, never re-run) against both golds with the registered gates. It is a sensitivity analysis, not a verdict: the verdict
+was registered against the first labels and is unchanged.
+
+  python3 eval/spike_results/wp_45_7/second_labeler_compare.py            # prints the report
+  python3 eval/spike_results/wp_45_7/second_labeler_compare.py --write    # also writes outputs/second_labeler_report.json
+"""
+
+import argparse
+import collections
+import json
+import re
+import shutil
+import sys
+import tempfile
+from pathlib import Path
+
+_HERE = Path(__file__).resolve().parent
+for _p in (_HERE, _HERE.parents[2]):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
+
+import fresh_gold as FG  # noqa: E402
+import menu as M  # noqa: E402
+import score_resolver as SR  # noqa: E402
+
+FIRST = FG.LABELS
+SECOND = _HERE / "fresh_labels_second"
+RUN = _HERE / "outputs" / "eval_v6_run"
+FROZEN = FG.FROZEN
+REPORT = _HERE / "outputs" / "second_labeler_report.json"
+
+# Pass B verdicts of the second labeler that contradict the rubric (RUBRIC.md "right": stem plus quote read as one complete statement) because neither the
+# stem nor the quote names a party: the stem is a list item or a verb-initial clause with no subject, and the labeler's own pass A notes say the party sits
+# only in a heading. Found by the Codex review of PR #244 and checked against the cards; the same defect was corrected in the first labeler's R265 before
+# any run. The submitted label files are never edited; these are applied in memory as a sensitivity variant, and the first six are the review's finding.
+ACTORLESS_RIGHT = ("R212", "R265", "R274", "R286", "R301", "R302")
+# Pass A departures from the rubric found in the same review, checked against the cards: R217 and R303 show "[4. DIRECTOR, OPERATIONAL TEST AND EVALUATION (DOT&E).
+# The DOT&E shall:]" as the section heading, but the second labeler answered not_shown after inferring the heading "looks stale" (the rubric says judge from the text
+# shown, and section_heading when that is the governing context); R251 and R257 are permissive "may" sentences marked not_a_requirement because the rubric given to a
+# blind labeler did not carry the project's ruling that "may" statements are requirements.
+PASS_A_DEPARTURES = {
+    "R217": {"standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "The DOT&E shall:"},
+    "R303": {"standalone": "needs_lead_in", "lead_in_location": "section_heading", "lead_in_text": "The DOT&E shall:"},
+    "R251": {"standalone": "complete", "lead_in_location": None, "lead_in_text": None},
+    "R257": {"standalone": "complete", "lead_in_location": None, "lead_in_text": None},
+}
+# With the heading accepted as R217's and R303's governing lead-in, the production stem on both is exactly that heading text ("The DOT&E shall:"), which the second
+# labeler's pass B called wrong_other only because it had called the lead-in not shown; the first labeler called both right.
+PASS_B_FOLLOWS = ("R217", "R303")
+ARGUABLE = ("R281",)  # the stem names a role ("the PPSM CCB chairperson") but its subject is only in the heading; the second labeler noted "'their' = chairperson"
+
+
+def _by_id(path):
+    return FG._jsonl(path)  # {card id: label}
+
+
+def agreement(first=FIRST, second=SECOND):
+    a1, a2 = _by_id(first / "labels_claude_a.jsonl"), _by_id(second / "labels_claude2_a.jsonl")
+    b1, b2 = _by_id(first / "labels_claude_b.jsonl"), _by_id(second / "labels_claude2_b.jsonl")
+    ids = sorted(a1)
+    both = [i for i in ids if a1[i]["standalone"] == a2[i]["standalone"] == "needs_lead_in"]
+    pairs = lambda x, y, ks, f: {" -> ".join(map(str, k)): v for k, v in sorted(collections.Counter((x[i][f], y[i][f]) for i in ks).items(), key=str)}  # noqa: E731
+    return {
+        "pass_a_cards": len(ids),
+        "standalone_agree": sum(a1[i]["standalone"] == a2[i]["standalone"] for i in ids),
+        "standalone_pairs": pairs(a1, a2, ids, "standalone"),
+        "both_need_lead_in": len(both),
+        "location_agree": sum(a1[i]["lead_in_location"] == a2[i]["lead_in_location"] for i in both),
+        "location_pairs": pairs(a1, a2, both, "lead_in_location"),
+        "lead_in_text_identical": sum((a1[i]["lead_in_text"] or "") == (a2[i]["lead_in_text"] or "") for i in both),
+        "pass_b_cards": len(b1),
+        "stem_verdict_agree": sum(b1[i]["stem_verdict"] == b2[i]["stem_verdict"] for i in b1),
+        "stem_verdict_pairs": pairs(b1, b2, sorted(b1), "stem_verdict"),
+    }
+
+
+def second_gold(second=SECOND, fragment_chain=(), pass_a=None, right=()):
+    """The gold the second labeler's labels give, built exactly as the frozen one (the builder expects the first labeler's file names). Cards named in
+    `fragment_chain` have their pass B verdict set to fragment_chain, cards in `right` to right, and cards in `pass_a` their pass A fields replaced, in memory (a sensitivity variant; the
+    label files are not touched)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        rows_a = [json.loads(line) for line in (second / "labels_claude2_a.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
+        for row in rows_a:
+            row.update((pass_a or {}).get(row["id"], {}))
+        (Path(tmp) / "labels_claude_a.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows_a), encoding="utf-8")
+        rows = [json.loads(line) for line in (second / "labels_claude2_b.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
+        for row in rows:
+            if row["id"] in fragment_chain:
+                row["stem_verdict"] = "fragment_chain"
+            elif row["id"] in right:
+                row["stem_verdict"] = "right"
+        (Path(tmp) / "labels_claude_b.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
+        return FG.build(labels=Path(tmp))
+
+
+def rescore(gold, run=RUN):
+    half = SR.score_run(str(run), gold)["evaluation"]
+    gates, _ = SR.selection_gates(half, None, SR.V4_RELATIVE)
+    return {"attachment": dict(half["audit"]["attachment"]), "baseline_attachment": dict(half["audit"]["baseline_attachment"]),
+            "gates": {k: {"value": v[0], "threshold": v[1], "passed": bool(v[2])} for k, v in gates.items()}}
+
+
+_LIST_ITEM = re.compile(r"^\(?[A-Za-z0-9]{1,3}[.)]\s")
+
+
+def strict_rescore(gold, run=RUN):
+    """The registered scorer credits a resolver answer as right when the chosen actor or parent overlaps the labeler's lead-in text, whether or not the
+    chosen text names a party; production's stems are judged on whether stem plus quote read as one complete statement. Found in the review of PR #244.
+    This variant is the mechanical, partial correction: a needs-lead-in answer that chose no actor and whose parent is itself a list item (starts with a
+    marker such as "d." or "(2)") and states no modal (a lead-in with "must" or "shall" states the requirement, as R245's does) is counted misleading. It misses party-less fragments with no marker (R301), so it is a floor on the effect."""
+    records = SR.load_ledger(str(run))
+    half = SR.score_run(str(run), gold)["evaluation"]
+    attachment = collections.Counter(half["audit"]["attachment"])
+    demoted = []
+    for g in gold["gold"]:
+        if not (SR.attachment_scored(g) and g["standalone"] == "needs_lead_in"):
+            continue
+        answer = records[g["candidate_id"]]["answer"]
+        if SR.attachment(answer, g) == "right" and not (answer["actor"]["value"] or "").strip() \
+                and _LIST_ITEM.match((answer["parent"]["value"] or "").strip()) and not M.first_modal(answer["parent"]["value"] or ""):
+            demoted.append(g["candidate_id"].split(":")[1])
+    attachment["right"] -= len(demoted)
+    attachment["misleading"] += len(demoted)
+    half["audit"]["attachment"] = dict(attachment)
+    gates, _ = SR.selection_gates(half, None, SR.V4_RELATIVE)
+    return {"demoted": sorted(demoted), "attachment": dict(attachment), "gates_failing": sorted(k for k, v in gates.items() if not v[2]),
+            "attachment_gain": gates["attachment_gain_over_production"], "misleading": gates["misleading"]}
+
+
+def per_candidate(first_gold, other_gold, run=RUN):
+    """How each candidate's resolver attachment class moves between the two golds (unscored = attachment not scored under that gold)."""
+    records = SR.load_ledger(str(run))
+    one, two = {g["candidate_id"]: g for g in first_gold["gold"]}, {g["candidate_id"]: g for g in other_gold["gold"]}
+
+    def cls(g, cid):
+        if not SR.attachment_scored(g):
+            return "unscored"
+        answer = (records.get(cid) or {}).get("answer")
+        return SR.attachment(answer, g) if answer else "failed"
+
+    moves = collections.Counter((cls(one[c], c), cls(two[c], c)) for c in one)
+    return {" -> ".join(k): v for k, v in sorted(moves.items())}
+
+
+def conformant_gold():
+    """The second labeler's labels with every departure from the rubric that review found and the cards confirm corrected (the actorless `right` verdicts, R217
+    and R303's location, R251 and R257 under the may-rule). Made by the first labeler, who knows the verdict, so it is a sensitivity view, never a replacement."""
+    return second_gold(fragment_chain=ACTORLESS_RIGHT, pass_a=PASS_A_DEPARTURES, right=PASS_B_FOLLOWS)
+
+
+def report():
+    first = json.loads(FROZEN.read_text(encoding="utf-8"))
+    second = second_gold()
+    conformant = conformant_gold()
+    return {
+        "note": "sensitivity analysis on the saved one-shot answers; not a verdict (the verdict was registered against the first labels)",
+        "agreement": agreement(),
+        "gold_counts": {"first": first["counts"], "second": second["counts"]},
+        "rescored": {
+            "first_labels": rescore(first),
+            "second_labels_as_submitted": rescore(second),
+            "second_labels_with_actorless_right_corrected": rescore(second_gold(fragment_chain=ACTORLESS_RIGHT)),
+            "second_labels_with_those_and_R281_corrected": rescore(second_gold(fragment_chain=ACTORLESS_RIGHT + ARGUABLE)),
+            "second_labels_rubric_conformant": rescore(conformant),
+        },
+        "strict_scorer_variant": {
+            "first_labels": strict_rescore(first),
+            "second_labels_as_submitted": strict_rescore(second),
+            "second_labels_with_actorless_right_corrected": strict_rescore(second_gold(fragment_chain=ACTORLESS_RIGHT)),
+            "second_labels_rubric_conformant": strict_rescore(conformant),
+        },
+        "corrected_cards": {"actorless_right": list(ACTORLESS_RIGHT), "arguable": list(ARGUABLE), "pass_a_departures": sorted(PASS_A_DEPARTURES), "pass_b_follows": list(PASS_B_FOLLOWS)},
+        "resolver_attachment_moves_first_to_second": per_candidate(first, second),
+    }
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--write", action="store_true", help=f"also write {REPORT.name}")
+    args = ap.parse_args()
+    text = json.dumps(report(), indent=1, sort_keys=True)
+    print(text)
+    if args.write:
+        REPORT.write_text(text + "\n", encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()

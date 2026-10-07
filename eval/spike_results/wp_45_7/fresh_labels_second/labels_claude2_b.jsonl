@@ -1,0 +1,58 @@
+{"id": "R202", "stem_verdict": "wrong_other", "note": "stem is an item from a different officer's list"}
+{"id": "R203", "stem_verdict": "right", "note": ""}
+{"id": "R206", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item a's sub-list"}
+{"id": "R211", "stem_verdict": "right", "note": ""}
+{"id": "R212", "stem_verdict": "right", "note": ""}
+{"id": "R213", "stem_verdict": "not_needed", "note": "document-level heading"}
+{"id": "R215", "stem_verdict": "wrong_sibling", "note": "tail of peer item c"}
+{"id": "R217", "stem_verdict": "wrong_other", "note": "DOT&E heading is stale for this item"}
+{"id": "R219", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item b"}
+{"id": "R220", "stem_verdict": "not_needed", "note": "quote complete; stem is loosely related parent"}
+{"id": "R221", "stem_verdict": "fragment_chain", "note": "half of the lead-in sentence, party missing"}
+{"id": "R223", "stem_verdict": "right", "note": ""}
+{"id": "R228", "stem_verdict": "right", "note": ""}
+{"id": "R229", "stem_verdict": "wrong_other", "note": "skips the PMO lead-in; stem would apply item to all stakeholders"}
+{"id": "R231", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item c's sub-list"}
+{"id": "R232", "stem_verdict": "right", "note": ""}
+{"id": "R233", "stem_verdict": "right", "note": ""}
+{"id": "R234", "stem_verdict": "wrong_other", "note": "DOT&E is a different party"}
+{"id": "R236", "stem_verdict": "fragment_chain", "note": "half of the lead-in sentence, party missing"}
+{"id": "R237", "stem_verdict": "not_needed", "note": "quote complete; stem is loosely related parent"}
+{"id": "R240", "stem_verdict": "right", "note": ""}
+{"id": "R241", "stem_verdict": "right", "note": "skips intermediate 'Oversee...' line but reads correctly"}
+{"id": "R242", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item b's sub-list"}
+{"id": "R245", "stem_verdict": "right", "note": ""}
+{"id": "R246", "stem_verdict": "right", "note": ""}
+{"id": "R247", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item b's sub-list"}
+{"id": "R248", "stem_verdict": "right", "note": ""}
+{"id": "R249", "stem_verdict": "right", "note": "skips intermediate 'Oversee...' line but reads correctly"}
+{"id": "R253", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item (5)'s sub-list"}
+{"id": "R255", "stem_verdict": "right", "note": ""}
+{"id": "R257", "stem_verdict": "not_needed", "note": "document-level heading"}
+{"id": "R258", "stem_verdict": "not_needed", "note": "adjacent sentence of same item, harmless"}
+{"id": "R260", "stem_verdict": "wrong_sibling", "note": "peer bullet"}
+{"id": "R264", "stem_verdict": "fragment_chain", "note": "half-sentence of the lead-in"}
+{"id": "R265", "stem_verdict": "right", "note": ""}
+{"id": "R266", "stem_verdict": "right", "note": ""}
+{"id": "R267", "stem_verdict": "wrong_sibling", "note": "text of peer item a"}
+{"id": "R268", "stem_verdict": "right", "note": ""}
+{"id": "R269", "stem_verdict": "not_needed", "note": "quote already names the DoD CIO"}
+{"id": "R270", "stem_verdict": "wrong_sibling", "note": "peer item 2.2.12.1"}
+{"id": "R272", "stem_verdict": "wrong_other", "note": "text from a different section"}
+{"id": "R273", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item e's sub-list"}
+{"id": "R274", "stem_verdict": "right", "note": ""}
+{"id": "R276", "stem_verdict": "right", "note": ""}
+{"id": "R277", "stem_verdict": "wrong_other", "note": "item from a different officer's list"}
+{"id": "R281", "stem_verdict": "right", "note": ""}
+{"id": "R284", "stem_verdict": "not_needed", "note": "document-level heading"}
+{"id": "R286", "stem_verdict": "right", "note": ""}
+{"id": "R287", "stem_verdict": "wrong_sibling", "note": "lead-in of peer item b's sub-list"}
+{"id": "R288", "stem_verdict": "right", "note": ""}
+{"id": "R292", "stem_verdict": "wrong_sibling", "note": "text of peer item 2.12.6.6"}
+{"id": "R301", "stem_verdict": "right", "note": ""}
+{"id": "R302", "stem_verdict": "right", "note": ""}
+{"id": "R303", "stem_verdict": "wrong_other", "note": "DOT&E heading is stale for this item"}
+{"id": "R310", "stem_verdict": "not_needed", "note": "quote complete; stem is loosely related parent"}
+{"id": "R311", "stem_verdict": "wrong_sibling", "note": "text of peer step b"}
+{"id": "R312", "stem_verdict": "not_needed", "note": "quote already names AFGSC"}
+{"id": "R313", "stem_verdict": "not_needed", "note": "adjacent clause, harmless"}
