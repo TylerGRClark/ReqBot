@@ -20,9 +20,9 @@
   "needs_lead_in_not_shown": 1,
   "with_production_stem": 58,
   "stem_verdicts": {
-   "fragment_chain": 9,
+   "fragment_chain": 10,
    "not_needed": 7,
-   "right": 21,
+   "right": 20,
    "wrong_other": 4,
    "wrong_sibling": 17
   }
@@ -32,7 +32,7 @@
   "pack_b.md": "ec9d95cbd02ef32420eaa3a3aaf53aca6b6d1389076a0e19066b8bae055e26fc",
   "outputs/fresh_draw_map.json": "2911e4a9036c4f35c1bf826b865a82a75cbe684a385c338ebaf3c699b6b3cccb",
   "labels_claude_a.jsonl": "d1d01c740f73fa6c14a9275cd2bfb90dcd4ddb30125f5e88bcfa5736533df18b",
-  "labels_claude_b.jsonl": "f0587320e684b164678a43e639535f4c8e39f0a7eff452d158e6e7e8334a16c6"
+  "labels_claude_b.jsonl": "357d3d036bffd80600d6e56e45c964af3a9734c062bce47d66c795add82aaaf9"
  },
  "gold": [
   {
@@ -1008,7 +1008,7 @@
    "lead_in_location": "previous_chunk",
    "lead_in_text": "Establish TSN processes to assess vulnerabilities and manage risk to the assurance in the applicable system by: | DOD COMPONENT HEADS.",
    "production_stem": "e. Establish TSN processes to assess vulnerabilities and manage risk to the assurance in the applicable system by:",
-   "stem_verdict": "right"
+   "stem_verdict": "fragment_chain"
   },
   {
    "candidate_id": "fresh:R266",

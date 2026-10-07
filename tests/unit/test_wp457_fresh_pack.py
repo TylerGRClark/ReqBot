@@ -292,12 +292,12 @@ def test_the_fresh_gold_works_with_the_scorers_and_the_v6_guards(FG):
     for g in gold:
         if S.attachment_scored(g):
             base[S.baseline_attachment(g)] = base.get(S.baseline_attachment(g), 0) + 1
-    assert base == {"right": 42, "misleading": 35, "incomplete": 27}  # production on the fresh set, from pass B: the verdict's anchors
+    assert base == {"right": 41, "misleading": 36, "incomplete": 27}  # production on the fresh set, from pass B: the verdict's anchors
     S.check_sufficiency("v6", gold)
     S.check_frozen_code("v6")  # now that the sealed files are committed, the manifest pins and every sealed file match
 
 
-def test_the_gold_differs_from_the_first_serialization_in_exactly_the_five_amended_lead_in_texts(FG):
+def test_the_gold_differs_from_the_first_serialization_only_in_the_disclosed_amendments(FG):
     """The plan's stage C2 amendments, pinned: the gold was re-serialized once (a secret-scanner trap on one key name), then five pass A lead-in texts were
     completed with their party passage. The first serialization is kept outside the repository; its per-record digests are in
     `outputs/fresh_gold_first_serialization_digests.json`. Every record must equal it, except these five, whose only difference is the lead-in text."""
@@ -311,16 +311,20 @@ def test_the_gold_differs_from_the_first_serialization_in_exactly_the_five_amend
         "fresh:R281": "Appoints a DoD military officer ... as the PPSM CCB chairperson to:",
         "fresh:R285": "In coordination with the USD(A&S), ensures:",
     }
+    verdict_before = {"fresh:R265": "right"}  # the second amendment: R265's pass B verdict was right, now fragment_chain
     records = gold["gold"]
     assert set(first) == {g["candidate_id"] for g in records} and len(first) == 114
     for g in records:
         cid = g["candidate_id"]
         if cid in amended:
             assert g["lead_in_text"].startswith(amended[cid] + " | ") and digest(g) != first[cid], cid  # the party passage was added
-            assert digest({**g, "lead_in_text": amended[cid]}) == first[cid], cid  # and nothing else changed
+            restored = {**g, "lead_in_text": amended[cid], **({"stem_verdict": verdict_before[cid]} if cid in verdict_before else {})}
+            assert digest(restored) == first[cid], cid  # and nothing else changed (R265's pass B verdict aside, restored here)
         else:
             assert digest(g) == first[cid], cid  # every other record is exactly as first serialized
-    counts = digest(gold["counts"])
-    assert counts == "696746fd879ae8527190cd35a2b1b57ade588c94df8b624f76843791bc67a537"  # the counts did not change
+    counts = json.loads(json.dumps(gold["counts"]))
+    counts["stem_verdicts"]["right"] += 1
+    counts["stem_verdicts"]["fragment_chain"] -= 1  # R265 moved from right to fragment_chain; everything else in the counts is as first serialized
+    assert digest(counts) == "696746fd879ae8527190cd35a2b1b57ade588c94df8b624f76843791bc67a537"
     assert digest(gold["sufficiency"]) == "ee0538dba14ab608bfcf299109496aa9f1dd9ce1388079c5ee996c13d8890a93"
     assert "outputs/fresh_draw_map.json" in gold["inputs_sha256"] and "outputs/fresh_key.json" not in gold["inputs_sha256"]

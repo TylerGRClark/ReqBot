@@ -32,7 +32,7 @@
 {"id": "R258", "stem_verdict": "not_needed", "note": ""}
 {"id": "R260", "stem_verdict": "wrong_sibling", "note": ""}
 {"id": "R264", "stem_verdict": "right", "note": ""}
-{"id": "R265", "stem_verdict": "right", "note": ""}
+{"id": "R265", "stem_verdict": "fragment_chain", "note": "right local lead-in; the actor is in the heading [amended at C2: was right; the stem names no actor, as for R274, R281 and R286]"}
 {"id": "R266", "stem_verdict": "right", "note": ""}
 {"id": "R267", "stem_verdict": "wrong_sibling", "note": ""}
 {"id": "R268", "stem_verdict": "right", "note": ""}

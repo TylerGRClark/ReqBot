@@ -34,7 +34,7 @@
  "note": "sha256 (paths relative to the repository root) of everything that defines the WP-45.7e frozen configuration: the import closure of the guarded runner, the declaration, the unlabeled draw and pack, and the files that pin the input documents. `sealed_until_c2` lists the files that exist only after the labels are committed, with the hashes fixed in docs/PHASE45_WP457E_PLAN.md. The v6 preflight and verdict refuse to proceed if any differs.",
  "sealed_until_c2": {
   "eval/spike_results/wp_45_7/fresh_labels/labels_claude_a.jsonl": "d1d01c740f73fa6c14a9275cd2bfb90dcd4ddb30125f5e88bcfa5736533df18b",
-  "eval/spike_results/wp_45_7/fresh_labels/labels_claude_b.jsonl": "f0587320e684b164678a43e639535f4c8e39f0a7eff452d158e6e7e8334a16c6",
-  "eval/spike_results/wp_45_7/outputs/fresh_gold.json": "2bd34beafa646d009dff51f9fadde074348c30b18bb3cb31ee8a92109555e221"
+  "eval/spike_results/wp_45_7/fresh_labels/labels_claude_b.jsonl": "357d3d036bffd80600d6e56e45c964af3a9734c062bce47d66c795add82aaaf9",
+  "eval/spike_results/wp_45_7/outputs/fresh_gold.json": "86fe38245047fc2baede592c8cafc40add2d0207b7c16ecb5dcd0cd969719681"
  }
 }
