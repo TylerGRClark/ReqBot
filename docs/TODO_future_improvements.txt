@@ -1110,3 +1110,10 @@ DECISIONS AND GUARDRAILS
     held-out portion) shows it stays above an explicit recall floor. Missing a
     real requirement is worse than keeping a questionable one. See ACTIVE
     BACKLOG items 35-36 and docs/PHASE44_REQUIREMENTS.md section 12.
+
+- seen_table_refs is marked when a chunk's text is built, before run_structure_aware's ToC / skip-section
+  filters decide whether the chunk is kept (pipeline/chunk_text.py, typed-table path from PR #189 and the
+  merged-chunk grid path from WP-45.11 T2). If a split table's first chunk is filtered out, a later chunk
+  referencing the same table loses its flat block / table. Found by Codex review on PR #249; pre-existing,
+  not measured to occur in the 13 pinned documents. Fix would mark refs only for kept chunks, and would
+  change chunks outside T2's scope, so it needs its own measured change.

@@ -188,6 +188,99 @@ def _format_breadcrumb(section_title_path: list[str], parent_header_text: str | 
     return ""
 
 
+# Single-item cache: only the document currently being chunked is kept (the pipeline chunks one document at a time); another document just rebuilds the serializer.
+_SERIALIZER_CACHE: dict = {}
+
+
+def _chunk_serializer(doc: object):
+    """HybridChunker's own default serializer for `doc` (the one that writes chunk.text), cached for the document being chunked."""
+    cached = _SERIALIZER_CACHE.get("last")
+    if cached and cached[0] is doc:
+        return cached[1]
+    from docling_core.transforms.chunker.hierarchical_chunker import ChunkingSerializerProvider
+
+    serializer = ChunkingSerializerProvider().get_serializer(doc)
+    _SERIALIZER_CACHE["last"] = (doc, serializer)
+    return serializer
+
+
+def _generic_tables(chunk: object, doc: object):
+    """(tables, table_only) for a chunk whose doc_items are all generic `DocItem` references and include at least one table; None otherwise (then the
+    caller keeps today's behavior exactly). `tables` are the real TableItems the references resolve to; `table_only` is True when nothing but tables and
+    headings is in the chunk.
+
+    WP-45.11 (T2): a chunk that HybridChunker made by merging several elements carries its doc_items as generic `DocItem` objects, so the isinstance()
+    checks in _chunk_raw_text() never matched a table in it and the table reached Step C as the chunker's flat "Header = Value" text (9 of the 56 tables
+    in the 13 pinned documents at the 256-token default; each has a proper cell grid in the converted document). A chunk with any real-typed item, or any
+    reference that cannot be resolved, is left alone.
+    """
+    if doc is None:
+        return None
+    try:
+        from docling_core.types.doc import SectionHeaderItem, TableItem, TitleItem
+        from docling_core.types.doc.document import DocItem, RefItem
+    except ImportError:
+        return None
+    tables, others = [], 0
+    for item in chunk.meta.doc_items:
+        if type(item) is not DocItem:
+            return None
+        ref = getattr(item, "self_ref", None)
+        try:
+            real = RefItem(cref=ref).resolve(doc) if ref else None
+        except Exception:
+            real = None
+        if real is None:
+            return None
+        if isinstance(real, TableItem):
+            tables.append(real)
+        elif not isinstance(real, (TitleItem, SectionHeaderItem)):
+            others += 1
+    return (tables, others == 0) if tables else None
+
+
+def _raw_text_with_table_grids(chunk: object, doc: object, tables: list, table_only: bool, seen_table_refs: set | None) -> str:
+    """chunk.text with each generic table's flat block swapped for the markdown grid (once per table; later chunks that reference the same table lose the
+    block), everything else exactly as the chunker wrote it. If a table's flat block is not in the text (a table split across chunks holds only some of its
+    rows) the grid replaces the whole text of a table-only chunk and the chunk is left as it was otherwise."""
+    text = chunk.text or ""
+    serializer = _chunk_serializer(doc)
+    for table in tables:
+        ref = getattr(table, "self_ref", None)
+        already = seen_table_refs is not None and ref is not None and ref in seen_table_refs
+        grid = ""
+        if not already:
+            try:
+                grid = table.export_to_markdown(doc).strip()
+            except Exception:
+                try:
+                    grid = table.export_to_markdown().strip()
+                except Exception:
+                    grid = ""
+            if not grid:
+                continue  # no usable grid: keep the flat text, and do not mark the table seen
+        try:
+            flat = (serializer.serialize(item=table).text or "").strip()
+        except Exception:
+            continue  # cannot locate the flat block safely: keep the chunker's text for this table
+        if flat and flat in text:
+            text = text.replace(flat, grid, 1)
+        elif table_only and len(tables) == 1:  # with several tables the whole-text swap would discard the others' grids
+            text = grid
+        else:
+            continue
+        if grid and seen_table_refs is not None and ref is not None:
+            seen_table_refs.add(ref)
+        if len(grid) > _TABLE_MARKDOWN_WARN_CHARS:  # the same warning the per-item path gives for a typed table
+            log.warning(
+                "Table markdown for %s is %d chars (~%d tokens) -- approaching "
+                "Step C's context budget. Extraction quality for this table "
+                "should be spot-checked.",
+                ref, len(grid), len(grid) // 4,
+            )
+    return text.strip()
+
+
 def _chunk_raw_text(chunk: object, doc: object = None, *, seen_table_refs: set | None = None) -> str:
     """Extract body text from a DocChunk, excluding heading items.
 
@@ -231,6 +324,10 @@ def _chunk_raw_text(chunk: object, doc: object = None, *, seen_table_refs: set |
         from docling_core.types.doc import TableItem, TitleItem, SectionHeaderItem
     except ImportError:
         return chunk.text or ""
+
+    generic = _generic_tables(chunk, doc)
+    if generic:  # WP-45.11 (T2): tables in a merged chunk (all generic references) come out as grids, the rest of the chunk exactly as the chunker wrote it
+        return _raw_text_with_table_grids(chunk, doc, generic[0], generic[1], seen_table_refs)
 
     parts: list[str] = []
     suppressed_duplicate_table = False

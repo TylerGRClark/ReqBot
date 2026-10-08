@@ -221,3 +221,126 @@ def test_oversized_table_markdown_logs_warning(caplog):
         result = _chunk_raw_text(_MockChunk([table]), None)
     assert result == huge_markdown
     assert any("approaching" in rec.message for rec in caplog.records)
+
+
+# ---- WP-45.11 (T2): tables in merged chunks (generic DocItem references) ---------------------------------------------------
+
+
+def _merged_doc():
+    """A real document whose chunks the real HybridChunker merges, so their doc_items really are generic `DocItem` objects: a heading, a paragraph, a list
+    and a small table, in one section."""
+    from docling_core.types.doc import DoclingDocument
+
+    doc = DoclingDocument(name="t")
+    doc.add_heading("2.1. APPLICABILITY", level=1)
+    doc.add_text(label=DocItemLabel.TEXT, text="This issuance applies to all components.")
+    group = doc.add_list_group()
+    doc.add_list_item(" Establish policy.", enumerated=True, marker="a.", parent=group)
+    doc.add_list_item(" Assign responsibilities.", enumerated=True, marker="b.", parent=group)
+    doc.add_table(data=_table_item().data)
+    return doc
+
+
+FLAT = "Col B = val2"  # how the chunker's default serializer writes the fixture table's row ("val1, Col B = val2")
+
+
+def _chunks(doc):
+    from docling.chunking import HybridChunker
+
+    return list(HybridChunker().chunk(doc))
+
+
+def test_a_table_in_a_merged_chunk_comes_out_as_a_grid_and_the_rest_exactly_as_the_chunker_wrote_it():
+    doc = _merged_doc()
+    chunks = _chunks(doc)
+    merged = [c for c in chunks if any(type(i).__name__ == "DocItem" for i in c.meta.doc_items) and FLAT in c.text]
+    assert merged, "premise: the chunker merged the table into a chunk of generic items and wrote it in its flat form"
+    chunk = merged[0]
+    raw = _chunk_raw_text(chunk, doc)
+    assert "| Col A" in raw and "---" in raw
+    assert FLAT not in raw
+    # everything outside the table is the chunker's own text, list markers included
+    assert raw.startswith(chunk.text.split(FLAT)[0].rstrip().split("\n")[0])
+    assert "a.  Establish policy." in raw and "b.  Assign responsibilities." in raw
+
+
+def test_a_merged_chunk_without_a_table_is_byte_identical_to_the_chunkers_text():
+    from docling_core.types.doc import DoclingDocument
+
+    doc = DoclingDocument(name="t")
+    doc.add_heading("2.1. RESPONSIBILITIES", level=1)
+    doc.add_text(label=DocItemLabel.TEXT, text="The Director shall:")
+    group = doc.add_list_group()
+    doc.add_list_item(" Establish policy.", enumerated=True, marker="a.", parent=group)
+    for chunk in _chunks(doc):
+        assert any(type(i).__name__ == "DocItem" for i in chunk.meta.doc_items)
+        assert _chunk_raw_text(chunk, doc) == chunk.text
+
+
+def test_without_the_document_a_merged_chunk_behaves_as_before_the_fix():
+    doc = _merged_doc()
+    chunk = next(c for c in _chunks(doc) if FLAT in c.text)
+    assert _chunk_raw_text(chunk, None) == chunk.text
+
+
+def test_a_table_referenced_by_a_second_chunk_is_emitted_once():
+    doc = _merged_doc()
+    chunk = next(c for c in _chunks(doc) if FLAT in c.text)
+    seen = set()
+    first = _chunk_raw_text(chunk, doc, seen_table_refs=seen)
+    assert "| Col A" in first and seen == {"#/tables/0"}
+    again = _chunk_raw_text(chunk, doc, seen_table_refs=seen)
+    assert "| Col A" not in again and FLAT not in again and "Establish policy" in again  # the block is dropped, the rest of the chunk stays
+
+
+def test_a_chunk_with_a_real_typed_item_or_an_unresolvable_reference_is_left_alone():
+    from docling_core.types.doc.document import DocItem
+
+    doc = _merged_doc()
+    ghost = DocItem(self_ref="#/texts/999", label=DocItemLabel.TEXT, prov=[])
+    table = DocItem(self_ref="#/tables/0", label=DocItemLabel.TABLE, prov=[])
+    flat = "flat chunker text"
+    assert _chunk_raw_text(_MockChunk([table, ghost], text=flat), doc) == flat  # unresolvable reference: today's fallback
+    assert _chunk_raw_text(_MockChunk([doc.tables[0], table], text=flat), doc) != flat  # a real TableItem in the chunk: today's per-item path
+
+
+
+def test_an_oversized_grid_from_a_merged_chunk_logs_the_same_warning(caplog, monkeypatch):
+    import pipeline.chunk_text as ct
+
+    doc = _merged_doc()
+    chunk = next(c for c in _chunks(doc) if FLAT in c.text)
+    monkeypatch.setattr(ct, "_TABLE_MARKDOWN_WARN_CHARS", 5)
+    with caplog.at_level("WARNING", logger=ct.log.name):
+        ct._chunk_raw_text(chunk, doc)
+    assert any("approaching" in r.message for r in caplog.records)
+
+
+def test_a_serializer_failure_keeps_the_chunkers_text_instead_of_crashing(monkeypatch):
+    import pipeline.chunk_text as ct
+
+    class Boom:
+        def serialize(self, **kw):
+            raise RuntimeError("boom")
+
+    doc = _merged_doc()
+    chunk = next(c for c in _chunks(doc) if FLAT in c.text)
+    monkeypatch.setattr(ct, "_chunk_serializer", lambda d: Boom())
+    assert FLAT in ct._chunk_raw_text(chunk, doc)  # the flat block stays; no crash
+
+
+def test_table_only_fallback_never_discards_another_tables_grid(monkeypatch):
+    import types
+
+    import pipeline.chunk_text as ct
+
+    def table(ref, grid):
+        return types.SimpleNamespace(self_ref=ref, export_to_markdown=lambda *a, **k: grid)
+
+    a, b = table("#/tables/0", "| A |\n|---|"), table("#/tables/1", "| B |\n|---|")
+    flats = {"#/tables/0": "A = 1", "#/tables/1": "B = 2 (not in the chunk text: a split table)"}
+    serializer = types.SimpleNamespace(serialize=lambda item: types.SimpleNamespace(text=flats[item.self_ref]))
+    monkeypatch.setattr(ct, "_chunk_serializer", lambda d: serializer)
+    chunk = types.SimpleNamespace(text="A = 1")
+    out = ct._raw_text_with_table_grids(chunk, object(), [a, b], True, set())
+    assert "| A |" in out  # table A's grid survives; B's missing flat block does not wipe the text

@@ -77,6 +77,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--limit", type=int)
     ap.add_argument("--resolve-items", action="store_true", help="EXPLORATORY: resolve generic chunk items to their real types before raw_text is built; outputs go to chunks/r<limit>")
+    ap.add_argument("--label", help="name of the output folder under chunks/ (default: the limit, `r<limit>` or `default`); refuses a folder that already holds chunk files")
     ap.add_argument("--default", action="store_true", help="chunk with this release's own default HybridChunker() into chunks/default (the upgrade comparison)")
     ap.add_argument("--control", action="store_true", help="also chunk with the default HybridChunker() and require identical records")
     ap.add_argument("--docs", nargs="*")
@@ -84,8 +85,10 @@ def main():
     if args.default == (args.limit is not None):
         raise SystemExit("give exactly one of --limit and --default")
     names = args.docs or sorted(common.pinned_documents())
-    label = "default" if args.default else (("r" if args.resolve_items else "") + str(args.limit))
+    label = args.label or ("default" if args.default else (("r" if args.resolve_items else "") + str(args.limit)))
     out = common.cache_dir("chunks", label)
+    if args.label and any(out.glob("*_chunks.jsonl")):
+        raise SystemExit(f"{out} already holds chunk files; choose another --label")
     common.check_manifest(out, label)
     skips = skip_sections()
     if args.default:
