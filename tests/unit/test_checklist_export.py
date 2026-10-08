@@ -368,7 +368,7 @@ def test_to_xlsx_sheet_name():
 def test_to_xlsx_group_headers_in_row_1():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    row1_values = [ws.cell(row=1, column=c).value for c in range(1, 17)]
+    row1_values = [ws.cell(row=1, column=c).value for c in range(1, 16)]
     assert "Locate" in row1_values
     assert "Ask" in row1_values
     assert "Record" in row1_values
@@ -381,12 +381,12 @@ def test_to_xlsx_column_order():
         "Ref", "Section", "Pages", "Applies to",
         "Requirement", "Passage", "Audit Question",
         "Status", "Notes",
-        "Check", "Flag", "Reasons", "Conf.",
+        "Check", "Reasons", "Conf.",
         "Item ID", "Req IDs", "Tags",
     ]
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    actual = [ws.cell(row=2, column=c).value for c in range(1, 17)]
+    actual = [ws.cell(row=2, column=c).value for c in range(1, 16)]
     assert actual == expected_headers
 
 
@@ -451,7 +451,7 @@ def test_to_xlsx_flagged_row_has_fill():
 def test_to_xlsx_confidence_percentage_format():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    conf_cell = ws.cell(row=3, column=13)
+    conf_cell = ws.cell(row=3, column=12)
     assert conf_cell.number_format == "0%"
 
 
@@ -499,5 +499,6 @@ def test_sheet_shades_only_rows_with_a_specific_reason_not_low_confidence_alone(
     ws = _load_xlsx(to_xlsx({**EMPTY_ENVELOPE, "items": [only_confidence, flagged]}))["Checklist"]
     assert ws.cell(row=3, column=1).fill.patternType is None
     assert ws.cell(row=4, column=1).fill.patternType == "solid"
-    # the Flag column keeps the review state; only the shading uses the narrower "needs attention" rule
-    assert [ws.cell(row=r, column=11).value for r in (3, 4)] == ["Yes", "Yes"]
+    headers = [c.value for c in ws[2]]
+    assert "Flag" not in headers  # a column that is Yes on every row says nothing
+    assert "low-confidence" not in str(ws.cell(row=3, column=11).value)
