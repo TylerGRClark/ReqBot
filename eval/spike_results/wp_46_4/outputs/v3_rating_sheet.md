@@ -49,7 +49,6 @@ Rate each question: **usable** / **edit** / **wrong**. When there is no question
 > Tier Two provides C/S/As DCO and DoDIN Operations direction and support and responds to direction from Tier One.
 
 **Draft question:** Does Tier Two provide DCO and DoDIN Operations direction and support to C/S/As and respond to direction from Tier One?  
-**Check:** unverified terms ['As']  
 **Rating:** 
 
 ---
@@ -107,7 +106,6 @@ Rate each question: **usable** / **edit** / **wrong**. When there is no question
 > Coordinate DCO and DoDIN Operations COA planning and execution with the appropriate I-NOSC, the 624 OC and applicable 24 AF-designated units as appropriate.
 
 **Draft question:** Does the Directorate of Security, Special Access Program Oversight and Information Protection (SAF/AAZ) coordinate DCO and DoDIN Operations COA planning and execution with the appropriate I-NOSC, the 624 OC and applicable 24 AF-designated units as appropriate?  
-**Check:** unverified terms ['NOSC']  
 **Rating:** 
 
 ---
@@ -306,7 +304,6 @@ Rate each question: **usable** / **edit** / **wrong**. When there is no question
 > Determine within one hour if the event or incident meets AF Operational Reporting (OPREP-3) and/or USSTRATCOM or USCYBERCOM Commander's Critical Information Requirements (CCIR) reporting requirements.
 
 **Draft question:** Does the unit determine within one hour if an event or incident meets AF Operational Reporting (OPREP-3) and/or USSTRATCOM or USCYBERCOM Commander's Critical Information Requirements (CCIR) reporting requirements?  
-**Check:** unverified terms ['Commander']  
 **Rating:** 
 
 ---
@@ -330,7 +327,7 @@ Rate each question: **usable** / **edit** / **wrong**. When there is no question
 
 > The sponsoring MAJCOM Staff element will establish the ROEs and SOPs for the exercise participants and will ensure the ROEs and SOPs address the issue of managing real world and exercise events and incidents.
 
-**Draft question:** Does the sponsoring MAJCOM Staff element establish ROEs and SOPs for exercise participants and ensure these address managing real world and exercise events and incidents?  
+**Draft question:** Does the sponsoring MAJCOM Staff element establish ROEs and SOPs for the exercise participants and ensure these address managing real world and exercise events and incidents?  
 **Rating:** 
 
 ---

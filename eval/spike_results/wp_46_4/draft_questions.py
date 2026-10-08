@@ -58,14 +58,17 @@ _STOP = {"does", "do", "is", "are", "has", "have", "did", "was", "were", "can", 
 
 def unverified_terms(question: str, material: str) -> list:
     """Numbers, acronyms and capitalized words in the question that the row's own text does not contain (the sentence-initial word is ignored)."""
-    low = set(re.findall(r"[a-z0-9][a-z0-9./&'-]*", re.sub(r"\s+", " ", material or "").lower()))
+    text = re.sub(r"\s+", " ", material or "").lower()
+    low = set(re.findall(r"[a-z0-9][a-z0-9./&'-]*", text))
     out = []
     for m in _TERM.finditer(question or ""):
         if m.start() == 0:
             continue
         for word in m.group(0).split():  # checked word by word: a title with its parenthetical acronym left out is still grounded
             w = word.lower().strip(".,;:()")
-            if w and w not in _STOP and w not in low:
+            if len(w) < 3 and not any(ch.isdigit() for ch in w):
+                continue  # "As" from "C/S/As" and similar fragments
+            if w and w not in _STOP and w not in low and w not in text:  # also accepts a word inside a longer token ("I-NOSC", "Commander's")
                 out.append(word)
     return out
 
