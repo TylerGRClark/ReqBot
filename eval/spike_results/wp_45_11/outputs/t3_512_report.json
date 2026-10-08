@@ -1,0 +1,203 @@
+{
+ "base_arms": [
+  "T2a",
+  "T2b"
+ ],
+ "arm": "T3_512",
+ "base_chunks": "d2.94.0:T2_256",
+ "arm_chunks": "d2.94.0:T2_512",
+ "labeled_items": 145,
+ "fixed_set": 145,
+ "findable_only_in_base_chunks": [],
+ "findable_only_in_arm_chunks": [],
+ "findable_in_neither": [],
+ "colocated": {
+  "base": 107,
+  "arm": 134,
+  "base_share": 0.7379,
+  "arm_share": 0.9241,
+  "gain_points": 18.6,
+  "gained": [
+   "audit:R009",
+   "audit:R045",
+   "audit:R048",
+   "audit:R075",
+   "audit:R082",
+   "audit:R089",
+   "audit:R105",
+   "audit:R108",
+   "audit:R109",
+   "audit:R125",
+   "fresh:R209",
+   "fresh:R212",
+   "fresh:R218",
+   "fresh:R219",
+   "fresh:R225",
+   "fresh:R241",
+   "fresh:R247",
+   "fresh:R248",
+   "fresh:R249",
+   "fresh:R268",
+   "fresh:R274",
+   "fresh:R281",
+   "fresh:R285",
+   "fresh:R286",
+   "fresh:R287",
+   "fresh:R295",
+   "fresh:R298",
+   "fresh:R302"
+  ],
+  "lost": [
+   "audit:R112"
+  ]
+ },
+ "extracted": {
+  "counts": {
+   "T2a": 142,
+   "T2b": 142,
+   "T3_512": 124
+  },
+  "lower_base": 142,
+  "arm_over_lower_base": 0.873,
+  "base_replicate_one_way_differences": {
+   "T2a_not_T2b": [
+    "audit:R107"
+   ],
+   "T2b_not_T2a": [
+    "audit:R001"
+   ]
+  },
+  "arm_lost_vs_each_base": {
+   "T2a": [
+    "audit:R040",
+    "audit:R051",
+    "audit:R058",
+    "audit:R070",
+    "audit:R085",
+    "audit:R087",
+    "audit:R089",
+    "audit:R094",
+    "audit:R105",
+    "audit:R107",
+    "fresh:R211",
+    "fresh:R217",
+    "fresh:R245",
+    "fresh:R263",
+    "fresh:R270",
+    "fresh:R276",
+    "fresh:R281",
+    "fresh:R302",
+    "fresh:R304"
+   ],
+   "T2b": [
+    "audit:R040",
+    "audit:R051",
+    "audit:R058",
+    "audit:R070",
+    "audit:R085",
+    "audit:R087",
+    "audit:R089",
+    "audit:R094",
+    "audit:R105",
+    "fresh:R211",
+    "fresh:R217",
+    "fresh:R245",
+    "fresh:R263",
+    "fresh:R270",
+    "fresh:R276",
+    "fresh:R281",
+    "fresh:R302",
+    "fresh:R304"
+   ]
+  },
+  "arm_gained_vs_each_base": {
+   "T2a": [
+    "audit:R001"
+   ],
+   "T2b": []
+  }
+ },
+ "stem_match_reported_not_gated": {
+  "counts": {
+   "T2a": 44,
+   "T2b": 47,
+   "T3_512": 33
+  },
+  "arm_minus_each_base": {
+   "T2a": -11,
+   "T2b": -14
+  },
+  "paired_vs_each_base": {
+   "T2a": {
+    "gained": [
+     "audit:R009",
+     "audit:R048",
+     "audit:R125",
+     "fresh:R218",
+     "fresh:R225",
+     "fresh:R285",
+     "fresh:R295"
+    ],
+    "lost": [
+     "audit:R030",
+     "audit:R032",
+     "audit:R045",
+     "audit:R075",
+     "audit:R085",
+     "audit:R096",
+     "audit:R105",
+     "audit:R118",
+     "audit:R128",
+     "fresh:R217",
+     "fresh:R241",
+     "fresh:R245",
+     "fresh:R249",
+     "fresh:R266",
+     "fresh:R274",
+     "fresh:R276",
+     "fresh:R286",
+     "fresh:R288"
+    ]
+   },
+   "T2b": {
+    "gained": [
+     "audit:R009",
+     "audit:R048",
+     "audit:R125",
+     "fresh:R218",
+     "fresh:R225",
+     "fresh:R285",
+     "fresh:R295"
+    ],
+    "lost": [
+     "audit:R001",
+     "audit:R024",
+     "audit:R030",
+     "audit:R040",
+     "audit:R045",
+     "audit:R075",
+     "audit:R085",
+     "audit:R096",
+     "audit:R105",
+     "audit:R118",
+     "audit:R128",
+     "fresh:R217",
+     "fresh:R236",
+     "fresh:R241",
+     "fresh:R245",
+     "fresh:R249",
+     "fresh:R266",
+     "fresh:R274",
+     "fresh:R276",
+     "fresh:R286",
+     "fresh:R288"
+    ]
+   }
+  }
+ },
+ "R3": {
+  "extracted_at_least_90_percent_of_lower_base": false,
+  "colocated_up_5_points": true,
+  "pass": false
+ }
+}

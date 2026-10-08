@@ -1,0 +1,2473 @@
+{
+ "obligations": 74,
+ "arms": {
+  "T2a": {
+   "recall": {
+    "chunked": 74,
+    "extracted_covered": 46,
+    "extracted_partial": 2,
+    "survived_step_d_covered": 45
+   },
+   "totals": {
+    "chunks": 839,
+    "step_c_ledger_rows": 839,
+    "records": 2025,
+    "survivors": 1880
+   },
+   "failure_codes": {
+    "quote_not_grounded_in_chunk": 59,
+    "unrepairable_fragment_quote": 33,
+    "quote_words_not_in_chunk": 5,
+    "heading_echo_quote": 25,
+    "orphaned_list_item_quote": 4
+   },
+   "per_document": {
+    "CJCSI 6510.02G": {
+     "chunks": 47,
+     "step_c_ledger_rows": 47,
+     "records": 104,
+     "survivors": 87,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 16,
+      "unrepairable_fragment_quote": 1
+     },
+     "wall_seconds": 126.7
+    },
+    "DODI 5200.01": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 73,
+     "survivors": 65,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 5,
+      "quote_not_grounded_in_chunk": 3
+     },
+     "wall_seconds": 91.9
+    },
+    "DODI 5200.44": {
+     "chunks": 36,
+     "step_c_ledger_rows": 36,
+     "records": 93,
+     "survivors": 87,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 128.8
+    },
+    "DODI 5200.48": {
+     "chunks": 100,
+     "step_c_ledger_rows": 100,
+     "records": 246,
+     "survivors": 232,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 9,
+      "quote_words_not_in_chunk": 2,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 360.7
+    },
+    "DODI 8410.03": {
+     "chunks": 42,
+     "step_c_ledger_rows": 42,
+     "records": 150,
+     "survivors": 142,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 1,
+      "unrepairable_fragment_quote": 7
+     },
+     "wall_seconds": 184.3
+    },
+    "DODI 8551.01": {
+     "chunks": 30,
+     "step_c_ledger_rows": 30,
+     "records": 64,
+     "survivors": 59,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 2,
+      "quote_not_grounded_in_chunk": 2,
+      "quote_words_not_in_chunk": 1
+     },
+     "wall_seconds": 93.6
+    },
+    "NIST.SP.800-125": {
+     "chunks": 109,
+     "step_c_ledger_rows": 109,
+     "records": 146,
+     "survivors": 144,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 1,
+      "heading_echo_quote": 1
+     },
+     "wall_seconds": 161.1
+    },
+    "afi10-2402": {
+     "chunks": 129,
+     "step_c_ledger_rows": 129,
+     "records": 323,
+     "survivors": 295,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 9,
+      "heading_echo_quote": 5,
+      "orphaned_list_item_quote": 4,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 414.5
+    },
+    "afi13-550": {
+     "chunks": 71,
+     "step_c_ledger_rows": 71,
+     "records": 181,
+     "survivors": 171,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 5,
+      "heading_echo_quote": 2
+     },
+     "wall_seconds": 243.5
+    },
+    "afi17-203": {
+     "chunks": 55,
+     "step_c_ledger_rows": 55,
+     "records": 123,
+     "survivors": 111,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 7,
+      "heading_echo_quote": 2,
+      "quote_words_not_in_chunk": 2
+     },
+     "wall_seconds": 160.9
+    },
+    "afman17-2101": {
+     "chunks": 63,
+     "step_c_ledger_rows": 63,
+     "records": 163,
+     "survivors": 145,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 3,
+      "heading_echo_quote": 5,
+      "unrepairable_fragment_quote": 6
+     },
+     "wall_seconds": 221.1
+    },
+    "afpd_17-1": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 70,
+     "survivors": 62,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "heading_echo_quote": 6
+     },
+     "wall_seconds": 79.2
+    },
+    "dafman17-1305": {
+     "chunks": 107,
+     "step_c_ledger_rows": 107,
+     "records": 289,
+     "survivors": 280,
+     "failure_codes": {
+      "heading_echo_quote": 4,
+      "unrepairable_fragment_quote": 2
+     },
+     "wall_seconds": 397.8
+    }
+   }
+  },
+  "T2b": {
+   "recall": {
+    "chunked": 74,
+    "extracted_covered": 47,
+    "extracted_partial": 2,
+    "survived_step_d_covered": 46
+   },
+   "totals": {
+    "chunks": 839,
+    "step_c_ledger_rows": 839,
+    "records": 2025,
+    "survivors": 1890
+   },
+   "failure_codes": {
+    "quote_not_grounded_in_chunk": 57,
+    "unrepairable_fragment_quote": 32,
+    "quote_words_not_in_chunk": 5,
+    "heading_echo_quote": 24
+   },
+   "per_document": {
+    "CJCSI 6510.02G": {
+     "chunks": 47,
+     "step_c_ledger_rows": 47,
+     "records": 102,
+     "survivors": 87,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 13,
+      "unrepairable_fragment_quote": 2
+     },
+     "wall_seconds": 124.0
+    },
+    "DODI 5200.01": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 72,
+     "survivors": 65,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 4,
+      "quote_not_grounded_in_chunk": 3
+     },
+     "wall_seconds": 92.2
+    },
+    "DODI 5200.44": {
+     "chunks": 36,
+     "step_c_ledger_rows": 36,
+     "records": 102,
+     "survivors": 93,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 5,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 140.3
+    },
+    "DODI 5200.48": {
+     "chunks": 100,
+     "step_c_ledger_rows": 100,
+     "records": 245,
+     "survivors": 233,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 8,
+      "quote_words_not_in_chunk": 1,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 355.2
+    },
+    "DODI 8410.03": {
+     "chunks": 42,
+     "step_c_ledger_rows": 42,
+     "records": 150,
+     "survivors": 145,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 5
+     },
+     "wall_seconds": 180.2
+    },
+    "DODI 8551.01": {
+     "chunks": 30,
+     "step_c_ledger_rows": 30,
+     "records": 63,
+     "survivors": 58,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 2,
+      "quote_not_grounded_in_chunk": 3
+     },
+     "wall_seconds": 89.2
+    },
+    "NIST.SP.800-125": {
+     "chunks": 109,
+     "step_c_ledger_rows": 109,
+     "records": 156,
+     "survivors": 153,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 1,
+      "heading_echo_quote": 1
+     },
+     "wall_seconds": 170.3
+    },
+    "afi10-2402": {
+     "chunks": 129,
+     "step_c_ledger_rows": 129,
+     "records": 314,
+     "survivors": 291,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 7,
+      "quote_words_not_in_chunk": 2,
+      "heading_echo_quote": 5,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 403.9
+    },
+    "afi13-550": {
+     "chunks": 71,
+     "step_c_ledger_rows": 71,
+     "records": 177,
+     "survivors": 166,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 5,
+      "heading_echo_quote": 2,
+      "unrepairable_fragment_quote": 1
+     },
+     "wall_seconds": 240.2
+    },
+    "afi17-203": {
+     "chunks": 55,
+     "step_c_ledger_rows": 55,
+     "records": 126,
+     "survivors": 115,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 6,
+      "heading_echo_quote": 2,
+      "quote_words_not_in_chunk": 2
+     },
+     "wall_seconds": 165.4
+    },
+    "afman17-2101": {
+     "chunks": 63,
+     "step_c_ledger_rows": 63,
+     "records": 161,
+     "survivors": 146,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 3,
+      "heading_echo_quote": 5,
+      "unrepairable_fragment_quote": 5
+     },
+     "wall_seconds": 217.7
+    },
+    "afpd_17-1": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 78,
+     "survivors": 67,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 4,
+      "heading_echo_quote": 6,
+      "unrepairable_fragment_quote": 1
+     },
+     "wall_seconds": 85.9
+    },
+    "dafman17-1305": {
+     "chunks": 107,
+     "step_c_ledger_rows": 107,
+     "records": 279,
+     "survivors": 271,
+     "failure_codes": {
+      "heading_echo_quote": 3,
+      "unrepairable_fragment_quote": 2
+     },
+     "wall_seconds": 385.0
+    }
+   }
+  },
+  "T3_1024": {
+   "recall": {
+    "chunked": 74,
+    "extracted_covered": 59,
+    "extracted_partial": 0,
+    "survived_step_d_covered": 58
+   },
+   "totals": {
+    "chunks": 390,
+    "step_c_ledger_rows": 390,
+    "records": 1787,
+    "survivors": 1695
+   },
+   "failure_codes": {
+    "quote_not_grounded_in_chunk": 43,
+    "unrepairable_fragment_quote": 33,
+    "heading_echo_quote": 8,
+    "quote_words_not_in_chunk": 2
+   },
+   "per_document": {
+    "CJCSI 6510.02G": {
+     "chunks": 28,
+     "step_c_ledger_rows": 28,
+     "records": 99,
+     "survivors": 79,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 19,
+      "unrepairable_fragment_quote": 1
+     },
+     "wall_seconds": 118.9
+    },
+    "DODI 5200.01": {
+     "chunks": 8,
+     "step_c_ledger_rows": 8,
+     "records": 54,
+     "survivors": 48,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "unrepairable_fragment_quote": 4
+     },
+     "wall_seconds": 72.1
+    },
+    "DODI 5200.44": {
+     "chunks": 16,
+     "step_c_ledger_rows": 16,
+     "records": 102,
+     "survivors": 98,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 134.7
+    },
+    "DODI 5200.48": {
+     "chunks": 52,
+     "step_c_ledger_rows": 52,
+     "records": 208,
+     "survivors": 198,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 3,
+      "quote_not_grounded_in_chunk": 7
+     },
+     "wall_seconds": 298.1
+    },
+    "DODI 8410.03": {
+     "chunks": 14,
+     "step_c_ledger_rows": 14,
+     "records": 117,
+     "survivors": 114,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 171.3
+    },
+    "DODI 8551.01": {
+     "chunks": 18,
+     "step_c_ledger_rows": 18,
+     "records": 60,
+     "survivors": 57,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 88.9
+    },
+    "NIST.SP.800-125": {
+     "chunks": 45,
+     "step_c_ledger_rows": 45,
+     "records": 95,
+     "survivors": 92,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 1,
+      "heading_echo_quote": 1
+     },
+     "wall_seconds": 106.7
+    },
+    "afi10-2402": {
+     "chunks": 59,
+     "step_c_ledger_rows": 59,
+     "records": 279,
+     "survivors": 266,
+     "failure_codes": {
+      "quote_words_not_in_chunk": 1,
+      "quote_not_grounded_in_chunk": 1,
+      "heading_echo_quote": 2,
+      "unrepairable_fragment_quote": 5
+     },
+     "wall_seconds": 344.2
+    },
+    "afi13-550": {
+     "chunks": 38,
+     "step_c_ledger_rows": 38,
+     "records": 160,
+     "survivors": 155,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 4,
+      "heading_echo_quote": 1
+     },
+     "wall_seconds": 216.4
+    },
+    "afi17-203": {
+     "chunks": 24,
+     "step_c_ledger_rows": 24,
+     "records": 121,
+     "survivors": 115,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 4,
+      "heading_echo_quote": 1,
+      "quote_words_not_in_chunk": 1
+     },
+     "wall_seconds": 152.4
+    },
+    "afman17-2101": {
+     "chunks": 23,
+     "step_c_ledger_rows": 23,
+     "records": 154,
+     "survivors": 144,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 4,
+      "heading_echo_quote": 2,
+      "unrepairable_fragment_quote": 4
+     },
+     "wall_seconds": 196.8
+    },
+    "afpd_17-1": {
+     "chunks": 15,
+     "step_c_ledger_rows": 15,
+     "records": 69,
+     "survivors": 66,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "heading_echo_quote": 1
+     },
+     "wall_seconds": 78.0
+    },
+    "dafman17-1305": {
+     "chunks": 50,
+     "step_c_ledger_rows": 50,
+     "records": 269,
+     "survivors": 263,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 6
+     },
+     "wall_seconds": 361.5
+    }
+   }
+  }
+ },
+ "pairs": {
+  "T2a vs T2b": {
+   "recall_extracted": {
+    "only_first": [
+     {
+      "id": "AFMAN-p009-002",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.10. Provides direct provisioning oversight and management of all corporately funded enterprise SBU IP Data (formerly NIPRNET), Secret IP Data (formerly SIPRNET) and DISN Virtual Private Network (VPN) requirements for all MAJCOMs.",
+      "trace_first": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-21-0"
+       ],
+       "covering_surviving": [
+        "REQ-6667e37fdac7"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-21-0",
+        "chunk_id": 21,
+        "source_quote": "Provides direct provisioning oversight and management of all corporately funded enterprise SBU IP Data (formerly NIPRNET), Secret IP Data (formerly SIPRNET) and DISN Virtual Private Network (VPN) requirements for all MAJCOMs.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": []
+     }
+    ],
+    "only_second": [
+     {
+      "id": "AFMAN-p004-007",
+      "document": "afman17-2101",
+      "page": 4,
+      "text": "1.1.2. DOD policy assigns Defense Information Systems Agency (DISA) the responsibility to provide end-to-end DOD Information Network (DODIN) infrastructure and to provision, manage and sustain DISN transport, services, facilities, and equipment in direct support of DOD missions, the Joint warfighter and AF operational readiness.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-6-0",
+        "R-6-1"
+       ],
+       "covering_surviving": [
+        "REQ-6a0f9a3c0f22",
+        "REQ-ad6e7236c0b5"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-6-0",
+        "chunk_id": 6,
+        "source_quote": "The AF centrally provisions, manages and funds the AF enterprise Long Haul Communications transport portion of the DOD network and services called the Defense Information Systems Network (DISN) and the AF segment called the AF Information Networks (AFIN) which uses the DISN for transport.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-6-1",
+        "chunk_id": 6,
+        "source_quote": "DOD policy assigns Defense Information Systems Agency (DISA) the responsibility to provide end-to-end DOD Information Network (DODIN) infrastructure and to provision, manage and sustain DISN transport, services, facilities, and equipment in direct support of DOD missions, the Joint warfighter and AF operational readiness.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-010",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.20. Coordinates with all appropriate organizations (DISA, the AF customers/mission system managers, sister services, COCOMs and other DOD Agencies) regarding contract transitions which affect circuits, equipment, and services.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-26-0"
+       ],
+       "covering_surviving": [
+        "REQ-416c36d9baa8"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-26-0",
+        "chunk_id": 26,
+        "source_quote": "Coordinates with all appropriate organizations (DISA, the AF customers/mission system managers, sister services, COCOMs and other DOD Agencies) regarding contract transitions which affect circuits, equipment, and services.",
+        "step_d_failure": null
+       }
+      ]
+     }
+    ],
+    "both": 45,
+    "neither": 26
+   },
+   "quote_overlap": {
+    "overall_jaccard": 0.8536,
+    "per_document": {
+     "CJCSI 6510.02G": {
+      "shared": 83,
+      "only_first": 4,
+      "only_second": 4,
+      "jaccard": 0.912
+     },
+     "DODI 5200.01": {
+      "shared": 59,
+      "only_first": 6,
+      "only_second": 6,
+      "jaccard": 0.831
+     },
+     "DODI 5200.44": {
+      "shared": 82,
+      "only_first": 5,
+      "only_second": 11,
+      "jaccard": 0.837
+     },
+     "DODI 5200.48": {
+      "shared": 221,
+      "only_first": 11,
+      "only_second": 12,
+      "jaccard": 0.906
+     },
+     "DODI 8410.03": {
+      "shared": 122,
+      "only_first": 20,
+      "only_second": 23,
+      "jaccard": 0.739
+     },
+     "DODI 8551.01": {
+      "shared": 56,
+      "only_first": 3,
+      "only_second": 2,
+      "jaccard": 0.918
+     },
+     "NIST.SP.800-125": {
+      "shared": 127,
+      "only_first": 17,
+      "only_second": 26,
+      "jaccard": 0.747
+     },
+     "afi10-2402": {
+      "shared": 268,
+      "only_first": 17,
+      "only_second": 12,
+      "jaccard": 0.902
+     },
+     "afi13-550": {
+      "shared": 150,
+      "only_first": 15,
+      "only_second": 10,
+      "jaccard": 0.857
+     },
+     "afi17-203": {
+      "shared": 107,
+      "only_first": 4,
+      "only_second": 8,
+      "jaccard": 0.899
+     },
+     "afman17-2101": {
+      "shared": 133,
+      "only_first": 11,
+      "only_second": 12,
+      "jaccard": 0.853
+     },
+     "afpd_17-1": {
+      "shared": 56,
+      "only_first": 4,
+      "only_second": 8,
+      "jaccard": 0.824
+     },
+     "dafman17-1305": {
+      "shared": 250,
+      "only_first": 26,
+      "only_second": 17,
+      "jaccard": 0.853
+     }
+    }
+   }
+  },
+  "T2a vs T3_1024": {
+   "recall_extracted": {
+    "only_first": [
+     {
+      "id": "AFMAN-p004-013",
+      "document": "afman17-2101",
+      "page": 4,
+      "text": "1.1.4. The AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron (CYRS)/SCC, executes and manages all facets of the DISN Enterprise Long Haul Communications Program on behalf of the AF.",
+      "trace_first": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-0"
+       ],
+       "covering_surviving": [
+        "REQ-e8cd537bede0"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.1333,
+        "survived_step_d": 0.1333
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [
+        "R-3-0"
+       ],
+       "covering_surviving": [
+        "REQ-6a0f9a3c0f22"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-8-0",
+        "chunk_id": 8,
+        "source_quote": "The AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron (CYRS)/SCC, executes and manages all facets of the DISN Enterprise Long Haul Communications Program on behalf of the AF.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-3-0",
+        "chunk_id": 3,
+        "source_quote": "The AF centrally provisions, manages and funds the AF enterprise Long Haul Communications transport portion of the DOD network and services called the Defense Information Systems Network (DISN) and the AF segment called the AF Information Networks (AFIN) which uses the DISN for transport.",
+        "step_d_failure": null
+       }
+      ]
+     }
+    ],
+    "only_second": [
+     {
+      "id": "AFMAN-p004-007",
+      "document": "afman17-2101",
+      "page": 4,
+      "text": "1.1.2. DOD policy assigns Defense Information Systems Agency (DISA) the responsibility to provide end-to-end DOD Information Network (DODIN) infrastructure and to provision, manage and sustain DISN transport, services, facilities, and equipment in direct support of DOD missions, the Joint warfighter and AF operational readiness.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-3-0",
+        "R-3-1"
+       ],
+       "covering_surviving": [
+        "REQ-6a0f9a3c0f22",
+        "REQ-ad6e7236c0b5"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-3-0",
+        "chunk_id": 3,
+        "source_quote": "The AF centrally provisions, manages and funds the AF enterprise Long Haul Communications transport portion of the DOD network and services called the Defense Information Systems Network (DISN) and the AF segment called the AF Information Networks (AFIN) which uses the DISN for transport.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-3-1",
+        "chunk_id": 3,
+        "source_quote": "DOD policy assigns Defense Information Systems Agency (DISA) the responsibility to provide end-to-end DOD Information Network (DODIN) infrastructure and to provision, manage and sustain DISN transport, services, facilities, and equipment in direct support of DOD missions, the Joint warfighter and AF operational readiness.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-003",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.11. Provides direct management oversight on corporate AF LHC funding appropriations and MAJCOM dedicated funding.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-7-10"
+       ],
+       "covering_surviving": [
+        "REQ-19384e1f0982"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-7-10",
+        "chunk_id": 7,
+        "source_quote": "Provides direct management oversight on corporate AF LHC funding appropriations and MAJCOM dedicated funding.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-014",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.11.5. Receive financial/execution plan (D-22s) from MAJCOMs.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-6"
+       ],
+       "covering_surviving": [
+        "REQ-94f569dd0f4c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-6",
+        "chunk_id": 8,
+        "source_quote": "Receive financial/execution plan (D-22s) from MAJCOMs. Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-015",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-6"
+       ],
+       "covering_surviving": [
+        "REQ-94f569dd0f4c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-6",
+        "chunk_id": 8,
+        "source_quote": "Receive financial/execution plan (D-22s) from MAJCOMs. Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-020",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.12. Assists SAF/CIO A6 as SME in support of AF and Major Command IG teams.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-11"
+       ],
+       "covering_surviving": [
+        "REQ-a3c3f2e0bf1c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-11",
+        "chunk_id": 8,
+        "source_quote": "Assists SAF/CIO A6 as SME in support of AF and Major Command IG teams.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-021",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.13. Serves as the AF customer interface and focal point with DISA, DITCO, and the General Services Administration (GSA) for long-haul circuit and service requirements.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-12",
+        "R-8-13",
+        "R-8-14"
+       ],
+       "covering_surviving": [
+        "REQ-fe5a3801a496",
+        "REQ-9f3b5237d40c"
+       ],
+       "rejected_ids": [
+        "R-8-14"
+       ]
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-12",
+        "chunk_id": 8,
+        "source_quote": "Serves as the AF customer interface and focal point with DISA, DITCO, and the General Services Administration (GSA) for long-haul circuit and service requirements.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-8-13",
+        "chunk_id": 8,
+        "source_quote": "Coordinates with DISA, DITCO, GSA, commercial venders, and users to resolve management, acquisition, and technical issues with LHC systems, circuits, equipment, and services. Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-8-14",
+        "chunk_id": 8,
+        "source_quote": "Serves as the AF Transition Lead and Designated Agency Representative Administrator for GSA's Networx/Enterprise Infrastructure Solutions (EIS) contracts by acting as the:",
+        "step_d_failure": "unrepairable_fragment_quote"
+       },
+       {
+        "requirement_id": "R-8-14",
+        "chunk_id": 8,
+        "source_quote": "Serves as the AF Transition Lead and Designated Agency Representative Administrator for GSA's Networx/Enterprise Infrastructure Solutions (EIS) contracts by acting as the:",
+        "step_d_failure": "unrepairable_fragment_quote"
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-023",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-8",
+        "R-8-13"
+       ],
+       "covering_surviving": [
+        "REQ-07b42597facd",
+        "REQ-9f3b5237d40c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-8",
+        "chunk_id": 8,
+        "source_quote": "Manage the DISA and the OSD Statistical Sampling Report.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-8-13",
+        "chunk_id": 8,
+        "source_quote": "Coordinates with DISA, DITCO, GSA, commercial venders, and users to resolve management, acquisition, and technical issues with LHC systems, circuits, equipment, and services. Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-007",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.17. Represents the AF at meetings, conferences, workshops and surveys with civilian, government, DOD, Joint Chiefs of Staff, Major Commands, FOA, DRU, and Joint agencies pertaining to DISN LHC.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-19",
+        "R-8-20"
+       ],
+       "covering_surviving": [
+        "REQ-b5cd714267ac",
+        "REQ-1ad3e41fec4d"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-19",
+        "chunk_id": 8,
+        "source_quote": "Represents the AF at meetings, conferences, workshops and surveys with civilian, government, DOD, Joint Chiefs of Staff, Major Commands, FOA, DRU, and Joint agencies pertaining to DISN LHC.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-8-20",
+        "chunk_id": 8,
+        "source_quote": "Represents the AF with government and DOD procurement actions involving long-haul requirements and participates in contract evaluation panels.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-008",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.18. Represents the AF with government and DOD procurement actions involving longhaul requirements and participates in contract evaluation panels.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 0.9444,
+        "survived_step_d": 0.9444
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-19",
+        "R-8-20"
+       ],
+       "covering_surviving": [
+        "REQ-b5cd714267ac",
+        "REQ-1ad3e41fec4d"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-19",
+        "chunk_id": 8,
+        "source_quote": "Represents the AF at meetings, conferences, workshops and surveys with civilian, government, DOD, Joint Chiefs of Staff, Major Commands, FOA, DRU, and Joint agencies pertaining to DISN LHC.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-8-20",
+        "chunk_id": 8,
+        "source_quote": "Represents the AF with government and DOD procurement actions involving long-haul requirements and participates in contract evaluation panels.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-009",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.19. Participates in working groups internal and external to AF, providing LHC technical and/or procedure SME recommendations and guidance.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-21"
+       ],
+       "covering_surviving": [
+        "REQ-e2cc7502a4c9"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-21",
+        "chunk_id": 8,
+        "source_quote": "Participates in working groups internal and external to AF, providing LHC technical and/or procedure SME recommendations and guidance.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-010",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.20. Coordinates with all appropriate organizations (DISA, the AF customers/mission system managers, sister services, COCOMs and other DOD Agencies) regarding contract transitions which affect circuits, equipment, and services.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-13",
+        "R-8-22"
+       ],
+       "covering_surviving": [
+        "REQ-9f3b5237d40c",
+        "REQ-416c36d9baa8"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-13",
+        "chunk_id": 8,
+        "source_quote": "Coordinates with DISA, DITCO, GSA, commercial venders, and users to resolve management, acquisition, and technical issues with LHC systems, circuits, equipment, and services. Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-8-22",
+        "chunk_id": 8,
+        "source_quote": "Coordinates with all appropriate organizations (DISA, the AF customers/mission system managers, sister services, COCOMs and other DOD Agencies) regarding contract transitions which affect circuits, equipment, and services.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-011",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.21. Forwards National Security Emergency Preparedness (NS/EP) appointment letters to Department of Homeland Security TSP Program Office. (tsp@hq.dhs.gov)",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-23"
+       ],
+       "covering_surviving": [
+        "REQ-1e2f679fe22e"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-23",
+        "chunk_id": 8,
+        "source_quote": "Forwards National Security Emergency Preparedness (NS/EP) appointment letters to Department of Homeland Security TSP Program Office. ( tsp@hq.dhs.gov )",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-008",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "\uf06e Follow the recommended practices for managing the physical OS, e.g., time synchronization, log management, authentication, remote access, etc.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-34-0"
+       ],
+       "covering_surviving": [
+        "REQ-5f1c27983213"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-34-0",
+        "chunk_id": 34,
+        "source_quote": "Follow the recommended practices for managing the physical OS, e.g., time synchronization, log management, authentication, remote access, etc.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p026-017",
+      "document": "NIST.SP.800-125",
+      "page": 26,
+      "text": "Organizations considering the use of desktop virtualization should determine which scenarios require the enforcement of security by managed virtualization solutions and which scenarios do not require centralized management.",
+      "trace_first": {
+       "status": {
+        "extracted": "partial",
+        "survived_step_d": "partial"
+       },
+       "shares": {
+        "extracted": 0.7143,
+        "survived_step_d": 0.7143
+       },
+       "first_loss": "partly_extracted",
+       "covering_extracted": [
+        "R-83-0"
+       ],
+       "covering_surviving": [
+        "REQ-53f78ef2f99d"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-36-0"
+       ],
+       "covering_surviving": [
+        "REQ-cf4817e96750"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-83-0",
+        "chunk_id": 83,
+        "source_quote": "Organizations considering the use of desktop virtualization should determine which scenarios require the enforcement of security by managed virtualization solutions",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-36-0",
+        "chunk_id": 36,
+        "source_quote": "Organizations considering the use of desktop virtualization should determine which scenarios require the enforcement of security by managed virtualization solutions and which scenarios do not require centralized management.",
+        "step_d_failure": null
+       }
+      ]
+     }
+    ],
+    "both": 45,
+    "neither": 14
+   },
+   "quote_overlap": {
+    "overall_jaccard": 0.4975,
+    "per_document": {
+     "CJCSI 6510.02G": {
+      "shared": 63,
+      "only_first": 24,
+      "only_second": 16,
+      "jaccard": 0.612
+     },
+     "DODI 5200.01": {
+      "shared": 30,
+      "only_first": 35,
+      "only_second": 17,
+      "jaccard": 0.366
+     },
+     "DODI 5200.44": {
+      "shared": 56,
+      "only_first": 31,
+      "only_second": 42,
+      "jaccard": 0.434
+     },
+     "DODI 5200.48": {
+      "shared": 127,
+      "only_first": 105,
+      "only_second": 71,
+      "jaccard": 0.419
+     },
+     "DODI 8410.03": {
+      "shared": 74,
+      "only_first": 68,
+      "only_second": 40,
+      "jaccard": 0.407
+     },
+     "DODI 8551.01": {
+      "shared": 43,
+      "only_first": 16,
+      "only_second": 14,
+      "jaccard": 0.589
+     },
+     "NIST.SP.800-125": {
+      "shared": 57,
+      "only_first": 87,
+      "only_second": 34,
+      "jaccard": 0.32
+     },
+     "afi10-2402": {
+      "shared": 207,
+      "only_first": 78,
+      "only_second": 53,
+      "jaccard": 0.612
+     },
+     "afi13-550": {
+      "shared": 114,
+      "only_first": 51,
+      "only_second": 35,
+      "jaccard": 0.57
+     },
+     "afi17-203": {
+      "shared": 71,
+      "only_first": 40,
+      "only_second": 44,
+      "jaccard": 0.458
+     },
+     "afman17-2101": {
+      "shared": 104,
+      "only_first": 40,
+      "only_second": 39,
+      "jaccard": 0.568
+     },
+     "afpd_17-1": {
+      "shared": 54,
+      "only_first": 6,
+      "only_second": 9,
+      "jaccard": 0.783
+     },
+     "dafman17-1305": {
+      "shared": 173,
+      "only_first": 103,
+      "only_second": 87,
+      "jaccard": 0.477
+     }
+    }
+   }
+  },
+  "T2b vs T3_1024": {
+   "recall_extracted": {
+    "only_first": [
+     {
+      "id": "AFMAN-p004-013",
+      "document": "afman17-2101",
+      "page": 4,
+      "text": "1.1.4. The AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron (CYRS)/SCC, executes and manages all facets of the DISN Enterprise Long Haul Communications Program on behalf of the AF.",
+      "trace_first": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-0"
+       ],
+       "covering_surviving": [
+        "REQ-e8cd537bede0"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.1333,
+        "survived_step_d": 0.1333
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [
+        "R-3-0"
+       ],
+       "covering_surviving": [
+        "REQ-6a0f9a3c0f22"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-8-0",
+        "chunk_id": 8,
+        "source_quote": "The AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron (CYRS)/SCC, executes and manages all facets of the DISN Enterprise Long Haul Communications Program on behalf of the AF.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-3-0",
+        "chunk_id": 3,
+        "source_quote": "The AF centrally provisions, manages and funds the AF enterprise Long Haul Communications transport portion of the DOD network and services called the Defense Information Systems Network (DISN) and the AF segment called the AF Information Networks (AFIN) which uses the DISN for transport.",
+        "step_d_failure": null
+       }
+      ]
+     }
+    ],
+    "only_second": [
+     {
+      "id": "AFMAN-p009-002",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.10. Provides direct provisioning oversight and management of all corporately funded enterprise SBU IP Data (formerly NIPRNET), Secret IP Data (formerly SIPRNET) and DISN Virtual Private Network (VPN) requirements for all MAJCOMs.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-7-0",
+        "R-7-3",
+        "R-7-5",
+        "R-7-9"
+       ],
+       "covering_surviving": [
+        "REQ-759570edb6de",
+        "REQ-e3e574dab080",
+        "REQ-8012551276eb",
+        "REQ-6667e37fdac7"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-7-0",
+        "chunk_id": 7,
+        "source_quote": "Executes Program Manager responsibilities for the DISN LHC on behalf of the Headquarters, Air Force to include the planning, programming and budgeting for the LHC program and management of the AF corporate DISN LHC requirements.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-7-3",
+        "chunk_id": 7,
+        "source_quote": "Assists SAF/CIO A6 in the development of AF policy and procedural guidance on the acquisition and management of DISN LHC services.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-7-5",
+        "chunk_id": 7,
+        "source_quote": "Manages the Consolidated MAJCOM Circuit Management Office (CMO) for all MAJCOMs and executes the consolidated MAJCOM CMO duties as identified in Chapter 2, paragraph 2.8.2.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-7-9",
+        "chunk_id": 7,
+        "source_quote": "Provides direct provisioning oversight and management of all corporately funded enterprise SBU IP Data (formerly NIPRNET), Secret IP Data (formerly SIPRNET) and DISN Virtual Private Network (VPN) requirements for all MAJCOMs.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-003",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.11. Provides direct management oversight on corporate AF LHC funding appropriations and MAJCOM dedicated funding.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-7-10"
+       ],
+       "covering_surviving": [
+        "REQ-19384e1f0982"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-7-10",
+        "chunk_id": 7,
+        "source_quote": "Provides direct management oversight on corporate AF LHC funding appropriations and MAJCOM dedicated funding.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-014",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.11.5. Receive financial/execution plan (D-22s) from MAJCOMs.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-6"
+       ],
+       "covering_surviving": [
+        "REQ-94f569dd0f4c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-6",
+        "chunk_id": 8,
+        "source_quote": "Receive financial/execution plan (D-22s) from MAJCOMs. Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-015",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-6"
+       ],
+       "covering_surviving": [
+        "REQ-94f569dd0f4c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-6",
+        "chunk_id": 8,
+        "source_quote": "Receive financial/execution plan (D-22s) from MAJCOMs. Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-020",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.12. Assists SAF/CIO A6 as SME in support of AF and Major Command IG teams.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-11"
+       ],
+       "covering_surviving": [
+        "REQ-a3c3f2e0bf1c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-11",
+        "chunk_id": 8,
+        "source_quote": "Assists SAF/CIO A6 as SME in support of AF and Major Command IG teams.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-021",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.13. Serves as the AF customer interface and focal point with DISA, DITCO, and the General Services Administration (GSA) for long-haul circuit and service requirements.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-12",
+        "R-8-13",
+        "R-8-14"
+       ],
+       "covering_surviving": [
+        "REQ-fe5a3801a496",
+        "REQ-9f3b5237d40c"
+       ],
+       "rejected_ids": [
+        "R-8-14"
+       ]
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-12",
+        "chunk_id": 8,
+        "source_quote": "Serves as the AF customer interface and focal point with DISA, DITCO, and the General Services Administration (GSA) for long-haul circuit and service requirements.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-8-13",
+        "chunk_id": 8,
+        "source_quote": "Coordinates with DISA, DITCO, GSA, commercial venders, and users to resolve management, acquisition, and technical issues with LHC systems, circuits, equipment, and services. Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-8-14",
+        "chunk_id": 8,
+        "source_quote": "Serves as the AF Transition Lead and Designated Agency Representative Administrator for GSA's Networx/Enterprise Infrastructure Solutions (EIS) contracts by acting as the:",
+        "step_d_failure": "unrepairable_fragment_quote"
+       },
+       {
+        "requirement_id": "R-8-14",
+        "chunk_id": 8,
+        "source_quote": "Serves as the AF Transition Lead and Designated Agency Representative Administrator for GSA's Networx/Enterprise Infrastructure Solutions (EIS) contracts by acting as the:",
+        "step_d_failure": "unrepairable_fragment_quote"
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-023",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-8",
+        "R-8-13"
+       ],
+       "covering_surviving": [
+        "REQ-07b42597facd",
+        "REQ-9f3b5237d40c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-8",
+        "chunk_id": 8,
+        "source_quote": "Manage the DISA and the OSD Statistical Sampling Report.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-8-13",
+        "chunk_id": 8,
+        "source_quote": "Coordinates with DISA, DITCO, GSA, commercial venders, and users to resolve management, acquisition, and technical issues with LHC systems, circuits, equipment, and services. Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-007",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.17. Represents the AF at meetings, conferences, workshops and surveys with civilian, government, DOD, Joint Chiefs of Staff, Major Commands, FOA, DRU, and Joint agencies pertaining to DISN LHC.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-19",
+        "R-8-20"
+       ],
+       "covering_surviving": [
+        "REQ-b5cd714267ac",
+        "REQ-1ad3e41fec4d"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-19",
+        "chunk_id": 8,
+        "source_quote": "Represents the AF at meetings, conferences, workshops and surveys with civilian, government, DOD, Joint Chiefs of Staff, Major Commands, FOA, DRU, and Joint agencies pertaining to DISN LHC.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-8-20",
+        "chunk_id": 8,
+        "source_quote": "Represents the AF with government and DOD procurement actions involving long-haul requirements and participates in contract evaluation panels.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-008",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.18. Represents the AF with government and DOD procurement actions involving longhaul requirements and participates in contract evaluation panels.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 0.9444,
+        "survived_step_d": 0.9444
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-19",
+        "R-8-20"
+       ],
+       "covering_surviving": [
+        "REQ-b5cd714267ac",
+        "REQ-1ad3e41fec4d"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-19",
+        "chunk_id": 8,
+        "source_quote": "Represents the AF at meetings, conferences, workshops and surveys with civilian, government, DOD, Joint Chiefs of Staff, Major Commands, FOA, DRU, and Joint agencies pertaining to DISN LHC.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-8-20",
+        "chunk_id": 8,
+        "source_quote": "Represents the AF with government and DOD procurement actions involving long-haul requirements and participates in contract evaluation panels.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-009",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.19. Participates in working groups internal and external to AF, providing LHC technical and/or procedure SME recommendations and guidance.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-21"
+       ],
+       "covering_surviving": [
+        "REQ-e2cc7502a4c9"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-21",
+        "chunk_id": 8,
+        "source_quote": "Participates in working groups internal and external to AF, providing LHC technical and/or procedure SME recommendations and guidance.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-011",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.21. Forwards National Security Emergency Preparedness (NS/EP) appointment letters to Department of Homeland Security TSP Program Office. (tsp@hq.dhs.gov)",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-23"
+       ],
+       "covering_surviving": [
+        "REQ-1e2f679fe22e"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-8-23",
+        "chunk_id": 8,
+        "source_quote": "Forwards National Security Emergency Preparedness (NS/EP) appointment letters to Department of Homeland Security TSP Program Office. ( tsp@hq.dhs.gov )",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-008",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "\uf06e Follow the recommended practices for managing the physical OS, e.g., time synchronization, log management, authentication, remote access, etc.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-34-0"
+       ],
+       "covering_surviving": [
+        "REQ-5f1c27983213"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-34-0",
+        "chunk_id": 34,
+        "source_quote": "Follow the recommended practices for managing the physical OS, e.g., time synchronization, log management, authentication, remote access, etc.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p026-017",
+      "document": "NIST.SP.800-125",
+      "page": 26,
+      "text": "Organizations considering the use of desktop virtualization should determine which scenarios require the enforcement of security by managed virtualization solutions and which scenarios do not require centralized management.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-36-0"
+       ],
+       "covering_surviving": [
+        "REQ-cf4817e96750"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-36-0",
+        "chunk_id": 36,
+        "source_quote": "Organizations considering the use of desktop virtualization should determine which scenarios require the enforcement of security by managed virtualization solutions and which scenarios do not require centralized management.",
+        "step_d_failure": null
+       }
+      ]
+     }
+    ],
+    "both": 46,
+    "neither": 14
+   },
+   "quote_overlap": {
+    "overall_jaccard": 0.4939,
+    "per_document": {
+     "CJCSI 6510.02G": {
+      "shared": 64,
+      "only_first": 23,
+      "only_second": 15,
+      "jaccard": 0.627
+     },
+     "DODI 5200.01": {
+      "shared": 30,
+      "only_first": 35,
+      "only_second": 17,
+      "jaccard": 0.366
+     },
+     "DODI 5200.44": {
+      "shared": 58,
+      "only_first": 35,
+      "only_second": 40,
+      "jaccard": 0.436
+     },
+     "DODI 5200.48": {
+      "shared": 122,
+      "only_first": 111,
+      "only_second": 76,
+      "jaccard": 0.395
+     },
+     "DODI 8410.03": {
+      "shared": 74,
+      "only_first": 71,
+      "only_second": 40,
+      "jaccard": 0.4
+     },
+     "DODI 8551.01": {
+      "shared": 43,
+      "only_first": 15,
+      "only_second": 14,
+      "jaccard": 0.597
+     },
+     "NIST.SP.800-125": {
+      "shared": 59,
+      "only_first": 94,
+      "only_second": 32,
+      "jaccard": 0.319
+     },
+     "afi10-2402": {
+      "shared": 199,
+      "only_first": 81,
+      "only_second": 61,
+      "jaccard": 0.584
+     },
+     "afi13-550": {
+      "shared": 112,
+      "only_first": 48,
+      "only_second": 37,
+      "jaccard": 0.569
+     },
+     "afi17-203": {
+      "shared": 71,
+      "only_first": 44,
+      "only_second": 44,
+      "jaccard": 0.447
+     },
+     "afman17-2101": {
+      "shared": 106,
+      "only_first": 39,
+      "only_second": 37,
+      "jaccard": 0.582
+     },
+     "afpd_17-1": {
+      "shared": 57,
+      "only_first": 7,
+      "only_second": 6,
+      "jaccard": 0.814
+     },
+     "dafman17-1305": {
+      "shared": 175,
+      "only_first": 92,
+      "only_second": 85,
+      "jaccard": 0.497
+     }
+    }
+   }
+  }
+ }
+}
