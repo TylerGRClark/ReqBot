@@ -49,7 +49,7 @@ Rules: [registry #250](../../../docs/PHASE45_WP458_REGISTRY.md) and [the Stage B
 
 **Registered outcome: H, R and C not triggered; G holds -> "proposal for integration"** (resolver arm; the hybrid arm, reported beside, gives the same).
 
-Resolver minus production, recall@10 (paired by record; best-tie mean with its 95% interval; the worst-tie readings are identical in every row shown, and differ only in the small incomplete-stem group, which is in the report):
+Resolver minus production, recall@10 (paired by record; best-tie mean with its 95% interval; the worst-tie readings are identical in every row shown except pooled stemmed, party, repeat 1, where the worst reading is 0.00; the incomplete-stem group, not shown, also differs, see the report):
 
 | group (n topic / party) | question | plain | prod r1 | prod r2 | prod r3 |
 |---|---|---|---|---|---|
