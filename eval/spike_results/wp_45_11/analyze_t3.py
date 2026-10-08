@@ -20,7 +20,7 @@ from pathlib import Path
 
 _HERE = Path(__file__).resolve().parent
 _ROOT = _HERE.parents[2]
-for _p in (_ROOT, _ROOT / "eval/spike_results/wp_45_10", _ROOT / "eval/spike_results/wp_45_7", _ROOT / "eval/spike_results/wp_45_1e", _ROOT / "eval/spike_results/wp_45_audit"):
+for _p in (_HERE, _ROOT, _ROOT / "eval/spike_results/wp_45_10", _ROOT / "eval/spike_results/wp_45_7", _ROOT / "eval/spike_results/wp_45_1e", _ROOT / "eval/spike_results/wp_45_audit"):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
@@ -105,6 +105,8 @@ def main():
         base_hit, arm_hit = find_chunk(chunks_for(args.base_chunks, it["document"]), it["quote"]), find_chunk(chunks_for(args.arm_chunks, it["document"]), it["quote"])
         hits[it["id"]] = (base_hit, arm_hit)
     fixed = [it for it in items if all(hits[it["id"]])]
+    if not fixed:
+        raise SystemExit("no labeled quote is findable in both chunk specifications; check --base-chunks / --arm-chunks")
     fixed_ids = {it["id"] for it in fixed}
     only_base = [it["id"] for it in items if hits[it["id"]][0] and not hits[it["id"]][1]]
     only_arm = [it["id"] for it in items if hits[it["id"]][1] and not hits[it["id"]][0]]
