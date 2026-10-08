@@ -1,0 +1,560 @@
+{
+ "summary": {
+  "source": "processed",
+  "label": "wp458_shadow_processed",
+  "documents": 13,
+  "input_records": 1853,
+  "output_rows": 1853,
+  "dropped_records": 0,
+  "calls_in_ledger": 1853,
+  "statuses": {
+   "complete": 1853
+  },
+  "seconds_per_call_mean": 1.01,
+  "seconds_total": 1863.6,
+  "with_resolver_string": 1577,
+  "kinds": {
+   "requirement": 1642,
+   "not_a_requirement": 175,
+   "scope_or_context": 36
+  },
+  "kind_other_than_requirement": 211,
+  "flags": {
+   "none": 1851,
+   "checker error": 2
+  },
+  "no_menu": 0,
+  "routes_vs_production": {
+   "production none -> resolver some": 1542,
+   "both none": 270,
+   "same": 21,
+   "production some -> resolver none": 6,
+   "both some, different": 14
+  },
+  "span_not_in_document": 6,
+  "gate": {
+   "zero_dropped_records": true,
+   "zero_spans_outside_document": false
+  }
+ },
+ "sample_of_changed_records": [
+  {
+   "document": "CJCSI 6510.02G",
+   "requirement_id": "REQ-07962c96de0d",
+   "chunk_id": 39,
+   "production_stem": "",
+   "resolver_string": "6. Provide the following information for a more detailed understanding of how the cryptographic device, system, and network function together:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "6. Provide the following information for a more detailed understanding of how the cryptographic device, system, and network function together:",
+   "flag": null
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "requirement_id": "REQ-24162897beaf",
+   "chunk_id": 15,
+   "production_stem": "",
+   "resolver_string": "The PO, in conjunction with Service Principal/CIO and AO | 1. The PO, in conjunction with Service Principal/CIO and AO will:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "The PO, in conjunction with Service Principal/CIO and AO",
+   "parent": "1. The PO, in conjunction with Service Principal/CIO and AO will:",
+   "flag": null
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "requirement_id": "REQ-4ced3d460692",
+   "chunk_id": 24,
+   "production_stem": "",
+   "resolver_string": "Director, NSA (DIRNSA) will:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "Director, NSA (DIRNSA) will:",
+   "flag": null
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "requirement_id": "REQ-fe06743bef3e",
+   "chunk_id": 32,
+   "production_stem": "",
+   "resolver_string": "The Service Principal/CIO | Step Two - Petition the MC4EB for Key Extension.",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "The Service Principal/CIO",
+   "parent": "Step Two - Petition the MC4EB for Key Extension.",
+   "flag": null
+  },
+  {
+   "document": "DODI 5200.01",
+   "requirement_id": "REQ-3be51945a84f",
+   "chunk_id": 22,
+   "production_stem": "",
+   "resolver_string": "DOD COMPONENT HEADS. The DoD Component heads:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "DOD COMPONENT HEADS. The DoD Component heads:",
+   "flag": null
+  },
+  {
+   "document": "DODI 5200.01",
+   "requirement_id": "REQ-474f99ed3b50",
+   "chunk_id": 14,
+   "production_stem": "",
+   "resolver_string": "Under the authority, direction and control of the USD(I&S), the DIRNSA/CHCSS and Directors of the NRO and NGA",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "Under the authority, direction and control of the USD(I&S), the DIRNSA/CHCSS and Directors of the NRO and NGA",
+   "flag": null
+  },
+  {
+   "document": "DODI 5200.44",
+   "requirement_id": "REQ-7337ab73e132",
+   "chunk_id": 5,
+   "production_stem": "",
+   "resolver_string": "Risk management will include TSN processes, tools, and techniques to:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "Risk management will include TSN processes, tools, and techniques to:",
+   "flag": null
+  },
+  {
+   "document": "DODI 5200.44",
+   "requirement_id": "REQ-edc0df1cb13c",
+   "chunk_id": 9,
+   "production_stem": "",
+   "resolver_string": "b. In coordination with the DoD CIO, the Under Secretary of Defense for Acquisition and Sustainment (USD(A&S)), the Under Secretary of Defense for Intelligence and Security (USD(I&S)), and the DoD Component heads:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "b. In coordination with the DoD CIO, the Under Secretary of Defense for Acquisition and Sustainment (USD(A&S)), the Under Secretary of Defense for Intelligence and Security (USD(I&S)), and the DoD Component heads:",
+   "flag": null
+  },
+  {
+   "document": "DODI 5200.44",
+   "requirement_id": "REQ-f4ee7e3008ef",
+   "chunk_id": 5,
+   "production_stem": "",
+   "resolver_string": "POLICY.",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "POLICY.",
+   "flag": null
+  },
+  {
+   "document": "DODI 5200.48",
+   "requirement_id": "REQ-1e82c3ee8510",
+   "chunk_id": 3,
+   "production_stem": "",
+   "resolver_string": "DoD Components",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "DoD Components",
+   "parent": "",
+   "flag": null
+  },
+  {
+   "document": "DODI 5200.48",
+   "requirement_id": "REQ-639ab925a9f2",
+   "chunk_id": 21,
+   "production_stem": "",
+   "resolver_string": "Designate in writing (with copy to the USD(I&S)):",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "Designate in writing (with copy to the USD(I&S)):",
+   "flag": null
+  },
+  {
+   "document": "DODI 5200.48",
+   "requirement_id": "REQ-ba86d946fec2",
+   "chunk_id": 9,
+   "production_stem": "",
+   "resolver_string": "Under the authority, direction, and control of the USD(I&S) and in addition to the responsibilities in Paragraph 2.10., the Director, DCSA:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "Under the authority, direction, and control of the USD(I&S) and in addition to the responsibilities in Paragraph 2.10., the Director, DCSA:",
+   "flag": null
+  },
+  {
+   "document": "DODI 5200.48",
+   "requirement_id": "REQ-d6fc880d877d",
+   "chunk_id": 57,
+   "production_stem": "satisfy the CUI requirements",
+   "resolver_string": "",
+   "kind": "not_a_requirement",
+   "strength": "not_a_requirement",
+   "actor": "",
+   "parent": "",
+   "flag": null
+  },
+  {
+   "document": "DODI 5200.48",
+   "requirement_id": "REQ-f80d62d230a8",
+   "chunk_id": 41,
+   "production_stem": "",
+   "resolver_string": "the CUI designation indicator",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "the CUI designation indicator",
+   "parent": "",
+   "flag": null
+  },
+  {
+   "document": "DODI 5200.48",
+   "requirement_id": "REQ-fdbcca7eafa5",
+   "chunk_id": 31,
+   "production_stem": "",
+   "resolver_string": "In accordance with DoDI 5230.09 and the August 14, 2014 Deputy Secretary of Defense Memorandum:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "In accordance with DoDI 5230.09 and the August 14, 2014 Deputy Secretary of Defense Memorandum:",
+   "flag": null
+  },
+  {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-3097aa5d306c",
+   "chunk_id": 31,
+   "production_stem": "",
+   "resolver_string": "NM SLAs shall at a minimum address the following areas identified in International Telecommunications Union - Telecommunications Recommendation M.3342 (Reference (z)) and TM Forum GB917 Release 3.0 (Reference (aa)):",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "NM SLAs shall at a minimum address the following areas identified in International Telecommunications Union - Telecommunications Recommendation M.3342 (Reference (z)) and TM Forum GB917 Release 3.0 (Reference (aa)):",
+   "flag": null
+  },
+  {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-344aefca3081",
+   "chunk_id": 3,
+   "production_stem": "",
+   "resolver_string": "NM and SM systems",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "NM and SM systems",
+   "parent": "",
+   "flag": null
+  },
+  {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-b73da299e723",
+   "chunk_id": 29,
+   "production_stem": "",
+   "resolver_string": "NM USE OF SNMP",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "NM USE OF SNMP",
+   "flag": null
+  },
+  {
+   "document": "DODI 8551.01",
+   "requirement_id": "REQ-89f7f5ccb43f",
+   "chunk_id": 7,
+   "production_stem": "",
+   "resolver_string": "Under the authority, direction, and control of the DoD Chief Information Officer, and in addition to the responsibilities in Paragraph 2.4., the Director, DISA:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "Under the authority, direction, and control of the DoD Chief Information Officer, and in addition to the responsibilities in Paragraph 2.4., the Director, DISA:",
+   "flag": null
+  },
+  {
+   "document": "DODI 8551.01",
+   "requirement_id": "REQ-8e9448e0db93",
+   "chunk_id": 21,
+   "production_stem": "PPSM standards will be implemented as directed by the authorizing official for the system for DoD-wide management and PPS control used in DoD systems to:",
+   "resolver_string": "- (7) PPSM standards will be implemented as directed by the authorizing official for the system for DoD-wide management and PPS control used in DoD systems to:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "- (7) PPSM standards will be implemented as directed by the authorizing official for the system for DoD-wide management and PPS control used in DoD systems to:",
+   "flag": null
+  },
+  {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-053c1e8b9abd",
+   "chunk_id": 96,
+   "production_stem": "",
+   "resolver_string": "-  Authentication.",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "-  Authentication.",
+   "flag": null
+  },
+  {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-8854465aaf2a",
+   "chunk_id": 97,
+   "production_stem": "",
+   "resolver_string": "The security aspects of the virtualization solution design",
+   "kind": "requirement",
+   "strength": "recommendation",
+   "actor": "The security aspects of the virtualization solution design",
+   "parent": "",
+   "flag": null
+  },
+  {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-baad8b317a72",
+   "chunk_id": 71,
+   "production_stem": "",
+   "resolver_string": "The following are security recommendations for the hypervisor itself:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "The following are security recommendations for the hypervisor itself:",
+   "flag": null
+  },
+  {
+   "document": "NIST.SP.800-125",
+   "requirement_id": "REQ-bf82d991d251",
+   "chunk_id": 78,
+   "production_stem": "",
+   "resolver_string": "The following are security recommendations for the guest OS itself:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "The following are security recommendations for the guest OS itself:",
+   "flag": null
+  },
+  {
+   "document": "afi10-2402",
+   "requirement_id": "REQ-3a28755e1e4e",
+   "chunk_id": 94,
+   "production_stem": "",
+   "resolver_string": "Per paragraphs 2.17.27 and 2.20.17,",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "Per paragraphs 2.17.27 and 2.20.17,",
+   "flag": null
+  },
+  {
+   "document": "afi10-2402",
+   "requirement_id": "REQ-48b04625daea",
+   "chunk_id": 74,
+   "production_stem": "",
+   "resolver_string": "Air Force Host Centers and Wings.",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "Air Force Host Centers and Wings.",
+   "flag": null
+  },
+  {
+   "document": "afi10-2402",
+   "requirement_id": "REQ-6eed68389db9",
+   "chunk_id": 38,
+   "production_stem": "",
+   "resolver_string": "Air Force Deputy Chief of Staff, Operations (AF/A3).",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "Air Force Deputy Chief of Staff, Operations (AF/A3).",
+   "flag": null
+  },
+  {
+   "document": "afi10-2402",
+   "requirement_id": "REQ-dc21dc4789cc",
+   "chunk_id": 24,
+   "production_stem": "",
+   "resolver_string": "Chief, Information Dominance and Chief Information Officer (SAF/CIO A6).",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "Chief, Information Dominance and Chief Information Officer (SAF/CIO A6).",
+   "flag": null
+  },
+  {
+   "document": "afi10-2402",
+   "requirement_id": "REQ-e15b4b2777fd",
+   "chunk_id": 108,
+   "production_stem": "",
+   "resolver_string": "CARM Reviews will feature a series of focused discussions on the following topics:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "CARM Reviews will feature a series of focused discussions on the following topics:",
+   "flag": null
+  },
+  {
+   "document": "afi13-550",
+   "requirement_id": "REQ-6a4fbe7f236c",
+   "chunk_id": 51,
+   "production_stem": "",
+   "resolver_string": "AFGSC will:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "AFGSC will:",
+   "flag": null
+  },
+  {
+   "document": "afi13-550",
+   "requirement_id": "REQ-9c0e93b0c336",
+   "chunk_id": 47,
+   "production_stem": "",
+   "resolver_string": "United States Air Forces in Europe (USAFE) will:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "United States Air Forces in Europe (USAFE) will:",
+   "flag": null
+  },
+  {
+   "document": "afpd_17-1",
+   "requirement_id": "REQ-bbf41ce423bd",
+   "chunk_id": 13,
+   "production_stem": "",
+   "resolver_string": "The Deputy Chief of Staff for Strategic Plans and Requirements (A5/8) will:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "The Deputy Chief of Staff for Strategic Plans and Requirements (A5/8) will:",
+   "flag": null
+  },
+  {
+   "document": "afpd_17-1",
+   "requirement_id": "REQ-e91e54709ec7",
+   "chunk_id": 7,
+   "production_stem": "",
+   "resolver_string": "Policy. The AF will:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "Policy. The AF will:",
+   "flag": null
+  },
+  {
+   "document": "dafman17-1305",
+   "requirement_id": "REQ-0d0ad2e1954b",
+   "chunk_id": 81,
+   "production_stem": "",
+   "resolver_string": "Each military member assigned or tasked as a UTC substitute",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "Each military member assigned or tasked as a UTC substitute",
+   "parent": "",
+   "flag": null
+  },
+  {
+   "document": "dafman17-1305",
+   "requirement_id": "REQ-3e267054848f",
+   "chunk_id": 76,
+   "production_stem": "",
+   "resolver_string": "Normal and Amplified Procedures",
+   "kind": "requirement",
+   "strength": "permission",
+   "actor": "",
+   "parent": "Normal and Amplified Procedures",
+   "flag": null
+  },
+  {
+   "document": "dafman17-1305",
+   "requirement_id": "REQ-8db77603d44a",
+   "chunk_id": 13,
+   "production_stem": "",
+   "resolver_string": "They may be requested to present a hard or soft copy of their certificate by the gaining agency, organization, or unit.",
+   "kind": "requirement",
+   "strength": "permission",
+   "actor": "",
+   "parent": "They may be requested to present a hard or soft copy of their certificate by the gaining agency, organization, or unit.",
+   "flag": null
+  },
+  {
+   "document": "dafman17-1305",
+   "requirement_id": "REQ-9bc04fd37529",
+   "chunk_id": 105,
+   "production_stem": "",
+   "resolver_string": "I understand that access to a U.S. Government system or network is a revocable privilege, and that failure to comply with requirements is a violation of the trust extended to me and may result in one or more administrative or judicial actions such as, but not limited to:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "I understand that access to a U.S. Government system or network is a revocable privilege, and that failure to comply with requirements is a violation of the trust extended to me and may result in one or more administrative or judicial actions such as, but not limited to:",
+   "flag": null
+  },
+  {
+   "document": "dafman17-1305",
+   "requirement_id": "REQ-b591ee3f7931",
+   "chunk_id": 55,
+   "production_stem": "",
+   "resolver_string": "Supervisors | Supervisors shall:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "Supervisors",
+   "parent": "Supervisors shall:",
+   "flag": null
+  },
+  {
+   "document": "dafman17-1305",
+   "requirement_id": "REQ-c9d5c980393a",
+   "chunk_id": 44,
+   "production_stem": "",
+   "resolver_string": "Program or Project Managers (PMs), System Managers, Program Management Offices (PMOs), Developmental or Operational Test Agencies and all Units shall:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "Program or Project Managers (PMs), System Managers, Program Management Offices (PMOs), Developmental or Operational Test Agencies and all Units shall:",
+   "flag": null
+  },
+  {
+   "document": "dafman17-1305",
+   "requirement_id": "REQ-edebbd4683ee",
+   "chunk_id": 59,
+   "production_stem": "",
+   "resolver_string": "Individuals (Contractor Personnel) shall:",
+   "kind": "requirement",
+   "strength": "obligation",
+   "actor": "",
+   "parent": "Individuals (Contractor Personnel) shall:",
+   "flag": null
+  }
+ ],
+ "spans_not_in_document": [
+  {
+   "document": "DODI 8410.03",
+   "requirement_id": "REQ-5d30644b5005",
+   "field": "actor",
+   "span": "The DoD Components with DISA support"
+  },
+  {
+   "document": "afi10-2402",
+   "requirement_id": "REQ-594183a1226c",
+   "field": "parent",
+   "span": "Have load-shedding plan"
+  },
+  {
+   "document": "afi17-203",
+   "requirement_id": "REQ-8d7abe4ebef4",
+   "field": "actor",
+   "span": "The organization"
+  },
+  {
+   "document": "dafman17-1305",
+   "requirement_id": "REQ-157a2875aae0",
+   "field": "actor",
+   "span": "Wing/Delta Cyberspace Offices (formerly known as Cybersecurity Offices) shall:"
+  },
+  {
+   "document": "dafman17-1305",
+   "requirement_id": "REQ-4c2705b0597b",
+   "field": "actor",
+   "span": "Wing/Delta Cyberspace Offices (formerly known as Cybersecurity Offices) shall:"
+  },
+  {
+   "document": "dafman17-1305",
+   "requirement_id": "REQ-9dd65ec7d891",
+   "field": "actor",
+   "span": "Wing/Delta Cyberspace Offices (formerly known as Cybersecurity Offices) shall:"
+  }
+ ]
+}
