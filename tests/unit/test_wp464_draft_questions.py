@@ -24,3 +24,15 @@ def test_prohibition_rule_is_only_added_when_the_quote_forbids_something():
     assert DQ.PROHIBITION.search("Preliminary response actions should not result in a self-imposed denial of service;")
     assert DQ.PROHIBITION.search("Personnel shall not exceed the limit.")
     assert not DQ.PROHIBITION.search("The CFP shall notify the MCCC.")
+
+
+def test_token_level_check_accepts_a_title_without_its_parenthetical_acronym():
+    material = "designated Computer Network Defense Service Provider (CNDSP) Certification Authority (CA) for Special Access Program (SAP) networks"
+    assert DQ.unverified_terms("Is it designated Computer Network Defense Service Provider Certification Authority for Special Access Program networks?", material) == []
+    assert DQ.unverified_terms("Is it designated the Certification Authority for Special Access Program Zebra networks?", material) == ["Zebra"]
+
+
+def test_prohibition_forms_are_recognized_and_descriptions_are_not():
+    for text in ("Do not release the report.", "The unit does not share keys.", "Users cannot reuse passwords.", "Disclosure is prohibited.", "Personnel must not leave the area."):
+        assert DQ.PROHIBITION.search(text), text
+    assert not DQ.PROHIBITION.search("Examples include, but are not limited to, logs.")
