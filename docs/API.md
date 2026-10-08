@@ -229,7 +229,9 @@ Each item includes `checklist_item_id`, `requirement_ids`, `domain_tags`,
 `source_ref`, `page_refs`, `section_title_path`, `source_quote`, `confidence`,
 `requires_human_review`, and `review_reasons`. For audit use it also carries
 `applies_to` (the heading that names the responsible party, when the document's
-structure gives one), `passage` (the document's own text around the quote, with
+structure gives one), `parent_ref` / `parent_text` (the parent paragraph read from
+the document's own numbering, verbatim: 2.17.22 sits under 2.17; empty for a
+generic label or a non-numbered reference), `passage` (the document's own text around the quote, with
 the requirement marked `>> <<`; for a list item or a quote that starts
 mid-sentence, the end of the previous chunk is put in front) and `item_flags`
 (rule-based hints such as `starts_mid_sentence`, `list_item`, `table_fragment`,

@@ -80,6 +80,16 @@ def _load_chunks(jsonl_path: Path) -> dict:
     return out
 
 
+def _paragraph_map(chunks: dict) -> dict:
+    """{paragraph number: text} over the document, from chunk text and from section headings (Docling keeps numbered headings out of a chunk's raw_text)."""
+    units: list[str] = []
+    for chunk_id in sorted(k for k in chunks if isinstance(k, int)):
+        chunk = chunks[chunk_id]
+        units.extend(str(p) for p in (chunk.get("section_title_path") or []))
+        units.extend(checklist_missed.paragraph_units(chunk.get("raw_text") or ""))
+    return checklist_audit.paragraph_map(units)
+
+
 def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     """Generate a checklist envelope dict from normalized requirements for doc_key.
 
@@ -92,7 +102,8 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
 
     profile = load_profile(profile_name)  # validate profile exists and is well-formed
     jsonl_path = _resolve_doc_path(processed_dir, doc_key)
-    chunks = _load_chunks(jsonl_path)  # WP-46.1: the document's own text, for the passage column; {} when the chunk file is not beside the requirements
+    chunks = _load_chunks(jsonl_path)
+    para_map = _paragraph_map(chunks)  # WP-46.1: the document's own text, for the passage column; {} when the chunk file is not beside the requirements
 
     items = []
     all_quotes: list[str] = []
@@ -138,6 +149,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             # WP-46.1 audit layout: who the row applies to, the document's own passage, and specific hints (nothing here is model-made)
             applies = checklist_audit.applies_to(section_title_path)
             flags = checklist_audit.item_flags(source_quote, source_ref, applies, profile.get("obligation_verbs", []))
+            parent_ref, parent_text = checklist_audit.parent_paragraph(source_ref, para_map)
             chunk_id = req.get("chunk_id")
             chunk = chunks.get(chunk_id)
             prev_chunk = chunks.get(chunk_id - 1) if isinstance(chunk_id, int) else None
@@ -169,6 +181,8 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
                 "page_refs": page_refs,
                 "section_title_path": section_title_path,
                 "applies_to": applies,
+                "parent_ref": parent_ref,
+                "parent_text": parent_text,
                 "source_quote": source_quote,
                 "passage": passage,
                 "item_flags": flags,

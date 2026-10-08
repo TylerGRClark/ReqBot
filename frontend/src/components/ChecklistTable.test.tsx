@@ -35,10 +35,11 @@ describe('ChecklistTable audit layout', () => {
   it('shows the applies-to heading, the passage and the hints, with no Flag column', () => {
     render(
       <ChecklistTable
-        items={[{ ...base, applies_to: 'AF/A4', passage: 'Lead-in:\n>> Provide a representative <<', item_flags: ['no_stated_actor'] }]}
+        items={[{ ...base, applies_to: 'AF/A4', parent_ref: '2.9', parent_text: 'Chief, Logistics (AF/A4).', passage: 'Lead-in:\n>> Provide a representative <<', item_flags: ['no_stated_actor'] }]}
       />,
     )
     expect(screen.getAllByText('AF/A4').length).toBeGreaterThan(0)
+    expect(screen.getByText('2.9 Chief, Logistics (AF/A4).')).toBeTruthy()
     expect(screen.getByText('Show passage')).toBeTruthy()
     expect(screen.getByText('no_stated_actor')).toBeTruthy()
     expect(screen.queryByText('Flag')).toBeNull()

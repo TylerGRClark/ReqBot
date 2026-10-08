@@ -39,7 +39,7 @@ export default function ChecklistTable({ items }: Props) {
         <thead>
           {/* Group header row */}
           <tr className="bg-gray-100 border-b border-gray-200">
-            <th scope="colgroup" colSpan={4} className={`${GROUP_HEADER_CLASS} border-r border-gray-300`}>
+            <th scope="colgroup" colSpan={5} className={`${GROUP_HEADER_CLASS} border-r border-gray-300`}>
               Locate
             </th>
             <th scope="colgroup" colSpan={3} className={`${GROUP_HEADER_CLASS} border-r border-gray-300`}>
@@ -60,7 +60,8 @@ export default function ChecklistTable({ items }: Props) {
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[100px]`}>Ref</th>
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[160px]`}>Section</th>
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[72px]`}>Pages</th>
-            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[150px] border-r border-gray-200`}>Applies to</th>
+            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[150px]`}>Applies to</th>
+            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[170px] border-r border-gray-200`}>Parent paragraph</th>
 
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[220px]`}>Requirement</th>
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[260px]`}>Passage</th>
@@ -91,7 +92,12 @@ export default function ChecklistTable({ items }: Props) {
                 <td className={cell}>{item.source_ref || '—'}</td>
                 <td className={cell}>{formatPath(item.section_title_path)}</td>
                 <td className={`${cell} whitespace-nowrap`}>{formatPageRefs(item.page_refs)}</td>
-                <td className={borderR}>{item.applies_to || <span className="text-gray-400">—</span>}</td>
+                <td className={cell}>{item.applies_to || <span className="text-gray-400">—</span>}</td>
+                <td className={borderR}>
+                  {item.parent_text
+                    ? <span className="break-words">{item.parent_ref ? `${item.parent_ref} ` : ''}{item.parent_text}</span>
+                    : <span className="text-gray-400">—</span>}
+                </td>
 
                 {/* Ask */}
                 <td className={cell}>

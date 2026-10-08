@@ -15,6 +15,7 @@ _CSV_COLUMNS = [
     "section_title_path",
     "page_refs",
     "applies_to",
+    "parent_paragraph",
     "source_quote",
     "passage",
     "audit_question",
@@ -64,12 +65,19 @@ def _sheet_reasons(item: dict) -> list:
     return [r for r in (item.get("review_reasons") or []) if r != "low-confidence"]
 
 
+def _parent_label(item: dict) -> str:
+    """"2.17 MAJCOM/DRUs." : the parent paragraph's number and its text, copied from the document; empty when there is none."""
+    text = item.get("parent_text") or ""
+    return f"{item.get('parent_ref', '')} {text}".strip() if text else ""
+
+
 def _csv_row(item: dict) -> dict:
     raw = {
         "source_ref": item.get("source_ref", ""),
         "section_title_path": _join(item.get("section_title_path") or [], " > "),
         "page_refs": _join(item.get("page_refs") or [], ", "),
         "applies_to": item.get("applies_to", ""),
+        "parent_paragraph": _parent_label(item),
         "source_quote": item.get("source_quote", ""),
         "passage": item.get("passage", ""),
         "audit_question": item.get("audit_question", ""),
@@ -128,6 +136,10 @@ def _md_item(item: dict, index: int) -> str:
     applies = item.get("applies_to", "")
     if applies:
         lines.append(f"**Applies to:** {applies}  ")
+    parent = _parent_label(item)
+    if parent:
+        lines.append(f"**Parent paragraph:** {parent}  ")
+    if applies or parent:
         lines.append("")
     quote = item.get("source_quote", "")
     lines.append(f"> {quote}")
@@ -181,6 +193,7 @@ def to_xlsx(checklist: dict) -> bytes:
         ("Section",        "section_title_path",     28, False),
         ("Pages",          "page_refs",               9, False),
         ("Applies to",     "applies_to",             24, True),
+        ("Parent para.",   "parent_text",            30, True),
         ("Requirement",    "source_quote",            36, True),
         ("Passage",        "passage",                 52, True),
         ("Audit Question", "audit_question",          22, True),
@@ -196,11 +209,11 @@ def to_xlsx(checklist: dict) -> bytes:
 
     # Column groups: (label, first_col_1based, last_col_1based)
     _GROUPS = [
-        ("Locate",  1,  4),
-        ("Ask",     5,  7),
-        ("Record",  8,  9),
-        ("Verify", 10, 12),
-        ("Trace",  13, 15),
+        ("Locate",  1,  5),
+        ("Ask",     6,  8),
+        ("Record",  9, 10),
+        ("Verify", 11, 13),
+        ("Trace",  14, 16),
     ]
 
     _GROUP_FILL = PatternFill("solid", fgColor="E2E8F0")
@@ -256,6 +269,7 @@ def to_xlsx(checklist: dict) -> bytes:
             _csv_safe(_join(item.get("section_title_path") or [], " > ")),
             _csv_safe(_join(item.get("page_refs") or [], ", ")),
             _csv_safe(item.get("applies_to") or ""),
+            _csv_safe(_parent_label(item)),
             _csv_safe(item.get("source_quote") or ""),
             _csv_safe(item.get("passage") or ""),
             _csv_safe(item.get("audit_question") or ""),
@@ -277,9 +291,9 @@ def to_xlsx(checklist: dict) -> bytes:
                 cell.fill = row_fill
 
         # Confidence as percentage (value is 0–1 float)
-        ws.cell(row=row_num, column=12).number_format = "0%"
+        ws.cell(row=row_num, column=13).number_format = "0%"
         # Status: register with data validation
-        dv.add(ws.cell(row=row_num, column=8))
+        dv.add(ws.cell(row=row_num, column=9))
 
     for item in checklist.get("items", []):
         write_item(item)

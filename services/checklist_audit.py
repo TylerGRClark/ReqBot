@@ -141,3 +141,42 @@ def build_passage(quote: str, chunk, prev_chunk=None, flags=()) -> tuple[str, bo
     if not m:
         return (prefix + raw).strip(), False
     return (prefix + raw[: m.start()] + MARK_OPEN + raw[m.start(): m.end()] + MARK_CLOSE + raw[m.end():]).strip(), True
+
+
+# WP-46.3: the parent paragraph from the document's own numbering. AFIs number paragraphs as a hierarchy (2.5.1.1.7.2 sits under 2.5.1.1.7 under 2.5.1.1), so the paragraph a row
+# belongs to is read straight from the document, verbatim; no model and no guess. A row whose number does not look like a dotted paragraph number (a table tag such as "(T-2)")
+# gets none.
+_DOTTED = re.compile(r"^\d+(?:\.\d+)+$")
+_PARA_START = re.compile(r"^\W*(\d+(?:\.\d+)+)\.?\s+(.*)$", re.DOTALL)
+PARENT_TEXT_CHARS = 300
+
+
+def paragraph_map(units) -> dict:
+    """{paragraph number: text} from paragraph units in document order; the first unit that starts with a number wins (chunks overlap)."""
+    out: dict = {}
+    for unit in units:
+        m = _PARA_START.match(unit or "")
+        if m and m.group(1) not in out:
+            out[m.group(1)] = " ".join(m.group(2).split())
+    return out
+
+
+def parent_paragraph(source_ref: str, para_map: dict) -> tuple[str, str]:
+    """(parent number, its text) for a dotted paragraph number: the nearest ancestor present in the document ("2.5.1.1.7.2" -> "2.5.1.1.7" -> "2.5.1.1" ...), or ("", "").
+
+    An ancestor made of a single number ("2") is not looked up: top-level headings are already in the section path. The text is cut at a word boundary."""
+    ref = (source_ref or "").strip().rstrip(".")
+    if not _DOTTED.match(ref):
+        return "", ""
+    parts = ref.split(".")
+    while len(parts) > 2:
+        parts = parts[:-1]
+        key = ".".join(parts)
+        if key in para_map:
+            text = para_map[key]
+            if _label(text) in PROCEDURAL_LABELS:  # "Responsibilities." names no one; the reader gets nothing rather than a label
+                return "", ""
+            if len(text) > PARENT_TEXT_CHARS:
+                text = text[:PARENT_TEXT_CHARS].rsplit(" ", 1)[0] + " ..."
+            return key, text
+    return "", ""
