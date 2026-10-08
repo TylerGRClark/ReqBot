@@ -277,6 +277,7 @@ export interface ChecklistItem {
   domain_tags: string[]
   confidence: number | null
   // WP-46.1 / 46.2 (checklist format 1.1); optional so older saved envelopes still type-check
+  citation?: string
   applies_to?: string
   parent_ref?: string
   parent_text?: string

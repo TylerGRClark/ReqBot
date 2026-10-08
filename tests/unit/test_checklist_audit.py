@@ -98,3 +98,14 @@ def test_generate_fills_the_parent_paragraph_from_headings_and_chunk_text(tmp_pa
     (run_dir / "doc_chunks.jsonl").write_text(json.dumps(chunk) + "\n")
     item = generate(tmp_path, "doc", "cybersecurity")["items"][0]
     assert item["parent_ref"] == "2.5.1.1.7" and item["parent_text"].startswith("Directorate of Security")
+
+
+def test_citation_is_the_paragraph_number_else_read_back_from_the_document():
+    assert A.citation("2.5.1.1.7.2", "", []) == "2.5.1.1.7.2"
+    assert A.citation("A2.1.3", "", []) == "A2.1.3"  # an annex paragraph is a paragraph number too
+    passage = "3.4.3. Preliminary analysis.\n3.4.4.3.  Based on the incident category,\n>> determine if the forensics process should start. <<"
+    assert A.citation("(T-2)", passage, []) == "3.4.4.3 (inferred)"
+    assert A.citation("", passage, ["INCIDENT HANDLING", "3.4. Detection"]) == "3.4.4.3 (inferred)"
+    assert A.citation("Table 3.1", ">> then take the indicated Actions <<", ["INCIDENT HANDLING", "3.4. Detection and Reporting"]) == "3.4 (inferred)"
+    assert A.citation("", ">> orphan quote <<", ["INCIDENT HANDLING"]) == ""
+    assert "(inferred)" not in A.citation("3.1", passage, [])  # a real reference is kept as extracted
