@@ -18,6 +18,15 @@
 - **Reported, not gated:** the production `parent_stem` overlapping the labeled lead-in text (WP-45.7 rule, `score_resolver.overlaps`; lenient, credits a party-less fragment), as paired change against each base replicate with the item ids gained and lost; items findable in only one chunk specification, listed.
 - **Limits stated now.** The 145 labeled items were drawn from production's own extracted records, so "still extracted" can only fall, not discover new items; it measures loss, and recall of the 74 (R1) remains the measure of gain. Prompt size at 1,024 tokens fits the 8,192-token window in the WP-45.10 estimate; a chunk that fails Step C makes `score_arms.py` refuse the arm rather than score it.
 
+## 2a. R2 clarification (owner guidance, 2026-10-08, before any T3 arm output was read)
+
+The owner pointed out that fewer extracted records is not by itself a failure: earlier ReqBot iterations extracted many fragments, and better attachment and consolidation can lower the count. R2 in the plan ("survivors within 10%") is therefore a **tripwire for collapse, not a verdict**. For T3, as for any later arm:
+
+- A fall of more than 10% in total Step D survivors does not fail the arm by itself. It triggers a read: a seeded sample of 40 of the records present in the base and absent in the arm (both T2 replicates' survivors minus the arm's, matched on normalized quote containment), each shown with its source text and sorted by me into (1) a fragment or duplicate that a surviving record of the arm still covers, or (2) a real obligation that is now missing.
+- R2 counts as satisfied, with the reasoning written out, only if R1 and R3 pass **and** the sample is mostly (1). If the sample is mixed or unclear the arm is not merged and the owner decides.
+- A fall in the count alongside a recall or labeled-quote loss is read as a loss (R1, R3 and R4 are unchanged); the count never rescues an arm.
+- Attaching a lead-in adds a stem to a fragment's record in today's pipeline; it does not merge records, so a lower count is evidence of merging or rejection, or of the model skimming a longer chunk, and the sample is how the two are told apart. A rise of more than 10% is read the same way (new fragments are not wins).
+
 ## 3. Disclosure
 
 A plumbing check of `analyze_t3.py` on baseline arms (not T3 arms) printed the chunk-file co-location for 256 vs 512 tokens before this addendum merged: 73.8% to 92.4% (+18.6 points; 145 of 145 items findable in both). It depends only on chunk files, not on any model output, and repeats the WP-45.10 finding. No T3 arm output had been read.
