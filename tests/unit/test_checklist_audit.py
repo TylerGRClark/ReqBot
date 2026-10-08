@@ -74,3 +74,27 @@ def test_chunk_file_is_found_when_the_document_name_contains_requirements(tmp_pa
     (run_dir / "policy_requirements_v1_chunks.jsonl").write_text(json.dumps({"chunk_id": 1, "raw_text": "Review logs monthly."}) + "\n")
     item = generate(tmp_path, "policy_requirements_v1", "cybersecurity")["items"][0]
     assert "no_passage" not in item["item_flags"] and ">> Review logs monthly. <<" in item["passage"]
+
+
+def test_parent_paragraph_comes_from_the_documents_own_numbering():
+    units = ["2.5.1.1.7. Directorate of Security (SAF/AAZ).", "2.5.1.1.7.1. Coordinates AF-wide activities.", "2.17. MAJCOM/DRUs.", "2.18. Responsibilities."]
+    pm = A.paragraph_map(units)
+    assert pm["2.5.1.1.7"] == "Directorate of Security (SAF/AAZ)."
+    assert A.parent_paragraph("2.5.1.1.7.2", pm) == ("2.5.1.1.7", "Directorate of Security (SAF/AAZ).")
+    assert A.parent_paragraph("2.17.22", pm) == ("2.17", "MAJCOM/DRUs.")
+    assert A.parent_paragraph("2.5.1.1.7.1.1.1", pm)[0] == "2.5.1.1.7.1"  # the nearest ancestor that exists
+    assert A.parent_paragraph("2.18.1", pm) == ("", "")  # a generic label names no one
+    assert A.parent_paragraph("(T-2)", pm) == ("", "") and A.parent_paragraph("Table 3.1", pm) == ("", "") and A.parent_paragraph("", pm) == ("", "")
+    assert A.parent_paragraph("3.1", pm) == ("", "")  # a two-part number has only a top-level parent, which is the section path
+
+
+def test_generate_fills_the_parent_paragraph_from_headings_and_chunk_text(tmp_path):
+    run_dir = tmp_path / "doc_20260101_120000"
+    run_dir.mkdir()
+    rec = {"requirement_id": "REQ-1", "source_quote": "Coordinates AF-wide CNDSP activities in accordance with DoDD O-8530.1.", "source_ref": "2.5.1.1.7.1", "chunk_id": 1,
+           "section_title_path": ["ROLES", "2.5.1.1.7. Directorate of Security (SAF/AAZ)."], "domain_tags": ["x"], "confidence": 0.9, "page_start": 1, "page_end": 1}
+    (run_dir / "doc_requirements_normalized.jsonl").write_text(json.dumps(rec) + "\n")
+    chunk = {"chunk_id": 1, "raw_text": "2.5.1.1.7.1. Coordinates AF-wide CNDSP activities in accordance with DoDD O-8530.1.", "section_title_path": rec["section_title_path"]}
+    (run_dir / "doc_chunks.jsonl").write_text(json.dumps(chunk) + "\n")
+    item = generate(tmp_path, "doc", "cybersecurity")["items"][0]
+    assert item["parent_ref"] == "2.5.1.1.7" and item["parent_text"].startswith("Directorate of Security")

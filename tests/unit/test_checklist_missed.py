@@ -80,7 +80,7 @@ def test_exports_show_the_section_clearly_apart(tmp_path):
     banner = [r for r in range(3, ws.max_row + 1) if str(ws.cell(row=r, column=1).value or "").startswith("POSSIBLE MISSED REQUIREMENTS")]
     assert banner == [5]
     assert ws.auto_filter.ref.endswith("3")  # the filter covers the extracted rows only
-    assert any(ws.cell(row=6, column=8).coordinate in dv.sqref for dv in ws.data_validations.dataValidation)  # the Status dropdown reaches the candidates too
+    assert any(ws.cell(row=6, column=9).coordinate in dv.sqref for dv in ws.data_validations.dataValidation)  # the Status dropdown reaches the candidates too
 
 
 def test_text_before_the_first_marker_and_bare_bullets_are_units():
