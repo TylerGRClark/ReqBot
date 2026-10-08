@@ -6,11 +6,11 @@
 
 | WP | What | State |
 |---|---|---|
-| 46.1 | Audit layout: paragraph citation, role, complete passage, specific flags, compliance and notes columns | planned |
-| 46.2 | "Possible missed requirements" section (rule-based scan), same sheet | planned |
-| 46.3 | Context attachment from the document's own structure, measured against the model's picks | planned |
-| 46.4 | Draft audit questions, marked as drafts | planned |
-| 46.5 | Review on AFI 17-203 and one more AFI, with the owner | planned |
+| 46.1 | Audit layout: paragraph citation, role, complete passage, specific flags, compliance and notes columns | merged (#264, #265, #269): applies-to heading, verbatim passage, hints, citation (inferred ones marked), Flag column dropped |
+| 46.2 | "Possible missed requirements" section (rule-based scan), same sheet | merged (#266): listed apart under a banner in the sheet, CSV, Markdown and the web preview |
+| 46.3 | Context attachment from the document's own structure | merged (#267): parent paragraph from the paragraph numbering, measured on the labeled AFI records (README of `eval/spike_results/wp_46_3`); the model resolver stays on hold |
+| 46.4 | Draft audit questions, marked as drafts | experiment merged (#268), **awaiting the owner's rating** of `eval/spike_results/wp_46_4/outputs/v3_rating_sheet.md`; nothing is wired in |
+| 46.5 | Review on AFI 17-203 and one more AFI, with the owner | pending the owner's review |
 
 ## 1. What the checklist is today (read from `services/checklist_service.py`, `pipeline/checklist_export.py`, and the AFI 17-203 output)
 
