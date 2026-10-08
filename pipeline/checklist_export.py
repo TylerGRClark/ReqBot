@@ -14,10 +14,13 @@ _CSV_COLUMNS = [
     "source_ref",
     "section_title_path",
     "page_refs",
+    "applies_to",
     "source_quote",
+    "passage",
     "audit_question",
     "status",
     "assessor_notes",
+    "item_flags",
     "requires_human_review",
     "review_reasons",
     "confidence",
@@ -48,15 +51,26 @@ def _csv_safe(value: object) -> object:
     return value
 
 
+def _needs_attention(item: dict) -> bool:
+    """A row worth a reader's second look in the sheet: a specific hint (item_flags) or a missing citation/tag. Confidence alone no longer shades every row (the pipeline's
+    confidence is below the review threshold on nearly every record, so it separated nothing); the number itself stays in its column and `requires_human_review` stays in JSON."""
+    if item.get("item_flags"):
+        return True
+    return any(r != "low-confidence" for r in (item.get("review_reasons") or []))
+
+
 def _csv_row(item: dict) -> dict:
     raw = {
         "source_ref": item.get("source_ref", ""),
         "section_title_path": _join(item.get("section_title_path") or [], " > "),
         "page_refs": _join(item.get("page_refs") or [], ", "),
+        "applies_to": item.get("applies_to", ""),
         "source_quote": item.get("source_quote", ""),
+        "passage": item.get("passage", ""),
         "audit_question": item.get("audit_question", ""),
         "status": item.get("status", ""),
         "assessor_notes": item.get("assessor_notes", ""),
+        "item_flags": _join(item.get("item_flags") or [], "; "),
         "requires_human_review": item.get("requires_human_review", False),
         "review_reasons": _join(item.get("review_reasons") or [], "; "),
         "confidence": item.get("confidence", 0.0),
@@ -106,9 +120,23 @@ def _md_item(item: dict, index: int) -> str:
     lines.append(f"**Confidence:** {conf:.2f}  ")
     lines.append("")
 
+    applies = item.get("applies_to", "")
+    if applies:
+        lines.append(f"**Applies to:** {applies}  ")
+        lines.append("")
     quote = item.get("source_quote", "")
     lines.append(f"> {quote}")
     lines.append("")
+    passage = item.get("passage", "")
+    if passage:
+        lines.append("**Passage** (the requirement is marked >> <<):")
+        lines.append("")
+        lines.extend(f"    {ln}" for ln in passage.splitlines())
+        lines.append("")
+    flags = _join(item.get("item_flags") or [], ", ")
+    if flags:
+        lines.append(f"**Check:** {flags}  ")
+        lines.append("")
 
     audit_q = item.get("audit_question", "")
     lines.append(f"**Audit Question:** {audit_q if audit_q else '*(not generated)*'}  ")
@@ -147,10 +175,13 @@ def to_xlsx(checklist: dict) -> bytes:
         ("Ref",            "source_ref",            14, False),
         ("Section",        "section_title_path",     28, False),
         ("Pages",          "page_refs",               9, False),
-        ("Source Quote",   "source_quote",            36, True),
+        ("Applies to",     "applies_to",             24, True),
+        ("Requirement",    "source_quote",            36, True),
+        ("Passage",        "passage",                 52, True),
         ("Audit Question", "audit_question",          22, True),
         ("Status",         "status",                  15, False),
         ("Notes",          "assessor_notes",          22, True),
+        ("Check",          "item_flags",              20, False),
         ("Flag",           "requires_human_review",    8, False),
         ("Reasons",        "review_reasons",          22, False),
         ("Conf.",          "confidence",               7, False),
@@ -161,11 +192,11 @@ def to_xlsx(checklist: dict) -> bytes:
 
     # Column groups: (label, first_col_1based, last_col_1based)
     _GROUPS = [
-        ("Locate",  1,  3),
-        ("Ask",     4,  5),
-        ("Record",  6,  7),
-        ("Verify",  8, 10),
-        ("Trace",  11, 13),
+        ("Locate",  1,  4),
+        ("Ask",     5,  7),
+        ("Record",  8,  9),
+        ("Verify", 10, 13),
+        ("Trace",  14, 16),
     ]
 
     _GROUP_FILL = PatternFill("solid", fgColor="E2E8F0")
@@ -212,7 +243,7 @@ def to_xlsx(checklist: dict) -> bytes:
 
     # Data rows
     for item in checklist.get("items", []):
-        flagged = item.get("requires_human_review", False)
+        flagged = _needs_attention(item)
         row_fill = _FLAGGED_FILL if flagged else None
         confidence_val = item.get("confidence") or 0.0
 
@@ -220,10 +251,13 @@ def to_xlsx(checklist: dict) -> bytes:
             _csv_safe(item.get("source_ref") or ""),
             _csv_safe(_join(item.get("section_title_path") or [], " > ")),
             _csv_safe(_join(item.get("page_refs") or [], ", ")),
+            _csv_safe(item.get("applies_to") or ""),
             _csv_safe(item.get("source_quote") or ""),
+            _csv_safe(item.get("passage") or ""),
             _csv_safe(item.get("audit_question") or ""),
             _csv_safe(item.get("status") or ""),
             _csv_safe(item.get("assessor_notes") or ""),
+            _csv_safe(_join(item.get("item_flags") or [], "; ")),
             "Yes" if flagged else "No",
             _csv_safe(_join(item.get("review_reasons") or [], "; ")),
             confidence_val,
@@ -240,9 +274,9 @@ def to_xlsx(checklist: dict) -> bytes:
                 cell.fill = row_fill
 
         # Confidence as percentage (value is 0–1 float)
-        ws.cell(row=row_num, column=10).number_format = "0%"
+        ws.cell(row=row_num, column=13).number_format = "0%"
         # Status: register with data validation
-        dv.add(ws.cell(row=row_num, column=6))
+        dv.add(ws.cell(row=row_num, column=8))
 
     # Auto-filter: set after rows are written so range covers all data rows
     ws.auto_filter.ref = f"A2:{get_column_letter(len(_COLS))}{ws.max_row}"

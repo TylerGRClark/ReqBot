@@ -23,6 +23,7 @@ if str(_ROOT) not in sys.path:
 
 from core.artifact_resolver import resolve_requirement_file
 from core.profiles import load_profile
+from services import checklist_audit
 
 log = logging.getLogger(__name__)
 
@@ -64,6 +65,22 @@ def _page_refs(req: dict) -> list[int]:
         return []
 
 
+def _load_chunks(jsonl_path: Path) -> dict:
+    """{chunk_id: chunk record} from the *_chunks.jsonl beside the requirements file (same run directory), or {} if it is absent or unreadable."""
+    prefix = jsonl_path.name.split("_requirements_")[0]
+    path = jsonl_path.parent / f"{prefix}_chunks.jsonl"
+    out: dict = {}
+    try:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                rec = json.loads(line)
+                out[rec.get("chunk_id")] = rec
+    except (OSError, ValueError):
+        log.warning("No readable chunk file beside %s; checklist passages will be empty", jsonl_path.name)
+        return {}
+    return out
+
+
 def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     """Generate a checklist envelope dict from normalized requirements for doc_key.
 
@@ -74,8 +91,9 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     if not processed_dir.exists():
         raise FileNotFoundError(f"processed_dir not found: {processed_dir}")
 
-    load_profile(profile_name)  # validate profile exists and is well-formed; reserved for WP-21.3 content
+    profile = load_profile(profile_name)  # validate profile exists and is well-formed
     jsonl_path = _resolve_doc_path(processed_dir, doc_key)
+    chunks = _load_chunks(jsonl_path)  # WP-46.1: the document's own text, for the passage column; {} when the chunk file is not beside the requirements
 
     items = []
     document_id = ""
@@ -116,6 +134,18 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
 
             source_profile = req.get("domain_profile") or "cybersecurity"
 
+            # WP-46.1 audit layout: who the row applies to, the document's own passage, and specific hints (nothing here is model-made)
+            applies = checklist_audit.applies_to(section_title_path)
+            flags = checklist_audit.item_flags(source_quote, source_ref, applies, profile.get("obligation_verbs", []))
+            chunk_id = req.get("chunk_id")
+            chunk = chunks.get(chunk_id)
+            prev_chunk = chunks.get(chunk_id - 1) if isinstance(chunk_id, int) else None
+            passage, found = checklist_audit.build_passage(source_quote, chunk, prev_chunk, flags)
+            if not passage:
+                flags.append("no_passage")
+            elif not found:
+                flags.append("quote_not_located_in_passage")
+
             review_reasons: list[str] = []
             if not source_ref:
                 review_reasons.append("missing-source-ref")
@@ -137,7 +167,10 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
                 "source_ref": source_ref,
                 "page_refs": page_refs,
                 "section_title_path": section_title_path,
+                "applies_to": applies,
                 "source_quote": source_quote,
+                "passage": passage,
+                "item_flags": flags,
                 "audit_question": "",
                 "evidence_to_request": [],
                 "generation_notes": "",
@@ -153,7 +186,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
 
     return {
         "format": "reqbot-checklist",
-        "format_version": "1.0",
+        "format_version": "1.1",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "generator": {
             "tool": "reqbot",
@@ -167,6 +200,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
         "summary": {
             "total_items": len(items),
             "items_requiring_review": sum(1 for i in items if i["requires_human_review"]),
+            "items_with_flags": sum(1 for i in items if i["item_flags"]),
         },
         "items": items,
     }

@@ -209,8 +209,11 @@ Requires `--doc DOC_KEY` (PDF stem shown by `docs`). Accepts `--profile NAME`
 `--output FILE`. XLSX requires an output file.
 
 Checklists read processed artifacts rather than searching Qdrant. They include
-quote/citation/page provenance and human-review flags. Assessor fields begin
-empty; generation does not complete an assessment.
+quote/citation/page provenance, the document's own surrounding passage, an
+"applies to" heading where the structure names one, and specific hints (the
+Check column). The sheet is one list in document order with a Status dropdown
+(not-started, in-progress, compliant, non-compliant, not-applicable) and a Notes
+column. Assessor fields begin empty; generation does not complete an assessment.
 
 ## reindex
 

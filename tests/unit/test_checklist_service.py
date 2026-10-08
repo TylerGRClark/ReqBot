@@ -118,7 +118,7 @@ def test_generate_returns_envelope_keys(tmp_path):
     processed_dir = _make_doc(tmp_path, "testdoc", [COMPLETE_REQ])
     result = generate(processed_dir, "testdoc", "cybersecurity")
     assert result["format"] == "reqbot-checklist"
-    assert result["format_version"] == "1.0"
+    assert result["format_version"] == "1.1"
     assert "generated_at" in result
     assert result["generator"]["tool"] == "reqbot"
     assert "testdoc" in result["generator"]["command"]
