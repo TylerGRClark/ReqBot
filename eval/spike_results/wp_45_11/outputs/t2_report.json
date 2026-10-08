@@ -1,0 +1,460 @@
+{
+ "DODI 5200.48 chunk 76": {
+  "table_rows_in_new_text": 12,
+  "versions": {
+   "T2base": {
+    "per_repeat": [
+     {
+      "records": 1,
+      "survivors": 0
+     },
+     {
+      "records": 2,
+      "survivors": 0
+     },
+     {
+      "records": 2,
+      "survivors": 0
+     },
+     {
+      "records": 5,
+      "survivors": 5
+     },
+     {
+      "records": 5,
+      "survivors": 5
+     }
+    ],
+    "median_survivors": 0,
+    "quotes": [
+     {
+      "quote": "Authorized for Release to Certain Foreign Nationals Only (REL TO USA, LIST ), ALIGNMENT TO CURRENT = .",
+      "repeats_extracted": 2,
+      "repeats_survived_step_d": 2,
+      "in_table": true
+     },
+     {
+      "quote": "Display Only (DISPLAY ONLY), ALIGNMENT TO CURRENT = .",
+      "repeats_extracted": 2,
+      "repeats_survived_step_d": 2,
+      "in_table": false
+     },
+     {
+      "quote": "Dissemination List - (Include Separate List for Government Only)*, ALIGNMENT TO CURRENT = DISTRO E.",
+      "repeats_extracted": 2,
+      "repeats_survived_step_d": 2,
+      "in_table": false
+     },
+     {
+      "quote": "Dissemination List - (Include Separate List for Government and Contractors Only)*, ALIGNMENT TO CURRENT = DISTRO D.",
+      "repeats_extracted": 2,
+      "repeats_survived_step_d": 2,
+      "in_table": true
+     },
+     {
+      "quote": "Dissemination List Controlled (DL ONLY), ALIGNMENT TO CURRENT = DISTRO F.",
+      "repeats_extracted": 2,
+      "repeats_survived_step_d": 2,
+      "in_table": false
+     },
+     {
+      "quote": "All DoD information systems shall implement multi-factor authentication for all privileged user accounts.",
+      "repeats_extracted": 1,
+      "repeats_survived_step_d": 0,
+      "in_table": false
+     },
+     {
+      "quote": "The dissemination control and distribution statement markings in Table 2 must be used for all CUI.",
+      "repeats_extracted": 1,
+      "repeats_survived_step_d": 0,
+      "in_table": false
+     },
+     {
+      "quote": "The information system enforces approved authorizations for logical access to information and system resources in accordance with applicable access control policies.",
+      "repeats_extracted": 1,
+      "repeats_survived_step_d": 0,
+      "in_table": false
+     },
+     {
+      "quote": "The information system shall be configured to ensure that all users are assigned a unique identifier.",
+      "repeats_extracted": 1,
+      "repeats_survived_step_d": 0,
+      "in_table": false
+     },
+     {
+      "quote": "The information system shall ensure that all users are properly authorized before accessing the system.",
+      "repeats_extracted": 1,
+      "repeats_survived_step_d": 0,
+      "in_table": false
+     }
+    ]
+   },
+   "T2new": {
+    "per_repeat": [
+     {
+      "records": 10,
+      "survivors": 10
+     },
+     {
+      "records": 10,
+      "survivors": 10
+     },
+     {
+      "records": 10,
+      "survivors": 10
+     },
+     {
+      "records": 10,
+      "survivors": 10
+     },
+     {
+      "records": 10,
+      "survivors": 10
+     }
+    ],
+    "median_survivors": 10,
+    "quotes": [
+     {
+      "quote": "Authorized for Release to Certain Foreign Nationals Only (REL TO USA, LIST )",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     },
+     {
+      "quote": "Display Only (DISPLAY ONLY)",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     },
+     {
+      "quote": "Dissemination List - (Include Separate List for Government Only)*",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     },
+     {
+      "quote": "Dissemination List - (Include Separate List for Government and Contractors Only)*",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     },
+     {
+      "quote": "Dissemination List Controlled (DL ONLY)",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     },
+     {
+      "quote": "Federal Employees Only (FED ONLY)",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     },
+     {
+      "quote": "Federal Employees and Contractors Only (FEDCON)",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     },
+     {
+      "quote": "NONE - Publicly Releasable AFTER Review",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     },
+     {
+      "quote": "No Dissemination to Contractors (NOCON)",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     },
+     {
+      "quote": "No Foreign Dissemination (NOFORN / NF)",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     }
+    ]
+   }
+  }
+ },
+ "DODI 5200.48 chunk 87": {
+  "table_rows_in_new_text": 8,
+  "versions": {
+   "T2base": {
+    "per_repeat": [
+     {
+      "records": 2,
+      "survivors": 2
+     },
+     {
+      "records": 2,
+      "survivors": 2
+     },
+     {
+      "records": 2,
+      "survivors": 2
+     },
+     {
+      "records": 2,
+      "survivors": 2
+     },
+     {
+      "records": 2,
+      "survivors": 2
+     }
+    ],
+    "median_survivors": 2,
+    "quotes": [
+     {
+      "quote": "Referenced definitions related to CUI in Section 2002.4 of Title 32, CFR can be found at https://intelshare.intelink.gov/sites/ousdi/hcis/sec/icdirect/information/CUI/Forms/AllItems.aspx.",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": false
+     },
+     {
+      "quote": "Unless otherwise noted, these terms and their definitions are for the purpose of this issuance.",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": false
+     }
+    ]
+   },
+   "T2new": {
+    "per_repeat": [
+     {
+      "records": 2,
+      "survivors": 2
+     },
+     {
+      "records": 2,
+      "survivors": 2
+     },
+     {
+      "records": 2,
+      "survivors": 2
+     },
+     {
+      "records": 2,
+      "survivors": 2
+     },
+     {
+      "records": 2,
+      "survivors": 2
+     }
+    ],
+    "median_survivors": 2,
+    "quotes": [
+     {
+      "quote": "Referenced definitions related to CUI in Section 2002.4 of Title 32, CFR can be found at https://intelshare.intelink.gov/sites/ousdi/hcis/sec/icdirect/information/CUI/Forms/AllItems.aspx.",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": false
+     },
+     {
+      "quote": "Unless otherwise noted, these terms and their definitions are for the purpose of this issuance.",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": false
+     }
+    ]
+   }
+  }
+ },
+ "DODI 8551.01 chunk 26": {
+  "table_rows_in_new_text": 22,
+  "versions": {
+   "T2base": {
+    "per_repeat": [
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     }
+    ],
+    "median_survivors": 0,
+    "quotes": []
+   },
+   "T2new": {
+    "per_repeat": [
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     }
+    ],
+    "median_survivors": 0,
+    "quotes": []
+   }
+  }
+ },
+ "afi10-2402 chunk 121": {
+  "table_rows_in_new_text": 5,
+  "versions": {
+   "T2base": {
+    "per_repeat": [
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     }
+    ],
+    "median_survivors": 0,
+    "quotes": []
+   },
+   "T2new": {
+    "per_repeat": [
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     }
+    ],
+    "median_survivors": 0,
+    "quotes": []
+   }
+  }
+ },
+ "afi10-2402 chunk 123": {
+  "table_rows_in_new_text": 5,
+  "versions": {
+   "T2base": {
+    "per_repeat": [
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     },
+     {
+      "records": 0,
+      "survivors": 0
+     }
+    ],
+    "median_survivors": 0,
+    "quotes": []
+   },
+   "T2new": {
+    "per_repeat": [
+     {
+      "records": 4,
+      "survivors": 4
+     },
+     {
+      "records": 4,
+      "survivors": 4
+     },
+     {
+      "records": 4,
+      "survivors": 4
+     },
+     {
+      "records": 4,
+      "survivors": 4
+     },
+     {
+      "records": 4,
+      "survivors": 4
+     }
+    ],
+    "median_survivors": 4,
+    "quotes": [
+     {
+      "quote": "One of three A/C units supporting Rms. 10, 11, and 15 have been malfunctioning and personnel have had to open doors and bring in portable fans to prevent mission equipment from overheating and failing.",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     },
+     {
+      "quote": "Rm. 100 no longer has adequate redundancy with its A/C units and if one unit fails mission equipment will receive insufficient cooling and could overheat and fail.",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     },
+     {
+      "quote": "This building lacks an automatic fire suppression system. While fire extinguishers are present for personnel to utilize, should an alarm sound this facility is not manned 24/7.",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     },
+     {
+      "quote": "Vehicles can park within 10 feet of the building due to lack of barriers or fencing.",
+      "repeats_extracted": 5,
+      "repeats_survived_step_d": 5,
+      "in_table": true
+     }
+    ]
+   }
+  }
+ }
+}
