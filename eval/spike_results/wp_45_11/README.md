@@ -51,6 +51,37 @@ The fix changes exactly 9 of 1,166 chunks; 5 reach Step C (DODI 5200.48 chunks 7
 
 **T2 outcome by the addendum's rules:** R2a, R3 and R4 hold. Whether the added table rows are wanted is the owner's call; the fix itself makes extraction from tables deterministic and faithful to the source layout.
 
+## T3 — chunk limit (512 and 1,024 tokens), on the T2 state
+
+Base = the merged table fix (#249) at `cc0b67e`, Docling 2.94.0 with the pinned set (#254), run twice (**T2a**, **T2b**). Arms: **T3_512**, **T3_1024** (same code and model digest, interleaved T2a, T3_512, T2b, T3_1024; 44, 40, 44 and 39 minutes). Rules: plan section 4 plus [the T3 addendum](../../../docs/PHASE45_WP4511_T3_ADDENDUM.md) (including the R2 clarification the owner asked for: a fall in the record count alone is not a failure). Reports: `outputs/t3_{512,1024}_arms_report.json` (R1, R2, R4) and `outputs/t3_{512,1024}_report.json` (R3).
+
+| | T2a | T2b | T3_512 | T3_1024 |
+|---|---|---|---|---|
+| chunks | 839 | 839 | 514 | 390 |
+| Step C records / Step D survivors | 2,025 / 1,880 | 2,025 / 1,890 | 1,813 / 1,712 | 1,787 / 1,695 |
+| the 74 obligations found (extracted) | 46 | 47 | 47 | **59** |
+| found by both base runs, not by the arm | | | 5 (limit 4) | 1 (limit 4) |
+| found by the arm and by neither base run | | | 5 | 12 |
+| labeled lead-in quotes still extracted (of 145; bar 90% of 142 = 128) | 142 | 142 | 124 (87%) | 110 (77%) |
+| lead-in in the quote's chunk (of 145) | 107 | 107 | 134 (+18.6 pts) | 143 (+24.8 pts) |
+
+Noise floor on the T2 state: one obligation one way, two the other (limit for paired losses 2 + 2 = 4); the two base runs extract all 145 labeled quotes except 3; survivor quotes overlap 0.85.
+
+**Registered verdicts.** Neither arm is adoptable.
+- **T3_512 fails R1(ii)** by one (5 paired losses against 4) **and R3** (124 of 142 = 87% against 90%). R2 holds (-8.9% in survivors; CJCSI 6510.02G is -26%).
+- **T3_1024 passes R1** (59 found; 1 paired loss) **and R2 by three records** (1,695 against a trigger of 1,692; -9.8% against the lower base run; per-document: NIST SP 800-125 -36%, DODI 5200.01 -26%, DODI 8410.03 -20%, DODI 5200.48 -15%), but **fails R3**: 110 of 142 labeled quotes (77%) are still extracted.
+
+**What the failures are (R4, read).**
+- *512, the 18 labeled quotes lost:* 16 are not covered in substance by any other record in the document (best word coverage 0.3 to 0.7) - list sub-items such as "(2) Send a copy of their PPSM CCB appointment letter to the DoD CISO." and "Execute Lead Command oversight and management of the AN/USQ-225."; two are measurement artifacts (a space before a full stop, one changed verb).
+- *1,024, the 32 lost:* 7 are covered in substance by a longer record that restates the lead-in ("CUI training standards must, at minimum: Identify individual responsibilities for protecting CUI.", which my containment test misses because the list marker is gone) or differ only by spacing; 4 are partly covered; **21 are not covered**. Counting the 0.9-or-better word-coverage cases as extracted still leaves 126 of 142 (88.7%) at 512 and 117 of 142 (82.4%) at 1,024, so the R3 verdict does not depend on my matching rule.
+- *1,024, the two documents over 25% different, read:* the dropped records are mostly real obligations in running prose ("all unneeded applications should be removed.", "if a system hosts guest oss with different impact levels, the system should be secured in accordance with the highest of those levels.", "classified information released to industry will be safeguarded in accordance with DoDI 5220.22 (reference (j)).", "sci will be safeguarded in accordance with policies and procedures established by the dni."). The records new at 1,024 in the same documents are also ordinary requirements, fewer of them. This is under-extraction by the 8B model on longer prose chunks, not consolidation of fragments: the owner's point that a lower count can be good applies to merged fragments, and here the dropped records are not covered by any merged record.
+- *1,024, the 12 obligations gained:* 10 are on pages 9 and 10 of afman17-2101, the list region that already flickers between identical runs (the model extracts or skips a whole list as a unit; the baseline replicates differ there too), and 2 are in NIST SP 800-125. So most of the large recall gain comes from one list in one document where a 1,024-token chunk holds the whole list; the 74-obligation sample has only three documents, so this should not be read as a corpus-wide +12. The one obligation lost (AFMAN-p004-013, "1.1.4. The AF Long Haul Communications Flight ... executes and manages all facets of the DISN Enterprise Long Haul Communications Program on behalf of the AF.") sits in the same document.
+- *Stem match* (production `parent_stem` overlapping the labeled lead-in; reported, not gated): 44 and 47 in the base runs, 33 at 512, 26 at 1,024. It falls because fewer of the labeled fragments are extracted at all, so it is not evidence about attachment quality.
+
+**Outcome.** The larger limit does what the audit predicted for lead-ins (107 to 134 to 143 of 145 co-located), but the 8B model extracts less from longer chunks, losing real obligations in prose and list sub-items, while stabilising one long list. Under the registered rules neither 512 nor 1,024 is adopted and nothing in the pipeline changes; the chunk limit stays 256. The measured trade-off points at attaching the lead-in to small chunks (WP-45.8) instead of enlarging them. A design not tested here: extract from small windows but show the model the lead-in as context.
+
+**Limits.** One model, three documents in the recall sample, the labeled quotes were drawn from production's own 256-token records (so "still extracted" can only fall and favors the base, as the addendum said), a noise floor from two runs, and the R2 pass at 1,024 is by three records. The R2 read was done for the two documents named above, not by the 40-record draw, because the total trigger did not fire.
+
 ## Deviations and limits, disclosed
 
 1. **A failed first launch.** T1 and T1b were first started from a path inside the working tree; switching branches removed the scripts and both exited at once (code 2). They were re-run from a pinned git worktree (`~/wp45_11_wt` at the commit recorded in each arm record). Nothing from the failed launch was kept. B0a and B0b ran from the main checkout whose `pipeline/`, `core/` and `services/` are byte-identical to that commit (checked with `git diff`); their arm records lack the `git_head` field that was added afterwards.
@@ -61,5 +92,5 @@ The fix changes exactly 9 of 1,166 chunks; 5 reach Step C (DODI 5200.48 chunks 7
 ## Decisions for the owner
 
 1. **T1 (Docling 2.122.0).** Adoptable by the registered rules; neutral on recall, changes about 13 points more quotes than noise, fixes some OCR text, rejects a few more quotes as ungrounded. A pull request would also pin `docling-core` (the chunker comes from it). If adopted, T2's test is rebuilt on the 2.122.0 chunk files and T2 and T3 get replicates on that base.
-2. **T2 (table fix, #249, held).** Passes its rules; correctness gain, small footprint (5 chunks of 839). It does not change chunk ids at the 256 default; adopting it still means re-extracting the three affected documents.
-3. **T3 (chunk limit).** Not yet run. It needs T2 first (without it a larger limit would flatten 37 of 56 tables) and replicates of the T2 state as its noise floor.
+2. **T2 (table fix, #249, merged 2026-10-08 on the owner's go-ahead).** Passed its rules; correctness gain, small footprint (5 chunks of 839). It does not change chunk ids at the 256 default; adopting it still means re-extracting the three affected documents.
+3. **T3 (chunk limit).** Run; neither 512 nor 1,024 tokens passes the registered rules (see above); the limit stays 256. T2 (#249) and the Docling pin (#254) are merged.
