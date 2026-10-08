@@ -1,0 +1,103 @@
+{
+ "sample": 200,
+ "identical": 194,
+ "different": 6,
+ "differences": [
+  {
+   "document": "CJCSI 6510.02G",
+   "requirement_id": "REQ-6985891dfbe2",
+   "first": [
+    "requirement",
+    "",
+    "",
+    null
+   ],
+   "second": [
+    "requirement",
+    "",
+    "Key extension for a decertified product is the authorization for continued operation of an NSS beyond the NSA-prescribed decertification dates for cryptographic products used within that system.",
+    null
+   ]
+  },
+  {
+   "document": "CJCSI 6510.02G",
+   "requirement_id": "REQ-e28c498536fc",
+   "first": [
+    "requirement",
+    "",
+    "The PO, in conjunction with Service Principal/CIO and AO will:",
+    null
+   ],
+   "second": [
+    "requirement",
+    "The PO, in conjunction with Service Principal/CIO and AO",
+    "The PO, in conjunction with Service Principal/CIO and AO will:",
+    null
+   ]
+  },
+  {
+   "document": "DODI 5200.44",
+   "requirement_id": "REQ-406330fb770f",
+   "first": [
+    "requirement",
+    "",
+    "that contains a joint recommendation of the DoD CIO and USD(A&S) on the basis of a risk assessment by the USD(I&S), regarding the assessment of a significant supply chain risk, the scope of applicability, and required or recommended mitigations. The Joint Recommendation package may also contain:",
+    null
+   ],
+   "second": [
+    "requirement",
+    "",
+    "For risks requiring action under Section 3252 of Title10, U.S.C., in coordination with the USD(A&S) and the USD(I&S), prepares and executes an action package that contains a joint recommendation of the DoD CIO and USD(A&S) on the basis of a risk assessment by the USD(I&S), regarding the assessment of a significant supply chain risk, the scope of applicability, and required or recommended mitigations. The Joint Recommendation package",
+    null
+   ]
+  },
+  {
+   "document": "DODI 5200.48",
+   "requirement_id": "REQ-c5e3988b8449",
+   "first": [
+    "requirement",
+    "",
+    "The DoD CUI Information Security Program will promote, to the maximum extent possible, information sharing, facilitate informed resource use, and simplify its management and implementation while",
+    null
+   ],
+   "second": [
+    "requirement",
+    "",
+    "The DoD CUI Information Security Program",
+    null
+   ]
+  },
+  {
+   "document": "afi10-2402",
+   "requirement_id": "REQ-1279116f315d",
+   "first": [
+    "requirement",
+    "",
+    "Chief, Information Dominance and Chief Information Officer (SAF/CIO A6).",
+    null
+   ],
+   "second": [
+    "requirement",
+    "Chief, Information Dominance and Chief Information Officer (SAF/CIO A6).",
+    "",
+    null
+   ]
+  },
+  {
+   "document": "afi13-550",
+   "requirement_id": "REQ-712161c0ce8e",
+   "first": [
+    "requirement",
+    "",
+    "SAF/AQ will:",
+    null
+   ],
+   "second": [
+    "requirement",
+    "SAF/AQ",
+    "SAF/AQ will:",
+    null
+   ]
+  }
+ ]
+}
