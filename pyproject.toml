@@ -11,10 +11,17 @@ license = { text = "AGPL-3.0-or-later" }
 requires-python = ">=3.12"
 dependencies = [
     "docling==2.94.0",
+    # WP-45.11: docling's own pins on these are open ranges, so a fresh install could resolve a
+    # newer chunker/parser than the one every Phase 45 measurement used. Held at the resolved
+    # versions of the known-good set (docling 2.94.0 stays the last version we measured as clean;
+    # 2.123.0 onward regressed list/code handling -- docs/PHASE45_WP4510_PLAN.md).
+    "docling-core==2.99.0",
+    "docling-parse==5.7.0",
+    "docling-ibm-models==3.13.0",
     "fastembed==0.7.4",
     "qdrant-client==1.17.0",
     "ollama==0.6.1",
-    "requests==2.33.0",
+    "requests==2.34.2",
     "openpyxl==3.1.5",
     "fastapi==0.115.12",
     "uvicorn==0.34.3",
