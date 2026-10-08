@@ -188,6 +188,7 @@ def _format_breadcrumb(section_title_path: list[str], parent_header_text: str | 
     return ""
 
 
+# Single-item cache: only the document currently being chunked is kept (the pipeline chunks one document at a time); another document just rebuilds the serializer.
 _SERIALIZER_CACHE: dict = {}
 
 
