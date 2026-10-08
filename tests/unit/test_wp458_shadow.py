@@ -73,12 +73,33 @@ def test_routes_compare_production_and_resolver_stems():
     assert SH.route(row("A", "a")) == "same" and SH.route(row("A", "B")) == "both some, different" and SH.route(row("", "")) == "both none"
 
 
+def test_an_unavailable_resolver_overrides_any_stale_ledger(tmp_path):
+    docs = _docs()
+    ledger = tmp_path / "resolver.jsonl"
+    ledger.write_text(json.dumps({"document": "D", "candidate_id": "r1", "status": "complete", "issues": [], "selection": {"kind": "requirement"},
+                                  "answer": {"status": {"value": "obligation"}, "actor": {"value": "A"}, "parent": {"value": "B"}}}) + "\n")
+    rows = SH.shadow_rows(docs, ledger, unavailable=True)
+    assert rows[0]["flag"] == "resolver unavailable" and rows[0]["resolver_string"] == ""
+
+
+def test_the_snapshot_hashes_the_records_file_actually_used(tmp_path):
+    base = tmp_path / "D_20260101_000000"
+    base.mkdir()
+    (base / "D_requirements_enriched.jsonl").write_text("")  # empty: the loader falls back to the normalized file
+    (base / "D_requirements_normalized.jsonl").write_text('{"requirement_id": "r", "chunk_id": 1, "source_quote": "q"}\n')
+    info = {"dir": str(base), "records_path": str(base / "D_requirements_normalized.jsonl")}
+    first = SH.snapshot({"D": info})["D"]
+    assert first["records_file"] == "D_requirements_normalized.jsonl"
+    (base / "D_requirements_normalized.jsonl").write_text('{"requirement_id": "r2"}\n')
+    assert SH.snapshot({"D": info})["D"]["records_sha256"] != first["records_sha256"]
+
+
 def test_a_report_refuses_inputs_that_changed_since_the_run(tmp_path):
     base = tmp_path / "D_20260101_000000"
     base.mkdir()
     (base / "D_chunks.jsonl").write_text('{"chunk_id": 1}\n')
     (base / "D_requirements_normalized.jsonl").write_text('{"requirement_id": "r"}\n')
-    docs = {"D": {"dir": str(base), "chunks": {}, "step": {}, "records": []}}
+    docs = {"D": {"dir": str(base), "chunks": {}, "step": {}, "records": [], "records_path": str(base / "D_requirements_normalized.jsonl")}}
     (tmp_path / "L").mkdir()
     (tmp_path / "L" / "run_info.json").write_text(json.dumps({"sources": SH.snapshot(docs)}))
     SH.check_snapshot(docs, "L", tmp_path)  # unchanged: fine

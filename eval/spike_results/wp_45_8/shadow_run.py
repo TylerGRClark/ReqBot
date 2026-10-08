@@ -111,12 +111,16 @@ def load_source(source):
     out = {}
     for doc, d in sorted(dirs.items()):
         chunks = {c["chunk_id"]: c for c in _lines(d / f"{doc}_chunks.jsonl")}
-        records = _lines(d / f"{doc}_requirements_enriched.jsonl") or _lines(d / f"{doc}_requirements_normalized.jsonl")
+        records_path = d / f"{doc}_requirements_enriched.jsonl"
+        records = _lines(records_path)
+        if not records:  # no enriched file, or an empty one: the normalized records are the ones used
+            records_path = d / f"{doc}_requirements_normalized.jsonl"
+            records = _lines(records_path)
         step = {}
         for r in _lines(d / f"{doc}_extracted_requirements.jsonl"):
             step.setdefault(r.get("chunk_id"), []).append(r)
         if records:
-            out[doc] = {"chunks": chunks, "step": step, "records": records, "dir": str(d)}
+            out[doc] = {"chunks": chunks, "step": step, "records": records, "dir": str(d), "records_path": str(records_path)}
     if not out:
         raise SystemExit(f"no document with records found for --source {source}")
     return out
@@ -144,9 +148,8 @@ def snapshot(docs):
     out = {}
     for doc, info in docs.items():
         d = Path(info["dir"])
-        records = d / f"{doc}_requirements_enriched.jsonl"
-        out[doc] = {"dir": str(d), "chunks_sha256": sha(d / f"{doc}_chunks.jsonl"),
-                    "records_sha256": sha(records if records.exists() else d / f"{doc}_requirements_normalized.jsonl"),
+        out[doc] = {"dir": str(d), "chunks_sha256": sha(d / f"{doc}_chunks.jsonl"), "records_file": Path(info["records_path"]).name,
+                    "records_sha256": sha(info["records_path"]),
                     "step_sha256": sha(d / f"{doc}_extracted_requirements.jsonl")}
     return out
 
@@ -206,7 +209,7 @@ def shadow_rows(docs, ledger_path, unavailable=False):
             key = (doc, rec.get("requirement_id"))
             row = {"document": doc, "requirement_id": rec.get("requirement_id"), "chunk_id": rec.get("chunk_id"), "production_stem": rec.get("parent_stem") or "",
                    "resolver_string": "", "kind": None, "strength": None, "actor": "", "parent": "", "flag": None}
-            led = ledger.get(key)
+            led = None if unavailable else ledger.get(key)  # an unavailable resolver overrides any earlier ledger: nothing stale is joined
             if key in reason:
                 row["flag"] = f"not sent: {reason[key]}"
             elif led is None:
