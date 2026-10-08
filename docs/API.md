@@ -221,8 +221,9 @@ The checklist envelope contains:
 | `generator` | `{tool, command}`. |
 | `document` | `{document_id, source_pdf}`. |
 | `profile` | Selected profile name. |
-| `summary` | `{total_items, items_requiring_review, items_with_flags}`. |
+| `summary` | `{total_items, items_requiring_review, items_with_flags, possible_missed}`. |
 | `items` | Checklist item objects. |
+| `possible_missed` | Item-shaped objects for passages of the document that look like obligations but were not extracted, found by a rule-based text scan (modal word or imperative opener, not a lead-in ending in a colon, not covered by any extracted quote). Their `checklist_item_id` starts with `MISS-`, `item_flags` contains `possible_missed`, and they are not counted in `total_items`. A prompt to check, not requirements: some are descriptions or examples. Empty when the chunk file is not beside the requirements. |
 
 Each item includes `checklist_item_id`, `requirement_ids`, `domain_tags`,
 `source_ref`, `page_refs`, `section_title_path`, `source_quote`, `confidence`,

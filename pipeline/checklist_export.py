@@ -91,7 +91,7 @@ def to_csv(checklist: dict) -> str:
     buf = io.StringIO()
     writer = csv.DictWriter(buf, fieldnames=_CSV_COLUMNS, lineterminator="\r\n")
     writer.writeheader()
-    for item in checklist.get("items", []):
+    for item in checklist.get("items", []) + checklist.get("possible_missed", []):
         writer.writerow(_csv_row(item))
     return buf.getvalue()
 
@@ -246,7 +246,7 @@ def to_xlsx(checklist: dict) -> bytes:
         ws.column_dimensions[get_column_letter(col_idx)].width = width
 
     # Data rows
-    for item in checklist.get("items", []):
+    def write_item(item):
         flagged = _needs_attention(item)
         row_fill = _FLAGGED_FILL if flagged else None
         confidence_val = item.get("confidence") or 0.0
@@ -281,8 +281,26 @@ def to_xlsx(checklist: dict) -> bytes:
         # Status: register with data validation
         dv.add(ws.cell(row=row_num, column=8))
 
+    for item in checklist.get("items", []):
+        write_item(item)
+
+    # Auto-filter covers the extracted rows only; the possible-missed section below is separate
+    last_item_row = ws.max_row
+
+    missed = checklist.get("possible_missed", [])
+    if missed:
+        banner_row = ws.max_row + 2
+        banner = ws.cell(
+            row=banner_row, column=1,
+            value=f"POSSIBLE MISSED REQUIREMENTS ({len(missed)}): found in the document text but not extracted. Confirm each; they are not counted above.",
+        )
+        banner.font = Font(bold=True, size=10)
+        ws.merge_cells(start_row=banner_row, start_column=1, end_row=banner_row, end_column=len(_COLS))
+        for item in missed:
+            write_item(item)
+
     # Auto-filter: set after rows are written so range covers all data rows
-    ws.auto_filter.ref = f"A2:{get_column_letter(len(_COLS))}{ws.max_row}"
+    ws.auto_filter.ref = f"A2:{get_column_letter(len(_COLS))}{last_item_row}"
 
     buf = io.BytesIO()
     wb.save(buf)
@@ -312,5 +330,18 @@ def to_markdown(checklist: dict) -> str:
 
     for i, item in enumerate(checklist.get("items", []), start=1):
         lines.append(_md_item(item, i))
+
+    missed = checklist.get("possible_missed", [])
+    if missed:
+        lines += [
+            "# Possible missed requirements",
+            "",
+            f"{len(missed)} passage(s) look like obligations but were not extracted (found by a text scan). Confirm each; they are not counted above.",
+            "",
+            "---",
+            "",
+        ]
+        for i, item in enumerate(missed, start=1):
+            lines.append(_md_item(item, i))
 
     return "\n".join(lines)

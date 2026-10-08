@@ -70,8 +70,11 @@ def _is_verb(word: str, verbs) -> bool:
     return word in verbs or (word.endswith("s") and word[:-1] in verbs) or (word.endswith("es") and word[:-2] in verbs)
 
 
+_PARAGRAPH_NUMBER = re.compile(r"^\W*\d+(?:\.\d+)*\.?\s+")
+
+
 def _first_word(quote: str) -> str:
-    text = _LIST_MARKER.sub("", quote or "", count=1).lstrip("( ")
+    text = _PARAGRAPH_NUMBER.sub("", _LIST_MARKER.sub("", quote or "", count=1), count=1).lstrip("( ")
     m = re.match(r"[A-Za-z][A-Za-z-]*", text)
     return m.group(0).lower() if m else ""
 

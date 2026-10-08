@@ -23,7 +23,7 @@ if str(_ROOT) not in sys.path:
 
 from core.artifact_resolver import doc_key_from_requirements_path, resolve_requirement_file
 from core.profiles import load_profile
-from services import checklist_audit
+from services import checklist_audit, checklist_missed
 
 log = logging.getLogger(__name__)
 
@@ -95,6 +95,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     chunks = _load_chunks(jsonl_path)  # WP-46.1: the document's own text, for the passage column; {} when the chunk file is not beside the requirements
 
     items = []
+    all_quotes: list[str] = []
     document_id = ""
     source_pdf = ""
     skipped = 0
@@ -116,6 +117,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
 
             req_id = req.get("requirement_id", "")
             source_quote = req.get("source_quote", "")
+            all_quotes.append(source_quote)
 
             # Hard provenance anchors — missing either means no checklist item
             if not req_id or not source_quote:
@@ -183,6 +185,9 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     if skipped:
         log.info("Skipped %d record(s) missing requirement_id or source_quote", skipped)
 
+    # WP-46.2: passages that look like obligations but were not extracted (rule-based; listed apart from the items, never counted as items)
+    possible_missed = checklist_missed.find_possible_missed(chunks, all_quotes, profile.get("obligation_verbs", [])) if chunks else []
+
     return {
         "format": "reqbot-checklist",
         "format_version": "1.1",
@@ -200,6 +205,8 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             "total_items": len(items),
             "items_requiring_review": sum(1 for i in items if i["requires_human_review"]),
             "items_with_flags": sum(1 for i in items if i["item_flags"]),
+            "possible_missed": len(possible_missed),
         },
         "items": items,
+        "possible_missed": possible_missed,
     }
