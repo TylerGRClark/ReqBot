@@ -33,15 +33,18 @@ ARMS = ("resolver", "hybrid")
 
 
 def resolver_strings(shadow_path=SHADOW, report_path=STAGE_A_REPORT):
-    """{requirement_id: string}: the Stage A string for each record that has one the addendum allows (unflagged, spans verbatim)."""
+    """({requirement_id: string}, evaluated ids): the Stage A string for each record that has one the addendum allows (unflagged, spans verbatim), and the ids Stage A
+    covered at all, so a record Stage A never saw is not mistaken for one the resolver abstained on."""
     bad = {b["requirement_id"] for b in json.loads(Path(report_path).read_text(encoding="utf-8"))["spans_not_in_document"]}
-    out = {}
+    out, evaluated = {}, set()
     for line in Path(shadow_path).read_text(encoding="utf-8").splitlines():
         if line.strip():
             r = json.loads(line)
-            if not r["flag"] and r["resolver_string"].strip() and r["requirement_id"] not in bad:
-                out[r["requirement_id"]] = r["resolver_string"].strip()
-    return out
+            evaluated.add(r["requirement_id"])
+            string = (r.get("resolver_string") or "").strip()
+            if not r["flag"] and string and r["requirement_id"] not in bad:
+                out[r["requirement_id"]] = string
+    return out, evaluated
 
 
 def resolver_text(payload, string):
@@ -70,7 +73,7 @@ def run(args):
     frozen = RT.verify_frozen()
     groups, targets = RT.load_targets()
     gold = RT.load_gold()
-    strings = resolver_strings()
+    strings, evaluated = resolver_strings()
     outdir = _HERE / "outputs"
     t0 = time.time()
 
@@ -78,6 +81,10 @@ def run(args):
     earlier = json.loads((C1 / "outputs" / "results_plain.json").read_text(encoding="utf-8"))["manifest"]["snapshot"]["digest"]
     not_indexed = [t["rid"] for t in targets if t["requirement_id"] not in points]
     targets = [t for t in targets if t["requirement_id"] in points]
+    unseen_targets = [t["rid"] for t in targets if t["requirement_id"] not in evaluated]
+    if unseen_targets:
+        sys.exit(f"Stage A did not cover these tested records (the index or the corpus changed since Stage A): {unseen_targets}")
+    not_in_stage_a = sorted(rid for rid in points if rid not in evaluated)  # keep production's vectors for these in both arms; reported
     client = E.build_memory_index(points, info["dense_size"])
     oc = ollama.Client(host=args.ollama_url)
     sm = SparseTextEmbedding(model_name=SPARSE_MODEL)
@@ -85,8 +92,11 @@ def run(args):
     texts = {"resolver": {}, "hybrid": {}}
     for requirement_id, p in points.items():
         s = strings.get(requirement_id, "")
-        texts["resolver"][requirement_id] = resolver_text(p["payload"], s)
-        texts["hybrid"][requirement_id] = hybrid_text(p["payload"], s)
+        if requirement_id in evaluated:
+            texts["resolver"][requirement_id] = resolver_text(p["payload"], s)
+            texts["hybrid"][requirement_id] = hybrid_text(p["payload"], s)
+        else:  # not covered by Stage A: no resolver result authorizes a change
+            texts["resolver"][requirement_id] = texts["hybrid"][requirement_id] = V.production_text(p["payload"])
     target_ids = {t["requirement_id"] for t in targets}
     all_texts = sorted({tx for arm in ARMS for tx in texts[arm].values()})
     dvec = dict(zip(all_texts, E.embed_dense(all_texts, oc, EMBEDDING_MODEL)))
@@ -152,7 +162,7 @@ def run(args):
     manifest = {
         "script": "eval/spike_results/wp_45_8/stage_b_run.py", "inputs_mode": args.inputs, "repeat": args.repeat if args.inputs == "prod" else None,
         "frozen_hashes": frozen["sha256"], "snapshot": {**info, "digest": snap_digest, "digest_matches_wp451c_results": snap_digest == earlier, "earlier_digest": earlier},
-        "strings": {"records_with_string": sum(1 for rid in points if rid in strings), "records_in_index": len(points),
+        "strings": {"records_with_string": sum(1 for rid in points if rid in strings), "records_in_index": len(points), "index_records_not_in_stage_a": not_in_stage_a,
                     "targets_with_string": sum(1 for t in targets if t["requirement_id"] in strings), "targets": len(targets),
                     "shadow_output_sha256": sha256(SHADOW), "stage_a_report_sha256": sha256(STAGE_A_REPORT)},
         "constants": {"top_k": E.TOP_K, "min_score": E.MIN_SCORE, "fusion_limit": E.FUSION_LIMIT, "prefetch_per_leg": E.PREFETCH, "diagnostic_depth": E.DIAG_DEPTH},

@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import logging
 import sys
 from pathlib import Path
 
@@ -19,6 +20,7 @@ def _load(name):
 
 
 RUN, AN = _load("stage_b_run"), _load("stage_b_analyze")
+logging.disable(logging.NOTSET)  # the apparatus' run_test.py turns logging off when imported; do not leak that into other tests
 PAYLOAD = {"source_quote": "(a) Report findings.", "embedding_text": "Old stem:", "source_ref": "1.2", "requirement_id": "REQ-1"}
 
 
@@ -27,12 +29,13 @@ def test_strings_exclude_flagged_rows_non_verbatim_spans_and_empty_strings(tmp_p
     rows = [
         {"requirement_id": "a", "flag": None, "resolver_string": "The Director shall:"},
         {"requirement_id": "b", "flag": "checker error", "resolver_string": "x"},
-        {"requirement_id": "c", "flag": None, "resolver_string": ""},
+        {"requirement_id": "c", "flag": None, "resolver_string": None},
         {"requirement_id": "d", "flag": None, "resolver_string": "not verbatim"},
     ]
     shadow.write_text("".join(json.dumps(r) + "\n" for r in rows))
     report.write_text(json.dumps({"spans_not_in_document": [{"requirement_id": "d"}]}))
-    assert RUN.resolver_strings(shadow, report) == {"a": "The Director shall:"}
+    strings, evaluated = RUN.resolver_strings(shadow, report)
+    assert strings == {"a": "The Director shall:"} and evaluated == {"a", "b", "c", "d"}  # evaluated ids include the abstentions, so unseen ids can be told apart
 
 
 def test_resolver_text_uses_the_string_or_the_quote_alone_and_hybrid_falls_back_to_production():
@@ -98,3 +101,30 @@ def test_g_needs_three_runs_and_c_needs_two_runs_wholly_below_the_floor():
     assert out["C"] and out["outcome"].startswith("no proposal: C")
     assert not AN.evaluate(g3, {**GOLD_OK, "plain": {"hi": -0.03}})["C"]  # one run is not enough
     assert not AN.evaluate(g3, {**GOLD_OK, "plain": {"hi": -0.02}, "prod_r1": {"hi": -0.01}})["C"]  # an interval that reaches -0.02 does not trigger
+
+
+def test_analyze_runs_end_to_end_on_synthetic_results(tmp_path):
+    import random
+
+    groups = json.loads((ROOT / "eval/spike_results/wp_45_1c/groups.json").read_text())
+    rng = random.Random(1)
+    for run in AN.RUNS:
+        rows = []
+        for g, rids in groups["groups"].items():
+            for rid in rids:
+                for style in AN.STYLES:
+                    base = rng.randint(1, 30)
+                    for arm, mode in (("production", "base"), ("resolver", "target_only"), ("hybrid", "target_only")):
+                        rank = base if arm == "production" else max(1, base - rng.randint(0, 3))
+                        rows.append({"rid": rid, "style": style, "arm": arm, "mode": mode, "group": g, "no_party": False, "has_string": rng.random() < 0.8,
+                                     "best_rank": rank, "worst_rank": rank, "score": 0.1})
+        gold = []
+        for q in range(35):
+            for arm, mode in (("production", "base"), ("resolver", "cohort"), ("hybrid", "cohort")):
+                gold.append({"query_id": f"g{q}", "arm": arm, "mode": mode, "recall@10": float(q % 2), "mrr": 0.5})
+        (tmp_path / f"stageb_results_{run}.json").write_text(json.dumps({"manifest": {"snapshot": {}, "strings": {}, "excluded_not_in_live_index": []}, "rows": rows, "gold": gold}))
+    verdict, detail = AN.analyze(tmp_path, "resolver")
+    assert verdict["outcome"] in ("no demonstrated benefit", "proposal for integration") or verdict["outcome"].startswith("no proposal")
+    assert set(detail["plain"]["other_metrics"]) == {"recall@5", "recall@20", "mrr"}
+    cov = detail["plain"]["string_coverage"]["bare"]
+    assert cov["with_string"] + cov["without_string"] == len(groups["groups"]["bare"])

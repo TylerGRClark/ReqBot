@@ -94,6 +94,14 @@ def analyze(directory, arm="resolver", metric="recall@10"):
         gp = A.gold_paired(data["gold"], arm, "cohort")[metric]
         gold[run] = gp
         detail[run]["gold"] = gp
+        detail[run]["gold_mrr"] = A.gold_paired(data["gold"], arm, "cohort")["mrr"]
+        # pre-registered diagnostics, reported and never gating: the other metrics, and how many records in each group have a resolver string
+        detail[run]["other_metrics"] = {
+            name: {style: {group: A.summarize(rows, rid_docs, [x for x in rids if not (style == "party" and x in no_party)], arm, "target_only", style, name)
+                           for group, rids in by_group.items()} for style in STYLES} for name in ("recall@5", "recall@20", "mrr")}
+        has = {(r["rid"]): r["has_string"] for r in rows if r["arm"] == arm and r["mode"] == "target_only"}
+        detail[run]["string_coverage"] = {group: {"with_string": sum(1 for x in rids if has.get(x)), "without_string": sum(1 for x in rids if x in has and not has[x])}
+                                          for group, rids in by_group.items()}
         detail[run]["manifest"] = {k: data["manifest"][k] for k in ("snapshot", "strings", "excluded_not_in_live_index")}
     return evaluate(cells, gold), detail
 
