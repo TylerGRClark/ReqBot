@@ -314,3 +314,16 @@ def test_an_oversized_grid_from_a_merged_chunk_logs_the_same_warning(caplog, mon
     with caplog.at_level("WARNING", logger=ct.log.name):
         ct._chunk_raw_text(chunk, doc)
     assert any("approaching" in r.message for r in caplog.records)
+
+
+def test_a_serializer_failure_keeps_the_chunkers_text_instead_of_crashing(monkeypatch):
+    import pipeline.chunk_text as ct
+
+    class Boom:
+        def serialize(self, **kw):
+            raise RuntimeError("boom")
+
+    doc = _merged_doc()
+    chunk = next(c for c in _chunks(doc) if FLAT in c.text)
+    monkeypatch.setattr(ct, "_chunk_serializer", lambda d: Boom())
+    assert FLAT in ct._chunk_raw_text(chunk, doc)  # the flat block stays; no crash

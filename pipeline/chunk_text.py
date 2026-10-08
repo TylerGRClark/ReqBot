@@ -217,12 +217,12 @@ def _generic_tables(chunk: object, doc: object):
         return None
     try:
         from docling_core.types.doc import SectionHeaderItem, TableItem, TitleItem
-        from docling_core.types.doc.document import RefItem
+        from docling_core.types.doc.document import DocItem, RefItem
     except ImportError:
         return None
     tables, others = [], 0
     for item in chunk.meta.doc_items:
-        if type(item).__name__ != "DocItem":
+        if type(item) is not DocItem:
             return None
         ref = getattr(item, "self_ref", None)
         try:
@@ -258,7 +258,10 @@ def _raw_text_with_table_grids(chunk: object, doc: object, tables: list, table_o
                     grid = ""
             if not grid:
                 continue  # no usable grid: keep the flat text, and do not mark the table seen
-        flat = (serializer.serialize(item=table).text or "").strip()
+        try:
+            flat = (serializer.serialize(item=table).text or "").strip()
+        except Exception:
+            continue  # cannot locate the flat block safely: keep the chunker's text for this table
         if flat and flat in text:
             text = text.replace(flat, grid, 1)
         elif table_only:
