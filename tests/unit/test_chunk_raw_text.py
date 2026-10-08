@@ -327,3 +327,20 @@ def test_a_serializer_failure_keeps_the_chunkers_text_instead_of_crashing(monkey
     chunk = next(c for c in _chunks(doc) if FLAT in c.text)
     monkeypatch.setattr(ct, "_chunk_serializer", lambda d: Boom())
     assert FLAT in ct._chunk_raw_text(chunk, doc)  # the flat block stays; no crash
+
+
+def test_table_only_fallback_never_discards_another_tables_grid(monkeypatch):
+    import types
+
+    import pipeline.chunk_text as ct
+
+    def table(ref, grid):
+        return types.SimpleNamespace(self_ref=ref, export_to_markdown=lambda *a, **k: grid)
+
+    a, b = table("#/tables/0", "| A |\n|---|"), table("#/tables/1", "| B |\n|---|")
+    flats = {"#/tables/0": "A = 1", "#/tables/1": "B = 2 (not in the chunk text: a split table)"}
+    serializer = types.SimpleNamespace(serialize=lambda item: types.SimpleNamespace(text=flats[item.self_ref]))
+    monkeypatch.setattr(ct, "_chunk_serializer", lambda d: serializer)
+    chunk = types.SimpleNamespace(text="A = 1")
+    out = ct._raw_text_with_table_grids(chunk, object(), [a, b], True, set())
+    assert "| A |" in out  # table A's grid survives; B's missing flat block does not wipe the text

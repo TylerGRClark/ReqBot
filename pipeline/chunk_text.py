@@ -265,7 +265,7 @@ def _raw_text_with_table_grids(chunk: object, doc: object, tables: list, table_o
             continue  # cannot locate the flat block safely: keep the chunker's text for this table
         if flat and flat in text:
             text = text.replace(flat, grid, 1)
-        elif table_only:
+        elif table_only and len(tables) == 1:  # with several tables the whole-text swap would discard the others' grids
             text = grid
         else:
             continue
