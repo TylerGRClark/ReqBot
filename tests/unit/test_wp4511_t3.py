@@ -45,3 +45,26 @@ def test_an_unfinished_arm_is_refused_before_any_number_is_computed(tmp_path, mo
     monkeypatch.setattr(T3, "SCRATCH", tmp_path)
     with pytest.raises(SystemExit):
         T3.validate([("T2a", "d2.94.0:T2_256"), ("T3_512", "d2.94.0:T2_512")])
+
+
+def _r2():
+    path = ROOT / "eval/spike_results/wp_45_11/r2_sample.py"
+    spec = importlib.util.spec_from_file_location("r2_sample", path)
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["r2_sample"] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_r2_pools_and_seeded_draw_are_deterministic():
+    r2 = _r2()
+    long = lambda n: f"the component shall perform requirement number {n} exactly as written here"  # noqa: E731
+    a = {"D": [long(i) for i in range(100)]}
+    b = {"D": [long(i) for i in range(100)]}
+    arm = {"D": [long(i) for i in range(30)]}
+    both, new = r2.pools(a, b, arm)["D"]
+    assert len(both) == 70 and new == []
+    first, second = r2.draw(both), r2.draw(list(reversed(both)))
+    assert first == second and len(first) == 40 and first == sorted(first)
+    assert r2.draw(both[:5]) == sorted(both[:5])
+    assert r2.pools(a, b, {"D": [long(500)]})["D"][1] == [long(500)]
