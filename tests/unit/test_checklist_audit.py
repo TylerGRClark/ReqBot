@@ -63,3 +63,14 @@ def test_generate_adds_the_audit_layout_and_flags_a_missing_chunk_file(tmp_path)
     assert result["format_version"] == "1.1" and "The Director will:" in item["passage"] and ">> (a) Review logs monthly. <<" in item["passage"]
     assert "no_passage" not in item["item_flags"] and "list_item" in item["item_flags"]
     assert result["summary"]["items_with_flags"] == 1
+
+
+def test_chunk_file_is_found_when_the_document_name_contains_requirements(tmp_path):
+    run_dir = tmp_path / "policy_requirements_v1_20260101_120000"
+    run_dir.mkdir()
+    rec = {"requirement_id": "REQ-1", "source_quote": "Review logs monthly.", "source_ref": "2.1", "chunk_id": 1, "section_title_path": ["Logs"], "domain_tags": ["x"],
+           "confidence": 0.9, "page_start": 1, "page_end": 1}
+    (run_dir / "policy_requirements_v1_requirements_normalized.jsonl").write_text(json.dumps(rec) + "\n")
+    (run_dir / "policy_requirements_v1_chunks.jsonl").write_text(json.dumps({"chunk_id": 1, "raw_text": "Review logs monthly."}) + "\n")
+    item = generate(tmp_path, "policy_requirements_v1", "cybersecurity")["items"][0]
+    assert "no_passage" not in item["item_flags"] and ">> Review logs monthly. <<" in item["passage"]

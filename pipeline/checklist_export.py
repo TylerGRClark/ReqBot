@@ -258,7 +258,7 @@ def to_xlsx(checklist: dict) -> bytes:
             _csv_safe(item.get("status") or ""),
             _csv_safe(item.get("assessor_notes") or ""),
             _csv_safe(_join(item.get("item_flags") or [], "; ")),
-            "Yes" if flagged else "No",
+            "Yes" if item.get("requires_human_review", False) else "No",
             _csv_safe(_join(item.get("review_reasons") or [], "; ")),
             confidence_val,
             _csv_safe(item.get("checklist_item_id") or ""),

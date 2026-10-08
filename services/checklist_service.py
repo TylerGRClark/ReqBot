@@ -21,7 +21,7 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from core.artifact_resolver import resolve_requirement_file
+from core.artifact_resolver import doc_key_from_requirements_path, resolve_requirement_file
 from core.profiles import load_profile
 from services import checklist_audit
 
@@ -67,8 +67,7 @@ def _page_refs(req: dict) -> list[int]:
 
 def _load_chunks(jsonl_path: Path) -> dict:
     """{chunk_id: chunk record} from the *_chunks.jsonl beside the requirements file (same run directory), or {} if it is absent or unreadable."""
-    prefix = jsonl_path.name.split("_requirements_")[0]
-    path = jsonl_path.parent / f"{prefix}_chunks.jsonl"
+    path = jsonl_path.parent / f"{doc_key_from_requirements_path(jsonl_path)}_chunks.jsonl"
     out: dict = {}
     try:
         for line in path.read_text(encoding="utf-8").splitlines():

@@ -499,4 +499,5 @@ def test_sheet_shades_only_rows_with_a_specific_reason_not_low_confidence_alone(
     ws = _load_xlsx(to_xlsx({**EMPTY_ENVELOPE, "items": [only_confidence, flagged]}))["Checklist"]
     assert ws.cell(row=3, column=1).fill.patternType is None
     assert ws.cell(row=4, column=1).fill.patternType == "solid"
-    assert [ws.cell(row=r, column=11).value for r in (3, 4)] == ["No", "Yes"]
+    # the Flag column keeps the review state; only the shading uses the narrower "needs attention" rule
+    assert [ws.cell(row=r, column=11).value for r in (3, 4)] == ["Yes", "Yes"]
