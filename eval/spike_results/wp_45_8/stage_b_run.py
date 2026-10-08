@@ -183,7 +183,7 @@ def main():
     cfg = _config.load()
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--inputs", choices=("plain", "prod"), default="plain")
-    ap.add_argument("--repeat", type=int, default=1)
+    ap.add_argument("--repeat", type=int, choices=(1, 2, 3), default=1)
     ap.add_argument("--qdrant-url", default=cfg.qdrant_url)
     ap.add_argument("--ollama-url", default=cfg.ollama_url)
     ap.add_argument("--rewrite-model", default="llama3.1:8b-instruct-q4_K_M")

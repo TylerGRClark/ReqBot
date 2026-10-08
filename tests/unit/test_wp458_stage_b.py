@@ -106,7 +106,7 @@ def test_g_needs_three_runs_and_c_needs_two_runs_wholly_below_the_floor():
 def test_analyze_runs_end_to_end_on_synthetic_results(tmp_path):
     import random
 
-    groups = json.loads((ROOT / "eval/spike_results/wp_45_1c/groups.json").read_text())
+    groups = json.loads((ROOT / "eval/spike_results/wp_45_1c/groups.json").read_text(encoding="utf-8"))
     rng = random.Random(1)
     for run in AN.RUNS:
         rows = []
