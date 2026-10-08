@@ -228,10 +228,9 @@ The checklist envelope contains:
 Each item includes `checklist_item_id`, `requirement_ids`, `domain_tags`,
 `source_ref`, `page_refs`, `section_title_path`, `source_quote`, `confidence`,
 `requires_human_review`, and `review_reasons`. For audit use it also carries
-`citation` (the paragraph number: `source_ref` when that is one, else read back from
+`section_heading` (the section the paragraph sits in, up to two levels, read from the paragraph numbering, e.g. `3.6 Incident Analysis`; the converter's `section_title_path` can be nested wrongly), `citation` (the paragraph number: `source_ref` when that is one, else read back from
 the document and marked `(inferred)`; `source_ref` itself is never replaced),
-`applies_to` (the heading that names the responsible party, when the document's
-structure gives one), `parent_ref` / `parent_text` (the parent paragraph read from
+`applies_to` (the responsible party: for a row with a dotted paragraph number the title of the nearest numbered ancestor when it names a party, never the converter's path, else the path rule), `parent_ref` / `parent_text` (the parent paragraph read from
 the document's own numbering, verbatim: 2.17.22 sits under 2.17; empty for a
 generic label or a non-numbered reference), `passage` (the document's own text around the quote, with
 the requirement marked `>> <<`; for a list item or a quote that starts

@@ -14,6 +14,7 @@ _CSV_COLUMNS = [
     "source_ref",
     "citation",
     "section_title_path",
+    "section_heading",
     "page_refs",
     "applies_to",
     "parent_paragraph",
@@ -71,6 +72,11 @@ def _ref(item: dict) -> str:
     return item.get("citation") or item.get("source_ref") or ""
 
 
+def _section(item: dict) -> str:
+    """The section to show: the heading read from the paragraph numbering when there is one (the converter's section path can be nested wrongly), else the section path."""
+    return item.get("section_heading") or _join(item.get("section_title_path") or [], " > ")
+
+
 def _parent_label(item: dict) -> str:
     """"2.17 MAJCOM/DRUs." : the parent paragraph's number and its text, copied from the document; empty when there is none."""
     text = item.get("parent_text") or ""
@@ -82,6 +88,7 @@ def _csv_row(item: dict) -> dict:
         "source_ref": item.get("source_ref", ""),
         "citation": item.get("citation", ""),
         "section_title_path": _join(item.get("section_title_path") or [], " > "),
+        "section_heading": item.get("section_heading", ""),
         "page_refs": _join(item.get("page_refs") or [], ", "),
         "applies_to": item.get("applies_to", ""),
         "parent_paragraph": _parent_label(item),
@@ -117,7 +124,7 @@ def to_json(checklist: dict) -> str:
 
 
 def _md_item(item: dict, index: int) -> str:
-    section = _join(item.get("section_title_path") or [], " > ")
+    section = _section(item)
     pages = _join(item.get("page_refs") or [], ", ")
     header_parts = []
     if section:
@@ -273,7 +280,7 @@ def to_xlsx(checklist: dict) -> bytes:
 
         values = [
             _csv_safe(_ref(item)),
-            _csv_safe(_join(item.get("section_title_path") or [], " > ")),
+            _csv_safe(_section(item)),
             _csv_safe(_join(item.get("page_refs") or [], ", ")),
             _csv_safe(item.get("applies_to") or ""),
             _csv_safe(_parent_label(item)),

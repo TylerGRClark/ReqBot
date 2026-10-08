@@ -8,7 +8,8 @@ WP-45.7 rule (`score_resolver.overlaps`: at least 80% of its distinctive words a
 end, an acronym, or a role word such as Director, Chief, Commander, Wing, MAJCOM). The original, looser score (overlap alone) is reported beside it. For records labeled
 "complete" (a sentence that stands alone) any shown parent counts as misleading; for "needs a lead-in" records a parent that does not match counts as misleading when shown and
 as none when absent. The sets are kept apart: development = the resolver gold's selection half, consumed earlier = its evaluation half, test = the fresh gold. 25 + 12 AFI
-records on three documents, one labeler; exploratory, and nothing here is tuned from the result.
+records on three documents, one labeler; exploratory. The "applies to" figures are for the number-based rule of WP-46.6, which I adjusted after reading a first run of this
+same script (numbered lead-in paragraphs became titles; a dotted row no longer falls back to the converter's path), so on these 37 records they are development numbers, not held-out.
 """
 import json
 import re
@@ -24,6 +25,7 @@ import score_resolver as SR  # noqa: E402
 
 from services import checklist_audit as A  # noqa: E402
 from services import checklist_missed as M  # noqa: E402
+from services import checklist_service as CS  # noqa: E402
 
 _MODAL = re.compile(r"\b(shall|must|will|should|may|required|are to|is to)\b", re.IGNORECASE)
 _ACRONYM = re.compile(r"\b[A-Z]{2,}[A-Za-z0-9/&-]*")
@@ -57,12 +59,14 @@ def main():
                 for c in chunks:
                     units += [str(p) for p in (c.get("section_title_path") or [])] + M.paragraph_units(c["raw_text"])
                 recs = {json.loads(x)["requirement_id"]: json.loads(x) for x in Path(corpus[doc]["normalized"]).read_text(encoding="utf-8").splitlines() if x.strip()}
-                cache[doc] = (A.paragraph_map(units), recs)
-            pm, recs = cache[doc]
+                cache[doc] = (A.paragraph_map(units), recs, CS._heading_map({c["chunk_id"]: c for c in chunks}))
+            pm, recs, hmap = cache[doc]
             rec = recs.get(g["requirement_id"]) or {}
             ref = rec.get("source_ref", "")
             pref, ptext = A.parent_paragraph(ref, pm)
-            applies = A.applies_to(rec.get("section_title_path"))
+            cite = A.citation(ref, "", rec.get("section_title_path"), rec.get("source_quote", ""))
+            numbered = A.applies_to_numbered(cite, hmap, rec.get("section_title_path"))  # WP-46.6: who the row applies to is read from the numbering when the row has a dotted number
+            applies = numbered if numbered is not None else A.applies_to(rec.get("section_title_path"))
             lead = g["lead_in_text"] if g["standalone"] == "needs_lead_in" else ""
 
             def score(value):

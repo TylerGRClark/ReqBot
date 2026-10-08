@@ -92,6 +92,7 @@ def find_possible_missed(chunks: dict, quotes: list[str], extra_verbs=()) -> lis
                 "page_refs": pages,
                 "section_title_path": path,
                 "applies_to": checklist_audit.applies_to(path),
+                "section_heading": "",
                 "parent_ref": "",
                 "parent_text": "",
                 "source_quote": text,
