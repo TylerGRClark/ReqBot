@@ -6,7 +6,7 @@
 Fall: more than 10% below the LOWER base replicate's total Step D survivors; pool = survivor quotes present in BOTH replicates and absent from the arm.
 Rise: more than 10% above the HIGHER replicate; pool = the arm's survivors absent from both replicates. "Absent" = no survivor of the other side contains the
 quote or is contained in it (both at least 40 characters). Pool sorted by (document, normalized quote); 40 drawn with random.Random(45).sample (all if fewer).
-Each sampled record is printed with its chunk text from the side that holds it, for sorting into (1)/(2)/(3) (fall) or (a)/(b)/(c) (rise). Nothing is sorted here.
+Each sampled record is printed (stdout, and --out) with the text of the chunk the survivor itself came from (its recorded chunk_id), on the side that holds it, for sorting into (1)/(2)/(3) (fall) or (a)/(b)/(c) (rise). Nothing is sorted here.
 """
 
 import argparse
@@ -56,9 +56,13 @@ def main():
     args = ap.parse_args()
     T3.validate([(args.base[0], args.base_chunks), (args.base[1], args.base_chunks), (args.arm, args.arm_chunks)])
     docs = sorted(SA.common.pinned_documents())
-    q = {a: {d: [T3.AC.norm(r.get("source_quote", "")) for r in T3.survivors(a, d)] for d in docs} for a in (*args.base, args.arm)}
+    recs = {a: {d: T3.survivors(a, d) for d in docs} for a in (*args.base, args.arm)}
+    q = {a: {d: [T3.AC.norm(r.get("source_quote") or "") for r in recs[a][d]] for d in docs} for a in recs}
+    chunk_of = {a: {d: {T3.AC.norm(r.get("source_quote") or ""): r.get("chunk_id") for r in recs[a][d]} for d in docs} for a in recs}  # the survivor's own chunk
     totals = {a: sum(len(v) for v in q[a].values()) for a in q}
     low, high = min(totals[b] for b in args.base), max(totals[b] for b in args.base)
+    if not low or not high:
+        raise SystemExit(f"a base replicate has no Step D survivors: {totals}")
     fall = totals[args.arm] < low * (1 - THRESHOLD)
     rise = totals[args.arm] > high * (1 + THRESHOLD)
     report = {"totals": totals, "lower_base": low, "higher_base": high, "arm_over_lower_base": round(totals[args.arm] / low, 4),
@@ -68,14 +72,17 @@ def main():
         pl = pools(q[args.base[0]], q[args.base[1]], q[args.arm])
         flat = [(d, quote) for d, (both, new) in pl.items() for quote in (both if fall else new)]
         report["pool_size"] = len(flat)
-        chunk_spec = args.base_chunks if fall else args.arm_chunks
+        chunk_spec, holder = (args.base_chunks, args.base[0]) if fall else (args.arm_chunks, args.arm)  # the side whose survivor the sampled quote is
+        by_id = {}
         sample = []
         for d, quote in draw(flat):
-            chunk = T3.find_chunk(T3.AC.load_chunks(chunk_spec, d), quote)
-            sample.append({"document": d, "quote": quote, "chunk_id": chunk and chunk["chunk_id"], "chunk_text": chunk and chunk["text"], "class": None})
+            cid = chunk_of[holder][d].get(quote)
+            chunk = by_id.setdefault(d, {c["chunk_id"]: c for c in T3.AC.load_chunks(chunk_spec, d)}).get(cid)
+            sample.append({"document": d, "quote": quote, "chunk_id": cid, "chunk_text": chunk and chunk["text"], "class": None})
         report["sample"] = sample
-    print(json.dumps({k: v for k, v in report.items() if k != "sample"}, indent=1))
+    print(json.dumps(report, indent=1))
     if args.out:
+        Path(args.out).parent.mkdir(parents=True, exist_ok=True)
         Path(args.out).write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
 
 
