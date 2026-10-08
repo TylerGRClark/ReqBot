@@ -19,7 +19,8 @@ _MARKER = re.compile(r"(?m)^[ \t]*(?:[-•*][ \t]+(?=\S)|(?:[-•*][ \t]*)?(?=(?
 _BULLET = re.compile(r"^[ \t]*[-•*][ \t]*")
 _SENTENCE = re.compile(r"(?<=[.;:])\s+(?=[A-Z(])")
 _MODAL = re.compile(r"\b(shall|must|will|should|required to|is responsible|are responsible|is to|are to)\b", re.IGNORECASE)
-_REF = re.compile(r"^\W*(\d+(?:\.\d+)+)\.?\s")
+_NUMBER_ONLY = re.compile(r"^\W*(?:[A-Z]{1,2})?\d+(?:\.\d+)+\.?$")
+_REF = re.compile(r"^\W*((?:[A-Z]{1,2})?\d+(?:\.\d+)+)\.?\s")
 MIN_UNIT_CHARS = 40
 MIN_COVER_CHARS = 25
 MAX_TEXT_CHARS = 700
@@ -38,7 +39,10 @@ def paragraph_units(raw_text: str) -> list[str]:
         # text before the first marker (the end of a paragraph that began in the previous chunk) is a unit of its own
         bounds = ([0] if starts[0] > 0 and raw_text[: starts[0]].strip() else []) + starts + [len(raw_text)]
         return [raw_text[a:b].strip() for a, b in zip(bounds, bounds[1:]) if raw_text[a:b].strip()]
-    return [s.strip() for s in _SENTENCE.split(raw_text) if s.strip()]
+    pieces = [s.strip() for s in _SENTENCE.split(raw_text) if s.strip()]
+    if len(pieces) > 1 and _NUMBER_ONLY.match(pieces[0]):  # "3.6. Incident Analysis. ..." must not be cut into "3.6." and "Incident Analysis. ..."
+        pieces = [pieces[0] + " " + pieces[1]] + pieces[2:]
+    return pieces
 
 
 def _page_range(chunk: dict) -> list[int]:

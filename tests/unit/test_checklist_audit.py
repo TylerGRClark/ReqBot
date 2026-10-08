@@ -144,3 +144,16 @@ def test_applies_to_numbered_names_the_party_from_the_numbered_ancestor_never_fr
 def test_a_numbered_lead_in_paragraph_titles_its_children_with_the_sentence_that_introduces_the_list():
     hmap = A.heading_map([], ["2.3.1. AFOSI is a Federal Law Enforcement agency and a member of the Intelligence Community. The AFOSI:"])
     assert hmap["2.3.1"] == "The AFOSI:"
+
+
+def test_a_chunk_with_one_numbered_paragraph_keeps_its_number_with_its_text():
+    from services import checklist_missed as MM
+    units = MM.paragraph_units("3.6. Incident Analysis .  Incident analysis is a series of analytical steps. Include the mission owner in the process.")
+    assert units[0].startswith("3.6. Incident Analysis") and A.heading_map([], units)["3.6"] == "Incident Analysis"
+
+
+def test_attachment_paragraph_numbers_are_numbers_too():
+    hmap = A.heading_map([], ["A2.2. Reporting Chain. The chain is ...", "A2.2.3.1. Report within 24 hours."])
+    assert hmap["A2.2"] == "Reporting Chain"
+    assert A.section_heading("A2.2.3.1", hmap) == "A2.2 Reporting Chain"
+    assert A.parent_paragraph("A2.2.3.1", A.paragraph_map(["A2.2.3. Parent text here.", "A2.2.3.1. Child."])) == ("A2.2.3", "Parent text here.")

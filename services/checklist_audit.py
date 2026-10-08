@@ -146,8 +146,8 @@ def build_passage(quote: str, chunk, prev_chunk=None, flags=()) -> tuple[str, bo
 # WP-46.3: the parent paragraph from the document's own numbering. AFIs number paragraphs as a hierarchy (2.5.1.1.7.2 sits under 2.5.1.1.7 under 2.5.1.1), so the paragraph a row
 # belongs to is read straight from the document, verbatim; no model and no guess. A row whose number does not look like a dotted paragraph number (a table tag such as "(T-2)")
 # gets none.
-_DOTTED = re.compile(r"^\d+(?:\.\d+)+$")
-_PARA_START = re.compile(r"^\W*(\d+(?:\.\d+)+)\.?\s+(.*)$", re.DOTALL)
+_DOTTED = re.compile(r"^(?:[A-Z]{1,2})?\d+(?:\.\d+)+$")  # an attachment paragraph ("A2.2.3.1") is a paragraph number too
+_PARA_START = re.compile(r"^\W*((?:[A-Z]{1,2})?\d+(?:\.\d+)+)\.?\s+(.*)$", re.DOTALL)
 PARENT_TEXT_CHARS = 300
 
 
@@ -213,7 +213,7 @@ def citation(source_ref: str, passage: str, section_title_path, quote: str = "")
 # WP-46.6: the section a row sits in, from the document's own numbering. The converter nests some headings wrongly (a row of 3.6 "Incident Analysis" can arrive under "Actions >
 # 3.5.2. Methodology"), and some AFI headings are run-in titles at the start of a paragraph ("3.6. Incident Analysis .  Incident analysis is ...") that are not headings at all.
 # So the heading of a number is read from (a) numbered section headings and (b) paragraphs that open with a short Title-Case phrase and a full stop, and a row is placed by its number.
-_RUN_IN_TITLE = re.compile(r"^(?P<t>[A-Z][A-Za-z0-9/&'-]*(?:\s+(?:[A-Z][A-Za-z0-9/&'-]*|and|of|the|for|to|in|on|or)){0,7})\s*\.\s+(?=\S)")
+_RUN_IN_TITLE = re.compile(r"^(?P<t>[A-Z][A-Za-z0-9/&'-]*(?:\s+(?:[A-Z][A-Za-z0-9/&'-]*|and|of|the|for|to|in|on|or)){0,7})\s*\.(?:\s+(?=\S)|$)")
 SECTION_LEVELS = 2
 
 
