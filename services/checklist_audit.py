@@ -74,7 +74,8 @@ _PARAGRAPH_NUMBER = re.compile(r"^\W*\d+(?:\.\d+)*\.?\s+")
 
 
 def _first_word(quote: str) -> str:
-    text = _PARAGRAPH_NUMBER.sub("", _LIST_MARKER.sub("", quote or "", count=1), count=1).lstrip("( ")
+    text = re.sub(r"^\s*[-•*]\s*", "", quote or "", count=1)
+    text = _PARAGRAPH_NUMBER.sub("", _LIST_MARKER.sub("", text, count=1), count=1).lstrip("( ")
     m = re.match(r"[A-Za-z][A-Za-z-]*", text)
     return m.group(0).lower() if m else ""
 

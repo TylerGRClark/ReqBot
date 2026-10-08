@@ -14,7 +14,9 @@ import re
 
 from services import checklist_audit
 
-_MARKER = re.compile(r"(?m)^[ \t]*(?:[-•*][ \t]*)?(?=(?:\d+(?:\.\d+)+\.?|\([a-zA-Z0-9]{1,3}\)|[a-z]\.)[ \t]+\S)")
+# a paragraph starts at a line that opens with a bullet, or with a numbered/lettered marker (optionally after a bullet)
+_MARKER = re.compile(r"(?m)^[ \t]*(?:[-•*][ \t]+(?=\S)|(?:[-•*][ \t]*)?(?=(?:\d+(?:\.\d+)+\.?|\([a-zA-Z0-9]{1,3}\)|[a-z]\.)[ \t]+\S))")
+_BULLET = re.compile(r"^[ \t]*[-•*][ \t]*")
 _SENTENCE = re.compile(r"(?<=[.;:])\s+(?=[A-Z(])")
 _MODAL = re.compile(r"\b(shall|must|will|should|required to|is responsible|are responsible|is to|are to)\b", re.IGNORECASE)
 _REF = re.compile(r"^\W*(\d+(?:\.\d+)+)\.?\s")
@@ -31,11 +33,25 @@ def normalize(text: str) -> str:
 
 def paragraph_units(raw_text: str) -> list[str]:
     """The paragraphs of a chunk: split at numbered/lettered markers when there are at least two, otherwise at sentence ends."""
-    starts = [m.start() for m in _MARKER.finditer(raw_text)]
+    starts = sorted({m.start() for m in _MARKER.finditer(raw_text)})
     if len(starts) >= 2:
-        starts.append(len(raw_text))
-        return [raw_text[a:b].strip() for a, b in zip(starts, starts[1:]) if raw_text[a:b].strip()]
+        # text before the first marker (the end of a paragraph that began in the previous chunk) is a unit of its own
+        bounds = ([0] if starts[0] > 0 and raw_text[: starts[0]].strip() else []) + starts + [len(raw_text)]
+        return [raw_text[a:b].strip() for a, b in zip(bounds, bounds[1:]) if raw_text[a:b].strip()]
     return [s.strip() for s in _SENTENCE.split(raw_text) if s.strip()]
+
+
+def _page_range(chunk: dict) -> list[int]:
+    """Every page the chunk spans: the scan has no finer position, so a candidate is cited to the whole range rather than to the first page only."""
+    try:
+        start = chunk.get("page_start")
+        if start is None:
+            return []
+        start = int(start)
+        end = chunk.get("page_end")
+        return list(range(start, int(end) + 1)) if end is not None and int(end) > start else [start]
+    except (TypeError, ValueError):
+        return []
 
 
 def _covered(unit_norm: str, quotes: list[str]) -> bool:
@@ -51,6 +67,7 @@ def find_possible_missed(chunks: dict, quotes: list[str], extra_verbs=()) -> lis
     for chunk_id in sorted(k for k in chunks if isinstance(k, int)):
         chunk = chunks[chunk_id]
         for unit in paragraph_units(chunk.get("raw_text") or ""):
+            unit = _BULLET.sub("", unit, count=1).strip()
             norm = normalize(unit)
             if len(norm) < MIN_UNIT_CHARS or norm in seen or norm.endswith(":") or unit.count("|") >= 2:
                 continue
@@ -65,14 +82,14 @@ def find_possible_missed(chunks: dict, quotes: list[str], extra_verbs=()) -> lis
                 continue
             path = [str(p) for p in (chunk.get("section_title_path") or [])]
             ref = (_REF.match(unit) or [None, ""])[1]
-            page = chunk.get("page_start")
+            pages = _page_range(chunk)
             text = unit if len(unit) <= MAX_TEXT_CHARS else unit[:MAX_TEXT_CHARS].rsplit(" ", 1)[0] + " ..."
             out.append({
                 "checklist_item_id": "MISS-" + hashlib.sha256(f"{chunk_id}|{norm}".encode()).hexdigest()[:16],
                 "requirement_ids": [],
                 "domain_tags": [],
                 "source_ref": ref,
-                "page_refs": [page] if isinstance(page, int) else [],
+                "page_refs": pages,
                 "section_title_path": path,
                 "applies_to": checklist_audit.applies_to(path),
                 "source_quote": text,

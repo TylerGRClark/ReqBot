@@ -81,3 +81,15 @@ def test_exports_show_the_section_clearly_apart(tmp_path):
     assert banner == [5]
     assert ws.auto_filter.ref.endswith("3")  # the filter covers the extracted rows only
     assert any(ws.cell(row=6, column=8).coordinate in dv.sqref for dv in ws.data_validations.dataValidation)  # the Status dropdown reaches the candidates too
+
+
+def test_text_before_the_first_marker_and_bare_bullets_are_units():
+    raw = "the Director to notify the CISO within 48 hours.\n2.1. The CFP will log all contacts.\n2.2. Report spills to the NOS."
+    units = M.paragraph_units(raw)
+    assert units[0].startswith("the Director to notify") and len(units) == 3
+    bullets = M.paragraph_units("- Review the access logs every quarter and record the findings.\n- Report anomalies to the security manager.")
+    assert len(bullets) == 2
+    chunks = {1: {"chunk_id": 1, "page_start": 3, "page_end": 5, "section_title_path": [], "raw_text": "- Review the access logs every quarter and record the findings.\n- Report anomalies to the security manager."}}
+    found = M.find_possible_missed(chunks, [])
+    assert [f["source_quote"] for f in found] == ["Review the access logs every quarter and record the findings.", "Report anomalies to the security manager."]
+    assert found[0]["page_refs"] == [3, 4, 5]  # the whole range the chunk spans
