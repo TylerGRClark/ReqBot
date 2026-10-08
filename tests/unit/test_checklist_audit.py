@@ -109,3 +109,11 @@ def test_citation_is_the_paragraph_number_else_read_back_from_the_document():
     assert A.citation("Table 3.1", ">> then take the indicated Actions <<", ["INCIDENT HANDLING", "3.4. Detection and Reporting"]) == "3.4 (inferred)"
     assert A.citation("", ">> orphan quote <<", ["INCIDENT HANDLING"]) == ""
     assert "(inferred)" not in A.citation("3.1", passage, [])  # a real reference is kept as extracted
+
+
+def test_citation_prefers_the_quotes_own_number_and_never_reads_an_unmarked_passage():
+    passage = "3.4.3. Preliminary analysis.\n>> 3.4.4. Assess and categorize the event. <<"
+    assert A.citation("SECTION 2", passage, [], "3.4.4. Assess and categorize the event.") == "3.4.4"  # the number the quote opens with is its own
+    unmarked = "1.1. Intro.\n9.9. A paragraph somewhere after the requirement, which was not located."
+    assert A.citation("", unmarked, ["INCIDENT HANDLING", "3.4. Detection"], "some requirement text") == "3.4 (inferred)"  # no marker: the heading fallback only
+    assert A.citation("", unmarked, [], "some requirement text") == ""

@@ -189,15 +189,20 @@ _PARAGRAPH_REF = re.compile(r"^[A-Z]{0,2}\d+(?:\.\d+)+$")
 _LINE_NUMBER = re.compile(r"(?m)^\W*((?:[A-Z]{1,2})?\d+(?:\.\d+)+)\.?\s")
 
 
-def citation(source_ref: str, passage: str, section_title_path) -> str:
-    """The paragraph citation for a row: `source_ref` when it is a paragraph number, else an inferred one marked "(inferred)", else an empty string."""
+def citation(source_ref: str, passage: str, section_title_path, quote: str = "") -> str:
+    """The paragraph citation for a row: `source_ref` when it is a paragraph number; else the paragraph number the quote itself opens with; else an inferred one marked
+    "(inferred)" (the last paragraph number opening a line in the passage before the marked requirement, which needs the marker: with no marker the quote was not located and the
+    passage says nothing about where it sits; else the nearest numbered heading); else an empty string."""
     ref = (source_ref or "").strip().rstrip(".")
     if _PARAGRAPH_REF.match(ref):
         return ref
-    before = (passage or "").split(MARK_OPEN.strip(), 1)[0]
-    found = _LINE_NUMBER.findall(before)
-    if found:
-        return f"{found[-1]} (inferred)"
+    own = _LINE_NUMBER.match((quote or "").lstrip() + " ")
+    if own:
+        return own.group(1)
+    if MARK_OPEN.strip() in (passage or ""):
+        found = _LINE_NUMBER.findall(passage.split(MARK_OPEN.strip(), 1)[0])
+        if found:
+            return f"{found[-1]} (inferred)"
     for heading in reversed([str(p) for p in (section_title_path or [])]):
         m = _LINE_NUMBER.match(heading.strip() + " ")
         if m:
