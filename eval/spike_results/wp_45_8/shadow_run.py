@@ -129,18 +129,49 @@ def candidates_from(docs):
     return cands, skipped
 
 
+def snapshot(docs):
+    """{document: {dir, chunks_sha256, records_sha256, step_sha256}}: which input files a run read, so a report can refuse to join a ledger to different inputs."""
+    sha = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest() if Path(path).exists() else None  # noqa: E731
+    out = {}
+    for doc, info in docs.items():
+        d = Path(info["dir"])
+        records = d / f"{doc}_requirements_enriched.jsonl"
+        out[doc] = {"dir": str(d), "chunks_sha256": sha(d / f"{doc}_chunks.jsonl"),
+                    "records_sha256": sha(records if records.exists() else d / f"{doc}_requirements_normalized.jsonl"),
+                    "step_sha256": sha(d / f"{doc}_extracted_requirements.jsonl")}
+    return out
+
+
+def check_snapshot(docs, label, scratch=SCRATCH):
+    """Refuse to report on a ledger whose inputs are not the ones the run read."""
+    info = json.loads((Path(scratch) / label / "run_info.json").read_text(encoding="utf-8"))
+    have, want = snapshot(docs), info.get("sources")
+    if want is None or have != want:
+        changed = sorted(d for d in set(have) | set(want or {}) if (want or {}).get(d) != have.get(d))
+        raise SystemExit(f"the input files changed since {label} was run (or were not recorded): {changed}; re-run, do not join a ledger to other inputs")
+
+
 def run(source, label, ollama_url, limit_ids=None, scratch=SCRATCH, log=print):
     drift = check_code()
     frozen = SR.frozen_choice(REGISTRY)
-    digest = OR.model_digest(ollama_url, frozen["model"])
-    if digest != frozen["digest"]:
-        raise SystemExit(f"the model file differs from the frozen one: {digest!r} against {frozen['digest']!r}")
     docs = load_source(source)
     cands, skipped = candidates_from(docs)
     if limit_ids is not None:
         cands = [c for c in cands if c["candidate_id"] in limit_ids]
     out = Path(scratch) / label
     out.mkdir(parents=True, exist_ok=True)
+    info = {"label": label, "source": source, "sources": snapshot(docs), "drifted_files_allowed": drift,
+            "records": sum(len(i["records"]) for i in docs.values()), "candidates": len(cands), "not_sent": skipped,
+            "model": frozen["model"], "tier": frozen["tier"], "prompt_hash": K.prompt_hash()}
+    try:
+        digest = OR.model_digest(ollama_url, frozen["model"])
+    except Exception as e:  # noqa: BLE001  (server unreachable or model absent: no change, flag only -- every record keeps its production stem)
+        info.update(digest=None, resolver_unavailable=repr(e), calls_made=0, wall_seconds=0)
+        (out / "run_info.json").write_text(json.dumps(info, indent=1) + "\n", encoding="utf-8")
+        log(f"resolver unavailable: {e!r}; no calls made, every record will be flagged")
+        return info
+    if digest != frozen["digest"]:
+        raise SystemExit(f"the model file differs from the frozen one: {digest!r} against {frozen['digest']!r}")
     ledger = RSC._StampedLedger(out / "resolver.jsonl", RSC.menu_identity(REGISTRY))
     started = time.time()
     by_doc = {d: (i["chunks"], i["step"]) for d, i in docs.items()}
@@ -148,14 +179,12 @@ def run(source, label, ollama_url, limit_ids=None, scratch=SCRATCH, log=print):
         calls = RS.run_candidates(cands, by_doc, tier=frozen["tier"], model=frozen["model"], digest=digest, run_label=label, ledger=ledger,
                                   ollama_url=ollama_url, num_ctx=int(frozen["num_ctxs"][0]), num_predict=int(frozen["num_predicts"][0]),
                                   temperature=float(frozen["temperatures"][0]), log=log, design=K)
-    info = {"label": label, "source": source, "drifted_files_allowed": drift, "records": sum(len(i["records"]) for i in docs.values()),
-            "candidates": len(cands), "not_sent": skipped, "calls_made": calls, "wall_seconds": round(time.time() - started, 1),
-            "model": frozen["model"], "digest": digest, "tier": frozen["tier"], "prompt_hash": K.prompt_hash()}
+    info.update(calls_made=calls, wall_seconds=round(time.time() - started, 1), digest=digest)
     (out / "run_info.json").write_text(json.dumps(info, indent=1) + "\n", encoding="utf-8")
     return info
 
 
-def shadow_rows(docs, ledger_path):
+def shadow_rows(docs, ledger_path, unavailable=False):
     """One row per input record, in input order: the production stem, the resolver's answer (or why it abstained) and the string that would be attached."""
     ledger = {}
     for rec in _lines(ledger_path):
@@ -167,17 +196,18 @@ def shadow_rows(docs, ledger_path):
         for rec in info["records"]:
             key = (doc, rec.get("requirement_id"))
             row = {"document": doc, "requirement_id": rec.get("requirement_id"), "chunk_id": rec.get("chunk_id"), "production_stem": rec.get("parent_stem") or "",
-                   "resolver_string": "", "kind": None, "actor": "", "parent": "", "flag": None}
+                   "resolver_string": "", "kind": None, "strength": None, "actor": "", "parent": "", "flag": None}
             led = ledger.get(key)
             if key in reason:
                 row["flag"] = f"not sent: {reason[key]}"
             elif led is None:
-                row["flag"] = "no ledger entry"
+                row["flag"] = "resolver unavailable" if unavailable else "no ledger entry"
             elif led["status"] != "complete" or not led.get("answer"):
                 row["flag"] = f"resolver abstained: {led['status']}"
             else:
                 ans = led["answer"]
-                row.update(kind=ans["status"]["value"], actor=ans["actor"]["value"] or "", parent=ans["parent"]["value"] or "")
+                row.update(kind=(led.get("selection") or {}).get("kind"), strength=ans["status"]["value"], actor=ans["actor"]["value"] or "",
+                           parent=ans["parent"]["value"] or "")
                 row["resolver_string"] = attach_string(row["actor"], row["parent"])
                 if any(i["severity"] == "error" for i in led.get("issues", [])):
                     row["flag"] = "checker error"
@@ -218,11 +248,14 @@ def substring_failures(rows, docs):
 
 def report(source, label, scratch=SCRATCH):
     docs = load_source(source)
+    check_snapshot(docs, label, scratch)
     out = Path(scratch) / label
-    rows = shadow_rows(docs, out / "resolver.jsonl")
+    unavailable = bool(json.loads((out / "run_info.json").read_text(encoding="utf-8")).get("resolver_unavailable"))
+    rows = shadow_rows(docs, out / "resolver.jsonl", unavailable)
     n_in = sum(len(i["records"]) for i in docs.values())
     routes = collections.Counter(route(r) for r in rows)
     kinds = collections.Counter(r["kind"] or "none" for r in rows)
+    not_requirement = sum(1 for r in rows if r["kind"] not in (None, "requirement"))
     ledger = _lines(out / "resolver.jsonl")
     secs = [r["meta"].get("wall_seconds") for r in ledger if r.get("meta") and r["meta"].get("wall_seconds")]
     changed = [r for r in rows if route(r) in ("production none -> resolver some", "both some, different", "production some -> resolver none")]
@@ -232,7 +265,7 @@ def report(source, label, scratch=SCRATCH):
         "source": source, "label": label, "documents": len(docs), "input_records": n_in, "output_rows": len(rows), "dropped_records": n_in - len(rows),
         "calls_in_ledger": len(ledger), "statuses": dict(collections.Counter(r["status"] for r in ledger)),
         "seconds_per_call_mean": round(sum(secs) / len(secs), 2) if secs else None, "seconds_total": round(sum(secs), 1),
-        "with_resolver_string": sum(bool(r["resolver_string"]) for r in rows), "kinds": dict(kinds), "flags": dict(collections.Counter(r["flag"] or "none" for r in rows)),
+        "with_resolver_string": sum(bool(r["resolver_string"]) for r in rows), "kinds": dict(kinds), "kind_other_than_requirement": not_requirement, "flags": dict(collections.Counter(r["flag"] or "none" for r in rows)),
         "no_menu": sum(1 for r in ledger if r.get("menu") == []), "routes_vs_production": dict(routes),
         "span_not_in_document": len(bad), "gate": {"zero_dropped_records": n_in == len(rows), "zero_spans_outside_document": not bad},
     }
@@ -246,6 +279,7 @@ def determinism(source, base_label, ollama_url, scratch=SCRATCH, log=print):
     rows = [r for r in _lines(Path(scratch) / base_label / "shadow_output.jsonl") if not (r["flag"] or "").startswith("not sent")]
     picked = sorted(random.Random(SEED).sample(rows, min(DETERMINISM_SIZE, len(rows))), key=lambda r: (r["document"], r["requirement_id"]))
     ids = {r["requirement_id"] for r in picked}
+    check_snapshot(load_source(source), base_label, scratch)
     label = base_label + "_rerun"
     run(source, label, ollama_url, limit_ids=ids, scratch=scratch, log=log)
     docs = load_source(source)

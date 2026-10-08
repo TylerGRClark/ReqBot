@@ -51,10 +51,10 @@ def test_records_without_a_usable_chunk_or_quote_are_flagged_not_sent_and_not_dr
     assert {s["requirement_id"]: s["reason"] for s in skipped} == {"r2": "no chunk id", "r3": "chunk not found", "r4": "no quote"}
     ledger = tmp_path / "resolver.jsonl"
     ledger.write_text(json.dumps({"document": "D", "candidate_id": "r1", "status": "complete", "issues": [],
-                                  "answer": {"status": {"value": "obligation"}, "actor": {"value": "The Director"}, "parent": {"value": "The Director shall:"}}}) + "\n")
+                                  "selection": {"kind": "requirement"}, "answer": {"status": {"value": "obligation"}, "actor": {"value": "The Director"}, "parent": {"value": "The Director shall:"}}}) + "\n")
     rows = SH.shadow_rows(docs, ledger)
-    assert len(rows) == 4
-    assert rows[0]["resolver_string"] == "The Director | The Director shall:" and rows[0]["flag"] is None
+    assert len(rows) == 4 and rows[0]["kind"] == "requirement"
+    assert rows[0]["resolver_string"] == "The Director | The Director shall:" and rows[0]["flag"] is None and rows[0]["strength"] == "obligation"
     assert all(r["flag"] and r["resolver_string"] == "" for r in rows[1:])
     assert [SH.route(r) for r in rows] == ["production none -> resolver some", "no resolver answer", "no resolver answer", "no resolver answer"]
 
@@ -71,3 +71,19 @@ def test_routes_compare_production_and_resolver_stems():
     assert SH.route(row("", "A")) == "production none -> resolver some"
     assert SH.route(row("A", "")) == "production some -> resolver none"
     assert SH.route(row("A", "a")) == "same" and SH.route(row("A", "B")) == "both some, different" and SH.route(row("", "")) == "both none"
+
+
+def test_a_report_refuses_inputs_that_changed_since_the_run(tmp_path):
+    base = tmp_path / "D_20260101_000000"
+    base.mkdir()
+    (base / "D_chunks.jsonl").write_text('{"chunk_id": 1}\n')
+    (base / "D_requirements_normalized.jsonl").write_text('{"requirement_id": "r"}\n')
+    docs = {"D": {"dir": str(base), "chunks": {}, "step": {}, "records": []}}
+    (tmp_path / "L").mkdir()
+    (tmp_path / "L" / "run_info.json").write_text(json.dumps({"sources": SH.snapshot(docs)}))
+    SH.check_snapshot(docs, "L", tmp_path)  # unchanged: fine
+    (base / "D_chunks.jsonl").write_text('{"chunk_id": 2}\n')
+    import pytest
+
+    with pytest.raises(SystemExit):
+        SH.check_snapshot(docs, "L", tmp_path)

@@ -68,5 +68,13 @@ def run_all():
             "flag": rows[0]["flag"] if rows else None, "resolver_string": rows[0]["resolver_string"] if rows else None,
             "no_change_flag_only": crashed is None and len(rows) == len(info["records"]) and bool(rows[0]["flag"]) and rows[0]["resolver_string"] == "",
         }
+    # the server is down when the run starts: the real `run` must still finish, write nothing but flags, and drop no record
+    with tempfile.TemporaryDirectory() as tmp:
+        info = SH.run("processed", "drill_unavailable", DEAD, scratch=tmp, log=lambda *a: None)
+        rows = SH.shadow_rows(docs, Path(tmp) / "drill_unavailable" / "resolver.jsonl", bool(info.get("resolver_unavailable")))
+    total = sum(len(i["records"]) for i in docs.values())
+    results["unreachable_at_start"] = {"input_records": total, "output_rows": len(rows), "calls_made": info["calls_made"],
+                                       "flags": sorted({r["flag"] for r in rows}),
+                                       "no_change_flag_only": len(rows) == total and info["calls_made"] == 0 and all(r["flag"] and not r["resolver_string"] for r in rows)}
     results["all_pass"] = all(v["no_change_flag_only"] for k, v in results.items() if k != "all_pass")
     return results
