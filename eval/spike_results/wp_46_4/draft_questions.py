@@ -23,7 +23,8 @@ from services.checklist_service import generate  # noqa: E402
 
 MODEL = "qwen2.5:14b"
 SEED = 46
-PROMPT = """You help an auditor check whether a unit follows a regulation.
+SKIP_FLAGS = {"starts_mid_sentence", "table_fragment", "definition_or_description", "quote_not_located_in_passage", "no_passage"}  # v2: no question is asked for these rows
+PROMPT_V1 = """You help an auditor check whether a unit follows a regulation.
 
 Write ONE short yes/no audit question that checks whether the requirement below is being met.
 Rules:
@@ -38,6 +39,17 @@ Passage (the requirement is marked >> <<):
 {passage}
 
 Answer as JSON: {{"question": "<the question>"}} or {{"question": null}}."""
+PROMPT_V2 = PROMPT_V1.replace(
+    "- If the requirement is a fragment,",
+    "- If the requirement says something must NOT happen (not, never, shall not), ask whether it is avoided (\"Does the unit avoid ...?\"); never turn it into a question about whether it happens.\n"
+    "- If the requirement only gives permission or describes how things are (may, can, is authorized to, is defined as), answer with null.\n- If the requirement is a fragment,")
+# v3: version 2's prompt rule about prohibitions leaked into plain statements ("Does the unit avoid any action that would prevent ..."), so the prohibition rule is added only when
+# the quote contains a prohibition; the permission rule and the code gate stay.
+PROHIBITION = re.compile(r"\b(?:shall|must|should|will|may|can|is|are)\s+not\b|\bnever\b|\bprohibited\b", re.IGNORECASE)
+PROMPT_V3 = PROMPT_V1.replace(
+    "- If the requirement is a fragment,",
+    "- If the requirement only gives permission or describes how things are (may, can, is authorized to, is defined as), answer with null.\n- If the requirement is a fragment,")
+PROHIBITION_RULE = "- This requirement forbids something. Ask whether it is avoided (\"Does the unit avoid ...?\"); do not ask whether it happens.\n"
 SCHEMA = {"type": "object", "properties": {"question": {"type": ["string", "null"]}}, "required": ["question"]}
 _TERM = re.compile(r"\b(?:\d[\w./-]*|[A-Z]{2,}[\w/&-]*|[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)")
 _STOP = {"does", "do", "is", "are", "has", "have", "did", "was", "were", "can", "will", "the", "a", "an", "if", "when", "whether", "who", "what", "how", "each", "all", "any", "yes", "no"}
@@ -65,6 +77,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--doc", default="afi17-203")
     ap.add_argument("--n", type=int, default=30)
+    ap.add_argument("--variant", type=int, choices=(1, 2, 3), default=3)
     ap.add_argument("--ollama-url", default=cfg.ollama_url)
     args = ap.parse_args()
     checklist = generate(Path(cfg.processed_dir).expanduser(), args.doc, "cybersecurity")
@@ -74,9 +87,21 @@ def main():
     out_dir = Path(__file__).resolve().parent / "outputs"
     records, lines = [], [f"# Draft audit questions — {args.doc}, {len(sample)} rows (seeded sample)", "",
                           "Rate each question: **usable** / **edit** / **wrong**. When there is no question: **right to skip** / **should have asked**.", ""]
+    prefix = f"v{args.variant}_"
     for n, item in enumerate(sample, 1):
+        skipped = sorted(SKIP_FLAGS & set(item["item_flags"])) if args.variant >= 2 else []
+        if skipped:  # the row stays on the sheet; only the suggested question is withheld
+            records.append({"n": n, "checklist_item_id": item["checklist_item_id"], "source_ref": item["source_ref"], "applies_to": item["applies_to"], "parent_text": item["parent_text"],
+                            "source_quote": item["source_quote"], "question": None, "skipped_because": skipped, "unverified_terms": [], "item_flags": item["item_flags"], "model": MODEL,
+                            "digest": digest, "seconds": 0})
+            lines += [f"## {n}. {item['source_ref'] or '(no ref)'} — p. {', '.join(map(str, item['page_refs']))}", "", f"> {item['source_quote']}", "",
+                      f"**Draft question:** *(none: the row looks like a fragment or description — {', '.join(skipped)})*  ", "**Rating:** ", "", "---", ""]
+            continue
         passage = item["passage"][:1500]
-        prompt = PROMPT.format(applies=item["applies_to"] or "(none)", parent=(f"{item['parent_ref']} {item['parent_text']}" if item["parent_text"] else "(none)"),
+        template = {1: PROMPT_V1, 2: PROMPT_V2, 3: PROMPT_V3}[args.variant]
+        if args.variant == 3 and PROHIBITION.search(item["source_quote"]):
+            template = template.replace("- If the requirement is a fragment,", PROHIBITION_RULE + "- If the requirement is a fragment,")
+        prompt = template.format(applies=item["applies_to"] or "(none)", parent=(f"{item['parent_ref']} {item['parent_text']}" if item["parent_text"] else "(none)"),
                                quote=item["source_quote"], passage=passage)
         text, meta = OR.generate(prompt, MODEL, args.ollama_url, num_ctx=4096, num_predict=200, temperature=0.1, schema=SCHEMA, timeout=120)
         try:
@@ -95,10 +120,10 @@ def main():
         if unver:
             lines.append(f"**Check:** unverified terms {unver}  ")
         lines += ["**Rating:** ", "", "---", ""]
-    (out_dir / "draft_questions.jsonl").write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in records), encoding="utf-8")
-    (out_dir / "rating_sheet.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (out_dir / f"{prefix}draft_questions.jsonl").write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in records), encoding="utf-8")
+    (out_dir / f"{prefix}rating_sheet.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     asked = sum(1 for r in records if r["question"])
-    print(json.dumps({"rows": len(records), "questions": asked, "no_question": len(records) - asked, "with_unverified_terms": sum(1 for r in records if r["unverified_terms"]), "model": MODEL, "digest": digest}, indent=1))
+    print(json.dumps({"rows": len(records), "questions": asked, "no_question": len(records) - asked, "skipped_by_code": sum(1 for r in records if r.get("skipped_because")), "with_unverified_terms": sum(1 for r in records if r["unverified_terms"]), "model": MODEL, "digest": digest}, indent=1))
 
 
 if __name__ == "__main__":
