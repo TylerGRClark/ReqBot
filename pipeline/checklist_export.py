@@ -59,6 +59,11 @@ def _needs_attention(item: dict) -> bool:
     return any(r != "low-confidence" for r in (item.get("review_reasons") or []))
 
 
+def _sheet_reasons(item: dict) -> list:
+    """The reasons worth showing on the sheet: low confidence is left out (it is true of nearly every row, so it says nothing; the number stays in the Conf. column)."""
+    return [r for r in (item.get("review_reasons") or []) if r != "low-confidence"]
+
+
 def _csv_row(item: dict) -> dict:
     raw = {
         "source_ref": item.get("source_ref", ""),
@@ -182,7 +187,6 @@ def to_xlsx(checklist: dict) -> bytes:
         ("Status",         "status",                  15, False),
         ("Notes",          "assessor_notes",          22, True),
         ("Check",          "item_flags",              20, False),
-        ("Flag",           "requires_human_review",    8, False),
         ("Reasons",        "review_reasons",          22, False),
         ("Conf.",          "confidence",               7, False),
         ("Item ID",        "checklist_item_id",       26, False),
@@ -195,8 +199,8 @@ def to_xlsx(checklist: dict) -> bytes:
         ("Locate",  1,  4),
         ("Ask",     5,  7),
         ("Record",  8,  9),
-        ("Verify", 10, 13),
-        ("Trace",  14, 16),
+        ("Verify", 10, 12),
+        ("Trace",  13, 15),
     ]
 
     _GROUP_FILL = PatternFill("solid", fgColor="E2E8F0")
@@ -258,8 +262,7 @@ def to_xlsx(checklist: dict) -> bytes:
             _csv_safe(item.get("status") or ""),
             _csv_safe(item.get("assessor_notes") or ""),
             _csv_safe(_join(item.get("item_flags") or [], "; ")),
-            "Yes" if item.get("requires_human_review", False) else "No",
-            _csv_safe(_join(item.get("review_reasons") or [], "; ")),
+            _csv_safe(_join(_sheet_reasons(item), "; ")),
             confidence_val,
             _csv_safe(item.get("checklist_item_id") or ""),
             _csv_safe(_join(item.get("requirement_ids") or [], ", ")),
@@ -274,7 +277,7 @@ def to_xlsx(checklist: dict) -> bytes:
                 cell.fill = row_fill
 
         # Confidence as percentage (value is 0–1 float)
-        ws.cell(row=row_num, column=13).number_format = "0%"
+        ws.cell(row=row_num, column=12).number_format = "0%"
         # Status: register with data validation
         dv.add(ws.cell(row=row_num, column=8))
 
