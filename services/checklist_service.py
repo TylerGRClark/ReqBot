@@ -180,6 +180,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
                 "source_ref": source_ref,
                 "page_refs": page_refs,
                 "section_title_path": section_title_path,
+                "citation": checklist_audit.citation(source_ref, passage, section_title_path, source_quote),
                 "applies_to": applies,
                 "parent_ref": parent_ref,
                 "parent_text": parent_text,

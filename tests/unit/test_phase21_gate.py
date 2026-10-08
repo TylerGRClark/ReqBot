@@ -66,17 +66,18 @@ def test_csv_has_correct_column_order(processed_dir):
     header = next(reader)
     # locate
     assert header[0] == "source_ref"
-    assert header[1] == "section_title_path"
-    assert header[2] == "page_refs"
-    assert header[3] == "applies_to"
-    assert header[4] == "parent_paragraph"
+    assert header[1] == "citation"
+    assert header[2] == "section_title_path"
+    assert header[3] == "page_refs"
+    assert header[4] == "applies_to"
+    assert header[5] == "parent_paragraph"
     # ask
-    assert header[5] == "source_quote"
-    assert header[6] == "passage"
-    assert header[7] == "audit_question"
+    assert header[6] == "source_quote"
+    assert header[7] == "passage"
+    assert header[8] == "audit_question"
     # record
-    assert header[8] == "status"
-    assert header[9] == "assessor_notes"
+    assert header[9] == "status"
+    assert header[10] == "assessor_notes"
 
 
 def test_csv_row_count_matches_fixture(processed_dir):

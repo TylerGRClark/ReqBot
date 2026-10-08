@@ -12,6 +12,7 @@ import json
 # CSV column order: locate → ask → record → verify → trace
 _CSV_COLUMNS = [
     "source_ref",
+    "citation",
     "section_title_path",
     "page_refs",
     "applies_to",
@@ -65,6 +66,11 @@ def _sheet_reasons(item: dict) -> list:
     return [r for r in (item.get("review_reasons") or []) if r != "low-confidence"]
 
 
+def _ref(item: dict) -> str:
+    """The citation to show: the paragraph citation (possibly inferred and marked so), else whatever the extractor recorded."""
+    return item.get("citation") or item.get("source_ref") or ""
+
+
 def _parent_label(item: dict) -> str:
     """"2.17 MAJCOM/DRUs." : the parent paragraph's number and its text, copied from the document; empty when there is none."""
     text = item.get("parent_text") or ""
@@ -74,6 +80,7 @@ def _parent_label(item: dict) -> str:
 def _csv_row(item: dict) -> dict:
     raw = {
         "source_ref": item.get("source_ref", ""),
+        "citation": item.get("citation", ""),
         "section_title_path": _join(item.get("section_title_path") or [], " > "),
         "page_refs": _join(item.get("page_refs") or [], ", "),
         "applies_to": item.get("applies_to", ""),
@@ -121,7 +128,7 @@ def _md_item(item: dict, index: int) -> str:
 
     lines = [f"## {heading}", ""]
 
-    source_ref = item.get("source_ref", "")
+    source_ref = _ref(item)
     if source_ref:
         lines.append(f"**Source Ref:** {source_ref}  ")
     tags = _join(item.get("domain_tags") or [], ", ")
@@ -265,7 +272,7 @@ def to_xlsx(checklist: dict) -> bytes:
         confidence_val = item.get("confidence") or 0.0
 
         values = [
-            _csv_safe(item.get("source_ref") or ""),
+            _csv_safe(_ref(item)),
             _csv_safe(_join(item.get("section_title_path") or [], " > ")),
             _csv_safe(_join(item.get("page_refs") or [], ", ")),
             _csv_safe(item.get("applies_to") or ""),

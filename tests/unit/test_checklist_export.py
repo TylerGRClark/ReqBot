@@ -503,3 +503,12 @@ def test_sheet_shades_only_rows_with_a_specific_reason_not_low_confidence_alone(
     headers = [c.value for c in ws[2]]
     assert "Flag" not in headers  # a column that is Yes on every row says nothing
     assert "low-confidence" not in str(ws.cell(row=3, column=12).value)
+
+
+def test_the_citation_is_what_the_sheet_and_markdown_show_in_the_ref_position():
+    item = {**COMPLETE_ITEM, "source_ref": "(T-2)", "citation": "3.4.4.3 (inferred)"}
+    checklist = {**EMPTY_ENVELOPE, "items": [item]}
+    row = next(csv.DictReader(io.StringIO(to_csv(checklist))))
+    assert row["source_ref"] == "(T-2)" and row["citation"] == "3.4.4.3 (inferred)"  # the extracted value is never replaced in the data
+    assert "**Source Ref:** 3.4.4.3 (inferred)" in to_markdown(checklist)
+    assert _load_xlsx(to_xlsx(checklist))["Checklist"].cell(row=3, column=1).value == "3.4.4.3 (inferred)"

@@ -180,3 +180,31 @@ def parent_paragraph(source_ref: str, para_map: dict) -> tuple[str, str]:
                 text = text[:PARENT_TEXT_CHARS].rsplit(" ", 1)[0] + " ..."
             return key, text
     return "", ""
+
+
+# WP-46.1c: a usable citation for every row. `source_ref` is whatever the extractor recorded; it is often empty, or a tier tag such as "(T-2)", or a table name. The citation an auditor
+# needs is the paragraph number, so when `source_ref` is not one it is read back from the document: the last paragraph number that opens a line in the passage before the
+# requirement, else the nearest numbered heading in the section path. An inferred citation is marked "(inferred)" and never replaces `source_ref`.
+_PARAGRAPH_REF = re.compile(r"^[A-Z]{0,2}\d+(?:\.\d+)+$")
+_LINE_NUMBER = re.compile(r"(?m)^\W*((?:[A-Z]{1,2})?\d+(?:\.\d+)+)\.?\s")
+
+
+def citation(source_ref: str, passage: str, section_title_path, quote: str = "") -> str:
+    """The paragraph citation for a row: `source_ref` when it is a paragraph number; else the paragraph number the quote itself opens with; else an inferred one marked
+    "(inferred)" (the last paragraph number opening a line in the passage before the marked requirement, which needs the marker: with no marker the quote was not located and the
+    passage says nothing about where it sits; else the nearest numbered heading); else an empty string."""
+    ref = (source_ref or "").strip().rstrip(".")
+    if _PARAGRAPH_REF.match(ref):
+        return ref
+    own = _LINE_NUMBER.match((quote or "").lstrip() + " ")
+    if own:
+        return own.group(1)
+    if MARK_OPEN.strip() in (passage or ""):
+        found = _LINE_NUMBER.findall(passage.split(MARK_OPEN.strip(), 1)[0])
+        if found:
+            return f"{found[-1]} (inferred)"
+    for heading in reversed([str(p) for p in (section_title_path or [])]):
+        m = _LINE_NUMBER.match(heading.strip() + " ")
+        if m:
+            return f"{m.group(1)} (inferred)"
+    return ""

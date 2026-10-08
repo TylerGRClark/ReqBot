@@ -228,6 +228,8 @@ The checklist envelope contains:
 Each item includes `checklist_item_id`, `requirement_ids`, `domain_tags`,
 `source_ref`, `page_refs`, `section_title_path`, `source_quote`, `confidence`,
 `requires_human_review`, and `review_reasons`. For audit use it also carries
+`citation` (the paragraph number: `source_ref` when that is one, else read back from
+the document and marked `(inferred)`; `source_ref` itself is never replaced),
 `applies_to` (the heading that names the responsible party, when the document's
 structure gives one), `parent_ref` / `parent_text` (the parent paragraph read from
 the document's own numbering, verbatim: 2.17.22 sits under 2.17; empty for a
