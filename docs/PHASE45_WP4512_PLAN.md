@@ -1,0 +1,25 @@
+# WP-45.12 — how the extractor is asked what a requirement is (plan, pre-registered)
+
+*Status: plan only; no run yet. Written after the owner's reading of AFI 17-203 (2026-10-09): nearly every numbered paragraph of an AFI is a requirement, with or without a "shall" or "must", yet the extraction prompt defines a requirement as "something an organization MUST DO" and asks for obligation or mandate language. Measured on AFI 17-203, 49% of its paragraph-sized units have no extracted record (AFI 13-550 64%, AFI 10-2402 54%; many of the rest are introductions and definitions), and siblings of the same form are treated differently (3.6.1.1 to 3.6.1.6 are all extracted; 3.4.3.1, 3.4.4.1 and 3.7.1.5 are not).*
+
+## 1. Arms (all on the extraction model, `llama3.1:8b-instruct-q4_K_M`, temperature 0.1, scratch only)
+
+- **D0** — the production Step C prompt, unchanged (one call per chunk).
+- **D1** — the inclusive discovery prompt frozen in WP-45.7 (prompt hash `7da34da9994793c5`): one call per chunk; duties with no modal verb, imperatives, recommendations and permissions count. Already measured on the labeled development pages: recall 91% (against 62% for D0), precision 56% (against 72%).
+- **P1** (new) — one call per paragraph. The paragraph units are the document's own (`checklist_missed.paragraph_units` over each chunk's text, 40 characters or more, deduplicated), each shown with its leaf heading. The model answers `{"duty": true|false}` to: *does this paragraph tell someone to do something, not do something, or permit or recommend something that an auditor could check?* Yes for shall/must/will/should/may statements, commands ("Identify the root cause."), third-person duties with no modal ("Provides functional expertise to ..."), prohibitions, recommendations, permissions; no for definitions, background, headings, scope or purpose statements, statements of what something is, bare cross-references, and a lead-in that ends with a colon and has no content of its own. A paragraph judged `true` becomes a candidate whose `source_quote` is the paragraph's own text without its leading number or bullet (verbatim by construction; no model writes any text). The prompt is fixed here and is not edited after any result.
+
+## 2. Sets and measures
+
+1. **Labeled development pages** (WP-45.1(e) / 45.7: 38 chunks touching 12 pages, 74 owner-adjudicated obligations on three documents). Recall and precision by the existing `score_discovery.score_run` rule (a piece is covered when the records of its chunk reproduce at least 90% of its tokens; precision by the fixed overlap rule). D0 and D1 numbers are the committed ones; P1 is run once, two repeats. D1 was designed on these pages; P1 was not tuned on them.
+2. **AFI 17-203, whole document** (chunk file `T2_256`, the merged table-fix chunking). D0, D1 and P1 each run once. For each arm: the share of paragraph units covered by a candidate (a quote of 25+ characters contained in the unit or containing it; for P1, the unit judged `true`), the number covered by the arm and by no other arm, and the number of candidates. Nothing is labeled on this set by me.
+3. **Owner rating of the additions.** A seeded sample of 40 units that P1 or D1 covers and D0 does not (`random.Random(4512)`; fewer if fewer exist), with the paragraph, its citation, its heading and its parent paragraph, rated by the owner: **requirement** (an auditor would want it on the sheet), **partial** (a requirement but cut or merged oddly), **not a requirement**.
+
+## 3. Decision rules (fixed now)
+
+- **Recommend an arm as the extraction candidate** only if, on the labeled pages, its recall is at least 15 points above D0's and its precision is at least 50%, **and** the owner rates at least 60% of its sampled additions requirement or partial. If both D1 and P1 qualify, take the higher F1 on the labeled pages; a tie goes to P1 (consistent per paragraph, verbatim by construction). If neither qualifies the result is reported and nothing changes.
+- This is a recommendation to the owner. Adopting an arm changes what Step C asks, forces re-extraction of the corpus and a reindex, and (for P1) adds a new call pattern to the pipeline: the owner's decision, after the result, with the stop-and-ask items of WP-45.8 unaffected.
+- Over-extraction is acceptable by the owner's standing rule: a false addition is a flagged row (the checklist already marks fragments and descriptions and withholds audit questions for them), a missed obligation is the failure.
+
+## 4. Limits stated now
+
+One model; the labeled pages are three documents and were used to design D1; the AFI test has one document and one rater; the paragraph splitter is a rule (numbered or lettered markers, else sentences) and a unit can hold more than one duty, which P1 keeps whole (splitting into atomic duties is a later step); run-to-run variation of the 8B is about 5 obligations on the labeled sample (WP-45.11), so a difference of that size is not an effect.
