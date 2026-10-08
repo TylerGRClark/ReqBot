@@ -275,7 +275,11 @@ export interface ChecklistItem {
   section_title_path: string[]
   page_refs: number[]
   domain_tags: string[]
-  confidence: number
+  confidence: number | null
+  // WP-46.1 / 46.2 (checklist format 1.1); optional so older saved envelopes still type-check
+  applies_to?: string
+  passage?: string
+  item_flags?: string[]
   audit_question: string
   status: string
   assessor_notes: string
@@ -290,8 +294,10 @@ export interface ChecklistEnvelope {
   generator: { tool: string; command: string }
   document: { document_id: string; source_pdf: string }
   profile: string
-  summary: { total_items: number; items_requiring_review: number }
+  summary: { total_items: number; items_requiring_review: number; items_with_flags?: number; possible_missed?: number }
   items: ChecklistItem[]
+  // passages that look like obligations but were not extracted (rule-based scan); not counted in total_items
+  possible_missed?: ChecklistItem[]
 }
 
 export interface ProfilesResponse {

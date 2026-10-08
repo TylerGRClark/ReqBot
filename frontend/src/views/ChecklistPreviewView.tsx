@@ -5,7 +5,7 @@ import type { ChecklistEnvelope, ChecklistItem } from '../api/types'
 import AppShell from '../components/AppShell'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorBanner from '../components/ErrorBanner'
-import ChecklistTable from '../components/ChecklistTable'
+import ChecklistTable, { needsAttention } from '../components/ChecklistTable'
 import ExportButtonGroup from '../components/ExportButtonGroup'
 
 export default function ChecklistPreviewView() {
@@ -34,8 +34,9 @@ export default function ChecklistPreviewView() {
   }, [docId, profile])
 
   const items: ChecklistItem[] = data?.items ?? []
-  const displayItems = flaggedOnly ? items.filter(i => i.requires_human_review) : items
-  const flaggedCount = items.filter(i => i.requires_human_review).length
+  const missed: ChecklistItem[] = data?.possible_missed ?? []
+  const displayItems = flaggedOnly ? items.filter(needsAttention) : items
+  const flaggedCount = items.filter(needsAttention).length
 
   return (
     <AppShell>
@@ -70,7 +71,7 @@ export default function ChecklistPreviewView() {
                 {data.summary.total_items} item{data.summary.total_items !== 1 ? 's' : ''}
                 {flaggedCount > 0 && (
                   <span className="ml-2 text-amber-700">
-                    · {flaggedCount} flagged for review
+                    · {flaggedCount} with a hint to check
                   </span>
                 )}
               </p>
@@ -83,7 +84,7 @@ export default function ChecklistPreviewView() {
                     onChange={e => setFlaggedOnly(e.target.checked)}
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
-                  Flagged only
+                  Hints only
                 </label>
               )}
             </div>
@@ -98,6 +99,19 @@ export default function ChecklistPreviewView() {
               </p>
             ) : (
               <ChecklistTable items={displayItems} />
+            )}
+
+            {missed.length > 0 && (
+              <section className="space-y-2 pt-4" aria-label="Possible missed requirements">
+                <h2 className="text-base font-semibold text-gray-900">
+                  Possible missed requirements ({missed.length})
+                </h2>
+                <p className="text-sm text-gray-500">
+                  These passages look like obligations but were not extracted (found by a text scan). Confirm each one;
+                  they are not counted above.
+                </p>
+                <ChecklistTable items={missed} />
+              </section>
             )}
           </>
         )}

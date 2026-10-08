@@ -213,7 +213,10 @@ quote/citation/page provenance, the document's own surrounding passage, an
 "applies to" heading where the structure names one, and specific hints (the
 Check column). The sheet is one list in document order with a Status dropdown
 (not-started, in-progress, compliant, non-compliant, not-applicable) and a Notes
-column. Assessor fields begin empty; generation does not complete an assessment.
+column. Passages that look like obligations but were not extracted are listed
+after the items under a clear banner ("possible missed requirements"; CSV rows
+carry the `possible_missed` flag). Assessor fields begin empty; generation does
+not complete an assessment.
 
 ## reindex
 

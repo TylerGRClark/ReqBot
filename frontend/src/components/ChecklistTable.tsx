@@ -1,5 +1,4 @@
 import type { ChecklistItem } from '../api/types'
-import ReviewFlagBadge from './ReviewFlagBadge'
 import { formatPath } from '../utils/ui'
 
 interface Props {
@@ -12,6 +11,11 @@ function formatPageRefs(refs: number[]): string {
   if (refs.length === 0) return '—'
   if (refs.length === 1) return `p. ${refs[0]}`
   return `pp. ${refs[0]}–${refs[refs.length - 1]}`
+}
+
+/** A row worth a second look: a specific hint, or a reason other than low confidence (which is true of nearly every row and separates nothing). */
+export function needsAttention(item: ChecklistItem): boolean {
+  return (item.item_flags ?? []).length > 0 || item.review_reasons.some(r => r !== 'low-confidence')
 }
 
 function formatList(items: string[]): string {
@@ -35,10 +39,10 @@ export default function ChecklistTable({ items }: Props) {
         <thead>
           {/* Group header row */}
           <tr className="bg-gray-100 border-b border-gray-200">
-            <th scope="colgroup" colSpan={3} className={`${GROUP_HEADER_CLASS} border-r border-gray-300`}>
+            <th scope="colgroup" colSpan={4} className={`${GROUP_HEADER_CLASS} border-r border-gray-300`}>
               Locate
             </th>
-            <th scope="colgroup" colSpan={2} className={`${GROUP_HEADER_CLASS} border-r border-gray-300`}>
+            <th scope="colgroup" colSpan={3} className={`${GROUP_HEADER_CLASS} border-r border-gray-300`}>
               Ask
             </th>
             <th scope="colgroup" colSpan={2} className={`${GROUP_HEADER_CLASS} border-r border-gray-300`}>
@@ -55,15 +59,17 @@ export default function ChecklistTable({ items }: Props) {
           <tr>
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[100px]`}>Ref</th>
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[160px]`}>Section</th>
-            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[72px] border-r border-gray-200`}>Pages</th>
+            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[72px]`}>Pages</th>
+            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[150px] border-r border-gray-200`}>Applies to</th>
 
-            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[220px]`}>Source quote</th>
+            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[220px]`}>Requirement</th>
+            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[260px]`}>Passage</th>
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[140px] border-r border-gray-200`}>Audit question</th>
 
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[100px]`}>Status</th>
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[140px] border-r border-gray-200`}>Notes</th>
 
-            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[110px]`}>Flag</th>
+            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[140px]`}>Check</th>
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[120px]`}>Reasons</th>
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[72px] border-r border-gray-200`}>Conf.</th>
 
@@ -74,7 +80,7 @@ export default function ChecklistTable({ items }: Props) {
         </thead>
         <tbody>
           {items.map((item, idx) => {
-            const flagged = item.requires_human_review
+            const flagged = needsAttention(item)
             const rowBg = flagged ? 'bg-amber-50' : idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'
             const cell = `py-3 px-3 text-gray-700 align-top ${rowBg}`
             const borderR = `${cell} border-r border-gray-200`
@@ -84,13 +90,24 @@ export default function ChecklistTable({ items }: Props) {
                 {/* Locate */}
                 <td className={cell}>{item.source_ref || '—'}</td>
                 <td className={cell}>{formatPath(item.section_title_path)}</td>
-                <td className={`${borderR} whitespace-nowrap`}>{formatPageRefs(item.page_refs)}</td>
+                <td className={`${cell} whitespace-nowrap`}>{formatPageRefs(item.page_refs)}</td>
+                <td className={borderR}>{item.applies_to || <span className="text-gray-400">—</span>}</td>
 
                 {/* Ask */}
                 <td className={cell}>
                   {item.source_quote
                     ? <span className="break-words">{item.source_quote}</span>
                     : <span className="break-words text-amber-700 font-medium">[MISSING SOURCE QUOTE]</span>}
+                </td>
+                <td className={cell}>
+                  {item.passage
+                    ? (
+                      <details>
+                        <summary className="cursor-pointer text-blue-700">Show passage</summary>
+                        <pre className="mt-1 whitespace-pre-wrap break-words font-sans text-xs text-gray-600">{item.passage}</pre>
+                      </details>
+                    )
+                    : <span className="text-gray-400">—</span>}
                 </td>
                 <td className={`${borderR}`}>
                   {item.audit_question || <span className="text-gray-400">—</span>}
@@ -104,19 +121,17 @@ export default function ChecklistTable({ items }: Props) {
 
                 {/* Verify */}
                 <td className={cell}>
-                  {flagged ? (
-                    <ReviewFlagBadge reasons={item.review_reasons} />
-                  ) : (
-                    <span className="text-gray-300">—</span>
-                  )}
+                  {(item.item_flags ?? []).length > 0
+                    ? formatList(item.item_flags ?? [])
+                    : <span className="text-gray-300">—</span>}
                 </td>
                 <td className={cell}>
-                  {item.review_reasons.length > 0
-                    ? formatList(item.review_reasons)
+                  {item.review_reasons.filter(r => r !== 'low-confidence').length > 0
+                    ? formatList(item.review_reasons.filter(r => r !== 'low-confidence'))
                     : <span className="text-gray-400">—</span>}
                 </td>
                 <td className={`${borderR} whitespace-nowrap tabular-nums`}>
-                  {(item.confidence * 100).toFixed(0)}%
+                  {item.confidence == null ? '—' : `${(item.confidence * 100).toFixed(0)}%`}
                 </td>
 
                 {/* Trace */}
