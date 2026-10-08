@@ -978,9 +978,14 @@ DEPENDENCY / TOOLCHAIN BACKLOG
    HeadingHierarchy* in the installed package), and section_parser.py computes
    heading depth from the heading text and ignores Docling's item levels. So
    "just enable it" is not available. Evaluate a compatible upgrade as its own
-   change. Also: the resolved docling-core version is not pinned (2.99.0 here),
-   so chunking behavior can shift between installs; record both versions in
-   every experiment manifest.
+   change. Also: the Docling family (docling-core, docling-parse,
+   docling-ibm-models) is now pinned to the audited set (docling-core 2.99.0,
+   docling-parse 5.7.0, docling-ibm-models 3.13.0; requests 2.34.2 as docling-core
+   requires) -- before that a fresh install resolved 2.96.0 / 5.11.0 / 3.15.0, not what
+   was measured. Still open ranges: torch, transformers, tokenizers, onnxruntime (the
+   chunker's token counts and TableFormer run on them). Keep recording versions in every
+   experiment manifest, and watch new Docling releases (2.122.0 was the last clean one
+   after 2.94.0; 2.123.0+ regressed list/code handling).
 
 
 ================================================================
