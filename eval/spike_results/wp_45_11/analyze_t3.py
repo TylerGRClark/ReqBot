@@ -24,6 +24,7 @@ for _p in (_ROOT, _ROOT / "eval/spike_results/wp_45_10", _ROOT / "eval/spike_res
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
+import score_arms as SA  # noqa: E402  (this folder: the same arm validation R1/R2 use)
 import analyze_chunks as AC  # noqa: E402  (wp_45_10: gold items, norm, chunk loading, lead-in pieces)
 import score_resolver as SR  # noqa: E402  (wp_45_7: the registered stem-overlap rule)
 
@@ -68,6 +69,21 @@ def per_arm(arm, items, fixed_ids, cache):
     return out
 
 
+def validate(arms_and_specs):
+    """The same refusals `score_arms.py` makes, before any number is computed: every document finished with no failed Step C chunk, one chunk specification per arm and
+    the specification each arm is declared to have run, one model file, identical pipeline code across the compared arms."""
+    for arm, spec in arms_and_specs:
+        SA.check_complete(arm, SCRATCH)
+        SA.check_one_spec_per_arm(arm, SCRATCH)
+        for doc in sorted(SA.common.pinned_documents()):
+            ran = json.loads((SA.arm_dir(arm, doc, SCRATCH) / "arm_record.json").read_text(encoding="utf-8")).get("chunks_spec")
+            if ran != spec:
+                raise SystemExit(f"arm {arm}/{doc} ran chunk specification {ran}, not {spec}")
+    arms = [a for a, _ in arms_and_specs]
+    SA.check_same_model(arms, SCRATCH)
+    SA.check_same_code(arms, SCRATCH)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--base", nargs=2, required=True, metavar=("A", "B"), help="the two replicate arms of the T2 state")
@@ -77,6 +93,7 @@ def main():
     ap.add_argument("--out")
     args = ap.parse_args()
 
+    validate([(args.base[0], args.base_chunks), (args.base[1], args.base_chunks), (args.arm, args.arm_chunks)])
     items = AC.gold_items()
     chunk_cache = {}
 
@@ -118,7 +135,11 @@ def main():
                                                               f"{args.base[1]}_not_{args.base[0]}": one_way(args.base[1], args.base[0])},
                       "arm_lost_vs_each_base": {b: one_way(b, args.arm) for b in args.base},
                       "arm_gained_vs_each_base": {b: one_way(args.arm, b) for b in args.base}},
-        "stem_match_reported_not_gated": {"counts": stem, "arm_minus_each_base": {b: stem[args.arm] - stem[b] for b in args.base}},
+        "stem_match_reported_not_gated": {
+            "counts": stem, "arm_minus_each_base": {b: stem[args.arm] - stem[b] for b in args.base},
+            "paired_vs_each_base": {b: {"gained": sorted(i for i in fixed_ids if results[args.arm][i]["stem_match"] and not results[b][i]["stem_match"]),
+                                        "lost": sorted(i for i in fixed_ids if results[b][i]["stem_match"] and not results[args.arm][i]["stem_match"])}
+                                    for b in args.base}},
     }
     r3_ext = ext[args.arm] >= 0.9 * lower_base
     r3_co = report["colocated"]["gain_points"] >= 5

@@ -37,3 +37,11 @@ def test_colocated_needs_every_lead_in_piece():
     chunk = {"text": "The Director shall: (a) do X. Components shall comply."}
     assert T3.colocated(chunk, "The Director shall: ... Components shall comply")
     assert not T3.colocated(chunk, "The Director shall: ... Services shall comply")
+
+
+def test_an_unfinished_arm_is_refused_before_any_number_is_computed(tmp_path, monkeypatch):
+    import pytest
+
+    monkeypatch.setattr(T3, "SCRATCH", tmp_path)
+    with pytest.raises(SystemExit):
+        T3.validate([("T2a", "d2.94.0:T2_256"), ("T3_512", "d2.94.0:T2_512")])
