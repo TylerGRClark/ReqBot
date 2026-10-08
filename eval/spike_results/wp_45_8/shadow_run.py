@@ -95,9 +95,16 @@ def _lines(path):
 def load_source(source):
     """{document: {"chunks": {chunk_id: chunk}, "step": {chunk_id: [Step C records]}, "records": [final records], "dir": path}} for a source."""
     if source == "processed":
+        if not PROCESSED.is_dir():
+            raise SystemExit(f"{PROCESSED} does not exist: nothing to shadow")
         dirs = newest_runs()
     elif source.startswith("arm:"):
-        base = Path.home() / "wp45_11_scratch" / source[4:]
+        name = source[4:]
+        if not name or "/" in name or "\\" in name or name.startswith("."):
+            raise SystemExit("--source arm:NAME takes a plain arm name")
+        base = Path.home() / "wp45_11_scratch" / name
+        if not base.is_dir():
+            raise SystemExit(f"{base} does not exist")
         dirs = {d.name: d for d in sorted(base.iterdir()) if d.is_dir()}
     else:
         raise SystemExit("--source is 'processed' or 'arm:NAME'")
@@ -110,6 +117,8 @@ def load_source(source):
             step.setdefault(r.get("chunk_id"), []).append(r)
         if records:
             out[doc] = {"chunks": chunks, "step": step, "records": records, "dir": str(d)}
+    if not out:
+        raise SystemExit(f"no document with records found for --source {source}")
     return out
 
 
