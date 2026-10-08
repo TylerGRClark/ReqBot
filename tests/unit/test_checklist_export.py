@@ -368,7 +368,7 @@ def test_to_xlsx_sheet_name():
 def test_to_xlsx_group_headers_in_row_1():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    row1_values = [ws.cell(row=1, column=c).value for c in range(1, 14)]
+    row1_values = [ws.cell(row=1, column=c).value for c in range(1, 17)]
     assert "Locate" in row1_values
     assert "Ask" in row1_values
     assert "Record" in row1_values
@@ -378,15 +378,15 @@ def test_to_xlsx_group_headers_in_row_1():
 
 def test_to_xlsx_column_order():
     expected_headers = [
-        "Ref", "Section", "Pages",
-        "Source Quote", "Audit Question",
+        "Ref", "Section", "Pages", "Applies to",
+        "Requirement", "Passage", "Audit Question",
         "Status", "Notes",
-        "Flag", "Reasons", "Conf.",
+        "Check", "Flag", "Reasons", "Conf.",
         "Item ID", "Req IDs", "Tags",
     ]
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    actual = [ws.cell(row=2, column=c).value for c in range(1, 14)]
+    actual = [ws.cell(row=2, column=c).value for c in range(1, 17)]
     assert actual == expected_headers
 
 
@@ -427,7 +427,7 @@ def test_to_xlsx_row_count():
 def test_to_xlsx_source_quote_present():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    all_values = [ws.cell(row=r, column=4).value for r in range(3, ws.max_row + 1)]
+    all_values = [ws.cell(row=r, column=5).value for r in range(3, ws.max_row + 1)]
     assert any("enforce MFA" in str(v) for v in all_values if v)
 
 
@@ -451,7 +451,7 @@ def test_to_xlsx_flagged_row_has_fill():
 def test_to_xlsx_confidence_percentage_format():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    conf_cell = ws.cell(row=3, column=10)
+    conf_cell = ws.cell(row=3, column=13)
     assert conf_cell.number_format == "0%"
 
 
@@ -460,7 +460,7 @@ def test_to_xlsx_formula_injection_protection():
     checklist = {**EMPTY_ENVELOPE, "items": [item]}
     wb = _load_xlsx(to_xlsx(checklist))
     ws = wb["Checklist"]
-    value = ws.cell(row=3, column=4).value
+    value = ws.cell(row=3, column=5).value
     assert value is not None
     assert str(value).startswith("'")
 
@@ -471,3 +471,33 @@ def test_to_xlsx_sparse_item_no_crash():
     result = to_xlsx(checklist)
     wb = _load_xlsx(result)
     assert wb["Checklist"].max_row == 3
+
+
+def test_audit_layout_fields_reach_every_export_format():
+    item = {**COMPLETE_ITEM, "applies_to": "AF/A3", "passage": "Lead-in:\n>> The requirement. <<", "item_flags": ["list_item", "no_passage"]}
+    checklist = {**EMPTY_ENVELOPE, "items": [item]}
+    row = next(csv.DictReader(io.StringIO(to_csv(checklist))))
+    assert row["applies_to"] == "AF/A3" and row["passage"].startswith("Lead-in:") and row["item_flags"] == "list_item; no_passage"
+    md = to_markdown(checklist)
+    assert "**Applies to:** AF/A3" in md and ">> The requirement. <<" in md and "**Check:** list_item, no_passage" in md
+    ws = _load_xlsx(to_xlsx(checklist))["Checklist"]
+    assert [ws.cell(row=3, column=c).value for c in (4, 6, 10)] == ["AF/A3", "Lead-in:\n>> The requirement. <<", "list_item; no_passage"]
+    status_cell = ws.cell(row=3, column=8)
+    assert status_cell.value == item["status"] and any(status_cell.coordinate in dv.sqref for dv in ws.data_validations.dataValidation)
+
+
+def test_old_items_without_the_new_fields_still_export():
+    old = {k: v for k, v in COMPLETE_ITEM.items() if k not in ("applies_to", "passage", "item_flags")}
+    checklist = {**EMPTY_ENVELOPE, "items": [old]}
+    assert "source_quote" in to_csv(checklist) and "Checklist" in to_markdown(checklist)
+    assert _load_xlsx(to_xlsx(checklist))["Checklist"].max_row == 3
+
+
+def test_sheet_shades_only_rows_with_a_specific_reason_not_low_confidence_alone():
+    only_confidence = {**COMPLETE_ITEM, "requires_human_review": True, "review_reasons": ["low-confidence"], "item_flags": []}
+    flagged = {**COMPLETE_ITEM, "checklist_item_id": "CHK-2", "requires_human_review": True, "review_reasons": ["low-confidence"], "item_flags": ["table_fragment"]}
+    ws = _load_xlsx(to_xlsx({**EMPTY_ENVELOPE, "items": [only_confidence, flagged]}))["Checklist"]
+    assert ws.cell(row=3, column=1).fill.patternType is None
+    assert ws.cell(row=4, column=1).fill.patternType == "solid"
+    # the Flag column keeps the review state; only the shading uses the narrower "needs attention" rule
+    assert [ws.cell(row=r, column=11).value for r in (3, 4)] == ["Yes", "Yes"]

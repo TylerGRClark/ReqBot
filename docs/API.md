@@ -216,17 +216,24 @@ The checklist envelope contains:
 
 | Field | Shape / meaning |
 |---|---|
-| `format`, `format_version` | `"reqbot-checklist"`, `"1.0"`. |
+| `format`, `format_version` | `"reqbot-checklist"`, `"1.1"` (1.1 added `applies_to`, `passage`, `item_flags` and `summary.items_with_flags`; nothing was removed). |
 | `generated_at` | UTC ISO 8601 timestamp. |
 | `generator` | `{tool, command}`. |
 | `document` | `{document_id, source_pdf}`. |
 | `profile` | Selected profile name. |
-| `summary` | `{total_items, items_requiring_review}`. |
+| `summary` | `{total_items, items_requiring_review, items_with_flags}`. |
 | `items` | Checklist item objects. |
 
 Each item includes `checklist_item_id`, `requirement_ids`, `domain_tags`,
 `source_ref`, `page_refs`, `section_title_path`, `source_quote`, `confidence`,
-`requires_human_review`, and `review_reasons`. It also initializes
+`requires_human_review`, and `review_reasons`. For audit use it also carries
+`applies_to` (the heading that names the responsible party, when the document's
+structure gives one), `passage` (the document's own text around the quote, with
+the requirement marked `>> <<`; for a list item or a quote that starts
+mid-sentence, the end of the previous chunk is put in front) and `item_flags`
+(rule-based hints such as `starts_mid_sentence`, `list_item`, `table_fragment`,
+`no_stated_actor`, `definition_or_description`, `no_passage`; a flagged row is
+never dropped). None of these is model-generated. It also initializes
 `audit_question`, `evidence_to_request`, `generation_notes`, `assessor_notes`,
 and `status` (`"not-started"`). Those initially empty fields are not completed
 assessments or automatically generated evidence.
