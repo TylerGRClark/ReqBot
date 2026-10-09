@@ -19,6 +19,11 @@ _MODAL = re.compile(r"\b(shall|must|will|should|may|required|is responsible|are 
 _LIST_MARKER = re.compile(r"^\s*\(?([A-Za-z]|\d{1,3})[.)]\s")
 # Wording that defines or describes instead of requiring ("... are referred to as events", "... means ...", "... breaks down ..."). Deliberately narrow: AFIs state duties in
 # many shapes ("Issues cyber orders ...", "CFPs implement ..."), and a broad "no obligation word" test flagged a third of a real checklist.
+# "This Instruction applies to ...", "It also applies to ...", "does not apply to ...": who the document covers. Rated "not a requirement" by the owner (WP-45.12 ratings); it tells the
+# reader who the other rows apply to, so the row is kept and hinted, never dropped.
+_APPLICABILITY = re.compile(
+    r"\b(?:this|these)\s+(?:instruction|manual|publication|policy|directive|issuance|document|supplement|chapter|section)\s+(?:also\s+)?(?:applies|apply|does\s+not\s+apply|do\s+not\s+apply)\s+to\b"
+    r"|^\W*(?:\d+(?:\.\d+)*\.?\s+)?(?:it|they)\s+(?:also\s+)?(?:applies|apply)\s+to\b", re.IGNORECASE)  # adjacent words only: "requires commanders to apply" and "to which this instruction applies must" do not match
 _DEFINITION_CUE = re.compile(r"\b(?:is|are|was|were) (?:referred to|defined|known|called|termed|considered) (?:as|to)\b|\bmeans\b|\bis defined\b|\brefers? to\b|\bbreaks? down\b|\bfor example\b|\bsuch as\b", re.IGNORECASE)
 # Verbs that open an imperative requirement ("Identify the likely root cause ..."). A hint, not a grammar: a quote that opens with one and has no modal states its duty
 # but not who has it, so the reader must take the actor from the heading or the passage.
@@ -87,6 +92,7 @@ def item_flags(quote: str, source_ref: str, applies: str, extra_verbs=()) -> lis
     list_item            the quote is a list item: its lead-in is above it (see the passage)
     table_fragment       the quote looks like a table cell or scrap (a pipe, a Table reference, or a short lower-case start)
     no_stated_actor      the quote gives a duty in the imperative with no modal and no actor, and no responsible-party heading was found
+    applicability_statement    who the document applies to ("This Instruction applies to ...", "does not apply to ...")
     definition_or_description  no modal and the wording defines or describes ("referred to as", "means", "breaks down", "such as")
     """
     quote = quote or ""
@@ -103,6 +109,8 @@ def item_flags(quote: str, source_ref: str, applies: str, extra_verbs=()) -> lis
     imperative = _is_verb(_first_word(quote), verbs)
     if imperative and not modal and not applies:
         flags.append("no_stated_actor")
+    if _APPLICABILITY.search(quote):
+        flags.append("applicability_statement")
     if not modal and _DEFINITION_CUE.search(quote):
         flags.append("definition_or_description")
     return flags
