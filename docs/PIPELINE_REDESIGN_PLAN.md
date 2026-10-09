@@ -10,7 +10,7 @@
 4. **Steps are named for what they do** (PDF reading, chunking, requirement finding, ...), not by letter. The letters (A, B, C, D, D.5, D.6, E, F) are retired; section 6 maps old to new.
 5. **Flag, do not delete**, except for records that are clearly not requirements (empty, a bare heading, a change-log line) or not in the document at all.
 6. **Every piece of the explained text that comes from the document is verbatim**, and each piece is labeled with what it is and where it came from.
-7. **A model chooses or judges; it does not write text into the explained layer.** There is no plain-language restatement layer (owner's decision).
+7. **A model chooses or judges; it does not write text into the explained layer.** There is no plain-language restatement layer (owner's decision). The one exception is the repair step (step 9): it writes, but into its own layer, from the root's exact words, labeled as model-written, and what it writes must pass the faithfulness check again.
 
 ## 2. The pipeline today
 
@@ -50,9 +50,11 @@ What is tangled:
 | 5 | **De-duplication** | Collapse records with the same source reference and the same root, as today (across chunks too, since neighboring chunks overlap); keep one and record how many were merged | step 4 | `duplicates_merged` | No |
 | 6 | **Context attaching** | Build the explained text from verbatim pieces (section 5) | steps 2, 4, 5 | `explained_text`, `explained_parts`, `explain_notes`, plus citation, section heading, parent paragraph, applies-to (stored instead of re-derived per checklist) | No (model step deferred, section 5) |
 | 7 | **Screening** | Flag, or reject the clear non-requirements, judging the **explained** text | step 6 | `screen_flags` | No (a model label may be added later) |
-| 8 | **Faithfulness check** | Does the explained text still mean what the root and its paragraph mean? Flags only | steps 6, 7 | `faithfulness` | Yes (14B); later, own plan |
-| 9 | **Totals and final file** | Counts and the final output | step 7 (or 8) | stats, final file | No |
-| 10 | **Search indexing** | Embed the explained text and store it in Qdrant (the requirements and context collections stay separate) | step 9 | Qdrant points | Embeddings |
+| 8 | **Faithfulness check** | Does the explained text still mean what the root and its paragraph mean? Flags only | steps 6, 7 | `faithfulness` (`ok`, or a reason: incomplete, confusing, adds meaning, loses meaning, could be improved) | Yes (14B); later, own plan |
+| 9 | **Repair** | For a row the check flagged, a model is given everything about it (root, explained text and parts, notes, lead-in, the chunk, the original paragraph) and writes a better version. One attempt. | steps 6 to 8 | `repaired_text`, `repair_notes`, `repair_status` | Yes (14B); later, own plan |
+| 10 | **Re-check** | The same faithfulness check on the repaired text, marked as repaired | step 9 | `faithfulness_after_repair` | Yes (14B) |
+| 11 | **Totals and final file** | Counts and the final output | step 10 | stats, final file | No |
+| 12 | **Search indexing** | Embed the text the record is shown with (section 4) and store it in Qdrant (the requirements and context collections stay separate) | step 11 | Qdrant points | Embeddings |
 | on demand | **Checklist building** | Lay the stored fields out as a sheet; derive nothing new | step 7 | sheet | No |
 | on demand | **Draft questions** | One audit question per row (unchanged) | checklist rows | sidecar file | Yes (14B) |
 
@@ -63,6 +65,7 @@ What is tangled:
 - **Anchoring comes right after requirement finding**, before anything judges or builds on the quote.
 - **Screening comes after context attaching**, because the "can this stand alone?" filters (cut-off fragment, dangling clause, orphan list item) are unfair to a fragment whose lead-in has not been attached yet. Both steps are rule-based, so screening before the model steps spends no model calls on records that get flagged.
 - If a later model step produces part of the explained text (section 5), screening moves after it.
+- **Repair is a loop of exactly one pass:** check, repair (only flagged rows), check again. Two separate calls, because checking and writing are two jobs. A row that fails the second check is not repaired again.
 - **De-duplication is once**, on the root, before the explained layer exists.
 
 ## 4. Record layers
@@ -73,6 +76,7 @@ What is tangled:
 | Anchor (metadata about the root) | `anchor_status` (`exact`, `exact_after_marker_removed`, `not_exact`), `anchor_start`, `anchor_end` in `raw_text`, `anchor_text` (the verbatim source span) | A separate set of fields, never merged with the root. When the root is not word for word (for example a lead-in glued onto an item), `anchor_status` says so and `anchor_text` is the closest exact span; the root stays as it is. |
 | Explained | `explained_text`, `explained_parts` (each `{kind, text, origin, location}` with `kind` in `lead_in`, `sentence`, `heading`; `origin` in `rule` or `model`), `explain_notes` (for example `leading marker removed`, `expanded to sentence`, `lead-in attached from numbering`) | Built from verbatim pieces only. Nothing here replaces the root. |
 | Screening | `screen_flags` | Flags, with a short reason each. |
+| Check and repair | `faithfulness`, `repaired_text`, `repair_status` (`not_needed`, `repaired_passed`, `repaired_failed`), `repair_notes`, `faithfulness_after_repair` | `explained_text` is never overwritten by repair. The repaired text is its own layer, and the guard below applies to it. |
 | Identity | `requirement_id` | Hash of the document, source reference and the **root**, so improving the explained layer never changes an ID or detaches an audit note. De-duplication (step 5) uses the same key (source reference plus root), so two records can never share an ID; a test asserts it, because the index derives each Qdrant point from the ID. This changes every ID once; the old index and any draft-question sidecars must be rebuilt. |
 
 The whole-sentence rule moves into step 6 and stops writing to `source_quote`. The root of a glued quote stays glued; the explained layer uses the exact pieces found by anchoring.
@@ -83,9 +87,20 @@ The whole-sentence rule moves into step 6 and stops writing to `source_quote`. T
 - **Tier 2, a model picks from a menu of verbatim spans (not in this plan's scope to build).** This is the WP-45.8 resolver (14B, 65 of 104 right against 41 for the old rules, nothing invented, in the earlier tests). Its evidence is on the *old* records. **It waits for rebuilt test groups on the new runs** (the owner adjudicates lead-ins, about an hour; see the Stage C plan) and for the attach rule to be written down and tested. Until then prose documents get tier 1 only.
 - **There is no tier 3.** No model-written restatement.
 
+### Repair (steps 8 to 10)
+
+Proposed by the owner: a row the faithfulness check calls incomplete, confusing or improvable goes to a model that sees all of the record's data (`source_quote`, `explained_text`, `explained_parts`, `explain_notes`, the lead-in, the chunk and the original paragraph) and writes a repaired version; the repaired version goes through the check again, marked as repaired.
+
+Guards proposed for it, because this is the one place a model writes:
+- **The root's words stay.** The repaired text must contain the anchored root text verbatim (a code check, not the model's word). The model may add words before or after to supply context, which is what the owner described, and may not change the root's own words.
+- **Everything stays visible.** The repaired text is labeled `origin: model` and shown as repaired in the checklist; the explained text it came from stays on the record.
+- **The row is judged by a second look.** Because a model grading its own rewrite is weak evidence, the re-check is the same prompt on the repaired text, and the owner rates a sample (section 7) before this step is trusted.
+- **Which text a reader sees:** `repaired_text` when `repair_status` is `repaired_passed`, otherwise `explained_text`. Indexing, Ask, Evidence and the checklist all use that one rule.
+- **A row that fails the re-check is not deleted.** The owner proposed dropping it as "not a good requirement". The plan proposes setting it aside instead (`repaired_failed`): kept in the files, kept out of the main checklist rows, and listed in a separate "set aside" section with its reason, the way possible-missed passages are listed. The reason: an auditor who is never shown a real requirement because a model could not improve its wording has silently lost an audit item. The owner decides (section 8).
+
 ## 6. Naming map (old letters to new names)
 
-A 1 PDF reading; B 2 Chunking; C 3 Requirement finding; D (grounding) 4 Anchoring; D (de-duplication) 5; D (expansion, parent stem, hierarchy and page metadata) 6 Context attaching; D (junk filters) 7 Screening; D.5 and D.6 disabled; E 9 Totals and final file; F 10 Search indexing. The `--skip-to` option takes the new names and keeps the letters as aliases for one release. `--skip-enrichment` and `--skip-description-gate` become accepted no-ops that print a note.
+A 1 PDF reading; B 2 Chunking; C 3 Requirement finding; D (grounding) 4 Anchoring; D (de-duplication) 5; D (expansion, parent stem, hierarchy and page metadata) 6 Context attaching; D (junk filters) 7 Screening; D.5 and D.6 disabled; E 11 Totals and final file; F 12 Search indexing; the faithfulness check, repair and re-check (8 to 10) are new. The `--skip-to` option takes the new names and keeps the letters as aliases for one release. `--skip-enrichment` and `--skip-description-gate` become accepted no-ops that print a note.
 
 ## 7. Sequence of PRs and what each one must show
 
@@ -98,12 +113,15 @@ Each PR registers its pass rules before any result is read (the project's standi
 5. **Explained layer (tier 1, stored).** Pass: the whole-sentence rule still meets its WP-45.14 measures when applied to the explained layer only; the owner rates 30 explained rows against their roots, better or same at least 80%; the checklist built from stored fields equals the one built today from derived fields on AFI 17-203 except where the plan says otherwise.
 6. **Screening on the explained text.** Pass: no labeled obligation lost; counts of records rescued and newly flagged are reported per document; the owner rates a sample of 30 of each.
 7. **Disable tagging, typing, description and the description check; point Ask, Evidence and result cards at the explained text; reindex.** Pass: the Ask and Evidence smoke checks still return grounded answers; the tests pass; the owner compares a few Ask answers with and without the description. The frontend tag and type filters will have nothing to filter on; the PR states what happens to those controls.
-8. **Later, each with its own plan:** the faithfulness check (14B, rated by the owner in the way the draft questions were, 30 rows, with a registered bar); the model-picks step (after the rebuilt test groups).
+8. **Later, each with its own plan:** the faithfulness check (14B, rated by the owner in the way the draft questions were: 30 rows, with a registered bar); the repair step and re-check (the owner rates 30 repaired rows as usable, needs an edit, or wrong, with a registered bar; also reported: how many flagged rows pass the re-check, and how many repaired texts break the guard); the model-picks step (after the rebuilt test groups).
 
-## 8. Open decisions
+## 8. Decisions
 
-- Keep `source_quote` as the name of the root (this plan), or rename it to `root_quote` in the rename PR.
-- `confidence`: drop, or redefine from the anchor result.
+**Settled by the owner (2026-10-09):** `source_quote` stays the name of the root; `confidence` is dropped from the default path (commented out, code kept; it may return as something real later). One thing to handle when it goes: the Evidence service picks each group's representative by highest confidence, so step 12's PR must give it another rule (for example, the highest search score).
+
+**Open:**
+- A row that fails the re-check: set aside and listed (proposed) or dropped (the owner's first wording).
+- Whether repair must keep the root's exact words (proposed: yes, by a code check).
 - Which screening rules reject and which only flag. Proposed: reject only an empty quote, a bare heading echo, a change-log entry and a quote that cannot be anchored and fails the existing grounding thresholds; flag the rest.
 - One file per step (clearer, more files) or one record file that grows by layers. The readers that pick `normalized`, `enriched` or `gated` files by name (the artifact resolver) would change either way; the rename PR settles it.
 - Whether the frontend tag and type filters are hidden or left empty while the fields are empty.
