@@ -379,7 +379,7 @@ def test_to_xlsx_group_headers_in_row_1():
 def test_to_xlsx_column_order():
     expected_headers = [
         "Ref", "Section", "Pages", "Applies to", "Parent para.",
-        "Requirement", "Passage", "Audit Question",
+        "Requirement", "Passage", "Audit Question (draft)",
         "Status", "Notes",
         "Check", "Reasons", "Conf.",
         "Item ID", "Req IDs", "Tags",

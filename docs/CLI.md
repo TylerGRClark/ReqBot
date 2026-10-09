@@ -31,6 +31,7 @@ Unless listed otherwise, service URL flags default to the effective
 | `compare` | Compare a control or topic across documents. |
 | `evidence` | Export a grouped evidence pack. |
 | `checklist` | Export a checklist from processed requirement artifacts. |
+| `questions` | Write draft audit questions for a document's checklist rows (local model; shown by `checklist`). |
 | `reindex` | Rebuild indexes from processed artifacts without extraction. |
 | `index` | Index one requirement JSONL file directly. |
 | `index-context` | Index one source-chunk JSONL file directly. |
@@ -196,6 +197,15 @@ per-command `--synthesize` or disable-synthesis flag. Set
 `synthesis_backend=none` for retrieval-only evidence. API/MCP evidence instead
 default to `synthesize=false`. Evidence packs collect requirements and source
 references; they do not assert that your organization has implemented a control.
+
+## questions
+
+```bash
+reqbot questions --doc policy
+reqbot checklist --doc policy --format xlsx --output checklist.xlsx   # the Audit Question column is now filled
+```
+
+Writes one draft yes/no audit question per checklist row to `<doc>_audit_questions.jsonl` beside the document's requirements, using the local Ollama model (default `qwen2.5:14b`; `--model`, `--ollama-url`). Rows that look like fragments, definitions or descriptions get no question. A question that mentions a number, acronym or name not found in the row's own text is kept and marked in the row's notes. Questions are drafts for the auditor to check; rerunning reuses unchanged rows and retries failed ones. Building a checklist never calls a model.
 
 ## checklist
 
