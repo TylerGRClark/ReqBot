@@ -47,7 +47,7 @@ What is tangled:
 | 2 | **Chunking** | Cut into chunks; keep `raw_text` as the one reference text | step 1 | chunks file | No |
 | 3 | **Requirement finding** | One call per chunk returns the quotes that look like duties | chunks | `source_quote` (the root, exactly as returned; trimmed of surrounding spaces only), `source_ref` | **Yes (8B)** |
 | 4 | **Anchoring** | Find the root in the chunk's `raw_text`; record where, and whether the match was exact | steps 2, 3 | `anchor_status`, `anchor_start`, `anchor_end`, `anchor_text` | No |
-| 5 | **De-duplication** | Collapse records with the same root in the same place | step 4 | (drops duplicates; keeps a count) | No |
+| 5 | **De-duplication** | Collapse records with the same source reference and the same root, as today (across chunks too, since neighboring chunks overlap); keep one and record how many were merged | step 4 | `duplicates_merged` | No |
 | 6 | **Context attaching** | Build the explained text from verbatim pieces (section 5) | steps 2, 4, 5 | `explained_text`, `explained_parts`, `explain_notes`, plus citation, section heading, parent paragraph, applies-to (stored instead of re-derived per checklist) | No (model step deferred, section 5) |
 | 7 | **Screening** | Flag, or reject the clear non-requirements, judging the **explained** text | step 6 | `screen_flags` | No (a model label may be added later) |
 | 8 | **Faithfulness check** | Does the explained text still mean what the root and its paragraph mean? Flags only | steps 6, 7 | `faithfulness` | Yes (14B); later, own plan |
@@ -73,7 +73,7 @@ What is tangled:
 | Anchor (metadata about the root) | `anchor_status` (`exact`, `exact_after_marker_removed`, `not_exact`), `anchor_start`, `anchor_end` in `raw_text`, `anchor_text` (the verbatim source span) | A separate set of fields, never merged with the root. When the root is not word for word (for example a lead-in glued onto an item), `anchor_status` says so and `anchor_text` is the closest exact span; the root stays as it is. |
 | Explained | `explained_text`, `explained_parts` (each `{kind, text, origin, location}` with `kind` in `lead_in`, `sentence`, `heading`; `origin` in `rule` or `model`), `explain_notes` (for example `leading marker removed`, `expanded to sentence`, `lead-in attached from numbering`) | Built from verbatim pieces only. Nothing here replaces the root. |
 | Screening | `screen_flags` | Flags, with a short reason each. |
-| Identity | `requirement_id` | Hash of the document, source reference and the **root**, so improving the explained layer never changes an ID or detaches an audit note. This changes every ID once; the old index and any draft-question sidecars must be rebuilt. |
+| Identity | `requirement_id` | Hash of the document, source reference and the **root**, so improving the explained layer never changes an ID or detaches an audit note. De-duplication (step 5) uses the same key (source reference plus root), so two records can never share an ID; a test asserts it, because the index derives each Qdrant point from the ID. This changes every ID once; the old index and any draft-question sidecars must be rebuilt. |
 
 The whole-sentence rule moves into step 6 and stops writing to `source_quote`. The root of a glued quote stays glued; the explained layer uses the exact pieces found by anchoring.
 
