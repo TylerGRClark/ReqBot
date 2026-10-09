@@ -1,0 +1,3879 @@
+{
+ "obligations": 74,
+ "arms": {
+  "T2a": {
+   "recall": {
+    "chunked": 74,
+    "extracted_covered": 46,
+    "extracted_partial": 2,
+    "survived_step_d_covered": 45
+   },
+   "totals": {
+    "chunks": 839,
+    "step_c_ledger_rows": 839,
+    "records": 2025,
+    "survivors": 1880
+   },
+   "failure_codes": {
+    "quote_not_grounded_in_chunk": 59,
+    "unrepairable_fragment_quote": 33,
+    "quote_words_not_in_chunk": 5,
+    "heading_echo_quote": 25,
+    "orphaned_list_item_quote": 4
+   },
+   "per_document": {
+    "CJCSI 6510.02G": {
+     "chunks": 47,
+     "step_c_ledger_rows": 47,
+     "records": 104,
+     "survivors": 87,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 16,
+      "unrepairable_fragment_quote": 1
+     },
+     "wall_seconds": 126.7
+    },
+    "DODI 5200.01": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 73,
+     "survivors": 65,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 5,
+      "quote_not_grounded_in_chunk": 3
+     },
+     "wall_seconds": 91.9
+    },
+    "DODI 5200.44": {
+     "chunks": 36,
+     "step_c_ledger_rows": 36,
+     "records": 93,
+     "survivors": 87,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 128.8
+    },
+    "DODI 5200.48": {
+     "chunks": 100,
+     "step_c_ledger_rows": 100,
+     "records": 246,
+     "survivors": 232,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 9,
+      "quote_words_not_in_chunk": 2,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 360.7
+    },
+    "DODI 8410.03": {
+     "chunks": 42,
+     "step_c_ledger_rows": 42,
+     "records": 150,
+     "survivors": 142,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 1,
+      "unrepairable_fragment_quote": 7
+     },
+     "wall_seconds": 184.3
+    },
+    "DODI 8551.01": {
+     "chunks": 30,
+     "step_c_ledger_rows": 30,
+     "records": 64,
+     "survivors": 59,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 2,
+      "quote_not_grounded_in_chunk": 2,
+      "quote_words_not_in_chunk": 1
+     },
+     "wall_seconds": 93.6
+    },
+    "NIST.SP.800-125": {
+     "chunks": 109,
+     "step_c_ledger_rows": 109,
+     "records": 146,
+     "survivors": 144,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 1,
+      "heading_echo_quote": 1
+     },
+     "wall_seconds": 161.1
+    },
+    "afi10-2402": {
+     "chunks": 129,
+     "step_c_ledger_rows": 129,
+     "records": 323,
+     "survivors": 295,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 9,
+      "heading_echo_quote": 5,
+      "orphaned_list_item_quote": 4,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 414.5
+    },
+    "afi13-550": {
+     "chunks": 71,
+     "step_c_ledger_rows": 71,
+     "records": 181,
+     "survivors": 171,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 5,
+      "heading_echo_quote": 2
+     },
+     "wall_seconds": 243.5
+    },
+    "afi17-203": {
+     "chunks": 55,
+     "step_c_ledger_rows": 55,
+     "records": 123,
+     "survivors": 111,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 7,
+      "heading_echo_quote": 2,
+      "quote_words_not_in_chunk": 2
+     },
+     "wall_seconds": 160.9
+    },
+    "afman17-2101": {
+     "chunks": 63,
+     "step_c_ledger_rows": 63,
+     "records": 163,
+     "survivors": 145,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 3,
+      "heading_echo_quote": 5,
+      "unrepairable_fragment_quote": 6
+     },
+     "wall_seconds": 221.1
+    },
+    "afpd_17-1": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 70,
+     "survivors": 62,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "heading_echo_quote": 6
+     },
+     "wall_seconds": 79.2
+    },
+    "dafman17-1305": {
+     "chunks": 107,
+     "step_c_ledger_rows": 107,
+     "records": 289,
+     "survivors": 280,
+     "failure_codes": {
+      "heading_echo_quote": 4,
+      "unrepairable_fragment_quote": 2
+     },
+     "wall_seconds": 397.8
+    }
+   }
+  },
+  "T2b": {
+   "recall": {
+    "chunked": 74,
+    "extracted_covered": 47,
+    "extracted_partial": 2,
+    "survived_step_d_covered": 46
+   },
+   "totals": {
+    "chunks": 839,
+    "step_c_ledger_rows": 839,
+    "records": 2025,
+    "survivors": 1890
+   },
+   "failure_codes": {
+    "quote_not_grounded_in_chunk": 57,
+    "unrepairable_fragment_quote": 32,
+    "quote_words_not_in_chunk": 5,
+    "heading_echo_quote": 24
+   },
+   "per_document": {
+    "CJCSI 6510.02G": {
+     "chunks": 47,
+     "step_c_ledger_rows": 47,
+     "records": 102,
+     "survivors": 87,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 13,
+      "unrepairable_fragment_quote": 2
+     },
+     "wall_seconds": 124.0
+    },
+    "DODI 5200.01": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 72,
+     "survivors": 65,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 4,
+      "quote_not_grounded_in_chunk": 3
+     },
+     "wall_seconds": 92.2
+    },
+    "DODI 5200.44": {
+     "chunks": 36,
+     "step_c_ledger_rows": 36,
+     "records": 102,
+     "survivors": 93,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 5,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 140.3
+    },
+    "DODI 5200.48": {
+     "chunks": 100,
+     "step_c_ledger_rows": 100,
+     "records": 245,
+     "survivors": 233,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 8,
+      "quote_words_not_in_chunk": 1,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 355.2
+    },
+    "DODI 8410.03": {
+     "chunks": 42,
+     "step_c_ledger_rows": 42,
+     "records": 150,
+     "survivors": 145,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 5
+     },
+     "wall_seconds": 180.2
+    },
+    "DODI 8551.01": {
+     "chunks": 30,
+     "step_c_ledger_rows": 30,
+     "records": 63,
+     "survivors": 58,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 2,
+      "quote_not_grounded_in_chunk": 3
+     },
+     "wall_seconds": 89.2
+    },
+    "NIST.SP.800-125": {
+     "chunks": 109,
+     "step_c_ledger_rows": 109,
+     "records": 156,
+     "survivors": 153,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 1,
+      "heading_echo_quote": 1
+     },
+     "wall_seconds": 170.3
+    },
+    "afi10-2402": {
+     "chunks": 129,
+     "step_c_ledger_rows": 129,
+     "records": 314,
+     "survivors": 291,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 7,
+      "quote_words_not_in_chunk": 2,
+      "heading_echo_quote": 5,
+      "unrepairable_fragment_quote": 3
+     },
+     "wall_seconds": 403.9
+    },
+    "afi13-550": {
+     "chunks": 71,
+     "step_c_ledger_rows": 71,
+     "records": 177,
+     "survivors": 166,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 5,
+      "heading_echo_quote": 2,
+      "unrepairable_fragment_quote": 1
+     },
+     "wall_seconds": 240.2
+    },
+    "afi17-203": {
+     "chunks": 55,
+     "step_c_ledger_rows": 55,
+     "records": 126,
+     "survivors": 115,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 6,
+      "heading_echo_quote": 2,
+      "quote_words_not_in_chunk": 2
+     },
+     "wall_seconds": 165.4
+    },
+    "afman17-2101": {
+     "chunks": 63,
+     "step_c_ledger_rows": 63,
+     "records": 161,
+     "survivors": 146,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 3,
+      "heading_echo_quote": 5,
+      "unrepairable_fragment_quote": 5
+     },
+     "wall_seconds": 217.7
+    },
+    "afpd_17-1": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 78,
+     "survivors": 67,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 4,
+      "heading_echo_quote": 6,
+      "unrepairable_fragment_quote": 1
+     },
+     "wall_seconds": 85.9
+    },
+    "dafman17-1305": {
+     "chunks": 107,
+     "step_c_ledger_rows": 107,
+     "records": 279,
+     "survivors": 271,
+     "failure_codes": {
+      "heading_echo_quote": 3,
+      "unrepairable_fragment_quote": 2
+     },
+     "wall_seconds": 385.0
+    }
+   }
+  },
+  "D1x": {
+   "recall": {
+    "chunked": 74,
+    "extracted_covered": 68,
+    "extracted_partial": 0,
+    "survived_step_d_covered": 67
+   },
+   "totals": {
+    "chunks": 839,
+    "step_c_ledger_rows": 839,
+    "records": 2752,
+    "survivors": 2501
+   },
+   "failure_codes": {
+    "quote_not_grounded_in_chunk": 92,
+    "unrepairable_fragment_quote": 87,
+    "heading_echo_quote": 40,
+    "quote_words_not_in_chunk": 4
+   },
+   "per_document": {
+    "CJCSI 6510.02G": {
+     "chunks": 47,
+     "step_c_ledger_rows": 47,
+     "records": 148,
+     "survivors": 113,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 16,
+      "unrepairable_fragment_quote": 17,
+      "heading_echo_quote": 1,
+      "quote_words_not_in_chunk": 1
+     },
+     "wall_seconds": 256.7
+    },
+    "DODI 5200.01": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 80,
+     "survivors": 75,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 5
+     },
+     "wall_seconds": 98.5
+    },
+    "DODI 5200.44": {
+     "chunks": 36,
+     "step_c_ledger_rows": 36,
+     "records": 117,
+     "survivors": 109,
+     "failure_codes": {
+      "quote_words_not_in_chunk": 1,
+      "unrepairable_fragment_quote": 7
+     },
+     "wall_seconds": 162.7
+    },
+    "DODI 5200.48": {
+     "chunks": 100,
+     "step_c_ledger_rows": 100,
+     "records": 360,
+     "survivors": 321,
+     "failure_codes": {
+      "unrepairable_fragment_quote": 10,
+      "quote_not_grounded_in_chunk": 25,
+      "quote_words_not_in_chunk": 2,
+      "heading_echo_quote": 1
+     },
+     "wall_seconds": 409.9
+    },
+    "DODI 8410.03": {
+     "chunks": 42,
+     "step_c_ledger_rows": 42,
+     "records": 179,
+     "survivors": 167,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "unrepairable_fragment_quote": 9,
+      "heading_echo_quote": 1
+     },
+     "wall_seconds": 212.2
+    },
+    "DODI 8551.01": {
+     "chunks": 30,
+     "step_c_ledger_rows": 30,
+     "records": 98,
+     "survivors": 84,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 10,
+      "unrepairable_fragment_quote": 4
+     },
+     "wall_seconds": 112.8
+    },
+    "NIST.SP.800-125": {
+     "chunks": 109,
+     "step_c_ledger_rows": 109,
+     "records": 325,
+     "survivors": 309,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 7,
+      "unrepairable_fragment_quote": 2,
+      "heading_echo_quote": 4
+     },
+     "wall_seconds": 324.7
+    },
+    "afi10-2402": {
+     "chunks": 129,
+     "step_c_ledger_rows": 129,
+     "records": 377,
+     "survivors": 356,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "heading_echo_quote": 6,
+      "unrepairable_fragment_quote": 8
+     },
+     "wall_seconds": 459.0
+    },
+    "afi13-550": {
+     "chunks": 71,
+     "step_c_ledger_rows": 71,
+     "records": 214,
+     "survivors": 192,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 7,
+      "heading_echo_quote": 4,
+      "unrepairable_fragment_quote": 7
+     },
+     "wall_seconds": 281.9
+    },
+    "afi17-203": {
+     "chunks": 55,
+     "step_c_ledger_rows": 55,
+     "records": 173,
+     "survivors": 157,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 9,
+      "heading_echo_quote": 4,
+      "unrepairable_fragment_quote": 1
+     },
+     "wall_seconds": 198.9
+    },
+    "afman17-2101": {
+     "chunks": 63,
+     "step_c_ledger_rows": 63,
+     "records": 211,
+     "survivors": 184,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 7,
+      "heading_echo_quote": 4,
+      "unrepairable_fragment_quote": 9
+     },
+     "wall_seconds": 262.3
+    },
+    "afpd_17-1": {
+     "chunks": 25,
+     "step_c_ledger_rows": 25,
+     "records": 92,
+     "survivors": 77,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 5,
+      "heading_echo_quote": 4,
+      "unrepairable_fragment_quote": 6
+     },
+     "wall_seconds": 95.6
+    },
+    "dafman17-1305": {
+     "chunks": 107,
+     "step_c_ledger_rows": 107,
+     "records": 378,
+     "survivors": 357,
+     "failure_codes": {
+      "quote_not_grounded_in_chunk": 2,
+      "heading_echo_quote": 11,
+      "unrepairable_fragment_quote": 2
+     },
+     "wall_seconds": 475.6
+    }
+   }
+  }
+ },
+ "pairs": {
+  "T2a vs T2b": {
+   "recall_extracted": {
+    "only_first": [
+     {
+      "id": "AFMAN-p009-002",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.10. Provides direct provisioning oversight and management of all corporately funded enterprise SBU IP Data (formerly NIPRNET), Secret IP Data (formerly SIPRNET) and DISN Virtual Private Network (VPN) requirements for all MAJCOMs.",
+      "trace_first": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-21-0"
+       ],
+       "covering_surviving": [
+        "REQ-6667e37fdac7"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-21-0",
+        "chunk_id": 21,
+        "source_quote": "Provides direct provisioning oversight and management of all corporately funded enterprise SBU IP Data (formerly NIPRNET), Secret IP Data (formerly SIPRNET) and DISN Virtual Private Network (VPN) requirements for all MAJCOMs.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": []
+     }
+    ],
+    "only_second": [
+     {
+      "id": "AFMAN-p004-007",
+      "document": "afman17-2101",
+      "page": 4,
+      "text": "1.1.2. DOD policy assigns Defense Information Systems Agency (DISA) the responsibility to provide end-to-end DOD Information Network (DODIN) infrastructure and to provision, manage and sustain DISN transport, services, facilities, and equipment in direct support of DOD missions, the Joint warfighter and AF operational readiness.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-6-0",
+        "R-6-1"
+       ],
+       "covering_surviving": [
+        "REQ-6a0f9a3c0f22",
+        "REQ-ad6e7236c0b5"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-6-0",
+        "chunk_id": 6,
+        "source_quote": "The AF centrally provisions, manages and funds the AF enterprise Long Haul Communications transport portion of the DOD network and services called the Defense Information Systems Network (DISN) and the AF segment called the AF Information Networks (AFIN) which uses the DISN for transport.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-6-1",
+        "chunk_id": 6,
+        "source_quote": "DOD policy assigns Defense Information Systems Agency (DISA) the responsibility to provide end-to-end DOD Information Network (DODIN) infrastructure and to provision, manage and sustain DISN transport, services, facilities, and equipment in direct support of DOD missions, the Joint warfighter and AF operational readiness.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-010",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.20. Coordinates with all appropriate organizations (DISA, the AF customers/mission system managers, sister services, COCOMs and other DOD Agencies) regarding contract transitions which affect circuits, equipment, and services.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-26-0"
+       ],
+       "covering_surviving": [
+        "REQ-416c36d9baa8"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-26-0",
+        "chunk_id": 26,
+        "source_quote": "Coordinates with all appropriate organizations (DISA, the AF customers/mission system managers, sister services, COCOMs and other DOD Agencies) regarding contract transitions which affect circuits, equipment, and services.",
+        "step_d_failure": null
+       }
+      ]
+     }
+    ],
+    "both": 45,
+    "neither": 26
+   },
+   "quote_overlap": {
+    "overall_jaccard": 0.8536,
+    "per_document": {
+     "CJCSI 6510.02G": {
+      "shared": 83,
+      "only_first": 4,
+      "only_second": 4,
+      "jaccard": 0.912
+     },
+     "DODI 5200.01": {
+      "shared": 59,
+      "only_first": 6,
+      "only_second": 6,
+      "jaccard": 0.831
+     },
+     "DODI 5200.44": {
+      "shared": 82,
+      "only_first": 5,
+      "only_second": 11,
+      "jaccard": 0.837
+     },
+     "DODI 5200.48": {
+      "shared": 221,
+      "only_first": 11,
+      "only_second": 12,
+      "jaccard": 0.906
+     },
+     "DODI 8410.03": {
+      "shared": 122,
+      "only_first": 20,
+      "only_second": 23,
+      "jaccard": 0.739
+     },
+     "DODI 8551.01": {
+      "shared": 56,
+      "only_first": 3,
+      "only_second": 2,
+      "jaccard": 0.918
+     },
+     "NIST.SP.800-125": {
+      "shared": 127,
+      "only_first": 17,
+      "only_second": 26,
+      "jaccard": 0.747
+     },
+     "afi10-2402": {
+      "shared": 268,
+      "only_first": 17,
+      "only_second": 12,
+      "jaccard": 0.902
+     },
+     "afi13-550": {
+      "shared": 150,
+      "only_first": 15,
+      "only_second": 10,
+      "jaccard": 0.857
+     },
+     "afi17-203": {
+      "shared": 107,
+      "only_first": 4,
+      "only_second": 8,
+      "jaccard": 0.899
+     },
+     "afman17-2101": {
+      "shared": 133,
+      "only_first": 11,
+      "only_second": 12,
+      "jaccard": 0.853
+     },
+     "afpd_17-1": {
+      "shared": 56,
+      "only_first": 4,
+      "only_second": 8,
+      "jaccard": 0.824
+     },
+     "dafman17-1305": {
+      "shared": 250,
+      "only_first": 26,
+      "only_second": 17,
+      "jaccard": 0.853
+     }
+    }
+   }
+  },
+  "T2a vs D1x": {
+   "recall_extracted": {
+    "only_first": [
+     {
+      "id": "AFMAN-p004-013",
+      "document": "afman17-2101",
+      "page": 4,
+      "text": "1.1.4. The AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron (CYRS)/SCC, executes and manages all facets of the DISN Enterprise Long Haul Communications Program on behalf of the AF.",
+      "trace_first": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-0"
+       ],
+       "covering_surviving": [
+        "REQ-e8cd537bede0"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-8-0",
+        "chunk_id": 8,
+        "source_quote": "The AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron (CYRS)/SCC, executes and manages all facets of the DISN Enterprise Long Haul Communications Program on behalf of the AF.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": []
+     },
+     {
+      "id": "AFMAN-p010-006",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "This activity will not be accomplished indiscriminately and shall be coordinated with the customer.",
+      "trace_first": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-25-0"
+       ],
+       "covering_surviving": [
+        "REQ-90db2aa35965"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.4286,
+        "survived_step_d": 0.4286
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [
+        "R-25-1"
+       ],
+       "covering_surviving": [
+        "REQ-f1ff90d953f1"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-25-0",
+        "chunk_id": 25,
+        "source_quote": "Denies/terminates DISN LHC requests when it is in the best interest of the AF. This activity will not be accomplished indiscriminately and shall be coordinated with the customer.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-25-1",
+        "chunk_id": 25,
+        "source_quote": "shall be coordinated with the customer.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "DODI-p012-003",
+      "document": "DODI 8410.03",
+      "page": 12,
+      "text": "l. Ensure, in coordination with DISA, all DoD equipment containing or potentially containing personally identifiable information and other data of a sensitive nature is managed in accordance with DoDI 5000.64 (Reference (s)).",
+      "trace_first": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-20-1",
+        "R-20-2",
+        "R-20-3",
+        "R-20-4"
+       ],
+       "covering_surviving": [
+        "REQ-77c9c964b9b5",
+        "REQ-d866ca15f25e",
+        "REQ-406665a0ef0e",
+        "REQ-ec1fa5d42f24"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0938,
+        "survived_step_d": 0.0938
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [
+        "R-20-1",
+        "R-20-2",
+        "R-20-3"
+       ],
+       "covering_surviving": [
+        "REQ-e72ccd154c58",
+        "REQ-6f18d648f440",
+        "REQ-c2fe38372d96"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-20-1",
+        "chunk_id": 20,
+        "source_quote": "Ensure, in coordination with DISA, all DoD equipment containing or potentially containing personally identifiable information and other data of a sensitive nature is managed in accordance with DoDI 5000.64 (Reference (s)).",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-20-2",
+        "chunk_id": 20,
+        "source_quote": "The CJCS, in addition to the responsibilities in section 8 of this enclosure and in coordination with the other Heads of the DoD Components, shall: Establish and issue priorities for the collection and sharing of NM data.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-20-3",
+        "chunk_id": 20,
+        "source_quote": "The CJCS, in addition to the responsibilities in section 8 of this enclosure and in coordination with the other Heads of the DoD Components, shall: Develop and promulgate joint NM tactics, techniques, and procedures.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-20-4",
+        "chunk_id": 20,
+        "source_quote": "In coordination with the Combatant Commanders, establish requirements for sharing NM information and data with coalition partner networks.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-20-1",
+        "chunk_id": 20,
+        "source_quote": "The CJCS, in addition to the responsibilities in section 8 of this enclosure and in coordination with the other Heads of the DoD Components, shall: a. Establish and issue priorities for the collection and sharing of NM data.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-20-2",
+        "chunk_id": 20,
+        "source_quote": "The CJCS, in addition to the responsibilities in section 8 of this enclosure and in coordination with the other Heads of the DoD Components, shall: b. Develop and promulgate joint NM tactics, techniques, and procedures.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-20-3",
+        "chunk_id": 20,
+        "source_quote": "The CJCS, in addition to the responsibilities in section 8 of this enclosure and in coordination with the other Heads of the DoD Components, shall: c. In coordination with the Combatant Commanders, establish requirements for sharing NM information and data with coalition partner networks.",
+        "step_d_failure": null
+       }
+      ]
+     }
+    ],
+    "only_second": [
+     {
+      "id": "AFMAN-p004-007",
+      "document": "afman17-2101",
+      "page": 4,
+      "text": "1.1.2. DOD policy assigns Defense Information Systems Agency (DISA) the responsibility to provide end-to-end DOD Information Network (DODIN) infrastructure and to provision, manage and sustain DISN transport, services, facilities, and equipment in direct support of DOD missions, the Joint warfighter and AF operational readiness.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-6-0",
+        "R-6-1"
+       ],
+       "covering_surviving": [
+        "REQ-6a0f9a3c0f22",
+        "REQ-ad6e7236c0b5"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-6-0",
+        "chunk_id": 6,
+        "source_quote": "The AF centrally provisions, manages and funds the AF enterprise Long Haul Communications transport portion of the DOD network and services called the Defense Information Systems Network (DISN) and the AF segment called the AF Information Networks (AFIN) which uses the DISN for transport.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-6-1",
+        "chunk_id": 6,
+        "source_quote": "DOD policy assigns Defense Information Systems Agency (DISA) the responsibility to provide end-to-end DOD Information Network (DODIN) infrastructure and to provision, manage and sustain DISN transport, services, facilities, and equipment in direct support of DOD missions, the Joint warfighter and AF operational readiness.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-003",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.11. Provides direct management oversight on corporate AF LHC funding appropriations and MAJCOM dedicated funding.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-21-1"
+       ],
+       "covering_surviving": [
+        "REQ-19384e1f0982"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-21-1",
+        "chunk_id": 21,
+        "source_quote": "Provides direct management oversight on corporate AF LHC funding appropriations and MAJCOM dedicated funding.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-005",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.11.1. Serve as AF Program Designator Code (PDC) manager.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-21-2"
+       ],
+       "covering_surviving": [
+        "REQ-9f2f204f5b51"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-21-2",
+        "chunk_id": 21,
+        "source_quote": "Serve as AF Program Designator Code (PDC) manager. Reviews local funded codes created by Management Headquarters, Agencies, Units and COCOMs.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-006",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "Reviews local funded codes created by Management Headquarters, Agencies, Units and COCOMs.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-21-2"
+       ],
+       "covering_surviving": [
+        "REQ-9f2f204f5b51"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-21-2",
+        "chunk_id": 21,
+        "source_quote": "Serve as AF Program Designator Code (PDC) manager. Reviews local funded codes created by Management Headquarters, Agencies, Units and COCOMs.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-014",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.11.5. Receive financial/execution plan (D-22s) from MAJCOMs.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-22-6"
+       ],
+       "covering_surviving": [
+        "REQ-94f569dd0f4c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-22-6",
+        "chunk_id": 22,
+        "source_quote": "Receive financial/execution plan (D-22s) from MAJCOMs. Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-015",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-22-6"
+       ],
+       "covering_surviving": [
+        "REQ-94f569dd0f4c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-22-6",
+        "chunk_id": 22,
+        "source_quote": "Receive financial/execution plan (D-22s) from MAJCOMs. Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-020",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.12. Assists SAF/CIO A6 as SME in support of AF and Major Command IG teams.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-23-4"
+       ],
+       "covering_surviving": [
+        "REQ-a3c3f2e0bf1c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-23-4",
+        "chunk_id": 23,
+        "source_quote": "Assists SAF/CIO A6 as SME in support of AF and Major Command IG teams.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-021",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.13. Serves as the AF customer interface and focal point with DISA, DITCO, and the General Services Administration (GSA) for long-haul circuit and service requirements.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-23-5"
+       ],
+       "covering_surviving": [
+        "REQ-fe5a3801a496"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-23-5",
+        "chunk_id": 23,
+        "source_quote": "Serves  as  the  AF  customer  interface  and  focal  point  with  DISA,  DITCO,  and  the General Services Administration (GSA) for long-haul circuit and service requirements.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-023",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-24-1"
+       ],
+       "covering_surviving": [
+        "REQ-18414b99a3fa"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-24-1",
+        "chunk_id": 24,
+        "source_quote": "Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-008",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.18. Represents the AF with government and DOD procurement actions involving longhaul requirements and participates in contract evaluation panels.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-26-0"
+       ],
+       "covering_surviving": [
+        "REQ-363e29724401"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-26-0",
+        "chunk_id": 26,
+        "source_quote": "2.3.18. Represents the AF with government and DOD procurement actions involving longhaul requirements and participates in contract evaluation panels.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-009",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.19. Participates in working groups internal and external to AF, providing LHC technical and/or procedure SME recommendations and guidance.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-26-1"
+       ],
+       "covering_surviving": [
+        "REQ-f056fcc5f261"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-26-1",
+        "chunk_id": 26,
+        "source_quote": "2.3.19. Participates in working groups internal and external to AF, providing LHC technical and/or procedure SME recommendations and guidance.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-010",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.20. Coordinates with all appropriate organizations (DISA, the AF customers/mission system managers, sister services, COCOMs and other DOD Agencies) regarding contract transitions which affect circuits, equipment, and services.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-26-2"
+       ],
+       "covering_surviving": [
+        "REQ-2fff0cfccd5a"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-26-2",
+        "chunk_id": 26,
+        "source_quote": "2.3.20. Coordinates with all appropriate organizations (DISA, the AF customers/mission system managers, sister services, COCOMs and other DOD Agencies) regarding contract transitions which affect circuits, equipment, and services.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-011",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.21. Forwards National Security Emergency Preparedness (NS/EP) appointment letters to Department of Homeland Security TSP Program Office. (tsp@hq.dhs.gov)",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-26-3"
+       ],
+       "covering_surviving": [
+        "REQ-7f15a2c9e11d"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-26-3",
+        "chunk_id": 26,
+        "source_quote": "2.3.21. Forwards National Security Emergency Preparedness (NS/EP) appointment letters to Department of Homeland Security TSP Program Office. (tsp@hq.dhs.gov)",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "DODI-p014-012",
+      "document": "DODI 8410.03",
+      "page": 14,
+      "text": "In situations where it is determined that adopting approved NM data schemas and net-centric sharing mechanisms would result in unacceptable delay or increased costs to a POR, a request for waiver will be submitted via the applicable acquisition oversight process.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0976,
+        "survived_step_d": 0.0976
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [
+        "R-24-0",
+        "R-24-1"
+       ],
+       "covering_surviving": [
+        "REQ-5d59de495ea0",
+        "REQ-fc087d38c87c"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-24-0",
+        "R-24-1",
+        "R-24-2"
+       ],
+       "covering_surviving": [
+        "REQ-644cc3f1575c",
+        "REQ-656637b51af9",
+        "REQ-505cb94fdc4b"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-24-0",
+        "chunk_id": 24,
+        "source_quote": "The CDRUSSTRATCOM, IAW Reference (c) and functioning IAW Reference (g), shall vet and approve NM data schemas and sharing mechanisms.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-24-1",
+        "chunk_id": 24,
+        "source_quote": "DoD programs of record (POR) shall adopt and implement NM data schemas and netcentric sharing mechanisms that have been approved by CDRUSSTRATCOM.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-24-0",
+        "chunk_id": 24,
+        "source_quote": "The CDRUSSTRATCOM, IAW Reference (c) and functioning IAW Reference (g), shall vet and approve NM data schemas and sharing mechanisms.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-24-1",
+        "chunk_id": 24,
+        "source_quote": "DoD programs of record (POR) shall adopt and implement NM data schemas and netcentric sharing mechanisms that have been approved by CDRUSSTRATCOM.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-24-2",
+        "chunk_id": 24,
+        "source_quote": "In situations where it is determined that adopting approved NM data schemas and net-centric sharing mechanisms would result in unacceptable delay or increased costs to a POR, a request for waiver will be submitted via the applicable acquisition oversight process.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "DODI-p014-013",
+      "document": "DODI 8410.03",
+      "page": 14,
+      "text": "(1) Where standards or data schemas are not available or have not been approved, program offices shall work with DISA to identify and vet program specific data standards, schemas, and exchange mechanisms prior to them being submitted to CDRUSSTRATCOM for approval.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-24-3"
+       ],
+       "covering_surviving": [
+        "REQ-b24de75c34b0"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-24-3",
+        "chunk_id": 24,
+        "source_quote": "(1) Where standards or data schemas are not available or have not been approved, program offices shall work with DISA to identify and vet program specific data standards, schemas, and exchange mechanisms prior to them being submitted to CDRUSSTRATCOM for approval.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p018-022",
+      "document": "NIST.SP.800-125",
+      "page": 18,
+      "text": "Some organizations have policies about which application data can physically reside on drives with the data of other applications, and such policies should take into account physical and logical partitioning in hypervisors.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-50-5",
+        "R-50-6"
+       ],
+       "covering_surviving": [
+        "REQ-9e2fe04a64a7",
+        "REQ-95cc5ba898d9"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-50-5",
+        "chunk_id": 50,
+        "source_quote": "Many virtualization systems can do both physical and logical partitioning.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-50-6",
+        "chunk_id": 50,
+        "source_quote": "Some organizations have policies about which application data can physically reside on drives with the data of other applications, and such policies should take into account physical and logical partitioning in hypervisors.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-006",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "Because of this, organizations should have policies regarding the use of shared clipboards.",
+      "trace_first": {
+       "status": {
+        "extracted": "partial",
+        "survived_step_d": "partial"
+       },
+       "shares": {
+        "extracted": 0.7692,
+        "survived_step_d": 0.7692
+       },
+       "first_loss": "partly_extracted",
+       "covering_extracted": [
+        "R-77-0"
+       ],
+       "covering_surviving": [
+        "REQ-3021734a3e3e"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-77-0",
+        "R-77-1"
+       ],
+       "covering_surviving": [
+        "REQ-3021734a3e3e",
+        "REQ-a01e05212a32"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-77-0",
+        "chunk_id": 77,
+        "source_quote": "organizations should have policies regarding the use of shared clipboards.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-77-0",
+        "chunk_id": 77,
+        "source_quote": "organizations should have policies regarding the use of shared clipboards.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-77-1",
+        "chunk_id": 77,
+        "source_quote": "Because of this, organizations should have policies regarding the use of shared clipboards.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-008",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "\uf06e Follow the recommended practices for managing the physical OS, e.g., time synchronization, log management, authentication, remote access, etc.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-78-0"
+       ],
+       "covering_surviving": [
+        "REQ-5f1c27983213"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-78-0",
+        "chunk_id": 78,
+        "source_quote": "Follow the recommended practices for managing the physical OS, e.g., time synchronization, log management, authentication, remote access, etc.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-018",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "If such sharing is turned on in two or more guest OSs, and one guest OS is compromised, the administrator of the virtualization system needs to decide how to deal with the potential compromise of other guest OSs.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-79-0"
+       ],
+       "covering_surviving": [
+        "REQ-e849893ba2bc"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-79-0",
+        "chunk_id": 79,
+        "source_quote": "If such sharing is turned on in two or more guest OSs, and one guest OS is compromised, the administrator of the virtualization system needs to decide how to deal with the potential compromise of other guest OSs.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-020",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "\uf06e Assume that all guest OSs on the same hardware have been compromised.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-79-1"
+       ],
+       "covering_surviving": [
+        "REQ-92fba9a3c1df"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-79-1",
+        "chunk_id": 79,
+        "source_quote": "- \uf06e Assume that all guest OSs on the same hardware have been compromised. Revert each guest OS to a known-good image that was saved before the compromise.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-021",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "Revert each guest OS to a known-good image that was saved before the compromise.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-79-1",
+        "R-79-2"
+       ],
+       "covering_surviving": [
+        "REQ-92fba9a3c1df",
+        "REQ-bc9fc80720a2"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-79-1",
+        "chunk_id": 79,
+        "source_quote": "- \uf06e Assume that all guest OSs on the same hardware have been compromised. Revert each guest OS to a known-good image that was saved before the compromise.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-79-2",
+        "chunk_id": 79,
+        "source_quote": "- \uf06e Investigate each guest OS for compromise, just as one would during normal scanning for malware. If malware is found, follow the organization's normal security policy.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-022",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "\uf06e Investigate each guest OS for compromise, just as one would during normal scanning for malware.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-79-1",
+        "R-79-2"
+       ],
+       "covering_surviving": [
+        "REQ-92fba9a3c1df",
+        "REQ-bc9fc80720a2"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-79-1",
+        "chunk_id": 79,
+        "source_quote": "- \uf06e Assume that all guest OSs on the same hardware have been compromised. Revert each guest OS to a known-good image that was saved before the compromise.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-79-2",
+        "chunk_id": 79,
+        "source_quote": "- \uf06e Investigate each guest OS for compromise, just as one would during normal scanning for malware. If malware is found, follow the organization's normal security policy.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-023",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "If malware is found, follow the organization\u2019s normal security policy.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-79-2"
+       ],
+       "covering_surviving": [
+        "REQ-bc9fc80720a2"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-79-2",
+        "chunk_id": 79,
+        "source_quote": "- \uf06e Investigate each guest OS for compromise, just as one would during normal scanning for malware. If malware is found, follow the organization's normal security policy.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-030",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "For example, if a virtual hard drive will be shared between two guest OSs, only those two OSs should have access to the virtual hard drive.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.4615,
+        "survived_step_d": 0.4615
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [
+        "R-80-1"
+       ],
+       "covering_surviving": [
+        "REQ-47784f76adea"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 0.9231,
+        "survived_step_d": 0.9231
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-80-1"
+       ],
+       "covering_surviving": [
+        "REQ-d34fdbac3a25"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-80-1",
+        "chunk_id": 80,
+        "source_quote": "Only those two OSs should have access to the virtual hard drive.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-80-1",
+        "chunk_id": 80,
+        "source_quote": "if a virtual hard drive will be shared between two guest OSs, only those two OSs should have access to the virtual hard drive.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p026-017",
+      "document": "NIST.SP.800-125",
+      "page": 26,
+      "text": "Organizations considering the use of desktop virtualization should determine which scenarios require the enforcement of security by managed virtualization solutions and which scenarios do not require centralized management.",
+      "trace_first": {
+       "status": {
+        "extracted": "partial",
+        "survived_step_d": "partial"
+       },
+       "shares": {
+        "extracted": 0.7143,
+        "survived_step_d": 0.7143
+       },
+       "first_loss": "partly_extracted",
+       "covering_extracted": [
+        "R-83-0"
+       ],
+       "covering_surviving": [
+        "REQ-53f78ef2f99d"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-83-0"
+       ],
+       "covering_surviving": [
+        "REQ-cf4817e96750"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-83-0",
+        "chunk_id": 83,
+        "source_quote": "Organizations considering the use of desktop virtualization should determine which scenarios require the enforcement of security by managed virtualization solutions",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-83-0",
+        "chunk_id": 83,
+        "source_quote": "Organizations considering the use of desktop virtualization should determine which scenarios require the enforcement of security by managed virtualization solutions and which scenarios do not require centralized management.",
+        "step_d_failure": null
+       }
+      ]
+     }
+    ],
+    "both": 43,
+    "neither": 3
+   },
+   "quote_overlap": {
+    "overall_jaccard": 0.3542,
+    "per_document": {
+     "CJCSI 6510.02G": {
+      "shared": 56,
+      "only_first": 31,
+      "only_second": 56,
+      "jaccard": 0.392
+     },
+     "DODI 5200.01": {
+      "shared": 26,
+      "only_first": 39,
+      "only_second": 49,
+      "jaccard": 0.228
+     },
+     "DODI 5200.44": {
+      "shared": 39,
+      "only_first": 48,
+      "only_second": 70,
+      "jaccard": 0.248
+     },
+     "DODI 5200.48": {
+      "shared": 100,
+      "only_first": 132,
+      "only_second": 221,
+      "jaccard": 0.221
+     },
+     "DODI 8410.03": {
+      "shared": 50,
+      "only_first": 92,
+      "only_second": 117,
+      "jaccard": 0.193
+     },
+     "DODI 8551.01": {
+      "shared": 27,
+      "only_first": 32,
+      "only_second": 57,
+      "jaccard": 0.233
+     },
+     "NIST.SP.800-125": {
+      "shared": 93,
+      "only_first": 51,
+      "only_second": 215,
+      "jaccard": 0.259
+     },
+     "afi10-2402": {
+      "shared": 232,
+      "only_first": 53,
+      "only_second": 117,
+      "jaccard": 0.577
+     },
+     "afi13-550": {
+      "shared": 88,
+      "only_first": 77,
+      "only_second": 95,
+      "jaccard": 0.338
+     },
+     "afi17-203": {
+      "shared": 75,
+      "only_first": 36,
+      "only_second": 80,
+      "jaccard": 0.393
+     },
+     "afman17-2101": {
+      "shared": 117,
+      "only_first": 27,
+      "only_second": 65,
+      "jaccard": 0.56
+     },
+     "afpd_17-1": {
+      "shared": 52,
+      "only_first": 8,
+      "only_second": 21,
+      "jaccard": 0.642
+     },
+     "dafman17-1305": {
+      "shared": 177,
+      "only_first": 99,
+      "only_second": 176,
+      "jaccard": 0.392
+     }
+    }
+   }
+  },
+  "T2b vs D1x": {
+   "recall_extracted": {
+    "only_first": [
+     {
+      "id": "AFMAN-p004-013",
+      "document": "afman17-2101",
+      "page": 4,
+      "text": "1.1.4. The AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron (CYRS)/SCC, executes and manages all facets of the DISN Enterprise Long Haul Communications Program on behalf of the AF.",
+      "trace_first": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-8-0"
+       ],
+       "covering_surviving": [
+        "REQ-e8cd537bede0"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-8-0",
+        "chunk_id": 8,
+        "source_quote": "The AF Long Haul Communications Flight, 38th Cyberspace Readiness Squadron (CYRS)/SCC, executes and manages all facets of the DISN Enterprise Long Haul Communications Program on behalf of the AF.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": []
+     },
+     {
+      "id": "AFMAN-p010-006",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "This activity will not be accomplished indiscriminately and shall be coordinated with the customer.",
+      "trace_first": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-25-0",
+        "R-25-1"
+       ],
+       "covering_surviving": [
+        "REQ-90db2aa35965",
+        "REQ-9700722b04cd"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.4286,
+        "survived_step_d": 0.4286
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [
+        "R-25-1"
+       ],
+       "covering_surviving": [
+        "REQ-f1ff90d953f1"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-25-0",
+        "chunk_id": 25,
+        "source_quote": "Denies/terminates DISN LHC requests when it is in the best interest of the AF. This activity will not be accomplished indiscriminately and shall be coordinated with the customer.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-25-1",
+        "chunk_id": 25,
+        "source_quote": "shall be coordinated with the customer",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-25-1",
+        "chunk_id": 25,
+        "source_quote": "shall be coordinated with the customer.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "DODI-p012-003",
+      "document": "DODI 8410.03",
+      "page": 12,
+      "text": "l. Ensure, in coordination with DISA, all DoD equipment containing or potentially containing personally identifiable information and other data of a sensitive nature is managed in accordance with DoDI 5000.64 (Reference (s)).",
+      "trace_first": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-20-1",
+        "R-20-2",
+        "R-20-3",
+        "R-20-4"
+       ],
+       "covering_surviving": [
+        "REQ-77c9c964b9b5",
+        "REQ-d866ca15f25e",
+        "REQ-406665a0ef0e",
+        "REQ-ec1fa5d42f24"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0938,
+        "survived_step_d": 0.0938
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [
+        "R-20-1",
+        "R-20-2",
+        "R-20-3"
+       ],
+       "covering_surviving": [
+        "REQ-e72ccd154c58",
+        "REQ-6f18d648f440",
+        "REQ-c2fe38372d96"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-20-1",
+        "chunk_id": 20,
+        "source_quote": "Ensure, in coordination with DISA, all DoD equipment containing or potentially containing personally identifiable information and other data of a sensitive nature is managed in accordance with DoDI 5000.64 (Reference (s)).",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-20-2",
+        "chunk_id": 20,
+        "source_quote": "The CJCS, in addition to the responsibilities in section 8 of this enclosure and in coordination with the other Heads of the DoD Components, shall: Establish and issue priorities for the collection and sharing of NM data.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-20-3",
+        "chunk_id": 20,
+        "source_quote": "The CJCS, in addition to the responsibilities in section 8 of this enclosure and in coordination with the other Heads of the DoD Components, shall: Develop and promulgate joint NM tactics, techniques, and procedures.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-20-4",
+        "chunk_id": 20,
+        "source_quote": "In coordination with the Combatant Commanders, establish requirements for sharing NM information and data with coalition partner networks.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-20-1",
+        "chunk_id": 20,
+        "source_quote": "The CJCS, in addition to the responsibilities in section 8 of this enclosure and in coordination with the other Heads of the DoD Components, shall: a. Establish and issue priorities for the collection and sharing of NM data.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-20-2",
+        "chunk_id": 20,
+        "source_quote": "The CJCS, in addition to the responsibilities in section 8 of this enclosure and in coordination with the other Heads of the DoD Components, shall: b. Develop and promulgate joint NM tactics, techniques, and procedures.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-20-3",
+        "chunk_id": 20,
+        "source_quote": "The CJCS, in addition to the responsibilities in section 8 of this enclosure and in coordination with the other Heads of the DoD Components, shall: c. In coordination with the Combatant Commanders, establish requirements for sharing NM information and data with coalition partner networks.",
+        "step_d_failure": null
+       }
+      ]
+     }
+    ],
+    "only_second": [
+     {
+      "id": "AFMAN-p009-002",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.10. Provides direct provisioning oversight and management of all corporately funded enterprise SBU IP Data (formerly NIPRNET), Secret IP Data (formerly SIPRNET) and DISN Virtual Private Network (VPN) requirements for all MAJCOMs.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-21-0"
+       ],
+       "covering_surviving": [
+        "REQ-6667e37fdac7"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-21-0",
+        "chunk_id": 21,
+        "source_quote": "Provides direct provisioning oversight and management of all corporately funded enterprise SBU IP Data (formerly NIPRNET), Secret IP Data (formerly SIPRNET) and DISN Virtual Private Network (VPN) requirements for all MAJCOMs.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-003",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.11. Provides direct management oversight on corporate AF LHC funding appropriations and MAJCOM dedicated funding.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-21-1"
+       ],
+       "covering_surviving": [
+        "REQ-19384e1f0982"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-21-1",
+        "chunk_id": 21,
+        "source_quote": "Provides direct management oversight on corporate AF LHC funding appropriations and MAJCOM dedicated funding.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-005",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.11.1. Serve as AF Program Designator Code (PDC) manager.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-21-2"
+       ],
+       "covering_surviving": [
+        "REQ-9f2f204f5b51"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-21-2",
+        "chunk_id": 21,
+        "source_quote": "Serve as AF Program Designator Code (PDC) manager. Reviews local funded codes created by Management Headquarters, Agencies, Units and COCOMs.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-006",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "Reviews local funded codes created by Management Headquarters, Agencies, Units and COCOMs.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-21-2"
+       ],
+       "covering_surviving": [
+        "REQ-9f2f204f5b51"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-21-2",
+        "chunk_id": 21,
+        "source_quote": "Serve as AF Program Designator Code (PDC) manager. Reviews local funded codes created by Management Headquarters, Agencies, Units and COCOMs.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-014",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.11.5. Receive financial/execution plan (D-22s) from MAJCOMs.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-22-6"
+       ],
+       "covering_surviving": [
+        "REQ-94f569dd0f4c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-22-6",
+        "chunk_id": 22,
+        "source_quote": "Receive financial/execution plan (D-22s) from MAJCOMs. Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-015",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-22-6"
+       ],
+       "covering_surviving": [
+        "REQ-94f569dd0f4c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-22-6",
+        "chunk_id": 22,
+        "source_quote": "Receive financial/execution plan (D-22s) from MAJCOMs. Ensures that financial/execution (D-22) transfers cover costs for existing requirements.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-020",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.12. Assists SAF/CIO A6 as SME in support of AF and Major Command IG teams.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-23-4"
+       ],
+       "covering_surviving": [
+        "REQ-a3c3f2e0bf1c"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-23-4",
+        "chunk_id": 23,
+        "source_quote": "Assists SAF/CIO A6 as SME in support of AF and Major Command IG teams.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-021",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "2.3.13. Serves as the AF customer interface and focal point with DISA, DITCO, and the General Services Administration (GSA) for long-haul circuit and service requirements.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-23-5"
+       ],
+       "covering_surviving": [
+        "REQ-fe5a3801a496"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-23-5",
+        "chunk_id": 23,
+        "source_quote": "Serves  as  the  AF  customer  interface  and  focal  point  with  DISA,  DITCO,  and  the General Services Administration (GSA) for long-haul circuit and service requirements.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p009-023",
+      "document": "afman17-2101",
+      "page": 9,
+      "text": "Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-24-1"
+       ],
+       "covering_surviving": [
+        "REQ-18414b99a3fa"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-24-1",
+        "chunk_id": 24,
+        "source_quote": "Identifies problems, facilitates solutions, and requests changes and improvements to the AF, the DISA, and DOD long-haul process.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-008",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.18. Represents the AF with government and DOD procurement actions involving longhaul requirements and participates in contract evaluation panels.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-26-0"
+       ],
+       "covering_surviving": [
+        "REQ-363e29724401"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-26-0",
+        "chunk_id": 26,
+        "source_quote": "2.3.18. Represents the AF with government and DOD procurement actions involving longhaul requirements and participates in contract evaluation panels.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-009",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.19. Participates in working groups internal and external to AF, providing LHC technical and/or procedure SME recommendations and guidance.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-26-1"
+       ],
+       "covering_surviving": [
+        "REQ-f056fcc5f261"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-26-1",
+        "chunk_id": 26,
+        "source_quote": "2.3.19. Participates in working groups internal and external to AF, providing LHC technical and/or procedure SME recommendations and guidance.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "AFMAN-p010-011",
+      "document": "afman17-2101",
+      "page": 10,
+      "text": "2.3.21. Forwards National Security Emergency Preparedness (NS/EP) appointment letters to Department of Homeland Security TSP Program Office. (tsp@hq.dhs.gov)",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-26-3"
+       ],
+       "covering_surviving": [
+        "REQ-7f15a2c9e11d"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-26-3",
+        "chunk_id": 26,
+        "source_quote": "2.3.21. Forwards National Security Emergency Preparedness (NS/EP) appointment letters to Department of Homeland Security TSP Program Office. (tsp@hq.dhs.gov)",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "DODI-p014-012",
+      "document": "DODI 8410.03",
+      "page": 14,
+      "text": "In situations where it is determined that adopting approved NM data schemas and net-centric sharing mechanisms would result in unacceptable delay or increased costs to a POR, a request for waiver will be submitted via the applicable acquisition oversight process.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0976,
+        "survived_step_d": 0.0976
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [
+        "R-24-0",
+        "R-24-1"
+       ],
+       "covering_surviving": [
+        "REQ-644cc3f1575c",
+        "REQ-656637b51af9"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-24-0",
+        "R-24-1",
+        "R-24-2"
+       ],
+       "covering_surviving": [
+        "REQ-644cc3f1575c",
+        "REQ-656637b51af9",
+        "REQ-505cb94fdc4b"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-24-0",
+        "chunk_id": 24,
+        "source_quote": "The CDRUSSTRATCOM, IAW Reference (c) and functioning IAW Reference (g), shall vet and approve NM data schemas and sharing mechanisms.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-24-1",
+        "chunk_id": 24,
+        "source_quote": "DoD programs of record (POR) shall adopt and implement NM data schemas and netcentric sharing mechanisms that have been approved by CDRUSSTRATCOM.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-24-0",
+        "chunk_id": 24,
+        "source_quote": "The CDRUSSTRATCOM, IAW Reference (c) and functioning IAW Reference (g), shall vet and approve NM data schemas and sharing mechanisms.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-24-1",
+        "chunk_id": 24,
+        "source_quote": "DoD programs of record (POR) shall adopt and implement NM data schemas and netcentric sharing mechanisms that have been approved by CDRUSSTRATCOM.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-24-2",
+        "chunk_id": 24,
+        "source_quote": "In situations where it is determined that adopting approved NM data schemas and net-centric sharing mechanisms would result in unacceptable delay or increased costs to a POR, a request for waiver will be submitted via the applicable acquisition oversight process.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "DODI-p014-013",
+      "document": "DODI 8410.03",
+      "page": 14,
+      "text": "(1) Where standards or data schemas are not available or have not been approved, program offices shall work with DISA to identify and vet program specific data standards, schemas, and exchange mechanisms prior to them being submitted to CDRUSSTRATCOM for approval.",
+      "trace_first": {
+       "status": {
+        "extracted": "partial",
+        "survived_step_d": "partial"
+       },
+       "shares": {
+        "extracted": 0.675,
+        "survived_step_d": 0.675
+       },
+       "first_loss": "partly_extracted",
+       "covering_extracted": [
+        "R-24-2"
+       ],
+       "covering_surviving": [
+        "REQ-f2b0ee33b110"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-24-3"
+       ],
+       "covering_surviving": [
+        "REQ-b24de75c34b0"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-24-2",
+        "chunk_id": 24,
+        "source_quote": "program offices shall work with DISA to identify and vet program specific data standards, schemas, and exchange mechanisms prior to them being submitted to CDRUSSTRATCOM for approval.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-24-3",
+        "chunk_id": 24,
+        "source_quote": "(1) Where standards or data schemas are not available or have not been approved, program offices shall work with DISA to identify and vet program specific data standards, schemas, and exchange mechanisms prior to them being submitted to CDRUSSTRATCOM for approval.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p018-022",
+      "document": "NIST.SP.800-125",
+      "page": 18,
+      "text": "Some organizations have policies about which application data can physically reside on drives with the data of other applications, and such policies should take into account physical and logical partitioning in hypervisors.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-50-5",
+        "R-50-6"
+       ],
+       "covering_surviving": [
+        "REQ-9e2fe04a64a7",
+        "REQ-95cc5ba898d9"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-50-5",
+        "chunk_id": 50,
+        "source_quote": "Many virtualization systems can do both physical and logical partitioning.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-50-6",
+        "chunk_id": 50,
+        "source_quote": "Some organizations have policies about which application data can physically reside on drives with the data of other applications, and such policies should take into account physical and logical partitioning in hypervisors.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-006",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "Because of this, organizations should have policies regarding the use of shared clipboards.",
+      "trace_first": {
+       "status": {
+        "extracted": "partial",
+        "survived_step_d": "partial"
+       },
+       "shares": {
+        "extracted": 0.7692,
+        "survived_step_d": 0.7692
+       },
+       "first_loss": "partly_extracted",
+       "covering_extracted": [
+        "R-77-0"
+       ],
+       "covering_surviving": [
+        "REQ-3021734a3e3e"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-77-0",
+        "R-77-1"
+       ],
+       "covering_surviving": [
+        "REQ-3021734a3e3e",
+        "REQ-a01e05212a32"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-77-0",
+        "chunk_id": 77,
+        "source_quote": "organizations should have policies regarding the use of shared clipboards.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-77-0",
+        "chunk_id": 77,
+        "source_quote": "organizations should have policies regarding the use of shared clipboards.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-77-1",
+        "chunk_id": 77,
+        "source_quote": "Because of this, organizations should have policies regarding the use of shared clipboards.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-008",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "\uf06e Follow the recommended practices for managing the physical OS, e.g., time synchronization, log management, authentication, remote access, etc.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-78-0"
+       ],
+       "covering_surviving": [
+        "REQ-5f1c27983213"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-78-0",
+        "chunk_id": 78,
+        "source_quote": "Follow the recommended practices for managing the physical OS, e.g., time synchronization, log management, authentication, remote access, etc.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-018",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "If such sharing is turned on in two or more guest OSs, and one guest OS is compromised, the administrator of the virtualization system needs to decide how to deal with the potential compromise of other guest OSs.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-79-0"
+       ],
+       "covering_surviving": [
+        "REQ-e849893ba2bc"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-79-0",
+        "chunk_id": 79,
+        "source_quote": "If such sharing is turned on in two or more guest OSs, and one guest OS is compromised, the administrator of the virtualization system needs to decide how to deal with the potential compromise of other guest OSs.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-020",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "\uf06e Assume that all guest OSs on the same hardware have been compromised.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-79-1"
+       ],
+       "covering_surviving": [
+        "REQ-92fba9a3c1df"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-79-1",
+        "chunk_id": 79,
+        "source_quote": "- \uf06e Assume that all guest OSs on the same hardware have been compromised. Revert each guest OS to a known-good image that was saved before the compromise.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-021",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "Revert each guest OS to a known-good image that was saved before the compromise.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-79-1",
+        "R-79-2"
+       ],
+       "covering_surviving": [
+        "REQ-92fba9a3c1df",
+        "REQ-bc9fc80720a2"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-79-1",
+        "chunk_id": 79,
+        "source_quote": "- \uf06e Assume that all guest OSs on the same hardware have been compromised. Revert each guest OS to a known-good image that was saved before the compromise.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-79-2",
+        "chunk_id": 79,
+        "source_quote": "- \uf06e Investigate each guest OS for compromise, just as one would during normal scanning for malware. If malware is found, follow the organization's normal security policy.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-022",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "\uf06e Investigate each guest OS for compromise, just as one would during normal scanning for malware.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-79-1",
+        "R-79-2"
+       ],
+       "covering_surviving": [
+        "REQ-92fba9a3c1df",
+        "REQ-bc9fc80720a2"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-79-1",
+        "chunk_id": 79,
+        "source_quote": "- \uf06e Assume that all guest OSs on the same hardware have been compromised. Revert each guest OS to a known-good image that was saved before the compromise.",
+        "step_d_failure": null
+       },
+       {
+        "requirement_id": "R-79-2",
+        "chunk_id": 79,
+        "source_quote": "- \uf06e Investigate each guest OS for compromise, just as one would during normal scanning for malware. If malware is found, follow the organization's normal security policy.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-023",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "If malware is found, follow the organization\u2019s normal security policy.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-79-2"
+       ],
+       "covering_surviving": [
+        "REQ-bc9fc80720a2"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-79-2",
+        "chunk_id": 79,
+        "source_quote": "- \uf06e Investigate each guest OS for compromise, just as one would during normal scanning for malware. If malware is found, follow the organization's normal security policy.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p025-030",
+      "document": "NIST.SP.800-125",
+      "page": 25,
+      "text": "For example, if a virtual hard drive will be shared between two guest OSs, only those two OSs should have access to the virtual hard drive.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.4615,
+        "survived_step_d": 0.4615
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [
+        "R-80-1"
+       ],
+       "covering_surviving": [
+        "REQ-47784f76adea"
+       ],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 0.9231,
+        "survived_step_d": 0.9231
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-80-1"
+       ],
+       "covering_surviving": [
+        "REQ-d34fdbac3a25"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [
+       {
+        "requirement_id": "R-80-1",
+        "chunk_id": 80,
+        "source_quote": "Only those two OSs should have access to the virtual hard drive.",
+        "step_d_failure": null
+       }
+      ],
+      "records_second": [
+       {
+        "requirement_id": "R-80-1",
+        "chunk_id": 80,
+        "source_quote": "if a virtual hard drive will be shared between two guest OSs, only those two OSs should have access to the virtual hard drive.",
+        "step_d_failure": null
+       }
+      ]
+     },
+     {
+      "id": "NIST-p026-017",
+      "document": "NIST.SP.800-125",
+      "page": 26,
+      "text": "Organizations considering the use of desktop virtualization should determine which scenarios require the enforcement of security by managed virtualization solutions and which scenarios do not require centralized management.",
+      "trace_first": {
+       "status": {
+        "extracted": "none",
+        "survived_step_d": "none"
+       },
+       "shares": {
+        "extracted": 0.0,
+        "survived_step_d": 0.0
+       },
+       "first_loss": "not_extracted",
+       "covering_extracted": [],
+       "covering_surviving": [],
+       "rejected_ids": []
+      },
+      "trace_second": {
+       "status": {
+        "extracted": "covered",
+        "survived_step_d": "covered"
+       },
+       "shares": {
+        "extracted": 1.0,
+        "survived_step_d": 1.0
+       },
+       "first_loss": null,
+       "covering_extracted": [
+        "R-83-0"
+       ],
+       "covering_surviving": [
+        "REQ-cf4817e96750"
+       ],
+       "rejected_ids": []
+      },
+      "records_first": [],
+      "records_second": [
+       {
+        "requirement_id": "R-83-0",
+        "chunk_id": 83,
+        "source_quote": "Organizations considering the use of desktop virtualization should determine which scenarios require the enforcement of security by managed virtualization solutions and which scenarios do not require centralized management.",
+        "step_d_failure": null
+       }
+      ]
+     }
+    ],
+    "both": 44,
+    "neither": 3
+   },
+   "quote_overlap": {
+    "overall_jaccard": 0.3516,
+    "per_document": {
+     "CJCSI 6510.02G": {
+      "shared": 55,
+      "only_first": 32,
+      "only_second": 57,
+      "jaccard": 0.382
+     },
+     "DODI 5200.01": {
+      "shared": 26,
+      "only_first": 39,
+      "only_second": 49,
+      "jaccard": 0.228
+     },
+     "DODI 5200.44": {
+      "shared": 38,
+      "only_first": 55,
+      "only_second": 71,
+      "jaccard": 0.232
+     },
+     "DODI 5200.48": {
+      "shared": 100,
+      "only_first": 133,
+      "only_second": 221,
+      "jaccard": 0.22
+     },
+     "DODI 8410.03": {
+      "shared": 57,
+      "only_first": 88,
+      "only_second": 110,
+      "jaccard": 0.224
+     },
+     "DODI 8551.01": {
+      "shared": 26,
+      "only_first": 32,
+      "only_second": 58,
+      "jaccard": 0.224
+     },
+     "NIST.SP.800-125": {
+      "shared": 104,
+      "only_first": 49,
+      "only_second": 204,
+      "jaccard": 0.291
+     },
+     "afi10-2402": {
+      "shared": 223,
+      "only_first": 57,
+      "only_second": 126,
+      "jaccard": 0.549
+     },
+     "afi13-550": {
+      "shared": 82,
+      "only_first": 78,
+      "only_second": 101,
+      "jaccard": 0.314
+     },
+     "afi17-203": {
+      "shared": 77,
+      "only_first": 38,
+      "only_second": 78,
+      "jaccard": 0.399
+     },
+     "afman17-2101": {
+      "shared": 115,
+      "only_first": 30,
+      "only_second": 67,
+      "jaccard": 0.542
+     },
+     "afpd_17-1": {
+      "shared": 56,
+      "only_first": 8,
+      "only_second": 17,
+      "jaccard": 0.691
+     },
+     "dafman17-1305": {
+      "shared": 169,
+      "only_first": 98,
+      "only_second": 184,
+      "jaccard": 0.375
+     }
+    }
+   }
+  }
+ }
+}
