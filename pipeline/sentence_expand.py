@@ -11,6 +11,7 @@ item starts where the list's sentence starts). A paragraph unit starts at a line
 import re
 
 MAX_SENTENCE_CHARS = 700
+MIN_QUOTE_WORDS = 2  # a one-word quote ("CNSI") is a table cell or a term, not a sentence fragment; it is not expanded
 
 _ABBREVIATIONS = frozenset({
     "u.s", "e.g", "i.e", "no", "nos", "fig", "figs", "sec", "para", "paras", "inc", "vs", "etc", "dr", "mr", "mrs", "ms", "st", "approx", "cf", "al", "dept", "gov", "gen", "col",
@@ -18,9 +19,9 @@ _ABBREVIATIONS = frozenset({
 })
 _MARKER_BODY = r"(?:(?:[A-Z]{1,2})?\d+(?:\.\d+)+\.?|\d{1,3}[.)]|\([a-zA-Z0-9]{1,3}\)|[a-zA-Z][.)])"  # 3.6.1.1.  1.  2)  (a)  a.  A.
 _MARKER = re.compile(r"(?m)^[ \t]*(?:[-•*][ \t]+(?=\S)|(?:[-•*][ \t]*)?(?=" + _MARKER_BODY + r"[ \t]+\S))")
-_LEADING_NUMBER = re.compile(r"^[ \t]*(?:[-•*][ \t]*)?" + _MARKER_BODY + r"[ \t]+")
+_LEADING_NUMBER = re.compile(r"^[ \t]*(?:[-•*][ \t]+)?(?:" + _MARKER_BODY + r"[ \t]+)*")  # a bare bullet and any run of markers ("- a. ", "3. (a) ")
 _TERMINAL = re.compile(r"\s*([.?!])([\"')\]]*)(?=\s+[A-Z0-9(\[\"“]|\s*$)")
-_INLINE_MARKER = re.compile(r"^(?:\([a-zA-Z0-9]{1,3}\)|[a-z]\.|\d{1,3}[.)])[ \t]+")  # "(g) ", "a. ", "3) " left at the start of a sentence found mid-line
+_INLINE_MARKER = re.compile(r"^(?:(?:\([a-zA-Z0-9]{1,3}\)|[a-z]\.|\d{1,3}[.)])[ \t]+)+")  # "(g) ", "a. ", "3) " left at the start of a sentence found mid-line
 _TIDY_SPACE_BEFORE = re.compile(r"\s+([.,;:)\]])")
 
 
@@ -77,7 +78,10 @@ def expand(quote: str, chunk_text: str) -> tuple[str, str]:
     unchanged     the quote already is a whole sentence
     not_located   the quote was not found in the chunk text; returned as given
     too_long      the whole sentence exceeds MAX_SENTENCE_CHARS; the quote is returned as given
+    too_short     a single word (a table cell or a term); returned as given
     """
+    if len((quote or "").split()) < MIN_QUOTE_WORDS:
+        return quote, "too_short"
     pat = flex_pattern(quote)
     m = pat.search(chunk_text or "") if pat else None
     if not m:
@@ -98,6 +102,9 @@ def expand(quote: str, chunk_text: str) -> tuple[str, str]:
             break
     while start < len(chunk_text) and chunk_text[start].isspace():
         start += 1
+    lead = chunk_text[start:s]
+    if start < s and lead.strip() and not re.search(r"[.?!:;]", lead) and len(lead.split()) <= 6 and is_complete(quote):
+        start = s  # a few words with no punctuation before a quote that opens like a sentence are a term or table cell ("CUI misuse"), not part of it
     marker = _INLINE_MARKER.match(chunk_text[start:end])
     if marker and start + marker.end() <= s:  # drop a list marker that opens the sentence, but never cut into the quote itself
         start += marker.end()

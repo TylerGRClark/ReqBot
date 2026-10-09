@@ -116,7 +116,7 @@ def main():
         lines += [f"## {n}. {doc} ({arm})", "", f"**Original:** {x['original']}", "", f"**Expanded:** {x['expanded']}", "", "**Rating:** ", "", "---", ""]
     out = _HERE / "outputs"
     out.mkdir(exist_ok=True)
-    (out / "sentence_rule_sample_for_rating.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (out / "sentence_rule_sample_after_fixes.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     report["sample_size"] = len(picked)
     (out / "sentence_rule_report.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
     for arm, v in report["arms"].items():

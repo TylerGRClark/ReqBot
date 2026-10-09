@@ -73,3 +73,26 @@ def test_flat_numbered_and_uppercase_lettered_lists_are_separate_units():
     assert SE.expand("Third item", chunk)[0] == "Third item."
     lettered = "A. Review the logs.\nB. Report the findings to the CIO."
     assert SE.expand("Report the findings", lettered)[0] == "Report the findings to the CIO."
+
+
+def test_bare_bullet_is_dropped():
+    assert SE.expand("Directs actions in accordance with X.", "- Directs actions in accordance with X.") == ("Directs actions in accordance with X.", "unchanged")
+
+
+def test_run_of_markers_is_dropped():
+    text, _ = SE.expand("Enhance baseline standards in accordance with DoDI 8500.01.", "3. (a)  Enhance baseline standards in accordance with DoDI 8500.01.")
+    assert text == "Enhance baseline standards in accordance with DoDI 8500.01."
+
+
+def test_one_word_quote_is_not_expanded():
+    assert SE.expand("CNSI", "CNSI classified national security information CPM Component program manager") == ("CNSI", "too_short")
+
+
+def test_unpunctuated_term_before_a_sentence_is_not_grafted_on():
+    text, _ = SE.expand("Use of CUI in a manner not in accordance with policy.", "CUI misuse Use of CUI in a manner not in accordance with policy.")
+    assert text == "Use of CUI in a manner not in accordance with policy."
+
+
+def test_lead_in_with_colon_is_still_grafted():
+    text, status = SE.expand("Obtain the qualification.", "Individuals shall: Obtain the qualification.")
+    assert text == "Individuals shall: Obtain the qualification." and status == "unchanged" or status == "expanded"

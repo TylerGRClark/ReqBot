@@ -13,7 +13,21 @@ Two bugs found by reading the first sample pairs (before any rating) and fixed: 
 | **E3** Step D survivors, before → after merging | 1,880 → 1,868 | 1,890 → 1,875 | 2,501 → 2,434 |
 | quotes changed / unchanged / not located / left as given for length | 281 / 1,436 / 145 / 18 | 304 / 1,428 / 138 / 20 | 725 / 1,611 / 158 / 7 |
 
-**E1 is met** (a longer quote can only cover more; recall of the labeled sample does not fall in any arm) and **E2 is met** (at most 2% incomplete in every arm; the bar was 2%). **E4 is pending**: 30 changed quotes for the owner to rate better / same / worse (`outputs/sentence_rule_sample_for_rating.md`, a seeded sample of 1,006 changed quotes from T2a and D1x); the rule is proposed for adoption only if at least 80% of the rated pairs are better or same.
+**E1 is met** (a longer quote can only cover more; recall of the labeled sample does not fall in any arm) and **E2 is met** (at most 2% incomplete in every arm; the bar was 2%). **E4 (owner's rating of the first version, `outputs/sentence_rule_sample_for_rating.md`, 30 of 1,006 changed quotes from T2a and D1x): 25 of 30 better or same = 83%, met (bar 80%).** 22 were "better" (mostly the list marker dropped: "- a. ", "(3) "), and 3 of those were "much better" or "one of the best examples" (units 23, 26, 27: pieces that become whole requirements; 27 restores a second requirement that had been dropped silently), and 5 not: unit 18 (worse), 25 (worse), 11 and 13 (a one-word cell expanded into a whole glossary), 19 (a glossary definition, not a requirement; the expansion is garbled). Counting 11, 13 and 19 as not better is the strict reading; unit 22 was "better" but kept an inner "(a)".
+
+## Fixes after the rating (2026-10-09)
+
+The ratings exposed five behaviours, fixed in `pipeline/sentence_expand.py` with tests (`tests/unit/test_sentence_expand.py`, 17 passing) and checked offline against the same 30 pairs:
+
+| unit | what he saw | fix | now |
+|---|---|---|---|
+| 7, 25 | a bare bullet `- ` kept at the start | a bare bullet and any run of markers (`3. (a) `) is dropped | clean |
+| 22 | `3.` removed but `(a)` left | same | clean |
+| 11, 13 | a one-word cell (`CNSI`, `DNI`) expanded to a whole glossary | a one-word quote is not expanded (status `too_short`) | stays `CNSI` / `DNI` |
+| 18 | `CUI misuse` (a table cell) put in front of a complete sentence | up to six words with no punctuation before a quote that is already a whole sentence are a cell, not part of it | clean |
+| 19 | a glossary definition (lowercase term) joined to its neighbours | **not fixed**: the owner says it is not a requirement; glossary definitions stay a known limit | unchanged |
+
+Only these six of the 30 outputs changed; the other 24 are identical, so the 83% is for the first version and the fixed version is the same or better on every rated pair. A fresh sample for any further rating is `outputs/sentence_rule_sample_after_fixes.md` (not rated). Re-measured with the fixes: T2a 1,880 → 1,868 survivors, incomplete 162 → 18 (1.05%); T2b 1,890 → 1,875, 176 → 17 (0.98%); D1x 2,501 → 2,461, 332 → 30 of 2,309 (1.3%; 27 one-word quotes now left alone); labeled coverage 45 → 47, 46 → 48, 67 → 68 (unchanged). E1 and E2 still met.
 
 ## What the numbers show
 
