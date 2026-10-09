@@ -142,6 +142,8 @@ def write(path: Path, records: dict[str, dict]) -> None:
 def draft_questions(items: list[dict], path: Path, *, model: str = MODEL, ollama_url: str = "", call=None, progress=None) -> dict:
     """Write or refresh the sidecar for `items` (checklist items). `call(prompt) -> text` replaces the Ollama call in tests. Returns counts.
     A record whose input is unchanged is kept; a row whose answer cannot be parsed after one retry is recorded with `error` and is retried on the next run."""
+    if call is None and not ollama_url:
+        raise ValueError("ollama_url is required when no call function is given")
     call = call or (lambda prompt: ollama_call(prompt, model, ollama_url))
     existing = load(path)
     records: dict[str, dict] = dict(existing)  # rows not in this run (another profile, an interrupted run) keep their records; apply() checks each against its row
