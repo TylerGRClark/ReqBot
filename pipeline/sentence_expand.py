@@ -89,7 +89,7 @@ def expand(quote: str, chunk_text: str) -> tuple[str, str]:
     s, e = m.span()
     unit_start, unit_end = _unit_bounds(chunk_text, s, e)
     unit = chunk_text[unit_start:unit_end]
-    content_start = unit_start + (_LEADING_NUMBER.match(unit).end() if _LEADING_NUMBER.match(unit) else 0)
+    content_start = unit_start + _LEADING_NUMBER.match(unit).end()  # the pattern can match nothing, so it always matches
     start, end = content_start, unit_end
     for t in _TERMINAL.finditer(chunk_text, content_start, unit_end):
         if not _is_sentence_end(chunk_text, t):

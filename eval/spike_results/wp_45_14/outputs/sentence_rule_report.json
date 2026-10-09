@@ -160,12 +160,12 @@
     "too_short": 27,
     "too_long": 7
    },
-   "incomplete_before": 332,
-   "incomplete_after": 30,
-   "could_be_expanded": 2309,
-   "incomplete_share_after": 0.013,
+   "incomplete_before": 358,
+   "incomplete_after": 56,
+   "could_be_expanded": 2336,
+   "incomplete_share_after": 0.024,
    "quote_chars_median_before": 151,
-   "quote_chars_median_after": 158,
+   "quote_chars_median_after": 158.0,
    "per_document": {
     "CJCSI 6510.02G": {
      "before": 113,

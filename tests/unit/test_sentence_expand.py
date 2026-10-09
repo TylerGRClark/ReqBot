@@ -95,4 +95,5 @@ def test_unpunctuated_term_before_a_sentence_is_not_grafted_on():
 
 def test_lead_in_with_colon_is_still_grafted():
     text, status = SE.expand("Obtain the qualification.", "Individuals shall: Obtain the qualification.")
-    assert text == "Individuals shall: Obtain the qualification." and status == "unchanged" or status == "expanded"
+    assert text == "Individuals shall: Obtain the qualification."
+    assert status == "expanded"

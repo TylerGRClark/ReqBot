@@ -94,7 +94,7 @@ def main():
         before = sum(len(doc[0]) for doc in expanded[arm].values())
         after = sum(len(doc[1]) for doc in expanded[arm].values())
         status = collections.Counter(x["status"] for x in details)
-        usable = [x for x in details if x["status"] in ("expanded", "unchanged")]
+        usable = [x for x in details if x["status"] in ("expanded", "unchanged", "too_short")]  # a one-word quote is left as given and still counts
         inc_before = sum(1 for x in usable if not SE.is_complete(x["original"]))
         inc_after = sum(1 for x in usable if not SE.is_complete(x["expanded"]))
         lengths = [len(x["expanded"]) for x in usable]
