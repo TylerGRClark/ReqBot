@@ -51,7 +51,7 @@ Three of the "better" ratings carry a note that the row is not a requirement and
 
 `pipeline/lead_in.py` finds, for a list item, the nearest earlier line (in the same chunk, or at the end of the previous chunk when the list began there) that ends in a colon and is not a sibling of the item: a sibling that also introduces a list, or a deeper numbered line, is skipped, and an ordinary paragraph in between stops the search. It is an exact line of the source. `explain_records` puts it in front of the explained text (`explained_parts` kind `lead_in`, origin `rule`; a note says so). The record's root is untouched. Run `lead_in_report.py` for the numbers below; it also writes `outputs/lead_in_rating_sheet.md`, 30 attached rows for the owner to rate right / neutral / wrong.
 
-On the 13 reference documents (2,420 records): **597 records (24.7%) get a lead-in by rule**, in addition to the 59 whose lead-in the model had glued on.
+On the 13 reference documents (2,420 records): **572 records (23.6%) get a lead-in by rule**, in addition to the 59 whose lead-in the model had glued on.
 
 Against the owner-adjudicated gold records (the AFI and DoDI records labeled earlier; 57 "complete" and 131 "needs a lead-in" are matched in the new run, 18 gold records are not found in it):
 
@@ -65,6 +65,8 @@ Against the owner-adjudicated gold records (the AFI and DoDI records labeled ear
 Reading the 15: most are items that are full sentences under a real lead-in ("AFGSC will: Publish and maintain a charter ..."; "Some significant points about DoD CUI include: ..."), so the lead-in is the line that governs them though the sentence did not need it to be understood. The "different" ones are mostly an immediate lead-in where the adjudicated one was the actor further up (for example "Appoints a DoD military officer ... to:" where the gold says "DIRECTOR, DISA."). The 17 same-chunk misses and the 56 heading cases are what a later step (the heading, or the model-picks step) would cover.
 
 Nothing is merged on this evidence alone. **Pass rule (written before any rating):** the owner's rating of the sample sheet is at least 80% right or neutral and no more than 10% wrong; a wrong lead-in is worse than none.
+
+After review of the PR, two rules were added: an abbreviation in a lead-in ("The U.S. Cyber Command will:") no longer cuts it, and the previous chunk is only consulted when it is in the same section (a list that continues across a chunk boundary stays in its section; another section's lead-in must not be borrowed). That took the count from 597 to 572; the figures against the adjudicated gold are unchanged. Of the 30 rated rows, 29 still get the same lead-in; the one that does not is row 1 (DODI 5200.01, "this instruction:"), which the owner had rated neutral.
 
 ### Rating of the lead-in sample (2026-10-09)
 

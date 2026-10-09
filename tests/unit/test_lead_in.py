@@ -43,3 +43,10 @@ def test_a_plain_paragraph_before_the_item_in_the_chunk_stops_the_search():
 def test_nothing_is_guessed_when_no_line_ends_in_a_colon():
     raw = "- a. Appoint a monitor.\n- b. Brief the staff weekly."
     assert find_lead_in(raw, _at(raw, "Brief")) is None
+
+
+def test_an_abbreviation_in_the_lead_in_does_not_cut_it():
+    raw = "Some intro. The U.S. Cyber Command will:\n- a. Brief the staff weekly.\n- b. Keep the records."
+    assert find_lead_in(raw, _at(raw, "Keep")) == "The U.S. Cyber Command will:"
+    raw2 = "Dr. Smith will:\n- a. Brief the staff weekly.\n- b. Keep the records."
+    assert find_lead_in(raw2, _at(raw2, "Keep")) == "Dr. Smith will:"

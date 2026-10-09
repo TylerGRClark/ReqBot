@@ -177,3 +177,14 @@ def test_a_definition_whose_front_words_were_trimmed_and_cannot_be_expanded_keep
 def test_the_note_says_when_only_a_list_number_was_taken_off():
     out, _ = SE.explain_records([{"chunk_id": 1, "source_quote": "(3) Inform the CSAO of concerns raised by the subordinate elements."}], {1: "(3)  Inform the CSAO of concerns raised by the subordinate elements."})
     assert out[0]["explained_text"] == "Inform the CSAO of concerns raised by the subordinate elements." and out[0]["explain_notes"] == ["list number or dash taken off"]
+
+
+def test_the_previous_chunk_is_used_for_a_lead_in_only_inside_the_same_section():
+    raws = {1: "Some intro here.\nThe Wing Commander shall:\n- a. Appoint a monitor.", 2: "- b. Brief the staff weekly and keep the records."}
+    rec = {"chunk_id": 2, "source_quote": "Brief the staff weekly and keep the records."}
+    same, _ = SE.explain_records([rec], raws, {1: (("4",), ("Duties",)), 2: (("4",), ("Duties",))})
+    other, _ = SE.explain_records([rec], raws, {1: (("4",), ("Duties",)), 2: (("5",), ("Reports",))})
+    legacy, _ = SE.explain_records([rec], raws)  # no section information: as before
+    assert same[0]["explained_text"].startswith("The Wing Commander shall: Brief")
+    assert other[0]["explained_text"] == "Brief the staff weekly and keep the records."
+    assert legacy[0]["explained_text"].startswith("The Wing Commander shall:")

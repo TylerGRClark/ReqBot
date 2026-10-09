@@ -913,7 +913,10 @@ def run(
     # source_quote is never changed. Records that reach the same sentence in the same chunk are shown once (the others' roots are kept in merged_roots), which also keeps IDs unique.
     if expand_sentences and chunk_raw_text_map:
         from pipeline import sentence_expand
-        valid_reqs, explain_counts = sentence_expand.explain_records(valid_reqs, chunk_raw_text_map)
+        valid_reqs, explain_counts = sentence_expand.explain_records(
+            valid_reqs, chunk_raw_text_map,
+            {cid: (tuple(h.get("section_ref_path") or ()), tuple(h.get("section_title_path") or ())) for cid, h in chunk_hierarchy_map.items()},
+        )
         log.info("Explained layer: %s", explain_counts)
 
     for req in valid_reqs:

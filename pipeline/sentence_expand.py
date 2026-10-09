@@ -132,7 +132,7 @@ def _norm_key(text: str) -> str:
     return tidy(text).lower()
 
 
-def explain_records(records: list[dict], raw_text_by_chunk: dict) -> tuple[list[dict], dict]:
+def explain_records(records: list[dict], raw_text_by_chunk: dict, section_by_chunk: dict | None = None) -> tuple[list[dict], dict]:
     """Give every record its explained layer: `explained_text`, `explained_parts` and `explain_notes`, built only from pieces of the source. The root (`source_quote`) and the anchor fields are never changed.
 
     - the sentence the root sits in (the root itself when it is exact, else the exact piece anchoring found: a quote with its list number taken off, a few words trimmed, or the list item of a glued lead-in);
@@ -162,7 +162,11 @@ def explain_records(records: list[dict], raw_text_by_chunk: dict) -> tuple[list[
             if start is None:
                 located = flex_pattern(piece).search(raw) if raw else None
                 start = located.start() if located else None
-            lead = _lead_in.find_lead_in(raw, start, raw_text_by_chunk.get((rec.get("chunk_id") or 0) - 1, "") if isinstance(rec.get("chunk_id"), int) else "")
+            cid = rec.get("chunk_id")
+            prev_cid = cid - 1 if isinstance(cid, int) else None
+            # the previous chunk is only consulted when it is in the same section: a list that continues across a chunk boundary stays in its section, and another section's lead-in must not be borrowed
+            same_section = section_by_chunk is None or (prev_cid in section_by_chunk and section_by_chunk.get(prev_cid) == section_by_chunk.get(cid))
+            lead = _lead_in.find_lead_in(raw, start, raw_text_by_chunk.get(prev_cid, "") if prev_cid is not None and same_section else "")
             if lead and tidy(text).lower().startswith(tidy(lead).lower()):
                 lead = None
             if lead:

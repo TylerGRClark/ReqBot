@@ -6,7 +6,7 @@ source, or there is none.
 """
 import re
 
-from pipeline.sentence_expand import _LEADING_NUMBER, _MARKER, tidy
+from pipeline.sentence_expand import _LEADING_NUMBER, _MARKER, _TERMINAL, _is_sentence_end, tidy
 
 MAX_UNITS_BACK = 40
 MAX_LEAD_IN_CHARS = 300
@@ -19,7 +19,6 @@ _STYLES = (
     ("num_p", re.compile(r"^\(\d{1,3}\)\s")),
     ("num", re.compile(r"^\d{1,3}[.)]\s")),
 )
-_SENTENCE_SPLIT = re.compile(r"(?<=[.?!])\s+(?=[A-Z(\[\"])")
 
 
 def _units(text: str) -> list[tuple[int, str]]:
@@ -47,8 +46,11 @@ def _text_of(unit: str) -> str:
     body = unit.strip()
     m = _LEADING_NUMBER.match(body)
     body = tidy(body[m.end():] if m else body)
-    sentences = _SENTENCE_SPLIT.split(body)
-    return sentences[-1].strip() if sentences else body
+    last_start = 0
+    for t in _TERMINAL.finditer(body):
+        if _is_sentence_end(body, t):  # abbreviations ("U.S. Cyber Command") and initials do not end a sentence
+            last_start = t.end()
+    return body[last_start:].strip()
 
 
 def _candidate(units: list[tuple[int, str]], index: int, item_style: tuple[str, int]):
