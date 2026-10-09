@@ -65,6 +65,8 @@ script has its own defaults; it does not inherit the CLI config for service
 URLs, model roles, or `processed_dir`. Its default output path is relative to
 the repository. Always specify the existing output directory for resume.
 
+The direct script's `--skip-to` takes a letter or the step name: `pdf-reading` (A), `chunking` (B), `requirement-finding` (C), `normalizing` (D), `totals` (E).
+
 | Resume option | Required existing artifacts / behavior |
 |---|---|
 | `--skip-to A` (PDF reading) | Run all stages. |

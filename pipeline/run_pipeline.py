@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Orchestrator: Run the full GRC requirements extraction pipeline (Steps A-E).
+"""Orchestrator: run the full GRC requirements extraction pipeline.
+
+The steps are named by job; the older letters are kept beside them (docs/PIPELINE_REDESIGN_PLAN.md):
+PDF reading (A), chunking (B), requirement finding (C), normalizing and checking (D), enrichment (D.5),
+description check (D.6), totals and final file (E). Search indexing (F) is run by the caller.
 
 Usage:
     python run_pipeline.py <pdf_path> [options]
@@ -29,6 +33,26 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
+
+# Step names by job. The letters still work everywhere (options, older docs); a name is an alias for its letter.
+STEP_NAMES = {
+    "pdf-reading": "A",
+    "chunking": "B",
+    "requirement-finding": "C",
+    "normalizing": "D",   # normalizing and checking, then (until they are switched off) enrichment and the description check
+    "totals": "E",        # totals and final file
+}
+STEP_CHOICES = sorted(STEP_NAMES) + list("ABCDE")
+
+
+def resolve_step(value: str) -> str:
+    """The step letter for a letter or a step name; ValueError for anything else."""
+    v = (value or "").strip()
+    if v.upper() in tuple("ABCDE"):
+        return v.upper()
+    if v.lower() in STEP_NAMES:
+        return STEP_NAMES[v.lower()]
+    raise ValueError(f"unknown step {value!r}; use one of {', '.join(STEP_CHOICES)}")
 
 
 def _docling_available() -> bool:
@@ -92,7 +116,7 @@ def run(
     skip_description_gate: bool = False,
     profile_name: str = "cybersecurity",
 ) -> str:
-    """Run the full extraction pipeline (Steps A-E + optional enrichment) in-process.
+    """Run the full extraction pipeline in-process (PDF reading to totals, with enrichment and the description check unless skipped).
 
     Callable interface for in-process use by reqbot.py.
     Standalone CLI usage is unchanged via main() / __main__.
@@ -100,14 +124,15 @@ def run(
     Args:
         pdf_path:          Path to the input PDF file.
         output_dir:        Directory to write all artifacts into.
-        extraction_model:  Ollama model for Step C (LLM extraction). (R-2.2)
-        enrichment_model:  Ollama model for Step D.5 (enrichment). (R-2.2)
+        extraction_model:  Ollama model for requirement finding (Step C). (R-2.2)
+        enrichment_model:  Ollama model for enrichment (Step D.5). (R-2.2)
         ollama_url:        Ollama API base URL.
         max_chunks:        Limit LLM processing to first N chunks.
         timeout:           Per-request LLM timeout in seconds.
-        skip_to:           Skip to step ('A'-'E'). Requires prior artifacts.
-        skip_enrichment:   Skip Step D.5 enrichment. Returns normalized JSONL path directly.
-        skip_description_gate: Skip Step D.6 description-grounding gate (WP-35.4).
+        skip_to:           Skip to a step: a letter ('A'-'E') or a name (pdf-reading, chunking, requirement-finding,
+                           normalizing, totals). Requires prior artifacts.
+        skip_enrichment:   Skip enrichment (Step D.5). Returns normalized JSONL path directly.
+        skip_description_gate: Skip the description check (Step D.6, the description-grounding gate, WP-35.4).
         profile_name:      Domain profile name to load from profiles/<name>.json.
                            Default 'cybersecurity'. Profile is loaded once and passed to
                            Steps C and D.5.
@@ -147,6 +172,7 @@ def run(
 
     stem = pdf.stem
     steps_to_run = "ABCDE"
+    skip_to = resolve_step(skip_to)
     if skip_to != "A":
         skip_idx = steps_to_run.index(skip_to)
         steps_to_run = steps_to_run[skip_idx:]
@@ -171,7 +197,7 @@ def run(
         if "A" in steps_to_run:
             docling_step = "A"
             log.info("=" * 60)
-            log.info("Starting Step A (PDF → Docling ancestry map)")
+            log.info("Starting PDF reading (Step A: PDF → Docling ancestry map)")
             log.info("=" * 60)
             from pipeline import section_parser as _section_parser
             ancestry_result = _section_parser.run(str(pdf), str(out_dir))
@@ -179,7 +205,7 @@ def run(
         if "B" in steps_to_run:
             docling_step = "B"
             log.info("=" * 60)
-            log.info("Starting Step B (Docling HybridChunker + breadcrumb injection)")
+            log.info("Starting chunking (Step B: Docling HybridChunker + breadcrumb injection)")
             log.info("=" * 60)
             # If --skip-to B, Step A was skipped so we need the ancestry
             if ancestry_result is None:
@@ -196,8 +222,8 @@ def run(
 
     if "C" in steps_to_run:
         log.info("=" * 60)
-        log.info("Starting Step C (LLM Extraction — Pass 1 mode)")
-        log.info("Step C — extraction model: %s", extraction_model)
+        log.info("Starting requirement finding (Step C: LLM extraction, Pass 1 mode)")
+        log.info("Requirement finding — extraction model: %s", extraction_model)
         log.info("=" * 60)
         try:
             llm_extract_requirements.run(
@@ -209,11 +235,11 @@ def run(
         except RuntimeError:
             raise
         except Exception as e:
-            raise RuntimeError(f"Step C failed: {e}") from e
+            raise RuntimeError(f"Requirement finding (Step C) failed: {e}") from e
 
     if "D" in steps_to_run:
         log.info("=" * 60)
-        log.info("Starting Step D (Normalize)")
+        log.info("Starting normalizing and checking (Step D)")
         log.info("=" * 60)
         try:
             parse_and_normalize.run(
@@ -221,7 +247,7 @@ def run(
                 profile=profile,
             )
         except Exception as e:
-            raise RuntimeError(f"Step D failed: {e}") from e
+            raise RuntimeError(f"Normalizing and checking (Step D) failed: {e}") from e
 
     # WP-39.2: parent-stem reconstruction. Deterministic and offline (no Ollama) --
     # called here, unconditionally and before the --skip-enrichment check below, so it
@@ -250,8 +276,8 @@ def run(
     index_path = norm_path
     if "D" in steps_to_run and not skip_enrichment:
         log.info("=" * 60)
-        log.info("Starting Step D.5 (Enrich — Pass 2)")
-        log.info("Step D.5 — enrichment model: %s", enrichment_model)
+        log.info("Starting enrichment (Step D.5: Pass 2)")
+        log.info("Enrichment — model: %s", enrichment_model)
         log.info("=" * 60)
         try:
             from pipeline import enrich_requirements as _enrich_mod
@@ -263,13 +289,13 @@ def run(
             index_path = Path(enrich_result)
         except Exception as e:
             log.warning(
-                "Step D.5 enrichment failed (%s) — proceeding with normalized JSONL for indexing",
+                "Enrichment (Step D.5) failed (%s) — proceeding with normalized JSONL for indexing",
                 e,
             )
     elif skip_enrichment:
-        log.info("Step D.5 skipped (--skip-enrichment)")
+        log.info("Enrichment (Step D.5) skipped (--skip-enrichment)")
     else:
-        log.info("Step D.5 skipped (Step D did not run in this invocation)")
+        log.info("Enrichment (Step D.5) skipped (normalizing did not run in this invocation)")
 
     # Step D.6: Description-grounding entailment gate (WP-35.4). Runs on
     # whatever index_path currently is (enriched if D.5 succeeded, normalized
@@ -281,7 +307,7 @@ def run(
     # continues" precedent Step D.5 already established.
     if "D" in steps_to_run and not skip_description_gate:
         log.info("=" * 60)
-        log.info("Starting Step D.6 (Description-Grounding Gate)")
+        log.info("Starting description check (Step D.6: description-grounding gate)")
         log.info("=" * 60)
         try:
             from pipeline import entailment_gate as _gate_mod
@@ -289,17 +315,17 @@ def run(
             index_path = Path(gate_result)
         except Exception as e:
             log.warning(
-                "Step D.6 gate failed (%s) — proceeding with ungated JSONL for indexing",
+                "Description check (Step D.6) failed (%s) — proceeding with ungated JSONL for indexing",
                 e,
             )
     elif skip_description_gate:
-        log.info("Step D.6 skipped (--skip-description-gate)")
+        log.info("Description check (Step D.6) skipped (--skip-description-gate)")
     else:
-        log.info("Step D.6 skipped (Step D did not run in this invocation)")
+        log.info("Description check (Step D.6) skipped (normalizing did not run in this invocation)")
 
     if "E" in steps_to_run:
         log.info("=" * 60)
-        log.info("Starting Step E (Aggregate)")
+        log.info("Starting totals and final file (Step E)")
         log.info("=" * 60)
         # Fresh Step A/B in this invocation is always docling (WP-34.1: the only
         # path left). Resuming past it (--skip-to C/D/E) means chunks_path is a
@@ -317,7 +343,7 @@ def run(
                 skip_sections_configured=profile.get("skip_sections", []),
             )
         except Exception as e:
-            raise RuntimeError(f"Step E failed: {e}") from e
+            raise RuntimeError(f"Totals and final file (Step E) failed: {e}") from e
 
     total_elapsed = time.time() - pipeline_start
     log.info("=" * 60)
@@ -385,10 +411,12 @@ def main() -> None:
     )
     parser.add_argument(
         "--skip-to",
-        type=str,
-        choices=["A", "B", "C", "D", "E"],
+        type=resolve_step,
+        choices=list("ABCDE"),
+        metavar="STEP",
         default="A",
-        help="Skip to a specific step (requires prior artifacts in output-dir)",
+        help="Skip to a specific step, by letter (A-E) or name: pdf-reading, chunking, requirement-finding, "
+             "normalizing, totals (requires prior artifacts in output-dir)",
     )
     parser.add_argument(
         "--index",
