@@ -1,0 +1,260 @@
+{
+ "dev": {
+  "D0": [
+   {
+    "run": "d0_8b_dev_r1",
+    "recall": {
+     "recall": 0.6216216216216216,
+     "interval": [
+      0.45454545454545453,
+      0.7818181818181819
+     ],
+     "n": 74,
+     "hits": 46
+    },
+    "recall_share": 0.6216216216216216,
+    "precision": {
+     "false_positive": 20,
+     "false_positive_not_obligation": 19,
+     "true_positive": 53,
+     "unscored": 9,
+     "false_positive_scope": 1
+    },
+    "precision_rate": 0.726,
+    "records": 82,
+    "status": {
+     "complete": 38
+    }
+   },
+   {
+    "run": "d0_8b_dev_r2",
+    "recall": {
+     "recall": 0.6081081081081081,
+     "interval": [
+      0.42105263157894735,
+      0.7671232876712328
+     ],
+     "n": 74,
+     "hits": 45
+    },
+    "recall_share": 0.6081081081081081,
+    "precision": {
+     "false_positive": 21,
+     "false_positive_not_obligation": 21,
+     "unscored": 11,
+     "true_positive": 52
+    },
+    "precision_rate": 0.712,
+    "records": 84,
+    "status": {
+     "complete": 38
+    }
+   }
+  ],
+  "D1": [
+   {
+    "run": "d1_8b_dev_r1",
+    "recall": {
+     "recall": 0.918918918918919,
+     "interval": [
+      0.8571428571428571,
+      0.958904109589041
+     ],
+     "n": 74,
+     "hits": 68
+    },
+    "recall_share": 0.918918918918919,
+    "precision": {
+     "false_positive": 55,
+     "false_positive_not_obligation": 54,
+     "true_positive": 69,
+     "unscored": 19,
+     "false_positive_scope": 1
+    },
+    "precision_rate": 0.556,
+    "records": 143,
+    "status": {
+     "complete": 38
+    }
+   },
+   {
+    "run": "d1_8b_dev_r2",
+    "recall": {
+     "recall": 0.9054054054054054,
+     "interval": [
+      0.7741568914956012,
+      0.9701492537313433
+     ],
+     "n": 74,
+     "hits": 67
+    },
+    "recall_share": 0.9054054054054054,
+    "precision": {
+     "unscored": 17,
+     "false_positive": 51,
+     "false_positive_not_obligation": 49,
+     "true_positive": 68,
+     "false_positive_scope": 2
+    },
+    "precision_rate": 0.571,
+    "records": 136,
+    "status": {
+     "complete": 38
+    }
+   }
+  ],
+  "P1": [
+   {
+    "run": "p1_dev_r1",
+    "recall": {
+     "recall": 1.0,
+     "interval": [
+      1.0,
+      1.0
+     ],
+     "n": 74,
+     "hits": 74
+    },
+    "recall_share": 1.0,
+    "precision": {
+     "false_positive": 88,
+     "false_positive_not_obligation": 85,
+     "true_positive": 71,
+     "unscored": 15,
+     "false_positive_lead_in": 1,
+     "false_positive_scope": 2
+    },
+    "precision_rate": 0.447,
+    "records": 174,
+    "status": {
+     "complete": 38
+    }
+   },
+   {
+    "run": "p1_dev_r2",
+    "recall": {
+     "recall": 1.0,
+     "interval": [
+      1.0,
+      1.0
+     ],
+     "n": 74,
+     "hits": 74
+    },
+    "recall_share": 1.0,
+    "precision": {
+     "false_positive": 91,
+     "false_positive_not_obligation": 88,
+     "true_positive": 71,
+     "unscored": 15,
+     "false_positive_lead_in": 1,
+     "false_positive_scope": 2
+    },
+    "precision_rate": 0.438,
+    "records": 177,
+    "status": {
+     "complete": 38
+    }
+   }
+  ]
+ },
+ "afi17-203": {
+  "units": 197,
+  "candidates": {
+   "D0": 120,
+   "D1": 173,
+   "P1": 195
+  },
+  "covered": {
+   "D0": 98,
+   "D1": 100,
+   "P1": 195
+  },
+  "covered_share": {
+   "D0": 0.497,
+   "D1": 0.508,
+   "P1": 0.99
+  },
+  "only_this_arm": {
+   "D0": 0,
+   "D1": 0,
+   "P1": 75
+  },
+  "additions_vs_D0": {
+   "P1_or_D1_not_D0": 97,
+   "P1_not_D0": 97,
+   "D1_not_D0": 22
+  },
+  "sample_ids": [
+   0,
+   3,
+   8,
+   9,
+   13,
+   14,
+   19,
+   25,
+   26,
+   27,
+   29,
+   31,
+   34,
+   38,
+   39,
+   43,
+   45,
+   46,
+   47,
+   48,
+   53,
+   54,
+   62,
+   72,
+   83,
+   94,
+   105,
+   112,
+   133,
+   145,
+   160,
+   163,
+   173,
+   174,
+   175,
+   181,
+   182,
+   191,
+   193,
+   194
+  ],
+  "uncovered_by_D0_and_D1": {
+   "units": 77,
+   "duty_looking_by_crude_rule": 15
+  },
+  "D1_quotes_matching_no_unit": 37,
+  "D1_additions_units": [
+   5,
+   14,
+   15,
+   57,
+   58,
+   83,
+   89,
+   112,
+   126,
+   129,
+   131,
+   132,
+   133,
+   134,
+   135,
+   143,
+   145,
+   160,
+   172,
+   173,
+   174,
+   175
+  ]
+ }
+}
