@@ -176,3 +176,15 @@ def test_step_names_are_aliases_for_the_step_letters():
     import pytest
     with pytest.raises(ValueError):
         rp.resolve_step("enrich")
+
+
+def test_skip_to_option_accepts_names_in_any_case_and_rejects_unknown_steps(capsys):
+    import pytest
+    from pipeline import run_pipeline as rp
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--skip-to", type=rp.resolve_step, choices=list("ABCDE"), metavar="STEP", default="A")
+    assert parser.parse_args(["--skip-to", "Requirement-Finding"]).skip_to == "C"
+    assert parser.parse_args([]).skip_to == "A"
+    with pytest.raises(SystemExit):
+        parser.parse_args(["--skip-to", "enrich"])

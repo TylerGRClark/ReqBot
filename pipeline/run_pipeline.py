@@ -411,8 +411,9 @@ def main() -> None:
     )
     parser.add_argument(
         "--skip-to",
-        type=str,
-        choices=STEP_CHOICES,
+        type=resolve_step,
+        choices=list("ABCDE"),
+        metavar="STEP",
         default="A",
         help="Skip to a specific step, by letter (A-E) or name: pdf-reading, chunking, requirement-finding, "
              "normalizing, totals (requires prior artifacts in output-dir)",

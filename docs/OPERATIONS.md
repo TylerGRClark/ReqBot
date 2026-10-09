@@ -65,10 +65,10 @@ script has its own defaults; it does not inherit the CLI config for service
 URLs, model roles, or `processed_dir`. Its default output path is relative to
 the repository. Always specify the existing output directory for resume.
 
-| Resume option | Required existing artifacts / behavior |
-|---|---|
 The direct script's `--skip-to` takes a letter or the step name: `pdf-reading` (A), `chunking` (B), `requirement-finding` (C), `normalizing` (D), `totals` (E).
 
+| Resume option | Required existing artifacts / behavior |
+|---|---|
 | `--skip-to A` (PDF reading) | Run all stages. |
 | `--skip-to B` (chunking) | The parser runs to obtain the in-memory Docling document, then chunks again. |
 | `--skip-to C` (requirement finding) | Existing matching chunks; extract or reuse valid cached responses. |
