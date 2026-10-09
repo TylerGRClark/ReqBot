@@ -170,7 +170,7 @@ def _md_item(item: dict, index: int) -> str:
         lines.append("")
 
     audit_q = item.get("audit_question", "")
-    lines.append(f"**Audit Question:** {audit_q if audit_q else '*(not generated)*'}  ")
+    lines.append(f"**Audit Question (draft):** {audit_q if audit_q else '*(not generated)*'}  ")
 
     status = item.get("status", "not-started")
     assessor = item.get("assessor_notes", "")
@@ -210,7 +210,7 @@ def to_xlsx(checklist: dict) -> bytes:
         ("Parent para.",   "parent_text",            30, True),
         ("Requirement",    "source_quote",            36, True),
         ("Passage",        "passage",                 52, True),
-        ("Audit Question", "audit_question",          22, True),
+        ("Audit Question (draft)", "audit_question",          22, True),
         ("Status",         "status",                  15, False),
         ("Notes",          "assessor_notes",          22, True),
         ("Check",          "item_flags",              20, False),

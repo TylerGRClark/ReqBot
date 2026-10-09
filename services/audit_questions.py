@@ -58,13 +58,16 @@ def unverified_terms(question: str, material: str) -> list[str]:
     low = set(re.findall(r"[a-z0-9][a-z0-9./&'-]*", text))
     out = []
     for m in _TERM.finditer(question or ""):
-        if m.start() == 0:
-            continue
-        for word in m.group(0).split():  # word by word: a title with its parenthetical acronym left out is still grounded
+        words = m.group(0).split()  # word by word: a title with its parenthetical acronym left out is still grounded
+        if m.start() == 0 and words:
+            words = words[1:]  # the sentence-initial word ("Do", "Does") is ignored; the rest of the match is still checked
+        for word in words:
             w = word.lower().strip(".,;:()")
             if len(w) < 3 and not any(ch.isdigit() for ch in w):
                 continue
-            if w and w not in _STOP and w not in low and w not in text:
+            w = re.sub(r"'s$", "", w)
+            inside_longer_token = bool(re.search(r"[\d./&'-]", w)) and w in text  # "I-NOSC" inside a longer token; a plain word must match a whole word ("port" is not "report")
+            if w and w not in _STOP and w not in low and not inside_longer_token:
                 out.append(word)
     return out
 
@@ -142,7 +145,7 @@ def draft_questions(items: list[dict], path: Path, *, model: str = MODEL, ollama
     A record whose input is unchanged is kept; a row whose answer cannot be parsed after one retry is recorded with `error` and is retried on the next run."""
     call = call or (lambda prompt: ollama_call(prompt, model, ollama_url))
     existing = load(path)
-    records: dict[str, dict] = {}
+    records: dict[str, dict] = dict(existing)  # rows not in this run (another profile, an interrupted run) keep their records; apply() checks each against its row
     counts = {"rows": 0, "questions": 0, "no_question": 0, "skipped_by_code": 0, "reused": 0, "errors": 0, "with_unverified_terms": 0}
     for item in items:
         if not (item.get("source_quote") or "").strip():
@@ -188,12 +191,19 @@ def apply(items: list[dict], path: Path) -> int:
     filled = 0
     for item in items:
         rec = records.get(item["checklist_item_id"])
-        if not rec or not rec.get("question"):
+        if not rec or not rec.get("question") or skipped_because(item):
             continue
+        if rec.get("input_hash") != input_hash(build_prompt(item), rec.get("model", MODEL)):
+            continue  # written from a different row text, passage or prompt: stale
         item["audit_question"] = rec["question"]
         note = f"Draft audit question written by {rec.get('model', MODEL)} from the text above; check it before use."
         if rec.get("unverified_terms"):
-            note += " Not found in the row's text: " + ", ".join(rec["unverified_terms"]) + "."
+            terms = ", ".join(rec["unverified_terms"])
+            note += " Not found in the row's text: " + terms + "."
+            reason = f"question-has-terms-not-in-row: {terms}"
+            if reason not in item.setdefault("review_reasons", []):
+                item["review_reasons"].append(reason)
+            item["requires_human_review"] = True
         item["generation_notes"] = (item.get("generation_notes") + " " if item.get("generation_notes") else "") + note
         filled += 1
     return filled

@@ -65,7 +65,7 @@ export default function ChecklistTable({ items }: Props) {
 
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[220px]`}>Requirement</th>
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[260px]`}>Passage</th>
-            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[140px] border-r border-gray-200`}>Audit question</th>
+            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[140px] border-r border-gray-200`}>Audit question (draft)</th>
 
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[100px]`}>Status</th>
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[140px] border-r border-gray-200`}>Notes</th>

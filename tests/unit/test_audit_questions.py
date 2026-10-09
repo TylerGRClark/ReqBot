@@ -81,3 +81,43 @@ def test_generate_fills_the_audit_question_from_the_sidecar(tmp_path):
     AQ.draft_questions(plain["items"], AQ.sidecar_path(run / "doc_requirements_normalized.jsonl"), call=lambda p: _answer("Do Commanders review logs monthly?"))
     filled = generate(tmp_path, "doc", "cybersecurity")
     assert filled["items"][0]["audit_question"] == "Do Commanders review logs monthly?" and filled["summary"]["items_with_draft_question"] == 1
+
+
+def test_a_plain_word_must_match_a_whole_word_and_the_first_word_after_a_sentence_start_is_still_checked():
+    assert AQ.unverified_terms("Do the units file a port report?", "Units file the report monthly.") == []  # "port" is lower case: not a checked term
+    assert AQ.unverified_terms("Do Administrators review logs?", "Commanders review logs monthly.") == ["Administrators"]
+    assert AQ.unverified_terms("Does the unit use SIEM-9?", "The unit uses a tool (SIEM-9a).") == []  # inside a longer token
+    assert AQ.unverified_terms("Does the unit use SIEM-9?", "The unit uses a tool.") == ["SIEM-9"]
+
+
+def test_apply_ignores_a_record_written_from_a_different_row(tmp_path):
+    path = tmp_path / "q.jsonl"
+    AQ.draft_questions([_item(1, "Commanders shall review logs monthly.")], path, call=lambda p: _answer("Do Commanders review logs monthly?"))
+    changed = _item(1, "Commanders shall review logs monthly.", passage=">> Commanders shall review logs monthly. <<  Auditors verify.")
+    assert AQ.apply([changed], path) == 0 and changed["audit_question"] == ""
+    flagged = _item(1, "Commanders shall review logs monthly.", item_flags=["table_fragment"])
+    assert AQ.apply([flagged], path) == 0
+
+
+def test_unverified_terms_become_a_review_reason(tmp_path):
+    item = _item(1, "Commanders shall review logs monthly.")
+    AQ.draft_questions([item], tmp_path / "q.jsonl", call=lambda p: _answer("Do Commanders review logs monthly using SIEM-9?"))
+    AQ.apply([item], tmp_path / "q.jsonl")
+    assert any(r.startswith("question-has-terms-not-in-row") for r in item["review_reasons"]) and item["requires_human_review"] is True
+
+
+def test_a_checkpoint_keeps_the_records_of_rows_not_reached_yet(tmp_path):
+    path = tmp_path / "q.jsonl"
+    items = [_item(i, f"Commanders shall review log number {i} monthly.") for i in range(1, 31)]
+    AQ.draft_questions(items, path, call=lambda p: _answer("Do Commanders review the log?"))
+    seen = []
+
+    def boom(prompt):
+        if len(seen) >= 26:
+            raise ValueError("stop")
+        seen.append(1)
+        return _answer("Do Commanders review the log monthly?")
+
+    changed = [_item(i, f"Commanders shall review log number {i} weekly.") for i in range(1, 31)]
+    AQ.draft_questions(changed, path, call=boom, progress=lambda c: None)
+    assert len(AQ.load(path)) == 30
