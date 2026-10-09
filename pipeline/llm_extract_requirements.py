@@ -55,43 +55,58 @@ log = logging.getLogger(__name__)
 VALID_DOMAIN_TAGS = default_profile()["domain_tags"]
 VALID_REQUIREMENT_TYPES = default_profile()["requirement_types"]
 
-PASS1_PROMPT_TEMPLATE = """You are a requirements extraction system for cybersecurity compliance documents.
+PASS1_PROMPT_TEMPLATE = """You are finding CANDIDATE requirement passages in a cybersecurity compliance document.
+Be inclusive: a later step decides which candidates are real, so do not drop a passage because you are unsure.
 
-Your ONLY task: identify and extract ACTIONABLE REQUIREMENTS from the text below.
-A requirement is something an organization MUST DO — it expresses obligation, mandate, or necessity.
+A candidate is a passage that tells a party what it must, should, may or must not do. Return passages such as:
+- shall / must / is required to / will statements
+- "should" or "is recommended" statements (recommendations)
+- "shall not", "must not", "is prohibited" statements (prohibitions)
+- "may" or "is authorized to" statements (permissions)
+- Third-person duty statements with no modal verb, often list items under a lead-in such as "The Director will:",
+  for example "Reviews access lists annually." Return the item itself, even if its lead-in is not in this text.
+- Imperative instructions, for example "Disable unused services."
+- When a sentence contains a condition or exception (if, unless, except, provided that), copy the whole sentence.
+- Scope or applicability statements ("This manual applies to all network operators"). They are not requirements, but the next
+  step keeps and attaches them, so return them.
 
-Extract statements containing obligation or mandate language including: {obligation_verbs}
-
-DO NOT extract:
-- Definitions or glossary entries
-- Document change logs or errata (e.g., "Change X to Y")
-- Tables of contents or section headings
-- Cross-references to other controls (e.g., "Related controls: AC-2, IA-1")
-- General background, context, or informational text
+Do NOT return:
+- definitions, change logs, tables of contents, headings
+- a cross-reference by itself ("See also AC-3")
+- background that describes how something works and tells nobody to do anything
+- statements of what a role is or is located in, with no action anyone could perform or be audited on
 
 Return a JSON object with a single "requirements" key whose value is an array.
 No markdown code fences. No text before or after the JSON object.
-If there are no actionable requirements, return: {"requirements": []}
+If there are no candidates, return: {"requirements": []}
 
 Each element in the "requirements" array must be a JSON object with exactly these keys:
-- "source_quote": (REQUIRED) The exact verbatim quote from the text establishing this requirement
+- "source_quote": (REQUIRED) The exact verbatim quote from the text establishing this candidate
   (under 500 characters). Copy word-for-word — do NOT paraphrase or summarize. If you cannot find
-  an exact verbatim quote for a requirement, do NOT include that requirement.
-- "source_ref": The document-specific locator for this requirement (e.g., "AC-4", "Section 5.2.1",
+  an exact verbatim quote for a candidate, do NOT include that candidate.
+- "source_ref": The document-specific locator for this candidate (e.g., "AC-4", "Section 5.2.1",
   "Para 3.4.1") or "" if none is visible in the text. Copy it exactly as written — do not infer or construct.
 
 --- EXAMPLES ---
 
-Example 1 — NIST prose (requirements present):
-Text: "AC-3 ACCESS ENFORCEMENT\nControl: The information system enforces approved authorizations for logical access to information and system resources in accordance with applicable access control policies.\nSupplemental Guidance: Access control policies (e.g., identity-based policies, role-based policies, attribute-based policies) and access enforcement mechanisms are employed by organizations to control access between active entities or subjects and passive entities or objects in information systems."
-Output: {"requirements": [{"source_quote": "The information system enforces approved authorizations for logical access to information and system resources in accordance with applicable access control policies.", "source_ref": "AC-3"}]}
+Example 1:
+Text: "4.2 The Records Officer will:\\na. Provides quarterly retention reports to the Program Office.\\nb. Reviews disposal schedules each year.\\nc. Is based in the Northern Annex."
+Output: {"requirements": [{"source_quote": "a. Provides quarterly retention reports to the Program Office.", "source_ref": "4.2"}, {"source_quote": "b. Reviews disposal schedules each year.", "source_ref": "4.2"}]}
 
-Example 2 — DoD policy table (multiple requirements):
-Text: "3.2 POLICY\n3.2.1 All DoD information systems shall implement multi-factor authentication for all privileged user accounts.\n3.2.2 Password complexity requirements shall conform to NIST SP 800-63B guidelines. Minimum password length is 12 characters.\n3.2.3 See Table 3.2-1 for password requirements by account type (informational)."
-Output: {"requirements": [{"source_quote": "All DoD information systems shall implement multi-factor authentication for all privileged user accounts.", "source_ref": "3.2.1"}, {"source_quote": "Password complexity requirements shall conform to NIST SP 800-63B guidelines. Minimum password length is 12 characters.", "source_ref": "3.2.2"}]}
+Example 2:
+Text: "Users shall not share accounts. Administrators should rotate shared secrets every 90 days. The Authorizing Official may grant a waiver for up to six months."
+Output: {"requirements": [{"source_quote": "Users shall not share accounts.", "source_ref": ""}, {"source_quote": "Administrators should rotate shared secrets every 90 days.", "source_ref": ""}, {"source_quote": "The Authorizing Official may grant a waiver for up to six months.", "source_ref": ""}]}
 
-Example 3 — References section (no requirements):
-Text: "1. REFERENCES\na. DoD Instruction 8500.01, Cybersecurity, March 14, 2014, as amended.\nb. NIST Special Publication 800-53, Security and Privacy Controls for Federal Information Systems and Organizations, Revision 5, September 2020.\nc. Committee on National Security Systems Instruction No. 1253."
+Example 3:
+Text: "Contractors shall encrypt backups unless the Program Manager grants a written exception.\\n(1) Keys must be stored apart from the data.\\n(2) Key custodians shall be named in writing."
+Output: {"requirements": [{"source_quote": "Contractors shall encrypt backups unless the Program Manager grants a written exception.", "source_ref": ""}, {"source_quote": "(1) Keys must be stored apart from the data.", "source_ref": "(1)"}, {"source_quote": "(2) Key custodians shall be named in writing.", "source_ref": "(2)"}]}
+
+Example 4:
+Text: "AC-9 Review. See also AC-3 and IA-2. Where paragraph 4.2 applies, the Agency shall comply with Section 6."
+Output: {"requirements": [{"source_quote": "Where paragraph 4.2 applies, the Agency shall comply with Section 6.", "source_ref": "AC-9"}]}
+
+Example 5:
+Text: "Virtualization is the practice of running several operating systems on one machine. It is widely used in data centers."
 Output: {"requirements": []}
 
 --- END EXAMPLES ---

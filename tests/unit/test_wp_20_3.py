@@ -120,19 +120,19 @@ def test_validate_requirement_cybersecurity_profile_unchanged():
 # Step C: obligation_verbs and domain_tags injected into prompt templates
 # ---------------------------------------------------------------------------
 
-def test_pass1_template_substitutes_obligation_verbs():
-    verbs = ", ".join(_TEST_DOMAIN_PROFILE["obligation_verbs"])
-    result = extract_mod.PASS1_PROMPT_TEMPLATE.replace("{obligation_verbs}", verbs)
-    assert "shall, must" in result
-    assert "{obligation_verbs}" not in result
+def test_pass1_template_no_longer_depends_on_profile_obligation_verbs():
+    # WP-45.16: the inclusive prompt (D1) asks for any passage that tells a party what to do, so it no longer lists the profile's obligation verbs;
+    # the placeholder is gone and rendering with a profile's verbs changes nothing.
+    template = extract_mod.PASS1_PROMPT_TEMPLATE
+    assert "{obligation_verbs}" not in template
+    for profile in (_TEST_DOMAIN_PROFILE, _CYBER_PROFILE):
+        assert template.replace("{obligation_verbs}", ", ".join(profile["obligation_verbs"])) == template
 
 
-def test_cybersecurity_profile_substitution_contains_expected_verbs():
-    verbs = ", ".join(_CYBER_PROFILE["obligation_verbs"])
-    result = extract_mod.PASS1_PROMPT_TEMPLATE.replace("{obligation_verbs}", verbs)
-    assert "shall" in result
-    assert "enforce" in result
-    assert "maintain" in result
+def test_pass1_template_is_inclusive_and_keeps_the_runtime_placeholders():
+    template = extract_mod.PASS1_PROMPT_TEMPLATE
+    assert "CANDIDATE" in template and "shall not" in template and "should" in template
+    assert "{chunk_text}" in template and "{source_ref_hints}" in template
 
 
 # ---------------------------------------------------------------------------
