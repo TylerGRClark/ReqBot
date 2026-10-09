@@ -37,3 +37,24 @@ Plan and rules: [docs/PHASE45_WP4512_PLAN.md](../../../docs/PHASE45_WP4512_PLAN.
 
 - P1 classifies at most the first 1,500 characters of a unit but emits the whole unit as the quote. It matters for 1 of 197 units on AFI 17-203 and 0 of 183 on the labeled pages, so it does not change the registered numbers; it would matter for table-shaped units in other documents.
 - The owner's rating sheets show the paragraph, its number, its heading and its parent paragraph read from the numbering; units longer than 1,800 characters are cut in the sheet only.
+
+## Owner's rating of D1's additions on AFI 17-203 (2026-10-09)
+
+The owner rated all 22 units D1 covers and the current prompt does not (`outputs/afi17-203_D1_additions_rating_sheet.md`, with his words kept as written).
+
+| rating | count | units |
+|---|---|---|
+| requirement ("is req", "is a req") | 11 | 4, 5, 7, 8, 9, 10, 11, 13, 14, 17, 18 |
+| partial or borderline ("is sort of a req"; "gives authority to but isn't necessarily a req, I'd let it slide") | 4 | 12, 19, 20, 21 |
+| not a requirement | 7 | 1, 2, 3 (who the instruction applies to or does not apply to), 6 ("describes a role"), 15, 16 ("describes how to comply with a requirement but isn't actually one"), 22 (a table he could not read) |
+
+**Against the registered rule** (at least 60% requirement or partial). The registered rubric allows *partial* only for a requirement that is cut or merged oddly. Three of the owner's ratings (units 19-21, "gives authority to but isn't necessarily a req, I'd let it slide with it is") are neither: they are intact paragraphs that he says are not necessarily requirements, though he would accept them. So the gate result depends on how those three are read, and it is the owner's to decide:
+
+- counting them as requirement-or-partial (his "let it slide"): 15 of 22 = 68% (15 of 21 = 71% leaving out the unreadable table); D1 clears the 60% bar;
+- counting them as not a requirement (his literal "isn't necessarily a req"): 12 of 22 = 55% (12 of 21 = 57% leaving out the table); D1 **does not** clear the bar.
+
+With the labeled-page gates met (recall 91% against 62%, precision 56%), D1 is therefore a candidate whose rating gate is *not cleanly met*: pending the owner's call on units 19-21. P1 had already failed and was not rated.
+
+What the seven "not a requirement" ratings show: three are applicability statements ("It applies to all military and civilian AF personnel ...", "This Instruction does not apply to ..."), which D1's prompt deliberately returns so a later step can attach them. A checklist hint for these rows is proposed separately (#275, not part of this change).
+
+**Nothing is adopted.** Adopting D1 changes what Step C asks for every document, and forces re-extraction and a reindex. The measured trial is planned in #276 (WP-45.13) against the two table-fix baseline runs.
