@@ -1,0 +1,143 @@
+{
+ "documents": {
+  "CJCSI 6510.02G": {
+   "records": 104,
+   "same_accepted_records_otherwise": true,
+   "status": {
+    "exact": 103,
+    "words_trimmed": 1
+   }
+  },
+  "DODI 5200.01": {
+   "records": 73,
+   "same_accepted_records_otherwise": true,
+   "status": {
+    "exact": 72,
+    "words_trimmed": 1
+   }
+  },
+  "DODI 5200.44": {
+   "records": 108,
+   "same_accepted_records_otherwise": true,
+   "status": {
+    "exact": 107,
+    "words_trimmed": 1
+   }
+  },
+  "DODI 5200.48": {
+   "records": 277,
+   "same_accepted_records_otherwise": true,
+   "status": {
+    "exact": 266,
+    "words_trimmed": 2,
+    "marker_removed": 3,
+    "fuzzy": 1,
+    "lead_in_joined": 3,
+    "exact_ambiguous": 2
+   }
+  },
+  "DODI 8410.03": {
+   "records": 172,
+   "same_accepted_records_otherwise": true,
+   "status": {
+    "exact": 151,
+    "lead_in_joined": 18,
+    "words_trimmed": 3
+   }
+  },
+  "DODI 8551.01": {
+   "records": 82,
+   "same_accepted_records_otherwise": true,
+   "status": {
+    "lead_in_joined": 4,
+    "exact": 66,
+    "words_trimmed": 11,
+    "not_found": 1
+   }
+  },
+  "NIST.SP.800-125": {
+   "records": 298,
+   "same_accepted_records_otherwise": true,
+   "status": {
+    "exact": 291,
+    "marker_removed": 3,
+    "words_trimmed": 3,
+    "not_found": 1
+   }
+  },
+  "afi10-2402": {
+   "records": 353,
+   "same_accepted_records_otherwise": true,
+   "status": {
+    "exact": 337,
+    "not_found": 1,
+    "marker_removed": 11,
+    "words_trimmed": 2,
+    "lead_in_joined": 1,
+    "exact_ambiguous": 1
+   }
+  },
+  "afi13-550": {
+   "records": 186,
+   "same_accepted_records_otherwise": true,
+   "status": {
+    "exact": 163,
+    "not_found": 3,
+    "lead_in_joined": 9,
+    "marker_removed": 10,
+    "fuzzy": 1
+   }
+  },
+  "afi17-203": {
+   "records": 155,
+   "same_accepted_records_otherwise": true,
+   "status": {
+    "exact": 127,
+    "words_trimmed": 14,
+    "lead_in_joined": 1,
+    "not_found": 2,
+    "fuzzy": 1,
+    "marker_removed": 6,
+    "exact_ambiguous": 4
+   }
+  },
+  "afman17-2101": {
+   "records": 184,
+   "same_accepted_records_otherwise": true,
+   "status": {
+    "exact": 178,
+    "fuzzy": 3,
+    "words_trimmed": 3
+   }
+  },
+  "afpd_17-1": {
+   "records": 75,
+   "same_accepted_records_otherwise": true,
+   "status": {
+    "exact": 74,
+    "words_trimmed": 1
+   }
+  },
+  "dafman17-1305": {
+   "records": 352,
+   "same_accepted_records_otherwise": true,
+   "status": {
+    "exact": 307,
+    "words_trimmed": 8,
+    "not_found": 3,
+    "lead_in_joined": 23,
+    "marker_removed": 9,
+    "fuzzy": 2
+   }
+  }
+ },
+ "total": {
+  "exact": 2242,
+  "words_trimmed": 50,
+  "marker_removed": 42,
+  "fuzzy": 8,
+  "lead_in_joined": 59,
+  "exact_ambiguous": 7,
+  "not_found": 11
+ }
+}

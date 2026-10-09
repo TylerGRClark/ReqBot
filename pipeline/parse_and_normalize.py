@@ -28,6 +28,7 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+from pipeline import anchor as anchor_mod
 from pipeline.chunk_text import _normalize_heading
 
 logging.basicConfig(
@@ -862,6 +863,10 @@ def run(
         if not source_ref:
             confidence -= 0.1
 
+        # Anchoring (docs/PIPELINE_REDESIGN_PLAN.md): metadata beside the root quote about where it sits in the chunk and how exact the match is. Adds fields only; the quote
+        # itself is not touched here, and nothing is accepted or rejected on this basis yet.
+        anchor_fields = anchor_mod.anchor(source_quote, chunk_raw_text_map.get(chunk_id, "")) if chunk_id is not None and chunk_id in chunk_raw_text_map else {}
+
         normalized = {
             "requirement_id": req.get("requirement_id", f"R-{chunk_id}-X"),
             "description": description,
@@ -890,6 +895,7 @@ def run(
             "extraction_model": extraction_model,
             "run_timestamp": run_timestamp,
         }
+        normalized.update(anchor_fields)
         valid_reqs.append(normalized)
 
     before_dedup = len(valid_reqs)
