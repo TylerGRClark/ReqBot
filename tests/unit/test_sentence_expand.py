@@ -171,6 +171,7 @@ def test_a_definition_whose_front_words_were_trimmed_and_cannot_be_expanded_keep
            "anchor_text": "Defined in Committee on National Security Systems Instruction (CNSSI) No. 4009."}
     out, _ = SE.explain_records([rec], raw)
     assert out[0]["explained_text"] == rec["source_quote"]
+    assert not any("taken off" in n for n in out[0]["explain_notes"]) and any("were kept" in n for n in out[0]["explain_notes"])
 
 
 def test_the_note_says_when_only_a_list_number_was_taken_off():

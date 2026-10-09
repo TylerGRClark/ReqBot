@@ -149,8 +149,9 @@ def explain_records(records: list[dict], raw_text_by_chunk: dict) -> tuple[list[
         end_trimmed = status == "words_trimmed" and rec.get("anchor_trim_side") == "end"  # words at the end that the source lacks are often a table cell read back ("... is End user"); dropping them would lose what tells rows apart
         piece = root if status in (None, "exact") or end_trimmed else (rec.get("anchor_text") or root) if status in ("marker_removed", "words_trimmed", "lead_in_joined", "lead_in_from_heading", "lead_in_not_in_source") else root
         text, outcome = expand(piece, raw)
+        reverted = False
         if status == "words_trimmed" and not end_trimmed and outcome not in ("expanded", "unchanged"):
-            text, outcome = root, "not_located"  # trimming dropped the model's words and no sentence was found to take their place: keep the root rather than a shorter piece
+            text, outcome, reverted = root, "not_located", True  # trimming dropped the model's words and no sentence was found to take their place: keep the root rather than a shorter piece
         counts[outcome] = counts.get(outcome, 0) + 1
         notes, parts = [], []
         lead = rec.get("anchor_lead_in") if status in ("lead_in_joined", "lead_in_from_heading") else None
@@ -166,6 +167,8 @@ def explain_records(records: list[dict], raw_text_by_chunk: dict) -> tuple[list[
             notes.append(f"not expanded: {outcome.replace('_', ' ')}")  # expand() returns the piece as given in these cases
         if end_trimmed:
             notes.append("end of the quote is not in the source; kept as returned")
+        elif reverted:
+            notes.append("front words not in the source were kept: no sentence was found to replace them")
         elif status in ("marker_removed", "words_trimmed", "lead_in_joined", "lead_in_from_heading", "lead_in_not_in_source"):
             notes.append({"marker_removed": "list number or dash taken off", "words_trimmed": "a few words at the front that are not in the source taken off",
                           "lead_in_joined": "lead-in kept (found in the chunk)", "lead_in_from_heading": "lead-in kept (found in the chunk's heading)",
