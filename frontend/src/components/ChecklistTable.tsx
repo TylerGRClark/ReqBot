@@ -33,6 +33,9 @@ const COL_HEADER_CLASS =
 // ── Table ─────────────────────────────────────────────────────────────────────
 
 export default function ChecklistTable({ items }: Props) {
+  // Tags and confidence are no longer assigned by the pipeline; show their columns only when some row has a value (older runs do).
+  const showTags = items.some(i => (i.domain_tags ?? []).length > 0)
+  const showConf = items.some(i => i.confidence != null)
   return (
     <div className="overflow-x-auto rounded border border-gray-200 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 hover:[&::-webkit-scrollbar-thumb]:bg-gray-400">
       <table className="min-w-full text-sm border-collapse">
@@ -48,10 +51,10 @@ export default function ChecklistTable({ items }: Props) {
             <th scope="colgroup" colSpan={2} className={`${GROUP_HEADER_CLASS} border-r border-gray-300`}>
               Record
             </th>
-            <th scope="colgroup" colSpan={3} className={`${GROUP_HEADER_CLASS} border-r border-gray-300`}>
+            <th scope="colgroup" colSpan={2 + (showConf ? 1 : 0)} className={`${GROUP_HEADER_CLASS} border-r border-gray-300`}>
               Verify
             </th>
-            <th scope="colgroup" colSpan={3} className={GROUP_HEADER_CLASS}>
+            <th scope="colgroup" colSpan={2 + (showTags ? 1 : 0)} className={GROUP_HEADER_CLASS}>
               Trace
             </th>
           </tr>
@@ -71,12 +74,12 @@ export default function ChecklistTable({ items }: Props) {
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[140px] border-r border-gray-200`}>Notes</th>
 
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[140px]`}>Check</th>
-            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[120px]`}>Reasons</th>
-            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[72px] border-r border-gray-200`}>Conf.</th>
+            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[120px]${showConf ? '' : ' border-r border-gray-200'}`}>Reasons</th>
+            {showConf && <th scope="col" className={`${COL_HEADER_CLASS} min-w-[72px] border-r border-gray-200`}>Conf.</th>}
 
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[170px]`}>Item ID</th>
             <th scope="col" className={`${COL_HEADER_CLASS} min-w-[130px]`}>Req IDs</th>
-            <th scope="col" className={`${COL_HEADER_CLASS} min-w-[120px]`}>Tags</th>
+            {showTags && <th scope="col" className={`${COL_HEADER_CLASS} min-w-[120px]`}>Tags</th>}
           </tr>
         </thead>
         <tbody>
@@ -131,19 +134,21 @@ export default function ChecklistTable({ items }: Props) {
                     ? formatList(item.item_flags ?? [])
                     : <span className="text-gray-300">—</span>}
                 </td>
-                <td className={cell}>
+                <td className={showConf ? cell : borderR}>
                   {item.review_reasons.filter(r => r !== 'low-confidence').length > 0
                     ? formatList(item.review_reasons.filter(r => r !== 'low-confidence'))
                     : <span className="text-gray-400">—</span>}
                 </td>
-                <td className={`${borderR} whitespace-nowrap tabular-nums`}>
-                  {item.confidence == null ? '—' : `${(item.confidence * 100).toFixed(0)}%`}
-                </td>
+                {showConf && (
+                  <td className={`${borderR} whitespace-nowrap tabular-nums`}>
+                    {item.confidence == null ? '—' : `${(item.confidence * 100).toFixed(0)}%`}
+                  </td>
+                )}
 
                 {/* Trace */}
                 <td className={`${cell} font-mono text-xs`}>{item.checklist_item_id}</td>
                 <td className={cell}>{formatList(item.requirement_ids)}</td>
-                <td className={cell}>{formatList(item.domain_tags)}</td>
+                {showTags && <td className={cell}>{formatList(item.domain_tags)}</td>}
               </tr>
             )
           })}

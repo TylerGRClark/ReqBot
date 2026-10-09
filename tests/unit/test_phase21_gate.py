@@ -192,8 +192,9 @@ def test_markdown_source_quotes_in_blockquotes(processed_dir):
 
 
 def test_markdown_review_flag_shown_for_low_confidence(processed_dir):
-    # Fixture records have no confidence field → 0.0 → below 0.8 threshold
+    # Fixture records carry no confidence now (it is switched off); a record that does carry a low one is still flagged
     checklist = generate(processed_dir, DOC_KEY, "cybersecurity")
+    checklist["items"][0].update(confidence=0.5, review_reasons=["low-confidence"], requires_human_review=True)
     result = to_markdown(checklist)
     assert "Requires Review" in result
     assert "low-confidence" in result

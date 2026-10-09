@@ -190,3 +190,28 @@ def test_skip_to_option_accepts_names_in_any_case_and_rejects_unknown_steps(caps
     assert parser.parse_args([]).skip_to == "A"
     with pytest.raises(SystemExit):
         parser.parse_args(["--skip-to", "enrich"])
+
+
+def test_enrichment_and_the_description_check_are_switched_off_by_default(tmp_path):
+    """Neither enrichment (descriptions, tags, types) nor the description check runs, even when not asked to skip them; the code stays and can be switched back on."""
+    def fake_step_d(reqs_jsonl, chunks_jsonl, pdf_path, output_dir, **kwargs):
+        norm = Path(output_dir) / "doc_requirements_normalized.jsonl"
+        norm.write_text("", encoding="utf-8")
+        return str(norm)
+
+    (tmp_path / "doc_chunks.jsonl").write_text('{"chunk_id": 0, "text": "x", "section_ref_path": []}\n')
+    (tmp_path / "doc_extracted_requirements.jsonl").write_text("", encoding="utf-8")
+    (tmp_path / "doc_requirements_normalized.jsonl").write_text("", encoding="utf-8")
+    fake_pdf = tmp_path / "doc.pdf"
+    fake_pdf.write_bytes(b"%PDF-1.4")
+    assert run_pipeline.ENRICHMENT_ENABLED is False and run_pipeline.DESCRIPTION_CHECK_ENABLED is False
+    with (
+        patch("pipeline.run_pipeline._docling_available", return_value=True),
+        patch("pipeline.parse_and_normalize.run", side_effect=fake_step_d),
+        patch("pipeline.enrich_requirements.run") as enrich,
+        patch("pipeline.entailment_gate.run") as gate,
+        patch("pipeline.aggregate_and_export.run"),
+    ):
+        run_pipeline.run(str(fake_pdf), str(tmp_path), skip_to="D", skip_enrichment=False, skip_description_gate=False)
+    enrich.assert_not_called()
+    gate.assert_not_called()

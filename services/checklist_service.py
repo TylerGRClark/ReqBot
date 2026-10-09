@@ -158,9 +158,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             source_ref = req.get("source_ref") or ""
             section_title_path = req.get("section_title_path") or []
             domain_tags = req.get("domain_tags") or []
-            confidence = req.get("confidence")
-            if confidence is None:
-                confidence = 0.0
+            confidence = req.get("confidence")  # None while confidence is switched off (records carry none)
 
             source_profile = req.get("domain_profile") or "cybersecurity"
 
@@ -193,9 +191,8 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
                 review_reasons.append("missing-section-title-path")
             if not page_refs:
                 review_reasons.append("missing-page-refs")
-            if not domain_tags:
-                review_reasons.append("missing-domain-tags")
-            if confidence < CONFIDENCE_REVIEW_THRESHOLD:
+            # Domain tags are no longer assigned (docs/PIPELINE_REDESIGN_PLAN.md), so a missing tag is not a reason to review; and confidence is only judged when the record carries one.
+            if confidence is not None and confidence < CONFIDENCE_REVIEW_THRESHOLD:
                 review_reasons.append("low-confidence")
             if source_profile != profile_name:
                 review_reasons.append("profile-mismatch")

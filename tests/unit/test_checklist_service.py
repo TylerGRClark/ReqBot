@@ -246,12 +246,13 @@ def test_generate_flags_missing_source_ref(tmp_path):
     assert "missing-source-ref" in item["review_reasons"]
 
 
-def test_generate_flags_missing_domain_tags(tmp_path):
+def test_generate_does_not_flag_missing_domain_tags(tmp_path):
+    """Domain tags are no longer assigned by the pipeline, so a record without them is not a reason to review."""
     rec = {**COMPLETE_REQ, "domain_tags": []}
     processed_dir = _make_doc(tmp_path, "testdoc", [rec])
     item = generate(processed_dir, "testdoc", "cybersecurity")["items"][0]
-    assert item["requires_human_review"] is True
-    assert "missing-domain-tags" in item["review_reasons"]
+    assert "missing-domain-tags" not in item["review_reasons"]
+    assert item["requires_human_review"] is False
 
 
 def test_generate_flags_missing_section_title_path(tmp_path):
@@ -305,21 +306,30 @@ def test_generate_high_confidence_complete_record_no_review_flag(tmp_path):
     assert item["review_reasons"] == []
 
 
-def test_generate_missing_confidence_treated_as_zero(tmp_path):
+def test_generate_missing_confidence_is_not_a_review_reason(tmp_path):
+    """Records carry no confidence while it is switched off: the item has none and is not flagged for it."""
     rec = {k: v for k, v in COMPLETE_REQ.items() if k != "confidence"}
     processed_dir = _make_doc(tmp_path, "testdoc", [rec])
     item = generate(processed_dir, "testdoc", "cybersecurity")["items"][0]
-    assert item["confidence"] == 0.0
+    assert item["confidence"] is None
+    assert "low-confidence" not in item["review_reasons"]
+
+
+def test_generate_still_flags_a_record_that_carries_a_low_confidence(tmp_path):
+    rec = {**COMPLETE_REQ, "confidence": 0.5}
+    processed_dir = _make_doc(tmp_path, "testdoc", [rec])
+    item = generate(processed_dir, "testdoc", "cybersecurity")["items"][0]
+    assert item["confidence"] == 0.5
     assert "low-confidence" in item["review_reasons"]
 
 
-def test_generate_null_confidence_treated_as_zero(tmp_path):
-    """JSON null confidence must not crash — treated as 0.0 and flagged low-confidence."""
+def test_generate_null_confidence_does_not_crash(tmp_path):
+    """JSON null confidence must not crash; it means no confidence."""
     rec = {**COMPLETE_REQ, "confidence": None}
     processed_dir = _make_doc(tmp_path, "testdoc", [rec])
     item = generate(processed_dir, "testdoc", "cybersecurity")["items"][0]
-    assert item["confidence"] == 0.0
-    assert "low-confidence" in item["review_reasons"]
+    assert item["confidence"] is None
+    assert "low-confidence" not in item["review_reasons"]
 
 
 # ---------------------------------------------------------------------------

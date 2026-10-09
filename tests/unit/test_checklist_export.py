@@ -512,3 +512,19 @@ def test_the_citation_is_what_the_sheet_and_markdown_show_in_the_ref_position():
     assert row["source_ref"] == "(T-2)" and row["citation"] == "3.4.4.3 (inferred)"  # the extracted value is never replaced in the data
     assert "**Source Ref:** 3.4.4.3 (inferred)" in to_markdown(checklist)
     assert _load_xlsx(to_xlsx(checklist))["Checklist"].cell(row=3, column=1).value == "3.4.4.3 (inferred)"
+
+
+def test_xlsx_hides_the_tags_and_confidence_columns_when_no_row_has_a_value():
+    from io import BytesIO
+
+    from openpyxl import load_workbook
+
+    base = {"checklist_item_id": "CHK-1", "requirement_ids": ["REQ-1"], "source_ref": "1.1", "page_refs": [1], "section_title_path": ["A"], "source_quote": "Systems must log.",
+            "item_flags": [], "review_reasons": [], "status": "not-started", "assessor_notes": "", "audit_question": "", "applies_to": "", "parent_text": "", "passage": ""}
+
+    def hidden(item):
+        ws = load_workbook(BytesIO(to_xlsx({"items": [item], "possible_missed": [], "summary": {}, "document": {}}))).active
+        return ws.column_dimensions["M"].hidden, ws.column_dimensions["P"].hidden  # Conf. and Tags
+
+    assert hidden({**base, "domain_tags": [], "confidence": None}) == (True, True)
+    assert hidden({**base, "domain_tags": ["x"], "confidence": 0.9}) == (False, False)

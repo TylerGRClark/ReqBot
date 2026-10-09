@@ -32,8 +32,8 @@ The [developer reference](../ARCHITECTURE.md) contains the module/import map.
 | Chunking (Step B) | Structure-aware chunking adds section paths and parent context; the profile can exclude sections. | `*_chunks.jsonl` |
 | Requirement finding (Step C) | Ollama returns, for each chunk, the quotes that look like duties, with references. The prompt is inclusive: it asks for anything that tells a party what it must, should, may or must not do. Raw responses and parse failures are retained. This output is the **root** of each requirement and is never edited. | `*_extracted_requirements.jsonl` |
 | Normalizing and checking (Step D) | One step today, doing several jobs: validate fields and quote grounding, drop junk (headings, change-log lines, fragments), attach page and section metadata, deduplicate, record where each quote sits in its chunk and how exactly it matches (the `anchor_*` fields), build the explained text (the whole sentence it sits in), and assign IDs (hashed from the root). Deterministic parent-stem reconstruction follows. | `*_requirements_normalized.jsonl` |
-| Enrichment (Step D.5) | Ollama adds descriptions, domain tags, and requirement types. Scheduled to be switched off (see below). | `*_requirements_enriched.jsonl` |
-| Description check (Step D.6) | Check descriptions against source quotes; clear rejected descriptions while keeping the requirements. Scheduled to be switched off with enrichment. | `*_requirements_gated.jsonl` |
+| Enrichment (Step D.5) | **Switched off** (October 2026): the code stays, but the pipeline no longer adds descriptions, domain tags or requirement types. | `*_requirements_enriched.jsonl` |
+| Description check (Step D.6) | **Switched off** with enrichment: there are no generated descriptions to check. | `*_requirements_gated.jsonl` |
 | Totals and final file (Step E) | Aggregate the selected output and record statistics. | `*_final_output.json`, `*_stats.json` |
 | Index requirements (Step F) | Embed selected requirement artifacts with dense Ollama embeddings and sparse BM25 features. | Qdrant `grc_requirements` |
 | Index context (Step F) | Embed source chunks with the same dense/sparse strategy. | Qdrant `grc_context` |
@@ -44,8 +44,10 @@ Step F); this page gives both. New work uses the names by job.
 ### Planned changes
 
 The [pipeline redesign plan](PIPELINE_REDESIGN_PLAN.md) describes where the pipeline is
-going; none of it is built yet, so everything above describes the pipeline as it runs
-today. In short: the root stays exactly as the model returned it and is never edited;
+going. Built so far: the anchor fields, the root kept untouched with the explained text
+beside it, enrichment and the description check switched off, `confidence` dropped, and
+readers showing the explained text. Still to come: Step D split into separate steps and
+screening on the explained text. In short: the root stays exactly as the model returned it and is never edited;
 checking that the root is word for word in the source becomes its own early step
 (anchoring); the whole-sentence expansion and lead-in attachment move into a separate
 "explained" layer beside the root; screening judges that explained text; Step D is split

@@ -107,8 +107,8 @@ def run(
         pages = load_jsonl(pages_path)
         total_chars = sum(len(p.get("text", "")) for p in pages)
 
-    confidence_values = [r.get("confidence", 0) for r in requirements]
-    avg_confidence = sum(confidence_values) / len(confidence_values) if confidence_values else 0.0
+    confidence_values = [r["confidence"] for r in requirements if isinstance(r.get("confidence"), (int, float))]  # records carry none while confidence is switched off
+    avg_confidence = sum(confidence_values) / len(confidence_values) if confidence_values else None
 
     tag_counts: Counter = Counter()
     for r in requirements:
@@ -181,7 +181,7 @@ def run(
             "unique_source_refs": unique_source_refs,
             "with_domain_tags": tagged_count,
             "without_domain_tags": untagged_count,
-            "average_confidence": round(avg_confidence, 3),
+            "average_confidence": round(avg_confidence, 3) if avg_confidence is not None else None,
             "domain_tag_distribution": dict(sorted(tag_counts.items())),
             "requirement_type_distribution": dict(sorted(type_counts.items())),
             "hierarchy": {

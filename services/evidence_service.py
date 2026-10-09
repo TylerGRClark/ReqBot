@@ -218,6 +218,10 @@ def build(
         ) from e
 
     document_ids = document_ids or []
+    filter_warnings: list[str] = []
+    if (domain_tags or requirement_types) and not _const.TAG_TYPE_FILTERS_ENABLED:
+        domain_tags, requirement_types = [], []
+        filter_warnings.append(_const.TAG_TYPE_FILTERS_OFF_WARNING)
     domain_tags = domain_tags or []
     requirement_types = requirement_types or []
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -429,5 +433,5 @@ def build(
         "group_order": group_order,
         "total_sources": total_sources,
         "synthesis_text": synthesis_text,
-        "warnings": _embedding_warnings(all_payloads, embedding_model),
+        "warnings": filter_warnings + _embedding_warnings(all_payloads, embedding_model),
     }

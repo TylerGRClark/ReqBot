@@ -93,7 +93,7 @@ def build_payload(req: dict, embedding_model: str, embedding_dim: int) -> dict:
         "description": req.get("description", ""),
         "page_start": req.get("page_start"),
         "page_end": req.get("page_end"),
-        "confidence": req.get("confidence", 0.0),
+        "confidence": req.get("confidence"),
         "chunk_id": req.get("chunk_id"),
         # Hierarchy metadata (WP-14.3) — empty for pre-WP-14.2 artifacts
         "section_ref_path": req.get("section_ref_path", []),

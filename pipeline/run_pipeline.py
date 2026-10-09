@@ -44,6 +44,12 @@ STEP_NAMES = {
 }
 STEP_CHOICES = sorted(STEP_NAMES) + list("ABCDE")
 
+# Switched off (docs/PIPELINE_REDESIGN_PLAN.md, 2026-10-09): enrichment (descriptions, domain tags, requirement types) and the description check. The tags are a cybersecurity vocabulary that
+# would be wrong for other domains, the descriptions were nearly verbatim or blank, and the explained text replaces them. The code stays; setting these back to True runs them again.
+# No option flag turns them on: --skip-enrichment and --skip-description-gate are still accepted and have no effect while these are False.
+ENRICHMENT_ENABLED = False
+DESCRIPTION_CHECK_ENABLED = False
+
 
 def resolve_step(value: str) -> str:
     """The step letter for a letter or a step name; ValueError for anything else."""
@@ -274,7 +280,7 @@ def run(
     # Skipped if --skip-enrichment is set.
     # If enrichment fails, the pipeline continues with the normalized JSONL.
     index_path = norm_path
-    if "D" in steps_to_run and not skip_enrichment:
+    if "D" in steps_to_run and ENRICHMENT_ENABLED and not skip_enrichment:
         log.info("=" * 60)
         log.info("Starting enrichment (Step D.5: Pass 2)")
         log.info("Enrichment — model: %s", enrichment_model)
@@ -292,6 +298,8 @@ def run(
                 "Enrichment (Step D.5) failed (%s) — proceeding with normalized JSONL for indexing",
                 e,
             )
+    elif not ENRICHMENT_ENABLED:
+        log.info("Enrichment (Step D.5) is switched off (descriptions, tags and types are no longer assigned)")
     elif skip_enrichment:
         log.info("Enrichment (Step D.5) skipped (--skip-enrichment)")
     else:
@@ -305,7 +313,7 @@ def run(
     # If the gate itself fails (e.g. a corrupt input file), the pipeline
     # continues with the pre-gate JSONL for indexing, same "pipeline
     # continues" precedent Step D.5 already established.
-    if "D" in steps_to_run and not skip_description_gate:
+    if "D" in steps_to_run and DESCRIPTION_CHECK_ENABLED and not skip_description_gate:
         log.info("=" * 60)
         log.info("Starting description check (Step D.6: description-grounding gate)")
         log.info("=" * 60)
@@ -318,6 +326,8 @@ def run(
                 "Description check (Step D.6) failed (%s) — proceeding with ungated JSONL for indexing",
                 e,
             )
+    elif not DESCRIPTION_CHECK_ENABLED:
+        log.info("Description check (Step D.6) is switched off (there are no generated descriptions to check)")
     elif skip_description_gate:
         log.info("Description check (Step D.6) skipped (--skip-description-gate)")
     else:

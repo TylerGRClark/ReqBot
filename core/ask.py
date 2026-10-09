@@ -26,6 +26,7 @@ import ollama
 from fastembed import SparseTextEmbedding
 from qdrant_client import QdrantClient, models
 
+from core import constants as _constants
 from core.display import requirement_text
 from core.profiles import default_profile
 from core.reranker import DEFAULT_RERANK_MODEL, rerank as rerank_candidates
@@ -609,6 +610,12 @@ def retrieve(
     import time as _time
     _t0 = _time.monotonic()
 
+    # The pipeline no longer assigns domain tags or requirement types (docs/PIPELINE_REDESIGN_PLAN.md), so a filter on them would match nothing: ignore it and say so.
+    filter_warnings: list[str] = []
+    if (domain_tags or requirement_types) and not _constants.TAG_TYPE_FILTERS_ENABLED:
+        domain_tags, requirement_types = None, None
+        filter_warnings.append(_constants.TAG_TYPE_FILTERS_OFF_WARNING)
+
     qdrant_client = QdrantClient(url=qdrant_url)
 
     if document_ids:
@@ -772,7 +779,7 @@ def retrieve(
             "expanded_query": dense_query,
             "total": 0,
             "retrieval_ms": int((_time.monotonic() - _t0) * 1000),
-            "warnings": [],
+            "warnings": list(filter_warnings),
         }
 
     # Context retrieval (uses Qdrant hit objects — happens before dict conversion)
@@ -823,7 +830,7 @@ def retrieve(
         "expanded_query": dense_query,
         "total": len(result_dicts),
         "retrieval_ms": _retrieval_ms,
-        "warnings": _embedding_mismatch_warnings(result_dicts, embedding_model),
+        "warnings": filter_warnings + _embedding_mismatch_warnings(result_dicts, embedding_model),
     }
 
 

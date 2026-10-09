@@ -272,6 +272,12 @@ def to_xlsx(checklist: dict) -> bytes:
     for col_idx, (_, _, width, _) in enumerate(_COLS, start=1):
         ws.column_dimensions[get_column_letter(col_idx)].width = width
 
+    # Tags and confidence are no longer assigned by the pipeline: hide those two columns (kept, so positions do not move) unless some row has a value (older runs do)
+    items_all = checklist.get("items", [])
+    for header, key, present in (("Conf.", "confidence", lambda v: v is not None), ("Tags", "domain_tags", bool)):
+        if not any(present(i.get(key)) for i in items_all):
+            ws.column_dimensions[get_column_letter(next(n for n, c in enumerate(_COLS, start=1) if c[0] == header))].hidden = True
+
     # Data rows
     def write_item(item):
         flagged = _needs_attention(item)
