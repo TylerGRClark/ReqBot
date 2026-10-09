@@ -22,3 +22,13 @@ def test_ask_service_does_not_report_ignored_tag_and_type_filters_as_active(monk
     out = ask_service.ask("q", qdrant_url="x", ollama_url="y", domain_tags=["access-control"], requirement_types=["policy"], document_ids=["doc"])
     assert out["filters"] == {"document_id": ["doc"], "domain_tag": None, "requirement_type": None}
     assert out["warnings"] == ["Tag and type filters are off"]
+
+
+def test_evidence_text_for_the_model_leaves_out_empty_type_tags_and_a_repeated_quote():
+    from core.ask import format_evidence
+
+    text = format_evidence([{"source_pdf": "a.pdf", "source_ref": "1.1", "explained_text": "AFMC will: Identify funding.", "source_quote": "Identify funding.", "domain_tags": [], "requirement_type": ""},
+                            {"source_pdf": "a.pdf", "source_ref": "1.2", "source_quote": "Only a quote.", "domain_tags": ["x"], "requirement_type": "policy"}])
+    assert "Type:" in text.split("[2]")[1] and "Type:" not in text.split("[2]")[0] and "Tags:" not in text.split("[2]")[0]
+    assert "Requirement: AFMC will: Identify funding.\n" in text + "\n" and "Quote: Identify funding." in text
+    assert text.count("Quote: Only a quote.") == 0  # the quote equals the requirement text there

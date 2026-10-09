@@ -2,6 +2,21 @@
 
 *Written 2026-10-09 from a discussion with the owner. This is a plan for review: no code, no data and no behavior changes with this PR. Each change below becomes its own PR, with its measurements and pass rules written down before any result is read. A phase number has not been assigned.*
 
+## Status (updated 2026-10-09, evening)
+
+| Plan step | State |
+|---|---|
+| Plan, documentation rewrite, rename (`--skip-to` takes names) | done (#284, #285, #286) |
+| 4 Anchoring (`anchor_*` fields) | done (#287); 92.7% of roots exact |
+| Root kept, explained layer beside it, IDs from the root, merged roots | done (#288, #291) |
+| 6 Context attaching, rule tier: sentence and verified lead-in stored on the record | done (in #288); citation, section heading, parent paragraph and applies-to are still built per checklist, not stored |
+| 7 Screening on the explained text, filters flag instead of reject | **not built**: waits for the owner's decision on colon-ending lead-ins (section 8) and his rating |
+| Tagging, typing, description, description check, confidence switched off | done (#289) |
+| Readers show the explained text (Ask, Evidence, Trace, Compare, cards, CLI) | done (#289) |
+| 8 to 10 Faithfulness check, repair, re-check | not built; own plan and the owner's rating first |
+| Model-picks (resolver) for prose documents | not built; waits for rebuilt test groups |
+| Data | the 13 reference documents were re-run with the new code, the Qdrant index rebuilt from them, draft questions regenerated |
+
 ## 1. Principles (the owner's)
 
 1. **The root is never edited.** What the requirement-finding call returned is the *root*. Nothing after it changes it, ever. A glued lead-in, a dropped paragraph number or a few added words are *not* the root; they belong to a later, separate layer.
@@ -127,6 +142,9 @@ Each PR registers its pass rules before any result is read (the project's standi
 **Proposed, and settled unless the owner objects:**
 - **One file per step**, each a full copy of the records plus the fields that step adds (the pattern `normalized` to `enriched` to `gated` already follows); nothing is rewritten in place, and readers take the latest file. The artifact resolver's name list is updated in the rename PR.
 - **Tags and types in the interfaces:** the web app has no tag or type filter controls (tags appear on the Trace page and in one checklist column, both already handle an empty list). The `domain_tags` and `requirement_types` options of the Ask and Evidence requests stay accepted but answer with a clear message that the filters are off, instead of silently returning no results. The Tags column is hidden in the checklist when no row has a tag.
+
+**Open:**
+- **Colon-ending lead-ins.** In the October 2026 run, all 93 records rejected as `unrepairable_fragment_quote` are lead-ins that end in a colon ("CUI training standards must, at minimum:"); judged on the explained text, 91 of the 93 are still lead-ins. Their items carry the duty, and the lead-in is attached to an item when the source backs it. Proposed: keep them out of the checklist rows (they stay in the failures file, which is how they are kept today) and treat them as context, not as requirements; the alternative is to flag them and show them as rows (93 extra rows across the 13 documents).
 
 ## 8a. Notes from building step 4
 
