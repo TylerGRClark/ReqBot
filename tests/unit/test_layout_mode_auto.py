@@ -168,3 +168,11 @@ def test_resume_past_step_b_records_actual_chunks_mode_not_fresh_assumption(tmp_
         )
 
     assert mock_step_e.call_args.kwargs["layout_mode_used"] == "pymupdf"
+
+
+def test_step_names_are_aliases_for_the_step_letters():
+    from pipeline import run_pipeline as rp
+    assert [rp.resolve_step(x) for x in ("A", "c", "pdf-reading", "chunking", "Requirement-Finding", "normalizing", "totals")] == ["A", "C", "A", "B", "C", "D", "E"]
+    import pytest
+    with pytest.raises(ValueError):
+        rp.resolve_step("enrich")
