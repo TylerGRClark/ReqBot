@@ -1,0 +1,233 @@
+{
+ "found": {
+  "T2a": 46,
+  "T2b": 47,
+  "D1x": 68
+ },
+ "R1": {
+  "found_at_least_lower_minus_2": true,
+  "paired_losses": [
+   "AFMAN-p004-013",
+   "AFMAN-p010-006",
+   "DODI-p012-003"
+  ],
+  "paired_loss_limit": 4,
+  "paired_losses_within_limit": true
+ },
+ "R3": {
+  "found_at_least_higher_plus_6": true,
+  "higher_replicate": 47,
+  "gained_over_both": [
+   "AFMAN-p009-003",
+   "AFMAN-p009-005",
+   "AFMAN-p009-006",
+   "AFMAN-p009-014",
+   "AFMAN-p009-015",
+   "AFMAN-p009-020",
+   "AFMAN-p009-021",
+   "AFMAN-p009-023",
+   "AFMAN-p010-008",
+   "AFMAN-p010-009",
+   "AFMAN-p010-011",
+   "DODI-p014-012",
+   "DODI-p014-013",
+   "NIST-p018-022",
+   "NIST-p025-006",
+   "NIST-p025-008",
+   "NIST-p025-018",
+   "NIST-p025-020",
+   "NIST-p025-021",
+   "NIST-p025-022",
+   "NIST-p025-023",
+   "NIST-p025-030",
+   "NIST-p026-017"
+  ]
+ },
+ "survivors": {
+  "T2a": 1880,
+  "T2b": 1890,
+  "D1x": 2501
+ },
+ "R2": {
+  "added_survivors_absent_from_both_replicates": 717,
+  "sampled_for_the_owner": 40,
+  "survivors_vs_lower_base": 1.33,
+  "owner_rating": "pending: outputs/d1x_additions_rating_sheet.md"
+ },
+ "step_d_failure_codes": {
+  "T2a": {
+   "quote_not_grounded_in_chunk": 59,
+   "unrepairable_fragment_quote": 33,
+   "quote_words_not_in_chunk": 5,
+   "heading_echo_quote": 25,
+   "orphaned_list_item_quote": 4
+  },
+  "T2b": {
+   "quote_not_grounded_in_chunk": 57,
+   "unrepairable_fragment_quote": 32,
+   "quote_words_not_in_chunk": 5,
+   "heading_echo_quote": 24
+  },
+  "D1x": {
+   "quote_not_grounded_in_chunk": 92,
+   "unrepairable_fragment_quote": 87,
+   "heading_echo_quote": 40,
+   "quote_words_not_in_chunk": 4
+  }
+ },
+ "survivors_per_document": {
+  "CJCSI 6510.02G": {
+   "T2a": 87,
+   "T2b": 87,
+   "D1x": 113
+  },
+  "DODI 5200.01": {
+   "T2a": 65,
+   "T2b": 65,
+   "D1x": 75
+  },
+  "DODI 5200.44": {
+   "T2a": 87,
+   "T2b": 93,
+   "D1x": 109
+  },
+  "DODI 5200.48": {
+   "T2a": 232,
+   "T2b": 233,
+   "D1x": 321
+  },
+  "DODI 8410.03": {
+   "T2a": 142,
+   "T2b": 145,
+   "D1x": 167
+  },
+  "DODI 8551.01": {
+   "T2a": 59,
+   "T2b": 58,
+   "D1x": 84
+  },
+  "NIST.SP.800-125": {
+   "T2a": 144,
+   "T2b": 153,
+   "D1x": 309
+  },
+  "afi10-2402": {
+   "T2a": 295,
+   "T2b": 291,
+   "D1x": 356
+  },
+  "afi13-550": {
+   "T2a": 171,
+   "T2b": 166,
+   "D1x": 192
+  },
+  "afi17-203": {
+   "T2a": 111,
+   "T2b": 115,
+   "D1x": 157
+  },
+  "afman17-2101": {
+   "T2a": 145,
+   "T2b": 146,
+   "D1x": 184
+  },
+  "afpd_17-1": {
+   "T2a": 62,
+   "T2b": 67,
+   "D1x": 77
+  },
+  "dafman17-1305": {
+   "T2a": 280,
+   "T2b": 271,
+   "D1x": 357
+  }
+ },
+ "afi17-203_unit_coverage": {
+  "T2a": {
+   "units": 198,
+   "covered": 99
+  },
+  "T2b": {
+   "units": 198,
+   "covered": 100
+  },
+  "D1x": {
+   "units": 198,
+   "covered": 100
+  }
+ },
+ "checklist_hints": {
+  "T2a": {
+   "afi17-203": {
+    "rows": 111,
+    "possible_missed": 12,
+    "flags": {
+     "applicability_statement": 2,
+     "definition_or_description": 5,
+     "starts_mid_sentence": 6,
+     "quote_not_located_in_passage": 4,
+     "no_stated_actor": 9,
+     "table_fragment": 3
+    }
+   },
+   "afi13-550": {
+    "rows": 171,
+    "possible_missed": 13,
+    "flags": {
+     "no_stated_actor": 9,
+     "starts_mid_sentence": 13,
+     "table_fragment": 1,
+     "quote_not_located_in_passage": 16,
+     "definition_or_description": 2
+    }
+   },
+   "afi10-2402": {
+    "rows": 295,
+    "possible_missed": 50,
+    "flags": {
+     "starts_mid_sentence": 4,
+     "no_stated_actor": 5,
+     "quote_not_located_in_passage": 12,
+     "definition_or_description": 2,
+     "table_fragment": 9
+    }
+   }
+  },
+  "D1x": {
+   "afi17-203": {
+    "rows": 157,
+    "possible_missed": 13,
+    "flags": {
+     "applicability_statement": 3,
+     "definition_or_description": 4,
+     "starts_mid_sentence": 13,
+     "quote_not_located_in_passage": 24,
+     "no_stated_actor": 11,
+     "table_fragment": 14
+    }
+   },
+   "afi13-550": {
+    "rows": 192,
+    "possible_missed": 31,
+    "flags": {
+     "applicability_statement": 1,
+     "no_stated_actor": 9,
+     "definition_or_description": 4,
+     "quote_not_located_in_passage": 19,
+     "starts_mid_sentence": 6
+    }
+   },
+   "afi10-2402": {
+    "rows": 356,
+    "possible_missed": 36,
+    "flags": {
+     "starts_mid_sentence": 3,
+     "no_stated_actor": 5,
+     "quote_not_located_in_passage": 9,
+     "definition_or_description": 1,
+     "table_fragment": 2
+    }
+   }
+  }
+ }
+}
