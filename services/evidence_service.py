@@ -17,6 +17,7 @@ if str(_ROOT) not in sys.path:
 log = logging.getLogger(__name__)
 
 from core import constants as _const
+from core.display import requirement_text
 from core.profiles import load_profile as _load_profile
 
 _EVIDENCE_AUDITOR_PROMPT = """You are a strict compliance auditor reviewing evidence for a System Security Plan (SSP).
@@ -386,7 +387,7 @@ def build(
             # description first: for LLM synthesis, an interpretive description yields a
             # more coherent auditor summary than a raw verbatim quote. source_quote remains
             # the canonical asset in all other contexts (trace, evidence table rows).
-            primary = rep.get("description") or rep.get("source_quote") or "(no text)"
+            primary = requirement_text(rep) or "(no text)"
             evidence_lines.append(
                 # g["source_ref"] is the display label (e.g. "(no ref)", "3.4(a)") -- ref
                 # itself is groups' internal dict key, which for the empty/bare-fragment

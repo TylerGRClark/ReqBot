@@ -22,6 +22,7 @@ export interface Requirement {
   requirement_id: string
   description: string
   source_quote: string
+  explained_text?: string     // the whole-sentence layer beside the root quote; absent on older records
   source_ref: string
   document_id: string
   source_pdf: string
@@ -135,6 +136,7 @@ export interface ComparePayload {
   requirement_id: string
   description: string
   source_quote?: string
+  explained_text?: string
   source_ref: string
   source_pdf: string
   document_id: string
@@ -207,6 +209,7 @@ export interface EvidenceRequirement {
   requirement_id: string
   description?: string | null
   source_quote?: string | null
+  explained_text?: string | null
   source_ref?: string | null
   source_pdf?: string | null
   document_id?: string | null

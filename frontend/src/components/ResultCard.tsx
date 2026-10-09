@@ -12,7 +12,7 @@ interface Props {
 
 export default function ResultCard({ result, index }: Props) {
   const location = useLocation()
-  const text = result.source_quote || result.description
+  const text = result.explained_text || result.source_quote || result.description
   const snippet = text.length > 220 ? text.slice(0, 220) + '…' : text
 
   const pages = pageRange(result.page_start, result.page_end)

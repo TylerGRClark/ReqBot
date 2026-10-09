@@ -26,6 +26,7 @@ import ollama
 from fastembed import SparseTextEmbedding
 from qdrant_client import QdrantClient, models
 
+from core.display import requirement_text
 from core.profiles import default_profile
 from core.reranker import DEFAULT_RERANK_MODEL, rerank as rerank_candidates
 
@@ -306,7 +307,7 @@ def format_evidence(results: list[dict]) -> str:
         cite_parts = [x for x in [source, ref, page_info] if x]
         cite = ", ".join(cite_parts)
 
-        primary = hit.get("description") or hit.get("source_quote", "")
+        primary = requirement_text(hit)
         entry = (
             f"[{i}] ({cite})\n"
             f"    Type: {hit.get('requirement_type', 'unknown')}\n"
@@ -356,9 +357,9 @@ def print_results_table(results: list[dict]) -> None:
             cite_parts = [x for x in [source, ref, page_info] if x]
             print(f"    Source: {', '.join(cite_parts)}")
         print(f"    Type: {hit.get('requirement_type', 'unknown')} | Tags: {', '.join(hit.get('domain_tags', []))}")
-        primary = hit.get("description") or hit.get("source_quote", "")
+        primary = requirement_text(hit)
         print(f"    {primary}")
-        if hit.get("source_quote") and hit.get("description"):
+        if hit.get("source_quote") and primary != hit.get("source_quote"):
             quote = hit["source_quote"]
             if len(quote) > 120:
                 quote = quote[:120] + "..."
