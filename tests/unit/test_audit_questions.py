@@ -121,3 +121,20 @@ def test_a_checkpoint_keeps_the_records_of_rows_not_reached_yet(tmp_path):
     changed = [_item(i, f"Commanders shall review log number {i} weekly.") for i in range(1, 31)]
     AQ.draft_questions(changed, path, call=boom, progress=lambda c: None)
     assert len(AQ.load(path)) == 30
+
+
+def test_an_unreachable_model_stops_the_run_and_keeps_earlier_rows(tmp_path):
+    import requests
+    path = tmp_path / "q.jsonl"
+    items = [_item(i, f"Commanders shall review log number {i} monthly.") for i in range(1, 12)]
+    done = []
+
+    def call(prompt):
+        if len(done) < 2:
+            done.append(1)
+            return _answer("Do Commanders review the log?")
+        raise requests.ConnectionError("down")
+
+    counts = AQ.draft_questions(items, path, call=call)
+    assert counts.get("aborted") is True and counts["questions"] == 2
+    assert sum(1 for r in AQ.load(path).values() if r.get("question")) == 2

@@ -21,6 +21,7 @@ log = logging.getLogger(__name__)
 MODEL = "qwen2.5:14b"
 NUM_CTX = 4096
 NUM_PREDICT = 200
+MAX_CONSECUTIVE_FAILURES = 5  # Ollama unreachable: stop after this many model-call failures in a row instead of timing out on every remaining row
 SKIP_FLAGS = frozenset({"starts_mid_sentence", "table_fragment", "definition_or_description", "quote_not_located_in_passage", "no_passage"})  # the row stays; only the question is withheld
 PROMPT = """You help an auditor check whether a unit follows a regulation.
 
@@ -146,6 +147,7 @@ def draft_questions(items: list[dict], path: Path, *, model: str = MODEL, ollama
     call = call or (lambda prompt: ollama_call(prompt, model, ollama_url))
     existing = load(path)
     records: dict[str, dict] = dict(existing)  # rows not in this run (another profile, an interrupted run) keep their records; apply() checks each against its row
+    consecutive_failures = 0
     counts = {"rows": 0, "questions": 0, "no_question": 0, "skipped_by_code": 0, "reused": 0, "errors": 0, "with_unverified_terms": 0}
     for item in items:
         if not (item.get("source_quote") or "").strip():
@@ -169,10 +171,18 @@ def draft_questions(items: list[dict], path: Path, *, model: str = MODEL, ollama
                     break
                 except (ValueError, KeyError) as e:
                     error = f"malformed response: {e}"
+                except OSError as e:  # requests' exceptions are OSErrors: Ollama unreachable, timed out or answered with an HTTP error
+                    error = f"model call failed: {e}"
+                    break
             unver = unverified_terms(question, row_material(item)) if question else []
             records[item_id] = {"checklist_item_id": item_id, "question": question, "skipped_because": [], "unverified_terms": unver, "model": model, "input_hash": h,
                                 "generated_at": datetime.now(timezone.utc).isoformat(), **({"error": error} if error else {})}
         rec = records[item_id]
+        consecutive_failures = consecutive_failures + 1 if str(rec.get("error", "")).startswith("model call failed") else 0
+        if consecutive_failures >= MAX_CONSECUTIVE_FAILURES:
+            counts["aborted"] = True
+            counts["errors"] += 1
+            break
         counts["skipped_by_code"] += bool(rec.get("skipped_because"))
         counts["errors"] += bool(rec.get("error"))
         counts["questions"] += bool(rec.get("question"))

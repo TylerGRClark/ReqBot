@@ -1145,7 +1145,7 @@ def cmd_questions(args: argparse.Namespace) -> int:
     processed_dir = _cfg.processed_dir_path()
     try:
         checklist = checklist_service.generate(processed_dir, args.doc, args.profile)
-        path = audit_questions.sidecar_path(checklist_service._resolve_doc_path(processed_dir, args.doc))
+        path = audit_questions.sidecar_path(checklist_service.requirements_path(processed_dir, args.doc))
     except (ValueError, FileNotFoundError) as e:
         log.error("%s", e)
         return 1
@@ -1154,6 +1154,8 @@ def cmd_questions(args: argparse.Namespace) -> int:
         progress=lambda c: log.info("questions so far: %s", c),
     )
     print(f"Draft audit questions for {args.doc}: {counts}\nWritten to: {path}")
+    if counts.get("aborted"):
+        log.error("Stopped: the model could not be reached %d times in a row (%s). Rows already written were kept.", audit_questions.MAX_CONSECUTIVE_FAILURES, args.ollama_url)
     return 1 if counts["errors"] else 0
 
 

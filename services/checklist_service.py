@@ -100,6 +100,11 @@ def _paragraph_map(chunks: dict) -> dict:
     return checklist_audit.paragraph_map(units)
 
 
+def requirements_path(processed_dir: Path, doc_key: str) -> Path:
+    """The requirements file a checklist for `doc_key` is built from (the newest run's best tier)."""
+    return _resolve_doc_path(processed_dir, doc_key)
+
+
 def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     """Generate a checklist envelope dict from normalized requirements for doc_key.
 
