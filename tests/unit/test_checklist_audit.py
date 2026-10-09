@@ -166,3 +166,6 @@ def test_applicability_statements_are_hinted_not_dropped():
         assert "applicability_statement" in A.item_flags(text, "1.1", ""), text
     assert "applicability_statement" not in A.item_flags("The CFP shall apply the patch within 24 hours.", "3.1", "")
     assert "applicability_statement" not in A.item_flags("Units will apply the guidance in this Instruction when reporting.", "3.1", "")
+    assert "applicability_statement" in A.item_flags("1.1. It applies to all personnel.", "1.1", "")  # a retained paragraph number is allowed before the pronoun
+    assert "applicability_statement" not in A.item_flags("This Instruction requires commanders to apply the controls within 30 days.", "3.1", "")
+    assert "applicability_statement" not in A.item_flags("The organizations to which this instruction applies must act within 30 days.", "3.1", "")

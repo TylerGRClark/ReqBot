@@ -22,8 +22,8 @@ _LIST_MARKER = re.compile(r"^\s*\(?([A-Za-z]|\d{1,3})[.)]\s")
 # "This Instruction applies to ...", "It also applies to ...", "does not apply to ...": who the document covers. Rated "not a requirement" by the owner (WP-45.12 ratings); it tells the
 # reader who the other rows apply to, so the row is kept and hinted, never dropped.
 _APPLICABILITY = re.compile(
-    r"\b(?:this|these|the)\s+(?:instruction|manual|publication|policy|directive|issuance|document|supplement|chapter|section)\b[^.]{0,80}?\b(?:also\s+)?(?:applies|apply|does\s+not\s+apply|do\s+not\s+apply)\b"
-    r"|^\W*(?:it|they)\s+(?:also\s+)?(?:applies|apply)\s+to\b", re.IGNORECASE)
+    r"\b(?:this|these)\s+(?:instruction|manual|publication|policy|directive|issuance|document|supplement|chapter|section)\s+(?:also\s+)?(?:applies|apply|does\s+not\s+apply|do\s+not\s+apply)\s+to\b"
+    r"|^\W*(?:\d+(?:\.\d+)*\.?\s+)?(?:it|they)\s+(?:also\s+)?(?:applies|apply)\s+to\b", re.IGNORECASE)  # adjacent words only: "requires commanders to apply" and "to which this instruction applies must" do not match
 _DEFINITION_CUE = re.compile(r"\b(?:is|are|was|were) (?:referred to|defined|known|called|termed|considered) (?:as|to)\b|\bmeans\b|\bis defined\b|\brefers? to\b|\bbreaks? down\b|\bfor example\b|\bsuch as\b", re.IGNORECASE)
 # Verbs that open an imperative requirement ("Identify the likely root cause ..."). A hint, not a grammar: a quote that opens with one and has no modal states its duty
 # but not who has it, so the reader must take the actor from the heading or the passage.
