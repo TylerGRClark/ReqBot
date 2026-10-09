@@ -1,102 +1,102 @@
-# WP-45.14 — 30 quotes that the whole-sentence rule changed (seeded sample of 1029 from T2a and D1x)
+# WP-45.14 — 30 quotes that the whole-sentence rule changed (seeded sample of 1006 from T2a and D1x)
 
 Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 1. CJCSI 6510.02G (D1x)
 
-**Original:** The PO should contact their Operational Mission Executive Agent,
+**Original:** - a. Validate and monitor plans for programmed transformation, modernization, and replacement of cryptographic items presented by the Joint Staff, NSA, Services, Agencies, and CCMDs, through the MC4EB Cryptographic Security Panel, IAW reference (f).
 
-**Expanded:** The PO should contact their Operational Mission Executive Agent, who will then conduct an Analysis of Alternatives (AoA), to include a security risk analysis of the processed information, to determine if a new system is appropriate, if alternative approaches are available, or if continued use of the existing system is required.
-
-**Rating:** 
-
----
-
-## 2. DODI 5200.01 (D1x)
-
-**Original:** (8) Operates SCI security programs to support other DoD activities and federal agencies by special agreement, in accordance with Reference (n)
-
-**Expanded:** Operates SCI security programs to support other DoD activities and federal agencies by special agreement, in accordance with Reference (n).
+**Expanded:** Validate and monitor plans for programmed transformation, modernization, and replacement of cryptographic items presented by the Joint Staff, NSA, Services, Agencies, and CCMDs, through the MC4EB Cryptographic Security Panel, IAW reference (f).
 
 **Rating:** 
 
 ---
 
-## 3. DODI 5200.01 (D1x)
+## 2. CJCSI 6510.02G (D1x)
 
-**Original:** (6) Develops and coordinates recommendations on current and proposed DNI SCI security policy and procedures with the senior intelligence officials designated in accordance with References (i) and (n)
+**Original:** - l.  In conjunction with the Joint Staff J-6 and the Defense Information Systems Agency (DISA), determine the applicable PO for decertified cryptographic products identified in 5.g. and ensure timetable and LYOU from 5.i. is issued to the identified PO.
 
-**Expanded:** Develops and coordinates recommendations on current and proposed DNI SCI security policy and procedures with the senior intelligence officials designated in accordance with References (i) and (n).
-
-**Rating:** 
-
----
-
-## 4. DODI 5200.01 (D1x)
-
-**Original:** (4) Brief onsite support contractor personnel in security responsibilities, procedures, and duties applicable to their positions.
-
-**Expanded:** Brief onsite support contractor personnel in security responsibilities, procedures, and duties applicable to their positions.
+**Expanded:** In conjunction with the Joint Staff J-6 and the Defense Information Systems Agency (DISA), determine the applicable PO for decertified cryptographic products identified in 5.g. and ensure timetable and LYOU from 5.i. is issued to the identified PO.
 
 **Rating:** 
 
 ---
 
-## 5. DODI 5200.01 (D1x)
+## 3. CJCSI 6510.02G (D1x)
 
-**Original:** (3) Declassification reviews in accordance with the quality standards of the NDC.
+**Original:** (3) Upon the completion of modernization  efforts and the need for a KER no longer exists, the Service acting as LO will submit a Close Out memo IAW the template found in Enclosure D.
 
-**Expanded:** Declassification reviews in accordance with the quality standards of the NDC.
-
-**Rating:** 
-
----
-
-## 6. DODI 5200.44 (T2a)
-
-**Original:** c. Conducts risk assessment activities to support implementation of Section 3252 of Title 10, U.S.C..
-
-**Expanded:** Conducts risk assessment activities to support implementation of Section 3252 of Title 10, U.S.C..
+**Expanded:** Upon the completion of modernization efforts and the need for a KER no longer exists, the Service acting as LO will submit a Close Out memo IAW the template found in Enclosure D.
 
 **Rating:** 
 
 ---
 
-## 7. DODI 5200.48 (D1x)
+## 4. DODI 5200.44 (D1x)
 
-**Original:** (1)  Implementation activities.
+**Original:** (6) Review intelligence and counterintelligence assessments of known supplier threats; determine associated risks affecting DoD information systems, networks, weapon systems, and defense critical infrastructure; identify ICT supply chain risks that may be common across the enterprise; and direct or recommend specific mitigation actions, as appropriate and authorized.
 
-**Expanded:** Implementation activities.
-
-**Rating:** 
-
----
-
-## 8. DODI 5200.48 (D1x)
-
-**Original:** (6) Resolve CUI challenges in accordance with E.O. 13556 and Part 2002 of Title 32, CFR.  Refer all unresolved challenges to the DDI(CL&S).
-
-**Expanded:** Resolve CUI challenges in accordance with E.O. 13556 and Part 2002 of Title 32, CFR. Refer all unresolved challenges to the DDI(CL&S).
+**Expanded:** Review intelligence and counterintelligence assessments of known supplier threats; determine associated risks affecting DoD information systems, networks, weapon systems, and defense critical infrastructure; identify ICT supply chain risks that may be common across the enterprise; and direct or recommend specific mitigation actions, as appropriate and authorized.
 
 **Rating:** 
 
 ---
 
-## 9. DODI 5200.48 (D1x)
+## 5. DODI 5200.44 (D1x)
 
-**Original:** Official DoD information that is not classified or controlled as CUI will also be reviewed prior to public release in accordance with DoDIs 5230.09 or5230.29.
+**Original:** - a. Grants facility and personnel security clearances for contractors who require access to classified information to perform classified contracts and as requested by DMEA for the accreditation of trusted suppliers.
 
-**Expanded:** All DoD CUI must be controlled until authorized for public release in accordance with DoD Instructions (DoDIs) 5230.09, 5230.29, and 5400.04, or DoD Manual (DoDM) 5400.07. Official DoD information that is not classified or controlled as CUI will also be reviewed prior to public release in accordance with DoDIs 5230.09 or5230.29.
+**Expanded:** Grants facility and personnel security clearances for contractors who require access to classified information to perform classified contracts and as requested by DMEA for the accreditation of trusted suppliers.
 
 **Rating:** 
 
 ---
 
-## 10. DODI 5200.48 (D1x)
+## 6. DODI 5200.44 (D1x)
 
-**Original:** (2)  Training statistics.
+**Original:** (3) All DoD information systems, networks, and weapon systems that are or include the following systems that are referred to collectively in this issuance as 'applicable systems:'
 
-**Expanded:** Training statistics.
+**Expanded:** All DoD information systems, networks, and weapon systems that are or include the following systems that are referred to collectively in this issuance as 'applicable systems:'
+
+**Rating:** 
+
+---
+
+## 7. DODI 5200.44 (T2a)
+
+**Original:** Directs actions in accordance with the SCRM implementation strategy of National Security Presidential Directive-54/Homeland Security Presidential Directive-23; Section 807 of Public Law 11591; and Committee on National Security Systems Directive No. 505.
+
+**Expanded:** - Directs actions in accordance with the SCRM implementation strategy of National Security Presidential Directive-54/Homeland Security Presidential Directive-23; Section 807 of Public Law 11591; and Committee on National Security Systems Directive No. 505.
+
+**Rating:** 
+
+---
+
+## 8. DODI 5200.44 (D1x)
+
+**Original:** - l.  In coordination with the USD(R&E); the DoD CIO; the USD(I&S); the Secretaries of the Military Departments; and the Commander, USCYBERCOM, reviews intelligence and counterintelligence assessments of known ICT supplier threats and determines associated risks affecting DoD information systems, networks, weapon systems, and defense critical infrastructure.
+
+**Expanded:** In coordination with the USD(R&E); the DoD CIO; the USD(I&S); the Secretaries of the Military Departments; and the Commander, USCYBERCOM, reviews intelligence and counterintelligence assessments of known ICT supplier threats and determines associated risks affecting DoD information systems, networks, weapon systems, and defense critical infrastructure.
+
+**Rating:** 
+
+---
+
+## 9. DODI 5200.44 (D1x)
+
+**Original:** - a.  Produces intelligence and counterintelligence threat assessments to support the DoD's mission and provides them to requesting parties in a timely manner relative to acquisition life cycles.
+
+**Expanded:** Produces intelligence and counterintelligence threat assessments to support the DoD's mission and provides them to requesting parties in a timely manner relative to acquisition life cycles.
+
+**Rating:** 
+
+---
+
+## 10. DODI 5200.44 (D1x)
+
+**Original:** (2) Develops budget recommendations for the life cycle of the TSN's capability and aligns DoD TSN enterprise resources to advance the state of the art in assurance tools, techniques, and methods across the system life cycle.
+
+**Expanded:** Develops budget recommendations for the life cycle of the TSN's capability and aligns DoD TSN enterprise resources to advance the state of the art in assurance tools, techniques, and methods across the system life cycle.
 
 **Rating:** 
 
@@ -104,9 +104,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 11. DODI 5200.48 (D1x)
 
-**Original:** (8) Address the destruction requirements and methods as described in this issuance.
+**Original:** CNSI
 
-**Expanded:** Address the destruction requirements and methods as described in this issuance.
+**Expanded:** ACRONYM MEANING CFR Code of Federal Regulations CMO Chief Management Officer of the Department of Defense CNSI classified national security information CPM Component program manager CSAO Component senior agency official CTI controlled technical information CUI controlled unclassified information DDI(CL&S) Director For Defense Intelligence (Counterintelligence, Law Enforcement, And Security) DCSA Defense Counterintelligence and Security Agency DFARS Defense Federal Acquisition Regulation Supplement DNI Director of National Intelligence DoD CIO Department of Defense Chief Information Officer DoDD DoD directive DoDI DoD instruction DoDM DoD manual EA Executive Agent E.O.
 
 **Rating:** 
 
@@ -114,9 +114,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 12. DODI 5200.48 (D1x)
 
-**Original:** d. When established by contract, contractors, sub-contractors, and consultants must comply with safeguarding requirements identified in the contract for all types of CUI.
+**Original:** (5) Incident response (e.g., ensure corrective measures are implemented in a timely manner and validate effectiveness).
 
-**Expanded:** When established by contract, contractors, sub-contractors, and consultants must comply with safeguarding requirements identified in the contract for all types of CUI.
+**Expanded:** Incident response (e.g., ensure corrective measures are implemented in a timely manner and validate effectiveness).
 
 **Rating:** 
 
@@ -124,9 +124,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 13. DODI 5200.48 (D1x)
 
-**Original:** (1) No individual may have access to CUI information unless it is determined he or she has an authorized, lawful government purpose.
+**Original:** DNI
 
-**Expanded:** No individual may have access to CUI information unless it is determined he or she has an authorized, lawful government purpose.
+**Expanded:** ACRONYM MEANING CFR Code of Federal Regulations CMO Chief Management Officer of the Department of Defense CNSI classified national security information CPM Component program manager CSAO Component senior agency official CTI controlled technical information CUI controlled unclassified information DDI(CL&S) Director For Defense Intelligence (Counterintelligence, Law Enforcement, And Security) DCSA Defense Counterintelligence and Security Agency DFARS Defense Federal Acquisition Regulation Supplement DNI Director of National Intelligence DoD CIO Department of Defense Chief Information Officer DoDD DoD directive DoDI DoD instruction DoDM DoD manual EA Executive Agent E.O.
 
 **Rating:** 
 
@@ -134,49 +134,49 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 14. DODI 5200.48 (D1x)
 
-**Original:** DoD information systems processing, storing, or transmitting CUI will be categorized at the 'moderate' confidentiality impact level and follow the guidance in DoDIs 8500.01 and 8510.01.
+**Original:** 'CUI' will not appear in the banner or footer.
 
-**Expanded:** DoD information systems processing, storing, or transmitting CUI will be categorized at the 'moderate' confidentiality impact level and follow the guidance in DoDIs 8500.01 and 8510.01. Non-DoD information systems processing, storing, or transmitting CUI will provide adequate security, and the appropriate requirements must be incorporated into all contracts, grants, and other legal agreements with non-DoD entities in accordance with DoDI 8582.01. See Section 5 of this issuance for more information on CUI and its application to industry.
-
-**Rating:** 
-
----
-
-## 15. DODI 8410.03 (D1x)
-
-**Original:** (3)  The often limited bandwidth available.
-
-**Expanded:** The often limited bandwidth available.
+**Expanded:** CUI markings in classified documents will appear in paragraphs or subparagraphs known to contain only CUI and must be portion marked with '(CUI).' 'CUI' will not appear in the banner or footer.
 
 **Rating:** 
 
 ---
 
-## 16. DODI 8410.03 (D1x)
+## 15. DODI 5200.48 (D1x)
 
-**Original:** - (e) Allowable NM system initialization time and data sync (or data re-sync due to NM and radio reconnection).
+**Original:** (2) The second line must identify the office making the determination.
 
-**Expanded:** Allowable NM system initialization time and data sync (or data re-sync due to NM and radio reconnection).
-
-**Rating:** 
-
----
-
-## 17. DODI 8410.03 (D1x)
-
-**Original:** (3) Mean time between failures of network equipment or connectivity.
-
-**Expanded:** Mean time between failures of network equipment or connectivity.
+**Expanded:** The second line must identify the office making the determination.
 
 **Rating:** 
 
 ---
 
-## 18. DODI 8410.03 (D1x)
+## 16. DODI 5200.48 (D1x)
 
-**Original:** (5) SNMP community strings shall meet the minimum password length and composition requirements required by applicable security controls.
+**Original:** (1) In accordance with Part 2002 of Title 32, CFR, the CUI designation indicator must contain, at minimum, the name of the DoD Component determining that the information is CUI. If letterhead or another standard indicator of origination is used, this line may be omitted.
 
-**Expanded:** SNMP community strings shall meet the minimum password length and composition requirements required by applicable security controls.
+**Expanded:** In accordance with Part 2002 of Title 32, CFR, the CUI designation indicator must contain, at minimum, the name of the DoD Component determining that the information is CUI. If letterhead or another standard indicator of origination is used, this line may be omitted.
+
+**Rating:** 
+
+---
+
+## 17. DODI 5200.48 (D1x)
+
+**Original:** - (1)  There is no requirement to add the 'U,' signifying unclassified, to the banner and footer as was required with the old FOUO marking (i.e., U//FOUO).
+
+**Expanded:** There is no requirement to add the 'U,' signifying unclassified, to the banner and footer as was required with the old FOUO marking (i.e., U//FOUO).
+
+**Rating:** 
+
+---
+
+## 18. DODI 5200.48 (T2a)
+
+**Original:** Use of CUI in a manner not in accordance with the policy contained in E.O. 13556; Part 2002 of Title 32, CFR; the CUI Registry; agency CUI policy; or the applicable LRGWP governing the information.
+
+**Expanded:** CUI misuse Use of CUI in a manner not in accordance with the policy contained in E.O. 13556; Part 2002 of Title 32, CFR; the CUI Registry; agency CUI policy; or the applicable LRGWP governing the information.
 
 **Rating:** 
 
@@ -184,109 +184,109 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 19. DODI 8410.03 (D1x)
 
-**Original:** (2)  The requirement for NEs to connect and disconnect at random due to mobility-related constraints.
+**Original:** telecommunications management network.  An architecture for management, including planning, provisioning, installation, maintenance, operation and administration of telecommunications equipment, networks, and services.
 
-**Expanded:** The requirement for NEs to connect and disconnect at random due to mobility-related constraints.
-
-**Rating:** 
-
----
-
-## 20. DODI 8410.03 (T2a)
-
-**Original:** (3) Where possible, a different string (or strings) shall be utilized for each NE, or at minimum for each area of the network being managed.
-
-**Expanded:** Where possible, a different string (or strings) shall be utilized for each NE, or at minimum for each area of the network being managed.
+**Expanded:** Those NM systems that operate within the approximate first tactical mile for joint forces connected to the GIG, which includes a variety of wired and wireless networks. telecommunications management network. An architecture for management, including planning, provisioning, installation, maintenance, operation and administration of telecommunications equipment, networks, and services. vendor-facing applications.
 
 **Rating:** 
 
 ---
 
-## 21. DODI 8410.03 (D1x)
+## 20. DODI 8410.03 (D1x)
 
-**Original:** (2) Minimum and maximum bandwidth provided.
+**Original:** c. Define common data standards for sharing information and data between NM and SM systems IAW DoDI 8320.05 (Reference (n)).
 
-**Expanded:** Minimum and maximum bandwidth provided.
-
-**Rating:** 
-
----
-
-## 22. DODI 8410.03 (T2a)
-
-**Original:** a. Execute NM within the portions of the Defense Information Enterprise within their assigned area of responsibility (AOR) IAW Reference (b) and in support of Combatant Commanders' responsibilities.
-
-**Expanded:** Execute NM within the portions of the Defense Information Enterprise within their assigned area of responsibility (AOR) IAW Reference (b) and in support of Combatant Commanders' responsibilities.
+**Expanded:** Define common data standards for sharing information and data between NM and SM systems IAW DoDI 8320.05 (Reference (n)).
 
 **Rating:** 
 
 ---
 
-## 23. DODI 8551.01 (D1x)
+## 21. DODI 8551.01 (D1x)
 
-**Original:** (1) Physical or virtual boundary protection devices for the DoD (e.g., routers, firewalls, intrusion detection or prevention devices) must allow only approved PPS to pass data.
+**Original:** - c.  A resource for the DoD cybersecurity community to post and share practical solutions and documents with other DoD community and mission partners.
 
-**Expanded:** Physical or virtual boundary protection devices for the DoD (e.g., routers, firewalls, intrusion detection or prevention devices) must allow only approved PPS to pass data.
-
-**Rating:** 
-
----
-
-## 24. DODI 8551.01 (D1x)
-
-**Original:** - b.  Supports the Director, DISA in developing PPSM standards.
-
-**Expanded:** Supports the Director, DISA in developing PPSM standards.
+**Expanded:** A resource for the DoD cybersecurity community to post and share practical solutions and documents with other DoD community and mission partners.
 
 **Rating:** 
 
 ---
 
-## 25. DODI 8551.01 (D1x)
+## 22. DODI 8551.01 (D1x)
 
-**Original:** (7) Communicate PPS securely across the DODIN.
+**Original:** 3. (a)  Enhance baseline cybersecurity standards in accordance with DoDI 8500.01.
 
-**Expanded:** Communicate PPS securely across the DODIN.
-
-**Rating:** 
-
----
-
-## 26. DODI 8551.01 (T2a)
-
-**Original:** (7) Maintains control correlation identifiers, security requirements guides, and security technical implementation guides (STIGs) developed by DISA consistent with security controls and assessment procedures used by the DoD.
-
-**Expanded:** Maintains control correlation identifiers, security requirements guides, and security technical implementation guides (STIGs) developed by DISA consistent with security controls and assessment procedures used by the DoD.
+**Expanded:** (a) Enhance baseline cybersecurity standards in accordance with DoDI 8500.01.
 
 **Rating:** 
 
 ---
 
-## 27. NIST.SP.800-125 (T2a)
+## 23. NIST.SP.800-125 (T2a)
 
-**Original:** access to the virtual storage can be controlled at the host and VM level
+**Original:** ensure that policies are updated accordingly as needed.
 
-**Expanded:** In addition, access to the virtual storage can be controlled at the host and VM level.
-
-**Rating:** 
-
----
-
-## 28. afi10-2402 (T2a)
-
-**Original:** will decompose their assigned missions and core functions to identify the specific METs/MEFs each requires to be implemented
-
-**Expanded:** During the initial step of the CAIP process, DoD mission owners (CCMDs, Defense Agencies, Military Departments) will decompose their assigned missions and core functions to identify the specific METs/MEFs each requires to be implemented by the resource providers.
+**Expanded:** Organizations should also be aware of the emergence of new types of virtualization solutions and of major changes to existing virtualization technologies, and ensure that policies are updated accordingly as needed.
 
 **Rating:** 
 
 ---
 
-## 29. afi10-2402 (D1x)
+## 24. NIST.SP.800-125 (D1x)
 
-**Original:** The CARM Program utilizes products from three separate assessments to determine risk to AF TCAs and develop risk management strategies.
+**Original:** virtualization may require more powerful hardware platforms that currently exist in the organization
 
-**Expanded:** (CHANGED) 3.3.1. The CARM Program utilizes products from three separate assessments to determine risk to AF TCAs and develop risk management strategies.
+**Expanded:** For example, virtualization may require more powerful hardware platforms that currently exist in the organization, and moving disparate servers into a single location may cause network bandwidth problems.
+
+**Rating:** 
+
+---
+
+## 25. NIST.SP.800-125 (D1x)
+
+**Original:** Synchronize the virtualized infrastructure to a trusted authoritative time server.
+
+**Expanded:** -  Synchronize the virtualized infrastructure to a trusted authoritative time server.
+
+**Rating:** 
+
+---
+
+## 26. NIST.SP.800-125 (D1x)
+
+**Original:** specifying business and functional requirements for the solution
+
+**Expanded:** These include identifying needs for virtualization, providing an overall vision for how virtualization solutions would support the mission of the organization, creating a high-level strategy for implementing virtualization solutions, developing virtualization policy, identifying platforms and applications that can be virtualized, and specifying business and functional requirements for the solution.
+
+**Rating:** 
+
+---
+
+## 27. afi10-2402 (D1x)
+
+**Original:** Ensure all records generated as a result of processes prescribed in this publication adhere to Air Force Instruction (AFI) 33-322, Records Management and Information Governance Program,
+
+**Expanded:** Ensure all records generated as a result of processes prescribed in this publication adhere to Air Force Instruction (AFI) 33-322, Records Management and Information Governance Program, and are disposed in accordance with the Air Force Records Disposition Schedule which is located in the Air Force Records Information Management System.
+
+**Rating:** 
+
+---
+
+## 28. afi13-550 (D1x)
+
+**Original:** - 5.3.7.  AF PEOs will coordinate requested or planned AN/USQ-225 host platform, constituent, or external dependency configuration baseline changes with AFGSC and AFNWC/NCAFPEO NC3 prior to implementation.
+
+**Expanded:** AF PEOs will coordinate requested or planned AN/USQ-225 host platform, constituent, or external dependency configuration baseline changes with AFGSC and AFNWC/NCAFPEO NC3 prior to implementation.
+
+**Rating:** 
+
+---
+
+## 29. afman17-2101 (D1x)
+
+**Original:** - 2.8.2.5.  Ensure  TS/SCI  connections  (TS/SCI  IP  DATA,  NSANet)  are  submitted  for validation and approval to the appropriate A2 designated office.
+
+**Expanded:** Ensure TS/SCI connections (TS/SCI IP DATA, NSANet) are submitted for validation and approval to the appropriate A2 designated office.
 
 **Rating:** 
 
@@ -294,9 +294,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 30. dafman17-1305 (D1x)
 
-**Original:** DAF civilian and military personnel are qualified after meeting foundational and residential requirements within 12 months of assignment to their cyberspace duties;
+**Original:** - 2.6.1.  Work with SAF/CN to provide a capability to identify, record and track civilian and military cyberspace positions via SEIs in personnel and manpower databases and systems and output on the UMD.
 
-**Expanded:** DAF civilian and military personnel are qualified after meeting foundational and residential requirements within 12 months of assignment to their cyberspace duties; (2) publication of this manual; and (3) the position has been fully transitioned to DCWF.
+**Expanded:** Work with SAF/CN to provide a capability to identify, record and track civilian and military cyberspace positions via SEIs in personnel and manpower databases and systems and output on the UMD.
 
 **Rating:** 
 

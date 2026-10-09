@@ -16,8 +16,9 @@ _ABBREVIATIONS = frozenset({
     "u.s", "e.g", "i.e", "no", "nos", "fig", "figs", "sec", "para", "paras", "inc", "vs", "etc", "dr", "mr", "mrs", "ms", "st", "approx", "cf", "al", "dept", "gov", "gen", "col",
     "lt", "sgt", "maj", "capt", "cdr", "adm", "jr", "sr", "ref", "refs", "vol", "chap", "art", "para", "ch", "pp", "p", "ed", "eds", "est", "max", "min",
 })
-_MARKER = re.compile(r"(?m)^[ \t]*(?:[-•*][ \t]+(?=\S)|(?:[-•*][ \t]*)?(?=(?:(?:[A-Z]{1,2})?\d+(?:\.\d+)+\.?|\([a-zA-Z0-9]{1,3}\)|[a-z]\.)[ \t]+\S))")
-_LEADING_NUMBER = re.compile(r"^[ \t]*(?:[-•*][ \t]*)?(?:(?:[A-Z]{1,2})?\d+(?:\.\d+)+\.?|\([a-zA-Z0-9]{1,3}\)|[a-z]\.)[ \t]+")
+_MARKER_BODY = r"(?:(?:[A-Z]{1,2})?\d+(?:\.\d+)+\.?|\d{1,3}[.)]|\([a-zA-Z0-9]{1,3}\)|[a-zA-Z][.)])"  # 3.6.1.1.  1.  2)  (a)  a.  A.
+_MARKER = re.compile(r"(?m)^[ \t]*(?:[-•*][ \t]+(?=\S)|(?:[-•*][ \t]*)?(?=" + _MARKER_BODY + r"[ \t]+\S))")
+_LEADING_NUMBER = re.compile(r"^[ \t]*(?:[-•*][ \t]*)?" + _MARKER_BODY + r"[ \t]+")
 _TERMINAL = re.compile(r"\s*([.?!])([\"')\]]*)(?=\s+[A-Z0-9(\[\"“]|\s*$)")
 _INLINE_MARKER = re.compile(r"^(?:\([a-zA-Z0-9]{1,3}\)|[a-z]\.|\d{1,3}[.)])[ \t]+")  # "(g) ", "a. ", "3) " left at the start of a sentence found mid-line
 _TIDY_SPACE_BEFORE = re.compile(r"\s+([.,;:)\]])")
@@ -55,8 +56,11 @@ def _is_sentence_end(text: str, m: re.Match) -> bool:
         return True  # "... of reference (k)." ends the sentence; a bracketed label is not an initial
     if word in _ABBREVIATIONS or (len(word) == 1 and raw_token[:1].isupper()):  # an initial such as "J."
         return False
-    if re.fullmatch(r"(?:[a-z]{1,2})?\d+(?:\.\d+)*", word) and re.search(r"(?:^|\s)(?:[A-Za-z]{1,2})?\d+(?:\.\d+)+$", before) is not None:
-        return False  # a paragraph number such as "3.6.1.1" or "A2.3"
+    num = re.search(r"(?:^|\s)((?:[A-Za-z]{1,2})?\d+(?:\.\d+)+)$", before)
+    if num is not None and re.fullmatch(r"(?:[a-z]{1,2})?\d+(?:\.\d+)*", word):
+        lead = before[: num.start()].rstrip()
+        if not lead or lead[-1] in ".?!":  # a number that opens a sentence is a paragraph number ("3.6.1.1."); one after words is a citation ("DoDI 8510.01.") that can end it
+            return False
     return True
 
 

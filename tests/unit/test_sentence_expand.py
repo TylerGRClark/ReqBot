@@ -59,3 +59,17 @@ def test_a_bracketed_reference_label_ends_a_sentence_and_an_initial_does_not():
 def test_an_inline_list_marker_does_not_open_the_expanded_sentence():
     chunk = "(f) The request will be filed. (g) During Joint Staff processing, the request will be forwarded to the NSA. (h) Next step."
     assert SE.expand("the request will be forwarded to the NSA", chunk)[0] == "During Joint Staff processing, the request will be forwarded to the NSA."
+
+
+def test_a_sentence_ending_in_a_dotted_citation_still_ends_there():
+    chunk = "Components shall implement the controls in DoDI 8510.01. Reports go to the CIO. Reviews are annual."
+    assert SE.expand("implement the controls", chunk) == ("Components shall implement the controls in DoDI 8510.01.", "expanded")
+    assert SE.expand("Reports go", chunk)[0] == "Reports go to the CIO."
+
+
+def test_flat_numbered_and_uppercase_lettered_lists_are_separate_units():
+    chunk = "1. First item;\n2. Second item;\n3. Third item."
+    assert SE.expand("Second item", chunk) == ("Second item;", "expanded")
+    assert SE.expand("Third item", chunk)[0] == "Third item."
+    lettered = "A. Review the logs.\nB. Report the findings to the CIO."
+    assert SE.expand("Report the findings", lettered)[0] == "Report the findings to the CIO."

@@ -2,19 +2,19 @@
  "arms": {
   "T2a": {
    "survivors_before": 1880,
-   "survivors_after_merge": 1865,
+   "survivors_after_merge": 1868,
    "status": {
-    "unchanged": 1421,
-    "expanded": 295,
+    "unchanged": 1436,
+    "expanded": 281,
     "not_located": 145,
-    "too_long": 19
+    "too_long": 18
    },
    "incomplete_before": 162,
-   "incomplete_after": 21,
-   "could_be_expanded": 1716,
-   "incomplete_share_after": 0.0122,
+   "incomplete_after": 19,
+   "could_be_expanded": 1717,
+   "incomplete_share_after": 0.0111,
    "quote_chars_median_before": 156.0,
-   "quote_chars_median_after": 162.0,
+   "quote_chars_median_after": 162,
    "per_document": {
     "CJCSI 6510.02G": {
      "before": 87,
@@ -30,7 +30,7 @@
     },
     "DODI 5200.48": {
      "before": 232,
-     "after": 228
+     "after": 231
     },
     "DODI 8410.03": {
      "before": 142,
@@ -77,19 +77,19 @@
   },
   "T2b": {
    "survivors_before": 1890,
-   "survivors_after_merge": 1872,
+   "survivors_after_merge": 1875,
    "status": {
     "not_located": 138,
-    "unchanged": 1412,
-    "expanded": 319,
-    "too_long": 21
+    "unchanged": 1428,
+    "expanded": 304,
+    "too_long": 20
    },
    "incomplete_before": 176,
-   "incomplete_after": 20,
-   "could_be_expanded": 1731,
-   "incomplete_share_after": 0.0116,
+   "incomplete_after": 18,
+   "could_be_expanded": 1732,
+   "incomplete_share_after": 0.0104,
    "quote_chars_median_before": 153.5,
-   "quote_chars_median_after": 163,
+   "quote_chars_median_after": 162.0,
    "per_document": {
     "CJCSI 6510.02G": {
      "before": 87,
@@ -105,7 +105,7 @@
     },
     "DODI 5200.48": {
      "before": 233,
-     "after": 228
+     "after": 231
     },
     "DODI 8410.03": {
      "before": 145,
@@ -152,19 +152,19 @@
   },
   "D1x": {
    "survivors_before": 2501,
-   "survivors_after_merge": 2427,
+   "survivors_after_merge": 2434,
    "status": {
-    "unchanged": 1602,
-    "expanded": 734,
+    "unchanged": 1611,
+    "expanded": 725,
     "not_located": 158,
     "too_long": 7
    },
    "incomplete_before": 358,
-   "incomplete_after": 42,
+   "incomplete_after": 40,
    "could_be_expanded": 2336,
-   "incomplete_share_after": 0.018,
+   "incomplete_share_after": 0.0171,
    "quote_chars_median_before": 151,
-   "quote_chars_median_after": 161.0,
+   "quote_chars_median_after": 160.0,
    "per_document": {
     "CJCSI 6510.02G": {
      "before": 113,
@@ -176,11 +176,11 @@
     },
     "DODI 5200.44": {
      "before": 109,
-     "after": 108
+     "after": 109
     },
     "DODI 5200.48": {
      "before": 321,
-     "after": 275
+     "after": 280
     },
     "DODI 8410.03": {
      "before": 167,
@@ -216,7 +216,7 @@
     },
     "dafman17-1305": {
      "before": 357,
-     "after": 351
+     "after": 352
     }
    },
    "recall_of_74_by_survivors": {
