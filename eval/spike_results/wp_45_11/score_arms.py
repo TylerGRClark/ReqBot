@@ -151,7 +151,15 @@ def check_same_code(arms, scratch=SCRATCH, unrecorded_head=None, allow=()):
         heads[arm] = head
     first = next(iter(heads.values()))
     for arm, head in heads.items():
-        if head != first and subprocess.run(["git", "diff", "--quiet", first, head, "--", *CODE_PATHS, *(f":(exclude){p}" for p in allow)], cwd=_ROOT).returncode != 0:
+        if head == first:
+            continue
+        try:
+            rc = subprocess.run(["git", "diff", "--quiet", first, head, "--", *CODE_PATHS, *(f":(exclude){p}" for p in allow)], cwd=_ROOT).returncode
+        except OSError as e:  # no git binary
+            raise SystemExit(f"cannot compare the arms' code revisions: {e}") from e
+        if rc not in (0, 1):  # 1 means "differs"; anything else (an unknown revision, a missing git) is an error, not a difference
+            raise SystemExit(f"git could not compare {first[:8]} with {head[:8]} for arm {arm} (exit code {rc}); are both revisions in this clone?")
+        if rc == 1:
             raise SystemExit(f"arm {arm} ran pipeline code that differs from the other arms ({first[:8]} against {head[:8]} over {', '.join(CODE_PATHS)})")
 
 
