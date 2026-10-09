@@ -1,6 +1,6 @@
 """WP-45.7: the two discovery prompts (scratch only).
 
-D0 is the production Step C prompt, unchanged, rendered exactly as `run()` renders it (the profile's obligation verbs filled in).
+D0 is the Step C prompt that was in production until WP-45.16 adopted D1, frozen in `d0_prompt_template.txt` (so the baseline stays comparable), rendered as `run()` rendered it (the profile's obligation verbs filled in).
 D1 is the inclusive discovery prompt of docs/PHASE45_WP457_PLAN.md appendix A: it replaces the opening definition, the
 "do not extract" bullets and the example block, and keeps the output rules, the verbatim-quote rule and the
 `{source_ref_hints}` / `{chunk_text}` slots. Same output schema for both. Examples are invented text.
@@ -21,7 +21,7 @@ ARMS = ("D0", "D1")
 
 
 def d0_template():
-    return S.PASS1_PROMPT_TEMPLATE.replace("{obligation_verbs}", ", ".join(default_profile()["obligation_verbs"]))
+    return (Path(__file__).resolve().parent / "d0_prompt_template.txt").read_text(encoding="utf-8").replace("{obligation_verbs}", ", ".join(default_profile()["obligation_verbs"]))
 
 
 _D1_HEAD = """You are finding CANDIDATE requirement passages in a cybersecurity compliance document.
