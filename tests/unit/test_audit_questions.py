@@ -157,3 +157,9 @@ def test_reused_questions_get_their_unverified_terms_recomputed(tmp_path):
     AQ.write(path, saved)
     AQ.draft_questions([item], path, call=lambda p: 1 / 0)
     assert AQ.load(path)["CL-1"]["unverified_terms"] == ["SIEM-9"]
+
+
+def test_mixed_case_names_with_acronym_parts_are_checked_whole():
+    assert AQ.unverified_terms("Does the unit use FedRAMP and DoD controls?", "The unit uses controls.") == ["FedRAMP", "DoD"]
+    assert AQ.unverified_terms("Does the unit use FedRAMP?", "The unit uses FedRAMP controls.") == []
+    assert AQ.unverified_terms("Does the unit follow Camel guidance?", "The unit follows guidance.") == ["Camel"]  # a single capitalized word is still checked

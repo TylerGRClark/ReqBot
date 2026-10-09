@@ -43,7 +43,7 @@ PROHIBITION = re.compile(
     r"\b(?:shall|must|should|will|may|can|could|would|do|does|did|is|are|be)\s+not\b(?!\s+(?:limited|only|necessarily))|\bcannot\b|\bnever\b|\bprohibited\b|\bforbidden\b", re.IGNORECASE)
 PROHIBITION_RULE = "- This requirement forbids something. Ask whether it is avoided (\"Does the unit avoid ...?\"); do not ask whether it happens.\n"
 SCHEMA = {"type": "object", "properties": {"question": {"type": ["string", "null"]}}, "required": ["question"]}
-_TERM = re.compile(r"\b(?:\d[\w./-]*|[A-Z]{2,}[\w/&-]*|[A-Z][a-z]+(?:[A-Z][a-z]+)+|[A-Z][a-z]+(?![A-Za-z])(?:\s+[A-Z][a-z]+(?![A-Za-z]))*)")  # a number, an acronym, a CamelCase name, or capitalized whole words
+_TERM = re.compile(r"\b(?:\d[\w./-]*|[A-Z]{2,}[\w/&-]*|[A-Z][A-Za-z]*[a-z][A-Z][A-Za-z]*|[A-Z][a-z]+(?![A-Za-z])(?:\s+[A-Z][a-z]+(?![A-Za-z]))*)")  # a number, an acronym, a mixed-case name (StoreFront, FedRAMP, DoD), or capitalized whole words
 _STOP = {"does", "do", "is", "are", "has", "have", "did", "was", "were", "can", "will", "the", "a", "an", "if", "when", "whether", "who", "what", "how", "each", "all", "any", "yes", "no", "should", "would", "could", "must", "shall", "may", "might", "there", "this", "that", "these", "those"}
 
 
