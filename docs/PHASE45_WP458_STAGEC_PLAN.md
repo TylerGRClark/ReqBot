@@ -17,7 +17,7 @@ A second-labeler check (#244) also found the selection verdict not robust (it fl
 - **Port, not import.** The selection resolver (evidence bundle, menu v2, selection prompt and schema, assembler, checker) moves from `eval/spike_results/wp_45_7/` into `pipeline/` with its tests; production code must not import from `eval/`.
 - **Attach rule (to be registered before it is measured):** attach a string only when the resolver chose a parent (a lead-in or heading) for a record that does not stand alone; never attach an actor-only string to a complete sentence.
 - **Saved fields:** reuse `parent_stem` and `embedding_text` (what Qdrant already embeds), plus `stem_source` (`resolver` or `deterministic`) and `resolver_status`. No change to the Qdrant payload shape; a reindex is needed.
-- **Cache:** keyed by the quote, chunk, headings, previous chunk, menu hash, tier, prompt hash, model digest, inference parameters and a hash of the resolver code, so any change misses.
+- **Cache:** keyed by the hash of the full rendered evidence bundle (the quote, chunk, previous and next chunk excerpts, cross-referenced section excerpts and headings, as the prompt shows them), the menu hash, tier, prompt hash, model digest, inference parameters and a hash of the resolver code, so any change to anything the model sees misses.
 
 ## 3. Gates before it is turned on by default
 
