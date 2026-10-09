@@ -671,7 +671,8 @@ def apply_parent_stem_reconstruction(norm_jsonl: str) -> None:
     changed = False
     for req in reqs:
         stem = reconstruct_parent_stem(req, step_c_by_chunk, chunks_by_id) or ""
-        embedding_text = f"{stem}\n{req.get('source_quote', '')}".strip() if stem else ""
+        body = req.get("explained_text") or req.get("source_quote", "")  # the explained sentence when the record has one (the root is a fragment more often)
+        embedding_text = f"{stem}\n{body}".strip() if stem else ""
         if req.get("parent_stem") != stem or req.get("embedding_text") != embedding_text:
             changed = True
         req["parent_stem"] = stem

@@ -25,3 +25,18 @@ Plan: [docs/PIPELINE_REDESIGN_PLAN.md](../../../docs/PIPELINE_REDESIGN_PLAN.md).
 **Pass rules from the plan, for this PR:** (c) the accepted records are identical with and without the anchor fields in all 13 documents (every field other than the new `anchor_*` fields and the run timestamp is equal): **met**. (d) per-document shares are in `outputs/anchor_report.json`: **reported**. Rule (a), that the root equals the line requirement finding wrote, and rule (b), labeled-obligation coverage, belong to the next PR, which is the one that stops the expansion from overwriting `source_quote`; this PR cannot change either.
 
 Where the 177 roots that are not plain "exact" are: the glued lead-ins are concentrated in DODI 8410.03, dafman17-1305 and afi13-550; `words_trimmed` in DODI 8551.01 (11) and AFI 17-203 (14). Only 8 roots (0.3%) have nothing close in the chunk; 8 more are close but reworded. Of the 59 glued lead-ins, 39 are in the heading breadcrumb the model saw (for example "Air Combat Command shall:" under a heading of that name), so the model was reading the heading, not inventing the actor.
+
+## Root restored, explained layer added (second PR for step 4)
+
+The whole-sentence expansion no longer replaces `source_quote`. `source_quote` is the root, exactly what requirement finding returned (trimmed of surrounding spaces); the expansion moves to `explained_text` (with `explained_parts` and `explain_notes`) beside it, built only from pieces of the source: the sentence the root sits in, the exact piece anchoring found when the root has a list number or a few front words that the source lacks, and a glued lead-in when anchoring found it in the chunk or its heading. A root whose last words are not in the source (often a table cell read back as a sentence) is not expanded, because dropping those words would merge rows that differ only there. Records that reach the same sentence in the same chunk are shown once; the other roots are kept in `merged_roots`. The stable ID is hashed from the root. The checklist shows the explained text as the requirement and keeps the root in `extracted_quote`; the embedding text and the Qdrant payload carry the explained text (search display moves in step 12 of the plan).
+
+`root_report.py` re-runs Step D on copies of the 13 reference documents' newest runs (offline) and checks the plan's rules:
+
+| Rule | Result |
+|---|---|
+| (a) every record's `source_quote` is a quote requirement finding returned | **met** in all 13 documents (a test checks it on a small fixture too) |
+| (b) labeled-obligation coverage (74 obligations, 3 sample documents) not lower than the existing run by more than the paired-loss limit of 4 | existing run (sentence rule replaced the quote) 69; new records counted by their root 67; **counted by their explained text 69: met** |
+| IDs unique | **met**: no repeated `requirement_id` in any document |
+| Records | 2,420 now against 2,419 in the existing run; 71 roots are listed in `merged_roots` because they sit in the same sentence as another root (only roots that were placed in the chunk are merged) |
+
+Counting by the root alone gives 67 of 74, two below the existing run (within the limit of 4, and the root is a fragment more often than the sentence is); the explained text keeps the earlier 69.

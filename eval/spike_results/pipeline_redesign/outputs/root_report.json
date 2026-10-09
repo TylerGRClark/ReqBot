@@ -1,0 +1,218 @@
+{
+ "documents": {
+  "CJCSI 6510.02G": {
+   "records": 104,
+   "existing_records": 104,
+   "root_invariant_holds": true,
+   "merged_into_another": 4,
+   "explain_notes": {
+    "already a whole sentence": 71,
+    "expanded to the whole sentence": 32,
+    "merged with other roots in the same sentence": 3,
+    "not expanded: not located": 1,
+    "end of the quote is not in the source; kept as returned": 1
+   },
+   "repeated_ids": 0
+  },
+  "DODI 5200.01": {
+   "records": 73,
+   "existing_records": 73,
+   "root_invariant_holds": true,
+   "merged_into_another": 0,
+   "explain_notes": {
+    "already a whole sentence": 27,
+    "expanded to the whole sentence": 46,
+    "a few words at the front that are not in the source taken off": 1
+   },
+   "repeated_ids": 0
+  },
+  "DODI 5200.44": {
+   "records": 107,
+   "existing_records": 108,
+   "root_invariant_holds": true,
+   "merged_into_another": 1,
+   "explain_notes": {
+    "already a whole sentence": 32,
+    "expanded to the whole sentence": 75,
+    "merged with other roots in the same sentence": 1
+   },
+   "repeated_ids": 0
+  },
+  "DODI 5200.48": {
+   "records": 277,
+   "existing_records": 277,
+   "root_invariant_holds": true,
+   "merged_into_another": 34,
+   "explain_notes": {
+    "already a whole sentence": 128,
+    "not expanded: not located": 2,
+    "end of the quote is not in the source; kept as returned": 1,
+    "expanded to the whole sentence": 142,
+    "list number or dash taken off": 3,
+    "merged with other roots in the same sentence": 7,
+    "a few words at the front that are not in the source taken off": 1,
+    "lead-in kept (found in the chunk)": 3,
+    "not expanded: too short": 2,
+    "not expanded: too long": 2,
+    "not expanded: ambiguous": 1
+   },
+   "repeated_ids": 0
+  },
+  "DODI 8410.03": {
+   "records": 172,
+   "existing_records": 172,
+   "root_invariant_holds": true,
+   "merged_into_another": 4,
+   "explain_notes": {
+    "already a whole sentence": 85,
+    "lead-in kept (found in the chunk's heading)": 12,
+    "lead-in kept (found in the chunk)": 6,
+    "expanded to the whole sentence": 86,
+    "a few words at the front that are not in the source taken off": 2,
+    "merged with other roots in the same sentence": 1,
+    "not expanded: not located": 1,
+    "end of the quote is not in the source; kept as returned": 1
+   },
+   "repeated_ids": 0
+  },
+  "DODI 8551.01": {
+   "records": 81,
+   "existing_records": 82,
+   "root_invariant_holds": true,
+   "merged_into_another": 2,
+   "explain_notes": {
+    "already a whole sentence": 16,
+    "lead-in kept (found in the chunk)": 4,
+    "expanded to the whole sentence": 55,
+    "merged with other roots in the same sentence": 2,
+    "not expanded: too long": 8,
+    "a few words at the front that are not in the source taken off": 9,
+    "not expanded: not located": 2,
+    "end of the quote is not in the source; kept as returned": 1
+   },
+   "repeated_ids": 0
+  },
+  "NIST.SP.800-125": {
+   "records": 302,
+   "existing_records": 298,
+   "root_invariant_holds": true,
+   "merged_into_another": 9,
+   "explain_notes": {
+    "already a whole sentence": 258,
+    "expanded to the whole sentence": 42,
+    "list number or dash taken off": 3,
+    "merged with other roots in the same sentence": 6,
+    "a few words at the front that are not in the source taken off": 2,
+    "not expanded: not located": 2,
+    "end of the quote is not in the source; kept as returned": 1
+   },
+   "repeated_ids": 0
+  },
+  "afi10-2402": {
+   "records": 353,
+   "existing_records": 353,
+   "root_invariant_holds": true,
+   "merged_into_another": 6,
+   "explain_notes": {
+    "already a whole sentence": 317,
+    "expanded to the whole sentence": 32,
+    "merged with other roots in the same sentence": 3,
+    "not expanded: not located": 3,
+    "list number or dash taken off": 11,
+    "end of the quote is not in the source; kept as returned": 2,
+    "lead-in kept (found in the chunk)": 1,
+    "not expanded: ambiguous": 1
+   },
+   "repeated_ids": 0
+  },
+  "afi13-550": {
+   "records": 185,
+   "existing_records": 186,
+   "root_invariant_holds": true,
+   "merged_into_another": 1,
+   "explain_notes": {
+    "already a whole sentence": 143,
+    "expanded to the whole sentence": 38,
+    "not expanded: not located": 4,
+    "lead-in kept (found in the chunk)": 5,
+    "list number or dash taken off": 10,
+    "lead-in kept (found in the chunk's heading)": 4,
+    "merged with other roots in the same sentence": 1
+   },
+   "repeated_ids": 0
+  },
+  "afi17-203": {
+   "records": 155,
+   "existing_records": 155,
+   "root_invariant_holds": true,
+   "merged_into_another": 4,
+   "explain_notes": {
+    "already a whole sentence": 121,
+    "expanded to the whole sentence": 10,
+    "merged with other roots in the same sentence": 3,
+    "a few words at the front that are not in the source taken off": 1,
+    "lead-in kept (found in the chunk)": 1,
+    "not expanded: not located": 16,
+    "end of the quote is not in the source; kept as returned": 13,
+    "list number or dash taken off": 6,
+    "not expanded: too long": 4,
+    "not expanded: ambiguous": 4
+   },
+   "repeated_ids": 0
+  },
+  "afman17-2101": {
+   "records": 184,
+   "existing_records": 184,
+   "root_invariant_holds": true,
+   "merged_into_another": 0,
+   "explain_notes": {
+    "already a whole sentence": 164,
+    "expanded to the whole sentence": 17,
+    "not expanded: not located": 3,
+    "a few words at the front that are not in the source taken off": 3
+   },
+   "repeated_ids": 0
+  },
+  "afpd_17-1": {
+   "records": 75,
+   "existing_records": 75,
+   "root_invariant_holds": true,
+   "merged_into_another": 0,
+   "explain_notes": {
+    "already a whole sentence": 74,
+    "not expanded: not located": 1,
+    "end of the quote is not in the source; kept as returned": 1
+   },
+   "repeated_ids": 0
+  },
+  "dafman17-1305": {
+   "records": 352,
+   "existing_records": 352,
+   "root_invariant_holds": true,
+   "merged_into_another": 6,
+   "explain_notes": {
+    "already a whole sentence": 294,
+    "expanded to the whole sentence": 51,
+    "a few words at the front that are not in the source taken off": 6,
+    "merged with other roots in the same sentence": 3,
+    "not expanded: not located": 7,
+    "lead-in kept (found in the chunk's heading)": 23,
+    "list number or dash taken off": 9,
+    "end of the quote is not in the source; kept as returned": 2
+   },
+   "repeated_ids": 0
+  }
+ },
+ "coverage": {
+  "obligations": 74,
+  "existing_run": 69,
+  "new_by_root": 67,
+  "new_by_explained_text": 69,
+  "paired_loss_limit": 4
+ },
+ "rules": {
+  "a_root_invariant_all_documents": true,
+  "b_coverage_by_explained_text_not_lower_by_more_than_limit": true,
+  "ids_unique": true
+ }
+}

@@ -1,4 +1,6 @@
 """WP-45.14: expanding a quote to the whole sentence it sits in."""
+import json
+
 from pipeline import sentence_expand as SE
 
 
@@ -99,24 +101,65 @@ def test_lead_in_with_colon_is_still_grafted():
     assert status == "expanded"
 
 
-def test_expand_records_expands_merges_and_copies():
+def test_explain_records_adds_the_explained_layer_and_never_changes_the_root():
     raw = {1: "Units shall retain logs for one year (T-2), and review them monthly. Other text."}
     recs = [{"chunk_id": 1, "source_quote": "retain logs for one year (T-2)"}, {"chunk_id": 1, "source_quote": "review them monthly"}, {"chunk_id": 2, "source_quote": "Missing quote here."}]
-    out, counts = SE.expand_records(recs, raw)
-    assert [r["source_quote"] for r in out] == ["Units shall retain logs for one year (T-2), and review them monthly.", "Missing quote here."]
-    assert counts["merged"] == 1 and counts["expanded"] == 2 and counts["not_located"] == 1
-    assert recs[0]["source_quote"] == "retain logs for one year (T-2)"
+    out, counts = SE.explain_records(recs, raw)
+    assert [r["source_quote"] for r in out] == ["retain logs for one year (T-2)", "Missing quote here."]  # roots untouched
+    assert out[0]["explained_text"] == "Units shall retain logs for one year (T-2), and review them monthly."
+    assert out[0]["merged_roots"] == ["review them monthly"] and "expanded to the whole sentence" in out[0]["explain_notes"]
+    assert out[1]["explained_text"] == "Missing quote here." and any("not expanded" in n for n in out[1]["explain_notes"])
+    assert counts["merged"] == 1 and "explained_text" not in recs[0]  # the input records are copied
+
+
+def test_a_glued_lead_in_backed_by_the_source_is_kept_in_front_of_the_sentence():
+    raw = {1: "AFMC will:\n- 4.3.7.1.  Identify AF NC3 funding requirements within AFMC. (T-1)\n- 4.3.7.2.  Identify facility requirements."}
+    rec = {"chunk_id": 1, "source_quote": "AFMC will: Identify AF NC3 funding requirements within AFMC.", "anchor_status": "lead_in_joined",
+           "anchor_text": "Identify AF NC3 funding requirements within AFMC.", "anchor_lead_in": "AFMC will:"}
+    out, _ = SE.explain_records([rec], raw)
+    assert out[0]["explained_text"] == "AFMC will: Identify AF NC3 funding requirements within AFMC."
+    assert [p["kind"] for p in out[0]["explained_parts"]] == ["lead_in", "sentence"] and out[0]["source_quote"] == rec["source_quote"]
+
+
+def test_a_root_with_a_list_number_in_front_is_explained_from_its_exact_piece():
+    raw = {1: "- 2.2.13.1.  Sustain, modernize and recapitalize the AN/USQ-225. (T-1)\n- 2.2.13.2.  Act as lead."}
+    rec = {"chunk_id": 1, "source_quote": "- Sustain, modernize and recapitalize the AN/USQ-225.", "anchor_status": "marker_removed", "anchor_text": "Sustain, modernize and recapitalize the AN/USQ-225."}
+    out, _ = SE.explain_records([rec], raw)
+    assert out[0]["explained_text"].startswith("Sustain, modernize") and out[0]["source_quote"] == "- Sustain, modernize and recapitalize the AN/USQ-225."
 
 
 def test_a_quote_that_occurs_twice_in_the_chunk_is_not_expanded_or_merged():
     raw = {1: "Administrators shall review logs. Auditors shall review logs."}
-    recs = [{"chunk_id": 1, "source_quote": "review logs"}, {"chunk_id": 1, "source_quote": "review logs"}]
-    out, counts = SE.expand_records(recs, raw)
-    assert [r["source_quote"] for r in out] == ["review logs", "review logs"] and counts["ambiguous"] == 2 and counts["merged"] == 0
+    recs = [{"chunk_id": 1, "source_ref": "1.1", "source_quote": "review logs"}, {"chunk_id": 1, "source_ref": "1.2", "source_quote": "review logs"}]
+    out, counts = SE.explain_records(recs, raw)
+    assert len(out) == 2 and counts["merged"] == 0 and counts["ambiguous"] == 2  # two citations, two records: neither may be dropped because their text is the same
 
 
-def test_an_unlocated_record_does_not_swallow_a_later_record_with_the_same_text():
-    raw = {1: "Units shall keep logs for one year."}
-    recs = [{"chunk_id": 1, "source_quote": "Units shall keep logs for one year."}, {"chunk_id": 1, "source_quote": "keep logs for one year"}]
-    out, _ = SE.expand_records([{"chunk_id": 2, "source_quote": "Units shall keep logs for one year."}] + recs, raw)
-    assert len(out) == 2 and out[0]["chunk_id"] == 2
+def test_step_d_keeps_the_root_exactly_as_requirement_finding_returned_it(tmp_path):
+    """Invariant: after normalizing, every record's source_quote is a quote requirement finding returned (trimmed), and the explained layer sits beside it."""
+    from pipeline import parse_and_normalize as PN
+    chunks = [{"chunk_id": 0, "page_start": 1, "page_end": 1, "section_title_path": ["Logs"], "section_ref_path": ["1"], "breadcrumb": "Logs",
+               "raw_text": "1.1.  Commanders shall review logs monthly, and report findings to the CIO.\n1.2.  AFMC will:\n- 1.2.1.  Identify funding requirements within AFMC.",
+               "text": "[Logs]\n1.1.  Commanders shall review logs monthly, and report findings to the CIO.\n1.2.  AFMC will:\n- 1.2.1.  Identify funding requirements within AFMC."}]
+    extracted = [{"chunk_id": 0, "requirement_id": "R-0-0", "source_ref": "1.1", "source_quote": "  review logs monthly  "},
+                 {"chunk_id": 0, "requirement_id": "R-0-1", "source_ref": "1.2.1", "source_quote": "AFMC will: Identify funding requirements within AFMC."}]
+    (tmp_path / "doc_chunks.jsonl").write_text("".join(json.dumps(c) + "\n" for c in chunks), encoding="utf-8")
+    (tmp_path / "doc_extracted_requirements.jsonl").write_text("".join(json.dumps(r) + "\n" for r in extracted), encoding="utf-8")
+    out = PN.run(str(tmp_path / "doc_extracted_requirements.jsonl"), str(tmp_path / "doc_chunks.jsonl"), "", str(tmp_path))
+    records = [json.loads(line) for line in open(out, encoding="utf-8")]
+    returned = {r["source_quote"].strip() for r in extracted}
+    assert records and all(r["source_quote"] in returned for r in records)
+    by_ref = {r["source_ref"]: r for r in records}
+    assert by_ref["1.1"]["explained_text"] == "Commanders shall review logs monthly, and report findings to the CIO."
+    assert by_ref["1.2.1"]["explained_text"] == "AFMC will: Identify funding requirements within AFMC." and by_ref["1.2.1"]["anchor_status"] == "lead_in_joined"
+    assert len({r["requirement_id"] for r in records}) == len(records)
+
+
+def test_table_rows_that_differ_only_in_their_last_words_are_not_merged():
+    raw = {1: "If the originator / recipient of the incident report (IR) is\n| End user | then take the indicated actions |\n| CST/CSL | then take the indicated actions |"}
+    recs = [{"chunk_id": 1, "source_quote": "If the originator / recipient of the incident report (IR) is End user", "anchor_status": "words_trimmed", "anchor_trim_side": "end",
+             "anchor_text": "If the originator / recipient of the incident report (IR) is"},
+            {"chunk_id": 1, "source_quote": "If the originator / recipient of the incident report (IR) is CST/CSL", "anchor_status": "words_trimmed", "anchor_trim_side": "end",
+             "anchor_text": "If the originator / recipient of the incident report (IR) is"}]
+    out, counts = SE.explain_records(recs, raw)
+    assert len(out) == 2 and counts["merged"] == 0 and out[0]["explained_text"].endswith("End user") and out[1]["explained_text"].endswith("CST/CSL")

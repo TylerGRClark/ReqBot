@@ -128,6 +128,12 @@ Each PR registers its pass rules before any result is read (the project's standi
 - **One file per step**, each a full copy of the records plus the fields that step adds (the pattern `normalized` to `enriched` to `gated` already follows); nothing is rewritten in place, and readers take the latest file. The artifact resolver's name list is updated in the rename PR.
 - **Tags and types in the interfaces:** the web app has no tag or type filter controls (tags appear on the Trace page and in one checklist column, both already handle an empty list). The `domain_tags` and `requirement_types` options of the Ask and Evidence requests stay accepted but answer with a clear message that the filters are off, instead of silently returning no results. The Tags column is hidden in the checklist when no row has a tag.
 
+## 8a. Notes from building step 4
+
+- The sentence rule's merging survives in the explained layer: records that reach the same sentence in the same chunk are shown once, and the other roots are kept in `merged_roots`. De-duplication on the root (step 5) is unchanged, so IDs stay unique.
+- A root whose last words are not in the source is not expanded, because those words are often what tells table rows apart.
+- Anchoring found that 39 of the 59 glued lead-ins are in the chunk's heading breadcrumb, not its body; they are kept in the explained text and labeled as coming from the heading.
+
 ## 9. What this plan does not claim
 
 It does not say the rules are better than a model for context; they are cheaper, auditable and verbatim, and they are weakest where documents have little structure. It rests on the 2026-10-09 re-ingest of the 13 pinned documents; the labeled sets are small and one rater's. Nothing here has been run. The draft-question sidecars and the Qdrant index built before the ID change must be rebuilt after step 4.

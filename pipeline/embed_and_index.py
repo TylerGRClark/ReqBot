@@ -64,7 +64,7 @@ def build_embedding_text(req: dict) -> str | None:
     source_quote = (req.get("source_quote") or "").strip()
     if not source_quote:
         return None
-    text = (req.get("embedding_text") or "").strip() or source_quote
+    text = (req.get("embedding_text") or "").strip() or (req.get("explained_text") or "").strip() or source_quote
     source_ref = (req.get("source_ref") or "").strip()
     if source_ref:
         text += f"\nRef: {source_ref}"
@@ -87,6 +87,7 @@ def build_payload(req: dict, embedding_model: str, embedding_dim: int) -> dict:
         "domain_tags": req.get("domain_tags", []),
         "requirement_type": req.get("requirement_type", ""),
         "source_quote": req.get("source_quote", ""),
+        "explained_text": req.get("explained_text", ""),
         "parent_stem": req.get("parent_stem", ""),
         "embedding_text": req.get("embedding_text", ""),
         "description": req.get("description", ""),

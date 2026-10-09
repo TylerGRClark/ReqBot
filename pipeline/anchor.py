@@ -11,7 +11,7 @@ anchor_status:
                      kept in anchor_lead_in with its position)
   lead_in_from_heading   the item is exact and the glued lead-in is not in the chunk body but is in the chunk's heading breadcrumb ("Air Combat Command shall:" under a heading of that name)
   lead_in_not_in_source  the item is exact but the glued lead-in is nowhere in the chunk (body before the item, or heading); the lead-in is not vouched for
-  words_trimmed      exact once a few words are taken off the front or the end
+  words_trimmed      exact once a few words are taken off the front or the end (anchor_trim_side says which)
   fuzzy              no exact piece; the closest span is at least FUZZY_MIN similar (anchor_score)
   not_found          nothing close in the chunk
 """
@@ -84,11 +84,11 @@ def anchor(root: str, raw_text: str, breadcrumb: str = "") -> dict:
 
     words = body.split()
     for k in range(1, MAX_TRIM_WORDS + 1):
-        for piece in (" ".join(words[k:]), " ".join(words[:-k])):
+        for side, piece in (("front", " ".join(words[k:])), ("end", " ".join(words[:-k]))):
             if len(piece) >= MIN_PIECE_CHARS:
                 found = _find(piece, raw)
                 if len(found) == 1:
-                    return _result("words_trimmed", found[0], anchor_words_trimmed=k)
+                    return _result("words_trimmed", found[0], anchor_words_trimmed=k, anchor_trim_side=side)
                 ambiguous = max(ambiguous, len(found))
 
     if ambiguous > 1:

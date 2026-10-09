@@ -904,24 +904,33 @@ def run(
     valid_reqs = deduplicate_requirements(valid_reqs)
     dedup_removed = before_dedup - len(valid_reqs)
 
-    # WP-45.15: a requirement is at minimum the whole sentence, never a piece of one. After dedup and
-    # before the stable ID, which hashes the quote.
+    # Explained layer (docs/PIPELINE_REDESIGN_PLAN.md): the whole sentence the root sits in, with a glued lead-in kept when the source backs it. It is a separate field beside the root;
+    # source_quote is never changed. Records that reach the same sentence in the same chunk are shown once (the others' roots are kept in merged_roots), which also keeps IDs unique.
     if expand_sentences and chunk_raw_text_map:
         from pipeline import sentence_expand
-        valid_reqs, expand_counts = sentence_expand.expand_records(valid_reqs, chunk_raw_text_map)
-        log.info("Sentence expansion: %s", expand_counts)
-        # two records in different chunks can now carry the same sentence and source_ref, which would give them one stable ID (and one Qdrant point)
-        valid_reqs = deduplicate_requirements(valid_reqs)
+        valid_reqs, explain_counts = sentence_expand.explain_records(valid_reqs, chunk_raw_text_map)
+        log.info("Explained layer: %s", explain_counts)
 
     for req in valid_reqs:
         req["requirement_id"] = compute_stable_id(
             document_id=req["document_id"],
             source_ref=req["source_ref"],
-            source_quote=req["source_quote"],
+            source_quote=req["source_quote"],  # the root: improving the explained layer never changes an ID
             chunk_id=req.get("chunk_id"),
             requirement_type=req["requirement_type"],
             description=req["description"],
         )
+    ids = [r["requirement_id"] for r in valid_reqs]
+    if len(set(ids)) != len(ids):  # de-duplication uses the same key as the ID, so this should not happen; the index keys each point by ID, so keep one of any pair
+        seen_ids: set = set()
+        unique = []
+        for r in valid_reqs:
+            if r["requirement_id"] in seen_ids:
+                log.warning("Dropping a record with a repeated requirement_id %s", r["requirement_id"])
+                continue
+            seen_ids.add(r["requirement_id"])
+            unique.append(r)
+        valid_reqs = unique
 
     elapsed = time.time() - start
 

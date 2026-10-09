@@ -143,8 +143,10 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
                 source_pdf = req.get("source_pdf", "")
 
             req_id = req.get("requirement_id", "")
-            source_quote = req.get("source_quote", "")
+            extracted_quote = req.get("source_quote", "")  # the root: exactly what requirement finding returned
+            source_quote = req.get("explained_text") or extracted_quote  # what the sheet shows: the explained requirement when the record has one
             all_quotes.append(source_quote)
+            all_quotes.extend(q for q in [extracted_quote, *(req.get("merged_roots") or [])] if q)
 
             # Hard provenance anchors — missing either means no checklist item
             if not req_id or not source_quote:
@@ -211,6 +213,8 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
                 "parent_ref": parent_ref,
                 "parent_text": parent_text,
                 "source_quote": source_quote,
+                "extracted_quote": extracted_quote,
+                "explain_notes": req.get("explain_notes") or [],
                 "passage": passage,
                 "item_flags": flags,
                 "audit_question": "",
