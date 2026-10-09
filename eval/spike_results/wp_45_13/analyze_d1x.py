@@ -62,6 +62,16 @@ def added_survivors():
     return flat, chunk_of, original
 
 
+def _window(passage, radius=900):
+    """The whole passage when it is short; otherwise the stretch around the marked quote (marked >> <<), with an ellipsis where text was cut, so the owner always sees the context."""
+    if len(passage) <= 2 * radius:
+        return passage
+    i = passage.find(">>")
+    i = 0 if i < 0 else i
+    a, b = max(0, i - radius), min(len(passage), i + radius)
+    return ("... " if a else "") + passage[a:b] + (" ..." if b < len(passage) else "")
+
+
 def sheet(flat, chunk_of, original):
     picked = flat if len(flat) <= SAMPLE else sorted(random.Random(SEED).sample(sorted(flat), SAMPLE))
     lines = [f"# WP-45.13 — D1x survivors absent from both baseline runs ({len(picked)} of {len(flat)}, seeded sample)", "",
@@ -74,7 +84,7 @@ def sheet(flat, chunk_of, original):
         chunk = cache[doc].get(chunk_of[doc].get(quote))
         passage, _found = A.build_passage(original[doc].get(quote, quote), chunk) if chunk else ("", False)
         lines += [f"## {n}. {doc} — chunk {chunk_of[doc].get(quote)}", "", f"**Heading:** {((chunk or {}).get('section_title_path') or ['—'])[-1]}  ", "", f"> {original[doc].get(quote, quote)}", "",
-                  "**Passage:**", "", "    " + (passage[:1200].replace("\n", "\n    ") or "(not located)"), "", "**Rating:** ", "", "---", ""]
+                  "**Passage:**", "", "    " + (_window(passage).replace("\n", "\n    ") or "(not located)"), "", "**Rating:** ", "", "---", ""]
     return "\n".join(lines) + "\n", len(picked)
 
 
@@ -104,8 +114,10 @@ def afi_unit_coverage(arm):
 def main():
     out = _HERE / "outputs"
     out.mkdir(exist_ok=True)
-    subprocess.run([sys.executable, str(_ROOT / "eval/spike_results/wp_45_11/score_arms.py"), "--arms", *BASE, ARM, "--allow-code-diff", *CODE, "--out", "../wp_45_13/outputs/d1x_arms_report.json"],
-                   check=True, capture_output=True, cwd=_ROOT / "eval/spike_results/wp_45_11")
+    done = subprocess.run([sys.executable, str(_ROOT / "eval/spike_results/wp_45_11/score_arms.py"), "--arms", *BASE, ARM, "--allow-code-diff", *CODE, "--out", "../wp_45_13/outputs/d1x_arms_report.json"],
+                          capture_output=True, text=True, cwd=_ROOT / "eval/spike_results/wp_45_11")
+    if done.returncode != 0:  # show why the scorer refused (a missing arm, a failed chunk, different model or code), not just that it did
+        sys.exit(f"score_arms.py failed:\n{done.stdout}\n{done.stderr}")
     report = json.loads((out / "d1x_arms_report.json").read_text(encoding="utf-8"))
     result = rules(report)
     flat, chunk_of, original = added_survivors()

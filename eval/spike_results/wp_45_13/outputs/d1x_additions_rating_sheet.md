@@ -215,7 +215,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     -  Connectivity. Users can connect to all of the resources that they are permitted to and cannot connect to any other resources. Each traffic flow is protected, if necessary, in accordance with the organization's established requirements.
     -  Applications. The virtualization solution does not interfere with the use of applications or servers within the guest OSs.
     -  Networking. The internal networking offered by the virtualization solution can be configured to conform to the organization's security policy. This includes the ability to monitor communications between guest OSs and to block particular types of traffic.
-    
+    -  Management. >> Administrators can configure and manage the solution effectively and securely. This includes all components, including hypervisors and images. <<
 
 **Rating:** 
 
@@ -306,7 +306,8 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     -  Authentication. Authentication is required at each of the appropriate solution layers and cannot be readily compromised or circumvented. If token-based authentication is needed in virtualized systems, test whether or not the tokens work in the emulated hardware.
     -  Connectivity. Users can connect to all of the resources that they are permitted to and cannot connect to any other resources. Each traffic flow is protected, if necessary, in accordance with the organization's established requirements.
     -  Applications. The virtualization solution does not interfere with the use of applications or servers within the guest OSs.
-    -  Networking. >> The internal networking offered by the virtualization solution can be configured to conform to the organization's security policy. This includes the ability to monitor communications between guest OSs and to block particular types of traffi
+    -  Networking. >> The internal networking offered by the virtualization solution can be configured to conform to the organization's security policy. This includes the ability to monitor communications between guest OSs and to block particular types of traffic. <<
+    -  Management. Administrators can configure and manage the solution effectively and securely. This includes all components, including hypervisors and images.
 
 **Rating:** 
 
@@ -438,7 +439,8 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     | End user                                                       | 1                                 | Client Support Technician (CST)/ Cybersecurity Liaison (CSL) | N/A                                    |
     | CST/CSL                                                        | 2, 7                              | CFP                                                          | Supporting NOS                         |
     | Functional System Administrator (FSA)                          | 2, 7                              | CFP                                                          | ACCC/MCCC/NOS                          |
-    | NCC/CFP                                                        | 2, 7                              | Appropriate CSC
+    | NCC/CFP                                                        | 2, 7                              | Appropriate CSCS unit, ACCC/MCCC                             | 624 OC, ACD unit                       |
+    | I-NOSC                                                         | 3-7                               | 624 OC                                                       | ACD unit, ACCC/MCCC                    |
 
 **Rating:** 
 
@@ -597,7 +599,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
 
     4.1.1.  DAF  civilian  and  military  personnel  are  qualified  after  meeting  foundational  and residential  requirements  within  12  months  of  assignment  to  their  cyberspace  duties;  (2) publication  of  this  manual;  and  (3)  the  position  has  been  fully  transitioned  to  DCWF. Completion of foundational requirements must be accomplished within the first nine months. Completion of residential requirements may be accomplished concurrently or after completion of foundational requirements.
     4.1.2.  Maintenance of qualification requires meeting a continuing education requirement of 20 hours per annum. >> Personnel relying on a vendor-provided certification to meet foundational requirements must meet the greater of this 20-hour requirement or the vendor's individualized continuing education requirements. <<
-    4.1.3.  Time  requirements  commence  on  the  date  of  assignment  to  each  role  assigned  and assignment to additional roles does not extend time for any prior assigned roles. Continuing education requirements that have overlapping KSAs may be used to satisfy those requirements for any KSAs contained within the overlap. Proficiency level requirements may differ 
+    4.1.3.  Time  requirements  commence  on  the  date  of  assignment  to  each  role  assigned  and assignment to additional roles does not extend time for any prior assigned roles. Continuing education requirements that have overlapping KSAs may be used to satisfy those requirements for any KSAs contained within the overlap. Proficiency level requirements may differ among roles, as necessary.
 
 **Rating:** 
 
