@@ -65,3 +65,9 @@ Against the owner-adjudicated gold records (the AFI and DoDI records labeled ear
 Reading the 15: most are items that are full sentences under a real lead-in ("AFGSC will: Publish and maintain a charter ..."; "Some significant points about DoD CUI include: ..."), so the lead-in is the line that governs them though the sentence did not need it to be understood. The "different" ones are mostly an immediate lead-in where the adjudicated one was the actor further up (for example "Appoints a DoD military officer ... to:" where the gold says "DIRECTOR, DISA."). The 17 same-chunk misses and the 56 heading cases are what a later step (the heading, or the model-picks step) would cover.
 
 Nothing is merged on this evidence alone. **Pass rule (written before any rating):** the owner's rating of the sample sheet is at least 80% right or neutral and no more than 10% wrong; a wrong lead-in is worse than none.
+
+### The owner's rating so far (2026-10-09, 22 of 30 rows; stopped for tiredness)
+
+No lead-in was judged to be the wrong line: **0 wrong of 22**. In his words: 14 better or right (several "together it is a requirement, without it, it wasn't a req at all"), 7 neutral or "helps add context but doesn't point to a person", and 1 (row 15) noted as a definition, not a requirement, which is a screening note and not a verdict on the lead-in. Rows 23 to 30 are unrated. The pass rule as written (30 rows rated, at least 80% right or neutral, at most 10% wrong) is therefore **not strictly met yet**: the 22 rated rows give 21 of 21 right or neutral and 0 wrong, but 0 of 22 only bounds the wrong rate below about 13% at 95% confidence, and 8 rows are unrated. Not merged on this evidence.
+
+What the comments add: the recurring complaint is that a lead-in such as "It is DoD policy that:" or "This issuance applies to:" gives context but **names no person or group**. Those are the cases where the "who" is not in a lead-in at all, which is the applicability question.

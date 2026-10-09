@@ -1,9 +1,7 @@
 # Lead-ins attached by rule — 30 rows (seeded sample of 597 rows that got one)
 
 For each row: the **item** as it reads without a lead-in, the **lead-in** the rule found (the nearest earlier line that ends in a colon), and the **result**.
-**What you are checking:** two things for each row. (1) Is the lead-in line really the one this item belongs under? (2) Does the result read better for an auditor than the item alone?
 Rate each: **right** (that line governs this item and the result reads better) / **neutral** (right line, no real gain) / **wrong** (that line does not govern this item, or it makes the row confusing).
-**Pass rule, written before any rating:** at least 80% right or neutral, and no more than 10% wrong. A wrong lead-in is worse than none, because it tells the auditor the requirement belongs to someone it does not.
 
 ## 1. DODI 5200.01 — 2.  APPLICABILITY.
 
@@ -14,7 +12,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** In accordance with the authority in DoD Directive (DoDD) 5143.01 (Reference (a)), this instruction: Does not alter existing authorities and responsibilities of the Director of National Intelligence (DNI) or of the heads of elements of the Intelligence Community (IC) established in Reference (h) and policies issued by the DNI.
 
 **Rating:** 
-
+neutral / this is an authoritative clause but it doesnt point to another person. 
 ---
 
 ## 2. DODI 5200.01 — section 11
@@ -26,7 +24,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** Participate in the NDC by providing: Training to declassification reviewers in accordance with NDC training standards.
 
 **Rating:** 
-
+this seems better but isnt pointing to a person or group
 ---
 
 ## 3. DODI 5200.44 — 2.3.
@@ -38,7 +36,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** The USD(A&S): Develops budget recommendations for the lifecycle of the TSN capability.
 
 **Rating:** 
-
+right
 ---
 
 ## 4. DODI 5200.44 — 6. (b)
@@ -50,7 +48,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** This issuance applies to: Any DoD system with a high impact level for any of the three security objectives-confidentiality, integrity, and availability-in accordance with the system categorization procedures in DoD Instruction (DoDI) 8510.01.
 
 **Rating:** 
-
+neutral. doesnt really help at all 
 ---
 
 ## 5. DODI 5200.44 — b.(1)
@@ -62,7 +60,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** Takes all necessary and appropriate actions to secure, defend, and operate the DOD information network in accordance with existing authorities, to include: In coordination with the Director, National Security Agency, may independently conduct operational and technical observations and assessments in support of the use of the authority in Section 3252 of Title 10, U.S.C..
 
 **Rating:** 
-
+this seems better but isnt pointing to a person or group
 ---
 
 ## 6. DODI 5200.44 — 2.3.
@@ -74,7 +72,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** The USD(A&S): Establishes policy and develops implementing guidance for acquisition and materiel management, including source selection guidance in support of TSN capabilities, to include ICT SCRM.
 
 **Rating:** 
-
+better
 ---
 
 ## 7. DODI 5200.48 — (no ref)
@@ -86,7 +84,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** The CUI Implementation Status Report will at least include: DoD and OSD Components will submit an initial report on the implementation status of their CUI Programs.
 
 **Rating:** 
-
+this seems better but isnt pointing to a person or group
 ---
 
 ## 8. DODI 5200.48 — (4)
@@ -98,7 +96,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** The CUI Implementation Status Report will at least include: Implementation and sustainment costs.
 
 **Rating:** 
-
+this is better but isnt pointing to a person or group. together it is a requirement, without it, it wasnt a req at all. 
 ---
 
 ## 9. DODI 5200.48 — SECTION 2: RESPONSIBILITIES > 2.9. DOD CIO.
@@ -110,7 +108,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** Coordinates with the USD(I&S) to: Implement information security policy standards for markings to display, CUI for DoD classified and unclassified systems and networks.
 
 **Rating:** 
-
+better
 ---
 
 ## 10. DODI 5200.48 — SECTION 2: RESPONSIBILITIES > 2.9.
@@ -122,7 +120,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** In addition to the responsibilities in Paragraph 2.10., the DoD CIO: Provides policy and standards recommendations to the USD(I&S) on updates for the sharing, marking, safeguarding, storage, dissemination, decontrol, destruction, and records management of DoD CUI residing on both DoD and non-DoD IS in accordance with DoDI 8582.01.
 
 **Rating:** 
-
+better
 ---
 
 ## 11. DODI 8410.03 — section 4.b
@@ -134,7 +132,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** It is DoD policy that: Systems that use Simple Network Management Protocol (SNMP) shall use the latest version as the target protocol version IAW section 3 of Enclosure 3.
 
 **Rating:** 
-
+neutral. doesnt really help and isnt point at a group or person
 ---
 
 ## 12. DODI 8410.03 — (8)
@@ -146,7 +144,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** NM SLAs and other agreements shall establish baseline and minimum service levels and address provisioning and measurement of the following network performance parameters: Packet error rate and bit error rate (average and standard deviation) through a given network node.
 
 **Rating:** 
-
+this is better. together it is a requirement, without it, it wasnt a req at all. 
 ---
 
 ## 13. DODI 8410.03 — - d.
@@ -158,7 +156,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** The CDRUSSTRATCOM, in addition to the responsibilities in sections 8 and 10 of this enclosure, shall: Develop, in coordination with the Director, DISA, operational guidance for integrating and correlating NM capabilities to enable near real-time end-to-end network SA.
 
 **Rating:** 
-
+way better
 ---
 
 ## 14. DODI 8410.03 — (1)
@@ -170,7 +168,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** The specific data and information available from an NM system varies based on system capabilities and implementation but at a minimum NM systems should be capable of collecting and reporting the following information about the NEs they manage: Operational configuration.
 
 **Rating:** 
-
+this is better. together it is a requirement, without it, it wasnt a req at all. 
 ---
 
 ## 15. DODI 8410.03 — (c)
@@ -182,7 +180,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** This section will define for all parties: Maximum allowable time from when an event takes place to when it is reported by the NM system, as well as the location of event.
 
 **Rating:** 
-
+this isnt really a requirement, its a definition 
 ---
 
 ## 16. DODI 8410.03 — (4)
@@ -194,7 +192,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** Existing systems that use SNMP v1 or v2c shall implement the following security precautions in the period prior to transition to the latest approved version of SNMP: SNMP community strings shall be safeguarded and protected against compromise at the level of the operational network.
 
 **Rating:** 
-
+better but doesnt point to a perosn 
 ---
 
 ## 17. DODI 8551.01 — (4)
@@ -206,7 +204,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** The DoD regulates the following functions based on the potential to cause damage to DoD operations if used maliciously: PPS RMF guidance and procedures, including those addressed by the PPSM exception management process, will be documented in the RMF KS at https://rmfks.osd.mil/rmf/Pages/default.aspx.
 
 **Rating:** 
-
+better
 ---
 
 ## 18. DODI 8551.01 — SECTION 2: RESPONSIBILITIES > 2.6.
@@ -218,7 +216,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** When required: Monitors the DODIN for threats and operational risks.
 
 **Rating:** 
-
+neutral
 ---
 
 ## 19. NIST.SP.800-125 — (no ref)
@@ -230,7 +228,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** Aspects of the solution that should be evaluated include the following: Users can connect to all of the resources that they are permitted to and cannot connect to any other resources.
 
 **Rating:** 
-
+helps to add context but doesnt point to a person 
 ---
 
 ## 20. NIST.SP.800-125 — [5. Secure Virtualization Planning and Deployment > 5.4 Operations and Maintenance]
@@ -242,7 +240,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** Operational processes that are particularly important for maintaining virtualization security, and thus should be performed regularly, include the following: Assessments need to be made at all levels of the virtualized infrastructure, including the host and guest OSs, the hypervisor, and shared storage media.
 
 **Rating:** 
-
+helps to add context but doesnt point to a person 
 ---
 
 ## 21. afi10-2402 — 2.20.5.1
@@ -254,7 +252,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** Execute a CARM program responsible for the following: Ensure FOA PEMs responsible for AF TCAs have CARM data, as required, in order to advocate for the funding of remediation efforts or to support funding requests beyond the FOA level (i.e. PPBE, PBR, AFCS).
 
 **Rating:** 
-
+helps to add context but doesnt point to a person 
 ---
 
 ## 22. afi10-2402 — 2.17.29.1
@@ -266,7 +264,7 @@ Rate each: **right** (that line governs this item and the result reads better) /
 **Result:** Provide guidance to Centers/Wings regarding the inclusion of TCAs in existing installation exercises to include: MAJCOM POCs will participate in MAAs as SMEs, as requested and resources permit.
 
 **Rating:** 
-
+better
 ---
 
 ## 23. afi10-2402 — 2.20.18.1
