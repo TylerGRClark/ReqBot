@@ -163,3 +163,17 @@ def test_table_rows_that_differ_only_in_their_last_words_are_not_merged():
              "anchor_text": "If the originator / recipient of the incident report (IR) is"}]
     out, counts = SE.explain_records(recs, raw)
     assert len(out) == 2 and counts["merged"] == 0 and out[0]["explained_text"].endswith("End user") and out[1]["explained_text"].endswith("CST/CSL")
+
+
+def test_a_definition_whose_front_words_were_trimmed_and_cannot_be_expanded_keeps_its_root():
+    raw = {1: "authorizing official Defined in Committee on National Security Systems Instruction (CNSSI) No. 4009. " + "filler words here " * 60}
+    rec = {"chunk_id": 1, "source_quote": "authorizing official is Defined in Committee on National Security Systems Instruction (CNSSI) No. 4009.", "anchor_status": "words_trimmed", "anchor_trim_side": "front",
+           "anchor_text": "Defined in Committee on National Security Systems Instruction (CNSSI) No. 4009."}
+    out, _ = SE.explain_records([rec], raw)
+    assert out[0]["explained_text"] == rec["source_quote"]
+    assert not any("taken off" in n for n in out[0]["explain_notes"]) and any("were kept" in n for n in out[0]["explain_notes"])
+
+
+def test_the_note_says_when_only_a_list_number_was_taken_off():
+    out, _ = SE.explain_records([{"chunk_id": 1, "source_quote": "(3) Inform the CSAO of concerns raised by the subordinate elements."}], {1: "(3)  Inform the CSAO of concerns raised by the subordinate elements."})
+    assert out[0]["explained_text"] == "Inform the CSAO of concerns raised by the subordinate elements." and out[0]["explain_notes"] == ["list number or dash taken off"]
