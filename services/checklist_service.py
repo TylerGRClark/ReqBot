@@ -80,6 +80,16 @@ def _load_chunks(jsonl_path: Path) -> dict:
     return out
 
 
+def _heading_map(chunks: dict) -> dict:
+    """{paragraph number: title} over the document (numbered headings and run-in titles); see checklist_audit.heading_map."""
+    headings, units = [], []
+    for chunk_id in sorted(k for k in chunks if isinstance(k, int)):
+        chunk = chunks[chunk_id]
+        headings.extend(str(p) for p in (chunk.get("section_title_path") or []))
+        units.extend(checklist_missed.paragraph_units(chunk.get("raw_text") or ""))
+    return checklist_audit.heading_map(headings, units)
+
+
 def _paragraph_map(chunks: dict) -> dict:
     """{paragraph number: text} over the document, from chunk text and from section headings (Docling keeps numbered headings out of a chunk's raw_text)."""
     units: list[str] = []
@@ -103,6 +113,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     profile = load_profile(profile_name)  # validate profile exists and is well-formed
     jsonl_path = _resolve_doc_path(processed_dir, doc_key)
     chunks = _load_chunks(jsonl_path)
+    hmap = _heading_map(chunks)
     para_map = _paragraph_map(chunks)  # WP-46.1: the document's own text, for the passage column; {} when the chunk file is not beside the requirements
 
     items = []
@@ -147,13 +158,22 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             source_profile = req.get("domain_profile") or "cybersecurity"
 
             # WP-46.1 audit layout: who the row applies to, the document's own passage, and specific hints (nothing here is model-made)
-            applies = checklist_audit.applies_to(section_title_path)
-            flags = checklist_audit.item_flags(source_quote, source_ref, applies, profile.get("obligation_verbs", []))
+            verbs = profile.get("obligation_verbs", [])
+            cite0 = checklist_audit.citation(source_ref, "", section_title_path, source_quote)  # the paragraph number as extracted or as the quote opens; inferred ones need the passage
+            numbered = checklist_audit.applies_to_numbered(cite0, hmap, section_title_path)
+            applies = numbered if numbered is not None else checklist_audit.applies_to(section_title_path)
+            flags = checklist_audit.item_flags(source_quote, source_ref, applies, verbs)
             parent_ref, parent_text = checklist_audit.parent_paragraph(source_ref, para_map)
             chunk_id = req.get("chunk_id")
             chunk = chunks.get(chunk_id)
             prev_chunk = chunks.get(chunk_id - 1) if isinstance(chunk_id, int) else None
             passage, found = checklist_audit.build_passage(source_quote, chunk, prev_chunk, flags)
+            cite = checklist_audit.citation(source_ref, passage, section_title_path, source_quote)
+            if cite != cite0:  # an inferred paragraph number: the numbering can now say who the row applies to
+                numbered = checklist_audit.applies_to_numbered(cite, hmap, section_title_path)
+                if numbered is not None:
+                    applies = numbered
+                    flags = checklist_audit.item_flags(source_quote, source_ref, applies, verbs)
             if not passage:
                 flags.append("no_passage")
             elif not found:
@@ -180,7 +200,8 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
                 "source_ref": source_ref,
                 "page_refs": page_refs,
                 "section_title_path": section_title_path,
-                "citation": checklist_audit.citation(source_ref, passage, section_title_path, source_quote),
+                "citation": cite,
+                "section_heading": checklist_audit.section_heading(cite, hmap),
                 "applies_to": applies,
                 "parent_ref": parent_ref,
                 "parent_text": parent_text,

@@ -7,9 +7,9 @@
    "parent_loose_right": 8,
    "parent_misleading_shown": 3,
    "applies_shown": 11,
-   "applies_strict_right": 7,
-   "applies_misleading_shown": 4,
-   "either_strict_right": 9
+   "applies_strict_right": 10,
+   "applies_misleading_shown": 1,
+   "either_strict_right": 10
   },
   "consumed earlier (resolver gold, evaluation half) | complete": {
    "records": 4,
@@ -17,9 +17,9 @@
    "parent_strict_right": 3,
    "parent_loose_right": 3,
    "parent_misleading_shown": 1,
-   "applies_shown": 0,
-   "applies_strict_right": 4,
-   "applies_misleading_shown": 0,
+   "applies_shown": 1,
+   "applies_strict_right": 3,
+   "applies_misleading_shown": 1,
    "either_strict_right": 4
   },
   "development (resolver gold, selection half) | needs_lead_in": {
@@ -28,9 +28,9 @@
    "parent_strict_right": 4,
    "parent_loose_right": 4,
    "parent_misleading_shown": 0,
-   "applies_shown": 5,
-   "applies_strict_right": 3,
-   "applies_misleading_shown": 2,
+   "applies_shown": 4,
+   "applies_strict_right": 4,
+   "applies_misleading_shown": 0,
    "either_strict_right": 4
   },
   "development (resolver gold, selection half) | complete": {
@@ -39,9 +39,9 @@
    "parent_strict_right": 3,
    "parent_loose_right": 3,
    "parent_misleading_shown": 0,
-   "applies_shown": 0,
-   "applies_strict_right": 3,
-   "applies_misleading_shown": 0,
+   "applies_shown": 1,
+   "applies_strict_right": 2,
+   "applies_misleading_shown": 1,
    "either_strict_right": 3
   },
   "test (fresh gold) | needs_lead_in": {
@@ -50,10 +50,10 @@
    "parent_strict_right": 4,
    "parent_loose_right": 4,
    "parent_misleading_shown": 2,
-   "applies_shown": 7,
+   "applies_shown": 6,
    "applies_strict_right": 5,
-   "applies_misleading_shown": 2,
-   "either_strict_right": 6
+   "applies_misleading_shown": 1,
+   "either_strict_right": 5
   },
   "test (fresh gold) | complete": {
    "records": 5,
@@ -61,9 +61,9 @@
    "parent_strict_right": 5,
    "parent_loose_right": 5,
    "parent_misleading_shown": 0,
-   "applies_shown": 0,
-   "applies_strict_right": 5,
-   "applies_misleading_shown": 0,
+   "applies_shown": 1,
+   "applies_strict_right": 4,
+   "applies_misleading_shown": 1,
    "either_strict_right": 5
   }
  },
@@ -77,7 +77,7 @@
    "gold_lead_in": "Air Force Deputy Chief of Staff, Operations (AF/A3)",
    "parent_ref": "2.12",
    "parent_text": "Air Force Deputy Chief of Staff, Operations (AF/A3).",
-   "applies_to": "Air Force Deputy Chief of Staff, Operations (AF/A3).",
+   "applies_to": "Air Force Deputy Chief of Staff, Operations (AF/A3)",
    "parent": {
     "shown": true,
     "strict_right": true,
@@ -149,7 +149,7 @@
    "gold_lead_in": "",
    "parent_ref": "",
    "parent_text": "",
-   "applies_to": "",
+   "applies_to": "AFGSC will:",
    "parent": {
     "shown": false,
     "strict_right": true,
@@ -157,10 +157,10 @@
     "misleading": false
    },
    "applies": {
-    "shown": false,
-    "strict_right": true,
-    "loose_right": true,
-    "misleading": false
+    "shown": true,
+    "strict_right": false,
+    "loose_right": false,
+    "misleading": true
    },
    "either_strict": true
   },
@@ -173,7 +173,7 @@
    "gold_lead_in": "MAJCOM/DRUs.",
    "parent_ref": "2.17",
    "parent_text": "MAJCOM/DRUs.",
-   "applies_to": "MAJCOM/DRUs.",
+   "applies_to": "MAJCOM/DRUs",
    "parent": {
     "shown": true,
     "strict_right": true,
@@ -197,7 +197,7 @@
    "gold_lead_in": "AFGSC will:",
    "parent_ref": "7.3.4",
    "parent_text": "AFGSC will:",
-   "applies_to": "AF/A10 will:",
+   "applies_to": "AFGSC will:",
    "parent": {
     "shown": true,
     "strict_right": true,
@@ -206,9 +206,9 @@
    },
    "applies": {
     "shown": true,
-    "strict_right": false,
-    "loose_right": false,
-    "misleading": true
+    "strict_right": true,
+    "loose_right": true,
+    "misleading": false
    },
    "either_strict": true
   },
@@ -221,7 +221,7 @@
    "gold_lead_in": "Chief, Information Dominance and Chief Information Officer (SAF/CIO A6).",
    "parent_ref": "2.5",
    "parent_text": "Chief, Information Dominance and Chief Information Officer (SAF/CIO A6).",
-   "applies_to": "Chief, Information Dominance and Chief Information Officer (SAF/CIO A6).",
+   "applies_to": "Chief, Information Dominance and Chief Information Officer (SAF/CIO A6)",
    "parent": {
     "shown": true,
     "strict_right": true,
@@ -245,7 +245,7 @@
    "gold_lead_in": "Air Force Host Centers and Wings.",
    "parent_ref": "2.22",
    "parent_text": "Air Force Host Centers and Wings.",
-   "applies_to": "Air Force Host Centers and Wings.",
+   "applies_to": "Air Force Host Centers and Wings",
    "parent": {
     "shown": true,
     "strict_right": true,
@@ -317,7 +317,7 @@
    "gold_lead_in": "MAJCOM/DRUs.",
    "parent_ref": "2.17",
    "parent_text": "MAJCOM/DRUs.",
-   "applies_to": "MAJCOM/DRUs.",
+   "applies_to": "MAJCOM/DRUs",
    "parent": {
     "shown": true,
     "strict_right": true,
@@ -365,7 +365,7 @@
    "gold_lead_in": "FOAs.",
    "parent_ref": "2.20",
    "parent_text": "FOAs.",
-   "applies_to": "FOAs.",
+   "applies_to": "FOAs",
    "parent": {
     "shown": true,
     "strict_right": true,
@@ -389,7 +389,7 @@
    "gold_lead_in": "Where an AF organization is the executive agent for components of the NMCS: provide support, funding, and other program aspects to",
    "parent_ref": "2.2.16",
    "parent_text": "All MAJCOMs, the Air National Guard (ANG), Field Operating Agencies (FOAs) and Direct Reporting Units (DRUs), and their subordinate units will support Air Force NC3 systems, equipment, personnel, and partnerships to ensure viable AF NC3 operations, training, and security. (T-1)",
-   "applies_to": "Deputy Chief of Staff for Operations ( AF/A3 ) will:",
+   "applies_to": "",
    "parent": {
     "shown": true,
     "strict_right": false,
@@ -397,10 +397,10 @@
     "misleading": true
    },
    "applies": {
-    "shown": true,
+    "shown": false,
     "strict_right": false,
     "loose_right": false,
-    "misleading": true
+    "misleading": false
    },
    "either_strict": false
   },
@@ -413,6 +413,30 @@
    "gold_lead_in": "AF/A2 will:",
    "parent_ref": "",
    "parent_text": "",
+   "applies_to": "AF/A2 will:",
+   "parent": {
+    "shown": false,
+    "strict_right": false,
+    "loose_right": false,
+    "misleading": false
+   },
+   "applies": {
+    "shown": true,
+    "strict_right": true,
+    "loose_right": true,
+    "misleading": false
+   },
+   "either_strict": true
+  },
+  {
+   "set": "development (resolver gold, selection half)",
+   "label": "needs_lead_in",
+   "document": "afi13-550",
+   "candidate_id": "audit:R063",
+   "source_ref": "2.2.8",
+   "gold_lead_in": "Air Force Chief of Safety ( AF/SE ), in coordination with AF/A10, will",
+   "parent_ref": "",
+   "parent_text": "",
    "applies_to": "",
    "parent": {
     "shown": false,
@@ -425,30 +449,6 @@
     "strict_right": false,
     "loose_right": false,
     "misleading": false
-   },
-   "either_strict": false
-  },
-  {
-   "set": "development (resolver gold, selection half)",
-   "label": "needs_lead_in",
-   "document": "afi13-550",
-   "candidate_id": "audit:R063",
-   "source_ref": "2.2.8",
-   "gold_lead_in": "Air Force Chief of Safety ( AF/SE ), in coordination with AF/A10, will",
-   "parent_ref": "",
-   "parent_text": "",
-   "applies_to": "Deputy Chief of Staff for Operations ( AF/A3 ) will:",
-   "parent": {
-    "shown": false,
-    "strict_right": false,
-    "loose_right": false,
-    "misleading": false
-   },
-   "applies": {
-    "shown": true,
-    "strict_right": false,
-    "loose_right": false,
-    "misleading": true
    },
    "either_strict": false
   },
@@ -461,7 +461,7 @@
    "gold_lead_in": "",
    "parent_ref": "",
    "parent_text": "",
-   "applies_to": "",
+   "applies_to": "AF/A10 will:",
    "parent": {
     "shown": false,
     "strict_right": true,
@@ -469,10 +469,10 @@
     "misleading": false
    },
    "applies": {
-    "shown": false,
-    "strict_right": true,
-    "loose_right": true,
-    "misleading": false
+    "shown": true,
+    "strict_right": false,
+    "loose_right": false,
+    "misleading": true
    },
    "either_strict": true
   },
@@ -485,7 +485,7 @@
    "gold_lead_in": "The AFOSI:",
    "parent_ref": "2.3",
    "parent_text": "The AF Inspector General (SAF/IG). SAF/IG provides administrative guidance and oversight to the AFOSI, and provides Executive Agent oversight for the Defense Cyber Crime Center (DC3) as delegated by the SecAF in accordance with DoDD 5505.13e, DOD Executive Agent (EA) for the Defense Cyber Crime ...",
-   "applies_to": "Directorate of Security, Special Access Program Oversight and Information Protection (SAF/AAZ).",
+   "applies_to": "The AFOSI:",
    "parent": {
     "shown": true,
     "strict_right": false,
@@ -494,11 +494,11 @@
    },
    "applies": {
     "shown": true,
-    "strict_right": false,
-    "loose_right": false,
-    "misleading": true
+    "strict_right": true,
+    "loose_right": true,
+    "misleading": false
    },
-   "either_strict": false
+   "either_strict": true
   },
   {
    "set": "development (resolver gold, selection half)",
@@ -509,7 +509,7 @@
    "gold_lead_in": "AFNC3C , as the designated lead organization for centralized organize, train and equip functions for the AN/USQ/225, will:",
    "parent_ref": "2.2.12",
    "parent_text": "AFNC3C , as the designated lead organization for centralized organize, train and equip functions for the AN/USQ/225, will:",
-   "applies_to": "Deputy Chief of Staff for Operations ( AF/A3 ) will:",
+   "applies_to": "AFNC3C , as the designated lead organization for centralized organize, train and equip functions for the AN/USQ/225, will:",
    "parent": {
     "shown": true,
     "strict_right": true,
@@ -518,9 +518,9 @@
    },
    "applies": {
     "shown": true,
-    "strict_right": false,
-    "loose_right": false,
-    "misleading": true
+    "strict_right": true,
+    "loose_right": true,
+    "misleading": false
    },
    "either_strict": true
   },
@@ -581,7 +581,7 @@
    "gold_lead_in": "Remaining MAJCOMs, ANG, FOAs, and DRUs will:",
    "parent_ref": "6.3.9",
    "parent_text": "Remaining MAJCOMs, ANG, FOAs, and DRUs will:",
-   "applies_to": "AFSPC will:",
+   "applies_to": "Remaining MAJCOMs, ANG, FOAs, and DRUs will:",
    "parent": {
     "shown": true,
     "strict_right": true,
@@ -590,9 +590,9 @@
    },
    "applies": {
     "shown": true,
-    "strict_right": false,
-    "loose_right": false,
-    "misleading": true
+    "strict_right": true,
+    "loose_right": true,
+    "misleading": false
    },
    "either_strict": true
   },
@@ -605,7 +605,7 @@
    "gold_lead_in": "Air Force Deputy Chief of Staff, Operations (AF/A3).",
    "parent_ref": "2.12.6",
    "parent_text": "Establish a HAF CARM program office, which:",
-   "applies_to": "Air Force Deputy Chief of Staff, Operations (AF/A3).",
+   "applies_to": "Establish a HAF CARM program office, which:",
    "parent": {
     "shown": true,
     "strict_right": false,
@@ -614,11 +614,11 @@
    },
    "applies": {
     "shown": true,
-    "strict_right": true,
-    "loose_right": true,
-    "misleading": false
+    "strict_right": false,
+    "loose_right": false,
+    "misleading": true
    },
-   "either_strict": true
+   "either_strict": false
   },
   {
    "set": "development (resolver gold, selection half)",
@@ -629,7 +629,7 @@
    "gold_lead_in": "Directorate of Security, Special Access Program Oversight and Information Protection (SAF/AAZ).",
    "parent_ref": "2.2",
    "parent_text": "Directorate of Security, Special Access Program Oversight and Information Protection (SAF/AAZ).",
-   "applies_to": "Directorate of Security, Special Access Program Oversight and Information Protection (SAF/AAZ).",
+   "applies_to": "Directorate of Security, Special Access Program Oversight and Information Protection (SAF/AAZ)",
    "parent": {
     "shown": true,
     "strict_right": true,
@@ -773,7 +773,7 @@
    "gold_lead_in": "AF executive agents",
    "parent_ref": "2.2.16",
    "parent_text": "All MAJCOMs, the Air National Guard (ANG), Field Operating Agencies (FOAs) and Direct Reporting Units (DRUs), and their subordinate units will support Air Force NC3 systems, equipment, personnel, and partnerships to ensure viable AF NC3 operations, training, and security. (T-1)",
-   "applies_to": "Deputy Chief of Staff for Operations ( AF/A3 ) will:",
+   "applies_to": "",
    "parent": {
     "shown": true,
     "strict_right": false,
@@ -781,10 +781,10 @@
     "misleading": true
    },
    "applies": {
-    "shown": true,
+    "shown": false,
     "strict_right": false,
     "loose_right": false,
-    "misleading": true
+    "misleading": false
    },
    "either_strict": false
   },
@@ -821,7 +821,7 @@
    "gold_lead_in": "Air Force Critical Asset Owning Centers and Wings.",
    "parent_ref": "2.21",
    "parent_text": "Air Force Critical Asset Owning Centers and Wings.",
-   "applies_to": "Air Force Critical Asset Owning Centers and Wings.",
+   "applies_to": "Air Force Critical Asset Owning Centers and Wings",
    "parent": {
     "shown": true,
     "strict_right": true,
@@ -845,7 +845,7 @@
    "gold_lead_in": "AFNC3C , as the designated lead organization for centralized organize, train and equip functions for the AN/USQ/225, will:",
    "parent_ref": "2.2.12",
    "parent_text": "AFNC3C , as the designated lead organization for centralized organize, train and equip functions for the AN/USQ/225, will:",
-   "applies_to": "Deputy Chief of Staff for Operations ( AF/A3 ) will:",
+   "applies_to": "AFNC3C , as the designated lead organization for centralized organize, train and equip functions for the AN/USQ/225, will:",
    "parent": {
     "shown": true,
     "strict_right": true,
@@ -854,9 +854,9 @@
    },
    "applies": {
     "shown": true,
-    "strict_right": false,
-    "loose_right": false,
-    "misleading": true
+    "strict_right": true,
+    "loose_right": true,
+    "misleading": false
    },
    "either_strict": true
   },
@@ -869,7 +869,7 @@
    "gold_lead_in": "Air Force Deputy Chief of Staff, Operations (AF/A3).",
    "parent_ref": "2.12.6",
    "parent_text": "Establish a HAF CARM program office, which:",
-   "applies_to": "Air Force Deputy Chief of Staff, Operations (AF/A3).",
+   "applies_to": "Establish a HAF CARM program office, which:",
    "parent": {
     "shown": true,
     "strict_right": false,
@@ -878,11 +878,11 @@
    },
    "applies": {
     "shown": true,
-    "strict_right": true,
-    "loose_right": true,
-    "misleading": false
+    "strict_right": false,
+    "loose_right": false,
+    "misleading": true
    },
-   "either_strict": true
+   "either_strict": false
   },
   {
    "set": "test (fresh gold)",
@@ -917,7 +917,7 @@
    "gold_lead_in": "MAJCOM/DRUs.",
    "parent_ref": "2.17",
    "parent_text": "MAJCOM/DRUs.",
-   "applies_to": "MAJCOM/DRUs.",
+   "applies_to": "MAJCOM/DRUs",
    "parent": {
     "shown": true,
     "strict_right": true,
@@ -941,7 +941,7 @@
    "gold_lead_in": "",
    "parent_ref": "",
    "parent_text": "",
-   "applies_to": "",
+   "applies_to": "AFGSC will:",
    "parent": {
     "shown": false,
     "strict_right": true,
@@ -949,10 +949,10 @@
     "misleading": false
    },
    "applies": {
-    "shown": false,
-    "strict_right": true,
-    "loose_right": true,
-    "misleading": false
+    "shown": true,
+    "strict_right": false,
+    "loose_right": false,
+    "misleading": true
    },
    "either_strict": true
   }

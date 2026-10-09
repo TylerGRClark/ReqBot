@@ -117,3 +117,43 @@ def test_citation_prefers_the_quotes_own_number_and_never_reads_an_unmarked_pass
     unmarked = "1.1. Intro.\n9.9. A paragraph somewhere after the requirement, which was not located."
     assert A.citation("", unmarked, ["INCIDENT HANDLING", "3.4. Detection"], "some requirement text") == "3.4 (inferred)"  # no marker: the heading fallback only
     assert A.citation("", unmarked, [], "some requirement text") == ""
+
+
+def test_section_heading_comes_from_the_numbering_not_the_converters_nesting():
+    units = ["3.6. Incident Analysis .  Incident analysis is a series of analytical steps. Include the mission owner in the process.",
+             "3.6.1.1. Ensure the accuracy and completeness of incident reports.", "2.5.3. I-NOSCs. The I-NOSCs ...", "3.1. Responsibilities. text"]
+    hmap = A.heading_map(["Actions", "3.5.2. Methodology."], units)
+    assert hmap["3.6"] == "Incident Analysis" and hmap["3.5.2"] == "Methodology" and "3.6.1.1" not in hmap  # a sentence is not a title
+    assert A.section_heading("3.6", hmap) == "3.6 Incident Analysis"
+    assert A.section_heading("3.6.1.4 (inferred)", hmap) == "3.6 Incident Analysis"
+    assert A.section_heading("3.1.2", hmap) == ""  # a generic label names no section
+    assert A.section_heading("", hmap) == "" and A.section_heading("(T-2)", hmap) == ""
+
+
+def test_applies_to_numbered_names_the_party_from_the_numbered_ancestor_never_from_a_wrong_path():
+    units = ["2.5.3. I-NOSCs. The I-NOSCs provide ...", "2.2.12. AFNC3C , as the designated lead organization, will:", "3.6. Incident Analysis .  Steps."]
+    hmap = A.heading_map([], units)
+    wrong_path = ["ROLES AND RESPONSIBILITIES", "2.2. Directorate of Security (SAF/AAZ)."]  # the converter's nesting is wrong for 2.5.3.x
+    assert A.applies_to_numbered("2.5.3.1", hmap, wrong_path) == "I-NOSCs"
+    assert A.applies_to_numbered("2.2.12.5", hmap, wrong_path).startswith("AFNC3C")
+    assert A.applies_to_numbered("3.6.1.4", hmap, ["Actions", "3.6.1. Objectives."]) == ""  # not a responsibilities section, title does not introduce a list
+    assert A.applies_to_numbered("2.9.9.9", hmap, wrong_path) == ""  # dotted number, no titled ancestor: blank, not the wrong path's party
+    assert A.applies_to_numbered("(T-2)", hmap, wrong_path) is None and A.applies_to_numbered("2.1", {}, wrong_path) is None  # no numbering knowledge: use the path
+
+
+def test_a_numbered_lead_in_paragraph_titles_its_children_with_the_sentence_that_introduces_the_list():
+    hmap = A.heading_map([], ["2.3.1. AFOSI is a Federal Law Enforcement agency and a member of the Intelligence Community. The AFOSI:"])
+    assert hmap["2.3.1"] == "The AFOSI:"
+
+
+def test_a_chunk_with_one_numbered_paragraph_keeps_its_number_with_its_text():
+    from services import checklist_missed as MM
+    units = MM.paragraph_units("3.6. Incident Analysis .  Incident analysis is a series of analytical steps. Include the mission owner in the process.")
+    assert units[0].startswith("3.6. Incident Analysis") and A.heading_map([], units)["3.6"] == "Incident Analysis"
+
+
+def test_attachment_paragraph_numbers_are_numbers_too():
+    hmap = A.heading_map([], ["A2.2. Reporting Chain. The chain is ...", "A2.2.3.1. Report within 24 hours."])
+    assert hmap["A2.2"] == "Reporting Chain"
+    assert A.section_heading("A2.2.3.1", hmap) == "A2.2 Reporting Chain"
+    assert A.parent_paragraph("A2.2.3.1", A.paragraph_map(["A2.2.3. Parent text here.", "A2.2.3.1. Child."])) == ("A2.2.3", "Parent text here.")

@@ -278,6 +278,7 @@ export interface ChecklistItem {
   confidence: number | null
   // WP-46.1 / 46.2 (checklist format 1.1); optional so older saved envelopes still type-check
   citation?: string
+  section_heading?: string
   applies_to?: string
   parent_ref?: string
   parent_text?: string

@@ -146,8 +146,8 @@ def build_passage(quote: str, chunk, prev_chunk=None, flags=()) -> tuple[str, bo
 # WP-46.3: the parent paragraph from the document's own numbering. AFIs number paragraphs as a hierarchy (2.5.1.1.7.2 sits under 2.5.1.1.7 under 2.5.1.1), so the paragraph a row
 # belongs to is read straight from the document, verbatim; no model and no guess. A row whose number does not look like a dotted paragraph number (a table tag such as "(T-2)")
 # gets none.
-_DOTTED = re.compile(r"^\d+(?:\.\d+)+$")
-_PARA_START = re.compile(r"^\W*(\d+(?:\.\d+)+)\.?\s+(.*)$", re.DOTALL)
+_DOTTED = re.compile(r"^(?:[A-Z]{1,2})?\d+(?:\.\d+)+$")  # an attachment paragraph ("A2.2.3.1") is a paragraph number too
+_PARA_START = re.compile(r"^\W*((?:[A-Z]{1,2})?\d+(?:\.\d+)+)\.?\s+(.*)$", re.DOTALL)
 PARENT_TEXT_CHARS = 300
 
 
@@ -207,4 +207,70 @@ def citation(source_ref: str, passage: str, section_title_path, quote: str = "")
         m = _LINE_NUMBER.match(heading.strip() + " ")
         if m:
             return f"{m.group(1)} (inferred)"
+    return ""
+
+
+# WP-46.6: the section a row sits in, from the document's own numbering. The converter nests some headings wrongly (a row of 3.6 "Incident Analysis" can arrive under "Actions >
+# 3.5.2. Methodology"), and some AFI headings are run-in titles at the start of a paragraph ("3.6. Incident Analysis .  Incident analysis is ...") that are not headings at all.
+# So the heading of a number is read from (a) numbered section headings and (b) paragraphs that open with a short Title-Case phrase and a full stop, and a row is placed by its number.
+_RUN_IN_TITLE = re.compile(r"^(?P<t>[A-Z][A-Za-z0-9/&'-]*(?:\s+(?:[A-Z][A-Za-z0-9/&'-]*|and|of|the|for|to|in|on|or)){0,7})\s*\.(?:\s+(?=\S)|$)")
+SECTION_LEVELS = 2
+
+
+def heading_map(headings, units) -> dict:
+    """{paragraph number: title} from numbered headings (as given) and from run-in titles at the start of numbered paragraphs; a heading wins over a run-in title."""
+    out: dict = {}
+    for unit in units:
+        m = _PARA_START.match(unit or "")
+        if m and m.group(1) not in out:
+            body = " ".join(m.group(2).split())
+            title = _RUN_IN_TITLE.match(body)
+            if title:
+                out[m.group(1)] = title.group("t").strip()
+            elif body.endswith(":") and len(body) <= 600:  # a numbered lead-in paragraph ("2.2.12. AFNC3C, as the lead organization, will:") titles the paragraphs under it
+                out[m.group(1)] = re.split(r"(?<=[.!?])\s+(?=[A-Z])", body)[-1]  # of several sentences, the one that introduces the list ("... mission. The AFOSI:")
+    for heading in headings:
+        m = _PARA_START.match((str(heading) + " ") if heading else "")
+        if m:
+            out[m.group(1)] = " ".join(m.group(2).split()).strip(" .")
+    return out
+
+
+def section_heading(citation: str, hmap: dict) -> str:
+    """"3.6 Incident Analysis" (up to two levels, outermost first, "3.6 Incident Analysis > 3.6.1 Actions") for the nearest numbered ancestors of the row's paragraph number
+    that have a title; empty when the number is missing or no ancestor has one."""
+    ref = (citation or "").replace("(inferred)", "").strip().rstrip(".")
+    if not _PARAGRAPH_REF.match(ref):
+        return ""
+    parts = ref.split(".")
+    found = []
+    while len(parts) >= 2:
+        key = ".".join(parts)
+        if key in hmap and hmap[key] and _label(hmap[key]) not in PROCEDURAL_LABELS:
+            found.append(f"{key} {hmap[key]}")
+        parts = parts[:-1]
+    return " > ".join(reversed(found[:SECTION_LEVELS]))
+
+
+def applies_to_numbered(citation: str, hmap: dict, section_title_path):
+    """Who a row applies to, from the paragraph numbering: the title of the nearest numbered ancestor, when that ancestor names the responsible party.
+
+    Returns the party (numbering-stripped), "" when the numbering says no party applies or names none, or None only when the row has no dotted paragraph number, so the caller can use
+    the section path (documents that are not numbered this way). A row that has a dotted number never falls back to the path: the converter nests some headings wrongly, and a wrong
+    party on an audit sheet is worse than none. An ancestor names the party when the row sits in a responsibilities section (the converter's top-level path
+    entry says so even where its deeper nesting is wrong) or when the title itself introduces a list ("... will:", "... shall:")."""
+    ref = (citation or "").replace("(inferred)", "").strip().rstrip(".")
+    if not hmap or not _PARAGRAPH_REF.match(ref):
+        return None  # no numbering knowledge for this document (or this row): the caller uses the section path
+    parts = ref.split(".")
+    in_responsibilities = any("responsibilit" in str(p).lower() for p in (section_title_path or []))
+    while len(parts) >= 2:
+        key = ".".join(parts)
+        title = (hmap or {}).get(key, "")
+        if title and _label(title) not in PROCEDURAL_LABELS:
+            introduces = title.rstrip().endswith(":") or bool(re.search(r"\b(?:will|shall)\s*:?\s*$", title.strip(), re.IGNORECASE))
+            if in_responsibilities or introduces:
+                return strip_numbering(title).strip()
+            return ""
+        parts = parts[:-1]
     return ""
