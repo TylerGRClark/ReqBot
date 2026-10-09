@@ -76,7 +76,7 @@ What is tangled:
 | Anchor (metadata about the root) | `anchor_status` (`exact`, `exact_after_marker_removed`, `not_exact`), `anchor_start`, `anchor_end` in `raw_text`, `anchor_text` (the verbatim source span) | A separate set of fields, never merged with the root. When the root is not word for word (for example a lead-in glued onto an item), `anchor_status` says so and `anchor_text` is the closest exact span; the root stays as it is. |
 | Explained | `explained_text`, `explained_parts` (each `{kind, text, origin, location}` with `kind` in `lead_in`, `sentence`, `heading`; `origin` in `rule` or `model`), `explain_notes` (for example `leading marker removed`, `expanded to sentence`, `lead-in attached from numbering`) | Built from verbatim pieces only. Nothing here replaces the root. |
 | Screening | `screen_flags` | Flags, with a short reason each. |
-| Check and repair | `faithfulness`, `repaired_text`, `repair_status` (`not_needed`, `repaired_passed`, `repaired_failed`), `repair_notes`, `faithfulness_after_repair` | `explained_text` is never overwritten by repair. The repaired text is its own layer, and the guard below applies to it. |
+| Check and repair | `faithfulness`, `repaired_text`, `repair_status` (`not_needed`, `repaired_passed`, `repaired_failed` = flagged, kept), `repair_notes`, `faithfulness_after_repair` | `explained_text` is never overwritten by repair. The repaired text is its own layer, and the guard below applies to it. |
 | Identity | `requirement_id` | Hash of the document, source reference and the **root**, so improving the explained layer never changes an ID or detaches an audit note. De-duplication (step 5) uses the same key (source reference plus root), so two records can never share an ID; a test asserts it, because the index derives each Qdrant point from the ID. This changes every ID once; the old index and any draft-question sidecars must be rebuilt. |
 
 The whole-sentence rule moves into step 6 and stops writing to `source_quote`. The root of a glued quote stays glued; the explained layer uses the exact pieces found by anchoring.
@@ -92,11 +92,11 @@ The whole-sentence rule moves into step 6 and stops writing to `source_quote`. T
 Proposed by the owner: a row the faithfulness check calls incomplete, confusing or improvable goes to a model that sees all of the record's data (`source_quote`, `explained_text`, `explained_parts`, `explain_notes`, the lead-in, the chunk and the original paragraph) and writes a repaired version; the repaired version goes through the check again, marked as repaired.
 
 Guards proposed for it, because this is the one place a model writes:
-- **The root's words stay.** The repaired text must contain the anchored root text verbatim (a code check, not the model's word). The model may add words before or after to supply context, which is what the owner described, and may not change the root's own words.
+- **The root's words stay inside it.** The explained and repaired text are the root plus context, so they differ from the root. The guard (a code check, not the model's word) requires only that the anchored root text appears unchanged somewhere inside the repaired text (when the root is not word for word, the exact source span stands in for it). The model may add words before or after to supply context and may not reword the root itself. The guard is strict (changing "Include" to "includes" fails it); if it blocks too many good repairs, it is loosened after the numbers are seen.
 - **Everything stays visible.** The repaired text is labeled `origin: model` and shown as repaired in the checklist; the explained text it came from stays on the record.
 - **The row is judged by a second look.** Because a model grading its own rewrite is weak evidence, the re-check is the same prompt on the repaired text, and the owner rates a sample (section 7) before this step is trusted.
 - **Which text a reader sees:** `repaired_text` when `repair_status` is `repaired_passed`, otherwise `explained_text`. Indexing, Ask, Evidence and the checklist all use that one rule.
-- **A row that fails the re-check is not deleted.** The owner proposed dropping it as "not a good requirement". The plan proposes setting it aside instead (`repaired_failed`): kept in the files, kept out of the main checklist rows, and listed in a separate "set aside" section with its reason, the way possible-missed passages are listed. The reason: an auditor who is never shown a real requirement because a model could not improve its wording has silently lost an audit item. The owner decides (section 8).
+- **A row that fails the re-check is flagged, not deleted (owner's decision, 2026-10-09).** `repair_status` becomes `repaired_failed` and the checklist and sheet show a flag along the lines of "probably not a good requirement". The row stays in the files and in its place in the main sheet; nothing is set aside or dropped. The flag appears only on rows that failed twice, so it does not become a flag on every row.
 
 ## 6. Naming map (old letters to new names)
 
@@ -117,14 +117,16 @@ Each PR registers its pass rules before any result is read (the project's standi
 
 ## 8. Decisions
 
-**Settled by the owner (2026-10-09):** `source_quote` stays the name of the root; `confidence` is dropped from the default path (commented out, code kept; it may return as something real later). One thing to handle when it goes: the Evidence service picks each group's representative by highest confidence, so step 12's PR must give it another rule (for example, the highest search score).
+**Settled by the owner (2026-10-09):**
+- `source_quote` stays the name of the root.
+- `confidence` is dropped from the default path (commented out, code kept; it may return as something real later). When it goes, the Evidence service, which picks each group's representative by highest confidence, needs another rule (for example, the highest search score); that belongs to step 12's PR.
+- A row that fails the re-check is flagged and kept, never dropped.
+- Screening rejects only an empty quote, a bare heading echo, a change-log entry, and a quote that cannot be anchored and fails the existing grounding thresholds. Every other screening rule flags.
+- Tagging, typing, description and the description check are disabled, code kept, no option flag.
 
-**Open:**
-- A row that fails the re-check: set aside and listed (proposed) or dropped (the owner's first wording).
-- Whether repair must keep the root's exact words (proposed: yes, by a code check).
-- Which screening rules reject and which only flag. Proposed: reject only an empty quote, a bare heading echo, a change-log entry and a quote that cannot be anchored and fails the existing grounding thresholds; flag the rest.
-- One file per step (clearer, more files) or one record file that grows by layers. The readers that pick `normalized`, `enriched` or `gated` files by name (the artifact resolver) would change either way; the rename PR settles it.
-- Whether the frontend tag and type filters are hidden or left empty while the fields are empty.
+**Proposed, and settled unless the owner objects:**
+- **One file per step**, each a full copy of the records plus the fields that step adds (the pattern `normalized` to `enriched` to `gated` already follows); nothing is rewritten in place, and readers take the latest file. The artifact resolver's name list is updated in the rename PR.
+- **Tags and types in the interfaces:** the web app has no tag or type filter controls (tags appear on the Trace page and in one checklist column, both already handle an empty list). The `domain_tags` and `requirement_types` options of the Ask and Evidence requests stay accepted but answer with a clear message that the filters are off, instead of silently returning no results. The Tags column is hidden in the checklist when no row has a tag.
 
 ## 9. What this plan does not claim
 
