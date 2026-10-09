@@ -689,7 +689,7 @@ def run(
         chunk_hierarchy_map = build_chunk_hierarchy_map(chunks)
         section_children_map = build_section_children_map(chunks)
         chunk_text_map = build_chunk_text_map(chunks)
-        chunk_raw_text_map = {c["chunk_id"]: c.get("raw_text") or c.get("text") or "" for c in chunks}
+        chunk_raw_text_map = {c["chunk_id"]: c.get("raw_text") or c.get("text") or "" for c in chunks if "chunk_id" in c}
         log.info("Loaded page references for %d chunks", len(chunk_page_map))
         sections_with_children = sum(1 for v in section_children_map.values() if v)
         log.info(
@@ -902,6 +902,8 @@ def run(
         from pipeline import sentence_expand
         valid_reqs, expand_counts = sentence_expand.expand_records(valid_reqs, chunk_raw_text_map)
         log.info("Sentence expansion: %s", expand_counts)
+        # two records in different chunks can now carry the same sentence and source_ref, which would give them one stable ID (and one Qdrant point)
+        valid_reqs = deduplicate_requirements(valid_reqs)
 
     for req in valid_reqs:
         req["requirement_id"] = compute_stable_id(

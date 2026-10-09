@@ -1,12 +1,12 @@
-# WP-45.14 — 30 quotes that the whole-sentence rule changed (seeded sample of 916 from T2a and D1x)
+# WP-45.14 — 30 quotes that the whole-sentence rule changed (seeded sample of 914 from T2a and D1x)
 
 Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 1. CJCSI 6510.02G (D1x)
 
-**Original:** - a. Validate and monitor plans for programmed transformation, modernization, and replacement of cryptographic items presented by the Joint Staff, NSA, Services, Agencies, and CCMDs, through the MC4EB Cryptographic Security Panel, IAW reference (f).
+**Original:** - c. Process KERs for decertified products under DISA's purview using cryptographic products identified in reference (b) pursuant to Enclosure B of this instruction.
 
-**Expanded:** Validate and monitor plans for programmed transformation, modernization, and replacement of cryptographic items presented by the Joint Staff, NSA, Services, Agencies, and CCMDs, through the MC4EB Cryptographic Security Panel, IAW reference (f).
+**Expanded:** Process KERs for decertified products under DISA's purview using cryptographic products identified in reference (b) pursuant to Enclosure B of this instruction.
 
 **Rating:** 
 
@@ -14,9 +14,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 2. CJCSI 6510.02G (D1x)
 
-**Original:** - l.  In conjunction with the Joint Staff J-6 and the Defense Information Systems Agency (DISA), determine the applicable PO for decertified cryptographic products identified in 5.g. and ensure timetable and LYOU from 5.i. is issued to the identified PO.
+**Original:** - f. In addition to the responsibilities identified above, Commander, U.S. Special Operations Command, under title 10 acquisition authority, will fund for special operations forces' unique cryptographic items, pursuant to cryptographic product replacement objectives identified in reference (b).
 
-**Expanded:** In conjunction with the Joint Staff J-6 and the Defense Information Systems Agency (DISA), determine the applicable PO for decertified cryptographic products identified in 5.g. and ensure timetable and LYOU from 5.i. is issued to the identified PO.
+**Expanded:** In addition to the responsibilities identified above, Commander, U.S. Special Operations Command, under title 10 acquisition authority, will fund for special operations forces' unique cryptographic items, pursuant to cryptographic product replacement objectives identified in reference (b).
 
 **Rating:** 
 
@@ -24,9 +24,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 3. CJCSI 6510.02G (D1x)
 
-**Original:** (3) Upon the completion of modernization  efforts and the need for a KER no longer exists, the Service acting as LO will submit a Close Out memo IAW the template found in Enclosure D.
+**Original:** - a. Identify to the affected Services, through the Joint Staff, any special and/or unique cryptographic capabilities required within their respective areas of responsibility (AOR) that pertain to the transformation, modernization, or replacement of cryptographic products and systems.
 
-**Expanded:** Upon the completion of modernization efforts and the need for a KER no longer exists, the Service acting as LO will submit a Close Out memo IAW the template found in Enclosure D.
+**Expanded:** Identify to the affected Services, through the Joint Staff, any special and/or unique cryptographic capabilities required within their respective areas of responsibility (AOR) that pertain to the transformation, modernization, or replacement of cryptographic products and systems.
 
 **Rating:** 
 
@@ -34,9 +34,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 4. DODI 5200.44 (D1x)
 
-**Original:** (d) Other DoD systems supporting national leadership command capabilities; nuclear weapons; nuclear command, control, and communications; continuity of U.S. Government operations; ballistic missile defense; protected satellite communications; and overhead persistent infrared systems as prioritized by the DoD Component heads.
+**Original:** (6) Review intelligence and counterintelligence assessments of known supplier threats; determine associated risks affecting DoD information systems, networks, weapon systems, and defense critical infrastructure; identify ICT supply chain risks that may be common across the enterprise; and direct or recommend specific mitigation actions, as appropriate and authorized.
 
-**Expanded:** Other DoD systems supporting national leadership command capabilities; nuclear weapons; nuclear command, control, and communications; continuity of U.S. Government operations; ballistic missile defense; protected satellite communications; and overhead persistent infrared systems as prioritized by the DoD Component heads.
+**Expanded:** Review intelligence and counterintelligence assessments of known supplier threats; determine associated risks affecting DoD information systems, networks, weapon systems, and defense critical infrastructure; identify ICT supply chain risks that may be common across the enterprise; and direct or recommend specific mitigation actions, as appropriate and authorized.
 
 **Rating:** 
 
@@ -44,9 +44,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 5. DODI 5200.44 (D1x)
 
-**Original:** (1) Establishes policy and provides guidance, mitigations, education, and training for the science and technology manager and engineering workforce on the protection of mission critical functions and critical components and the application of software and hardware assurance mechanisms relating to systems engineering, acquisition, logistics, and materiel readiness policies. Ensures that assurance concepts are implemented in policies relating to technology demonstration or other research projects, defense acquisition programs, commodity purchases, operations and maintenance activities, and disposal procedures.
+**Original:** - a. Grants facility and personnel security clearances for contractors who require access to classified information to perform classified contracts and as requested by DMEA for the accreditation of trusted suppliers.
 
-**Expanded:** Establishes policy and provides guidance, mitigations, education, and training for the science and technology manager and engineering workforce on the protection of mission critical functions and critical components and the application of software and hardware assurance mechanisms relating to systems engineering, acquisition, logistics, and materiel readiness policies. Ensures that assurance concepts are implemented in policies relating to technology demonstration or other research projects, defense acquisition programs, commodity purchases, operations and maintenance activities, and disposal procedures.
+**Expanded:** Grants facility and personnel security clearances for contractors who require access to classified information to perform classified contracts and as requested by DMEA for the accreditation of trusted suppliers.
 
 **Rating:** 
 
@@ -54,9 +54,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 6. DODI 5200.44 (D1x)
 
-**Original:** - a. Establish and maintain an operational TSN program to enable risk owners to identify, assess, and manage engineering risks.
+**Original:** - k.  Fulfills congressional reporting requirements regarding covered procurement actions taken pursuant to DFARS Part 239.73 during the annual reporting period.
 
-**Expanded:** Establish and maintain an operational TSN program to enable risk owners to identify, assess, and manage engineering risks.
+**Expanded:** Fulfills congressional reporting requirements regarding covered procurement actions taken pursuant to DFARS Part 239.73 during the annual reporting period.
 
 **Rating:** 
 
@@ -64,25 +64,15 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 7. DODI 5200.44 (D1x)
 
-**Original:** - j. Issues guidance and provides recommendations to DoD Component heads for ICT supply chain due diligence, risk and mitigation trade-offs, and residual risk management.
+**Original:** - l.  In coordination with the USD(R&E); the DoD CIO; the USD(I&S); the Secretaries of the Military Departments; and the Commander, USCYBERCOM, reviews intelligence and counterintelligence assessments of known ICT supplier threats and determines associated risks affecting DoD information systems, networks, weapon systems, and defense critical infrastructure.
 
-**Expanded:** Issues guidance and provides recommendations to DoD Component heads for ICT supply chain due diligence, risk and mitigation trade-offs, and residual risk management.
+**Expanded:** In coordination with the USD(R&E); the DoD CIO; the USD(I&S); the Secretaries of the Military Departments; and the Commander, USCYBERCOM, reviews intelligence and counterintelligence assessments of known ICT supplier threats and determines associated risks affecting DoD information systems, networks, weapon systems, and defense critical infrastructure.
 
 **Rating:** 
 
 ---
 
 ## 8. DODI 5200.44 (D1x)
-
-**Original:** c. All-source intelligence analysis of suppliers of critical components will be used with supply chain illumination capabilities as part of supplier due diligence to inform risk management decisions.
-
-**Expanded:** All-source intelligence analysis of suppliers of critical components will be used with supply chain illumination capabilities as part of supplier due diligence to inform risk management decisions.
-
-**Rating:** 
-
----
-
-## 9. DODI 5200.44 (D1x)
 
 **Original:** - a.  Produces intelligence and counterintelligence threat assessments to support the DoD's mission and provides them to requesting parties in a timely manner relative to acquisition life cycles.
 
@@ -92,21 +82,31 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ---
 
-## 10. DODI 5200.48 (T2a)
+## 9. DODI 5200.44 (D1x)
 
-**Original:** (2) Identify the organizational index with CUI categories routinely handled by DoD personnel.
+**Original:** (2) Develops budget recommendations for the life cycle of the TSN's capability and aligns DoD TSN enterprise resources to advance the state of the art in assurance tools, techniques, and methods across the system life cycle.
 
-**Expanded:** Identify the organizational index with CUI categories routinely handled by DoD personnel.
+**Expanded:** Develops budget recommendations for the life cycle of the TSN's capability and aligns DoD TSN enterprise resources to advance the state of the art in assurance tools, techniques, and methods across the system life cycle.
 
 **Rating:** 
 
 ---
 
-## 11. DODI 5200.48 (D1x)
+## 10. DODI 5200.48 (D1x)
 
-**Original:** (6) Resolve CUI challenges in accordance with E.O. 13556 and Part 2002 of Title 32, CFR.  Refer all unresolved challenges to the DDI(CL&S).
+**Original:** (5) Incident response (e.g., ensure corrective measures are implemented in a timely manner and validate effectiveness).
 
-**Expanded:** Resolve CUI challenges in accordance with E.O. 13556 and Part 2002 of Title 32, CFR. Refer all unresolved challenges to the DDI(CL&S).
+**Expanded:** Incident response (e.g., ensure corrective measures are implemented in a timely manner and validate effectiveness).
+
+**Rating:** 
+
+---
+
+## 11. DODI 5200.48 (T2a)
+
+**Original:** in addition to the responsibilities in Paragraph 2.10.
+
+**Expanded:** Under the authority, direction, and control of the CMO, through the Director for Administration and Organizational Policy, and in addition to the responsibilities in Paragraph 2.10., the Director, PFPA:
 
 **Rating:** 
 
@@ -114,9 +114,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 12. DODI 5200.48 (D1x)
 
-**Original:** (4) Describe the differences between CUI Basic and CUI Specified.
+**Original:** OIG DoD
 
-**Expanded:** Describe the differences between CUI Basic and CUI Specified.
+**Expanded:** Executive order FOIA Freedom of Information Act GPI Geodetic Product Information ISOO Information Security Oversight Office information systems IS LDC limited dissemination controls NARA National Archives and Records Administration NISP National Industrial Security Program NIST SP National Institute of Standards and Technology Special Publication NNPI Naval Nuclear Propulsion Information NOFORN or NF not releasable to foreign nationals OCA original classification authority Office of the Inspector General of the Department of Defense OIG DoD PFPA Pentagon Force Protection Agency
 
 **Rating:** 
 
@@ -124,9 +124,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 13. DODI 5200.48 (D1x)
 
-**Original:** (1) Identify individual responsibilities for protecting CUI.
+**Original:** but must have a lawful governmental purpose for such access.
 
-**Expanded:** Identify individual responsibilities for protecting CUI.
+**Expanded:** Unlike classified information, an individual or organization generally does not need to demonstrate a need-to-know to access CUI, unless required by a law, regulation, or governmentwide policy, but must have a lawful governmental purpose for such access.
 
 **Rating:** 
 
@@ -134,9 +134,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 14. DODI 5200.48 (D1x)
 
-**Original:** (2) CUI information and material may be transmitted via first class mail, parcel post, or, bulk shipments.
+**Original:** - a.  Provides information security administrative support to OSD.
 
-**Expanded:** CUI information and material may be transmitted via first class mail, parcel post, or, bulk shipments.
+**Expanded:** Provides information security administrative support to OSD.
 
 **Rating:** 
 
@@ -144,9 +144,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 15. DODI 5200.48 (D1x)
 
-**Original:** Defined in Section 2002.4 of Title 32 CFR
+**Original:** the OCA will: - a. Notify the organization using the compiled information to remove or protect the information.
 
-**Expanded:** Defined in Section 2002.4 of Title 32 CFR CUI Registry Defined in Section 2002.4 of Title 32 CFR CUI Specified Defined in Section 2002.4 of Title 32 CFR (DoD is not using this structure in its initial implementation phase.) decontrol Defined in Section 2002.18 of Title 32, CFR.
+**Expanded:** Any time an OCA discovers that compiled or aggregated information is not properly classified on websites, folders, or documents, the OCA will: - a. Notify the organization using the compiled information to remove or protect the information.
 
 **Rating:** 
 
@@ -154,9 +154,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 16. DODI 5200.48 (D1x)
 
-**Original:** b. Record and non-record CUI documents may be destroyed by means approved for destroying classified information or by any other means making it unreadable, indecipherable, and unrecoverable the original information such as those identified in NIST SP 800-88 and in accordance with Section 2002.14 of Title 32, CFR.
+**Original:** (2)  Training statistics.
 
-**Expanded:** Record and non-record CUI documents may be destroyed by means approved for destroying classified information or by any other means making it unreadable, indecipherable, and unrecoverable the original information such as those identified in NIST SP 800-88 and in accordance with Section 2002.14 of Title 32, CFR.
+**Expanded:** Training statistics.
 
 **Rating:** 
 
@@ -164,9 +164,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 17. DODI 5200.48 (D1x)
 
-**Original:** - b.  If portion markings are selected, then all document subjects and titles, as well as individual sections, parts, paragraphs, or similar portions of a CUI document known to contain CUI, will be portion marked with '(CUI).'
+**Original:** - c.  Conducts CUI staff assistance visits to OSD in the National Capital Region.
 
-**Expanded:** If portion markings are selected, then all document subjects and titles, as well as individual sections, parts, paragraphs, or similar portions of a CUI document known to contain CUI, will be portion marked with '(CUI).'
+**Expanded:** Conducts CUI staff assistance visits to OSD in the National Capital Region.
 
 **Rating:** 
 
@@ -174,9 +174,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 18. DODI 8410.03 (T2a)
 
-**Original:** meet all required background checks, training, and certification requirements prior to assuming their duties
+**Original:** (3) Where possible, a different string (or strings) shall be utilized for each NE, or at minimum for each area of the network being managed.
 
-**Expanded:** NM system operator and supervisory positions (e.g., system administrators, network managers and controllers, router and switch administrators, managers and controllers) performing NM IA functions as defined in DoD 8570.01-M (Reference (ad)) shall be designated IA Technical Category Level 2 and IA Management Category Level 2 positions and as critical sensitive positions as defined by DoD 5200.2-R (Reference (ae)), and military, government civilian, and contractor personnel filling them shall meet all required background checks, training, and certification requirements prior to assuming their duties.
+**Expanded:** Where possible, a different string (or strings) shall be utilized for each NE, or at minimum for each area of the network being managed.
 
 **Rating:** 
 
@@ -184,9 +184,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 19. DODI 8410.03 (D1x)
 
-**Original:** vendor-facing applications.  A software program within an automated information business system performing DoD acquisition missions that provides for controlled access for solicitation information, contract award information, and payment and contract administration purposes to the vendors specifically listed in the Central Contractor Registration (CCR) who have been awarded contracts by the Federal Government.
+**Original:** (4) Detailed explanations of the expected levels and quality of NM services that will be provided.
 
-**Expanded:** An architecture for management, including planning, provisioning, installation, maintenance, operation and administration of telecommunications equipment, networks, and services. vendor-facing applications. A software program within an automated information business system performing DoD acquisition missions that provides for controlled access for solicitation information, contract award information, and payment and contract administration purposes to the vendors specifically listed in the Central Contractor Registration (CCR) who have been awarded contracts by the Federal Government.
+**Expanded:** Detailed explanations of the expected levels and quality of NM services that will be provided.
 
 **Rating:** 
 
@@ -194,9 +194,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 20. DODI 8551.01 (D1x)
 
-**Original:** (4) PPS RMF guidance and procedures, including those addressed by the PPSM exception management process, will be documented in the RMF KS at https://rmfks.osd.mil/rmf/Pages/default.aspx.
+**Original:** (2) Send a copy of their PPSM CCB appointment letter to the DoD CISO.
 
-**Expanded:** PPS RMF guidance and procedures, including those addressed by the PPSM exception management process, will be documented in the RMF KS at https://rmfks.osd.mil/rmf/Pages/default.aspx.
+**Expanded:** Send a copy of their PPSM CCB appointment letter to the DoD CISO.
 
 **Rating:** 
 
@@ -204,9 +204,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 21. DODI 8551.01 (D1x)
 
-**Original:** (7) Communicate PPS securely across the DODIN.
+**Original:** (3) Implement standards established by the PPSM CCB and in accordance with DoDI 8500.01, CJCSI 6510.01F, and CJCSI 6211.02D.
 
-**Expanded:** Communicate PPS securely across the DODIN.
+**Expanded:** Implement standards established by the PPSM CCB and in accordance with DoDI 8500.01, CJCSI 6510.01F, and CJCSI 6211.02D.
 
 **Rating:** 
 
@@ -214,9 +214,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 22. NIST.SP.800-125 (T2a)
 
-**Original:** equipment is configured to meet operational and security requirements
+**Original:** an organization might have a network security policy that says that all network switches connecting multiple servers must be managed and that traffic between the servers be monitored for suspicious activity.
 
-**Expanded:** In this phase, equipment is configured to meet operational and security requirements, installed and tested as a prototype, and then activated on a production network.
+**Expanded:** For example, an organization might have a network security policy that says that all network switches connecting multiple servers must be managed and that traffic between the servers be monitored for suspicious activity.
 
 **Rating:** 
 
@@ -224,9 +224,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 23. NIST.SP.800-125 (D1x)
 
-**Original:** moving disparate servers into a single location may cause network bandwidth problems
+**Original:** access to the virtual storage can be controlled at the host and VM level.
 
-**Expanded:** For example, virtualization may require more powerful hardware platforms that currently exist in the organization, and moving disparate servers into a single location may cause network bandwidth problems.
+**Expanded:** In addition, access to the virtual storage can be controlled at the host and VM level.
 
 **Rating:** 
 
@@ -234,9 +234,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 24. afi10-2402 (D1x)
 
-**Original:** - 2.9.2. Provide a health functional area representative to the CARM WG when requested.
+**Original:** while the installation will develop an understanding of what can be expected throughout the process and what support and documentation must be provided to the assessment team.
 
-**Expanded:** Provide a health functional area representative to the CARM WG when requested.
+**Expanded:** The assessment team will familiarize itself with the installation and the assets/infrastructures which are to be assessed, while the installation will develop an understanding of what can be expected throughout the process and what support and documentation must be provided to the assessment team.
 
 **Rating:** 
 
@@ -244,9 +244,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 25. afi10-2402 (D1x)
 
-**Original:** This building lacks an automatic fire suppression system. While fire extinguishers are present for personnel to utilize, should an alarm sound this facility is not manned 24/7.
+**Original:** - 2.9.3. Provide SMEs to participate in the MAA process as it pertains to TCAs and as requested.
 
-**Expanded:** This building lacks an automatic fire suppression system. While fire extinguishers are present for personnel to utilize, should an alarm sound this facility is not manned 24/7. | Medium |
+**Expanded:** Provide SMEs to participate in the MAA process as it pertains to TCAs and as requested.
 
 **Rating:** 
 
@@ -254,9 +254,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 26. afi13-550 (D1x)
 
-**Original:** - 6.3.1.4.  In coordination with SAF/CIO A6, coordinate the appointment of AF NC3 system authorizing officials to AF organizations IAW AFI 17-130.
+**Original:** - 7.3.4.2.  Establish  and  maintain  an  AN/USQ-225  operational  reporting  process  IAW AFMAN  10-206, Operational  Reporting , to identify, elevate,  and  resolve  system problems.
 
-**Expanded:** In coordination with SAF/CIO A6, coordinate the appointment of AF NC3 system authorizing officials to AF organizations IAW AFI 17-130.
+**Expanded:** Establish and maintain an AN/USQ-225 operational reporting process IAW AFMAN 10-206, Operational Reporting, to identify, elevate, and resolve system problems.
 
 **Rating:** 
 
@@ -264,9 +264,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 27. afi13-550 (D1x)
 
-**Original:** 1.1. Purpose. This instruction establishes roles and responsibilities to ensure effective stewardship and integrated planning, programming, budgeting and execution, and sustainment of the AF NC3 mission area.
+**Original:** - 4.3.3. SAF/AQ will monitor execution status of AF NC3 acquisition programs,
 
-**Expanded:** Purpose. This instruction establishes roles and responsibilities to ensure effective stewardship and integrated planning, programming, budgeting and execution, and sustainment of the AF NC3 mission area.
+**Expanded:** SAF/AQ will monitor execution status of AF NC3 acquisition programs, identify program budget disconnects, and coordinate investment programming and reprogramming actions.
 
 **Rating:** 
 
@@ -274,9 +274,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 28. afi13-550 (T2a)
 
-**Original:** will provide guidance for AN/USQ-225 maintenance documentation and reporting processes.
+**Original:** Issues and topics addressed by the AF NLCC/NC3 governance process will include, but are not limited to: AF NC3 requirements
 
-**Expanded:** Deputy Chief of Staff for Logistics, Engineering, and Force Protection (AF/A4) will provide guidance for AN/USQ-225 maintenance documentation and reporting processes.
+**Expanded:** Issues and topics addressed by the AF NLCC/NC3 governance process will include, but are not limited to: AF NC3 requirements, AF NC3 resourcing, AF NC3 capability performance assessment, AF NC3 acquisition program fielding, AF NC3 systems sustainment, AF NC3 architecture and configuration management, AF NC3 resiliency, AF NC3 operations and maintenance, and AF NC3 human capital and training.
 
 **Rating:** 
 
@@ -284,9 +284,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 29. dafman17-1305 (D1x)
 
-**Original:** - 3) The U.S. Government may inspect and seize data stored on this Information System, at any time.
+**Original:** continuous professional development of a minimum of 20 hours per year (or vendor certification maintenance minimums, whichever is greater).
 
-**Expanded:** The U.S. Government may inspect and seize data stored on this Information System, at any time.
+**Expanded:** In some circumstances, actual experience performing in the role may serve as a conditional alternative; 2) an optional foundational qualification based on experience; 3) a residential qualification that is based on demonstration of capability, which always includes a specific On-the-Job qualification and may include any environmental or organizational specific requirements; and 4) continuous professional development of a minimum of 20 hours per year (or vendor certification maintenance minimums, whichever is greater).
 
 **Rating:** 
 
@@ -294,9 +294,9 @@ Rate the expanded text against the original: **better** / **same** / **worse**.
 
 ## 30. dafman17-1305 (D1x)
 
-**Original:** - 2.7.3.  Work with AF/A1, AF/A2/6, and SAF/CN on a capability to automate reporting of the DAF cyberspace workforce (e.g., qualification status).
+**Original:** - 2.15.14. Coordinate with the Contracting Officer to ensure security background investigation and clearance requirements (when appropriate) are incorporated into the contract and associated SOW or PWS (T-1).
 
-**Expanded:** Work with AF/A1, AF/A2/6, and SAF/CN on a capability to automate reporting of the DAF cyberspace workforce (e.g., qualification status).
+**Expanded:** Coordinate with the Contracting Officer to ensure security background investigation and clearance requirements (when appropriate) are incorporated into the contract and associated SOW or PWS (T-1).
 
 **Rating:** 
 

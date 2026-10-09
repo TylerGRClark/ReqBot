@@ -39,8 +39,8 @@ def test_spaced_punctuation_and_tier_tags_are_tidied_not_split():
 def test_a_quote_not_in_the_chunk_and_a_sentence_that_is_too_long_are_left_as_given():
     assert SE.expand("text that is not there", "Some other text.") == ("text that is not there", "not_located")
     long_sentence = "The unit shall " + "do something and then " * 60 + "stop."
-    text, status = SE.expand("do something", long_sentence)
-    assert status == "too_long" and text == "do something"
+    text, status = SE.expand("then stop", long_sentence)
+    assert status == "too_long" and text == "then stop"
 
 
 def test_completeness_check():
@@ -106,3 +106,17 @@ def test_expand_records_expands_merges_and_copies():
     assert [r["source_quote"] for r in out] == ["Units shall retain logs for one year (T-2), and review them monthly.", "Missing quote here."]
     assert counts["merged"] == 1 and counts["expanded"] == 2 and counts["not_located"] == 1
     assert recs[0]["source_quote"] == "retain logs for one year (T-2)"
+
+
+def test_a_quote_that_occurs_twice_in_the_chunk_is_not_expanded_or_merged():
+    raw = {1: "Administrators shall review logs. Auditors shall review logs."}
+    recs = [{"chunk_id": 1, "source_quote": "review logs"}, {"chunk_id": 1, "source_quote": "review logs"}]
+    out, counts = SE.expand_records(recs, raw)
+    assert [r["source_quote"] for r in out] == ["review logs", "review logs"] and counts["ambiguous"] == 2 and counts["merged"] == 0
+
+
+def test_an_unlocated_record_does_not_swallow_a_later_record_with_the_same_text():
+    raw = {1: "Units shall keep logs for one year."}
+    recs = [{"chunk_id": 1, "source_quote": "Units shall keep logs for one year."}, {"chunk_id": 1, "source_quote": "keep logs for one year"}]
+    out, _ = SE.expand_records([{"chunk_id": 2, "source_quote": "Units shall keep logs for one year."}] + recs, raw)
+    assert len(out) == 2 and out[0]["chunk_id"] == 2

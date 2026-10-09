@@ -29,6 +29,10 @@ The ratings exposed five behaviours, fixed in `pipeline/sentence_expand.py` with
 
 Only these six of the 30 outputs changed; the other 24 are identical, so the 83% is for the first version and the fixed version is the same or better on every rated pair. A fresh sample for any further rating is `outputs/sentence_rule_sample_after_fixes.md` (not rated). Re-measured with the fixes (table above): E1 unchanged and met; E2 met for T2a and T2b, **not met for D1x (2.4%)** once the 27 one-word quotes are counted.
 
+## After wiring review (#280)
+
+Review of the wiring found that a quote occurring twice in one chunk was expanded around its first occurrence (and the second record then merged away, losing a duty). The rule now leaves such a quote as given (`ambiguous`: T2a 1, T2b 1, D1x 7 records), and the pipeline also de-duplicates by source reference and quote after expansion so that two chunks reaching the same sentence cannot share one record ID. Re-measured: T2a 1,880 → 1,868 survivors (18 of 1,717 incomplete); T2b 1,890 → 1,875 (17 of 1,732); D1x 2,501 → 2,462 (55 of 2,331 = 2.4%, still above the 2% bar for the reason given above); labeled coverage unchanged (47, 48, 68).
+
 ## What the numbers show
 
 - The rule repairs about 87% of the incomplete quotes (162 → 18, 176 → 17 on the current prompt; D1x 358 → 56 counting the one-word cells). What remains is mostly table rows, glossary strings and quotes that run to the end of a chunk.
