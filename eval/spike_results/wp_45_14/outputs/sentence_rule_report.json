@@ -1,0 +1,349 @@
+{
+ "arms": {
+  "T2a": {
+   "survivors_before": 1880,
+   "survivors_after_merge": 1865,
+   "status": {
+    "unchanged": 1421,
+    "expanded": 295,
+    "not_located": 145,
+    "too_long": 19
+   },
+   "incomplete_before": 162,
+   "incomplete_after": 21,
+   "could_be_expanded": 1716,
+   "incomplete_share_after": 0.0122,
+   "quote_chars_median_before": 156.0,
+   "quote_chars_median_after": 162.0,
+   "per_document": {
+    "CJCSI 6510.02G": {
+     "before": 87,
+     "after": 87
+    },
+    "DODI 5200.01": {
+     "before": 65,
+     "after": 63
+    },
+    "DODI 5200.44": {
+     "before": 87,
+     "after": 87
+    },
+    "DODI 5200.48": {
+     "before": 232,
+     "after": 228
+    },
+    "DODI 8410.03": {
+     "before": 142,
+     "after": 139
+    },
+    "DODI 8551.01": {
+     "before": 59,
+     "after": 59
+    },
+    "NIST.SP.800-125": {
+     "before": 144,
+     "after": 142
+    },
+    "afi10-2402": {
+     "before": 295,
+     "after": 293
+    },
+    "afi13-550": {
+     "before": 171,
+     "after": 171
+    },
+    "afi17-203": {
+     "before": 111,
+     "after": 111
+    },
+    "afman17-2101": {
+     "before": 145,
+     "after": 145
+    },
+    "afpd_17-1": {
+     "before": 62,
+     "after": 62
+    },
+    "dafman17-1305": {
+     "before": 280,
+     "after": 278
+    }
+   },
+   "recall_of_74_by_survivors": {
+    "before": 45,
+    "after": 47,
+    "obligations": 74
+   }
+  },
+  "T2b": {
+   "survivors_before": 1890,
+   "survivors_after_merge": 1872,
+   "status": {
+    "not_located": 138,
+    "unchanged": 1412,
+    "expanded": 319,
+    "too_long": 21
+   },
+   "incomplete_before": 176,
+   "incomplete_after": 20,
+   "could_be_expanded": 1731,
+   "incomplete_share_after": 0.0116,
+   "quote_chars_median_before": 153.5,
+   "quote_chars_median_after": 163,
+   "per_document": {
+    "CJCSI 6510.02G": {
+     "before": 87,
+     "after": 87
+    },
+    "DODI 5200.01": {
+     "before": 65,
+     "after": 63
+    },
+    "DODI 5200.44": {
+     "before": 93,
+     "after": 93
+    },
+    "DODI 5200.48": {
+     "before": 233,
+     "after": 228
+    },
+    "DODI 8410.03": {
+     "before": 145,
+     "after": 141
+    },
+    "DODI 8551.01": {
+     "before": 58,
+     "after": 58
+    },
+    "NIST.SP.800-125": {
+     "before": 153,
+     "after": 151
+    },
+    "afi10-2402": {
+     "before": 291,
+     "after": 289
+    },
+    "afi13-550": {
+     "before": 166,
+     "after": 166
+    },
+    "afi17-203": {
+     "before": 115,
+     "after": 115
+    },
+    "afman17-2101": {
+     "before": 146,
+     "after": 145
+    },
+    "afpd_17-1": {
+     "before": 67,
+     "after": 67
+    },
+    "dafman17-1305": {
+     "before": 271,
+     "after": 269
+    }
+   },
+   "recall_of_74_by_survivors": {
+    "before": 46,
+    "after": 48,
+    "obligations": 74
+   }
+  },
+  "D1x": {
+   "survivors_before": 2501,
+   "survivors_after_merge": 2427,
+   "status": {
+    "unchanged": 1602,
+    "expanded": 734,
+    "not_located": 158,
+    "too_long": 7
+   },
+   "incomplete_before": 358,
+   "incomplete_after": 42,
+   "could_be_expanded": 2336,
+   "incomplete_share_after": 0.018,
+   "quote_chars_median_before": 151,
+   "quote_chars_median_after": 161.0,
+   "per_document": {
+    "CJCSI 6510.02G": {
+     "before": 113,
+     "after": 110
+    },
+    "DODI 5200.01": {
+     "before": 75,
+     "after": 75
+    },
+    "DODI 5200.44": {
+     "before": 109,
+     "after": 108
+    },
+    "DODI 5200.48": {
+     "before": 321,
+     "after": 275
+    },
+    "DODI 8410.03": {
+     "before": 167,
+     "after": 167
+    },
+    "DODI 8551.01": {
+     "before": 84,
+     "after": 83
+    },
+    "NIST.SP.800-125": {
+     "before": 309,
+     "after": 300
+    },
+    "afi10-2402": {
+     "before": 356,
+     "after": 352
+    },
+    "afi13-550": {
+     "before": 192,
+     "after": 192
+    },
+    "afi17-203": {
+     "before": 157,
+     "after": 153
+    },
+    "afman17-2101": {
+     "before": 184,
+     "after": 184
+    },
+    "afpd_17-1": {
+     "before": 77,
+     "after": 77
+    },
+    "dafman17-1305": {
+     "before": 357,
+     "after": 351
+    }
+   },
+   "recall_of_74_by_survivors": {
+    "before": 67,
+    "after": 68,
+    "obligations": 74
+   }
+  }
+ },
+ "checklist_view": {
+  "T2a": {
+   "afi17-203": {
+    "before": {
+     "rows": 111,
+     "flags": {
+      "starts_mid_sentence": 6,
+      "quote_not_located_in_passage": 4,
+      "no_stated_actor": 9,
+      "table_fragment": 3
+     }
+    },
+    "after": {
+     "rows": 111,
+     "flags": {
+      "starts_mid_sentence": 4,
+      "quote_not_located_in_passage": 4,
+      "no_stated_actor": 9,
+      "table_fragment": 3
+     }
+    }
+   },
+   "afi13-550": {
+    "before": {
+     "rows": 171,
+     "flags": {
+      "no_stated_actor": 9,
+      "starts_mid_sentence": 13,
+      "table_fragment": 1,
+      "quote_not_located_in_passage": 16
+     }
+    },
+    "after": {
+     "rows": 171,
+     "flags": {
+      "no_stated_actor": 7,
+      "quote_not_located_in_passage": 16
+     }
+    }
+   },
+   "afi10-2402": {
+    "before": {
+     "rows": 295,
+     "flags": {
+      "starts_mid_sentence": 4,
+      "no_stated_actor": 5,
+      "quote_not_located_in_passage": 12,
+      "table_fragment": 9
+     }
+    },
+    "after": {
+     "rows": 293,
+     "flags": {
+      "no_stated_actor": 3,
+      "quote_not_located_in_passage": 12,
+      "table_fragment": 14
+     }
+    }
+   }
+  },
+  "D1x": {
+   "afi17-203": {
+    "before": {
+     "rows": 157,
+     "flags": {
+      "starts_mid_sentence": 13,
+      "quote_not_located_in_passage": 24,
+      "no_stated_actor": 11,
+      "table_fragment": 14
+     }
+    },
+    "after": {
+     "rows": 153,
+     "flags": {
+      "quote_not_located_in_passage": 24,
+      "no_stated_actor": 11,
+      "table_fragment": 14,
+      "starts_mid_sentence": 9
+     }
+    }
+   },
+   "afi13-550": {
+    "before": {
+     "rows": 192,
+     "flags": {
+      "no_stated_actor": 9,
+      "quote_not_located_in_passage": 19,
+      "starts_mid_sentence": 6
+     }
+    },
+    "after": {
+     "rows": 192,
+     "flags": {
+      "no_stated_actor": 7,
+      "quote_not_located_in_passage": 19
+     }
+    }
+   },
+   "afi10-2402": {
+    "before": {
+     "rows": 356,
+     "flags": {
+      "starts_mid_sentence": 3,
+      "no_stated_actor": 5,
+      "quote_not_located_in_passage": 9,
+      "table_fragment": 2
+     }
+    },
+    "after": {
+     "rows": 352,
+     "flags": {
+      "no_stated_actor": 5,
+      "quote_not_located_in_passage": 9,
+      "table_fragment": 7
+     }
+    }
+   }
+  }
+ },
+ "sample_size": 30
+}
