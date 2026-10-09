@@ -40,3 +40,9 @@ The whole-sentence expansion no longer replaces `source_quote`. `source_quote` i
 | Records | 2,420 now against 2,419 in the existing run; 71 roots are listed in `merged_roots` because they sit in the same sentence as another root (only roots that were placed in the chunk are merged) |
 
 Counting by the root alone gives 67 of 74, two below the existing run (within the limit of 4, and the root is a fragment more often than the sentence is); the explained text keeps the earlier 69.
+
+## Explained text against the root: the owner's rating (2026-10-09)
+
+`outputs/explained_rating_sheet.md`, 30 rows (8 where only a list number, dash or spacing differs; 22 where the words differ). The owner rated 28 and left 2 blank (rows 23 and 29): **25 better, 3 same, 0 worse = 28 of 28 better or same; step 5's bar of 80% is met** (28 of 30 = 93% even if the two blanks are counted against it).
+
+Three of the "better" ratings carry a note that the row is not a requirement and should be n/a: row 3 is a lead-in line ("In addition to the responsibilities in Paragraph 2.10., the DoD CIO:"), rows 24 and 26 are definitions. The text is better, but screening should mark them; this is the evidence for the screening step (plan step 7).

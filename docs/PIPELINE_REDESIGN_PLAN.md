@@ -10,6 +10,7 @@
 | 4 Anchoring (`anchor_*` fields) | done (#287); 92.7% of roots exact |
 | Root kept, explained layer beside it, IDs from the root, merged roots | done (#288, #291) |
 | 6 Context attaching, rule tier: sentence and verified lead-in stored on the record | done (in #288); citation, section heading, parent paragraph and applies-to are still built per checklist, not stored |
+| 5 Rating of the explained text (30 rows) | done: 28 of 28 rated better or same (bar 80%); three rows noted as not requirements (a lead-in line and two definitions), which is the case for screening |
 | 7 Screening on the explained text, filters flag instead of reject | **not built**: waits for the owner's decision on colon-ending lead-ins (section 8) and his rating |
 | Tagging, typing, description, description check, confidence switched off | done (#289) |
 | Readers show the explained text (Ask, Evidence, Trace, Compare, cards, CLI) | done (#289) |

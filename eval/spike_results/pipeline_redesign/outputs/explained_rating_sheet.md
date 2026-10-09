@@ -13,7 +13,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence
 
 **Rating:** 
-
+better
 ---
 
 ## 2. DODI 5200.48 — (5)
@@ -25,7 +25,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** list number or dash taken off
 
 **Rating:** 
-
+better
 ---
 
 ## 3. DODI 5200.48 — SECTION 2: RESPONSIBILITIES > 2.9.
@@ -37,7 +37,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence
 
 **Rating:** 
-
+better but this is also not a req so this should be n/a
 ---
 
 ## 4. DODI 5200.48 — (3)
@@ -49,7 +49,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** list number or dash taken off
 
 **Rating:** 
-
+better
 ---
 
 ## 5. DODI 8410.03 — 5.
@@ -61,7 +61,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence; a few words at the front that are not in the source taken off
 
 **Rating:** 
-
+better
 ---
 
 ## 6. DODI 8410.03 — (2)
@@ -73,7 +73,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** list number or dash taken off
 
 **Rating:** 
-
+better
 ---
 
 ## 7. DODI 8410.03 — 4.d
@@ -85,7 +85,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** already a whole sentence; lead-in kept (found in the chunk's heading)
 
 **Rating:** 
-
+better
 ---
 
 ## 8. DODI 8410.03 — (5)
@@ -97,7 +97,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence; merged with other roots in the same sentence
 
 **Rating:** 
-
+better
 ---
 
 ## 9. DODI 8410.03 — - a.
@@ -109,7 +109,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** list number or dash taken off
 
 **Rating:** 
-
+better
 ---
 
 ## 10. DODI 8551.01 — SECTION 1
@@ -121,7 +121,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** already a whole sentence; lead-in kept (found in the chunk)
 
 **Rating:** 
-
+better
 ---
 
 ## 11. DODI 8551.01 — (no ref)
@@ -133,7 +133,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** list number or dash taken off
 
 **Rating:** 
-
+better
 ---
 
 ## 12. DODI 8551.01 — (no ref)
@@ -145,7 +145,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** list number or dash taken off
 
 **Rating:** 
-
+better
 ---
 
 ## 13. NIST.SP.800-125 — (no ref)
@@ -157,7 +157,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence
 
 **Rating:** 
-
+same
 ---
 
 ## 14. NIST.SP.800-125 — (no ref)
@@ -169,7 +169,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence
 
 **Rating:** 
-
+better
 ---
 
 ## 15. NIST.SP.800-125 — 5.2 Planning and Design
@@ -181,7 +181,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence; merged with other roots in the same sentence
 
 **Rating:** 
-
+better
 ---
 
 ## 16. NIST.SP.800-125 — (no ref)
@@ -193,7 +193,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence
 
 **Rating:** 
-
+better
 ---
 
 ## 17. NIST.SP.800-125 — (no ref)
@@ -205,7 +205,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence
 
 **Rating:** 
-
+better
 ---
 
 ## 18. NIST.SP.800-125 — (no ref)
@@ -217,7 +217,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence
 
 **Rating:** 
-
+same 
 ---
 
 ## 19. NIST.SP.800-125 — [3. Virtualization Security Overview > 3.3 Image and Snapshot Management]
@@ -229,7 +229,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence
 
 **Rating:** 
-
+better
 ---
 
 ## 20. NIST.SP.800-125 — (no ref)
@@ -241,7 +241,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** list number or dash taken off; list number or dash taken off
 
 **Rating:** 
-
+better
 ---
 
 ## 21. afi10-2402 — 3.3.3.3.4
@@ -253,7 +253,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence
 
 **Rating:** 
-
+better
 ---
 
 ## 22. afi10-2402 — A2.4.1
@@ -265,7 +265,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** already a whole sentence
 
 **Rating:** 
-
+same
 ---
 
 ## 23. afi13-550 — 2.2.8
@@ -289,7 +289,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence; merged with other roots in the same sentence
 
 **Rating:** 
-
+better but should be n/a because it isnt a req, its a def
 ---
 
 ## 25. afi17-203 — (no ref)
@@ -301,7 +301,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence; merged with other roots in the same sentence
 
 **Rating:** 
-
+better
 ---
 
 ## 26. afman17-2101 — 3.1.1.2.3
@@ -313,7 +313,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence; a few words at the front that are not in the source taken off
 
 **Rating:** 
-
+better but should be n/a because it isnt a req, its a def
 ---
 
 ## 27. dafman17-1305 — (no ref)
@@ -325,7 +325,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence; merged with other roots in the same sentence
 
 **Rating:** 
-
+bbetter
 ---
 
 ## 28. dafman17-1305 — 2.15.15
@@ -337,7 +337,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence
 
 **Rating:** 
-
+better
 ---
 
 ## 29. dafman17-1305 — 4.4.1.3
@@ -347,7 +347,7 @@ Pass rule (plan step 5): at least 80% better or same.
 **Explained:** Maintenance of self-funded certifications are recommended but not required, but if the civilian or military member has maintained a self-funded certification and it fulfills the foundational requirements for their new DCWF coded role, a reimbursement can be made subject to end of fiscal year funding allowances.
 
 **What was done:** expanded to the whole sentence
-
+better
 **Rating:** 
 
 ---
@@ -361,6 +361,6 @@ Pass rule (plan step 5): at least 80% better or same.
 **What was done:** expanded to the whole sentence; merged with other roots in the same sentence
 
 **Rating:** 
-
+better
 ---
 
