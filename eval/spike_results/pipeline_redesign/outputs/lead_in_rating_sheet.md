@@ -1,7 +1,9 @@
 # Lead-ins attached by rule — 30 rows (seeded sample of 597 rows that got one)
 
 For each row: the **item** as it reads without a lead-in, the **lead-in** the rule found (the nearest earlier line that ends in a colon), and the **result**.
+**What you are checking:** two things for each row. (1) Is the lead-in line really the one this item belongs under? (2) Does the result read better for an auditor than the item alone?
 Rate each: **right** (that line governs this item and the result reads better) / **neutral** (right line, no real gain) / **wrong** (that line does not govern this item, or it makes the row confusing).
+**Pass rule, written before any rating:** at least 80% right or neutral, and no more than 10% wrong. A wrong lead-in is worse than none, because it tells the auditor the requirement belongs to someone it does not.
 
 ## 1. DODI 5200.01 — 2.  APPLICABILITY.
 

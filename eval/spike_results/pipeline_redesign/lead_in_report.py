@@ -90,7 +90,9 @@ def main():
     picked = sorted(random.Random(SEED).sample(sorted(attached, key=lambda t: (t[0], t[1]["requirement_id"])), min(N, len(attached))), key=lambda t: (t[0], t[1]["requirement_id"]))
     lines = [f"# Lead-ins attached by rule — {len(picked)} rows (seeded sample of {len(attached)} rows that got one)", "",
              "For each row: the **item** as it reads without a lead-in, the **lead-in** the rule found (the nearest earlier line that ends in a colon), and the **result**.",
-             "Rate each: **right** (that line governs this item and the result reads better) / **neutral** (right line, no real gain) / **wrong** (that line does not govern this item, or it makes the row confusing).", ""]
+             "**What you are checking:** two things for each row. (1) Is the lead-in line really the one this item belongs under? (2) Does the result read better for an auditor than the item alone?",
+             "Rate each: **right** (that line governs this item and the result reads better) / **neutral** (right line, no real gain) / **wrong** (that line does not govern this item, or it makes the row confusing).",
+             "**Pass rule, written before any rating:** at least 80% right or neutral, and no more than 10% wrong. A wrong lead-in is worse than none, because it tells the auditor the requirement belongs to someone it does not.", ""]
     for n, (doc, r) in enumerate(picked, 1):
         lead = next(p["text"] for p in r["explained_parts"] if p["kind"] == "lead_in")
         item = next(p["text"] for p in r["explained_parts"] if p["kind"] == "sentence")

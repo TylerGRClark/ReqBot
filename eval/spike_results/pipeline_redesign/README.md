@@ -64,4 +64,4 @@ Against the owner-adjudicated gold records (the AFI and DoDI records labeled ear
 
 Reading the 15: most are items that are full sentences under a real lead-in ("AFGSC will: Publish and maintain a charter ..."; "Some significant points about DoD CUI include: ..."), so the lead-in is the line that governs them though the sentence did not need it to be understood. The "different" ones are mostly an immediate lead-in where the adjudicated one was the actor further up (for example "Appoints a DoD military officer ... to:" where the gold says "DIRECTOR, DISA."). The 17 same-chunk misses and the 56 heading cases are what a later step (the heading, or the model-picks step) would cover.
 
-Nothing is merged on this evidence alone: the plan's rule is the owner's rating of the sample sheet.
+Nothing is merged on this evidence alone. **Pass rule (written before any rating):** the owner's rating of the sample sheet is at least 80% right or neutral and no more than 10% wrong; a wrong lead-in is worse than none.
