@@ -43,7 +43,7 @@ PROHIBITION = re.compile(
     r"\b(?:shall|must|should|will|may|can|could|would|do|does|did|is|are|be)\s+not\b(?!\s+(?:limited|only|necessarily))|\bcannot\b|\bnever\b|\bprohibited\b|\bforbidden\b", re.IGNORECASE)
 PROHIBITION_RULE = "- This requirement forbids something. Ask whether it is avoided (\"Does the unit avoid ...?\"); do not ask whether it happens.\n"
 SCHEMA = {"type": "object", "properties": {"question": {"type": ["string", "null"]}}, "required": ["question"]}
-_TERM = re.compile(r"\b(?:\d[\w./-]*|[A-Z]{2,}[\w/&-]*|[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)")
+_TERM = re.compile(r"\b(?:\d[\w./-]*|[A-Z]{2,}[\w/&-]*|[A-Z][a-z]+(?:[A-Z][a-z]+)+|[A-Z][a-z]+(?![A-Za-z])(?:\s+[A-Z][a-z]+(?![A-Za-z]))*)")  # a number, an acronym, a CamelCase name, or capitalized whole words
 _STOP = {"does", "do", "is", "are", "has", "have", "did", "was", "were", "can", "will", "the", "a", "an", "if", "when", "whether", "who", "what", "how", "each", "all", "any", "yes", "no", "should", "would", "could", "must", "shall", "may", "might", "there", "this", "that", "these", "those"}
 
 
@@ -54,9 +54,13 @@ def sidecar_path(requirements_path: Path) -> Path:
 
 
 def unverified_terms(question: str, material: str) -> list[str]:
-    """Numbers, acronyms and capitalized words in the question that the row's own text does not contain (the sentence-initial word is ignored)."""
+    """Numbers, acronyms and capitalized words in the question that the row's own text does not contain. A word counts as present when it is a whole word of the text, or a part of a longer
+    token split at "/", "-", "." or "&" ("Networx" in "Networx/EIS"), or differs only by a plural ("Installations" for "Installation")."""
     text = re.sub(r"\s+", " ", material or "").lower()
-    low = set(re.findall(r"[a-z0-9][a-z0-9./&'-]*", text))
+    tokens = set(re.findall(r"[a-z0-9][a-z0-9./&'-]*", text))
+    present = set(tokens)
+    for token in tokens:
+        present.update(part for part in re.split(r"[./&'-]+", token) if part)
     out = []
     for m in _TERM.finditer(question or ""):
         words = m.group(0).split()  # word by word: a title with its parenthetical acronym left out is still grounded
@@ -65,8 +69,9 @@ def unverified_terms(question: str, material: str) -> list[str]:
             if len(w) < 3 and not any(ch.isdigit() for ch in w):
                 continue
             w = re.sub(r"'s$", "", w)
+            variants = {w, w + "s", w + "es", w[:-1] if w.endswith("s") else w, w[:-2] if w.endswith("es") else w, w[:-3] + "y" if w.endswith("ies") else w}
             inside_longer_token = bool(re.search(r"[\d./&'-]", w)) and w in text  # "I-NOSC" inside a longer token; a plain word must match a whole word ("port" is not "report")
-            if w and w not in _STOP and w not in low and not inside_longer_token:
+            if w and w not in _STOP and not (variants & present) and not inside_longer_token:
                 out.append(word)
     return out
 
@@ -159,6 +164,7 @@ def draft_questions(items: list[dict], path: Path, *, model: str = MODEL, ollama
         skipped = skipped_because(item)
         old = existing.get(item_id)
         if old and old.get("input_hash") == h and not old.get("error") and old.get("skipped_because", []) == skipped:
+            old["unverified_terms"] = unverified_terms(old["question"], row_material(item)) if old.get("question") else []  # cheap and deterministic: rule changes reach reused questions too
             records[item_id] = old
             counts["reused"] += 1
         elif skipped:
