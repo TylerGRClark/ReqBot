@@ -72,7 +72,7 @@ resume, backups, reindex, and troubleshooting; the
 change dependencies.
 
 - **JSONL is the source of record.** Qdrant is a rebuildable index.
-- **Resume in the existing run directory.** Step C's prompt-hash cache lives
+- **Resume in the existing run directory.** The requirement-finding step's (Step C) prompt-hash cache lives
   there; creating another run does not reuse that directory's cache.
 - **Preserve artifact modification times.** Reindex selects the newest run and
   freshest acceptable gated/enriched/normalized tier using those times.

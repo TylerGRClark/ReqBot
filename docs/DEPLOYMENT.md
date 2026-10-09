@@ -124,7 +124,7 @@ loads when it first converts a PDF. The Docker image already includes them.
 sudo apt install libgl1 libglib2.0-0
 ```
 
-Without them, the first `reqbot ingest` fails at Step A with
+Without them, the first `reqbot ingest` fails at PDF reading (Step A) with
 `libGL.so.1: cannot open shared object file` (or `libxcb.so.1`). Desktop
 systems usually have these already.
 

@@ -12,6 +12,7 @@ differ.
 | [Getting started](GETTING_STARTED.md) | Step-by-step first run: Ollama, install, first PDF, first search. |
 | [Deployment](DEPLOYMENT.md) | Every install variant: Docker, source, extras, networking, and offline preparation. |
 | [Architecture](ARCHITECTURE.md) | Document-to-requirement flow, retrieval, validation, and component ownership. |
+| [Pipeline redesign plan](PIPELINE_REDESIGN_PLAN.md) | Where the pipeline is going: root, anchor and explained layers, steps named by job. A plan; none of it is built. |
 | [Configuration](CONFIGURATION.md) | Defaults, precedence, environment variables, and model changes. |
 | [Connecting AI tools](AI_TOOLS.md) | MCP setup, subprocess configuration, tools, and troubleshooting. |
 | [CLI reference](CLI.md) | Every public subcommand and its options. |
