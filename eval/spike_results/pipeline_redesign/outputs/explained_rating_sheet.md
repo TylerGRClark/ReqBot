@@ -1,14 +1,14 @@
-# Explained text against the root — 30 rows (seeded sample of 807 of 2420 records where they differ)
+# Explained text against the root — 30 rows (seeded sample: 8 of 618 where only a list number, dash or spacing differs, and 22 of 189 where the words differ; 2420 records in all)
 
 The **root** is exactly what requirement finding returned. The **explained text** is what a reader sees: the whole sentence, with a lead-in the source backs.
 Rate each: **better** (the explained text is the more useful and still says the same thing) / **same** / **worse** (it lost, added or changed meaning, or is more confusing).
 Pass rule (plan step 5): at least 80% better or same.
 
-## 1. CJCSI 6510.02G — [3.  CCDRs will:]
+## 1. DODI 5200.01 — (8)
 
-**Root:** - c. As appropriate, ensure requests for a key extension for decertified products are processed as specified in Enclosure B on behalf of foreign partners within their respective AORs.
+**Root:** (8) Operates SCI security programs to support other DoD activities and federal agencies by special agreement, in accordance with Reference (n)
 
-**Explained:** As appropriate, ensure requests for a key extension for decertified products are processed as specified in Enclosure B on behalf of foreign partners within their respective AORs.
+**Explained:** Operates SCI security programs to support other DoD activities and federal agencies by special agreement, in accordance with Reference (n).
 
 **What was done:** expanded to the whole sentence
 
@@ -16,11 +16,23 @@ Pass rule (plan step 5): at least 80% better or same.
 
 ---
 
-## 2. DODI 5200.48 — SECTION 2: RESPONSIBILITIES > 2.4.
+## 2. DODI 5200.48 — (5)
+
+**Root:** (5) Submit the annual CUI Implementation Status Report to the DDI(CL&S) to evaluate the effectiveness, compliance, and efficiency of the DoD Component's implementation of CUI, in accordance with Paragraph 3.6.c.
+
+**Explained:** Submit the annual CUI Implementation Status Report to the DDI(CL&S) to evaluate the effectiveness, compliance, and efficiency of the DoD Component's implementation of CUI, in accordance with Paragraph 3.6.c.
+
+**What was done:** expanded to the whole sentence
+
+**Rating:** 
+
+---
+
+## 3. DODI 5200.48 — SECTION 2: RESPONSIBILITIES > 2.9.
 
 **Root:** In addition to the responsibilities in Paragraph 2.10.
 
-**Explained:** In addition to the responsibilities in Paragraph 2.10., the CMO:
+**Explained:** In addition to the responsibilities in Paragraph 2.10., the DoD CIO:
 
 **What was done:** expanded to the whole sentence
 
@@ -28,23 +40,11 @@ Pass rule (plan step 5): at least 80% better or same.
 
 ---
 
-## 3. DODI 5200.48 — SECTION 2:  RESPONSIBILITIES > 2.10.
+## 4. DODI 5200.48 — (3)
 
-**Root:** c. Ensure their subordinate organizations comply with DoD CUI Program requirements.
+**Root:** (3) Inform the CSAO of concerns identified by subordinate elements.
 
-**Explained:** Ensure their subordinate organizations comply with DoD CUI Program requirements.
-
-**What was done:** expanded to the whole sentence
-
-**Rating:** 
-
----
-
-## 4. DODI 5200.48 — SECTION 4
-
-**Root:** (3) Is not restricted by an authorized LDC established by the CUI EA.
-
-**Explained:** Is not restricted by an authorized LDC established by the CUI EA.
+**Explained:** Inform the CSAO of concerns identified by subordinate elements.
 
 **What was done:** expanded to the whole sentence
 
@@ -52,11 +52,23 @@ Pass rule (plan step 5): at least 80% better or same.
 
 ---
 
-## 5. DODI 5200.48 — (5)
+## 5. DODI 8410.03 — 5.
 
-**Root:** - (5)  Self-inspection activities.
+**Root:** Serve as the DoD focal point to the Intelligence Community (IC) for NM policy and oversight matters relating to intelligence information sharing and interoperability of Defense intelligence systems and processes IAW DoDD 5143.01 (Reference (o)).
 
-**Explained:** Self-inspection activities.
+**Explained:** The USD(I) shall serve as the DoD focal point to the Intelligence Community (IC) for NM policy and oversight matters relating to intelligence information sharing and interoperability of Defense intelligence systems and processes IAW DoDD 5143.01 (Reference (o)).
+
+**What was done:** expanded to the whole sentence; a few words at the front that are not in the source taken off
+
+**Rating:** 
+
+---
+
+## 6. DODI 8410.03 — (2)
+
+**Root:** (2) Read-only and read-write SNMP community strings for a managed device shall be different.
+
+**Explained:** Read-only and read-write SNMP community strings for a managed device shall be different.
 
 **What was done:** expanded to the whole sentence
 
@@ -64,143 +76,11 @@ Pass rule (plan step 5): at least 80% better or same.
 
 ---
 
-## 6. DODI 5200.48 — (no ref)
+## 7. DODI 8410.03 — 4.d
 
-**Root:** (3) CUI information may be disseminated within the DoD Components and between DoD Component officials and DoD contractors, consultants, and grantees to conduct official business for the DoD, provided dissemination is consistent with controls imposed by a distribution statement or limited dissemination controls (LDC).
+**Root:** The DOT&E shall: d. Support DISA in developing and maintaining NM standards, specifications, and interfaces to include defining extensions to baseline NM data-exchange schemas necessary to enable and facilitate the exchange and sharing of NM information and data with tactical edge NM systems.
 
-**Explained:** CUI information may be disseminated within the DoD Components and between DoD Component officials and DoD contractors, consultants, and grantees to conduct official business for the DoD, provided dissemination is consistent with controls imposed by a distribution statement or limited dissemination controls (LDC).
-
-**What was done:** expanded to the whole sentence
-
-**Rating:** 
-
----
-
-## 7. DODI 8410.03 — - b.
-
-**Root:** - b. Develop, publish, and enforce standard processes for the sharing of NM data about readiness and operating status of all DoD networks.
-
-**Explained:** Develop, publish, and enforce standard processes for the sharing of NM data about readiness and operating status of all DoD networks.
-
-**What was done:** expanded to the whole sentence
-
-**Rating:** 
-
----
-
-## 8. DODI 8410.03 — (3)
-
-**Root:** (3) Where possible, a different string (or strings) shall be utilized for each NE, or at minimum for each area of the network being managed.
-
-**Explained:** Where possible, a different string (or strings) shall be utilized for each NE, or at minimum for each area of the network being managed.
-
-**What was done:** expanded to the whole sentence
-
-**Rating:** 
-
----
-
-## 9. DODI 8410.03 — (d)
-
-**Root:** - (d) Location of the NM event.
-
-**Explained:** Location of the NM event.
-
-**What was done:** expanded to the whole sentence
-
-**Rating:** 
-
----
-
-## 10. DODI 8410.03 — (f)
-
-**Root:** - (f) Required local event storage requirements (if any).
-
-**Explained:** Required local event storage requirements (if any).
-
-**What was done:** expanded to the whole sentence
-
-**Rating:** 
-
----
-
-## 11. DODI 8410.03 — (no ref)
-
-**Root:** (2) Where appropriate, these standards shall be established jointly, maintained by DISA, and incorporated into the baseline schemas for NM.
-
-**Explained:** Where appropriate, these standards shall be established jointly, maintained by DISA, and incorporated into the baseline schemas for NM.
-
-**What was done:** expanded to the whole sentence
-
-**Rating:** 
-
----
-
-## 12. DODI 8410.03 — i
-
-**Root:** i. Ensure that NM systems are resilient to manmade or natural events that may cause failure, loss or disruption of NM capabilities.
-
-**Explained:** Ensure that NM systems are resilient to manmade or natural events that may cause failure, loss or disruption of NM capabilities.
-
-**What was done:** expanded to the whole sentence
-
-**Rating:** 
-
----
-
-## 13. DODI 8410.03 — (8)
-
-**Root:** - (8) A description of the remedies available to the customer in the event the NM system does not perform as agreed.
-
-**Explained:** A description of the remedies available to the customer in the event the NM system does not perform as agreed.
-
-**What was done:** expanded to the whole sentence
-
-**Rating:** 
-
----
-
-## 14. DODI 8410.03 — (2)
-
-**Root:** (2)  The requirement for NEs to connect and disconnect at random due to mobility-related constraints.
-
-**Explained:** The requirement for NEs to connect and disconnect at random due to mobility-related constraints.
-
-**What was done:** expanded to the whole sentence
-
-**Rating:** 
-
----
-
-## 15. DODI 8410.03 — (no ref)
-
-**Root:** tactical edge NM systems.  Those NM systems that operate within the approximate first tactical mile for joint forces connected to the GIG, which includes a variety of wired and wireless networks.
-
-**Explained:** Defined in IETF Request for Comment 2570 'Introduction to Version 3 of the Internetstandard Network Management Framework' (Reference (ai)). tactical edge NM systems. Those NM systems that operate within the approximate first tactical mile for joint forces connected to the GIG, which includes a variety of wired and wireless networks. telecommunications management network.
-
-**What was done:** expanded to the whole sentence
-
-**Rating:** 
-
----
-
-## 16. DODI 8410.03 — [3.  NM USE OF SNMP]
-
-**Root:** Where possible, elements in multiple MIBs that refer to the same parameter shall be formatted and identified the same way.  Standard formats and identifications shall be maintained in a DoD-published MIB data format and dictionary established and maintained by DISA.
-
-**Explained:** Where possible, elements in multiple MIBs that refer to the same parameter shall be formatted and identified the same way. Standard formats and identifications shall be maintained in a DoD-published MIB data format and dictionary established and maintained by DISA.
-
-**What was done:** already a whole sentence
-
-**Rating:** 
-
----
-
-## 17. DODI 8410.03 — (no ref)
-
-**Root:** The DoD CIO, shall: f. Establish and maintain definitions and interface control documents for standard mechanisms for exchanging NM information between NM systems and for exposing data to nonNM systems.
-
-**Explained:** The DoD CIO, shall: Establish and maintain definitions and interface control documents for standard mechanisms for exchanging NM information between NM systems and for exposing data to nonNM systems.
+**Explained:** The DOT&E shall: Support DISA in developing and maintaining NM standards, specifications, and interfaces to include defining extensions to baseline NM data-exchange schemas necessary to enable and facilitate the exchange and sharing of NM information and data with tactical edge NM systems.
 
 **What was done:** already a whole sentence; lead-in kept (found in the chunk's heading)
 
@@ -208,13 +88,133 @@ Pass rule (plan step 5): at least 80% better or same.
 
 ---
 
-## 18. DODI 8551.01 — SECTION 2: RESPONSIBILITIES > 2.6.
+## 8. DODI 8410.03 — (5)
 
-**Root:** (3) Directs appropriate mitigations to be completed as documented in the vulnerability assessment report identifying operational risk and proper implementation strategies.
+**Root:** This section must include: where, how, and in what format NM information and data will be collected;
 
-**Explained:** Directs appropriate mitigations to be completed as documented in the vulnerability assessment report identifying operational risk and proper implementation strategies.
+**Explained:** This section must include: where, how, and in what format NM information and data will be collected; how often it will be collected; how it will be shared with the customer; how often it will be shared with the customer; how NM information and data will be archived; and duration archived information will be retained IAW Reference (h).
+
+**What was done:** expanded to the whole sentence; merged with other roots in the same sentence
+
+**Rating:** 
+
+---
+
+## 9. DODI 8410.03 — - a.
+
+**Root:** a. Execute NM within the portions of the Defense Information Enterprise within their assigned area of responsibility (AOR) IAW Reference (b) and in support of Combatant Commanders' responsibilities.
+
+**Explained:** Execute NM within the portions of the Defense Information Enterprise within their assigned area of responsibility (AOR) IAW Reference (b) and in support of Combatant Commanders' responsibilities.
 
 **What was done:** expanded to the whole sentence
+
+**Rating:** 
+
+---
+
+## 10. DODI 8551.01 — (no ref)
+
+**Root:** analysis is An automated compliance verification process that evaluates declared or discovered data against established PPSM standards.
+
+**Explained:** An automated compliance verification process that evaluates declared or discovered data against established PPSM standards.
+
+**What was done:** not expanded: too long; a few words at the front that are not in the source taken off
+
+**Rating:** 
+
+---
+
+## 11. DODI 8551.01 — (no ref)
+
+**Root:** (5) Validate PPS for DoD systems in accordance with DoDI 8510.01.
+
+**Explained:** Validate PPS for DoD systems in accordance with DoDI 8510.01.
+
+**What was done:** expanded to the whole sentence
+
+**Rating:** 
+
+---
+
+## 12. DODI 8551.01 — (no ref)
+
+**Root:** The RMF KS provides: - b.  Data storage and retrieval, pooling of relevant information from appropriate DoD Component RMF repositories, automated assessment and compliance verification, summary reporting, and similar capabilities that support the discovery and analysis methodology in accordance with Paragraph 3.3.
+
+**Explained:** The RMF KS provides: Data storage and retrieval, pooling of relevant information from appropriate DoD Component RMF repositories, automated assessment and compliance verification, summary reporting, and similar capabilities that support the discovery and analysis methodology in accordance with Paragraph 3.3.
+
+**What was done:** already a whole sentence; lead-in kept (found in the chunk)
+
+**Rating:** 
+
+---
+
+## 13. DODI 8551.01 — (no ref)
+
+**Root:** authorizing official is Defined in Committee on National Security Systems Instruction (CNSSI) No. 4009.
+
+**Explained:** Defined in Committee on National Security Systems Instruction (CNSSI) No. 4009.
+
+**What was done:** not expanded: too long; a few words at the front that are not in the source taken off
+
+**Rating:** 
+
+---
+
+## 14. DODI 8551.01 — (no ref)
+
+**Root:** (1) Assess it for vulnerabilities and document them in an internal vulnerability assessment report for internal PPS by the system owner in accordance with PPSM component local service assessment process.
+
+**Explained:** Assess it for vulnerabilities and document them in an internal vulnerability assessment report for internal PPS by the system owner in accordance with PPSM component local service assessment process.
+
+**What was done:** expanded to the whole sentence
+
+**Rating:** 
+
+---
+
+## 15. DODI 8551.01 — (no ref)
+
+**Root:** data service is A named standard, unique, or proprietary packet structure that provides the software interface communication from one information network application to another.
+
+**Explained:** A named standard, unique, or proprietary packet structure that provides the software interface communication from one information network application to another.
+
+**What was done:** not expanded: too long; a few words at the front that are not in the source taken off
+
+**Rating:** 
+
+---
+
+## 16. NIST.SP.800-125 — [3. Virtualization Security Overview > 3.3 Image and Snapshot Management]
+
+**Root:** By properly configuring the guest OS, any configuration available on a production system can be replicated
+
+**Explained:** By properly configuring the guest OS, any configuration available on a production system can be replicated.
+
+**What was done:** expanded to the whole sentence
+
+**Rating:** 
+
+---
+
+## 17. NIST.SP.800-125 — (no ref)
+
+**Root:** allow a user to run applications for different OSs on a single host.
+
+**Explained:** One of the most common reasons for using desktop virtualization is to allow a user to run applications for different OSs on a single host.
+
+**What was done:** expanded to the whole sentence
+
+**Rating:** 
+
+---
+
+## 18. NIST.SP.800-125 — 5.2 Planning and Design
+
+**Root:** Once the organization has established a virtualization security policy
+
+**Explained:** Once the organization has established a virtualization security policy, identified virtualization needs, and completed other preparatory activities, the next step is to determine which types of virtualization technologies should be used and to design a solution to deploy.
+
+**What was done:** expanded to the whole sentence; merged with other roots in the same sentence
 
 **Rating:** 
 
@@ -222,21 +222,21 @@ Pass rule (plan step 5): at least 80% better or same.
 
 ## 19. NIST.SP.800-125 — (no ref)
 
-**Root:** Another form of virtualization, known as operating system virtualization , provides a virtual implementation of the OS interface that can be used to run applications written for the same OS as the host, with each application in a separate VM container.
+**Root:** organizations should incorporate backups of virtualized storage into their backup policies.
 
-**Explained:** Another form of virtualization, known as operating system virtualization, provides a virtual implementation of the OS interface that can be used to run applications written for the same OS as the host, with each application in a separate VM container.
+**Explained:** Of course, using disk backups as part of a security strategy is just as important with virtual computers as it is with non-virtual computers, so organizations should incorporate backups of virtualized storage into their backup policies.
 
-**What was done:** already a whole sentence
+**What was done:** expanded to the whole sentence
 
 **Rating:** 
 
 ---
 
-## 20. afi10-2402 — 2.19.5
+## 20. NIST.SP.800-125 — (no ref)
 
-**Root:** - Provide notification of unfunded remediation requirements to the relevant HHQ functional manager and the HAF CARM Program office.
+**Root:** - Host Only Networking. The guest OS is given a virtual NIC that does not directly route to a physical NIC. In this scenario, guest OSs can be configured to communicate with one another and, potentially, with the host OS.
 
-**Explained:** Provide notification of unfunded remediation requirements to the relevant HHQ functional manager and the HAF CARM Program office.
+**Explained:** Host Only Networking. The guest OS is given a virtual NIC that does not directly route to a physical NIC. In this scenario, guest OSs can be configured to communicate with one another and, potentially, with the host OS.
 
 **What was done:** already a whole sentence; list number or dash taken off
 
@@ -244,23 +244,11 @@ Pass rule (plan step 5): at least 80% better or same.
 
 ---
 
-## 21. afi10-2402 — 2.19.3
+## 21. NIST.SP.800-125 — (no ref)
 
-**Root:** - Coordinate with the MAJCOM/DRUs, FOAs, and AF functional area leads on the identification, assessment, and remediation of AF TCAs and non-AF owned and/or managed infrastructure.
+**Root:** An operating system and applications can be installed, configured, secured, and tested in a single image
 
-**Explained:** Coordinate with the MAJCOM/DRUs, FOAs, and AF functional area leads on the identification, assessment, and remediation of AF TCAs and non-AF owned and/or managed infrastructure.
-
-**What was done:** already a whole sentence; list number or dash taken off
-
-**Rating:** 
-
----
-
-## 22. afi13-550 — 7.3.4
-
-**Root:** - 7.3.4.2.  Establish  and  maintain  an  AN/USQ-225  operational  reporting  process  IAW AFMAN  10-206, Operational  Reporting , to identify, elevate,  and  resolve  system problems.
-
-**Explained:** Establish and maintain an AN/USQ-225 operational reporting process IAW AFMAN 10-206, Operational Reporting, to identify, elevate, and resolve system problems.
+**Explained:** An operating system and applications can be installed, configured, secured, and tested in a single image and that image then distributed to many hosts.
 
 **What was done:** expanded to the whole sentence
 
@@ -268,47 +256,11 @@ Pass rule (plan step 5): at least 80% better or same.
 
 ---
 
-## 23. afi13-550 — 6.3.2
+## 22. afi10-2402 — A2.4.1
 
-**Root:** - 6.3.2.1.  Implement NC3 and intelligence cybersecurity policy IAW AFI 17-130.
+**Root:** This reinforces  the  TCA  identification  process  that  starts  with  the  mission.
 
-**Explained:** Implement NC3 and intelligence cybersecurity policy IAW AFI 17-130.
-
-**What was done:** expanded to the whole sentence
-
-**Rating:** 
-
----
-
-## 24. afi13-550 — 5.3.6
-
-**Root:** - 5.3.6.  MAJCOMs supporting AN/USQ-225 host facilities, constituents, or external dependencies will coordinate requested or planned configuration baseline changes with AFGSC and AFNWC/NC-AFPEO NC3 prior to implementation.
-
-**Explained:** MAJCOMs supporting AN/USQ-225 host facilities, constituents, or external dependencies will coordinate requested or planned configuration baseline changes with AFGSC and AFNWC/NC-AFPEO NC3 prior to implementation.
-
-**What was done:** expanded to the whole sentence
-
-**Rating:** 
-
----
-
-## 25. afi13-550 — 2.2.13.2
-
-**Root:** - Act as lead systems engineer and technical configuration manager for the AN/USQ-225.
-
-**Explained:** Act as lead systems engineer and technical configuration manager for the AN/USQ-225.
-
-**What was done:** already a whole sentence; list number or dash taken off
-
-**Rating:** 
-
----
-
-## 26. afi13-550 — 7.3.1
-
-**Root:** Maintain situational awareness of AF participation and review metrics generated by  formal  DoD  NC3  assessment  and  exercise  programs,  such  as:  USSTRATCOM Continuing  Evaluation  Program  (CEP)  (US  Strategic  Command  Instruction  513-3, Continuing Evaluation Program )  and the Joint Staff POLO HAT and PAUL REVERE programs  (CJCSI  3264.01F, Nuclear  Command,  Control,  and  Communications  (NC3) Operational Assessment Programs ).
-
-**Explained:** Maintain situational awareness of AF participation and review metrics generated by formal DoD NC3 assessment and exercise programs, such as: USSTRATCOM Continuing Evaluation Program (CEP) (US Strategic Command Instruction 513-3, Continuing Evaluation Program) and the Joint Staff POLO HAT and PAUL REVERE programs (CJCSI 3264.01F, Nuclear Command, Control, and Communications (NC3) Operational Assessment Programs).
+**Explained:** This reinforces the TCA identification process that starts with the mission.
 
 **What was done:** already a whole sentence
 
@@ -316,23 +268,23 @@ Pass rule (plan step 5): at least 80% better or same.
 
 ---
 
-## 27. dafman17-1305 — 2.2.14
+## 23. afi13-550 — 3.3.3.3
 
-**Root:** Track Authorizing Official (AO) signed certification waivers, as discussed in Chapter 4 .
+**Root:** AFGSC will: - Publish  and  maintain  a  charter  governing  the  AF  NLCC/NC3  governance structure and process.
 
-**Explained:** Track Authorizing Official (AO) signed certification waivers, as discussed in Chapter 4.
+**Explained:** AFGSC will: Publish and maintain a charter governing the AF NLCC/NC3 governance structure and process.
 
-**What was done:** already a whole sentence
+**What was done:** already a whole sentence; lead-in kept (found in the chunk)
 
 **Rating:** 
 
 ---
 
-## 28. dafman17-1305 — 2.20.4
+## 24. afi13-550 — 2.2.7
 
-**Root:** - 2.20.4. (For personnel assigned to the cybersecurity workforce element or assigned a cybersecurity role) Sign a formal statement of assigned cybersecurity responsibilities and submit to the appropriate program management office.
+**Root:** provide guidance and feedback on the integration of AF NC3 analyses of programs, plans, and operations; synchronizing DoD and Air Force NC3 capabilities; and requirements analyses designed to optimize operations and sustainment efforts.
 
-**Explained:** (For personnel assigned to the cybersecurity workforce element or assigned a cybersecurity role) Sign a formal statement of assigned cybersecurity responsibilities and submit to the appropriate program management office.
+**Explained:** Director for Studies, Analyses and Assessments (AF/A9) will provide guidance and feedback on the integration of AF NC3 analyses of programs, plans, and operations; synchronizing DoD and Air Force NC3 capabilities; and requirements analyses designed to optimize operations and sustainment efforts.
 
 **What was done:** expanded to the whole sentence
 
@@ -340,23 +292,71 @@ Pass rule (plan step 5): at least 80% better or same.
 
 ---
 
-## 29. dafman17-1305 — 2.2.10
+## 25. afi13-550 — 2.2.3
 
-**Root:** Identify, track, and report qualifications for DAF personnel who perform cyberspace work roles in accordance with DoDD 8000.01, Management of the Department of Defense Information Enterprise ,  DoDI 7730.68, Uniformed Services Human Resources Information System , Volume 4 of DoDI 1444.02 .
+**Root:** Deputy Chief of Staff for Intelligence, Surveillance, and Reconnaissance ( AF/A2 ) will establish policies and processes to provide intelligence and threat support to Air Force NLCC/NC3 programs IAW AFI 14-111,
 
-**Explained:** Identify, track, and report qualifications for DAF personnel who perform cyberspace work roles in accordance with DoDD 8000.01, Management of the Department of Defense Information Enterprise, DoDI 7730.68, Uniformed Services Human Resources Information System, Volume 4 of DoDI 1444.02.
+**Explained:** Deputy Chief of Staff for Intelligence, Surveillance, and Reconnaissance (AF/A2) will establish policies and processes to provide intelligence and threat support to Air Force NLCC/NC3 programs IAW AFI 14-111, Intelligence Support to the Acquisition Life-Cycle, and AFGSC Intelligence, Surveillance, and Reconnaissance Support to NC3 Standard Operating Procedure.
 
-**What was done:** already a whole sentence
+**What was done:** expanded to the whole sentence
 
 **Rating:** 
 
 ---
 
-## 30. dafman17-1305 — 2.7.3
+## 26. afi17-203 — 3.4.4
 
-**Root:** - 2.7.3.  Work with AF/A1, AF/A2/6, and SAF/CN on a capability to automate reporting of the DAF cyberspace workforce (e.g., qualification status).
+**Root:** Assess the event against the incident criteria to determine if it is a reportable event or incident
 
-**Explained:** Work with AF/A1, AF/A2/6, and SAF/CN on a capability to automate reporting of the DAF cyberspace workforce (e.g., qualification status).
+**Explained:** Assess the event against the incident criteria to determine if it is a reportable event or incident (See Table 1.1, Incident Categories).
+
+**What was done:** expanded to the whole sentence
+
+**Rating:** 
+
+---
+
+## 27. afi17-203 — 1.2.3
+
+**Root:** incidents which may involve the compromise of PII will also be reported according to the guidelines in paragraph 1.1.2.4 of AFI 33-332
+
+**Explained:** In addition to the procedures specified in this Instruction, incidents which may involve the compromise of PII will also be reported according to the guidelines in paragraph 1.1.2.4 of AFI 33-332, The Air Force Privacy and Civil Liberties Program, and Appendix A, Table 1, of Office of the Secretary of Defense (OSD) Memorandum OSD 06227-09, Safeguarding Against and Responding to the Breach of Personally Identifiable Information.
+
+**What was done:** expanded to the whole sentence; merged with other roots in the same sentence
+
+**Rating:** 
+
+---
+
+## 28. afman17-2101 — 2.8.3.8.
+
+**Root:** Submit concurrence or non-concurrence to the base Communications Focal Point for SBU I DATA, SECRET IP DATA, and 24 AF designated mission critical circuits.
+
+**Explained:** Submit concurrence or non- concurrence to the base Communications Focal Point for SBU I DATA, SECRET IP DATA, and 24 AF designated mission critical circuits.
+
+**What was done:** expanded to the whole sentence; a few words at the front that are not in the source taken off
+
+**Rating:** 
+
+---
+
+## 29. afman17-2101 — 2.8.4.1
+
+**Root:** ANG/AFRC tenant units do not have to accomplish the Tech Control Facility/Patch and Test Facility roles and responsibilities defined above since the host base provides that support.
+
+**Explained:** ANG/AFRC tenant units collocated on main operating bases do not have to accomplish the Tech Control Facility/Patch and Test Facility roles and responsibilities defined above since the host base provides that support.
+
+**What was done:** expanded to the whole sentence; a few words at the front that are not in the source taken off
+
+**Rating:** 
+
+---
+
+## 30. afman17-2101 — 2.3.16
+
+**Root:** shall be coordinated with the customer.
+
+**Explained:** This activity will not be accomplished indiscriminately and shall be coordinated with the customer.
 
 **What was done:** expanded to the whole sentence
 
