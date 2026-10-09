@@ -46,3 +46,38 @@ Counting by the root alone gives 67 of 74, two below the existing run (within th
 `outputs/explained_rating_sheet.md`, 30 rows (8 where only a list number, dash or spacing differs; 22 where the words differ). The owner rated 28 and left 2 blank (rows 23 and 29): **25 better, 3 same, 0 worse = 28 of 28 better or same; step 5's bar of 80% is met** (28 of 30 = 93% even if the two blanks are counted against it).
 
 Three of the "better" ratings carry a note that the row is not a requirement and should be n/a: row 3 is a lead-in line ("In addition to the responsibilities in Paragraph 2.10., the DoD CIO:"), rows 24 and 26 are definitions. The text is better, but screening should mark them; this is the evidence for the screening step (plan step 7).
+
+## Lead-ins attached by rule (context attaching, tier 1)
+
+`pipeline/lead_in.py` finds, for a list item, the nearest earlier line (in the same chunk, or at the end of the previous chunk when the list began there) that ends in a colon and is not a sibling of the item: a sibling that also introduces a list, or a deeper numbered line, is skipped, and an ordinary paragraph in between stops the search. It is an exact line of the source. `explain_records` puts it in front of the explained text (`explained_parts` kind `lead_in`, origin `rule`; a note says so). The record's root is untouched. Run `lead_in_report.py` for the numbers below; it also writes `outputs/lead_in_rating_sheet.md`, 30 attached rows for the owner to rate right / neutral / wrong.
+
+On the 13 reference documents (2,420 records): **572 records (23.6%) get a lead-in by rule**, in addition to the 59 whose lead-in the model had glued on.
+
+Against the owner-adjudicated gold records (the AFI and DoDI records labeled earlier; 57 "complete" and 131 "needs a lead-in" are matched in the new run, 18 gold records are not found in it):
+
+| Gold label | Result |
+|---|---|
+| needs a lead-in, in the previous chunk (31) | the adjudicated lead-in attached 27, a different one 2, none 2 |
+| needs a lead-in, in the same chunk (50) | attached 28, different 5, none 17 |
+| needs a lead-in, in a section heading (58) | none attached 56 (a heading is not a line ending in a colon; this rule does not read headings), attached 1, different 1 |
+| complete, stands on its own (57) | none attached 42, a lead-in attached 15 |
+
+Reading the 15: most are items that are full sentences under a real lead-in ("AFGSC will: Publish and maintain a charter ..."; "Some significant points about DoD CUI include: ..."), so the lead-in is the line that governs them though the sentence did not need it to be understood. The "different" ones are mostly an immediate lead-in where the adjudicated one was the actor further up (for example "Appoints a DoD military officer ... to:" where the gold says "DIRECTOR, DISA."). The 17 same-chunk misses and the 56 heading cases are what a later step (the heading, or the model-picks step) would cover.
+
+Nothing is merged on this evidence alone. **Pass rule (written before any rating):** the owner's rating of the sample sheet is at least 80% right or neutral and no more than 10% wrong; a wrong lead-in is worse than none.
+
+After review of the PR, two rules were added: an abbreviation in a lead-in ("The U.S. Cyber Command will:") no longer cuts it, and the previous chunk is only consulted when it is in the same section (a list that continues across a chunk boundary stays in its section; another section's lead-in must not be borrowed). That took the count from 597 to 572; the figures against the adjudicated gold are unchanged. Of the 30 rated rows, 29 still get the same lead-in; the one that does not is row 1 (DODI 5200.01, "this instruction:"), which the owner had rated neutral.
+
+### Rating of the lead-in sample (2026-10-09)
+
+The owner rated rows 1 to 22 and, too tired to go on, asked the assistant to judge rows 23 to 30. Those eight are marked "assistant's judgment" in the sheet and are kept apart here. The check was against the document's own numbering: in each of the eight, the lead-in found is the line whose paragraph number is the parent of the item's number (7.3.4 "AFGSC will:" for 7.3.4.2; 2.20.18 for 2.20.18.1; 6.3.2, 2.2.11, 2.2.6, 7.3.5, 2.8.2, 4.3.2 likewise).
+
+| | Rows | Result |
+|---|---|---|
+| Owner | 1 to 22 | **0 wrong of 22**: 14 better or right, 7 neutral or "helps add context but doesn't point to a person", 1 (row 15) noted as a definition, not a requirement (a screening note, not a verdict on the lead-in) |
+| Assistant | 23 to 30 | 8 right (row 23 names no person or group, the others do) |
+| Together | 30 | 0 wrong; 22 right or better and 7 neutral among the 29 judged on the lead-in (row 15 aside): **at least 80% right or neutral, at most 10% wrong: met** |
+
+The pass rule asked for the owner's rating; the owner delegated the last eight, so the result is stated both ways: on his 22 alone it is 0 wrong of 22 (an upper bound of about 13% on the wrong rate at 95% confidence, so the "at most 10%" half is not shown by his rows alone); with the eight it is 0 of 30. If he rates rows 23 to 30 himself and disagrees, the rule can be re-read then.
+
+What the comments add: the recurring complaint is that a lead-in such as "It is DoD policy that:" or "This issuance applies to:" gives context but **names no person or group**. Those are the cases where the "who" is not in a lead-in at all, which is the applicability question.
