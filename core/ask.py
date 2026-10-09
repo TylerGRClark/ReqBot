@@ -309,13 +309,15 @@ def format_evidence(results: list[dict]) -> str:
         cite = ", ".join(cite_parts)
 
         primary = requirement_text(hit)
-        entry = (
-            f"[{i}] ({cite})\n"
-            f"    Type: {hit.get('requirement_type', 'unknown')}\n"
-            f"    Tags: {', '.join(hit.get('domain_tags', []))}\n"
-            f"    Requirement: {primary}\n"
-            f"    Quote: {hit.get('source_quote', '')}"
-        )
+        # Type and tags are no longer assigned (docs/PIPELINE_REDESIGN_PLAN.md): show them only on records that have them; show the quote only when it differs from the requirement text.
+        entry = f"[{i}] ({cite})\n"
+        if hit.get("requirement_type"):
+            entry += f"    Type: {hit['requirement_type']}\n"
+        if hit.get("domain_tags"):
+            entry += f"    Tags: {', '.join(hit['domain_tags'])}\n"
+        entry += f"    Requirement: {primary}"
+        if hit.get("source_quote") and hit.get("source_quote") != primary:
+            entry += f"\n    Quote: {hit['source_quote']}"
         # WP-39.2: governing stem recovered by parent-stem reconstruction, for
         # fragment-shaped quotes that don't stand on their own (e.g. "(3) Restrain
         # competition." with no visible list-introducing clause) -- otherwise
@@ -357,7 +359,8 @@ def print_results_table(results: list[dict]) -> None:
         if source or ref or page_info:
             cite_parts = [x for x in [source, ref, page_info] if x]
             print(f"    Source: {', '.join(cite_parts)}")
-        print(f"    Type: {hit.get('requirement_type', 'unknown')} | Tags: {', '.join(hit.get('domain_tags', []))}")
+        if hit.get("requirement_type") or hit.get("domain_tags"):
+            print(f"    Type: {hit.get('requirement_type') or 'unknown'} | Tags: {', '.join(hit.get('domain_tags') or [])}")
         primary = requirement_text(hit)
         print(f"    {primary}")
         if hit.get("source_quote") and primary != hit.get("source_quote"):
