@@ -28,6 +28,7 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+from pipeline import anchor as anchor_mod
 from pipeline.chunk_text import _normalize_heading
 
 logging.basicConfig(
@@ -682,6 +683,7 @@ def run(
     section_children_map: dict[str, list[str]] = {}
     chunk_text_map: dict[int, str] = {}
     chunk_raw_text_map: dict[int, str] = {}
+    chunk_breadcrumb_map: dict[int, str] = {}
     if chunks_path.exists():
         log.info("Loading chunk metadata from: %s", chunks_path)
         chunks = load_jsonl(chunks_path)
@@ -690,6 +692,7 @@ def run(
         section_children_map = build_section_children_map(chunks)
         chunk_text_map = build_chunk_text_map(chunks)
         chunk_raw_text_map = {c["chunk_id"]: c.get("raw_text") or c.get("text") or "" for c in chunks if "chunk_id" in c}
+        chunk_breadcrumb_map = {c["chunk_id"]: str(c.get("breadcrumb") or "") for c in chunks if "chunk_id" in c}
         log.info("Loaded page references for %d chunks", len(chunk_page_map))
         sections_with_children = sum(1 for v in section_children_map.values() if v)
         log.info(
@@ -862,6 +865,10 @@ def run(
         if not source_ref:
             confidence -= 0.1
 
+        # Anchoring (docs/PIPELINE_REDESIGN_PLAN.md): metadata beside the root quote about where it sits in the chunk and how exact the match is. Adds fields only; the quote
+        # itself is not touched here, and nothing is accepted or rejected on this basis yet.
+        anchor_fields = anchor_mod.anchor(source_quote, chunk_raw_text_map.get(chunk_id, ""), chunk_breadcrumb_map.get(chunk_id, ""))  # an unknown chunk gives the same fields, as not_found
+
         normalized = {
             "requirement_id": req.get("requirement_id", f"R-{chunk_id}-X"),
             "description": description,
@@ -890,6 +897,7 @@ def run(
             "extraction_model": extraction_model,
             "run_timestamp": run_timestamp,
         }
+        normalized.update(anchor_fields)
         valid_reqs.append(normalized)
 
     before_dedup = len(valid_reqs)
