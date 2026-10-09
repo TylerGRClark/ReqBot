@@ -44,7 +44,7 @@ PROHIBITION = re.compile(
 PROHIBITION_RULE = "- This requirement forbids something. Ask whether it is avoided (\"Does the unit avoid ...?\"); do not ask whether it happens.\n"
 SCHEMA = {"type": "object", "properties": {"question": {"type": ["string", "null"]}}, "required": ["question"]}
 _TERM = re.compile(r"\b(?:\d[\w./-]*|[A-Z]{2,}[\w/&-]*|[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)")
-_STOP = {"does", "do", "is", "are", "has", "have", "did", "was", "were", "can", "will", "the", "a", "an", "if", "when", "whether", "who", "what", "how", "each", "all", "any", "yes", "no"}
+_STOP = {"does", "do", "is", "are", "has", "have", "did", "was", "were", "can", "will", "the", "a", "an", "if", "when", "whether", "who", "what", "how", "each", "all", "any", "yes", "no", "should", "would", "could", "must", "shall", "may", "might", "there", "this", "that", "these", "those"}
 
 
 def sidecar_path(requirements_path: Path) -> Path:
@@ -60,8 +60,6 @@ def unverified_terms(question: str, material: str) -> list[str]:
     out = []
     for m in _TERM.finditer(question or ""):
         words = m.group(0).split()  # word by word: a title with its parenthetical acronym left out is still grounded
-        if m.start() == 0 and words:
-            words = words[1:]  # the sentence-initial word ("Do", "Does") is ignored; the rest of the match is still checked
         for word in words:
             w = word.lower().strip(".,;:()")
             if len(w) < 3 and not any(ch.isdigit() for ch in w):

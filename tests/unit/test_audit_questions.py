@@ -86,6 +86,8 @@ def test_generate_fills_the_audit_question_from_the_sidecar(tmp_path):
 def test_a_plain_word_must_match_a_whole_word_and_the_first_word_after_a_sentence_start_is_still_checked():
     assert AQ.unverified_terms("Do the units file a port report?", "Units file the report monthly.") == []  # "port" is lower case: not a checked term
     assert AQ.unverified_terms("Do Administrators review logs?", "Commanders review logs monthly.") == ["Administrators"]
+    assert AQ.unverified_terms("CIO approval is documented?", "Commanders review logs monthly.") == ["CIO"]
+    assert AQ.unverified_terms("Does the unit review logs?", "Commanders review logs monthly.") == []
     assert AQ.unverified_terms("Does the unit use SIEM-9?", "The unit uses a tool (SIEM-9a).") == []  # inside a longer token
     assert AQ.unverified_terms("Does the unit use SIEM-9?", "The unit uses a tool.") == ["SIEM-9"]
 
