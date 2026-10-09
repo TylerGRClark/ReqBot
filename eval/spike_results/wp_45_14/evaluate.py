@@ -94,7 +94,7 @@ def main():
         before = sum(len(doc[0]) for doc in expanded[arm].values())
         after = sum(len(doc[1]) for doc in expanded[arm].values())
         status = collections.Counter(x["status"] for x in details)
-        usable = [x for x in details if x["status"] in ("expanded", "unchanged")]
+        usable = [x for x in details if x["status"] in ("expanded", "unchanged", "too_short")]  # a one-word quote is left as given and still counts
         inc_before = sum(1 for x in usable if not SE.is_complete(x["original"]))
         inc_after = sum(1 for x in usable if not SE.is_complete(x["expanded"]))
         lengths = [len(x["expanded"]) for x in usable]
@@ -116,7 +116,7 @@ def main():
         lines += [f"## {n}. {doc} ({arm})", "", f"**Original:** {x['original']}", "", f"**Expanded:** {x['expanded']}", "", "**Rating:** ", "", "---", ""]
     out = _HERE / "outputs"
     out.mkdir(exist_ok=True)
-    (out / "sentence_rule_sample_for_rating.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (out / "sentence_rule_sample_after_fixes.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     report["sample_size"] = len(picked)
     (out / "sentence_rule_report.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
     for arm, v in report["arms"].items():

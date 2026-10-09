@@ -18,7 +18,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     7. Summary of Changes. Updates to CJCSI 6510.02G include clariSring authority, roles, responsibilities, and procedures for the Services  and CCMDs for submission  of a KER for continued  use of communication security  devices whose cryptographic  algorithms have reached the LYOU or have been decertified.  Added KER close out template to references (reference (d)). References  dates have also been updated.
 
 **Rating:** 
-
+not a requirement
 ---
 
 ## 2. DODI 5200.44 — chunk 16
@@ -35,7 +35,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     - c.  In coordination with the USD(R&E), the DoD CIO, the USD(I&S), and the DoD Component heads, establishes TSN and ICT SCRM policy, guidance, education, and training for the program managers and the acquisition and sustainment workforce to include cybersecurity for acquisition decision authorities and program managers in accordance with DoDI 5000.90. Develops budget recommendations for the lifecycle of the TSN capability.
 
 **Rating:** 
-
+yes
 ---
 
 ## 3. DODI 5200.48 — chunk 72
@@ -50,7 +50,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     determining whether appropriate protection will be available at the receiving location before transmission (e.g., facsimile machine attended by a person authorized to receive CUI; facsimile machine located in a controlled government environment).
 
 **Rating:** 
-
+yes
 ---
 
 ## 4. DODI 5200.48 — chunk 21
@@ -71,7 +71,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     - h.  As the requiring activity, oversee CUI requirements for contractor implementation in partnership with the Defense Contract Management Agency, based on Defense Contract Management Agency responsibilities, or DCSA for cleared contractors in accordance with the NISP, as appropriate.
 
 **Rating:** 
-
+yes
 ---
 
 ## 5. DODI 5200.48 — chunk 3
@@ -94,7 +94,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     f.  Nothing in this issuance alters or supersedes the existing authorities of the Director of National Intelligence (DNI) regarding CUI.
 
 **Rating:** 
-
+yes
 ---
 
 ## 6. DODI 5200.48 — chunk 64
@@ -110,7 +110,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     related to IS. <<  The USD(I&S) must coordinate and collaborate with the DoD CIO to ensure the agency requesting the waiver has plans to appropriately safeguard and control CUI.  The request for a waiver for a CUI Program requirement shall be done in accordance with Volume 1 of DoDM 5200.01 for CNSI, as modified in the forthcoming manual supporting this instruction.
 
 **Rating:** 
-
+yes
 ---
 
 ## 7. DODI 8410.03 — chunk 20
@@ -130,7 +130,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     11.  COMMANDERS OF THE COMBATANT COMMANDS.  The Commanders of the Combatant Commands, in addition to the responsibilities in section 8 of this enclosure, shall support the Joint Staff in establishing requirements for sharing NM information and data with coalition partner networks.
 
 **Rating:** 
-
+yes
 ---
 
 ## 8. DODI 8551.01 — chunk 20
@@ -147,7 +147,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     - (5)  PPS used in DODIN connections with mission partners must adhere to applicable international agreements negotiated and concluded in accordance with DoDI 5530.03. Interagency memorandums of understanding, service-level agreements, or contracts must specify the approved use of PPS.
 
 **Rating:** 
-
+yes
 ---
 
 ## 9. DODI 8551.01 — chunk 25
@@ -164,7 +164,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     >> - c.  A resource for the DoD cybersecurity community to post and share practical solutions and documents with other DoD community and mission partners. <<
 
 **Rating:** 
-
+no
 ---
 
 ## 10. DODI 8551.01 — chunk 24
@@ -183,7 +183,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     - e.  >> Procedures for preparing and processing requests under the exception management process are located on the RMF KS. <<
 
 **Rating:** 
-
+partial. this may be informational or a req. hard to tell 
 ---
 
 ## 11. DODI 8551.01 — chunk 5
@@ -199,7 +199,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     b.  Provides oversight and guidance to the Director, Defense Information Systems Agency (DISA), in the development, review, and approval of the PPSM CCB Charter in accordance with the responsibilities assigned to the Director, DISA, in Paragraph 2.2.b.
 
 **Rating:** 
-
+no
 ---
 
 ## 12. NIST.SP.800-125 — chunk 100
@@ -218,7 +218,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     -  Management. >> Administrators can configure and manage the solution effectively and securely. This includes all components, including hypervisors and images. <<
 
 **Rating:** 
-
+this sounds like a requirement for someone to be an admin? but yes
 ---
 
 ## 13. NIST.SP.800-125 — chunk 14
@@ -233,7 +233,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     Most existing recommended security practices remain applicable in virtual environments. The practices described in this document build on and assume the implementation of practices described in other NIST publications.
 
 **Rating:** 
-
+no
 ---
 
 ## 14. NIST.SP.800-125 — chunk 84
@@ -247,7 +247,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     >> Desktop virtualization can be used to improve security by providing a well-secured guest OS image for the desktop environment. << A number of virtualization vendors provide solutions that will allow organizations to deploy a managed desktop guest OS on unmanaged computers. For example, telecommuting employees may install a hypervisor on their home computer and access the organization's intranet through a specific guest OS image, or a remote access server might deliver a clean guest OS image every time a user initiates a remote access session. Some solutions even permit users to boot their home computers from removable media containing a hypervisor and guest OS image; this can provide a bare metal full virtualization solution that does not run the host OS on the home computer. Guest OS images on read-only media are not a panacea, however. Guest OSs are often updated, which means that the old read-only media would need to be destroyed and new media created and distributed. Because of this, some organizations might be tempted to use rewritable media instead, but that could lead to the media being infected with malware.
 
 **Rating:** 
-
+yes/ partial. NIST freequently writes in a way that gives multiple options. this can be counted as a yes. NIST is hard
 ---
 
 ## 15. NIST.SP.800-125 — chunk 50
@@ -261,7 +261,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     Resources may be partitioned physically or logically. In physical partitioning , the hypervisor assigns separate physical resources to each guest OS, such as disk partitions, disk drives, and network interface cards. Logical partitioning may divide resources on a single host or across multiple hosts as in a pool of resources with the same security impact level categorization, allowing multiple guest OSs to share the same physical resources, such as processors and RAM, with the hypervisor mediating access to the resources. Physical partitioning sets hard limits on resources for each guest OS because unused capacity from one resource may not be accessed by any other guest OS. >> However, having physical separation for resources may provide stronger security and improved performance than logical partitioning. << Many virtualization systems can do both physical and logical partitioning. Some organizations have policies about which application data can physically reside on drives with the data of other applications, and such policies should take into account physical and logical partitioning in hypervisors.
 
 **Rating:** 
-
+yes/partial same as above
 ---
 
 ## 16. NIST.SP.800-125 — chunk 52
@@ -277,7 +277,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     Attackers may attempt to break out of a guest OS so that they can access the hypervisor, other guest OSs, or the underlying host OS. Breaking out of a guest OS is also known as escape . >> If an attacker can successfully escape a guest OS and gain access to the hypervisor, the attacker might be able to compromise the hypervisor and gain control over all of its guest OSs. << So the hypervisor provides a single point of security failure for all the guest OSs; a single breach of the hypervisor places all the guest OSs at high risk.
 
 **Rating:** 
-
+no, just informative
 ---
 
 ## 17. NIST.SP.800-125 — chunk 61
@@ -291,7 +291,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     In some virtualization systems, guest OSs can be moved from one host computer to another when needed, such as when a host needs to be rebooted or shut off for maintenance work, when a partial host failure or an attack against the hypervisor or OS is detected, when there is a strong expectation of an impending attack. This can lower the pressure to perform upgrades and replacements quickly, thus reducing inconvenience to system administrators and providing more time for testing the changes. For server virtualization, the hypervisor may be able to move its guest OSs to other host computers automatically; on some VM systems, this can happen when the virtual machines are still running, and do not require a shutdown or suspend of the guest operating system. For desktop virtualization, manual actions are generally needed.  A storage network is dedicated to perform these migrations or the transport channel is fully authenticated and encrypted to preserve the integrity of the VMs and prevent information leakage.
 
 **Rating:** 
-
+no, same as above
 ---
 
 ## 18. NIST.SP.800-125 — chunk 100
@@ -310,7 +310,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     -  Management. Administrators can configure and manage the solution effectively and securely. This includes all components, including hypervisors and images.
 
 **Rating:** 
-
+yes
 ---
 
 ## 19. NIST.SP.800-125 — chunk 28
@@ -324,7 +324,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     For full virtualization to be effective, the virtualized hardware presented to the guest OS must resemble physical hardware extremely closely. In addition, >> virtualization systems must offer additional features for the virtualized hardware to help it integrate well with the physical hardware in an organization's network. << This section discusses virtualized networking and storage, as well as how a guest OS is encapsulated.
 
 **Rating:** 
-
+yes
 ---
 
 ## 20. afi10-2402 — chunk 31
@@ -342,7 +342,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     - 2.10.5.  Coordinate as appropriate with the HAF  CARM  Program to code HAF, MAJCOM/DRU,  and  FOA  CARM  positions with a Top Secret (TS) / Sensitive Compartmented Information (SCI) security clearance.
 
 **Rating:** 
-
+yes
 ---
 
 ## 21. afi10-2402 — chunk 100
@@ -357,7 +357,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     3.5.7.  The HAF CARM Program will task MAJCOM/DRUs and FOAs (as appropriate) on an annual basis to conduct a review of BEIs for identified TCAs to maintain data fidelity and asset awareness.
 
 **Rating:** 
-
+yes
 ---
 
 ## 22. afi10-2402 — chunk 95
@@ -374,7 +374,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     3.4.2.3.  Each  COA  recommendation  will  include  a  summary  of  the  suggested  action, expected  risk  reduction  effectiveness,  and  estimates  of  time/investment  needed  to implement the action.
 
 **Rating:** 
-
+no, but i can see why it looks like one to an LLM
 ---
 
 ## 23. afi10-2402 — chunk 92
@@ -389,7 +389,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     3.3.4.  >> The  AFMAA  is  the  only  assessment  program  pertaining  to  the  CARM  Program, which focuses exclusively on AF assets and infrastructure. <<  The AFMAA team structure and assessment format parallel that of the JMAA.  As such, the assessment stages, procedures, outputs, and team composition described in Section 3.3.3 also apply to the AFMAA.
 
 **Rating:** 
-
+maybe? probably no with the same answer above. id probably not score this one
 ---
 
 ## 24. afi13-550 — chunk 9
@@ -407,7 +407,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     1.5.2.2.  Planning.    Planning is  the set of C3  activities relating to the development and modification of plans for employment of nuclear weapons and other operations in support of nuclear employment.
 
 **Rating:** 
-
+no, its a definition
 ---
 
 ## 25. afi13-550 — chunk 30
@@ -421,7 +421,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     3.1. Overview. The Office of the Secretary of Defense maintains robust and recurring oversight of NLCC and NC3 issues across the DoD.  Under authority vested in Title 10 United States Code Section  171a, Council  on  Oversight  of  the  National  Leadership  Command,  Control,  and Communications System (established by Section 1052 of the FY14 National Defense Authorization Act), the DoD established a Council on Oversight of National Leadership Command, Control, and Communications systems.  >> This Council, co-chaired by Vice Chairman of the Joint Chiefs of Staff and Under Secretary of Defense for Acquisition and Sustainment, governs and oversees NLCC, to include NC3, across all DoD agencies, including AF-owned portions. <<  The Council provides a centralized decision-making structure and forum through which AF senior officials can elevate AF-owned NC3 issues.  Subordinate to the Council, DoD Chief Information Officer (CIO) chairs a NLCC Executive Management Board, Senior Steering Group, and numerous working groups IAW DoDI S-5100.92, Defense and National Leadership Command Capability Governance ,  to elevate issues through the Council's governance structure.
 
 **Rating:** 
-
+no, same as above
 ---
 
 ## 26. afi17-203 — chunk 32
@@ -443,7 +443,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     | I-NOSC                                                         | 3-7                               | 624 OC                                                       | ACD unit, ACCC/MCCC                    |
 
 **Rating:** 
-
+no
 ---
 
 ## 27. afi17-203 — chunk 36
@@ -459,7 +459,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     3.4.4.3.  Based on the incident category, nature, and impact of the incident, determine if the computer forensics process should be initiated per CJCSM 6510.01B (T-2) .
 
 **Rating:** 
-
+yes
 ---
 
 ## 28. afi17-203 — chunk 54
@@ -475,7 +475,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     A2.1.6.  Cyberspace Vulnerability Assessment/Hunter (CVA/Hunter). >> CVA/Hunter executes vulnerability,  compliance,  defense  and  non-technical  assessments,  best  practice  reviews, penetration  testing  and  Hunter  missions  on  AF  and  DoD  networks  &  systems. <<  Hunter operations characterize and then eliminate threats for the purpose of mission assurance. The weapon system can perform defensive sorties world-wide via remote or on-site access.
 
 **Rating:** 
-
+yes
 ---
 
 ## 29. afi17-203 — chunk 49
@@ -489,7 +489,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     3.8.1.  An  incident/event  investigation  involving  the  IC  may  deviate  from  'typical'  cyber incident handling processes depending upon the nature and sensitivity of the operation.  >> In such cases, adversary activity may be allowed to continue in order for friendly forces to gain actionable intelligence or allow for the continuation of friendly classified operations. <<
 
 **Rating:** 
-
+yes
 ---
 
 ## 30. afi17-203 — chunk 37
@@ -503,7 +503,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     3.5. Preliminary  Response  Actions. Preliminary  response  actions  are  the  immediate  steps taken once an incident has been detected and declared. >> They provide information to help protect the systems and network from more damage while more detailed analysis is completed. << More detailed response steps may be taken after a more thorough analysis is performed. These will be based on the nature, scope, and potential impact of the incident. Preliminary response  actions should  not  result  in  a  self-imposed  denial  of  service;  that  is,  wherever  possible,  affected systems/networks should be kept in operation to support the unit mission.
 
 **Rating:** 
-
+no, informational
 ---
 
 ## 31. afman17-2101 — chunk 26
@@ -521,7 +521,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     - 2.3.22.  Manages the expired/expiring Communications Service Authorization (CSA) program to  ensure commercial  circuits  and  services  are  re-awarded  or  discontinued  IAW DISA Global Contract Re-award Actions Tactics, Techniques, and Procedures.
 
 **Rating:** 
-
+yes
 ---
 
 ## 32. afman17-2101 — chunk 22
@@ -541,7 +541,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     - 2.3.11.5.  >> Receive  financial/execution  plan  (D-22s)  from  MAJCOMs.    Ensures  that financial/execution (D-22) transfers cover costs for existing requirements. <<
 
 **Rating:** 
-
+yes
 ---
 
 ## 33. dafman17-1305 — chunk 77
@@ -556,7 +556,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     4.1.13.  >> CCC may pay for annual vouchers for members who are cyber coded but currently serving  in  civilian  development  positions  such  as  career  broadening,  key  career  positions, civilian development long-term training schools and civilian strategic leadership programs. << Wherever possible, these individuals would retain their cyber codes. (T-2) To facilitate the return to their normal career progression, civilian personnel will maintain their qualifications
 
 **Rating:** 
-
+yes
 ---
 
 ## 34. dafman17-1305 — chunk 60
@@ -570,7 +570,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     - 2.21.8.  Report status of continuing education requirements in manner  prescribed  by Contracting Officer.
 
 **Rating:** 
-
+yes
 ---
 
 ## 35. dafman17-1305 — chunk 76
@@ -586,7 +586,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     4.1.11.  Vouchers are only issued for initial and annual payment of vendor certification fees for civilian and military personnel. >> Issuance of any vouchers requires the individual is assigned to a cyber coded position. << Vouchers may be requested via the CCC Certification and Training website: https://cwip.cce.af.mil .
 
 **Rating:** 
-
+yes
 ---
 
 ## 36. dafman17-1305 — chunk 72
@@ -602,7 +602,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     4.1.3.  Time  requirements  commence  on  the  date  of  assignment  to  each  role  assigned  and assignment to additional roles does not extend time for any prior assigned roles. Continuing education requirements that have overlapping KSAs may be used to satisfy those requirements for any KSAs contained within the overlap. Proficiency level requirements may differ among roles, as necessary.
 
 **Rating:** 
-
+yes
 ---
 
 ## 37. dafman17-1305 — chunk 14
@@ -618,7 +618,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     series as a required data field as applicable. << Relevant information is also recorded on civilian position description or core personnel documents.
 
 **Rating:** 
-
+yes
 ---
 
 ## 38. dafman17-1305 — chunk 99
@@ -633,7 +633,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     MRS. VENICE M. GOODWINE, SES, DAF Chief Information Officer
 
 **Rating:** 
-
+there was a requirement leading into this but this really isnt one. its also too small of a fragment to work off of 
 ---
 
 ## 39. dafman17-1305 — chunk 90
@@ -648,7 +648,7 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     4.4.5.2.  If the military member is not incumbent to the position the commander shall meet with both the supervisor and military member to reassess whether the individual possesses the necessary skills to perform in the cyberspace position. >> This assessment should include but is not limited to contextual factors of the individual's aptitude, motivation, experience, and knowledge level to perform at the required proficiency level in the cyberspace position. << Commanders  should  exercise restraint from using this section as the basis for administrative or punitive action against the member when reasonableness in making the assignment could have prevented failure.
 
 **Rating:** 
-
+yes
 ---
 
 ## 40. dafman17-1305 — chunk 77
@@ -663,6 +663,6 @@ Rate each: **requirement** (an auditor would want it on the sheet) / **partial**
     4.1.13.  CCC may pay for annual vouchers for members who are cyber coded but currently serving  in  civilian  development  positions  such  as  career  broadening,  key  career  positions, civilian development long-term training schools and civilian strategic leadership programs. >> Wherever possible, these individuals would retain their cyber codes. << (T-2) To facilitate the return to their normal career progression, civilian personnel will maintain their qualifications
 
 **Rating:** 
-
+yes
 ---
-
+## Note from tyler: a lot of these are either fragments are would need to more context and then molded to be really used on a checklist. The requirements need to be expanded for them to be auditable in many situations. but i was judging these as a root extraction, not necessarily as the 100% finished product

@@ -53,7 +53,7 @@ The owner rated all 22 units D1 covers and the current prompt does not (`outputs
 - counting them as requirement-or-partial (his "let it slide"): 15 of 22 = 68% (15 of 21 = 71% leaving out the unreadable table); D1 clears the 60% bar;
 - counting them as not a requirement (his literal "isn't necessarily a req"): 12 of 22 = 55% (12 of 21 = 57% leaving out the table); D1 **does not** clear the bar.
 
-With the labeled-page gates met (recall 91% against 62%, precision 56%), D1 is therefore a candidate whose rating gate is *not cleanly met*: pending the owner's call on units 19-21. P1 had already failed and was not rated.
+**Owner's call (2026-10-09): units 19-21 count as passes.** Unit 21 ("adversary activity may be allowed to continue ...") becomes auditable once phrased as a question ("is adversarial activity allowed to continue ...?"), so it is a valid extraction even though on its own it is a permission, and he will not try to separate suggestions from requirements at this stage; unit 19 is a requirement for the same reason (requirements can be drawn from the text), and unit 20 is read the same way. The 68% reading therefore stands, and with the labeled-page gates met (recall 91% against 62%, precision 56%) D1 passed the WP-45.12 gates. P1 had already failed and was not rated.
 
 What the seven "not a requirement" ratings show: three are applicability statements ("It applies to all military and civilian AF personnel ...", "This Instruction does not apply to ..."), which D1's prompt deliberately returns so a later step can attach them. A checklist hint for these rows is proposed separately (#275, not part of this change).
 
