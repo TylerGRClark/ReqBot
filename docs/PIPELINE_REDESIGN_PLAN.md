@@ -58,7 +58,7 @@ What is tangled:
 | on demand | **Checklist building** | Lay the stored fields out as a sheet; derive nothing new | step 7 | sheet | No |
 | on demand | **Draft questions** | One audit question per row (unchanged) | checklist rows | sidecar file | Yes (14B) |
 
-**Disabled for now (the code stays, commented out or switched off at the call site; no option flag is added):** tagging and typing (old D.5, part), plain-language description (old D.5, part), the description check (old D.6). `domain_tags`, `requirement_type` and `description` stay in the saved records as empty values, so readers do not break. The reasons: the tags are a cybersecurity vocabulary that would be wrong for the other AFI domains the project is meant to reach, the descriptions were nearly verbatim or blank, and neither fed the checklist. `confidence` is dropped from the default path, or redefined from the anchor result; the owner decides when the PR is written (section 8).
+**Disabled for now (the code stays, commented out or switched off at the call site; no option flag is added):** tagging and typing (old D.5, part), plain-language description (old D.5, part), the description check (old D.6). `domain_tags`, `requirement_type` and `description` stay in the saved records as empty values, so readers do not break. The reasons: the tags are a cybersecurity vocabulary that would be wrong for the other AFI domains the project is meant to reach, the descriptions were nearly verbatim or blank, and neither fed the checklist. `confidence` is dropped from the default path too (commented out, code kept; section 8).
 
 ### Order and why
 
