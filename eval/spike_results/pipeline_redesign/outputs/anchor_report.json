@@ -41,7 +41,8 @@
    "same_accepted_records_otherwise": true,
    "status": {
     "exact": 151,
-    "lead_in_joined": 18,
+    "lead_in_from_heading": 12,
+    "lead_in_joined": 6,
     "words_trimmed": 3
    }
   },
@@ -52,7 +53,7 @@
     "lead_in_joined": 4,
     "exact": 66,
     "words_trimmed": 11,
-    "not_found": 1
+    "exact_ambiguous": 1
    }
   },
   "NIST.SP.800-125": {
@@ -82,10 +83,12 @@
    "same_accepted_records_otherwise": true,
    "status": {
     "exact": 163,
-    "not_found": 3,
-    "lead_in_joined": 9,
+    "not_found": 1,
+    "lead_in_joined": 5,
     "marker_removed": 10,
-    "fuzzy": 1
+    "exact_ambiguous": 2,
+    "fuzzy": 1,
+    "lead_in_from_heading": 4
    }
   },
   "afi17-203": {
@@ -125,7 +128,7 @@
     "exact": 307,
     "words_trimmed": 8,
     "not_found": 3,
-    "lead_in_joined": 23,
+    "lead_in_from_heading": 23,
     "marker_removed": 9,
     "fuzzy": 2
    }
@@ -136,8 +139,9 @@
   "words_trimmed": 50,
   "marker_removed": 42,
   "fuzzy": 8,
-  "lead_in_joined": 59,
-  "exact_ambiguous": 7,
-  "not_found": 11
+  "lead_in_joined": 20,
+  "exact_ambiguous": 10,
+  "lead_in_from_heading": 39,
+  "not_found": 8
  }
 }
