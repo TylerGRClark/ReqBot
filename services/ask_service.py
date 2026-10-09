@@ -86,12 +86,15 @@ def ask(
         synthesis_provider=synthesis_provider,
         synthesis_api_key=synthesis_api_key,
     )
+    from core import constants as _const
+
+    tag_type_active = _const.TAG_TYPE_FILTERS_ENABLED  # when off, retrieve() ignored them, so they are not reported as active filters
     return {
         "query": question,
         "filters": {
             "document_id": document_ids or None,
-            "domain_tag": domain_tags or None,
-            "requirement_type": requirement_types or None,
+            "domain_tag": (domain_tags or None) if tag_type_active else None,
+            "requirement_type": (requirement_types or None) if tag_type_active else None,
         },
         "results": data["results"],
         "metadata": {
