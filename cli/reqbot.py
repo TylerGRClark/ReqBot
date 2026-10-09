@@ -1138,6 +1138,25 @@ def cmd_evidence(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_questions(args: argparse.Namespace) -> int:
+    """Write draft audit questions for a document's checklist rows to a sidecar file (WP-46.6); `reqbot checklist` shows them."""
+    from services import audit_questions, checklist_service
+
+    processed_dir = _cfg.processed_dir_path()
+    try:
+        checklist = checklist_service.generate(processed_dir, args.doc, args.profile)
+        path = audit_questions.sidecar_path(checklist_service._resolve_doc_path(processed_dir, args.doc))
+    except (ValueError, FileNotFoundError) as e:
+        log.error("%s", e)
+        return 1
+    counts = audit_questions.draft_questions(
+        checklist["items"], path, model=args.model, ollama_url=args.ollama_url,
+        progress=lambda c: log.info("questions so far: %s", c),
+    )
+    print(f"Draft audit questions for {args.doc}: {counts}\nWritten to: {path}")
+    return 1 if counts["errors"] else 0
+
+
 def cmd_checklist(args: argparse.Namespace) -> int:
     """Generate an audit checklist from validated requirements for a document."""
     from services import checklist_service
@@ -1738,6 +1757,16 @@ def main() -> None:
         help="Domain profile name (default: cybersecurity)",
     )
 
+    # questions
+    p_questions = subparsers.add_parser(
+        "questions",
+        help="Write draft audit questions for a document's checklist rows (uses the local Ollama model; shown by 'reqbot checklist')",
+    )
+    p_questions.add_argument("--doc", type=str, required=True, help="Document key (PDF stem), as shown by reqbot docs")
+    p_questions.add_argument("--profile", type=str, default="cybersecurity", help="Domain profile name (default: cybersecurity)")
+    p_questions.add_argument("--model", type=str, default="qwen2.5:14b", help="Ollama model that writes the questions (default: qwen2.5:14b)")
+    p_questions.add_argument("--ollama-url", type=str, default=_cfg.ollama_url, dest="ollama_url")
+
     # trace
     p_trace = subparsers.add_parser("trace", help="Trace full provenance of a requirement by ID")
     p_trace.add_argument("requirement_id", type=str, help="Requirement ID (e.g. REQ-a3f2c1d4e5b6)")
@@ -1802,6 +1831,7 @@ def main() -> None:
         "ask": cmd_ask,
         "batch": cmd_batch,
         "checklist": cmd_checklist,
+        "questions": cmd_questions,
         "docs": cmd_docs,
         "reindex": cmd_reindex,
         "status": cmd_status,

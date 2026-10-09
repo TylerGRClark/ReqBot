@@ -23,7 +23,7 @@ if str(_ROOT) not in sys.path:
 
 from core.artifact_resolver import doc_key_from_requirements_path, resolve_requirement_file
 from core.profiles import load_profile
-from services import checklist_audit, checklist_missed
+from services import audit_questions, checklist_audit, checklist_missed
 
 log = logging.getLogger(__name__)
 
@@ -221,6 +221,9 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     if skipped:
         log.info("Skipped %d record(s) missing requirement_id or source_quote", skipped)
 
+    # WP-46.6: draft audit questions written earlier by `reqbot questions` (a sidecar file; building a checklist never calls a model)
+    drafted = audit_questions.apply(items, audit_questions.sidecar_path(jsonl_path))
+
     # WP-46.2: passages that look like obligations but were not extracted (rule-based; listed apart from the items, never counted as items)
     possible_missed = checklist_missed.find_possible_missed(chunks, all_quotes, profile.get("obligation_verbs", [])) if chunks else []
 
@@ -242,6 +245,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             "items_requiring_review": sum(1 for i in items if i["requires_human_review"]),
             "items_with_flags": sum(1 for i in items if i["item_flags"]),
             "possible_missed": len(possible_missed),
+            "items_with_draft_question": drafted,
         },
         "items": items,
         "possible_missed": possible_missed,
