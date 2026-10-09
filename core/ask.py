@@ -359,8 +359,11 @@ def print_results_table(results: list[dict]) -> None:
         if source or ref or page_info:
             cite_parts = [x for x in [source, ref, page_info] if x]
             print(f"    Source: {', '.join(cite_parts)}")
-        if hit.get("requirement_type") or hit.get("domain_tags"):
-            print(f"    Type: {hit.get('requirement_type') or 'unknown'} | Tags: {', '.join(hit.get('domain_tags') or [])}")
+        meta = [f"Type: {hit['requirement_type']}"] if hit.get("requirement_type") else []
+        if hit.get("domain_tags"):
+            meta.append(f"Tags: {', '.join(hit['domain_tags'])}")
+        if meta:
+            print("    " + " | ".join(meta))
         primary = requirement_text(hit)
         print(f"    {primary}")
         if hit.get("source_quote") and primary != hit.get("source_quote"):
