@@ -79,13 +79,17 @@ def expand(quote: str, chunk_text: str) -> tuple[str, str]:
     not_located   the quote was not found in the chunk text; returned as given
     too_long      the whole sentence exceeds MAX_SENTENCE_CHARS; the quote is returned as given
     too_short     a single word (a table cell or a term); returned as given
+    ambiguous     the quote occurs more than once in the chunk, so the sentence it came from cannot be told; returned as given
     """
     if len((quote or "").split()) < MIN_QUOTE_WORDS:
         return quote, "too_short"
     pat = flex_pattern(quote)
-    m = pat.search(chunk_text or "") if pat else None
-    if not m:
+    found = list(pat.finditer(chunk_text or "")) if pat else []
+    if not found:
         return quote, "not_located"
+    if len(found) > 1:
+        return quote, "ambiguous"
+    m = found[0]
     s, e = m.span()
     unit_start, unit_end = _unit_bounds(chunk_text, s, e)
     unit = chunk_text[unit_start:unit_end]
@@ -122,3 +126,24 @@ def is_complete(quote: str) -> bool:
     first = next((c for c in q if c.isalnum() or c in "(["), "")
     starts_ok = first.isupper() or first.isdigit() or first in "(["
     return starts_ok and bool(re.search(r"[.?!:;][\"')\]]*$", q))
+
+
+def expand_records(records: list[dict], raw_text_by_chunk: dict) -> tuple[list[dict], dict]:
+    """Expand every record's `source_quote` to its whole sentence and merge records that end up with the same sentence in the same chunk (the first one is kept, order preserved).
+    Returns (records, counts); `counts` has the status tally and `merged`. Records are copied, never changed in place; a quote that is not located is left as given."""
+    out: list[dict] = []
+    seen: set = set()
+    counts: dict = {"merged": 0}
+    for rec in records:
+        text, status = expand(rec.get("source_quote") or "", raw_text_by_chunk.get(rec.get("chunk_id"), ""))
+        counts[status] = counts.get(status, 0) + 1
+        if status in ("expanded", "unchanged"):
+            key = (rec.get("chunk_id"), tidy(text).lower())
+            if key in seen:
+                counts["merged"] += 1
+                continue
+            seen.add(key)
+        new = dict(rec)
+        new["source_quote"] = text
+        out.append(new)
+    return out, counts

@@ -7,7 +7,8 @@
     "unchanged": 1470,
     "expanded": 247,
     "not_located": 145,
-    "too_long": 18
+    "too_long": 17,
+    "ambiguous": 1
    },
    "incomplete_before": 162,
    "incomplete_after": 18,
@@ -82,7 +83,8 @@
     "not_located": 138,
     "unchanged": 1469,
     "expanded": 263,
-    "too_long": 20
+    "too_long": 19,
+    "ambiguous": 1
    },
    "incomplete_before": 176,
    "incomplete_after": 17,
@@ -152,20 +154,21 @@
   },
   "D1x": {
    "survivors_before": 2501,
-   "survivors_after_merge": 2461,
+   "survivors_after_merge": 2462,
    "status": {
-    "unchanged": 1640,
-    "expanded": 669,
+    "unchanged": 1637,
+    "expanded": 667,
     "not_located": 158,
+    "ambiguous": 7,
     "too_short": 27,
-    "too_long": 7
+    "too_long": 5
    },
-   "incomplete_before": 358,
-   "incomplete_after": 56,
-   "could_be_expanded": 2336,
-   "incomplete_share_after": 0.024,
+   "incomplete_before": 356,
+   "incomplete_after": 55,
+   "could_be_expanded": 2331,
+   "incomplete_share_after": 0.0236,
    "quote_chars_median_before": 151,
-   "quote_chars_median_after": 158.0,
+   "quote_chars_median_after": 158,
    "per_document": {
     "CJCSI 6510.02G": {
      "before": 113,
@@ -181,7 +184,7 @@
     },
     "DODI 5200.48": {
      "before": 321,
-     "after": 307
+     "after": 308
     },
     "DODI 8410.03": {
      "before": 167,
