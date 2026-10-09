@@ -86,8 +86,8 @@ Requirements and source context are indexed automatically after the pipeline.
 | `--profile NAME` | Domain profile; default `cybersecurity`. |
 | `--max-chunks N` | Limit requirement finding (Step C) for inspection/testing; produces a partial corpus. |
 | `--no-index` | Write artifacts without indexing. |
-| `--skip-enrichment` | Skip LLM enrichment (descriptions, tags, types); deterministic parent-stem reconstruction still runs. |
-| `--skip-description-gate` | Skip the description check (Step D.6). Independent of enrichment. |
+| `--skip-enrichment` | Accepted, with no effect: enrichment (descriptions, tags, types) is switched off. Deterministic parent-stem reconstruction always runs. |
+| `--skip-description-gate` | Accepted, with no effect: the description check is switched off. |
 | `--ollama-url URL` | Override the Ollama connection. |
 | `--qdrant-url URL` | Override the Qdrant connection. |
 

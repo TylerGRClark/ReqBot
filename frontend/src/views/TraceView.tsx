@@ -202,9 +202,9 @@ export default function TraceView() {
             </div>
 
             {/* Description */}
-            <Section label="Description">
-              {req.description ? (
-                <p className="text-sm text-gray-700 leading-relaxed">{req.description}</p>
+            <Section label={req.explained_text ? 'Requirement' : 'Description'}>
+              {req.explained_text || req.description ? (
+                <p className="text-sm text-gray-700 leading-relaxed">{req.explained_text || req.description}</p>
               ) : (
                 <p className="text-sm text-gray-400">No description available.</p>
               )}

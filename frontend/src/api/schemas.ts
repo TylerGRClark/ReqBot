@@ -27,6 +27,7 @@ const evidenceRequirementSchema = z.object({
   requirement_id: z.string(),
   description: z.string().nullish(),
   source_quote: z.string().nullish(),
+  explained_text: z.string().nullish(),
   source_ref: z.string().nullish(),
   source_pdf: z.string().nullish(),
   document_id: z.string().nullish(),

@@ -92,10 +92,10 @@ function BothCard({ item, from }: { item: BothItem; from: string }) {
         </Link>
       </div>
       <p className="text-sm text-gray-700 leading-snug">
-        {snip(item.p1.source_quote || item.p1.description)}
+        {snip(item.p1.explained_text || item.p1.source_quote || item.p1.description)}
       </p>
       <p className="mt-2 text-sm text-gray-500 leading-snug border-t border-gray-100 pt-2">
-        {snip(item.p2.source_quote || item.p2.description)}
+        {snip(item.p2.explained_text || item.p2.source_quote || item.p2.description)}
       </p>
     </div>
   )
@@ -119,7 +119,7 @@ function SingleCard({ item, from }: { item: SingleItem; from: string }) {
         )}
       </div>
       <p className="text-sm text-gray-700 leading-snug">
-        {snip(item.payload.source_quote || item.payload.description)}
+        {snip(item.payload.explained_text || item.payload.source_quote || item.payload.description)}
       </p>
       {item.ref && (
         <p className="mt-1.5 text-xs text-gray-400 truncate">{item.ref}</p>

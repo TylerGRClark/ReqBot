@@ -89,7 +89,7 @@ again to retry them) and chunks that may be missing requirements.
 
 Other direct-script options are `--model` (sets both role models),
 `--max-chunks`, `--timeout` (per-request seconds, default 120),
-`--skip-enrichment`, `--skip-description-gate`, and `--qdrant-url`.
+`--skip-enrichment`, `--skip-description-gate` (both accepted with no effect: enrichment and the description check are switched off), and `--qdrant-url`.
 The direct script does **not** index unless `--index` is supplied.
 Its `--index` path uses indexing-module defaults, so for a deployment with a
 custom embedding model, finish the resume and use configured `reqbot reindex`

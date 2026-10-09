@@ -63,6 +63,7 @@ PIPELINE_VERSION = "1.0"
 # genuine fabrications score far below 60 anyway (the confirmed hallucination
 # that motivated this WP scored 44). See archive/PHASE32_REQUIREMENTS.md for the
 # full investigation.
+COMPUTE_CONFIDENCE = False  # see the comment where confidence is computed
 QUOTE_GROUNDING_THRESHOLD = 60
 
 
@@ -855,15 +856,19 @@ def run(
         if chunk_id is not None and chunk_id in chunk_page_map:
             page_start, page_end = chunk_page_map[chunk_id]
 
-        confidence = 1.0
-        if not domain_tags:
-            confidence -= 0.2
-        if not source_quote:
-            confidence -= 0.2
-        if len(description) < 20:
-            confidence -= 0.1
-        if not source_ref:
-            confidence -= 0.1
+        # Switched off (docs/PIPELINE_REDESIGN_PLAN.md): confidence measured whether the record had tags, a description and a source reference, and the first-pass extractor supplies
+        # neither of the first two, so every record scored 0.6 or 0.7 and the number said nothing. The record carries no confidence while COMPUTE_CONFIDENCE is False.
+        confidence = None
+        if COMPUTE_CONFIDENCE:
+            confidence = 1.0
+            if not domain_tags:
+                confidence -= 0.2
+            if not source_quote:
+                confidence -= 0.2
+            if len(description) < 20:
+                confidence -= 0.1
+            if not source_ref:
+                confidence -= 0.1
 
         # Anchoring (docs/PIPELINE_REDESIGN_PLAN.md): metadata beside the root quote about where it sits in the chunk and how exact the match is. Adds fields only; the quote
         # itself is not touched here, and nothing is accepted or rejected on this basis yet.
@@ -879,7 +884,7 @@ def run(
             "chunk_id": chunk_id,
             "page_start": page_start,
             "page_end": page_end,
-            "confidence": round(max(0.0, confidence), 2),
+            **({"confidence": round(max(0.0, confidence), 2)} if confidence is not None else {}),
             # Hierarchy metadata (WP-14.3) — deterministic parser output from WP-14.2.
             # Empty for requirements produced by the legacy fixed-size chunker.
             "section_ref_path": section_ref_path,

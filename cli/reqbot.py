@@ -35,6 +35,7 @@ from datetime import datetime as _dt
 import requests
 
 from core import config as _config
+from core.display import requirement_text
 
 logging.basicConfig(
     level=logging.INFO,
@@ -802,6 +803,13 @@ def cmd_trace(args: argparse.Namespace) -> int:
         _auth_label = f"{_auth_weight}/5" + (f"  ({_auth_fw})" if _auth_fw else "")
         print(f"  {'Authority:':<14} {_auth_label}")
 
+    explained = payload.get("explained_text", "")
+    if explained and explained != payload.get("source_quote", ""):
+        print("\nRequirement")
+        print("-----------")
+        for line in _tw.wrap(explained, width=76):
+            print(f"  {line}")
+
     source_quote = payload.get("source_quote", "")
     if source_quote:
         print("\nSource Quote")
@@ -885,9 +893,9 @@ def cmd_compare(args: argparse.Namespace) -> int:
                 page = p.get("page_start", "")
                 header = f"{doc_key} (Page {page})" if page else doc_key
                 print(f"## {header}\n")
-                primary = p.get("description") or p.get("source_quote", "")
+                primary = requirement_text(p)
                 print(f"{primary}\n")
-                if p.get("source_quote") and p.get("description"):
+                if p.get("source_quote") and primary != p.get("source_quote"):
                     print(f"> {p['source_quote']}\n")
                 print("---\n")
         else:
@@ -900,7 +908,7 @@ def cmd_compare(args: argparse.Namespace) -> int:
                 subheader = (f"{doc_key} (Page {page})" if page else doc_key) + auth_tag
                 print(f"\n{subheader}")
                 print("-" * len(subheader))
-                primary = p.get("description") or p.get("source_quote", "")
+                primary = requirement_text(p)
                 for line in _tw.wrap(primary, width=76):
                     print(f"  {line}")
             print(f"\n{len(doc_groups)} document(s) — 1 control ID")
@@ -937,7 +945,7 @@ def cmd_compare(args: argparse.Namespace) -> int:
                     page = p.get("page_start", "")
                     sub = f"**{doc_key}**" + (f" (Page {page})" if page else "")
                     print(f"### {sub}\n")
-                    primary = p.get("description") or p.get("source_quote", "")
+                    primary = requirement_text(p)
                     print(f"{primary}\n")
                 print("---\n")
         else:
@@ -953,7 +961,7 @@ def cmd_compare(args: argparse.Namespace) -> int:
                     aw = _cfg.authority_weight(doc_key)
                     auth_tag = f"  [auth:{aw}/5]" if aw is not None else ""
                     print(f"\n  {doc_key}" + (f" (Page {page})" if page else "") + auth_tag)
-                    primary = p.get("description") or p.get("source_quote", "")
+                    primary = requirement_text(p)
                     for line in _tw.wrap(primary, width=72):
                         print(f"    {line}")
             print(f"\n{len(ref_groups)} control group(s) — {total_docs} source(s)")
@@ -1025,7 +1033,7 @@ def cmd_evidence(args: argparse.Namespace) -> int:
                 "source_ref": g["source_ref"],
                 "description": rep.get("description", ""),
                 "source_quote": rep.get("source_quote", ""),
-                "primary_text": rep.get("description") or rep.get("source_quote", ""),
+                "primary_text": requirement_text(rep),
                 "confidence": rep.get("confidence"),
                 "sources": [
                     {
@@ -1077,7 +1085,7 @@ def cmd_evidence(args: argparse.Namespace) -> int:
             lines.append(f"## Requirement Group {i} — {g['source_ref']}")
             lines.append("")
             lines.append("**Requirement:**")
-            lines.append(rep.get("description") or rep.get("source_quote", ""))
+            lines.append(requirement_text(rep))
             lines.append("")
             lines.append("**Sources:**")
             lines.append("")
