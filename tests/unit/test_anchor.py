@@ -24,7 +24,7 @@ def test_a_glued_lead_in_anchors_to_the_item_and_keeps_the_lead_in():
 
 def test_a_subject_restated_in_front_is_trimmed_to_the_exact_sentence():
     a = anchor("AFOSI is the sole AF entity with responsibility for conducting felony investigations.", RAW)
-    assert a["anchor_status"] == "words_trimmed" and a["anchor_text"].startswith("the sole AF entity") and a["anchor_words_trimmed"] == 2
+    assert a["anchor_status"] == "words_trimmed" and a["anchor_text"].startswith("the sole AF entity") and a["anchor_words_trimmed"] == 2 and a["anchor_trim_side"] == "front"
 
 
 def test_a_root_that_occurs_twice_gets_no_position():

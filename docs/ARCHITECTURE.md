@@ -31,7 +31,7 @@ The [developer reference](../ARCHITECTURE.md) contains the module/import map.
 | PDF reading (Step A) | Docling reads layout, headings, tables, and page provenance. | `*_ancestry.json` and an in-memory parsed document. |
 | Chunking (Step B) | Structure-aware chunking adds section paths and parent context; the profile can exclude sections. | `*_chunks.jsonl` |
 | Requirement finding (Step C) | Ollama returns, for each chunk, the quotes that look like duties, with references. The prompt is inclusive: it asks for anything that tells a party what it must, should, may or must not do. Raw responses and parse failures are retained. This output is the **root** of each requirement and is never edited. | `*_extracted_requirements.jsonl` |
-| Normalizing and checking (Step D) | One step today, doing several jobs: validate fields and quote grounding, drop junk (headings, change-log lines, fragments), attach page and section metadata, deduplicate, expand each quote to the whole sentence it sits in, and assign IDs. Deterministic parent-stem reconstruction follows. | `*_requirements_normalized.jsonl` |
+| Normalizing and checking (Step D) | One step today, doing several jobs: validate fields and quote grounding, drop junk (headings, change-log lines, fragments), attach page and section metadata, deduplicate, record where each quote sits in its chunk and how exactly it matches (the `anchor_*` fields), build the explained text (the whole sentence it sits in), and assign IDs (hashed from the root). Deterministic parent-stem reconstruction follows. | `*_requirements_normalized.jsonl` |
 | Enrichment (Step D.5) | Ollama adds descriptions, domain tags, and requirement types. Scheduled to be switched off (see below). | `*_requirements_enriched.jsonl` |
 | Description check (Step D.6) | Check descriptions against source quotes; clear rejected descriptions while keeping the requirements. Scheduled to be switched off with enrichment. | `*_requirements_gated.jsonl` |
 | Totals and final file (Step E) | Aggregate the selected output and record statistics. | `*_final_output.json`, `*_stats.json` |
@@ -70,8 +70,11 @@ Each accepted quote is then expanded, best effort, to the whole sentence it sits
 (verbatim, with spacing tidied; `pipeline/sentence_expand.py`). A quote that cannot be
 found exactly once in its chunk, or whose sentence is very long, or that is a single
 word, is left as the model returned it, so some accepted quotes stay incomplete or not
-word for word. Today the expansion replaces `source_quote`; the redesign plan keeps the
-original and puts the expanded text in its own field.
+word for word. The expansion never replaces `source_quote`, which stays exactly as
+requirement finding returned it (the root); the expanded sentence is stored beside it in
+`explained_text`, with the pieces it was built from in `explained_parts` and a short
+note of what was done in `explain_notes`. Where the source backs it, a lead-in the
+model glued onto a list item is kept in front of the sentence.
 
 Parent-stem reconstruction attaches `parent_stem` and combined `embedding_text`
 to fragment records while preserving their `source_quote`.

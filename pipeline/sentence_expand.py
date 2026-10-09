@@ -128,22 +128,58 @@ def is_complete(quote: str) -> bool:
     return starts_ok and bool(re.search(r"[.?!:;][\"')\]]*$", q))
 
 
-def expand_records(records: list[dict], raw_text_by_chunk: dict) -> tuple[list[dict], dict]:
-    """Expand every record's `source_quote` to its whole sentence and merge records that end up with the same sentence in the same chunk (the first one is kept, order preserved).
-    Returns (records, counts); `counts` has the status tally and `merged`. Records are copied, never changed in place; a quote that is not located is left as given."""
+def _norm_key(text: str) -> str:
+    return tidy(text).lower()
+
+
+def explain_records(records: list[dict], raw_text_by_chunk: dict) -> tuple[list[dict], dict]:
+    """Give every record its explained layer: `explained_text`, `explained_parts` and `explain_notes`, built only from pieces of the source. The root (`source_quote`) and the anchor fields are never changed.
+
+    - the sentence the root sits in (the root itself when it is exact, else the exact piece anchoring found: a quote with its list number taken off, a few words trimmed, or the list item of a glued lead-in);
+    - for a glued lead-in that anchoring found in the chunk or its heading, the lead-in goes in front ("AFMC will: Identify ...").
+    A root that cannot be located is its own explained text, with a note saying so. Records whose explained text is the same sentence in the same chunk are shown once: the first is kept and the
+    others' roots are listed in `merged_roots`. Records are copied. Returns (records, counts)."""
     out: list[dict] = []
-    seen: set = set()
+    seen: dict = {}
     counts: dict = {"merged": 0}
     for rec in records:
-        text, status = expand(rec.get("source_quote") or "", raw_text_by_chunk.get(rec.get("chunk_id"), ""))
-        counts[status] = counts.get(status, 0) + 1
-        if status in ("expanded", "unchanged"):
-            key = (rec.get("chunk_id"), tidy(text).lower())
-            if key in seen:
-                counts["merged"] += 1
-                continue
-            seen.add(key)
+        root = (rec.get("source_quote") or "").strip()
+        raw = raw_text_by_chunk.get(rec.get("chunk_id"), "")
+        status = rec.get("anchor_status")
+        end_trimmed = status == "words_trimmed" and rec.get("anchor_trim_side") == "end"  # words at the end that the source lacks are often a table cell read back ("... is End user"); dropping them would lose what tells rows apart
+        piece = root if status in (None, "exact") or end_trimmed else (rec.get("anchor_text") or root) if status in ("marker_removed", "words_trimmed", "lead_in_joined", "lead_in_from_heading", "lead_in_not_in_source") else root
+        text, outcome = expand(piece, raw)
+        counts[outcome] = counts.get(outcome, 0) + 1
+        notes, parts = [], []
+        lead = rec.get("anchor_lead_in") if status in ("lead_in_joined", "lead_in_from_heading") else None
+        if outcome == "expanded":
+            notes.append("expanded to the whole sentence")
+        elif outcome == "unchanged":
+            notes.append("already a whole sentence")
+        else:
+            notes.append(f"not expanded: {outcome.replace('_', ' ')}")  # expand() returns the piece as given in these cases
+        if end_trimmed:
+            notes.append("end of the quote is not in the source; kept as returned")
+        elif status in ("marker_removed", "words_trimmed", "lead_in_joined", "lead_in_from_heading", "lead_in_not_in_source"):
+            notes.append({"marker_removed": "list number or dash taken off", "words_trimmed": "a few words at the front that are not in the source taken off",
+                          "lead_in_joined": "lead-in kept (found in the chunk)", "lead_in_from_heading": "lead-in kept (found in the chunk's heading)",
+                          "lead_in_not_in_source": "lead-in dropped (not in the source)"}[status])
+        if lead:
+            parts.append({"kind": "lead_in", "text": lead, "origin": "heading" if status == "lead_in_from_heading" else "chunk"})
+        parts.append({"kind": "sentence", "text": text, "origin": "rule"})
+        explained = tidy((lead + " " if lead else "") + text)
+        key = (rec.get("chunk_id"), _norm_key(explained))
+        if key in seen:
+            kept = out[seen[key]]
+            kept.setdefault("merged_roots", []).append(root)
+            if "merged with other roots in the same sentence" not in kept["explain_notes"]:
+                kept["explain_notes"].append("merged with other roots in the same sentence")
+            counts["merged"] += 1
+            continue
+        seen[key] = len(out)
         new = dict(rec)
-        new["source_quote"] = text
+        new["explained_text"] = explained
+        new["explained_parts"] = parts
+        new["explain_notes"] = notes
         out.append(new)
     return out, counts
