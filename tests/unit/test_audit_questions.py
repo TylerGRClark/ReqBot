@@ -163,3 +163,18 @@ def test_mixed_case_names_with_acronym_parts_are_checked_whole():
     assert AQ.unverified_terms("Does the unit use FedRAMP and DoD controls?", "The unit uses controls.") == ["FedRAMP", "DoD"]
     assert AQ.unverified_terms("Does the unit use FedRAMP?", "The unit uses FedRAMP controls.") == []
     assert AQ.unverified_terms("Does the unit follow Camel guidance?", "The unit follows guidance.") == ["Camel"]  # a single capitalized word is still checked
+
+
+def test_a_lead_in_attached_from_above_does_not_stop_the_passage_from_being_found(tmp_path):
+    from services.checklist_service import generate
+    run = tmp_path / "doc_20260101_120000"
+    run.mkdir()
+    raw = "The USD(A&S):\n- a. Establishes policy for acquisition.\n- b. Develops budget recommendations."
+    (run / "doc_chunks.jsonl").write_text(json.dumps({"chunk_id": 0, "raw_text": raw, "text": raw, "section_title_path": ["Duties"], "page_start": 1, "page_end": 1}) + "\n", encoding="utf-8")
+    req = {"requirement_id": "REQ-1", "source_quote": "- b. Develops budget recommendations.", "explained_text": "The USD(A&S): Develops budget recommendations.",
+           "explained_parts": [{"kind": "lead_in", "text": "The USD(A&S):", "origin": "rule"}, {"kind": "sentence", "text": "Develops budget recommendations.", "origin": "rule"}],
+           "source_ref": "b", "section_title_path": ["Duties"], "page_start": 1, "page_end": 1, "chunk_id": 0}
+    (run / "doc_requirements_normalized.jsonl").write_text(json.dumps(req) + "\n", encoding="utf-8")
+    item = generate(tmp_path, "doc", "cybersecurity")["items"][0]
+    assert "quote_not_located_in_passage" not in item["item_flags"] and ">> Develops budget recommendations. <<" in item["passage"]
+    assert item["source_quote"] == "The USD(A&S): Develops budget recommendations."

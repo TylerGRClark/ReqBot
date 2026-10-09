@@ -145,6 +145,9 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             req_id = req.get("requirement_id", "")
             extracted_quote = req.get("source_quote", "")  # the root: exactly what requirement finding returned
             source_quote = req.get("explained_text") or extracted_quote  # what the sheet shows: the explained requirement when the record has one
+            # The passage is located by the sentence itself: a lead-in attached from the line above is not contiguous with it in the document, so the full explained text would never be found
+            sentence_parts = [p.get("text") for p in (req.get("explained_parts") or []) if p.get("kind") == "sentence" and p.get("text")]
+            locate_text = sentence_parts[-1] if sentence_parts else source_quote
             all_quotes.append(source_quote)
             all_quotes.extend(q for q in [extracted_quote, *(req.get("merged_roots") or [])] if q)
 
@@ -164,7 +167,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
 
             # WP-46.1 audit layout: who the row applies to, the document's own passage, and specific hints (nothing here is model-made)
             verbs = profile.get("obligation_verbs", [])
-            cite0 = checklist_audit.citation(source_ref, "", section_title_path, source_quote)  # the paragraph number as extracted or as the quote opens; inferred ones need the passage
+            cite0 = checklist_audit.citation(source_ref, "", section_title_path, locate_text)  # the paragraph number as extracted or as the quote opens; inferred ones need the passage
             numbered = checklist_audit.applies_to_numbered(cite0, hmap, section_title_path)
             applies = numbered if numbered is not None else checklist_audit.applies_to(section_title_path)
             flags = checklist_audit.item_flags(source_quote, source_ref, applies, verbs)
@@ -172,8 +175,8 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             chunk_id = req.get("chunk_id")
             chunk = chunks.get(chunk_id)
             prev_chunk = chunks.get(chunk_id - 1) if isinstance(chunk_id, int) else None
-            passage, found = checklist_audit.build_passage(source_quote, chunk, prev_chunk, flags)
-            cite = checklist_audit.citation(source_ref, passage, section_title_path, source_quote)
+            passage, found = checklist_audit.build_passage(locate_text, chunk, prev_chunk, flags)
+            cite = checklist_audit.citation(source_ref, passage, section_title_path, locate_text)
             if cite != cite0:  # an inferred paragraph number: the numbering can now say who the row applies to
                 numbered = checklist_audit.applies_to_numbered(cite, hmap, section_title_path)
                 if numbered is not None:

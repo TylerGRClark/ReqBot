@@ -98,7 +98,7 @@ def main():
         item = next(p["text"] for p in r["explained_parts"] if p["kind"] == "sentence")
         lines += [f"## {n}. {doc} — {r.get('source_ref') or '(no ref)'}", "", f"**Item:** {item}", "", f"**Lead-in found:** {lead}", "", f"**Result:** {r['explained_text']}", "", "**Rating:** ", "", "---", ""]
     sheet = out_dir / "lead_in_rating_sheet.md"
-    if sheet.exists() and re.search(r"\*\*Rating:\*\*[ \t]*\S", sheet.read_text(encoding="utf-8")):
+    if sheet.exists() and any(re.search(r"\*\*Rating:\*\*(.*?)(?:\n---|\Z)", block, re.DOTALL).group(1).strip() for block in re.split(r"\n## ", sheet.read_text(encoding="utf-8"))[1:]):
         sheet = out_dir / "lead_in_rating_sheet_regenerated.md"  # never overwrite a sheet that has ratings in it
         print(f"The rating sheet already has ratings; wrote {sheet.name} instead")
     sheet.write_text("\n".join(lines) + "\n", encoding="utf-8")
