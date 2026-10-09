@@ -37,3 +37,19 @@ Plan and rules: [docs/PHASE45_WP4512_PLAN.md](../../../docs/PHASE45_WP4512_PLAN.
 
 - P1 classifies at most the first 1,500 characters of a unit but emits the whole unit as the quote. It matters for 1 of 197 units on AFI 17-203 and 0 of 183 on the labeled pages, so it does not change the registered numbers; it would matter for table-shaped units in other documents.
 - The owner's rating sheets show the paragraph, its number, its heading and its parent paragraph read from the numbering; units longer than 1,800 characters are cut in the sheet only.
+
+## Owner's rating of D1's additions on AFI 17-203 (2026-10-09)
+
+The owner rated all 22 units D1 covers and the current prompt does not (`outputs/afi17-203_D1_additions_rating_sheet.md`, with his words kept as written).
+
+| rating | count | units |
+|---|---|---|
+| requirement ("is req", "is a req") | 11 | 4, 5, 7, 8, 9, 10, 11, 13, 14, 17, 18 |
+| partial or borderline ("is sort of a req"; "gives authority to but isn't necessarily a req, I'd let it slide") | 4 | 12, 19, 20, 21 |
+| not a requirement | 7 | 1, 2, 3 (who the instruction applies to or does not apply to), 6 ("describes a role"), 15, 16 ("describes how to comply with a requirement but isn't actually one"), 22 (a table he could not read) |
+
+**Against the registered rule** (at least 60% requirement or partial): 15 of 22 = 68% (11 of 22 = 50% if only clear requirements count; 15 of 21 = 71% if the unreadable table is left out). With the labeled-page gates met (recall 91% against 62%, precision 56%), D1 qualifies as the extraction candidate under the plan. P1 had already failed and was not rated.
+
+What the seven "not a requirement" ratings show: three are applicability statements ("It applies to all military and civilian AF personnel ...", "This Instruction does not apply to ..."), which D1's prompt deliberately returns so a later step can attach them. The checklist now flags those rows instead (see the `applicability_statement` hint).
+
+**Nothing is adopted yet.** Adopting D1 changes what Step C asks for every document, and forces re-extraction and a reindex. The next step is a measured trial on the 13 documents against the two table-fix baseline runs (T2a, T2b), judged by the WP-45.11 rules, before any pipeline change.
