@@ -66,9 +66,12 @@ semantically faithful: in the October 2026 run of the 13 reference documents, 7%
 accepted quotes (172 of 2,419) are not word for word in their chunk (most often a lead-in glued onto a list item, or a dropped
 list number), and the checklist marks them `quote_not_located_in_passage`.
 
-Each accepted quote is then expanded to the whole sentence it sits in (verbatim, with
-spacing tidied; `pipeline/sentence_expand.py`). Today this replaces `source_quote`; the
-redesign plan keeps the original and puts the expanded text in its own field.
+Each accepted quote is then expanded, best effort, to the whole sentence it sits in
+(verbatim, with spacing tidied; `pipeline/sentence_expand.py`). A quote that cannot be
+found exactly once in its chunk, or whose sentence is very long, or that is a single
+word, is left as the model returned it, so some accepted quotes stay incomplete or not
+word for word. Today the expansion replaces `source_quote`; the redesign plan keeps the
+original and puts the expanded text in its own field.
 
 Parent-stem reconstruction attaches `parent_stem` and combined `embedding_text`
 to fragment records while preserving their `source_quote`.
