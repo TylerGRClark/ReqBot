@@ -130,9 +130,9 @@ def test_a_root_with_a_list_number_in_front_is_explained_from_its_exact_piece():
 
 def test_a_quote_that_occurs_twice_in_the_chunk_is_not_expanded_or_merged():
     raw = {1: "Administrators shall review logs. Auditors shall review logs."}
-    recs = [{"chunk_id": 1, "source_quote": "review logs"}, {"chunk_id": 1, "source_quote": "review logs"}]
+    recs = [{"chunk_id": 1, "source_ref": "1.1", "source_quote": "review logs"}, {"chunk_id": 1, "source_ref": "1.2", "source_quote": "review logs"}]
     out, counts = SE.explain_records(recs, raw)
-    assert len(out) == 1 and out[0]["explained_text"] == "review logs" and counts["ambiguous"] == 2  # the identical roots were already one record before this step; here they collapse
+    assert len(out) == 2 and counts["merged"] == 0 and counts["ambiguous"] == 2  # two citations, two records: neither may be dropped because their text is the same
 
 
 def test_step_d_keeps_the_root_exactly_as_requirement_finding_returned_it(tmp_path):

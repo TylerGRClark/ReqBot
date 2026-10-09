@@ -37,6 +37,6 @@ The whole-sentence expansion no longer replaces `source_quote`. `source_quote` i
 | (a) every record's `source_quote` is a quote requirement finding returned | **met** in all 13 documents (a test checks it on a small fixture too) |
 | (b) labeled-obligation coverage (74 obligations, 3 sample documents) not lower than the existing run by more than the paired-loss limit of 4 | existing run (sentence rule replaced the quote) 69; new records counted by their root 67; **counted by their explained text 69: met** |
 | IDs unique | **met**: no repeated `requirement_id` in any document |
-| Records | 2,418 now against 2,419 in the existing run; 73 roots are listed in `merged_roots` because they sit in the same sentence as another root |
+| Records | 2,420 now against 2,419 in the existing run; 71 roots are listed in `merged_roots` because they sit in the same sentence as another root (only roots that were placed in the chunk are merged) |
 
 Counting by the root alone gives 67 of 74, two below the existing run (within the limit of 4, and the root is a fragment more often than the sentence is); the explained text keeps the earlier 69.

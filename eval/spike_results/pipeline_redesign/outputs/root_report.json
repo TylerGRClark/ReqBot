@@ -142,21 +142,21 @@
    "repeated_ids": 0
   },
   "afi17-203": {
-   "records": 153,
+   "records": 155,
    "existing_records": 155,
    "root_invariant_holds": true,
-   "merged_into_another": 6,
+   "merged_into_another": 4,
    "explain_notes": {
     "already a whole sentence": 121,
     "expanded to the whole sentence": 10,
-    "merged with other roots in the same sentence": 4,
+    "merged with other roots in the same sentence": 3,
     "a few words at the front that are not in the source taken off": 1,
     "lead-in kept (found in the chunk)": 1,
     "not expanded: not located": 16,
     "end of the quote is not in the source; kept as returned": 13,
     "list number or dash taken off": 6,
     "not expanded: too long": 4,
-    "not expanded: ambiguous": 2
+    "not expanded: ambiguous": 4
    },
    "repeated_ids": 0
   },

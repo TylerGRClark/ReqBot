@@ -169,14 +169,16 @@ def explain_records(records: list[dict], raw_text_by_chunk: dict) -> tuple[list[
         parts.append({"kind": "sentence", "text": text, "origin": "rule"})
         explained = tidy((lead + " " if lead else "") + text)
         key = (rec.get("chunk_id"), _norm_key(explained))
-        if key in seen:
+        mergeable = outcome in ("expanded", "unchanged")  # a root that could not be placed (or occurs twice) is its own record: its text matching another's says nothing about the sentence
+        if mergeable and key in seen:
             kept = out[seen[key]]
             kept.setdefault("merged_roots", []).append(root)
             if "merged with other roots in the same sentence" not in kept["explain_notes"]:
                 kept["explain_notes"].append("merged with other roots in the same sentence")
             counts["merged"] += 1
             continue
-        seen[key] = len(out)
+        if mergeable:
+            seen[key] = len(out)
         new = dict(rec)
         new["explained_text"] = explained
         new["explained_parts"] = parts
