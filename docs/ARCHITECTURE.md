@@ -28,15 +28,29 @@ The [developer reference](../ARCHITECTURE.md) contains the module/import map.
 
 | Stage | Work | Main output |
 |---|---|---|
-| A — parse | Docling reads layout, headings, tables, and page provenance. | `*_ancestry.json` and an in-memory parsed document. |
-| B — chunk | Structure-aware chunking adds section paths and parent context; the profile can exclude sections. | `*_chunks.jsonl` |
-| C — extract | Ollama extracts quoted requirements and references from each chunk. Raw responses and parse failures are retained. | `*_extracted_requirements.jsonl` |
-| D — normalize | Validate fields and quote grounding, assign IDs, deduplicate, and reject invalid records. Deterministic parent-stem reconstruction follows normalization. | `*_requirements_normalized.jsonl` |
-| D.5 — enrich | Ollama adds descriptions, domain tags, and requirement types. | `*_requirements_enriched.jsonl` |
-| D.6 — description gate | Check descriptions against source quotes; clear rejected descriptions while keeping the requirements. | `*_requirements_gated.jsonl` |
-| E — export | Aggregate the selected output and record statistics. | `*_final_output.json`, `*_stats.json` |
-| Index requirements | Embed selected requirement artifacts with dense Ollama embeddings and sparse BM25 features. | Qdrant `grc_requirements` |
-| Index context | Embed source chunks with the same dense/sparse strategy. | Qdrant `grc_context` |
+| PDF reading (Step A) | Docling reads layout, headings, tables, and page provenance. | `*_ancestry.json` and an in-memory parsed document. |
+| Chunking (Step B) | Structure-aware chunking adds section paths and parent context; the profile can exclude sections. | `*_chunks.jsonl` |
+| Requirement finding (Step C) | Ollama returns, for each chunk, the quotes that look like duties, with references. The prompt is inclusive: it asks for anything that tells a party what it must, should, may or must not do. Raw responses and parse failures are retained. This output is the **root** of each requirement and is never edited. | `*_extracted_requirements.jsonl` |
+| Normalizing and checking (Step D) | One step today, doing several jobs: validate fields and quote grounding, drop junk (headings, change-log lines, fragments), attach page and section metadata, deduplicate, expand each quote to the whole sentence it sits in, and assign IDs. Deterministic parent-stem reconstruction follows. | `*_requirements_normalized.jsonl` |
+| Enrichment (Step D.5) | Ollama adds descriptions, domain tags, and requirement types. Scheduled to be switched off (see below). | `*_requirements_enriched.jsonl` |
+| Description check (Step D.6) | Check descriptions against source quotes; clear rejected descriptions while keeping the requirements. Scheduled to be switched off with enrichment. | `*_requirements_gated.jsonl` |
+| Totals and final file (Step E) | Aggregate the selected output and record statistics. | `*_final_output.json`, `*_stats.json` |
+| Index requirements (Step F) | Embed selected requirement artifacts with dense Ollama embeddings and sparse BM25 features. | Qdrant `grc_requirements` |
+| Index context (Step F) | Embed source chunks with the same dense/sparse strategy. | Qdrant `grc_context` |
+
+Older documents, log lines and command options name the stages by letter (Step A to
+Step F); this page gives both. New work uses the names by job.
+
+### Planned changes
+
+The [pipeline redesign plan](PIPELINE_REDESIGN_PLAN.md) describes where the pipeline is
+going; none of it is built yet, so everything above describes the pipeline as it runs
+today. In short: the root stays exactly as the model returned it and is never edited;
+checking that the root is word for word in the source becomes its own early step
+(anchoring); the whole-sentence expansion and lead-in attachment move into a separate
+"explained" layer beside the root; screening judges that explained text; Step D is split
+so each step does one job; and tagging, typing, descriptions and the description check
+are switched off, with the explained text used in their place.
 
 The CLI `ingest` command runs indexing by default. The direct pipeline script
 writes artifacts by default and requires `--index` to index. See [CLI](CLI.md)
@@ -44,14 +58,21 @@ and [Operations](OPERATIONS.md#resume-an-interrupted-run).
 
 ### What validation establishes
 
-Step D's known-chunk grounding checks combine fuzzy character matching and a
-word-coverage threshold. They reject some invented quotes while preserving
-formatting variants and reconstructed list obligations. These are heuristic
-checks, not proof that every quote is verbatim or semantically faithful.
+Normalizing and checking (Step D) applies known-chunk grounding checks that combine
+fuzzy character matching and a word-coverage threshold. They reject some invented quotes
+while preserving formatting variants and list obligations the model joined to their
+lead-in. These are heuristic checks, not proof that every quote is verbatim or
+semantically faithful: in the October 2026 run of the 13 reference documents, 7% of
+accepted quotes (172 of 2,419) are not word for word in their chunk (most often a lead-in glued onto a list item, or a dropped
+list number), and the checklist marks them `quote_not_located_in_passage`.
+
+Each accepted quote is then expanded to the whole sentence it sits in (verbatim, with
+spacing tidied; `pipeline/sentence_expand.py`). Today this replaces `source_quote`; the
+redesign plan keeps the original and puts the expanded text in its own field.
 
 Parent-stem reconstruction attaches `parent_stem` and combined `embedding_text`
 to fragment records while preserving their `source_quote`.
-Generated descriptions are distinct from source quotes. Step D.6 has
+Generated descriptions are distinct from source quotes. The description check (Step D.6) has
 deterministic checks and, when the optional MiniCheck dependency is available,
 an entailment check. A rejected description is cleared; its requirement remains.
 
@@ -59,6 +80,17 @@ Enrichment failures can fall back to normalized artifacts. A description-gate
 failure can fall back to the pre-gate artifact, with a log warning. Inspect logs
 and failure artifacts when assessing a run; completion alone does not mean every
 optional check executed. Human review of source quotes remains necessary.
+
+## Checklists
+
+A checklist is built on demand from the newest processed run of a document; building it
+never calls a model. Each row is one requirement with its citation, section heading,
+the paragraph it sits under (read from the document's own numbering), who it applies to,
+the surrounding passage with the quote marked, and hint flags (for example "starts
+mid-sentence" or "table fragment"). Passages that look like duties but were not
+extracted are listed separately as possible missed requirements. Draft audit questions
+come from `reqbot questions`, which writes a sidecar file (`*_audit_questions.jsonl`) that
+the checklist reads; they are drafts for the auditor to check.
 
 ## Artifacts and the source of record
 
@@ -75,6 +107,7 @@ to regenerate the corpus.
 | `*_requirements_enriched.jsonl` | Added descriptions/classifications before description checking. |
 | `*_requirements_gated.jsonl`, `*_description_gate_failures.jsonl` | Post-check records and rejected-description evidence. |
 | `*_final_output.json`, `*_stats.json` | Aggregated export and run metrics. |
+| `*_audit_questions.jsonl` | Draft audit questions written by `reqbot questions`; read by the checklist. |
 
 Some artifacts are absent when their stage is skipped or fails. Reindex and
 checklist generation share an artifact resolver: pick the run with the most

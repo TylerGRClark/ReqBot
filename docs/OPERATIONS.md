@@ -48,7 +48,7 @@ placement. This is independent of Docling's parsing work on the ReqBot host.
 
 ## Resume an interrupted run
 
-Resume in the **same run directory** to retain Step C's prompt-hash cache.
+Resume in the **same run directory** to retain the requirement-finding step's (Step C) prompt-hash cache.
 From a source checkout, use the original PDF:
 
 ```bash
@@ -67,20 +67,20 @@ the repository. Always specify the existing output directory for resume.
 
 | Resume option | Required existing artifacts / behavior |
 |---|---|
-| `--skip-to A` | Run all stages. |
-| `--skip-to B` | The parser runs to obtain the in-memory Docling document, then chunks again. |
-| `--skip-to C` | Existing matching chunks; extract or reuse valid cached responses. |
-| `--skip-to D` | Existing chunks and extracted requirements; normalize, reconstruct, enrich/check, and export. |
-| `--skip-to E` | Existing normalized requirements; aggregate without rerunning D.5/D.6. |
+| `--skip-to A` (PDF reading) | Run all stages. |
+| `--skip-to B` (chunking) | The parser runs to obtain the in-memory Docling document, then chunks again. |
+| `--skip-to C` (requirement finding) | Existing matching chunks; extract or reuse valid cached responses. |
+| `--skip-to D` (normalizing and checking) | Existing chunks and extracted requirements; normalize, reconstruct, enrich/check, and export. |
+| `--skip-to E` (totals and final file) | Existing normalized requirements; aggregate without rerunning enrichment and the description check (D.5/D.6). |
 
 The original PDF is still required because the script checks its existence and
 normalization uses its content identity. Changing model/prompt inputs can
-invalidate cached extraction work. Non-default profiles bypass Step C's cache;
+invalidate cached extraction work (a new prompt, such as the inclusive prompt adopted in October 2026, means a full re-extraction). Non-default profiles bypass the requirement-finding step's cache;
 the direct script has no profile flag and uses `cybersecurity`.
 
-On resume, Step C redoes any chunk whose request failed or whose answer could not
+On resume, requirement finding redoes any chunk whose request failed or whose answer could not
 be parsed, and skips chunks it finished. If a chunk's answer is cut off at the
-output limit, Step C retries it once with a larger allowance that still fits the
+output limit, it retries it once with a larger allowance that still fits the
 context window; if it is still cut off, the requirements recovered so far are kept
 and the chunk is not retried. The end-of-run log lists chunks that failed (run
 again to retry them) and chunks that may be missing requirements.
@@ -214,7 +214,7 @@ intend to refresh extraction or validation outputs.
 |---|---|
 | `reqbot` runs an old version | Inspect `command -v reqbot` and `reqbot --version`; check PATH and reinstall the intended revision. |
 | `pip` refuses to install (`externally-managed-environment`) | Install inside a virtual environment; see [Deployment](DEPLOYMENT.md#source-installation). |
-| Ingest fails at Step A with `libGL.so.1` or `libxcb.so.1` not found | Install the system libraries: `sudo apt install libgl1 libglib2.0-0`. The Docker image includes them. |
+| Ingest fails at PDF reading (Step A) with `libGL.so.1` or `libxcb.so.1` not found | Install the system libraries: `sudo apt install libgl1 libglib2.0-0`. The Docker image includes them. |
 | Ollama model not found | Compare configured roles to `ollama list` on the configured service. |
 | Browser root returns no GUI | Build frontend before package install; API may still be available at `/api-docs`. |
 | Browser shows old frontend | Reload/hard-refresh; for a packaged install, rebuild and reinstall/recreate. |

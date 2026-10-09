@@ -1,6 +1,9 @@
 # Developer architecture reference
 
 For a component and pipeline overview, read [Architecture](docs/ARCHITECTURE.md).
+The pipeline is named by job (PDF reading, chunking, requirement finding, ...); the older
+letters (Step A to Step F) are given beside the names. Where it is going is in the
+[pipeline redesign plan](docs/PIPELINE_REDESIGN_PLAN.md).
 For setup, commands, and defaults, use the [documentation index](docs/README.md).
 This page maps implementation ownership and change dependencies for contributors.
 
@@ -24,6 +27,9 @@ This page maps implementation ownership and change dependencies for contributors
 | `services/compare_service.py` | Exact citation or hybrid topic comparison. |
 | `services/evidence_service.py` | Evidence retrieval/grouping, context, and optional synthesis. |
 | `services/checklist_service.py` | Artifact-backed checklist envelope, stable item IDs, and review flags. |
+| `services/checklist_audit.py` | Audit-sheet fields derived from the document's own text: citation, section heading, parent paragraph, applies-to, passage, hint flags. |
+| `services/checklist_missed.py` | Rule-based scan for passages that look like duties but were not extracted. |
+| `services/audit_questions.py` | Draft audit questions (Ollama) written to a sidecar file and read back by the checklist. |
 | `services/config_service.py` | Shared configuration read/write path for init and settings API. |
 | `api/app.py` | FastAPI assembly, CORS, route registration, and SPA static-file serving. |
 | `api/routes/` | Request models, interface validation, service calls, HTTP error mapping. |
@@ -33,18 +39,19 @@ This page maps implementation ownership and change dependencies for contributors
 
 ### Pipeline modules
 
-| Module | Stage / responsibility |
+| Module | Pipeline step / responsibility |
 |---|---|
 | `pipeline/run_pipeline.py` | In-process stage sequencing, resume boundaries, stage failure/fallback behavior. |
-| `pipeline/section_parser.py` | Docling PDF conversion and ancestry/page/parent metadata. |
-| `pipeline/chunk_text.py` | HybridChunker, breadcrumbs, section exclusions, and chunk artifacts. |
-| `pipeline/llm_extract_requirements.py` | Pass-1 prompts, Ollama extraction, response parsing, prompt-hash cache. |
-| `pipeline/parse_and_normalize.py` | Normalization, quote checks, deduplication, document/requirement identity. |
-| `pipeline/enrich_requirements.py` | LLM descriptions/classification plus deterministic parent-stem reconstruction. |
-| `pipeline/entailment_gate.py` | Description checks, optional MiniCheck scoring, gated artifact/failure output. |
-| `pipeline/aggregate_and_export.py` | Aggregated output and statistics. |
-| `pipeline/embed_and_index.py` | Dense/sparse requirement vectors, Qdrant schema and payloads. |
-| `pipeline/embed_context_index.py` | Dense/sparse context vectors and linked chunk identity. |
+| `pipeline/section_parser.py` | PDF reading (Step A): Docling PDF conversion and ancestry/page/parent metadata. |
+| `pipeline/chunk_text.py` | Chunking (Step B): HybridChunker, breadcrumbs, section exclusions, and chunk artifacts. |
+| `pipeline/llm_extract_requirements.py` | Requirement finding (Step C): the inclusive prompt, Ollama extraction, response parsing, prompt-hash cache. |
+| `pipeline/parse_and_normalize.py` | Normalizing and checking (Step D): quote checks, junk filters, deduplication, whole-sentence expansion, document/requirement identity. Several jobs in one module today; the redesign plan splits it. |
+| `pipeline/sentence_expand.py` | Expands a quote to the whole sentence it sits in (verbatim); called by Step D. |
+| `pipeline/enrich_requirements.py` | Enrichment (Step D.5): LLM descriptions/classification, plus deterministic parent-stem reconstruction. |
+| `pipeline/entailment_gate.py` | Description check (Step D.6): optional MiniCheck scoring, gated artifact/failure output. |
+| `pipeline/aggregate_and_export.py` | Totals and final file (Step E). |
+| `pipeline/embed_and_index.py` | Search indexing (Step F): dense/sparse requirement vectors, Qdrant schema and payloads. |
+| `pipeline/embed_context_index.py` | Search indexing (Step F): dense/sparse context vectors and linked chunk identity. |
 | `pipeline/checklist_export.py` | CSV/JSON/Markdown/XLSX serialization and spreadsheet formula handling. |
 | `pipeline/repair_ligatures.py` | Text repair helper. |
 
