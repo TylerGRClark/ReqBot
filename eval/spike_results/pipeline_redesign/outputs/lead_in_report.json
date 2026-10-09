@@ -1,0 +1,84 @@
+{
+ "records": 2420,
+ "lead_in_attached_by_rule": 597,
+ "lead_in_already_glued_by_the_model": 59,
+ "per_document": {
+  "CJCSI 6510.02G": 26,
+  "DODI 5200.01": 32,
+  "DODI 5200.44": 71,
+  "DODI 5200.48": 111,
+  "DODI 8410.03": 63,
+  "DODI 8551.01": 45,
+  "NIST.SP.800-125": 41,
+  "afi10-2402": 56,
+  "afi13-550": 58,
+  "afi17-203": 22,
+  "afman17-2101": 42,
+  "afpd_17-1": 10,
+  "dafman17-1305": 20
+ },
+ "against_the_adjudicated_gold": {
+  "complete: a lead-in was attached (wrong)": 15,
+  "complete: none attached (right)": 42,
+  "gold record not found in the new run": 18,
+  "needs a lead-in, in previous_chunk: a different lead-in was attached": 2,
+  "needs a lead-in, in previous_chunk: none attached": 2,
+  "needs a lead-in, in previous_chunk: the adjudicated lead-in was attached": 27,
+  "needs a lead-in, in same_chunk: a different lead-in was attached": 5,
+  "needs a lead-in, in same_chunk: none attached": 17,
+  "needs a lead-in, in same_chunk: the adjudicated lead-in was attached": 28,
+  "needs a lead-in, in section_heading: a different lead-in was attached": 1,
+  "needs a lead-in, in section_heading: none attached": 56,
+  "needs a lead-in, in section_heading: the adjudicated lead-in was attached": 1
+ },
+ "different_lead_in_examples": [
+  [
+   "DODI 8551.01",
+   "(3) Establishes and manages the unclassified RMF KS website (https://rmfks.osd.m",
+   "Appoints a DoD military officer in the grade of O-6, or civilian employee equivalent, possessing a T",
+   "DIRECTOR, DISA."
+  ],
+  [
+   "CJCSI 6510.02G",
+   "This request should be directly coordinated by the PO, the NSA CM office, and re",
+   "Urgency associated with modernization planning will be reported IAW reference (b), using color codes",
+   "POs (Service Selected Entity), in conjunction with their Authorizing Official (AO) or AO equivalent "
+  ],
+  [
+   "DODI 5200.01",
+   "Develops implementing guidance, as necessary, for the protection of signals inte",
+   "Under the authority, direction, and control of the USD(I&S), in addition to the responsibilities in ",
+   "the DIRNSA/CHCSS:"
+  ],
+  [
+   "DODI 8410.03",
+   "(3) A basic description of the NM system and supporting equipment information an",
+   "NM SLAs shall at a minimum address the following areas identified in International Telecommunication",
+   "NM SLAs shall at a minimum address the following areas"
+  ],
+  [
+   "DODI 8551.01",
+   "- d. Must meet the requirements in Paragraph 3.2.",
+   "All PPS used throughout planned, newly developed, acquired, and existing DODIN (whether used interna",
+   "All PPS used throughout planned, newly developed, acquired, and existing DODIN ... must:"
+  ],
+  [
+   "DODI 5200.01",
+   "imposes special requirements on the classification, declassification, marking, r",
+   "Under the authority, direction, and control of the USD(I&S), in addition to the responsibilities in ",
+   "As the designee of the Secretary of Defense, when necessary, | the DIRNSA/CHCSS:"
+  ],
+  [
+   "DODI 8551.01",
+   "(2) Send a copy of their PPSM CCB appointment letter to the DoD CISO.",
+   "Appoints a DoD military officer in the grade of O-6, or civilian employee equivalent, possessing a T",
+   "Appoints a DoD military officer ... as the PPSM CCB chairperson to: | DIRECTOR, DISA."
+  ],
+  [
+   "DODI 5200.44",
+   "(3) Develops a strategy for managing TSN risk in the supply chain for products a",
+   "In coordination with the DoD CIO, the Under Secretary of Defense for Acquisition and Sustainment (US",
+   "In coordination with the DoD CIO, ... and the DoD Component heads: | The USD(R&E):"
+  ]
+ ]
+}

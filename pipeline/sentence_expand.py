@@ -155,6 +155,19 @@ def explain_records(records: list[dict], raw_text_by_chunk: dict) -> tuple[list[
         counts[outcome] = counts.get(outcome, 0) + 1
         notes, parts = [], []
         lead = rec.get("anchor_lead_in") if status in ("lead_in_joined", "lead_in_from_heading") else None
+        lead_origin = "heading" if status == "lead_in_from_heading" else "chunk"
+        if not lead and outcome in ("expanded", "unchanged") and status in (None, "exact", "marker_removed", "words_trimmed") and not end_trimmed:
+            from pipeline import lead_in as _lead_in  # imported here: lead_in uses this module's helpers
+            start = rec.get("anchor_start")
+            if start is None:
+                located = flex_pattern(piece).search(raw) if raw else None
+                start = located.start() if located else None
+            lead = _lead_in.find_lead_in(raw, start, raw_text_by_chunk.get((rec.get("chunk_id") or 0) - 1, "") if isinstance(rec.get("chunk_id"), int) else "")
+            if lead and tidy(text).lower().startswith(tidy(lead).lower()):
+                lead = None
+            if lead:
+                lead_origin = "rule"
+                notes.append("lead-in attached from the line above that ends with a colon")
         lead_match = _LEADING_NUMBER.match(root)
         only_marker = outcome in ("expanded", "unchanged") and tidy(text).lower() == tidy(root[lead_match.end():] if lead_match else root).lower() and tidy(text).lower() != tidy(root).lower()
         if only_marker:
@@ -174,7 +187,7 @@ def explain_records(records: list[dict], raw_text_by_chunk: dict) -> tuple[list[
                           "lead_in_joined": "lead-in kept (found in the chunk)", "lead_in_from_heading": "lead-in kept (found in the chunk's heading)",
                           "lead_in_not_in_source": "lead-in dropped (not in the source)"}[status])
         if lead:
-            parts.append({"kind": "lead_in", "text": lead, "origin": "heading" if status == "lead_in_from_heading" else "chunk"})
+            parts.append({"kind": "lead_in", "text": lead, "origin": lead_origin})
         parts.append({"kind": "sentence", "text": text, "origin": "rule"})
         explained = tidy((lead + " " if lead else "") + text)
         key = (rec.get("chunk_id"), _norm_key(explained))

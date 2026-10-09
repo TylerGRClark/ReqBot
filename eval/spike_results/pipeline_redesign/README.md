@@ -46,3 +46,22 @@ Counting by the root alone gives 67 of 74, two below the existing run (within th
 `outputs/explained_rating_sheet.md`, 30 rows (8 where only a list number, dash or spacing differs; 22 where the words differ). The owner rated 28 and left 2 blank (rows 23 and 29): **25 better, 3 same, 0 worse = 28 of 28 better or same; step 5's bar of 80% is met** (28 of 30 = 93% even if the two blanks are counted against it).
 
 Three of the "better" ratings carry a note that the row is not a requirement and should be n/a: row 3 is a lead-in line ("In addition to the responsibilities in Paragraph 2.10., the DoD CIO:"), rows 24 and 26 are definitions. The text is better, but screening should mark them; this is the evidence for the screening step (plan step 7).
+
+## Lead-ins attached by rule (context attaching, tier 1)
+
+`pipeline/lead_in.py` finds, for a list item, the nearest earlier line (in the same chunk, or at the end of the previous chunk when the list began there) that ends in a colon and is not a sibling of the item: a sibling that also introduces a list, or a deeper numbered line, is skipped, and an ordinary paragraph in between stops the search. It is an exact line of the source. `explain_records` puts it in front of the explained text (`explained_parts` kind `lead_in`, origin `rule`; a note says so). The record's root is untouched. Run `lead_in_report.py` for the numbers below; it also writes `outputs/lead_in_rating_sheet.md`, 30 attached rows for the owner to rate right / neutral / wrong.
+
+On the 13 reference documents (2,420 records): **597 records (24.7%) get a lead-in by rule**, in addition to the 59 whose lead-in the model had glued on.
+
+Against the owner-adjudicated gold records (the AFI and DoDI records labeled earlier; 57 "complete" and 131 "needs a lead-in" are matched in the new run, 18 gold records are not found in it):
+
+| Gold label | Result |
+|---|---|
+| needs a lead-in, in the previous chunk (31) | the adjudicated lead-in attached 27, a different one 2, none 2 |
+| needs a lead-in, in the same chunk (50) | attached 28, different 5, none 17 |
+| needs a lead-in, in a section heading (58) | none attached 56 (a heading is not a line ending in a colon; this rule does not read headings), attached 1, different 1 |
+| complete, stands on its own (57) | none attached 42, a lead-in attached 15 |
+
+Reading the 15: most are items that are full sentences under a real lead-in ("AFGSC will: Publish and maintain a charter ..."; "Some significant points about DoD CUI include: ..."), so the lead-in is the line that governs them though the sentence did not need it to be understood. The "different" ones are mostly an immediate lead-in where the adjudicated one was the actor further up (for example "Appoints a DoD military officer ... to:" where the gold says "DIRECTOR, DISA."). The 17 same-chunk misses and the 56 heading cases are what a later step (the heading, or the model-picks step) would cover.
+
+Nothing is merged on this evidence alone: the plan's rule is the owner's rating of the sample sheet.
