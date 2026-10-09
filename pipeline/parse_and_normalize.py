@@ -999,6 +999,11 @@ def main() -> None:
         default="llama3.1:8b-instruct-q4_K_M",
         help="Name of the LLM used in Step C extraction (written to schema metadata).",
     )
+    parser.add_argument(
+        "--no-sentence-expand",
+        action="store_true",
+        help="WP-45.15: keep each source_quote as Step C returned it instead of expanding it to the whole sentence (for debugging).",
+    )
     args = parser.parse_args()
 
     reqs_path = Path(args.requirements_jsonl).resolve()
@@ -1022,6 +1027,7 @@ def main() -> None:
         args.source_pdf_path or "",
         str(out_dir),
         extraction_model=args.extraction_model,
+        expand_sentences=not args.no_sentence_expand,
     )
 
 
