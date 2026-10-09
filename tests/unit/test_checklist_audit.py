@@ -157,3 +157,12 @@ def test_attachment_paragraph_numbers_are_numbers_too():
     assert hmap["A2.2"] == "Reporting Chain"
     assert A.section_heading("A2.2.3.1", hmap) == "A2.2 Reporting Chain"
     assert A.parent_paragraph("A2.2.3.1", A.paragraph_map(["A2.2.3. Parent text here.", "A2.2.3.1. Child."])) == ("A2.2.3", "Parent text here.")
+
+
+def test_applicability_statements_are_hinted_not_dropped():
+    for text in ("This Instruction also applies to incidents involving systems which are not directly connected to an AF network.",
+                 "This Instruction does not apply to AF Intelligence Community systems, networks and assets.",
+                 "It applies to all military and civilian AF personnel, members of the AF Reserve and DoD contractors."):
+        assert "applicability_statement" in A.item_flags(text, "1.1", ""), text
+    assert "applicability_statement" not in A.item_flags("The CFP shall apply the patch within 24 hours.", "3.1", "")
+    assert "applicability_statement" not in A.item_flags("Units will apply the guidance in this Instruction when reporting.", "3.1", "")

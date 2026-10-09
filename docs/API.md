@@ -236,7 +236,7 @@ generic label or a non-numbered reference), `passage` (the document's own text a
 the requirement marked `>> <<`; for a list item or a quote that starts
 mid-sentence, the end of the previous chunk is put in front) and `item_flags`
 (rule-based hints such as `starts_mid_sentence`, `list_item`, `table_fragment`,
-`no_stated_actor`, `definition_or_description`, `no_passage`; a flagged row is
+`no_stated_actor`, `definition_or_description`, `applicability_statement`, `no_passage`; a flagged row is
 never dropped). None of these is model-generated. It also initializes
 `audit_question`, `evidence_to_request`, `generation_notes`, `assessor_notes`,
 and `status` (`"not-started"`). Those initially empty fields are not completed
