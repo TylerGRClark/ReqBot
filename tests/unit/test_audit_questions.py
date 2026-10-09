@@ -178,3 +178,18 @@ def test_a_lead_in_attached_from_above_does_not_stop_the_passage_from_being_foun
     item = generate(tmp_path, "doc", "cybersecurity")["items"][0]
     assert "quote_not_located_in_passage" not in item["item_flags"] and ">> Develops budget recommendations. <<" in item["passage"]
     assert item["source_quote"] == "The USD(A&S): Develops budget recommendations."
+
+
+def test_a_lead_in_from_the_previous_chunk_brings_the_previous_chunk_into_the_passage(tmp_path):
+    from services.checklist_service import generate
+    run = tmp_path / "doc_20260101_120000"
+    run.mkdir()
+    chunks = [{"chunk_id": 0, "raw_text": "Intro sentence here.\nThe USD(A&S):\n- a. Establishes policy for acquisition.", "section_title_path": ["Duties"], "page_start": 1, "page_end": 1},
+              {"chunk_id": 1, "raw_text": "- b. Develops budget recommendations.", "section_title_path": ["Duties"], "page_start": 1, "page_end": 1}]
+    (run / "doc_chunks.jsonl").write_text("".join(json.dumps({**c, "text": c["raw_text"]}) + "\n" for c in chunks), encoding="utf-8")
+    req = {"requirement_id": "REQ-1", "source_quote": "- b. Develops budget recommendations.", "explained_text": "The USD(A&S): Develops budget recommendations.",
+           "explained_parts": [{"kind": "lead_in", "text": "The USD(A&S):", "origin": "rule"}, {"kind": "sentence", "text": "Develops budget recommendations.", "origin": "rule"}],
+           "source_ref": "b", "section_title_path": ["Duties"], "page_start": 1, "page_end": 1, "chunk_id": 1}
+    (run / "doc_requirements_normalized.jsonl").write_text(json.dumps(req) + "\n", encoding="utf-8")
+    item = generate(tmp_path, "doc", "cybersecurity")["items"][0]
+    assert "The USD(A&S):" in item["passage"] and ">> Develops budget recommendations. <<" in item["passage"]

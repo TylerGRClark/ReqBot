@@ -147,7 +147,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             source_quote = req.get("explained_text") or extracted_quote  # what the sheet shows: the explained requirement when the record has one
             # The passage is located by the sentence itself: a lead-in attached from the line above is not contiguous with it in the document, so the full explained text would never be found
             sentence_parts = [p.get("text") for p in (req.get("explained_parts") or []) if p.get("kind") == "sentence" and p.get("text")]
-            locate_text = sentence_parts[-1] if sentence_parts else source_quote
+            locate_text = sentence_parts[-1] if sentence_parts else extracted_quote  # the root is contiguous text; older records have only the root
             all_quotes.append(source_quote)
             all_quotes.extend(q for q in [extracted_quote, *(req.get("merged_roots") or [])] if q)
 
@@ -175,7 +175,11 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             chunk_id = req.get("chunk_id")
             chunk = chunks.get(chunk_id)
             prev_chunk = chunks.get(chunk_id - 1) if isinstance(chunk_id, int) else None
-            passage, found = checklist_audit.build_passage(locate_text, chunk, prev_chunk, flags)
+            # whether to put the end of the previous chunk in front of the passage depends on the item being a list item or starting mid-sentence: judge that from the root and the sentence,
+            # not from the explained text (which starts with the lead-in), and always when a lead-in was attached by rule (it may sit in the previous chunk)
+            has_rule_lead_in = any(p.get("kind") == "lead_in" and p.get("origin") == "rule" for p in (req.get("explained_parts") or []))
+            passage_flags = set(flags) | set(checklist_audit.item_flags(extracted_quote, source_ref, applies, verbs)) | ({"list_item"} if has_rule_lead_in else set())
+            passage, found = checklist_audit.build_passage(locate_text, chunk, prev_chunk, passage_flags)
             cite = checklist_audit.citation(source_ref, passage, section_title_path, locate_text)
             if cite != cite0:  # an inferred paragraph number: the numbering can now say who the row applies to
                 numbered = checklist_audit.applies_to_numbered(cite, hmap, section_title_path)
