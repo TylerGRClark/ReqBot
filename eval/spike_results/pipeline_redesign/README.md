@@ -66,8 +66,16 @@ Reading the 15: most are items that are full sentences under a real lead-in ("AF
 
 Nothing is merged on this evidence alone. **Pass rule (written before any rating):** the owner's rating of the sample sheet is at least 80% right or neutral and no more than 10% wrong; a wrong lead-in is worse than none.
 
-### The owner's rating so far (2026-10-09, 22 of 30 rows; stopped for tiredness)
+### Rating of the lead-in sample (2026-10-09)
 
-No lead-in was judged to be the wrong line: **0 wrong of 22**. In his words: 14 better or right (several "together it is a requirement, without it, it wasn't a req at all"), 7 neutral or "helps add context but doesn't point to a person", and 1 (row 15) noted as a definition, not a requirement, which is a screening note and not a verdict on the lead-in. Rows 23 to 30 are unrated. The pass rule as written (30 rows rated, at least 80% right or neutral, at most 10% wrong) is therefore **not strictly met yet**: the 22 rated rows give 21 of 21 right or neutral and 0 wrong, but 0 of 22 only bounds the wrong rate below about 13% at 95% confidence, and 8 rows are unrated. Not merged on this evidence.
+The owner rated rows 1 to 22 and, too tired to go on, asked the assistant to judge rows 23 to 30. Those eight are marked "assistant's judgment" in the sheet and are kept apart here. The check was against the document's own numbering: in each of the eight, the lead-in found is the line whose paragraph number is the parent of the item's number (7.3.4 "AFGSC will:" for 7.3.4.2; 2.20.18 for 2.20.18.1; 6.3.2, 2.2.11, 2.2.6, 7.3.5, 2.8.2, 4.3.2 likewise).
+
+| | Rows | Result |
+|---|---|---|
+| Owner | 1 to 22 | **0 wrong of 22**: 14 better or right, 7 neutral or "helps add context but doesn't point to a person", 1 (row 15) noted as a definition, not a requirement (a screening note, not a verdict on the lead-in) |
+| Assistant | 23 to 30 | 8 right (row 23 names no person or group, the others do) |
+| Together | 30 | 0 wrong; 22 right or better and 7 neutral among the 29 judged on the lead-in (row 15 aside): **at least 80% right or neutral, at most 10% wrong: met** |
+
+The pass rule asked for the owner's rating; the owner delegated the last eight, so the result is stated both ways: on his 22 alone it is 0 wrong of 22 (an upper bound of about 13% on the wrong rate at 95% confidence, so the "at most 10%" half is not shown by his rows alone); with the eight it is 0 of 30. If he rates rows 23 to 30 himself and disagrees, the rule can be re-read then.
 
 What the comments add: the recurring complaint is that a lead-in such as "It is DoD policy that:" or "This issuance applies to:" gives context but **names no person or group**. Those are the cases where the "who" is not in a lead-in at all, which is the applicability question.

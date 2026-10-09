@@ -275,7 +275,7 @@ better
 
 **Result:** Assist in the development of exercises relating to TCAs (T-2) as appropriate to include: Provide CARM activity injects into existing installation and command exercise programs for the test and evaluation, and validation of critical security, mitigation, reconstitution, and emergency response plans.
 
-**Rating:** 
+**Rating:** right (assistant's judgment, not the owner's): its parent 2.20.18 "Assist in the development of exercises ... to include:" is the numbered parent of 2.20.18.1; good context but names no person or group
 
 ---
 
@@ -287,7 +287,7 @@ better
 
 **Result:** AFGSC will: Establish and maintain an AN/USQ-225 operational reporting process IAW AFMAN 10-206, Operational Reporting, to identify, elevate, and resolve system problems.
 
-**Rating:** 
+**Rating:** right (assistant's judgment): 7.3.4 "AFGSC will:" is the numbered parent of 7.3.4.2; names the group
 
 ---
 
@@ -299,7 +299,7 @@ better
 
 **Result:** AF/A2 will: Execute authorizing official duties for a subset of AF NC3 systems IAW DoDI 8510.01, Risk Management Framework for DoD Information Technology, AFI 17-130, and applicable CDRUSSTRATCOM Memoranda delegating the authorizing official responsibilities for specified systems.
 
-**Rating:** 
+**Rating:** right (assistant's judgment): 6.3.2 "AF/A2 will:" is the numbered parent of 6.3.2.2; names the group
 
 ---
 
@@ -311,7 +311,7 @@ better
 
 **Result:** AFGSC will: Integrate AN/USQ-225 into the NDO Service Core Function and Domain Mission Chief Architect roles and responsibilities.
 
-**Rating:** 
+**Rating:** right (assistant's judgment): 2.2.11 "AFGSC will:" is the numbered parent of 2.2.11.2; names the group
 
 ---
 
@@ -323,7 +323,7 @@ better
 
 **Result:** Deputy Chief of Staff for Strategic Plans and Requirements (AF/A5/8) will: Act as AF lead for AF NC3 requirements.
 
-**Rating:** 
+**Rating:** right (assistant's judgment): 2.2.6 "Deputy Chief of Staff for Strategic Plans and Requirements (AF/A5/8) will:" is the numbered parent of 2.2.6.2; names the office
 
 ---
 
@@ -335,7 +335,7 @@ better
 
 **Result:** AFNWC/NC, as Principal Integrator for AN/USQ-225 sustainment, modernization, and recapitalization, will: Support AFGSC through the development of AF NC3 metrics collection tools, development of tools to support an AN/USQ-225 health dashboard, and the provision of technical expertise for root cause analysis and issue resolution.
 
-**Rating:** 
+**Rating:** right (assistant's judgment): 7.3.5 "AFNWC/NC ... will:" is the numbered parent of 7.3.5.3; names the group
 
 ---
 
@@ -347,7 +347,7 @@ better
 
 **Result:** All CMO not part of the MAJCOM CMO's consolidation effort retain their CMO responsibilities to: Provision, track, and manage LHC circuits and service throughout their life cycle.
 
-**Rating:** 
+**Rating:** right (assistant's judgment): 2.8.2 "All CMO not part of the MAJCOM CMO's consolidation effort retain their CMO responsibilities to:" is the numbered parent of 2.8.2.1; names the group
 
 ---
 
@@ -359,7 +359,7 @@ better
 
 **Result:** The PM will ensure the exemption determination memo includes the following items: Details on security risk mitigations implemented to enable limited permissions.
 
-**Rating:** 
+**Rating:** right (assistant's judgment): 4.3.2 "The PM will ensure the exemption determination memo includes the following items:" is the numbered parent of 4.3.2.5; with it the item is a requirement, without it it is only a noun phrase
 
 ---
 
