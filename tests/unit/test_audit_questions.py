@@ -140,3 +140,26 @@ def test_an_unreachable_model_stops_the_run_and_keeps_earlier_rows(tmp_path):
     counts = AQ.draft_questions(items, path, call=call)
     assert counts.get("aborted") is True and counts["questions"] == 2
     assert sum(1 for r in AQ.load(path).values() if r.get("question")) == 2
+
+
+def test_a_part_of_a_longer_token_a_plural_and_a_camel_case_name_count_as_present():
+    material = "Install the DISA StoreFront roles; Networx/EIS contracts apply to the Installation."
+    assert AQ.unverified_terms("Does the unit use the DISA StoreFront for Networx and EIS contracts at the Installations?", material) == []
+    assert AQ.unverified_terms("Does the unit use the DISA StoreFront for Cloudx contracts?", material) == ["Cloudx"]
+
+
+def test_reused_questions_get_their_unverified_terms_recomputed(tmp_path):
+    item = _item(1, "Commanders shall review logs monthly.")
+    path = tmp_path / "q.jsonl"
+    AQ.draft_questions([item], path, call=lambda p: _answer("Do Commanders review logs monthly using SIEM-9?"))
+    saved = AQ.load(path)
+    saved["CL-1"]["unverified_terms"] = ["stale"]
+    AQ.write(path, saved)
+    AQ.draft_questions([item], path, call=lambda p: 1 / 0)
+    assert AQ.load(path)["CL-1"]["unverified_terms"] == ["SIEM-9"]
+
+
+def test_mixed_case_names_with_acronym_parts_are_checked_whole():
+    assert AQ.unverified_terms("Does the unit use FedRAMP and DoD controls?", "The unit uses controls.") == ["FedRAMP", "DoD"]
+    assert AQ.unverified_terms("Does the unit use FedRAMP?", "The unit uses FedRAMP controls.") == []
+    assert AQ.unverified_terms("Does the unit follow Camel guidance?", "The unit follows guidance.") == ["Camel"]  # a single capitalized word is still checked
