@@ -625,6 +625,7 @@ def run(
     *,
     extraction_model: str = "llama3.1:8b-instruct-q4_K_M",
     profile: dict | None = None,
+    expand_sentences: bool = True,
 ) -> str:
     """Normalize and deduplicate extracted requirements and write output JSONL.
 
@@ -639,6 +640,9 @@ def run(
         extraction_model:   LLM name used in Step C (written to schema).
         profile:            Validated profile dict from core.profiles.load_profile().
                             When None, the cybersecurity default profile is loaded.
+        expand_sentences:   WP-45.15: expand every source_quote to the whole sentence it sits in
+                            (pipeline/sentence_expand.py) and merge records that end up with the
+                            same sentence in the same chunk. Quotes stay verbatim source text.
 
     Returns:
         Path to the requirements_normalized.jsonl file that was written (str).
@@ -677,6 +681,7 @@ def run(
     chunk_hierarchy_map: dict[int, dict] = {}
     section_children_map: dict[str, list[str]] = {}
     chunk_text_map: dict[int, str] = {}
+    chunk_raw_text_map: dict[int, str] = {}
     if chunks_path.exists():
         log.info("Loading chunk metadata from: %s", chunks_path)
         chunks = load_jsonl(chunks_path)
@@ -684,6 +689,7 @@ def run(
         chunk_hierarchy_map = build_chunk_hierarchy_map(chunks)
         section_children_map = build_section_children_map(chunks)
         chunk_text_map = build_chunk_text_map(chunks)
+        chunk_raw_text_map = {c["chunk_id"]: c.get("raw_text") or c.get("text") or "" for c in chunks}
         log.info("Loaded page references for %d chunks", len(chunk_page_map))
         sections_with_children = sum(1 for v in section_children_map.values() if v)
         log.info(
@@ -889,6 +895,13 @@ def run(
     before_dedup = len(valid_reqs)
     valid_reqs = deduplicate_requirements(valid_reqs)
     dedup_removed = before_dedup - len(valid_reqs)
+
+    # WP-45.15: a requirement is at minimum the whole sentence, never a piece of one. After dedup and
+    # before the stable ID, which hashes the quote.
+    if expand_sentences and chunk_raw_text_map:
+        from pipeline import sentence_expand
+        valid_reqs, expand_counts = sentence_expand.expand_records(valid_reqs, chunk_raw_text_map)
+        log.info("Sentence expansion: %s", expand_counts)
 
     for req in valid_reqs:
         req["requirement_id"] = compute_stable_id(

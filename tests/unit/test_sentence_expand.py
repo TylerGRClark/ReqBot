@@ -97,3 +97,12 @@ def test_lead_in_with_colon_is_still_grafted():
     text, status = SE.expand("Obtain the qualification.", "Individuals shall: Obtain the qualification.")
     assert text == "Individuals shall: Obtain the qualification."
     assert status == "expanded"
+
+
+def test_expand_records_expands_merges_and_copies():
+    raw = {1: "Units shall retain logs for one year (T-2), and review them monthly. Other text."}
+    recs = [{"chunk_id": 1, "source_quote": "retain logs for one year (T-2)"}, {"chunk_id": 1, "source_quote": "review them monthly"}, {"chunk_id": 2, "source_quote": "Missing quote here."}]
+    out, counts = SE.expand_records(recs, raw)
+    assert [r["source_quote"] for r in out] == ["Units shall retain logs for one year (T-2), and review them monthly.", "Missing quote here."]
+    assert counts["merged"] == 1 and counts["expanded"] == 2 and counts["not_located"] == 1
+    assert recs[0]["source_quote"] == "retain logs for one year (T-2)"
