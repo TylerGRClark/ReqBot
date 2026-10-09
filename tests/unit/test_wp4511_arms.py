@@ -174,3 +174,19 @@ def test_compared_arms_must_have_run_identical_pipeline_code(tmp_path):
         _records_with_head(tmp_path, "D", older)
         with pytest.raises(SystemExit):
             SA.check_same_code(["A", "D"], scratch=tmp_path)
+
+
+def test_a_prompt_trial_may_declare_the_files_it_is_meant_to_change(tmp_path):
+    """pipeline/chunk_text.py is the only pipeline/core/services file that differs between these two commits (the merged table fix)."""
+    import subprocess
+    before, after = "52ead0b", "cc0b67e"
+    names = subprocess.run(["git", "diff", "--name-only", before, after, "--", *SA.CODE_PATHS], cwd=SA._ROOT, capture_output=True, text=True)
+    if names.returncode != 0 or names.stdout.split() != ["pipeline/chunk_text.py"]:
+        pytest.skip("the two reference commits are not available in this clone")
+    _records_with_head(tmp_path, "A", before)
+    _records_with_head(tmp_path, "B", after)
+    with pytest.raises(SystemExit):
+        SA.check_same_code(["A", "B"], scratch=tmp_path)  # undeclared difference
+    SA.check_same_code(["A", "B"], scratch=tmp_path, allow=("pipeline/chunk_text.py",))  # declared
+    with pytest.raises(SystemExit):
+        SA.check_same_code(["A", "B"], scratch=tmp_path, allow=("pipeline/other.py",))  # declaring a different file does not hide this one
