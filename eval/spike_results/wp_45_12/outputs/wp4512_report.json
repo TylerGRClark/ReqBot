@@ -12,7 +12,7 @@
      "n": 74,
      "hits": 46
     },
-    "recall_share": null,
+    "recall_share": 0.6216216216216216,
     "precision": {
      "false_positive": 20,
      "false_positive_not_obligation": 19,
@@ -37,7 +37,7 @@
      "n": 74,
      "hits": 45
     },
-    "recall_share": null,
+    "recall_share": 0.6081081081081081,
     "precision": {
      "false_positive": 21,
      "false_positive_not_obligation": 21,
@@ -63,7 +63,7 @@
      "n": 74,
      "hits": 68
     },
-    "recall_share": null,
+    "recall_share": 0.918918918918919,
     "precision": {
      "false_positive": 55,
      "false_positive_not_obligation": 54,
@@ -88,7 +88,7 @@
      "n": 74,
      "hits": 67
     },
-    "recall_share": null,
+    "recall_share": 0.9054054054054054,
     "precision": {
      "unscored": 17,
      "false_positive": 51,
@@ -115,7 +115,7 @@
      "n": 74,
      "hits": 74
     },
-    "recall_share": null,
+    "recall_share": 1.0,
     "precision": {
      "false_positive": 88,
      "false_positive_not_obligation": 85,
@@ -141,7 +141,7 @@
      "n": 74,
      "hits": 74
     },
-    "recall_share": null,
+    "recall_share": 1.0,
     "precision": {
      "false_positive": 91,
      "false_positive_not_obligation": 88,

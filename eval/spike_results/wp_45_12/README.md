@@ -32,3 +32,8 @@ Plan and rules: [docs/PHASE45_WP4512_PLAN.md](../../../docs/PHASE45_WP4512_PLAN.
 3. Nothing is changed in the pipeline. Adopting D1 changes Step C for every document, forces re-extraction and a reindex: the owner's decision, after rating `outputs/afi17-203_D1_additions_rating_sheet.md` (the 22 units D1 adds over D0 on AFI 17-203).
 
 `outputs/afi17-203_additions_rating_sheet.md` is the registered seeded sample of P1-or-D1 additions (40 of 97); because P1 failed its gate it is mostly P1 noise and is not asked of the owner.
+
+## Limits found in review
+
+- P1 classifies at most the first 1,500 characters of a unit but emits the whole unit as the quote. It matters for 1 of 197 units on AFI 17-203 and 0 of 183 on the labeled pages, so it does not change the registered numbers; it would matter for table-shaped units in other documents.
+- The owner's rating sheets show the paragraph, its number, its heading and its parent paragraph read from the numbering; units longer than 1,800 characters are cut in the sheet only.

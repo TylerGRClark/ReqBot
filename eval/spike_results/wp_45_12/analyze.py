@@ -48,7 +48,7 @@ def dev_scores():
             r = SD.score_run(d, final, index, obligations, pages)
             r.pop("traces")
             n = len(obligations)
-            recall = r["recall"]["count"] / n if isinstance(r["recall"], dict) and "count" in r["recall"] else None
+            recall = r["recall"]["recall"]  # score_run's primary recall (pieces covered / n)
             prec = SD.precision_rate(r["precision"])
             reps.append({"run": d.name, "recall": r["recall"], "recall_share": recall, "precision": r["precision"], "precision_rate": prec, "records": r["records"], "status": r["status"]})
         out[arm] = reps
@@ -72,6 +72,7 @@ def afi_coverage():
 
 
 def sample_sheet(units, covered):
+    pm = _paragraph_map(units)
     pool = sorted((covered["P1"] | covered["D1"]) - covered["D0"])
     picked = sorted(random.Random(SEED).sample(pool, min(SAMPLE, len(pool))))
     lines = [f"# WP-45.12 — additions to rate ({len(picked)} of {len(pool)} units covered by P1 or D1 and not by D0, seeded sample)", "",
@@ -79,7 +80,9 @@ def sample_sheet(units, covered):
     for n, i in enumerate(picked, 1):
         u = units[i]
         arms = [a for a in ("P1", "D1") if i in covered[a]]
-        lines += [f"## {n}. {u['ref'] or '(no number)'} — p. {u['page']}", "", f"**Heading:** {(u['path'] or ['—'])[-1]}  ", f"**Found by:** {', '.join(arms)}  ", "", f"> {u['unit'][:900]}", "", "**Rating:** ", "", "---", ""]
+        pref, ptext = A.parent_paragraph(u["ref"], pm)
+        lines += [f"## {n}. {u['ref'] or '(no number)'} — p. {u['page']}", "", f"**Heading:** {(u['path'] or ['—'])[-1]}  ", f"**Parent paragraph:** {(pref + ' ' + ptext).strip() or '—'}  ", f"**Found by:** {', '.join(arms)}  ", "",
+                  f"> {u['unit'][:1800]}", "", "**Rating:** ", "", "---", ""]
     return "\n".join(lines) + "\n", picked, pool
 
 
@@ -90,13 +93,20 @@ def duty_looking(u):
     return bool(re.search(r"\b(shall|must|will|should|may|required|responsible)\b", u["unit"], re.IGNORECASE)) or A._is_verb(fw, A.IMPERATIVE_VERBS)
 
 
+def _paragraph_map(units):
+    return A.paragraph_map([h for u in units for h in u["path"]] + [u["unit"] for u in units])
+
+
 def d1_sheet(units, covered):
     ids = sorted(covered["D1"] - covered["D0"])
+    pm = _paragraph_map(units)
     lines = [f"# WP-45.12 — AFI 17-203: the {len(ids)} units D1 covers and the current prompt (D0) does not", "",
              "Rate each: **requirement** (an auditor would want it on the sheet) / **partial** / **not a requirement**.", ""]
     for n, i in enumerate(ids, 1):
         u = units[i]
-        lines += [f"## {n}. {u['ref'] or '(no number)'} — p. {u['page']}", "", f"**Heading:** {(u['path'] or ['—'])[-1]}  ", "", f"> {u['unit'][:900]}", "", "**Rating:** ", "", "---", ""]
+        pref, ptext = A.parent_paragraph(u["ref"], pm)
+        lines += [f"## {n}. {u['ref'] or '(no number)'} — p. {u['page']}", "", f"**Heading:** {(u['path'] or ['—'])[-1]}  ", f"**Parent paragraph:** {(pref + ' ' + ptext).strip() or '—'}  ", "",
+                  f"> {u['unit'][:1800]}", "", "**Rating:** ", "", "---", ""]
     return "\n".join(lines) + "\n", ids
 
 
