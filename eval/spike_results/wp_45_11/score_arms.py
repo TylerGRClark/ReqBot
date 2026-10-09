@@ -133,10 +133,11 @@ def check_one_spec_per_arm(arm, scratch=SCRATCH):
 CODE_PATHS = ("pipeline", "core", "services")
 
 
-def check_same_code(arms, scratch=SCRATCH, unrecorded_head=None):
+def check_same_code(arms, scratch=SCRATCH, unrecorded_head=None, allow=()):
     """The arms may differ in chunk files only, so the pipeline code they ran must be identical: each arm's recorded git revision is compared with the others by
     `git diff` over pipeline/, core/ and services/ (different commits are fine if those directories are byte-identical). An arm whose records carry no revision
-    (the first two baseline runs, made before the field existed) needs `unrecorded_head`, the revision it ran at, stated by the person who ran it."""
+    (the first two baseline runs, made before the field existed) needs `unrecorded_head`, the revision it ran at, stated by the person who ran it. `allow` lists files that the
+    treatment is *meant* to change (a prompt trial changes `pipeline/llm_extract_requirements.py`); they are left out of the comparison, and the caller must name them."""
     import subprocess
 
     heads = {}
@@ -150,7 +151,15 @@ def check_same_code(arms, scratch=SCRATCH, unrecorded_head=None):
         heads[arm] = head
     first = next(iter(heads.values()))
     for arm, head in heads.items():
-        if head != first and subprocess.run(["git", "diff", "--quiet", first, head, "--", *CODE_PATHS], cwd=_ROOT).returncode != 0:
+        if head == first:
+            continue
+        try:
+            rc = subprocess.run(["git", "diff", "--quiet", first, head, "--", *CODE_PATHS, *(f":(exclude){p}" for p in allow)], cwd=_ROOT).returncode
+        except OSError as e:  # no git binary
+            raise SystemExit(f"cannot compare the arms' code revisions: {e}") from e
+        if rc not in (0, 1):  # 1 means "differs"; anything else (an unknown revision, a missing git) is an error, not a difference
+            raise SystemExit(f"git could not compare {first[:8]} with {head[:8]} for arm {arm} (exit code {rc}); are both revisions in this clone?")
+        if rc == 1:
             raise SystemExit(f"arm {arm} ran pipeline code that differs from the other arms ({first[:8]} against {head[:8]} over {', '.join(CODE_PATHS)})")
 
 
@@ -199,6 +208,7 @@ def main():
     ap.add_argument("--arms", nargs="+", required=True)
     ap.add_argument("--pair", nargs=2, metavar=("A", "B"), help="also print the obligations found in only one of the two arms (both must be in --arms, in that order)")
     ap.add_argument("--unrecorded-head", help="git revision that arms with no recorded revision ran at")
+    ap.add_argument("--allow-code-diff", nargs="*", default=[], metavar="PATH", help="files the treatment is meant to change (e.g. pipeline/llm_extract_requirements.py for a prompt trial); excluded from the same-code check")
     ap.add_argument("--scratch", default=str(SCRATCH))
     ap.add_argument("--out")
     args = ap.parse_args()
@@ -208,7 +218,7 @@ def main():
         check_complete(arm, args.scratch)  # before anything is traced: a partial run must not produce recall numbers
         check_one_spec_per_arm(arm, args.scratch)
     check_same_model(args.arms, args.scratch)
-    check_same_code(args.arms, args.scratch, args.unrecorded_head)
+    check_same_code(args.arms, args.scratch, args.unrecorded_head, args.allow_code_diff)
     traces = {arm: recall_traces(arm, index, ids, args.scratch) for arm in args.arms}
     levels, quotes = {}, {}
     for arm in args.arms:
