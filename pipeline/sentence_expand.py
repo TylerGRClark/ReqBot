@@ -149,10 +149,16 @@ def explain_records(records: list[dict], raw_text_by_chunk: dict) -> tuple[list[
         end_trimmed = status == "words_trimmed" and rec.get("anchor_trim_side") == "end"  # words at the end that the source lacks are often a table cell read back ("... is End user"); dropping them would lose what tells rows apart
         piece = root if status in (None, "exact") or end_trimmed else (rec.get("anchor_text") or root) if status in ("marker_removed", "words_trimmed", "lead_in_joined", "lead_in_from_heading", "lead_in_not_in_source") else root
         text, outcome = expand(piece, raw)
+        if status == "words_trimmed" and not end_trimmed and outcome not in ("expanded", "unchanged"):
+            text, outcome = root, "not_located"  # trimming dropped the model's words and no sentence was found to take their place: keep the root rather than a shorter piece
         counts[outcome] = counts.get(outcome, 0) + 1
         notes, parts = [], []
         lead = rec.get("anchor_lead_in") if status in ("lead_in_joined", "lead_in_from_heading") else None
-        if outcome == "expanded":
+        lead_match = _LEADING_NUMBER.match(root)
+        only_marker = outcome in ("expanded", "unchanged") and tidy(text).lower() == tidy(root[lead_match.end():] if lead_match else root).lower() and tidy(text).lower() != tidy(root).lower()
+        if only_marker:
+            notes.append("list number or dash taken off")
+        elif outcome == "expanded":
             notes.append("expanded to the whole sentence")
         elif outcome == "unchanged":
             notes.append("already a whole sentence")
