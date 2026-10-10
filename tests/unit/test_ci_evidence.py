@@ -652,6 +652,17 @@ def test_conflicting_legacy_index_cannot_be_hidden_by_rule_reference(gate, tmp_p
     assert gate.main([str(tmp_path)]) == 1
 
 
+@pytest.mark.parametrize("field,reason", [("ruleId", "Invalid rule ID"),
+                                        ("ruleIndex", "Invalid ruleIndex")])
+def test_null_legacy_reference_cannot_be_hidden_by_valid_extension(gate, tmp_path, field, reason):
+    data = extension_sarif()
+    data["runs"][0]["results"][0][field] = None
+    write_sarif(tmp_path, data)
+    with pytest.raises(gate.InvalidSarif, match=reason):
+        gate.evaluate(tmp_path)
+    assert gate.main([str(tmp_path)]) == 1
+
+
 @pytest.mark.parametrize("extensions", [None, {}, [None], [{"rules": None}],
                                         [{"rules": [{"id": "same"}, {"id": "same"}]}]])
 def test_malformed_extension_descriptors_fail(gate, tmp_path, extensions):

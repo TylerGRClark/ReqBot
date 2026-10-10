@@ -18,9 +18,9 @@ class InvalidSarif(ValueError):
 def effective_rule(result, driver, extensions):
     rule_id = result.get("ruleId")
     index = result.get("ruleIndex")
-    if rule_id is not None and (not isinstance(rule_id, str) or not rule_id):
+    if "ruleId" in result and (not isinstance(rule_id, str) or not rule_id):
         raise InvalidSarif("Invalid rule ID.")
-    if index is not None and (type(index) is not int or index < 0):
+    if "ruleIndex" in result and (type(index) is not int or index < 0):
         raise InvalidSarif("Invalid ruleIndex.")
     component = driver
     reference = {}
