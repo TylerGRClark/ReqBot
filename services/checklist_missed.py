@@ -170,7 +170,7 @@ def _duty_sentences(unit: str, covered_by: list[str], verbs) -> tuple[list[str],
         if _covered(norm, covered_by) or norm in covered_by:  # a short sentence is only covered by an extracted row that says exactly the same
             covered += 1
             continue
-        out.append(_capped(body))
+        out.append(body)  # the whole sentence, however long: a found row is cited and located like any other, so it is not cut
     return out, covered
 
 

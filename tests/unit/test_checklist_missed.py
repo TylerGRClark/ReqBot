@@ -160,6 +160,17 @@ def test_a_found_row_is_marked_in_its_own_paragraph_when_the_wording_repeats(tmp
     assert first["passage"].index(">>") < first["passage"].index("2.8.2.") and second["passage"].index(">>") > second["passage"].index("2.8.2.")  # the second row's mark is after its own number
 
 
+def test_a_long_duty_sentence_is_promoted_whole_and_can_be_located(tmp_path):
+    long_sentence = "The local CFP will " + ", ".join(f"coordinate step {i} of the response with the mission owner" for i in range(30)) + "."
+    assert len(long_sentence) > M.MAX_TEXT_CHARS
+    raw = f"3.7. Response. Response includes the steps taken. {long_sentence}\n3.8. Training. Personnel are trained every year."
+    promoted, _ = M.split_candidates({1: {"chunk_id": 1, "page_start": 2, "section_title_path": [], "raw_text": raw}}, [])
+    assert [p["text"] for p in promoted] == [long_sentence]  # not cut with an ellipsis
+    assert raw[promoted[0]["offset"]:].startswith(long_sentence)
+    # the old paragraph-level block still shortens a long paragraph for display
+    assert M.find_possible_missed({1: {"chunk_id": 1, "page_start": 2, "section_title_path": [], "raw_text": long_sentence}}, [])[0]["source_quote"].endswith(" ...")
+
+
 def test_a_short_duty_sentence_is_covered_only_by_the_same_extracted_sentence():
     raw = "2.20.19.  Support  MAAs  of  TCAs.  ( T-1 )  Assessment types are described in section 3.3.\n2.20.20. Training. Personnel are trained every year."
     chunks = {1: {"chunk_id": 1, "page_start": 2, "section_title_path": [], "raw_text": raw}}
