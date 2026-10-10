@@ -130,7 +130,7 @@ def _flex_pattern(text: str):
     return re.compile(r"\s+".join(pieces)) if pieces else None
 
 
-def build_passage(quote: str, chunk, prev_chunk=None, flags=()) -> tuple[str, bool]:
+def build_passage(quote: str, chunk, prev_chunk=None, flags=(), start: int = 0) -> tuple[str, bool]:
     """(passage, quote_found): the document's own text around the quote, verbatim, with the quote wrapped in >> << markers.
 
     The passage is the text of the chunk that holds the quote. When the quote starts mid-sentence or is a list item, the tail of the previous chunk is put in front (the
@@ -145,7 +145,7 @@ def build_passage(quote: str, chunk, prev_chunk=None, flags=()) -> tuple[str, bo
         cut = tail.find(" ")
         prefix = "... " + (tail[cut + 1:] if 0 <= cut < len(tail) - 1 and len(tail) == PASSAGE_TAIL_CHARS else tail).strip() + "\n\n"
     pat = _flex_pattern(quote)
-    m = pat.search(raw) if pat else None
+    m = pat.search(raw, max(start, 0)) if pat else None  # `start`: a row found by the text scan is marked at its own paragraph, not at an earlier identical sentence
     if not m:
         return (prefix + raw).strip(), False
     return (prefix + raw[: m.start()] + MARK_OPEN + raw[m.start(): m.end()] + MARK_CLOSE + raw[m.end():]).strip(), True

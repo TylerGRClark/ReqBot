@@ -221,9 +221,9 @@ The checklist envelope contains:
 | `generator` | `{tool, command}`. |
 | `document` | `{document_id, source_pdf}`. |
 | `profile` | Selected profile name. |
-| `summary` | `{total_items, items_requiring_review, items_with_flags, possible_missed}`. |
+| `summary` | `{total_items, items_requiring_review, items_with_flags, found_by_text_scan, possible_missed}`. |
 | `items` | Checklist item objects. |
-| `possible_missed` | Item-shaped objects for passages of the document that look like obligations but were not extracted, found by a rule-based text scan (modal word or imperative opener, not a lead-in ending in a colon, not covered by any extracted quote). Their `checklist_item_id` starts with `MISS-`, `item_flags` contains `possible_missed`, and they are not counted in `total_items`. A prompt to check, not requirements: some are descriptions or examples. Empty when the chunk file is not beside the requirements. |
+| `possible_missed` | Item-shaped objects for passages of the document that look like obligations but were not extracted, found by a rule-based text scan (modal word or imperative opener, not a lead-in ending in a colon, not covered by any extracted quote). Their `checklist_item_id` starts with `MISS-`, `item_flags` contains `possible_missed`, and they are not counted in `total_items`. A prompt to check, not requirements: some are descriptions or examples. Empty when the chunk file is not beside the requirements. A candidate that carries its own paragraph number is not listed here but promoted into `items` (below); one whose duty sentences are all extracted already is dropped. |
 
 Each item includes `checklist_item_id`, `requirement_ids`, `domain_tags`,
 `source_ref`, `page_refs`, `section_title_path`, `source_quote`, `confidence`,
@@ -237,7 +237,7 @@ the requirement marked `>> <<`; for a list item or a quote that starts
 mid-sentence, the end of the previous chunk is put in front) and `item_flags`
 (rule-based hints such as `starts_mid_sentence`, `list_item`, `table_fragment`,
 `no_stated_actor`, `definition_or_description`, `applicability_statement`, `no_passage`; a flagged row is
-never dropped). None of these is model-generated. It also initializes
+never dropped). A numbered paragraph the text scan found but extraction missed is promoted into `items`, in its place in the document: one row for each sentence that holds a duty (the whole sentence, without the paragraph number), flagged first with `found_by_text_scan`, counted in `total_items` and `found_by_text_scan`, with empty `requirement_ids` and `extracted_quote`, `review_reasons` `["not-extracted"]`, and the same citation, section, passage and parent paragraph as any other row. None of these is model-generated. It also initializes
 `audit_question`, `evidence_to_request`, `generation_notes`, `assessor_notes`,
 and `status` (`"not-started"`). Those initially empty fields are not completed
 assessments or automatically generated evidence.

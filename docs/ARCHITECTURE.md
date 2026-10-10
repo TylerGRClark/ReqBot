@@ -95,8 +95,9 @@ A checklist is built on demand from the newest processed run of a document; buil
 never calls a model. Each row is one requirement with its citation, section heading,
 the paragraph it sits under (read from the document's own numbering), who it applies to,
 the surrounding passage with the quote marked, and hint flags (for example "starts
-mid-sentence" or "table fragment"). Passages that look like duties but were not
-extracted are listed separately as possible missed requirements. Draft audit questions
+mid-sentence" or "table fragment"). Duty sentences in numbered paragraphs that look like duties but were not
+extracted become ordinary rows in their place in the document, flagged `found_by_text_scan`; other passages of that kind are listed
+separately as possible missed requirements. Draft audit questions
 come from `reqbot questions`, which writes a sidecar file (`*_audit_questions.jsonl`) that
 the checklist reads; they are drafts for the auditor to check.
 
