@@ -246,6 +246,31 @@ def _continues(earlier: str, later: str) -> bool:
     return bool(end and start and end.count("|") == start.count("|"))
 
 
+_LIST_LINE = re.compile(r"^\s*-\s+\S")
+
+
+def _list_key_label(chunks: dict, chunk_id: int) -> tuple[str, str]:
+    """The key to a table's column, set as a bulleted list right after the table under the column's own name (Table 3.1 of AFI 17-203 numbers its "Actions" 1 to 7 in a list under a
+    heading "Actions"): a list chunk, or a run of them under the same heading, directly after a captioned table whose grid holds the heading's word. The table's label, else ("", "")."""
+    leaf = str(((chunks.get(chunk_id) or {}).get("section_title_path") or [""])[-1]).strip()
+    if not leaf:
+        return "", ""
+    for back in range(MAX_TABLE_CHUNKS):
+        chunk = chunks.get(chunk_id - back)
+        if chunk is None:
+            return "", ""
+        raw = chunk.get("raw_text") or ""
+        if _is_table_grid(raw):
+            grid = " ".join(line for line in raw.splitlines() if line.lstrip().startswith("|"))
+            if back == 0 or not re.search(rf"\b{re.escape(leaf)}\b", grid, re.IGNORECASE):
+                return "", ""
+            return table_label(chunks, chunk_id - back, "")
+        lines = [line for line in raw.splitlines() if line.strip()]
+        if not lines or not all(_LIST_LINE.match(line) for line in lines) or str(((chunk.get("section_title_path") or [""])[-1])).strip() != leaf:
+            return "", ""
+    return "", ""
+
+
 def table_label(chunks: dict, chunk_id, quote: str = "") -> tuple[str, str]:
     """("Table 3.1", "Table 3.1 Incident Reporting Action Matrix") for a row from a table chunk, else ("", ""): the chunk is a table grid and it, or the grid chunks running
     back from it, has a caption such as "Table 3.1.  Incident Reporting Action Matrix.". Read straight from the document; no inference, so no "(inferred)".
@@ -257,7 +282,7 @@ def table_label(chunks: dict, chunk_id, quote: str = "") -> tuple[str, str]:
     for back in range(MAX_TABLE_CHUNKS):
         raw = (chunks.get(chunk_id - back) or {}).get("raw_text") or ""
         if not _is_table_grid(raw):
-            return "", ""
+            return _list_key_label(chunks, chunk_id) if back == 0 else ("", "")
         if back and not _continues(raw, (chunks.get(chunk_id - back + 1) or {}).get("raw_text") or ""):
             return "", ""  # the chunk after this one is not a continuation of its grid
         captions = list(_TABLE_CAPTION.finditer(raw))
@@ -281,6 +306,57 @@ def table_label(chunks: dict, chunk_id, quote: str = "") -> tuple[str, str]:
             title = " ".join(caption.group(2).split()).strip(" .")
             return number, f"{number} {title}".strip()[:TABLE_HEADING_CHARS]
     return "", ""
+
+
+# A row with no paragraph number to cite is cited by where it sits, read from the document and never inferred: "Front matter" for text ahead of the first numbered paragraph (the cover,
+# the compliance statement, a memorandum), or the caption of the figure or table whose unnumbered pages it is on ("Figure A3.1" for a template whose parts carry only roman
+# numerals). A numbered paragraph between the caption and the row, or a document with no numbered paragraphs at all, leaves the row with the paragraph rules (no label).
+_CAPTION_HEADING = re.compile(r"^\s*((?:Figure|Table)\s+(?:[A-Z]{1,2})?\d+(?:\.\d+)*)\.?(?:\s|$)", re.IGNORECASE)
+FRONT_MATTER = "Front matter"
+MAX_CAPTION_CHUNKS = 40
+_UNSET = object()
+
+
+def first_numbered_chunk(chunks: dict):
+    """The id of the first chunk, in document order, with a line that opens on a dotted paragraph number; None when the document has none."""
+    for chunk_id in sorted(c for c in chunks if isinstance(c, int)):
+        if _LINE_NUMBER.search((chunks[chunk_id] or {}).get("raw_text") or ""):
+            return chunk_id
+    return None
+
+
+def unnumbered_label(chunks: dict, chunk_id, quote: str = "", first_numbered=_UNSET) -> str:
+    """"Figure A3.1" for a row on the unnumbered pages that follow a captioned figure or table, "Front matter" for a row ahead of the document's first numbered paragraph, else "".
+    `first_numbered` is `first_numbered_chunk(chunks)`, passed in so a document with many such rows reads its chunks once."""
+    if not isinstance(chunk_id, int) or chunk_id not in chunks:
+        return ""
+    own = (chunks[chunk_id] or {}).get("raw_text") or ""
+    pattern = _flex_pattern(quote)
+    hit = pattern.search(own) if pattern else None
+    for back in range(MAX_CAPTION_CHUNKS):
+        chunk = chunks.get(chunk_id - back)
+        if chunk is None:
+            break
+        raw = chunk.get("raw_text") or ""
+        if back == 0 and hit:
+            raw = raw[:hit.start()]  # only what comes before the quote
+        if _LINE_NUMBER.search(raw):
+            break  # a numbered paragraph is nearer than any caption: the paragraph rules cite this row
+        for part in reversed([str(p) for p in (chunk.get("section_title_path") or [])]):
+            caption = _CAPTION_HEADING.match(part)
+            if caption:
+                return " ".join(caption.group(1).split())
+    if first_numbered is _UNSET:
+        first_numbered = first_numbered_chunk(chunks)
+    if first_numbered is None:
+        return ""  # the document is not numbered by paragraph: "front matter" would be every row
+    if chunk_id < first_numbered:
+        return FRONT_MATTER
+    if chunk_id == first_numbered and hit:
+        first_line = _LINE_NUMBER.search(own)
+        if first_line and hit.start() < first_line.start(1):
+            return FRONT_MATTER
+    return ""
 
 
 # WP-46.6: the section a row sits in, from the document's own numbering. The converter nests some headings wrongly (a row of 3.6 "Incident Analysis" can arrive under "Actions >

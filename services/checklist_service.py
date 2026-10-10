@@ -105,10 +105,12 @@ def requirements_path(processed_dir: Path, doc_key: str) -> Path:
     return _resolve_doc_path(processed_dir, doc_key)
 
 
-def _found_item(c: dict, chunks: dict, hmap: dict, para_map: dict, verbs) -> dict:
+def _found_item(c: dict, chunks: dict, hmap: dict, para_map: dict, verbs, first_numbered=checklist_audit._UNSET) -> dict:
     """A checklist row for a duty sentence the text scan found in a paragraph that was not extracted. It is built like an extracted row (citation, section, who it applies to,
     passage, parent paragraph, flags), flagged found_by_text_scan and left for review; nothing here is model-made."""
     cite, path, text = c["ref"], c["path"], c["text"]  # the paragraph's own number, read from the document: exact, not inferred; empty when the paragraph has none
+    table_ref, table_heading = checklist_audit.table_label(chunks, c["chunk_id"], text)  # a row from a table is cited by the table's caption, as an extracted row is
+    cite = table_ref or cite
     own_number = bool(cite)
     bulleted = bool(c.get("list_item"))  # the scan removed a bare bullet from the text: the row is still a list item (its lead-in is above it)
 
@@ -116,14 +118,14 @@ def _found_item(c: dict, chunks: dict, hmap: dict, para_map: dict, verbs) -> dic
         flags = checklist_audit.item_flags(text, cite, applies, verbs)
         return flags + ["list_item"] if bulleted and "list_item" not in flags else flags
 
-    numbered = checklist_audit.applies_to_numbered(cite, hmap, path)
-    applies = numbered if numbered is not None else checklist_audit.applies_to(path)
+    numbered = None if table_ref else checklist_audit.applies_to_numbered(cite, hmap, path)
+    applies = "" if table_ref else (numbered if numbered is not None else checklist_audit.applies_to(path))  # the converter's heading for a table is a guess: no party is read from it
     flags = row_flags(cite, applies)
     chunk = chunks.get(c["chunk_id"])
     prev_chunk = chunks.get(c["chunk_id"] - 1)
     passage, found = checklist_audit.build_passage(text, chunk, prev_chunk, set(flags), c["offset"])
     if not own_number:  # cited like an extracted row without a number: the nearest number before it, marked "(inferred)", else the nearest numbered heading
-        cite = checklist_audit.citation("", passage, path, text)
+        cite = checklist_audit.citation("", passage, path, text) or checklist_audit.unnumbered_label(chunks, c["chunk_id"], text, first_numbered)
         numbered = checklist_audit.applies_to_numbered(cite, hmap, path) if cite else None
         if numbered is not None:
             applies = numbered
@@ -142,7 +144,7 @@ def _found_item(c: dict, chunks: dict, hmap: dict, para_map: dict, verbs) -> dic
         "page_refs": c["pages"],
         "section_title_path": path,
         "citation": cite,
-        "section_heading": checklist_audit.section_heading(cite, hmap),
+        "section_heading": table_heading if table_ref else checklist_audit.section_heading(cite, hmap),
         "applies_to": applies,
         "parent_ref": parent_ref,
         "parent_text": parent_text,
@@ -198,6 +200,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     chunks = _load_chunks(jsonl_path)
     hmap = _heading_map(chunks)
     para_map = _paragraph_map(chunks)  # WP-46.1: the document's own text, for the passage column; {} when the chunk file is not beside the requirements
+    first_numbered = checklist_audit.first_numbered_chunk(chunks)  # for rows with no number to cite (front matter)
 
     items = []
     item_keys: list[tuple] = []  # where each item sits in the document: (chunk id, offset in the chunk), for placing rows found by the text scan
@@ -267,6 +270,8 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
                 if numbered is not None:
                     applies = numbered
                     flags = checklist_audit.item_flags(source_quote, source_ref, applies, verbs)
+            if not cite:  # nothing numbered to cite: where the row sits, read from the document ("Front matter", "Figure A3.1")
+                cite = checklist_audit.unnumbered_label(chunks, chunk_id, locate_text, first_numbered)
             if not passage:
                 flags.append("no_passage")
             elif not found:
@@ -325,7 +330,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     # flagged found_by_text_scan; the rest are listed apart, below the items, and are not counted as items
     obligation_verbs = profile.get("obligation_verbs", [])
     promoted, possible_missed = checklist_missed.split_candidates(chunks, all_quotes, obligation_verbs) if chunks else ([], [])
-    found_items = [_found_item(c, chunks, hmap, para_map, obligation_verbs) for c in promoted]
+    found_items = [_found_item(c, chunks, hmap, para_map, obligation_verbs, first_numbered) for c in promoted]
     items = _merge_in_order(items, item_keys, found_items, [(c["chunk_id"], c["offset"]) for c in promoted])
 
     # WP-46.6: draft audit questions written earlier by `reqbot questions` (a sidecar file; building a checklist never calls a model)

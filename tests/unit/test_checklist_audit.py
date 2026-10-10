@@ -230,3 +230,85 @@ def test_applicability_statements_are_hinted_not_dropped():
     assert "applicability_statement" in A.item_flags("1.1. It applies to all personnel.", "1.1", "")  # a retained paragraph number is allowed before the pronoun
     assert "applicability_statement" not in A.item_flags("This Instruction requires commanders to apply the controls within 30 days.", "3.1", "")
     assert "applicability_statement" not in A.item_flags("The organizations to which this instruction applies must act within 30 days.", "3.1", "")
+
+
+def test_unnumbered_label_cites_the_front_matter_and_the_figure_a_template_follows():
+    chunks = {
+        0: {"raw_text": "COMPLIANCE WITH THIS PUBLICATION IS MANDATORY\nSubmit requests for waivers through the chain of command.", "section_title_path": ["COMPLIANCE WITH THIS PUBLICATION IS MANDATORY"]},
+        1: {"raw_text": "1.1. Purpose. This instruction establishes the program.", "section_title_path": ["INTRODUCTION"]},
+        2: {"raw_text": "2.1. Roles. The commander will appoint a monitor.", "section_title_path": ["ROLES"]},
+        3: {"raw_text": "(Insert Command Logo)\nRisk Response Plan", "section_title_path": ["Figure A3.1.  Risk Response Plan (RRP) Template."]},
+        4: {"raw_text": "Describe what the organization has already done.", "section_title_path": ["VI. Risk Response"]},
+        5: {"raw_text": "Propose the way ahead.", "section_title_path": ["VII. Conclusions"]},
+        6: {"raw_text": "A2.4. A numbered annex paragraph. Notify the monitor.", "section_title_path": ["ANNEX"]},
+        7: {"raw_text": "Another unnumbered line after the annex paragraph.", "section_title_path": ["VIII. Closing"]},
+    }
+    first = A.first_numbered_chunk(chunks)
+    assert first == 1
+    assert A.unnumbered_label(chunks, 0, "Submit requests for waivers through the chain of command.", first) == "Front matter"
+    assert A.unnumbered_label(chunks, 4, "Describe what the organization has already done.", first) == "Figure A3.1"
+    assert A.unnumbered_label(chunks, 5, "Propose the way ahead.", first) == "Figure A3.1"  # two pages on, still before any numbered paragraph
+    assert A.unnumbered_label(chunks, 7, "Another unnumbered line after the annex paragraph.", first) == ""  # a numbered paragraph is nearer than the caption
+    assert A.unnumbered_label(chunks, 2, "The commander will appoint a monitor.", first) == ""  # numbered text, not front matter
+    assert A.unnumbered_label(chunks, 99, "x", first) == "" and A.unnumbered_label(chunks, None, "x", first) == ""
+
+
+def test_unnumbered_label_is_never_front_matter_in_a_document_without_paragraph_numbers():
+    chunks = {0: {"raw_text": "Applicability. This applies to all components."}, 1: {"raw_text": "a. The head of each component will report."}}
+    assert A.first_numbered_chunk(chunks) is None
+    assert A.unnumbered_label(chunks, 0, "This applies to all components.") == ""
+    assert A.unnumbered_label(chunks, 1, "The head of each component will report.") == ""
+
+
+def test_front_matter_in_the_chunk_that_holds_the_first_numbered_paragraph_ends_at_that_paragraph():
+    raw = "Submit waiver requests through the chain of command.\n\n1.1. Purpose. The commander will report."
+    chunks = {0: {"raw_text": raw, "section_title_path": ["INTRODUCTION"]}}
+    assert A.unnumbered_label(chunks, 0, "Submit waiver requests through the chain of command.") == "Front matter"
+    assert A.unnumbered_label(chunks, 0, "The commander will report.") == ""
+    assert A.unnumbered_label(chunks, 0, "A sentence that is not in the chunk.") == ""  # not located: no guess
+
+
+def test_the_key_list_under_a_table_is_cited_by_the_table():
+    grid = "| If the originator is | then take the indicated Actions | and the Primary Recipient will be |\n|---|---|---|\n| End user | 1 | CST/CSL |"
+    chunks = {1: {"raw_text": "Table 3.1.  Incident Reporting Action Matrix.\n\n" + grid, "section_title_path": ["INCIDENT HANDLING", "3.3.1. Objectives."]},
+              2: {"raw_text": "- 1 Upon detection of an incident, end users will notify the CST/CSL. (T-2)", "section_title_path": ["Actions"]},
+              3: {"raw_text": "- 7 Send an informational copy of all IRs. (T-2)", "section_title_path": ["Actions"]},
+              4: {"raw_text": "- A bulleted list under another heading.", "section_title_path": ["Notes"]},
+              5: {"raw_text": "3.4. Prose.\nSome paragraph.", "section_title_path": ["Actions"]}}
+    assert A.table_label(chunks, 2) == ("Table 3.1", "Table 3.1 Incident Reporting Action Matrix")
+    assert A.table_label(chunks, 3) == ("Table 3.1", "Table 3.1 Incident Reporting Action Matrix")  # the list runs on across chunks
+    assert A.table_label(chunks, 4) == ("", "")  # the heading is not a word of the table's header
+    assert A.table_label(chunks, 5) == ("", "")  # prose under the same heading is not the key
+
+
+def _doc(tmp_path, recs, chunks):
+    run_dir = tmp_path / "doc_20260101_120000"
+    run_dir.mkdir()
+    (run_dir / "doc_requirements_normalized.jsonl").write_text("".join(json.dumps(r) + "\n" for r in recs))
+    (run_dir / "doc_chunks.jsonl").write_text("".join(json.dumps(c) + "\n" for c in chunks))
+
+
+def _rec(req_id, quote, chunk_id, path):
+    return {"requirement_id": req_id, "source_quote": quote, "source_ref": "", "chunk_id": chunk_id, "section_title_path": path, "domain_tags": ["x"], "confidence": 0.9,
+            "page_start": 1, "page_end": 1}
+
+
+def test_generate_cites_unnumbered_cover_rows_as_front_matter_and_keeps_numbered_rows(tmp_path):
+    cover = "Submit requests for waivers through the chain of command to the appropriate tier."
+    body = "2.1. The commander will appoint a monitor for each installation."
+    _doc(tmp_path, [_rec("REQ-1", cover, 0, ["COMPLIANCE WITH THIS PUBLICATION IS MANDATORY"]), _rec("REQ-2", body, 1, ["ROLES", "2.1. Commander."])],
+         [{"chunk_id": 0, "raw_text": cover, "section_title_path": ["COMPLIANCE WITH THIS PUBLICATION IS MANDATORY"], "page_start": 1},
+          {"chunk_id": 1, "raw_text": body, "section_title_path": ["ROLES", "2.1. Commander."], "page_start": 5}])
+    items = {i["requirement_ids"][0]: i for i in generate(tmp_path, "doc", "cybersecurity")["items"]}
+    assert items["REQ-1"]["citation"] == "Front matter"
+    assert items["REQ-2"]["citation"] == "2.1"
+
+
+def test_a_row_the_text_scan_finds_in_a_table_is_cited_by_the_table(tmp_path):
+    grid = "| Category | Description |\n|---|---|\n| 8 | Investigating (Event): Events that are potentially malicious or anomalous activity and warrant further review. No event will be closed out as a Category 8 without review by the NOS. |"
+    chunks = [{"chunk_id": 0, "raw_text": "1.1. The CFP will notify the servicing MCCC within 24 hours of detection.", "section_title_path": ["INTRODUCTION"], "page_start": 4},
+              {"chunk_id": 1, "raw_text": "Table 1.1.  Categories of Events.\n\n" + grid, "section_title_path": ["INTRODUCTION"], "page_start": 6}]
+    _doc(tmp_path, [_rec("REQ-1", "The CFP will notify the servicing MCCC within 24 hours of detection.", 0, ["INTRODUCTION"])], chunks)
+    found = [i for i in generate(tmp_path, "doc", "cybersecurity")["items"] if "found_by_text_scan" in i["item_flags"]]
+    assert [i["citation"] for i in found] == ["Table 1.1"]
+    assert found[0]["section_heading"] == "Table 1.1 Categories of Events" and found[0]["applies_to"] == ""
