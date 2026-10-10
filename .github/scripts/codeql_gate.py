@@ -15,22 +15,67 @@ class InvalidSarif(ValueError):
     """Missing, malformed, or unsupported scan evidence."""
 
 
-def effective_rule(result, rules):
+def effective_rule(result, driver, extensions):
     rule_id = result.get("ruleId")
     index = result.get("ruleIndex")
+    if "ruleId" in result and (not isinstance(rule_id, str) or not rule_id):
+        raise InvalidSarif("Invalid rule ID.")
+    if "ruleIndex" in result and (type(index) is not int or index < 0):
+        raise InvalidSarif("Invalid ruleIndex.")
+    component = driver
+    reference = {}
     if "rule" in result:
-        raise InvalidSarif("Unsupported result.rule reference; expected CodeQL driver rules.")
+        reference = result["rule"]
+        if not isinstance(reference, dict):
+            raise InvalidSarif("Invalid result.rule reference.")
+        if "id" in reference and (
+            not isinstance(reference["id"], str) or not reference["id"]
+        ):
+            raise InvalidSarif("Invalid result.rule ID.")
+        if "index" in reference and (
+            type(reference["index"]) is not int or reference["index"] < 0
+        ):
+            raise InvalidSarif("Invalid result.rule index.")
+        for field, legacy in (("id", rule_id), ("index", index)):
+            if field in reference and legacy is not None and reference[field] != legacy:
+                raise InvalidSarif(f"result.rule.{field} disagrees with legacy reference.")
+        rule_id = reference.get("id", rule_id)
+        index = reference.get("index", index)
+        if "toolComponent" in reference:
+            component_ref = reference["toolComponent"]
+            if not isinstance(component_ref, dict):
+                raise InvalidSarif("Invalid rule toolComponent reference.")
+            component_index = component_ref.get("index")
+            if (type(component_index) is not int or component_index < 0
+                    or component_index >= len(extensions)):
+                raise InvalidSarif("Unsupported or invalid extension index.")
+            component = extensions[component_index]
+            for field in ("name", "guid"):
+                if field in component_ref and (
+                    not isinstance(component_ref[field], str) or not component_ref[field]
+                    or component_ref[field] != component.get(field)
+                ):
+                    raise InvalidSarif("Extension reference metadata disagrees.")
+    rules = component.get("rules", [])
+    if rule_id is not None and (not isinstance(rule_id, str) or not rule_id):
+        raise InvalidSarif("Invalid rule ID.")
     if index is not None:
         if type(index) is not int or index < 0 or index >= len(rules):
             raise InvalidSarif("Invalid ruleIndex.")
         rule = rules[index]
         if rule_id is not None and rule_id != rule["id"]:
             raise InvalidSarif("ruleId and ruleIndex disagree.")
-        return rule
-    matches = [rule for rule in rules if rule["id"] == rule_id]
-    if len(matches) != 1:
-        raise InvalidSarif("Result must resolve to exactly one rule descriptor.")
-    return matches[0]
+    else:
+        matches = [rule for rule in rules if rule["id"] == rule_id]
+        if len(matches) != 1:
+            raise InvalidSarif("Result must resolve to exactly one rule descriptor.")
+        rule = matches[0]
+    if "guid" in reference and (
+        not isinstance(reference["guid"], str) or not reference["guid"]
+        or reference["guid"] != rule.get("guid")
+    ):
+        raise InvalidSarif("Rule reference GUID disagrees.")
+    return rule
 
 
 def scan_file(path):
@@ -54,14 +99,20 @@ def scan_file(path):
             "CodeQL", "CodeQL command-line toolchain",
         ):
             raise InvalidSarif("Expected CodeQL driver evidence.")
-        rules = driver.get("rules", [])
-        if not isinstance(rules, list) or not all(
-            isinstance(rule, dict) and isinstance(rule.get("id"), str) and rule["id"]
-            for rule in rules
+        extensions = tool.get("extensions", [])
+        if not isinstance(extensions, list) or not all(
+            isinstance(component, dict) for component in extensions
         ):
-            raise InvalidSarif("Invalid rule descriptors.")
-        if len({rule["id"] for rule in rules}) != len(rules):
-            raise InvalidSarif("Duplicate rule descriptors.")
+            raise InvalidSarif("Invalid tool extensions.")
+        for component in [driver, *extensions]:
+            rules = component.get("rules", [])
+            if not isinstance(rules, list) or not all(
+                isinstance(rule, dict) and isinstance(rule.get("id"), str) and rule["id"]
+                for rule in rules
+            ):
+                raise InvalidSarif("Invalid rule descriptors.")
+            if len({rule["id"] for rule in rules}) != len(rules):
+                raise InvalidSarif("Duplicate rule descriptors.")
         invocations = run.get("invocations", [])
         if not isinstance(invocations, list):
             raise InvalidSarif("Invalid scan invocations.")
@@ -74,7 +125,7 @@ def scan_file(path):
         for result in results:
             if not isinstance(result, dict):
                 raise InvalidSarif("Invalid result.")
-            rule = effective_rule(result, rules)
+            rule = effective_rule(result, driver, extensions)
             default = rule.get("defaultConfiguration", {})
             if not isinstance(default, dict):
                 raise InvalidSarif("Invalid default rule configuration.")

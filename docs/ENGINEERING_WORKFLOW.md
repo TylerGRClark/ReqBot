@@ -144,7 +144,10 @@ CodeQL runs and explicit results lists. The accepted driver names are `CodeQL`
 and the [documented CLI name](https://docs.github.com/en/code-security/reference/code-scanning/codeql/codeql-cli/sarif-output),
 `CodeQL command-line toolchain`. Empty results are valid; missing output
 is not. Present invocation records must report successful execution. Every result
-must resolve to a driver rule, with consistent rule ID/index and valid metadata.
+must resolve to a driver rule or an indexed tool-extension rule, with consistent
+rule ID/index and valid metadata. Both legacy `ruleId`/`ruleIndex` references and
+CodeQL's `result.rule` references are supported; extension indexes select the
+corresponding `tool.extensions` entry rather than the driver's rules.
 Unsupported references or malformed evidence fail rather than disappear.
 
 The proposed blocking policy is an effective result level of `error` **or** a
