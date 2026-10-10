@@ -218,6 +218,35 @@ def citation(source_ref: str, passage: str, section_title_path, quote: str = "")
     return ""
 
 
+# A row from a table is cited by the table, not by a paragraph number. The converter files a table under the last heading it saw (Table 3.1 of AFI 17-203 sits in section 3.3 but
+# arrives under "3.3.1. Objectives"; Table 3.2 arrives under 3.7.3), and the document itself calls the table only "Table 3.1". The caption opens the table's chunk; a table that
+# runs on into the next chunk has no caption there, so a grid chunk without a caption continues the table of the chunk before it.
+_TABLE_CAPTION = re.compile(r"^\s*(Table\s+\d+(?:\.\d+)*)\.(?=\s)[ \t]*([^\n|]*)")  # the full stop after the number, then a space: "Table 3.1 shows ..." is prose
+MAX_TABLE_CHUNKS = 6
+TABLE_HEADING_CHARS = 120
+
+
+def _is_table_grid(raw_text: str) -> bool:
+    return sum(1 for line in (raw_text or "").splitlines() if line.lstrip().startswith("|")) >= 2
+
+
+def table_label(chunks: dict, chunk_id) -> tuple[str, str]:
+    """("Table 3.1", "Table 3.1 Incident Reporting Action Matrix") for a row from a table chunk, else ("", ""): the chunk is a table grid and it, or the grid chunks running
+    back from it, opens with a caption such as "Table 3.1.  Incident Reporting Action Matrix.". Read straight from the document; no inference, so no "(inferred)"."""
+    if not isinstance(chunk_id, int):
+        return "", ""
+    for back in range(MAX_TABLE_CHUNKS):
+        raw = (chunks.get(chunk_id - back) or {}).get("raw_text") or ""
+        if not _is_table_grid(raw):
+            return "", ""
+        m = _TABLE_CAPTION.match(raw)
+        if m:
+            number = " ".join(m.group(1).split())
+            title = " ".join(m.group(2).split()).strip(" .")
+            return number, f"{number} {title}".strip()[:TABLE_HEADING_CHARS]
+    return "", ""
+
+
 # WP-46.6: the section a row sits in, from the document's own numbering. The converter nests some headings wrongly (a row of 3.6 "Incident Analysis" can arrive under "Actions >
 # 3.5.2. Methodology"), and some AFI headings are run-in titles at the start of a paragraph ("3.6. Incident Analysis .  Incident analysis is ...") that are not headings at all.
 # So the heading of a number is read from (a) numbered section headings and (b) paragraphs that open with a short Title-Case phrase and a full stop, and a row is placed by its number.

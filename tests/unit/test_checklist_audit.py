@@ -111,6 +111,35 @@ def test_citation_is_the_paragraph_number_else_read_back_from_the_document():
     assert "(inferred)" not in A.citation("3.1", passage, [])  # a real reference is kept as extracted
 
 
+def test_table_label_reads_the_caption_and_follows_a_table_across_chunks():
+    grid = "| a | b |\n|---|---|\n| 1 | 2 |"
+    chunks = {1: {"raw_text": "3.3.1. Objectives. Some paragraph."}, 2: {"raw_text": "Table 3.1.  Incident Reporting Action Matrix.\n\n" + grid}, 3: {"raw_text": grid},
+              4: {"raw_text": "A paragraph after the table."}, 5: {"raw_text": grid}, 6: {"raw_text": "Table 3.1 shows the matrix.\n" + grid}}
+    assert A.table_label(chunks, 2) == ("Table 3.1", "Table 3.1 Incident Reporting Action Matrix")
+    assert A.table_label(chunks, 3) == ("Table 3.1", "Table 3.1 Incident Reporting Action Matrix")  # the table runs on into the next chunk, which has no caption
+    assert A.table_label(chunks, 1) == ("", "") and A.table_label(chunks, 4) == ("", "")  # ordinary paragraphs
+    assert A.table_label(chunks, 5) == ("", "")  # a grid with no caption anywhere before it has no label to give
+    assert A.table_label(chunks, 6) == ("", "")  # "Table 3.1 shows ..." is prose, not a caption (a caption has a full stop after the number)
+    assert A.table_label(chunks, None) == ("", "") and A.table_label({}, 2) == ("", "")
+
+
+def test_a_row_from_a_table_is_cited_by_the_table_and_names_no_party(tmp_path):
+    run_dir = tmp_path / "doc_20260101_120000"
+    run_dir.mkdir()
+    grid = "| If the originator is | then take the indicated Actions |\n|---|---|\n| the AFOSI | notify the CFP |"
+    recs = [{"requirement_id": "REQ-1", "source_quote": "then take the indicated Actions", "source_ref": "", "chunk_id": 2, "page_start": 14, "page_end": 14,
+             "section_title_path": ["INCIDENT HANDLING", "3.3.1. Objectives."], "domain_tags": [], "confidence": None},
+            {"requirement_id": "REQ-2", "source_quote": "Notify the CFP within one hour.", "source_ref": "3.3.2", "chunk_id": 3, "page_start": 15, "page_end": 15,
+             "section_title_path": ["INCIDENT HANDLING", "3.3.1. Objectives."], "domain_tags": [], "confidence": None}]
+    (run_dir / "doc_requirements_normalized.jsonl").write_text("".join(json.dumps(r) + "\n" for r in recs))
+    chunks = [{"chunk_id": 1, "raw_text": "3.3.1. Objectives. Detect events."}, {"chunk_id": 2, "raw_text": "Table 3.1.  Incident Reporting Action Matrix.\n\n" + grid},
+              {"chunk_id": 3, "raw_text": "3.3.2. Notify the CFP within one hour."}]
+    (run_dir / "doc_chunks.jsonl").write_text("".join(json.dumps(c) + "\n" for c in chunks))
+    table_row, paragraph_row = generate(tmp_path, "doc", "cybersecurity")["items"]
+    assert table_row["citation"] == "Table 3.1" and table_row["section_heading"] == "Table 3.1 Incident Reporting Action Matrix" and table_row["applies_to"] == ""
+    assert paragraph_row["citation"] == "3.3.2" and "Table" not in paragraph_row["section_heading"]  # a row outside the table is cited as before
+
+
 def test_citation_prefers_the_quotes_own_number_and_never_reads_an_unmarked_passage():
     passage = "3.4.3. Preliminary analysis.\n>> 3.4.4. Assess and categorize the event. <<"
     assert A.citation("SECTION 2", passage, [], "3.4.4. Assess and categorize the event.") == "3.4.4"  # the number the quote opens with is its own

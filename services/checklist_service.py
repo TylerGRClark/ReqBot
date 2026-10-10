@@ -167,9 +167,11 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
 
             # WP-46.1 audit layout: who the row applies to, the document's own passage, and specific hints (nothing here is model-made)
             verbs = profile.get("obligation_verbs", [])
-            cite0 = checklist_audit.citation(source_ref, "", section_title_path, locate_text)  # the paragraph number as extracted or as the quote opens; inferred ones need the passage
-            numbered = checklist_audit.applies_to_numbered(cite0, hmap, section_title_path)
-            applies = numbered if numbered is not None else checklist_audit.applies_to(section_title_path)
+            # a row from a table is cited by the table's own caption ("Table 3.1"); the converter's heading for a table is a guess, so no party is read from it either
+            table_ref, table_heading = checklist_audit.table_label(chunks, req.get("chunk_id"))
+            cite0 = table_ref or checklist_audit.citation(source_ref, "", section_title_path, locate_text)  # the paragraph number as extracted or as the quote opens; inferred ones need the passage
+            numbered = None if table_ref else checklist_audit.applies_to_numbered(cite0, hmap, section_title_path)
+            applies = "" if table_ref else (numbered if numbered is not None else checklist_audit.applies_to(section_title_path))
             flags = checklist_audit.item_flags(source_quote, source_ref, applies, verbs)
             parent_ref, parent_text = checklist_audit.parent_paragraph(source_ref, para_map)
             chunk_id = req.get("chunk_id")
@@ -180,7 +182,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             has_rule_lead_in = any(p.get("kind") == "lead_in" and p.get("origin") == "rule" for p in (req.get("explained_parts") or []))
             passage_flags = set(flags) | set(checklist_audit.item_flags(extracted_quote, source_ref, applies, verbs)) | ({"list_item"} if has_rule_lead_in else set())
             passage, found = checklist_audit.build_passage(locate_text, chunk, prev_chunk, passage_flags)
-            cite = checklist_audit.citation(source_ref, passage, section_title_path, locate_text)
+            cite = table_ref or checklist_audit.citation(source_ref, passage, section_title_path, locate_text)
             if cite != cite0:  # an inferred paragraph number: the numbering can now say who the row applies to
                 numbered = checklist_audit.applies_to_numbered(cite, hmap, section_title_path)
                 if numbered is not None:
@@ -212,7 +214,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
                 "page_refs": page_refs,
                 "section_title_path": section_title_path,
                 "citation": cite,
-                "section_heading": checklist_audit.section_heading(cite, hmap),
+                "section_heading": table_heading if table_ref else checklist_audit.section_heading(cite, hmap),
                 "applies_to": applies,
                 "parent_ref": parent_ref,
                 "parent_text": parent_text,
