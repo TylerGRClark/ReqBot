@@ -56,19 +56,43 @@ def _write(tmp_path, quotes, chunks):
         (run_dir / "doc_chunks.jsonl").write_text("".join(json.dumps(c) + "\n" for c in chunks.values()))
 
 
-def test_numbered_duty_sentences_become_rows_in_document_order_and_the_rest_stay_apart(tmp_path):
+def test_duty_sentences_become_rows_in_document_order_numbered_or_not(tmp_path):
     _write(tmp_path, ["The CFP will notify the servicing MCCC within 24 hours of detection."], CHUNKS)
     result = generate(tmp_path, "doc", "cybersecurity")
     items = result["items"]
     found = [i for i in items if "found_by_text_scan" in i["item_flags"]]
-    assert [i["citation"] for i in items] == ["2.3", "2.3.4", "2.3.5"]  # the extracted row first, then the two found rows after it in the chunk
-    assert [i["source_quote"] for i in found] == ["Support the ACD unit as directed during investigation of the incident.", "No event will be closed out as a Category 8 without review by the NOS."]
+    assert [i["citation"] for i in items] == ["2.3", "2.3.4", "2.3.5", ""]  # the extracted row, the two numbered found rows, then the unnumbered one: no number anywhere to cite
+    assert [i["source_quote"] for i in found] == ["Support the ACD unit as directed during investigation of the incident.", "No event will be closed out as a Category 8 without review by the NOS.",
+                                                  "Submit requests for waivers through the chain of command to the appropriate tier."]
     row = found[0]
     assert row["item_flags"][0] == "found_by_text_scan" and row["requirement_ids"] == [] and row["extracted_quote"] == "" and row["review_reasons"] == ["not-extracted"]
     assert row["checklist_item_id"].startswith("MISS-") and row["page_refs"] == [4] and "AF/A3" in row["applies_to"] and ">> Support the ACD unit" in row["passage"]
-    assert result["summary"]["total_items"] == 3 and result["summary"]["found_by_text_scan"] == 2
-    assert [m["source_quote"] for m in result["possible_missed"]] == ["Submit requests for waivers through the chain of command to the appropriate tier."]  # no paragraph number: stays in the block
-    assert result["summary"]["possible_missed"] == 1 and all("possible_missed" in m["item_flags"] for m in result["possible_missed"])
+    assert result["summary"]["total_items"] == 4 and result["summary"]["found_by_text_scan"] == 3
+    assert result["possible_missed"] == [] and result["summary"]["possible_missed"] == 0  # nothing is left below the line when every candidate holds a duty sentence
+
+
+def test_an_unnumbered_found_row_is_cited_by_inference_from_its_section(tmp_path):
+    chunks = {1: {"chunk_id": 1, "page_start": 3, "section_title_path": ["3. Roles", "3.4. Waivers"],
+                  "raw_text": "Submit requests for waivers through the chain of command to the appropriate tier."}}
+    _write(tmp_path, ["The CFP will notify the servicing MCCC within 24 hours of detection."], chunks)
+    result = generate(tmp_path, "doc", "cybersecurity")
+    found = [i for i in result["items"] if "found_by_text_scan" in i["item_flags"]]
+    assert [i["citation"] for i in found] == ["3.4 (inferred)"]  # marked as inferred, like an extracted row that has no number of its own
+    assert "found_by_text_scan" in found[0]["item_flags"] and result["possible_missed"] == []
+
+
+def test_an_unnumbered_bullet_is_a_list_item_and_shows_the_lead_in_from_the_previous_chunk(tmp_path):
+    chunks = {
+        1: {"chunk_id": 1, "page_start": 3, "section_title_path": ["3. Roles", "3.4. AF/A3"], "raw_text": "3.4.1. AF/A3 will:"},
+        2: {"chunk_id": 2, "page_start": 3, "section_title_path": ["3. Roles", "3.4. AF/A3"],
+            "raw_text": "- Submit reports to the wing within 24 hours of an incident.\n- Maintain the log of every incident handled by the unit."},
+    }
+    _write(tmp_path, ["The CFP will notify the servicing MCCC within 24 hours of detection."], chunks)
+    result = generate(tmp_path, "doc", "cybersecurity")
+    found = [i for i in result["items"] if "found_by_text_scan" in i["item_flags"]]
+    assert len(found) == 2 and all("list_item" in i["item_flags"] for i in found)  # the scan strips the bullet, the row must still say it is a list item
+    assert all("AF/A3 will:" in i["passage"] for i in found)  # the lead-in sits in the previous chunk: shown, not lost
+    assert [i["citation"] for i in found] == ["3.4.1 (inferred)", "3.4.1 (inferred)"]
 
 
 def test_only_the_sentence_that_holds_the_duty_is_promoted_not_the_paragraph():
@@ -137,13 +161,13 @@ def test_a_later_imperative_sentence_qualifies_a_paragraph_that_has_no_modal():
     assert [p["text"] for p in promoted] == ["Include the mission owner."] and promoted[0]["ref"] == "3.6"
 
 
-def test_the_sentences_of_a_chunk_with_one_numbered_paragraph_keep_its_number():
+def test_the_sentences_of_a_chunk_with_one_numbered_paragraph_keep_its_number_and_an_unnumbered_one_is_promoted_too():
     raw = "3.6. Incident Analysis. Incident analysis describes the process. The CFP will notify the MCCC of every incident. Include the mission owner in the process."
     promoted, rest = M.split_candidates({1: {"chunk_id": 1, "page_start": 2, "section_title_path": [], "raw_text": raw}}, [])
     assert [(p["ref"], p["text"]) for p in promoted] == [("3.6", "The CFP will notify the MCCC of every incident."), ("3.6", "Include the mission owner in the process.")] and rest == []
     no_number = "Incident analysis describes the process. The CFP will notify the MCCC of every incident."
     promoted, rest = M.split_candidates({1: {"chunk_id": 1, "page_start": 2, "section_title_path": [], "raw_text": no_number}}, [])
-    assert promoted == [] and len(rest) == 1  # no number anywhere in the chunk: nothing to inherit, so it stays in the block
+    assert [(p["ref"], p["text"]) for p in promoted] == [("", "The CFP will notify the MCCC of every incident.")] and rest == []  # no number anywhere in the chunk: promoted, cited by inference
 
 
 def test_a_found_row_is_marked_in_its_own_paragraph_when_the_wording_repeats(tmp_path):
@@ -196,13 +220,14 @@ def test_without_a_chunk_file_there_are_no_candidates_and_no_crash(tmp_path):
 
 
 def test_exports_show_the_section_clearly_apart(tmp_path):
-    _write(tmp_path, ["The CFP will notify the servicing MCCC within 24 hours of detection."], CHUNKS)
+    purpose = {"chunk_id": 4, "page_start": 7, "section_title_path": ["Notes"], "raw_text": "The purpose of this review is to confirm that every report is filed."}
+    _write(tmp_path, ["The CFP will notify the servicing MCCC within 24 hours of detection."], {**CHUNKS, 4: purpose})
     checklist = generate(tmp_path, "doc", "cybersecurity")
     n_items, n_missed = len(checklist["items"]), len(checklist["possible_missed"])
-    assert n_items == 3 and n_missed == 1
+    assert n_items == 4 and n_missed == 1  # a purpose statement has a modal but no duty sentence: it stays below the line
     rows = list(csv.DictReader(io.StringIO(to_csv(checklist))))
     assert len(rows) == n_items + n_missed and sum(1 for r in rows if "possible_missed" in r["item_flags"]) == n_missed
-    assert sum(1 for r in rows if "found_by_text_scan" in r["item_flags"]) == 2  # the promoted rows are ordinary rows with a flag
+    assert sum(1 for r in rows if "found_by_text_scan" in r["item_flags"]) == 3  # the promoted rows are ordinary rows with a flag
     assert "# Possible missed requirements" in to_markdown(checklist)
     ws = openpyxl.load_workbook(io.BytesIO(to_xlsx(checklist)))["Checklist"]
     assert ws.max_row == 2 + n_items + 1 + 1 + n_missed  # 2 header rows, the items, a blank row, the banner row, the candidates
