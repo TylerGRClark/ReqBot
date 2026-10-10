@@ -328,7 +328,8 @@ def test_invalid_retry_consumes_time_budget(reviewer, monkeypatch):
     assert len(diagnostics) == 1
 
 
-def test_rejected_findings_survive_clean_fallback(review_run, original_get_review, monkeypatch):
+@pytest.mark.parametrize("shape", ["wrapper", "array", "string", "number", "null"])
+def test_rejected_findings_survive_clean_fallback(review_run, original_get_review, monkeypatch, shape):
     reviewer, posted = review_run
     monkeypatch.setenv("GEMINI_API_KEY", "test-key")
     monkeypatch.delenv("GEMINI_API_KEY_2", raising=False)
@@ -337,6 +338,10 @@ def test_rejected_findings_survive_clean_fallback(review_run, original_get_revie
         "severity": "High", "path": "other.py", "line": 10, "title": "Bug",
         "explanation": "A failure returns success.", "evidence": "return 0",
     }]
+    rejected = {
+        "wrapper": rejected, "array": rejected["findings"],
+        "string": "A finding without the required wrapper", "number": 42, "null": None,
+    }[shape]
     responses = iter([provider_response(json.dumps(rejected)), provider_response()])
     def get(contents, paths, **kwargs):
         return original_get_review(contents, paths, generate=lambda *args: next(responses), **kwargs)
@@ -346,8 +351,8 @@ def test_rejected_findings_survive_clean_fallback(review_run, original_get_revie
     evidence = json.loads(reviewer.EVIDENCE_PATH.read_text())
     assert evidence["status"] == "complete" and evidence["attempts"] == 2
     assert evidence["review"]["findings"] == []
-    assert evidence["provider_attempts"][0]["unvalidated_review"]["findings"] == rejected["findings"]
-    assert "Rejected responses contained findings" in posted[0][1]["body"]
+    assert evidence["provider_attempts"][0]["unvalidated_review"] == rejected
+    assert "Inspect them for findings and record dispositions" in posted[0][1]["body"]
 
 
 def test_all_invalid_reviews_persist_failure_evidence(review_run, original_get_review, monkeypatch):

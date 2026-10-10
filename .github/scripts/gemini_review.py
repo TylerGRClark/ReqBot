@@ -253,9 +253,7 @@ def get_review(contents, changed_paths, generate=None, attempt_log=None, is_curr
                 # clean fallback cannot erase findings that still need disposition.
                 if isinstance(raw, str) and diagnostic["response_bytes"] <= MAX_RESPONSE_BYTES:
                     try:
-                        rejected = json.loads(raw)
-                        if isinstance(rejected, dict):
-                            diagnostic["unvalidated_review"] = rejected
+                        diagnostic["unvalidated_review"] = json.loads(raw)
                     except (ValueError, RecursionError):
                         pass
                 print(
@@ -313,11 +311,10 @@ def render_comment(evidence):
                 f"; finish: {attempt.get('finish_reason', 'no response')}"
                 f"; output/thinking tokens: {attempt.get('output_tokens')}/{attempt.get('thinking_tokens')}"
             )
-        if any(attempt.get("unvalidated_review", {}).get("findings")
-               for attempt in evidence["provider_attempts"]):
+        if any("unvalidated_review" in attempt for attempt in evidence["provider_attempts"]):
             lines.append(
-                "Rejected responses contained findings. Inspect the unvalidated responses "
-                "in the retained artifact and record their dispositions before acceptance."
+                "Rejected parseable responses were retained in the artifact. Inspect them "
+                "for findings and record dispositions before acceptance."
             )
     return "\n".join(lines)
 

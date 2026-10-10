@@ -77,7 +77,8 @@ eight-call/240-second start budget. Only a normal `STOP` response that passes
 validation completes the review. A valid review with findings stops fallback;
 the script never asks another model to replace it with a clean review. Parseable
 rejected responses remain in the artifact as unvalidated evidence, and comments
-flag any rejected findings that still need inspection and disposition.
+flag those responses for inspection and finding disposition. This includes bare
+arrays and scalar JSON values, not just the expected object wrapper.
 
 Gemini 3 uses medium thinking; Gemini 2.5 uses a 4,096-token thinking budget.
 The larger total token cap leaves room for a full review JSON after reasoning.
