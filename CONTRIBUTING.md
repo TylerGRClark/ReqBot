@@ -58,6 +58,9 @@ not just the solution you have in mind.
   reformat the file.
 - **Working code.** MRs that break the pipeline won't be reviewed.
 
+The [engineering workflow](docs/ENGINEERING_WORKFLOW.md) describes final-candidate
+review evidence, CI checks, finding dispositions and owner acceptance.
+
 ---
 
 ## Operational Notes
