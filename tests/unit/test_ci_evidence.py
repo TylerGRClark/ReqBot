@@ -18,8 +18,12 @@ def load_script(name):
 
 
 @pytest.fixture
-def reviewer():
-    return load_script("gemini_review")
+def reviewer(monkeypatch):
+    module = load_script("gemini_review")
+    monkeypatch.setattr(module, "generate_review", lambda *args: pytest.fail(
+        "Unit tests must not call a live provider; inject a fake generate function.",
+    ))
+    return module
 
 
 @pytest.fixture
@@ -35,8 +39,21 @@ def valid_review():
     }
 
 
+def provider_response(raw=None, finish_reason="STOP"):
+    return {
+        "text": json.dumps(valid_review()) if raw is None else raw,
+        "finish_reason": finish_reason,
+        "prompt_tokens": 100, "output_tokens": 200, "thinking_tokens": 300,
+    }
+
+
 @pytest.fixture
-def review_run(reviewer, monkeypatch, tmp_path):
+def original_get_review(reviewer):
+    return reviewer.get_review
+
+
+@pytest.fixture
+def review_run(reviewer, original_get_review, monkeypatch, tmp_path):
     for key, value in {
         "GITHUB_REPOSITORY": "owner/repo", "PR_NUMBER": "12", "GITHUB_RUN_ID": "99",
         "BASE_SHA": "a" * 40, "HEAD_SHA": "b" * 40,
@@ -50,7 +67,7 @@ def review_run(reviewer, monkeypatch, tmp_path):
     monkeypatch.setattr(reviewer, "prepare_input", lambda *args: (
         "diff", "d" * 64, ["file.py"], [{"path": "file.py", "text": "pass"}], [],
     ))
-    monkeypatch.setattr(reviewer, "get_review", lambda *args: (
+    monkeypatch.setattr(reviewer, "get_review", lambda *args, **kwargs: (
         "fallback-model", json.dumps(valid_review()), 3,
     ))
     posted = []
@@ -79,7 +96,7 @@ def test_success_records_actual_model_and_revision(review_run):
 def test_provider_outage_is_incomplete_and_fails(review_run, monkeypatch):
     reviewer, posted = review_run
 
-    def outage(*args):
+    def outage(*args, **kwargs):
         raise reviewer.ReviewUnavailable("Provider unavailable.", 8)
 
     monkeypatch.setattr(reviewer, "get_review", outage)
@@ -95,7 +112,7 @@ def test_provider_outage_is_incomplete_and_fails(review_run, monkeypatch):
 @pytest.mark.parametrize("raw", ["not JSON", "null", "{}", '{"summary":"clean"}', None])
 def test_malformed_output_never_becomes_complete(review_run, monkeypatch, raw):
     reviewer, posted = review_run
-    monkeypatch.setattr(reviewer, "get_review", lambda *args: ("model", raw, 1))
+    monkeypatch.setattr(reviewer, "get_review", lambda *args, **kwargs: ("model", raw, 1))
     assert reviewer.main() == 1
     evidence = json.loads(reviewer.EVIDENCE_PATH.read_text())
     assert evidence["status"] == "invalid"
@@ -117,7 +134,7 @@ def test_substantive_findings_are_not_automatic_merge_verdicts(review_run, monke
         "severity": "High", "path": "file.py", "line": 10, "title": "Failure swallowed",
         "explanation": "The exception branch returns success.", "evidence": "except: return 0",
     }]
-    monkeypatch.setattr(reviewer, "get_review", lambda *args: ("model", json.dumps(review), 1))
+    monkeypatch.setattr(reviewer, "get_review", lambda *args, **kwargs: ("model", json.dumps(review), 1))
     assert reviewer.main() == 0  # Completed advisory review, not acceptance.
     assert "[High]" in posted[0][1]["body"]
 
@@ -148,7 +165,7 @@ def test_new_push_during_review_cannot_publish_old_evidence(review_run, monkeypa
 def test_stale_event_makes_no_provider_call(review_run, monkeypatch):
     reviewer, posted = review_run
     monkeypatch.setattr(reviewer, "current_candidate", lambda *args: False)
-    monkeypatch.setattr(reviewer, "get_review", lambda *args: pytest.fail("Provider called"))
+    monkeypatch.setattr(reviewer, "get_review", lambda *args, **kwargs: pytest.fail("Provider called"))
     assert reviewer.main() == 1
     assert not posted
     assert json.loads(reviewer.EVIDENCE_PATH.read_text())["publication"] == "stale"
@@ -186,13 +203,13 @@ def test_provider_fallback_budget_and_model_are_recorded(reviewer, monkeypatch):
         assert timeout <= 60
         if len(calls) == 1:
             raise TimeoutError
-        return "{}"
+        return provider_response()
 
-    model, _, attempts = reviewer.get_review("input", generate)
+    model, _, attempts = reviewer.get_review("input", [], generate=generate)
     assert model == reviewer.MODEL_CHAIN[1] and attempts == 2
     monkeypatch.setattr(reviewer, "MAX_CALLS", 1)
     with pytest.raises(reviewer.ReviewUnavailable) as caught:
-        reviewer.get_review("input", lambda *args: (_ for _ in ()).throw(TimeoutError()))
+        reviewer.get_review("input", [], generate=lambda *args: (_ for _ in ()).throw(TimeoutError()))
     assert caught.value.attempts == 1
 
 
@@ -201,7 +218,7 @@ def test_provider_time_budget_stops_new_calls(reviewer, monkeypatch):
     clock = iter([0, reviewer.PROVIDER_BUDGET_SECONDS + 1])
     monkeypatch.setattr(reviewer.time, "monotonic", lambda: next(clock))
     with pytest.raises(reviewer.ReviewUnavailable, match="budget exhausted"):
-        reviewer.get_review("input", lambda *args: pytest.fail("Provider called"))
+        reviewer.get_review("input", [], generate=lambda *args: pytest.fail("Provider called"))
 
 
 def test_all_provider_failures_exhaust_exactly_the_call_budget(reviewer, monkeypatch):
@@ -214,9 +231,185 @@ def test_all_provider_failures_exhaust_exactly_the_call_budget(reviewer, monkeyp
         raise TimeoutError
 
     with pytest.raises(reviewer.ReviewUnavailable) as caught:
-        reviewer.get_review("input", outage)
+        reviewer.get_review("input", [], generate=outage)
     assert len(calls) == reviewer.MAX_CALLS == caught.value.attempts
     assert len(set(calls)) == len(calls)
+
+
+@pytest.mark.parametrize("first", [
+    provider_response('{"summary": "cut off', "MAX_TOKENS"),
+    provider_response("not JSON"), provider_response("{}"),
+    provider_response("null"), provider_response(""),
+    provider_response(finish_reason="SAFETY"), provider_response(finish_reason=None),
+])
+def test_incomplete_or_invalid_output_falls_back_to_complete_review(reviewer, monkeypatch, first):
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.delenv("GEMINI_API_KEY_2", raising=False)
+    responses = iter([first, provider_response()])
+    diagnostics = []
+    model, raw, attempts = reviewer.get_review(
+        "input", ["file.py"], generate=lambda *args: next(responses), attempt_log=diagnostics,
+    )
+    assert model == reviewer.MODEL_CHAIN[1] and attempts == 2
+    assert reviewer.validate_review(raw, ["file.py"]) == valid_review()
+    assert [item["status"] for item in diagnostics] == ["invalid", "complete"]
+    assert diagnostics[0]["finish_reason"] == (first["finish_reason"] or "UNKNOWN")
+    assert diagnostics[1]["output_tokens"] == 200
+    assert diagnostics[1]["thinking_tokens"] == 300
+
+
+def test_valid_json_with_max_tokens_is_not_complete(reviewer, monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.delenv("GEMINI_API_KEY_2", raising=False)
+    monkeypatch.setattr(reviewer, "MAX_CALLS", 1)
+    diagnostics = []
+    with pytest.raises(reviewer.InvalidReview, match="No complete valid review"):
+        reviewer.get_review(
+            "input", [], generate=lambda *args: provider_response(finish_reason="MAX_TOKENS"),
+            attempt_log=diagnostics,
+        )
+    assert diagnostics[0]["status"] == "invalid"
+    assert diagnostics[0]["unvalidated_review"] == valid_review()
+
+
+def test_invalid_attempts_stop_at_the_same_call_budget(reviewer, monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "first-test-key")
+    monkeypatch.setenv("GEMINI_API_KEY_2", "second-test-key")
+    diagnostics = []
+    with pytest.raises(reviewer.InvalidReview, match="No complete valid review"):
+        reviewer.get_review(
+            "input", [], generate=lambda *args: provider_response("not JSON"),
+            attempt_log=diagnostics,
+        )
+    assert len(diagnostics) == reviewer.MAX_CALLS
+    assert all(item["status"] == "invalid" for item in diagnostics)
+
+
+def test_no_fallback_call_after_candidate_changes(reviewer, monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.delenv("GEMINI_API_KEY_2", raising=False)
+    states = iter([True, False])
+    calls = []
+
+    def generate(*args):
+        calls.append(args)
+        return provider_response("not JSON")
+
+    with pytest.raises(reviewer.InvalidReview, match="Candidate changed"):
+        reviewer.get_review("input", [], generate=generate, is_current=lambda: next(states))
+    assert len(calls) == 1
+
+
+def test_freshness_check_cannot_extend_provider_start_budget(reviewer, monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.delenv("GEMINI_API_KEY_2", raising=False)
+    clock = iter([0, 1, reviewer.PROVIDER_BUDGET_SECONDS + 1])
+    monkeypatch.setattr(reviewer.time, "monotonic", lambda: next(clock))
+    diagnostics = []
+    with pytest.raises(reviewer.ReviewUnavailable, match="budget exhausted") as caught:
+        reviewer.get_review(
+            "input", [], generate=lambda *args: pytest.fail("Provider called"),
+            is_current=lambda: True, attempt_log=diagnostics,
+        )
+    assert caught.value.attempts == 0 and not diagnostics
+
+
+def test_invalid_retry_consumes_time_budget(reviewer, monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.delenv("GEMINI_API_KEY_2", raising=False)
+    clock = iter([0, 1, 2, reviewer.PROVIDER_BUDGET_SECONDS + 1])
+    monkeypatch.setattr(reviewer.time, "monotonic", lambda: next(clock))
+    diagnostics = []
+    with pytest.raises(reviewer.InvalidReview, match="budget exhausted"):
+        reviewer.get_review(
+            "input", [], generate=lambda *args: provider_response("not JSON"),
+            attempt_log=diagnostics,
+        )
+    assert len(diagnostics) == 1
+
+
+@pytest.mark.parametrize("shape", ["wrapper", "array", "string", "number", "null"])
+def test_rejected_findings_survive_clean_fallback(review_run, original_get_review, monkeypatch, shape):
+    reviewer, posted = review_run
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.delenv("GEMINI_API_KEY_2", raising=False)
+    rejected = valid_review()
+    rejected["findings"] = [{
+        "severity": "High", "path": "other.py", "line": 10, "title": "Bug",
+        "explanation": "A failure returns success.", "evidence": "return 0",
+    }]
+    rejected = {
+        "wrapper": rejected, "array": rejected["findings"],
+        "string": "A finding without the required wrapper", "number": 42, "null": None,
+    }[shape]
+    responses = iter([provider_response(json.dumps(rejected)), provider_response()])
+    def get(contents, paths, **kwargs):
+        return original_get_review(contents, paths, generate=lambda *args: next(responses), **kwargs)
+
+    monkeypatch.setattr(reviewer, "get_review", get)
+    assert reviewer.main() == 0
+    evidence = json.loads(reviewer.EVIDENCE_PATH.read_text())
+    assert evidence["status"] == "complete" and evidence["attempts"] == 2
+    assert evidence["review"]["findings"] == []
+    assert evidence["provider_attempts"][0]["unvalidated_review"] == rejected
+    assert "Inspect them for findings and record dispositions" in posted[0][1]["body"]
+
+
+def test_all_invalid_reviews_persist_failure_evidence(review_run, original_get_review, monkeypatch):
+    reviewer, posted = review_run
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.delenv("GEMINI_API_KEY_2", raising=False)
+    def get(contents, paths, **kwargs):
+        return original_get_review(contents, paths, generate=lambda *args: provider_response("bad"), **kwargs)
+
+    monkeypatch.setattr(reviewer, "get_review", get)
+    assert reviewer.main() == 1
+    evidence = json.loads(reviewer.EVIDENCE_PATH.read_text())
+    assert evidence["status"] == "invalid" and evidence["review"] is None
+    assert evidence["attempts"] == len(reviewer.MODEL_CHAIN)
+    assert len(evidence["provider_attempts"]) == evidence["attempts"]
+    assert "No findings reported" not in posted[0][1]["body"]
+
+
+def test_diagnostics_do_not_log_keys_or_raw_provider_text(reviewer, monkeypatch, capsys):
+    monkeypatch.setenv("GEMINI_API_KEY", "secret-test-key")
+    monkeypatch.delenv("GEMINI_API_KEY_2", raising=False)
+    responses = iter([provider_response("private candidate text"), provider_response()])
+    diagnostics = []
+    reviewer.get_review("input", [], generate=lambda *args: next(responses), attempt_log=diagnostics)
+    output = capsys.readouterr()
+    assert "secret-test-key" not in output.err + json.dumps(diagnostics)
+    assert "private candidate text" not in output.err + json.dumps(diagnostics)
+    assert diagnostics[0]["response_sha256"]
+
+
+def test_reruns_have_distinct_comment_identities(review_run, monkeypatch):
+    reviewer, posted = review_run
+    monkeypatch.setenv("GITHUB_RUN_ATTEMPT", "1")
+    assert reviewer.main() == 0
+    monkeypatch.setenv("GITHUB_RUN_ATTEMPT", "2")
+    assert reviewer.main() == 0
+    assert posted[0][1]["body"].splitlines()[0] != posted[1][1]["body"].splitlines()[0]
+    assert "Run attempt: 2" in posted[1][1]["body"]
+
+
+def test_complete_review_with_findings_stops_fallback(reviewer, monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.delenv("GEMINI_API_KEY_2", raising=False)
+    review = valid_review()
+    review["findings"] = [{
+        "severity": "High", "path": "file.py", "line": 10, "title": "Bug",
+        "explanation": "Failure returns success.", "evidence": "return 0",
+    }]
+    calls = []
+
+    def generate(*args):
+        calls.append(args)
+        return provider_response(json.dumps(review))
+
+    _, raw, attempts = reviewer.get_review("input", ["file.py"], generate=generate)
+    assert attempts == len(calls) == 1
+    assert reviewer.validate_review(raw, ["file.py"])["findings"] == review["findings"]
 
 
 @pytest.mark.parametrize("change", [
