@@ -206,8 +206,11 @@ def main(argv=None):
     problems = []
     if reply.get("done_reason") != "stop":
         problems.append(f"the answer was cut off (finish: {reply.get('done_reason')})")
-    if (reply.get("prompt_eval_count") or 0) >= NUM_CTX - 64:
-        problems.append("the prompt filled the context window, so part of the diff may not have been seen")
+    # Ollama shifts the window and keeps generating (still "stop") when prompt plus answer
+    # overflow it, silently dropping the start of the prompt; count generated tokens too.
+    used = (reply.get("prompt_eval_count") or 0) + (reply.get("eval_count") or 0)
+    if used >= NUM_CTX - 64:
+        problems.append("the prompt and answer filled the context window, so part of the diff may have been dropped")
     status = "incomplete" if problems else "complete"
     return show(status, "; ".join(problems), summary, findings, dropped)
 

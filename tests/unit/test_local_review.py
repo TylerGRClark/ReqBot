@@ -112,6 +112,17 @@ def test_full_context_window_is_reported_incomplete(review, monkeypatch, capsys)
     assert "incomplete" in out and "context window" in out
 
 
+def test_answer_that_overflows_the_window_is_incomplete_even_when_prompt_fits(review, monkeypatch, capsys):
+    # Ollama shifts the window mid-answer and still reports "stop"; only the sum shows it.
+    with_diff(review, monkeypatch)
+    monkeypatch.setattr(
+        review, "chat", lambda *a: answer(prompt_eval_count=15_000, eval_count=1_384),
+    )
+    assert review.main([]) == 0
+    out = capsys.readouterr().out
+    assert "incomplete" in out and "context window" in out
+
+
 def test_cut_off_answer_is_incomplete(review, monkeypatch, capsys):
     with_diff(review, monkeypatch)
     monkeypatch.setattr(review, "chat", lambda *a: answer(done_reason="length"))
