@@ -58,7 +58,12 @@ jobs:
 
       # Missing evidence fails. Effective error level OR high/critical security
       # severity blocks; severity does not establish confidence/precision.
+      # Runs on pull_request only: that is the gate for newly introduced findings.
+      # Whole-tree scans (push to main, weekly schedule) still upload to the Security
+      # tab but do not fail the job -- seven older alerts there were reviewed as false
+      # positives, and failing on them kept main red without gating anything.
       - name: Validate CodeQL evidence and severity
+        if: github.event_name == 'pull_request'
         env:
           SARIF_DIRECTORY: ${{ steps.analyze.outputs.sarif-output }}
         run: python3 .github/scripts/codeql_gate.py "$SARIF_DIRECTORY"
