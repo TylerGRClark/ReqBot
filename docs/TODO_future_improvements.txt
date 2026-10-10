@@ -1117,3 +1117,17 @@ DECISIONS AND GUARDRAILS
   referencing the same table loses its flat block / table. Found by Codex review on PR #249; pre-existing,
   not measured to occur in the 13 pinned documents. Fix would mark refs only for kept chunks, and would
   change chunks outside T2's scope, so it needs its own measured change.
+
+- Auditor check on draft audit questions (2026-10-10, Tyler: park for a possible follow-up). A separate
+  model call plays an auditor, is given only a draft question and its passage, and answers "can you
+  perform an audit from this question alone? if not, what is missing?". Flag only, never rewrite; flagged
+  rows get a Check-column flag. Motivating row: AFI 17-203 row 3, "Does it apply to all military and
+  civilian AF personnel...?" -- the requirement text is right, but nobody can audit "it". Decided against
+  a rule that expands every "it/they/these" in the requirement (risk of thrash, and the root is never
+  edited). Size of the problem, counted on the three October 2026 sheets (693 extracted rows): 16 rows
+  (2.3%) open with a dangling It/They/These/This, 6 of them already without a draft question; vague
+  words mid-sentence ("such actions") were not counted, so 3% is a floor. Test idea:
+  those 16 rows are known-bad, ~30 questions already rated good are known-good; the owner reviews only
+  what is flagged, and the flag rate is reported before he reads anything. Weakness to measure: the same
+  model family would be judging its own questions. If this catches the row 3 kind of problem, the repair
+  step in docs/PIPELINE_REDESIGN_PLAN.md (steps 8 to 10) may not be needed at all.
