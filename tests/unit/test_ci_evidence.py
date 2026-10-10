@@ -359,3 +359,110 @@ def test_failed_scan_invocation_cannot_pass(gate, tmp_path):
 def test_unresolved_or_conflicting_rule_cannot_pass(gate, tmp_path):
     write_sarif(tmp_path, sarif(result={"ruleId": "unknown", "ruleIndex": 0}))
     assert gate.main([str(tmp_path)]) == 1
+
+
+def extension_sarif(level="warning", severity="3.0"):
+    # CodeQL's main-branch output puts query rules in tool.extensions, with an
+    # empty driver.rules list. Preserve that shape rather than invent a driver rule.
+    data = sarif(result={
+        "ruleId": "test/rule", "level": level,
+        "rule": {"id": "test/rule", "index": 0, "toolComponent": {"index": 0}},
+    })
+    tool = data["runs"][0]["tool"]
+    tool["driver"]["rules"] = []
+    tool["extensions"] = [{
+        "name": "codeql/python-queries", "guid": "component-guid",
+        "rules": [{"id": "test/rule", "guid": "rule-guid",
+                   "properties": {"security-severity": severity}}],
+    }]
+    return data
+
+
+@pytest.mark.parametrize("level,severity,blocked", [
+    ("warning", "3.0", False), ("error", "3.0", True), ("warning", "7.0", True),
+])
+def test_codeql_extension_results_preserve_severity_policy(gate, tmp_path, level, severity, blocked):
+    write_sarif(tmp_path, extension_sarif(level, severity))
+    assert gate.evaluate(tmp_path) == (["test/rule"] if blocked else [])
+    assert gate.main([str(tmp_path)]) == int(blocked)
+
+
+def test_extension_rule_inherits_its_own_error_level(gate, tmp_path):
+    data = extension_sarif()
+    run = data["runs"][0]
+    del run["results"][0]["level"]
+    run["tool"]["extensions"][0]["rules"][0]["defaultConfiguration"] = {"level": "error"}
+    write_sarif(tmp_path, data)
+    assert gate.evaluate(tmp_path) == ["test/rule"]
+
+
+def test_extension_selection_does_not_use_driver_severity(gate, tmp_path):
+    data = extension_sarif(severity="7.0")
+    data["runs"][0]["tool"]["driver"]["rules"] = [
+        {"id": "test/rule", "properties": {"security-severity": "0.0"}},
+    ]
+    write_sarif(tmp_path, data)
+    assert gate.evaluate(tmp_path) == ["test/rule"]
+
+
+@pytest.mark.parametrize("reference", [{"id": "test/rule"}, {"index": 0},
+                                        {"id": "test/rule", "index": 0}])
+def test_result_rule_without_component_uses_driver(gate, tmp_path, reference):
+    data = sarif(result={"rule": reference, "level": "error"})
+    write_sarif(tmp_path, data)
+    assert gate.evaluate(tmp_path) == ["test/rule"]
+
+
+def test_extension_reference_can_inherit_legacy_id_and_index(gate, tmp_path):
+    data = extension_sarif(severity="7.0")
+    data["runs"][0]["results"][0].update(
+        ruleIndex=0, rule={"toolComponent": {"index": 0}},
+    )
+    write_sarif(tmp_path, data)
+    assert gate.evaluate(tmp_path) == ["test/rule"]
+
+
+def test_matching_reference_metadata_is_supported(gate, tmp_path):
+    data = extension_sarif(severity="7.0")
+    reference = data["runs"][0]["results"][0]["rule"]
+    reference["guid"] = "rule-guid"
+    reference["toolComponent"].update(name="codeql/python-queries", guid="component-guid")
+    write_sarif(tmp_path, data)
+    assert gate.evaluate(tmp_path) == ["test/rule"]
+
+
+@pytest.mark.parametrize("reference", [
+    None, [], {"id": "unknown"}, {"id": None}, {"index": None}, {"index": True},
+    {"index": -1}, {"index": 1}, {"guid": "wrong-guid"},
+    {"toolComponent": None}, {"toolComponent": {"index": True}},
+    {"toolComponent": {"index": -1}}, {"toolComponent": {"index": 1}},
+    {"toolComponent": {"name": "codeql/python-queries"}},
+    {"toolComponent": {"index": 0, "name": "wrong-name"}},
+    {"toolComponent": {"index": 0, "guid": "wrong-guid"}},
+])
+def test_malformed_or_conflicting_extension_reference_fails(gate, tmp_path, reference):
+    data = extension_sarif()
+    result = data["runs"][0]["results"][0]
+    if isinstance(reference, dict):
+        result["rule"].update(reference)
+    else:
+        result["rule"] = reference
+    write_sarif(tmp_path, data)
+    assert gate.main([str(tmp_path)]) == 1
+
+
+@pytest.mark.parametrize("legacy_index", [True, 1])
+def test_conflicting_legacy_index_cannot_be_hidden_by_rule_reference(gate, tmp_path, legacy_index):
+    data = extension_sarif()
+    data["runs"][0]["results"][0]["ruleIndex"] = legacy_index
+    write_sarif(tmp_path, data)
+    assert gate.main([str(tmp_path)]) == 1
+
+
+@pytest.mark.parametrize("extensions", [None, {}, [None], [{"rules": None}],
+                                        [{"rules": [{"id": "same"}, {"id": "same"}]}]])
+def test_malformed_extension_descriptors_fail(gate, tmp_path, extensions):
+    data = extension_sarif()
+    data["runs"][0]["tool"]["extensions"] = extensions
+    write_sarif(tmp_path, data)
+    assert gate.main([str(tmp_path)]) == 1
