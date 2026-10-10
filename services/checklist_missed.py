@@ -87,6 +87,7 @@ def _scan(chunks: dict, quotes: list[str], extra_verbs=(), check_coverage: bool 
             at = raw.find(unit, cursor)
             offset = at if at >= 0 else cursor
             cursor = offset + len(unit) if at >= 0 else cursor
+            bulleted = bool(_BULLET.match(unit))  # a bare bullet is removed from the text below; the row must still know it is a list item
             unit = _BULLET.sub("", unit, count=1).strip()
             own_ref = (_REF.match(unit) or [None, ""])[1]
             if own_ref:
@@ -107,7 +108,7 @@ def _scan(chunks: dict, quotes: list[str], extra_verbs=(), check_coverage: bool 
             if check_coverage and _covered(norm, covered_by):
                 continue
             out.append({"chunk_id": chunk_id, "offset": offset, "unit": unit, "norm": norm, "why": why, "ref": own_ref or (chunk_ref if by_sentences and by_sentence else ""),
-                        "path": [str(p) for p in (chunk.get("section_title_path") or [])], "pages": _page_range(chunk)})
+                        "path": [str(p) for p in (chunk.get("section_title_path") or [])], "pages": _page_range(chunk), "bulleted": bulleted})
     return out
 
 
@@ -194,6 +195,6 @@ def split_candidates(chunks: dict, quotes: list[str], extra_verbs=()) -> tuple[l
             pattern = sentence_expand.flex_pattern(text)
             found = pattern.search(raw, c["offset"]) if pattern else None  # from this paragraph on: identical wording in an earlier paragraph is not this one
             at = found.start() if found else c["offset"]
-            promoted.append({"chunk_id": c["chunk_id"], "offset": at, "text": text, "ref": c["ref"], "path": c["path"], "pages": c["pages"],
+            promoted.append({"chunk_id": c["chunk_id"], "offset": at, "text": text, "ref": c["ref"], "path": c["path"], "pages": c["pages"], "list_item": c["bulleted"],
                              "checklist_item_id": "MISS-" + hashlib.sha256(f"{c['chunk_id']}|{at}|{normalize(text)}".encode()).hexdigest()[:16]})
     return promoted, rest

@@ -81,6 +81,20 @@ def test_an_unnumbered_found_row_is_cited_by_inference_from_its_section(tmp_path
     assert "found_by_text_scan" in found[0]["item_flags"] and result["possible_missed"] == []
 
 
+def test_an_unnumbered_bullet_is_a_list_item_and_shows_the_lead_in_from_the_previous_chunk(tmp_path):
+    chunks = {
+        1: {"chunk_id": 1, "page_start": 3, "section_title_path": ["3. Roles", "3.4. AF/A3"], "raw_text": "3.4.1. AF/A3 will:"},
+        2: {"chunk_id": 2, "page_start": 3, "section_title_path": ["3. Roles", "3.4. AF/A3"],
+            "raw_text": "- Submit reports to the wing within 24 hours of an incident.\n- Maintain the log of every incident handled by the unit."},
+    }
+    _write(tmp_path, ["The CFP will notify the servicing MCCC within 24 hours of detection."], chunks)
+    result = generate(tmp_path, "doc", "cybersecurity")
+    found = [i for i in result["items"] if "found_by_text_scan" in i["item_flags"]]
+    assert len(found) == 2 and all("list_item" in i["item_flags"] for i in found)  # the scan strips the bullet, the row must still say it is a list item
+    assert all("AF/A3 will:" in i["passage"] for i in found)  # the lead-in sits in the previous chunk: shown, not lost
+    assert [i["citation"] for i in found] == ["3.4.1 (inferred)", "3.4.1 (inferred)"]
+
+
 def test_only_the_sentence_that_holds_the_duty_is_promoted_not_the_paragraph():
     raw = ("3.7. Response and Recovery. Response and recovery includes the detailed steps taken to restore the integrity of affected systems. "
            "The local CFP, with the assistance of the mission owner, will develop a Plan of Action and Milestones (POA&M) detailing the required actions (T-2) .\n"

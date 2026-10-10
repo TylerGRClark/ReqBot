@@ -110,9 +110,15 @@ def _found_item(c: dict, chunks: dict, hmap: dict, para_map: dict, verbs) -> dic
     passage, parent paragraph, flags), flagged found_by_text_scan and left for review; nothing here is model-made."""
     cite, path, text = c["ref"], c["path"], c["text"]  # the paragraph's own number, read from the document: exact, not inferred; empty when the paragraph has none
     own_number = bool(cite)
+    bulleted = bool(c.get("list_item"))  # the scan removed a bare bullet from the text: the row is still a list item (its lead-in is above it)
+
+    def row_flags(cite, applies):
+        flags = checklist_audit.item_flags(text, cite, applies, verbs)
+        return flags + ["list_item"] if bulleted and "list_item" not in flags else flags
+
     numbered = checklist_audit.applies_to_numbered(cite, hmap, path)
     applies = numbered if numbered is not None else checklist_audit.applies_to(path)
-    flags = checklist_audit.item_flags(text, cite, applies, verbs)
+    flags = row_flags(cite, applies)
     chunk = chunks.get(c["chunk_id"])
     prev_chunk = chunks.get(c["chunk_id"] - 1)
     passage, found = checklist_audit.build_passage(text, chunk, prev_chunk, set(flags), c["offset"])
@@ -121,7 +127,7 @@ def _found_item(c: dict, chunks: dict, hmap: dict, para_map: dict, verbs) -> dic
         numbered = checklist_audit.applies_to_numbered(cite, hmap, path) if cite else None
         if numbered is not None:
             applies = numbered
-            flags = checklist_audit.item_flags(text, cite, applies, verbs)
+            flags = row_flags(cite, applies)
     flags = ["found_by_text_scan"] + flags
     if not passage:
         flags.append("no_passage")
