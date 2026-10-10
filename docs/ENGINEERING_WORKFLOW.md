@@ -135,7 +135,8 @@ added to repository rules by this change. Keep `docker`
 mandatory for packaging, dependency, deployment and parse/chunk changes, and
 visible for other changes. Before adopting rules, decide how to enforce that
 conditional requirement. Any exception must record the candidate SHA, affected
-check, reason and Tyler's authorization. This PR changes no required-check list.
+check, reason and Tyler's authorization. No required-check list has been changed
+by this work: the repository ruleset still requires only `lint` and `test`.
 
 ### CodeQL blocking policy
 
@@ -150,19 +151,30 @@ CodeQL's `result.rule` references are supported; extension indexes select the
 corresponding `tool.extensions` entry rather than the driver's rules.
 Unsupported references or malformed evidence fail rather than disappear.
 
-The proposed blocking policy is an effective result level of `error` **or** a
+The blocking policy is an effective result level of `error` **or** a
 rule's numeric `security-severity` of at least **7.0**, regardless of precision.
 An omitted result level inherits `defaultConfiguration.level`, then defaults to
 `warning`. `pass` and `notApplicable` results do not represent findings. Suppression
 metadata does not exempt a blocking finding. This is a severity policy; it makes
-no claim that every result has high confidence. The owner reviews this policy
-before merging it. Other findings remain visible in GitHub code scanning.
+no claim that every result has high confidence. The owner accepted this policy
+when it was merged (#301). Other findings remain visible in GitHub code scanning.
 
 This custom gate checks evidence shape and severity, not full SARIF-schema
-conformance or scan authenticity. It runs after the CodeQL action, whose failure
-also fails the job. The gate is ordinary candidate CI code; it is not the trusted
-acceptance validator planned for the next package. Branch rules alone must not
-be described as protection against a candidate weakening its own CI.
+conformance or scan authenticity. On pull requests it runs after the CodeQL
+action, whose failure also fails the job. Pushes to `main` and the weekly scan
+run the same analysis and upload results to code scanning but skip the gate
+(#304), so older findings on `main` do not turn it red. The gate is ordinary
+candidate CI code; it is not the trusted acceptance validator planned for the
+next package. Branch rules alone must not be described as protection against a
+candidate weakening its own CI.
+
+Known state: seven older alerts on `main` (path injection in `api/app.py` and
+`core/profiles.py`; clear-text-logging heuristics in `core/ask.py` and
+`cli/reqbot.py`) were read as false positives and left open. Dismissing an alert
+in GitHub does not clear the gate, which reads the scan output directly. CodeQL
+is not a required check; before it becomes one, a documented way to approve a
+specific false positive (finding, evidence and reviewed revision recorded) is
+needed.
 
 ## Local validation
 
