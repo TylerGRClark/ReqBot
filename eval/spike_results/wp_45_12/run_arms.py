@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""WP-45.12: run the arms of docs/PHASE45_WP4512_PLAN.md into ~/wp45_12_scratch (scratch only; nothing touches the pipeline, Qdrant or ~/documents/processed).
+"""WP-45.12: run the arms of docs/PHASE45_WP4512_PLAN.md into ~/reqbot-work/scratch/wp45_12_scratch (scratch only; nothing touches the pipeline, Qdrant or ~/documents/processed).
 
   python3 run_arms.py --arm P1 --set dev --run-label p1_dev_r1          # per-paragraph arm on the 38 labeled development chunks
   python3 run_arms.py --arm D0 --set afi17-203 --run-label d0_afi17-203 # chunk-level arms on a whole AFI (D0, D1) or the per-paragraph arm (P1)
@@ -21,7 +21,7 @@ import run_discovery as RD  # noqa: E402
 
 from core import config  # noqa: E402
 
-SCRATCH = Path.home() / "wp45_12_scratch"
+SCRATCH = Path.home() / "reqbot-work/scratch/wp45_12_scratch"
 
 
 def main():

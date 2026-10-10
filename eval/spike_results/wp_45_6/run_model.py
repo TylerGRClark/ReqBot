@@ -32,7 +32,7 @@ for _p in (_ROOT, _ROOT / "eval/spike_results/wp_45_audit"):
 
 from _inputs import corpus_inputs  # noqa: E402
 
-DEFAULT_SCRATCH = Path.home() / "wp45_6_scratch"
+DEFAULT_SCRATCH = Path.home() / "reqbot-work/scratch/wp45_6_scratch"
 BASELINE_MODEL = "llama3.1:8b-instruct-q4_K_M"
 
 

@@ -1,7 +1,7 @@
 # WP-45.6: does a larger local model read the documents better? (qwen2.5:14b against llama3.1:8b)
 
 Measurement only. Nothing in production, the index or the processed files changed; every run wrote to a scratch directory
-(`~/wp45_6_scratch`). The plan, written before any run, is `docs/PHASE45_WP456_PLAN.md` (local, untracked).
+(`~/reqbot-work/scratch/wp45_6_scratch`). The plan, written before any run, is `docs/PHASE45_WP456_PLAN.md` (local, untracked).
 
 ## Question
 

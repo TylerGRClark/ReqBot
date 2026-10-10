@@ -32,7 +32,7 @@ LABELS = ("obligation", "lead_in", "scope", "not_obligation")
 SEED = "wp45.1e"
 BOOT_SEED = 451  # numpy needs an integer seed
 RESAMPLES = 10_000
-SCRATCH = Path.home() / "wp45_6_scratch"
+SCRATCH = Path.home() / "reqbot-work/scratch/wp45_6_scratch"
 FROZEN = _HERE / "outputs" / "pages_frozen.json"
 STAGES = ("chunked", "extracted", "survived_step_d", "indexed")
 

@@ -19,7 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 DOCS = {"DODI 5200.48": [76, 87], "DODI 8551.01": [26], "afi10-2402": [121, 123]}
-SCRATCH = Path.home() / "wp45_11_scratch"
+SCRATCH = Path.home() / "reqbot-work/scratch/wp45_11_scratch"
 
 
 def words(text):

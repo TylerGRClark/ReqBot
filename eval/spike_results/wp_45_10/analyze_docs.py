@@ -6,7 +6,7 @@
   python3 analyze_docs.py --headings                 # H4: Docling's heading level against the numbering-based depth the pipeline uses
   python3 analyze_docs.py --across baseline          # upgrade: this release's baseline against another release's (--other-tag d2.135.0)
 
-Reads `~/wp45_10_cache/<tag>/docs/<variant>/<doc>.json` written by convert.py. Every difference is counted and kept in full in the JSON output (`--out`). Nothing here scores quality beyond what the labeled cases allow (see docs/PHASE45_WP4510_PLAN.md section 3).
+Reads `~/reqbot-work/scratch/wp45_10_cache/<tag>/docs/<variant>/<doc>.json` written by convert.py. Every difference is counted and kept in full in the JSON output (`--out`). Nothing here scores quality beyond what the labeled cases allow (see docs/PHASE45_WP4510_PLAN.md section 3).
 """
 
 import argparse

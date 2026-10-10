@@ -5,7 +5,7 @@
   python3 analyze_chunks.py --runs d2.94.0:default d2.135.0:default --out upgrade_chunks_report.json      # the upgrade comparison
 
 A run is RELEASE_TAG:LABEL (a token limit, or `default` for that release's own HybridChunker()); the first run is the baseline every other is compared with,
-so a comparison can span two Docling releases (files under ~/wp45_10_cache/<tag>/chunks/<label>/).
+so a comparison can span two Docling releases (files under ~/reqbot-work/scratch/wp45_10_cache/<tag>/chunks/<label>/).
 
 Measures per token limit (all through the production chunk function, so its filters apply):
   * chunk count and size distribution (characters and the repository's own token estimate), and how many chunks leave less than the answer allowance of

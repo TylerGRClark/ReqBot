@@ -29,7 +29,7 @@ import census as C  # noqa: E402
 from core.profiles import default_profile  # noqa: E402
 from pipeline.parse_and_normalize import normalize_text  # noqa: E402
 
-DEFAULT_SCRATCH = Path.home() / "wp45_6_scratch"
+DEFAULT_SCRATCH = Path.home() / "reqbot-work/scratch/wp45_6_scratch"
 BASELINE_TAG = "8b_current_stepD"
 
 

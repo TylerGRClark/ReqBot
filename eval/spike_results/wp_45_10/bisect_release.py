@@ -3,7 +3,7 @@
 
   python3 bisect_release.py --good 2.94.0 --bad 2.135.0 --document "DODI 5200.01"
 
-Each tested release gets its own virtual environment (~/wp45_10_bis/<version>, system site-packages shared, so the repository's install is untouched) and
+Each tested release gets its own virtual environment (~/reqbot-work/scratch/wp45_10_bis/<version>, system site-packages shared, so the repository's install is untouched) and
 `probe_release.py` runs in it. A release is *bad* when its default conversion has any `code` item or fewer than half the good release's list items. The search
 assumes the change is monotonic in release order; the result names the first bad release found and the last good one, nothing more.
 """
@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-ROOT = Path.home() / "wp45_10_bis"
+ROOT = Path.home() / "reqbot-work/scratch/wp45_10_bis"
 
 
 def releases(lo, hi):

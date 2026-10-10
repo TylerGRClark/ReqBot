@@ -30,7 +30,7 @@ import audit_pack as AP  # noqa: E402  (card format and quote marking, reused un
 
 SEED = "wp45.6"
 SAMPLE = {"new_only": 40, "base_only": 40, "both": 20}
-DEFAULT_SCRATCH = Path.home() / "wp45_6_scratch"
+DEFAULT_SCRATCH = Path.home() / "reqbot-work/scratch/wp45_6_scratch"
 BASELINE_TAG = "8b_current_stepD"
 RUBRIC_DIR = _ROOT / "eval/spike_results/wp_45_1/audit_pack"
 DOCS = ("DODI 8410.03", "afman17-2101", "NIST.SP.800-125")
