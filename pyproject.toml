@@ -10,7 +10,7 @@ readme = "README.md"
 license = { text = "AGPL-3.0-or-later" }
 requires-python = ">=3.12"
 dependencies = [
-    "docling==2.94.0",
+    "docling==2.132.0",
     # WP-45.11: docling's own pins on these are open ranges, so a fresh install could resolve a
     # newer chunker/parser than the one every Phase 45 measurement used. Held at the resolved
     # versions of the known-good set (docling 2.94.0 stays the last version we measured as clean;
