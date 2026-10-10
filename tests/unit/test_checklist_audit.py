@@ -111,6 +111,67 @@ def test_citation_is_the_paragraph_number_else_read_back_from_the_document():
     assert "(inferred)" not in A.citation("3.1", passage, [])  # a real reference is kept as extracted
 
 
+def test_table_label_reads_the_caption_and_follows_a_table_across_chunks():
+    grid = "| a | b |\n|---|---|\n| 1 | 2 |"
+    chunks = {1: {"raw_text": "3.3.1. Objectives. Some paragraph."}, 2: {"raw_text": "Table 3.1.  Incident Reporting Action Matrix.\n\n" + grid}, 3: {"raw_text": grid},
+              4: {"raw_text": "A paragraph after the table."}, 5: {"raw_text": grid}, 6: {"raw_text": "Table 3.1 shows the matrix.\n" + grid}}
+    assert A.table_label(chunks, 2) == ("Table 3.1", "Table 3.1 Incident Reporting Action Matrix")
+    assert A.table_label(chunks, 3) == ("Table 3.1", "Table 3.1 Incident Reporting Action Matrix")  # the table runs on into the next chunk, which has no caption
+    assert A.table_label(chunks, 1) == ("", "") and A.table_label(chunks, 4) == ("", "")  # ordinary paragraphs
+    assert A.table_label(chunks, 5) == ("", "")  # a grid with no caption anywhere before it has no label to give
+    assert A.table_label(chunks, 6) == ("", "")  # "Table 3.1 shows ..." is prose, not a caption (a caption has a full stop after the number)
+    assert A.table_label(chunks, None) == ("", "") and A.table_label({}, 2) == ("", "")
+    # an attachment table ("Table A2.1") is a table too
+    attach = {1: {"raw_text": "Table A2.1.  AF Critical Asset Identification Process.\n\n" + grid}}
+    assert A.table_label(attach, 1) == ("Table A2.1", "Table A2.1 AF Critical Asset Identification Process")
+
+
+def test_a_merged_chunk_with_prose_before_the_table_is_the_tables_only_after_the_caption():
+    raw = "2.1. Intro paragraph. The CFP will notify the MCCC.\n\nTable 3.1.  Reporting Matrix.\n\n| If the originator is | then |\n|---|---|\n| the AFOSI | notify the CFP |"
+    chunks = {7: {"raw_text": raw}, 8: {"raw_text": "| more | rows |\n| a | b |"}}
+    assert A.table_label(chunks, 7, "notify the CFP") == ("Table 3.1", "Table 3.1 Reporting Matrix")  # a cell, located after the caption
+    assert A.table_label(chunks, 7, "The CFP will notify the MCCC.") == ("", "")  # the prose in front of the table keeps its paragraph citation
+    assert A.table_label(chunks, 7, "text that is nowhere in the chunk") == ("", "") and A.table_label(chunks, 7) == ("", "")  # not located: no guess
+    assert A.table_label(chunks, 8, "more") == ("Table 3.1", "Table 3.1 Reporting Matrix")  # the grid runs on into the next chunk
+
+
+def test_a_grid_chunk_continues_a_table_only_when_it_picks_up_the_same_grid():
+    grid = "| a | b |\n|---|---|\n| 1 | 2 |"
+    captioned = "Table 3.1.  First.\n\n" + grid
+    assert A.table_label({1: {"raw_text": captioned}, 2: {"raw_text": grid}}, 2) == ("Table 3.1", "Table 3.1 First")
+    assert A.table_label({1: {"raw_text": captioned + "\n\nA paragraph after the table."}, 2: {"raw_text": grid}}, 2) == ("", "")  # the table ended before the chunk did
+    assert A.table_label({1: {"raw_text": captioned}, 2: {"raw_text": "| a | b | c |\n|---|---|---|\n| 1 | 2 | 3 |"}}, 2) == ("", "")  # a different grid with no caption of its own
+    assert A.table_label({1: {"raw_text": captioned}, 2: {"raw_text": "Intro line.\n\n" + grid}}, 2) == ("", "")  # prose first: not the same grid carrying on
+
+
+def test_a_merged_chunk_with_two_tables_gives_each_row_the_nearest_caption_before_it():
+    raw = ("Table 3.1.  First.\n\n| a | b |\n|---|---|\n| x1 | y1 |\n\nA paragraph between the tables says they will meet.\n\n"
+           "Table 3.2.  Second.\n\n| c | d |\n|---|---|\n| x2 | y2 |")
+    chunks = {3: {"raw_text": raw}}
+    assert A.table_label(chunks, 3, "x1 | y1") == ("Table 3.1", "Table 3.1 First")
+    assert A.table_label(chunks, 3, "x2 | y2") == ("Table 3.2", "Table 3.2 Second")
+    assert A.table_label(chunks, 3, "Second. | c | d |") == ("Table 3.2", "Table 3.2 Second")  # a quote that starts on the caption line belongs to that table
+    assert A.table_label(chunks, 3, "A paragraph between the tables says they will meet.") == ("", "")  # prose between the tables is not a table row
+    assert A.table_label(chunks, 3, "a row joined from cells that is not in the chunk") == ("", "")  # two tables and no position: no guess
+
+
+def test_a_row_from_a_table_is_cited_by_the_table_and_names_no_party(tmp_path):
+    run_dir = tmp_path / "doc_20260101_120000"
+    run_dir.mkdir()
+    grid = "| If the originator is | then take the indicated Actions |\n|---|---|\n| the AFOSI | notify the CFP |"
+    recs = [{"requirement_id": "REQ-1", "source_quote": "then take the indicated Actions", "source_ref": "", "chunk_id": 2, "page_start": 14, "page_end": 14,
+             "section_title_path": ["INCIDENT HANDLING", "3.3.1. Objectives."], "domain_tags": [], "confidence": None},
+            {"requirement_id": "REQ-2", "source_quote": "Notify the CFP within one hour.", "source_ref": "3.3.2", "chunk_id": 3, "page_start": 15, "page_end": 15,
+             "section_title_path": ["INCIDENT HANDLING", "3.3.1. Objectives."], "domain_tags": [], "confidence": None}]
+    (run_dir / "doc_requirements_normalized.jsonl").write_text("".join(json.dumps(r) + "\n" for r in recs))
+    chunks = [{"chunk_id": 1, "raw_text": "3.3.1. Objectives. Detect events."}, {"chunk_id": 2, "raw_text": "Table 3.1.  Incident Reporting Action Matrix.\n\n" + grid},
+              {"chunk_id": 3, "raw_text": "3.3.2. Notify the CFP within one hour."}]
+    (run_dir / "doc_chunks.jsonl").write_text("".join(json.dumps(c) + "\n" for c in chunks))
+    table_row, paragraph_row = generate(tmp_path, "doc", "cybersecurity")["items"]
+    assert table_row["citation"] == "Table 3.1" and table_row["section_heading"] == "Table 3.1 Incident Reporting Action Matrix" and table_row["applies_to"] == ""
+    assert paragraph_row["citation"] == "3.3.2" and "Table" not in paragraph_row["section_heading"]  # a row outside the table is cited as before
+
+
 def test_citation_prefers_the_quotes_own_number_and_never_reads_an_unmarked_passage():
     passage = "3.4.3. Preliminary analysis.\n>> 3.4.4. Assess and categorize the event. <<"
     assert A.citation("SECTION 2", passage, [], "3.4.4. Assess and categorize the event.") == "3.4.4"  # the number the quote opens with is its own

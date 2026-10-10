@@ -218,6 +218,71 @@ def citation(source_ref: str, passage: str, section_title_path, quote: str = "")
     return ""
 
 
+# A row from a table is cited by the table, not by a paragraph number. The converter files a table under the last heading it saw (Table 3.1 of AFI 17-203 sits in section 3.3 but
+# arrives under "3.3.1. Objectives"; Table 3.2 arrives under 3.7.3), and the document itself calls the table only "Table 3.1". The caption opens the table's chunk; a table that
+# runs on into the next chunk has no caption there, so a grid chunk without a caption continues the table of the chunk before it. A chunk that holds prose in front of the table
+# (a merged chunk) is only the table's for a quote located after the table starts.
+_TABLE_CAPTION = re.compile(r"(?m)^[ \t]*(Table\s+(?:[A-Z]{1,2})?\d+(?:\.\d+)*)\.(?=\s)[ \t]*([^\n|]*)")  # "Table 3.1.", "Table A2.1."; "Table 3.1 shows ..." is prose
+_GRID_LINE = re.compile(r"(?m)^[ \t]*\|")
+MAX_TABLE_CHUNKS = 6
+TABLE_HEADING_CHARS = 120
+
+
+def _is_table_grid(raw_text: str) -> bool:
+    return len(_GRID_LINE.findall(raw_text or "")) >= 2
+
+
+def _grid_end(raw_text: str, last: bool):
+    """The first (or last) non-empty line of a chunk when it is a grid line, else None."""
+    lines = [line for line in (raw_text or "").splitlines() if line.strip()]
+    line = (lines[-1] if last else lines[0]) if lines else ""
+    return line if line.lstrip().startswith("|") else None
+
+
+def _continues(earlier: str, later: str) -> bool:
+    """`later` carries on the grid that `earlier` ends with: it opens on a grid line, `earlier` ends on one, and both have the same number of columns. A table with no caption of
+    its own that merely follows a captioned table does not qualify unless it looks like the same grid."""
+    end, start = _grid_end(earlier, True), _grid_end(later, False)
+    return bool(end and start and end.count("|") == start.count("|"))
+
+
+def table_label(chunks: dict, chunk_id, quote: str = "") -> tuple[str, str]:
+    """("Table 3.1", "Table 3.1 Incident Reporting Action Matrix") for a row from a table chunk, else ("", ""): the chunk is a table grid and it, or the grid chunks running
+    back from it, has a caption such as "Table 3.1.  Incident Reporting Action Matrix.". Read straight from the document; no inference, so no "(inferred)".
+
+    A chunk can also hold prose, or several tables (a merged chunk). So a quote that is located must sit on a grid line, and gets the nearest caption before it; a quote that is not
+    located (a row joined from several cells) gets a label only when the chunk is one table with nothing in front of it. Anything else keeps its paragraph citation."""
+    if not isinstance(chunk_id, int):
+        return "", ""
+    for back in range(MAX_TABLE_CHUNKS):
+        raw = (chunks.get(chunk_id - back) or {}).get("raw_text") or ""
+        if not _is_table_grid(raw):
+            return "", ""
+        if back and not _continues(raw, (chunks.get(chunk_id - back + 1) or {}).get("raw_text") or ""):
+            return "", ""  # the chunk after this one is not a continuation of its grid
+        captions = list(_TABLE_CAPTION.finditer(raw))
+        caption = captions[-1] if captions else None  # a chunk behind this one: the table that runs on from it is the last one it holds
+        if back == 0:
+            first_table = captions[0].start() if captions else _GRID_LINE.search(raw).start()
+            pattern = _flex_pattern(quote)
+            located = pattern.search(raw) if pattern else None
+            if located:
+                line_start = raw.rfind("\n", 0, located.start()) + 1
+                on_table_line = raw[line_start:].lstrip().startswith("|") or any(c.start() == line_start for c in captions)  # a grid line, or the caption itself
+                if located.start() < first_table or not on_table_line:
+                    return "", ""  # in the prose in front of, or between, the tables
+                caption = ([c for c in captions if c.start() <= located.start()] or [None])[-1]
+            elif raw[:first_table].strip() or len(captions) > 1:
+                return "", ""  # not located, and prose or several tables make a label a guess
+            else:
+                caption = captions[0] if captions else None
+        if caption:
+            number = " ".join(caption.group(1).split())
+            title = " ".join(caption.group(2).split()).strip(" .")
+            return number, f"{number} {title}".strip()[:TABLE_HEADING_CHARS]
+    return "", ""
+
+
 # WP-46.6: the section a row sits in, from the document's own numbering. The converter nests some headings wrongly (a row of 3.6 "Incident Analysis" can arrive under "Actions >
 # 3.5.2. Methodology"), and some AFI headings are run-in titles at the start of a paragraph ("3.6. Incident Analysis .  Incident analysis is ...") that are not headings at all.
 # So the heading of a number is read from (a) numbered section headings and (b) paragraphs that open with a short Title-Case phrase and a full stop, and a row is placed by its number.
