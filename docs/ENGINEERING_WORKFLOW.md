@@ -38,7 +38,8 @@ The script validates structured provider output and writes `review-evidence.json
 | `diff_sha256` | Hash of the Git diff bytes submitted, before UTF-8 decoding |
 | `context_sha256` | Hash of the trusted architecture brief |
 | `model`, `attempts` | Model selected after fallback and number of provider attempts |
-| `run_id`, `run_url` | GitHub run reference |
+| `provider_attempts` | Per-call status, fixed finish reason, response size/hash and numeric token usage; parseable rejected responses are retained as unvalidated evidence |
+| `run_id`, `run_attempt`, `run_url` | GitHub run and rerun attempt reference |
 | `changed_paths` | Paths in the pinned diff |
 | `review` | Summary, what was checked, findings and provider limitations |
 | `limitations`, `reason` | Omitted context and incomplete-review explanation |
@@ -52,8 +53,9 @@ repository check. If a work package explicitly requires Gemini, an outage needs
 an owner-approved alternative or exception, rather than a clean-review claim.
 
 Each run posts its own revision-labeled comment. It never edits an older comment.
+Reruns have separate identities using the GitHub run-attempt number.
 The script checks head/base freshness before any provider call and immediately
-before publication. GitHub does not provide an atomic state-check/comment-write
+before each fallback call and publication. GitHub does not provide an atomic state-check/comment-write
 operation: a push can occur between them, so the comment identifies only the
 reviewed revision and never claims current approval. Concurrency cancellation
 reduces wasted work; the revision checks and immutable comments handle older runs.
@@ -61,7 +63,7 @@ reduces wasted work; the revision checks and immutable comments handle older run
 Limits are eight model/key attempts, a 240-second budget for starting provider
 calls, at most 60 seconds of HTTP timeout per request, one SDK HTTP attempt per
 request, a 120,000-byte diff, 60,000
-bytes of surrounding source, 4,096 output tokens, a 24,000-byte response, and 20
+bytes of surrounding source, 16,384 combined thinking/output tokens, a 48,000-byte response, and 20
 findings. HTTP timeouts are not an independent wall-clock kill switch; the job
 timeout bounds the whole run. An oversized diff is rejected instead of silently reviewing a prefix.
 Omitted surrounding files are recorded as limitations. The job also has a
@@ -69,8 +71,29 @@ Omitted surrounding files are recorded as limitations. The job also has a
 can prevent evidence creation; the artifact step requires the file, so missing
 evidence cannot become success. Artifacts are retained for 30 days.
 
-The reviewer SDK is installed only in this workflow, with its direct version
-pinned in `.github/scripts/requirements-review.txt`. Transitive packages are not
+Fallback applies to provider errors, abnormal finish reasons (including
+`MAX_TOKENS`), malformed JSON and invalid review contracts, within the same
+eight-call/240-second start budget. Only a normal `STOP` response that passes
+validation completes the review. A valid review with findings stops fallback;
+the script never asks another model to replace it with a clean review. Parseable
+rejected responses remain in the artifact as unvalidated evidence, and comments
+flag any rejected findings that still need inspection and disposition.
+
+Gemini 3 uses medium thinking; Gemini 2.5 uses a 4,096-token thinking budget.
+The larger total token cap leaves room for a full review JSON after reasoning.
+Finish reasons and numeric token usage are retained; raw response text and
+provider exception messages are not written to job logs. Unknown finish reasons
+are recorded as `UNKNOWN` and cannot establish completion.
+
+Gemini is a required part of ReqBot's coding process: obtain a complete review
+of the current candidate and resolve its findings before owner acceptance.
+An unavailable or invalid run requires recovery or an explicit owner-approved
+alternative. This process requirement does not silently change GitHub branch
+rules; repository check enforcement remains a separate owner decision.
+
+The reviewer SDK is installed in the reviewer workflow and credential-free
+protocol-test job, with its direct version pinned in
+`.github/scripts/requirements-review.txt`; it is not a runtime dependency. Transitive packages are not
 locked by this first package. The architecture brief is
 [`.github/review_context.md`](../.github/review_context.md); keep it consistent with
 approved architecture changes.
@@ -96,6 +119,7 @@ Confirm these names and successful runs before changing repository rules:
 | --- | --- |
 | `lint` | Repository Ruff checks |
 | `test` | Python tests, including workflow failure cases |
+| `reviewer-protocol` | Pinned reviewer SDK and fallback tests against fake HTTP, without provider credentials |
 | `secrets` | Gitleaks scan |
 | `frontend-test` | Standalone frontend tests |
 | `frontend-typecheck` | Standalone `npm exec tsc -- --noEmit` under Node 20 |
@@ -103,7 +127,10 @@ Confirm these names and successful runs before changing repository rules:
 | `Analyze (javascript-typescript)` | JS/TS CodeQL analysis and SARIF gate |
 | `docker` | Container build/start, configuration, served frontend and PDF parse/chunk smoke checks |
 
-The proposed routine required list is the first seven checks. Keep `docker`
+The proposed routine required list is `lint`, `test`, `secrets`, `frontend-test`,
+`frontend-typecheck`, `Analyze (python)` and `Analyze (javascript-typescript)`.
+The separate `reviewer-protocol` check exercises SDK compatibility and is not
+added to repository rules by this change. Keep `docker`
 mandatory for packaging, dependency, deployment and parse/chunk changes, and
 visible for other changes. Before adopting rules, decide how to enforce that
 conditional requirement. Any exception must record the candidate SHA, affected
@@ -146,6 +173,12 @@ npm ci
 npm exec tsc -- --noEmit
 npm run test
 ```
+
+SDK transport probes also need the separately pinned reviewer requirements;
+they use fake HTTP rather than live API keys. The `reviewer-protocol` CI job
+installs those requirements and runs `tests/unit/test_gemini_sdk_transport.py`
+alongside the evidence tests. Runtime-only test environments may skip the
+SDK-specific module; they must still run the evidence/fallback tests.
 
 Use Node 20 to match CI. Broader Python tests use the existing project/dev
 dependencies. Record missing dependencies or infrastructure failures explicitly;

@@ -70,6 +70,18 @@ jobs:
       - run: pip install -e . -r requirements-dev.txt
       - run: pytest tests/ -v --cov=core --cov=services --cov=pipeline --cov-report=term-missing
 
+  reviewer-protocol:
+    # Candidate code is tested against fake HTTP with no provider credentials.
+    # Keep the reviewer SDK separate from ReqBot's runtime dependencies.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: pip install pytest -r .github/scripts/requirements-review.txt
+      - run: pytest tests/unit/test_ci_evidence.py tests/unit/test_gemini_sdk_transport.py -q
+
   frontend-test:
     # WP-30.1 (Phase 30) -- first standalone frontend CI job; previously only the `docker` job
     # built frontend/dist as part of the image, which proves the build succeeds but runs no tests.

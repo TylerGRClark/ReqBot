@@ -21,7 +21,8 @@ MAX_CALLS = 8
 PROVIDER_BUDGET_SECONDS = 240
 MAX_DIFF_BYTES = 120_000
 MAX_CONTEXT_BYTES = 60_000
-MAX_RESPONSE_BYTES = 24_000
+MAX_OUTPUT_TOKENS = 16_384
+MAX_RESPONSE_BYTES = 48_000
 MAX_FINDINGS = 20
 EVIDENCE_PATH = Path("review-evidence.json")
 CONTEXT_PATH = Path(__file__).resolve().parents[1] / "review_context.md"
@@ -33,6 +34,8 @@ line, explanation and evidence. Do not invent findings to meet a quota. Severity
 Critical, High, Medium or Low. Ignore formatting enforced by lint. A clean review
 must explain what you traced; limitations must state anything you could not check.
 Return only the requested JSON object. Completion is not merge approval.
+Keep summaries and checked items concise so the full JSON fits the response.
+Report at most 20 findings; state any coverage limit explicitly.
 """
 REVIEW_SCHEMA = {
     "type": "object",
@@ -40,10 +43,10 @@ REVIEW_SCHEMA = {
     "additionalProperties": False,
     "properties": {
         "summary": {"type": "string"},
-        "checked": {"type": "array", "items": {"type": "string"}},
+        "checked": {"type": "array", "minItems": 1, "items": {"type": "string"}},
         "limitations": {"type": "array", "items": {"type": "string"}},
         "findings": {
-            "type": "array",
+            "type": "array", "maxItems": MAX_FINDINGS,
             "items": {
                 "type": "object", "additionalProperties": False,
                 "required": ["severity", "path", "line", "title", "explanation", "evidence"],
@@ -156,42 +159,114 @@ def generate_review(model, key, contents, timeout_seconds):
     from google import genai
     from google.genai import types
 
+    # Output limits include thinking tokens. Reserve room for both reasoning and
+    # the full JSON; Gemini 3 and 2.5 expose different thinking controls.
+    thinking = (types.ThinkingConfig(thinking_level=types.ThinkingLevel.MEDIUM)
+                if model.startswith("gemini-3") else types.ThinkingConfig(thinking_budget=4096))
     with genai.Client(api_key=key) as client:
         response = client.models.generate_content(
             model=model, contents=contents,
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_INSTRUCTION, response_mime_type="application/json",
-                response_json_schema=REVIEW_SCHEMA, max_output_tokens=4096,
+                response_json_schema=REVIEW_SCHEMA, max_output_tokens=MAX_OUTPUT_TOKENS,
+                thinking_config=thinking,
                 http_options=types.HttpOptions(
                     timeout=int(timeout_seconds * 1000),
                     retry_options=types.HttpRetryOptions(attempts=1),
                 ),
             ),
         )
-        return response.text
+        candidate = response.candidates[0] if response.candidates else None
+        finish_reason = getattr(candidate, "finish_reason", None)
+        usage = response.usage_metadata
+        return {
+            "text": response.text,
+            "finish_reason": getattr(finish_reason, "value", finish_reason),
+            "prompt_tokens": getattr(usage, "prompt_token_count", None),
+            "output_tokens": getattr(usage, "candidates_token_count", None),
+            "thinking_tokens": getattr(usage, "thoughts_token_count", None),
+        }
 
 
-def get_review(contents, generate=None):
+def get_review(contents, changed_paths, generate=None, attempt_log=None, is_current=None):
     generate = generate or generate_review
     keys = [os.environ[name] for name in API_KEY_ENV_VARS if os.environ.get(name)]
     if not keys:
         raise ReviewUnavailable("No reviewer API key configured.")
     deadline = time.monotonic() + PROVIDER_BUDGET_SECONDS
     attempts = 0
+    saw_invalid = False
+    attempt_log = attempt_log if attempt_log is not None else []
+
+    def exhausted(reason):
+        if saw_invalid:
+            raise InvalidReview(f"{reason} No complete valid review returned.")
+        raise ReviewUnavailable(reason, attempts)
+
     for model in MODEL_CHAIN:
         for key in keys:
             remaining = deadline - time.monotonic()
             if remaining <= 0 or attempts >= MAX_CALLS:
-                raise ReviewUnavailable("Provider time/call budget exhausted.", attempts)
+                exhausted("Provider time/call budget exhausted.")
+            if is_current is not None and not is_current():
+                raise InvalidReview("Candidate changed before provider attempt; review stopped.")
+            # Freshness checks can take time; do not start a call after the budget.
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                exhausted("Provider time/call budget exhausted.")
             attempts += 1
+            diagnostic = {"attempt": attempts, "model": model, "status": "provider_error"}
+            attempt_log.append(diagnostic)
             try:
-                return model, generate(model, key, contents, min(60, remaining)), attempts
+                response = generate(model, key, contents, min(60, remaining))
             except ImportError as err:
+                diagnostic["error_type"] = "ImportError"
                 raise ReviewUnavailable("Reviewer SDK unavailable.", attempts) from err
             except Exception as err:
                 # Provider messages can contain input data: log type/model, not keys or payloads.
+                diagnostic["error_type"] = type(err).__name__
                 print(f"Provider attempt {attempts}: {model}: {type(err).__name__}", file=sys.stderr)
-    raise ReviewUnavailable("All configured model/key attempts failed.", attempts)
+                continue
+            diagnostic["status"] = "invalid"
+            raw = response.get("text") if isinstance(response, dict) else None
+            reason = response.get("finish_reason") if isinstance(response, dict) else None
+            # Retain only fixed finish codes and numeric usage, never SDK messages,
+            # API keys, candidate text or arbitrary provider fields in job logs.
+            diagnostic["finish_reason"] = reason if reason in (
+                "STOP", "MAX_TOKENS", "SAFETY", "RECITATION", "OTHER",
+                "BLOCKLIST", "PROHIBITED_CONTENT", "SPII", "MALFORMED_FUNCTION_CALL",
+            ) else "UNKNOWN"
+            for field in ("prompt_tokens", "output_tokens", "thinking_tokens"):
+                value = response.get(field) if isinstance(response, dict) else None
+                diagnostic[field] = value if type(value) is int and value >= 0 else None
+            diagnostic["response_bytes"] = len(raw.encode("utf-8")) if isinstance(raw, str) else 0
+            if isinstance(raw, str):
+                diagnostic["response_sha256"] = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+            try:
+                if reason != "STOP":
+                    raise InvalidReview("Provider did not finish normally; output may be incomplete.")
+                validate_review(raw, changed_paths)
+            except InvalidReview as err:
+                saw_invalid = True
+                diagnostic["reason"] = str(err)
+                # Preserve parseable rejected responses in the artifact so a later
+                # clean fallback cannot erase findings that still need disposition.
+                if isinstance(raw, str) and diagnostic["response_bytes"] <= MAX_RESPONSE_BYTES:
+                    try:
+                        rejected = json.loads(raw)
+                        if isinstance(rejected, dict):
+                            diagnostic["unvalidated_review"] = rejected
+                    except (ValueError, RecursionError):
+                        pass
+                print(
+                    f"Provider attempt {attempts}: {model}: invalid "
+                    f"({diagnostic['finish_reason']}; {diagnostic['response_bytes']} bytes)",
+                    file=sys.stderr,
+                )
+                continue
+            diagnostic["status"] = "complete"
+            return model, raw, attempts
+    exhausted("All configured model/key attempts failed.")
 
 
 def current_candidate(repo, pr_number, base_sha, head_sha):
@@ -204,12 +279,13 @@ def current_candidate(repo, pr_number, base_sha, head_sha):
 
 def render_comment(evidence):
     lines = [
-        f"<!-- gemini-review:{evidence['head_sha']}:{evidence['run_id']} -->",
+        f"<!-- gemini-review:{evidence['head_sha']}:{evidence['run_id']}:{evidence.get('run_attempt', '1')} -->",
         "### Gemini review evidence",
         f"Status: **{evidence['status']}**. Advisory evidence; not merge approval.",
         f"Head: `{evidence['head_sha']}` · Base: `{evidence['base_sha']}`",
         f"Diff SHA-256: `{evidence['diff_sha256']}`",
         f"Model: `{evidence['model'] or 'none completed'}` · [Run]({evidence['run_url']})",
+        f"Run attempt: {evidence.get('run_attempt', '1')}",
         "A later push or base change requires fresh evidence.", "",
     ]
     if evidence["status"] == "complete":
@@ -229,6 +305,20 @@ def render_comment(evidence):
     if evidence["limitations"]:
         lines.extend(["", "**Limitations**"])
         lines.extend(f"- {item}" for item in evidence["limitations"])
+    if evidence.get("provider_attempts"):
+        lines.extend(["", "**Provider attempts**"])
+        for attempt in evidence["provider_attempts"]:
+            lines.append(
+                f"- {attempt['attempt']}: `{attempt['model']}` — {attempt['status']}"
+                f"; finish: {attempt.get('finish_reason', 'no response')}"
+                f"; output/thinking tokens: {attempt.get('output_tokens')}/{attempt.get('thinking_tokens')}"
+            )
+        if any(attempt.get("unvalidated_review", {}).get("findings")
+               for attempt in evidence["provider_attempts"]):
+            lines.append(
+                "Rejected responses contained findings. Inspect the unvalidated responses "
+                "in the retained artifact and record their dispositions before acceptance."
+            )
     return "\n".join(lines)
 
 
@@ -255,9 +345,11 @@ def main():
         "schema_version": 1, "reviewer": "gemini", "status": "invalid",
         "base_sha": base_sha, "head_sha": head_sha, "diff_sha256": None,
         "model": None, "attempts": 0, "run_id": run_id,
+        "run_attempt": os.environ.get("GITHUB_RUN_ATTEMPT", "1"),
         "run_url": f"https://github.com/{repo}/actions/runs/{run_id}",
         "context_sha256": None, "changed_paths": [], "review": None,
         "reason": "", "limitations": [], "publication": "not_published",
+        "provider_attempts": [],
     }
     try:
         if not current_candidate(repo, pr_number, base_sha, head_sha):
@@ -275,7 +367,10 @@ def main():
         contents = json.dumps({
             "approved_architecture": brief, "diff": diff, "surrounding_files": surroundings,
         })
-        model, raw, attempts = get_review(contents)
+        model, raw, attempts = get_review(
+            contents, paths, attempt_log=evidence["provider_attempts"],
+            is_current=lambda: current_candidate(repo, pr_number, base_sha, head_sha),
+        )
         evidence.update(model=model, attempts=attempts)
         review = validate_review(raw, paths)
         evidence.update(status="complete", review=review)
@@ -283,10 +378,12 @@ def main():
     except ReviewUnavailable as err:
         evidence.update(status="unavailable", reason=str(err), attempts=err.attempts)
     except InvalidReview as err:
-        evidence.update(status="invalid", reason=str(err))
+        evidence.update(status="invalid", reason=str(err),
+                        attempts=len(evidence["provider_attempts"]) or evidence["attempts"])
     except (OSError, ValueError, subprocess.SubprocessError):
         evidence.update(status="unavailable", reason="Input preparation or GitHub access failed.")
     finally:
+        evidence["attempts"] = max(evidence["attempts"], len(evidence["provider_attempts"]))
         EVIDENCE_PATH.write_text(json.dumps(evidence, indent=2) + "\n")
     try:
         evidence["publication"] = "published" if publish(evidence, repo, pr_number) else "stale"
