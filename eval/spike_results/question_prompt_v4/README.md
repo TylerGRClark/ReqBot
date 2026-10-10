@@ -1,0 +1,48 @@
+# Draft audit question prompt v4 (an experiment; nothing is wired into the checklist)
+
+Why: the owner's review of 21 flagged rows of AFI 10-2402 (2026-10-10) found one draft question not in the spirit of its requirement.
+Row 2.17.26 holds two sentences. The marked one is "Required courses will be designated by the HAF CARM Program office."; the question asked
+"Do MAJCOM/DRUs ensure that Center/Wing level CARM POCs complete the required courses designated by the HAF CARM Program office?",
+which folds in the sentence before it and takes the actor from the "Applies to" heading instead of from the sentence.
+Two causes in prompt v3: no rule says to ask only about the marked sentence, and rule 2 sends the actor to the "Applies to" line.
+
+## The change (v4), and only this
+
+Prompt only. Same model (`qwen2.5:14b`, temperature 0.1, same server), same inputs, same code gate (rows carrying a skip flag get no question), same schema.
+
+1. New rule after rule 1: ask only about the requirement marked `>> <<`; the sentences around it are background; do not put their duties in the question.
+2. Rule 2 replaced: if the requirement itself says who acts, use that; the "Applies to" line is the actor only when the requirement names none; if neither does, ask about "the unit".
+
+Deliberately not in v4 (a later, separate experiment): spelling out abbreviations (row 21 turned "MA" into "Major Army Commands"; the document says Mission Assurance).
+The examples inside the new rules are generic ("by the program office", "the commander will"); no name from the test rows appears in the prompt.
+
+## Rules, fixed before any v4 output was generated
+
+**Rows.**
+- Set A: the 21 rows the owner reviewed (rows 2 to 22 of `afi_all_flagged_rows.xlsx`; ids in `run_prompt_v4.py`). His verdicts: 17 usable, row 11 a fragment, row 17 no question (withheld by the code gate, so not compared), row 21 a wrong spell-out, row 22 the target.
+- Set B: every eligible row of AFI 10-2402, AFI 13-550 and AFI 17-203 whose marked sentence is preceded by other text in the same line of the passage (at least 25 characters after the paragraph number): the rows where the failure can occur. Eligible = has a requirement quote and no skip flag.
+- Set C: 40 other eligible rows, seeded (`random.Random(47)`), as a regression guard.
+- A row is "changed" when the v4 question differs from the stored v3 question after lowercasing and removing punctuation. The rating sheet holds all changed rows of A, up to 15 changed rows of B and up to 10 of C (seeded order, `random.Random(48)`).
+
+**Measures computed by code, no rating.**
+- Noise floor: v3 re-run on Sets A and C with the same prompt; share of questions that differ from the stored v3 question.
+- v4 change rate against that noise floor, per set.
+- Null rate (model answered null) v3 against v4; `unverified_terms` rate v3 against v4.
+- Blend proxy: share of questions with at least two words of 5 or more letters that appear in the sentence before the marked one and not in the marked sentence, its "Applies to" line or its parent paragraph. v3 against v4.
+
+**The owner rates** each sheet row as **better**, **same** or **worse** than the v3 question (side by side), as in the explained-layer rating (WP-45.14 practice).
+
+**Adopt v4** only if all of these hold:
+1. The target row (2.17.26, "Required courses will be designated...") gets a question the owner rates better, about the designation of required courses by the HAF CARM Program office, without the previous sentence's duty.
+2. Rated rows: worse is at most 10%.
+3. Of the Set A rows he rated usable under v3, at most 1 is rated worse.
+4. Null rate rises by no more than 5 points, and the `unverified_terms` rate does not rise by more than the noise floor.
+5. The blend proxy falls.
+
+If v4 fails rule 1, the next step is to split the two rules into separate arms to see which one does the work; no third prompt is tried before then.
+Adopting means changing the prompt in `services/audit_questions.py`; every stored question then reads as stale (new input hash) and the questions for the documents must be regenerated with `reqbot questions --doc`. That regeneration is a separate step with its own approval.
+
+## Run
+
+`PYTHONPATH=. python3 eval/spike_results/question_prompt_v4/run_prompt_v4.py --ollama-url http://192.168.90.100:11434`
+Writes `outputs/runs.jsonl`, `outputs/measures.json` and the rating sheet (`~/reqbot-work/checklists/question_prompt_v4_rating.xlsx`).
