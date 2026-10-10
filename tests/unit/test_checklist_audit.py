@@ -135,6 +135,15 @@ def test_a_merged_chunk_with_prose_before_the_table_is_the_tables_only_after_the
     assert A.table_label(chunks, 8, "more") == ("Table 3.1", "Table 3.1 Reporting Matrix")  # the grid runs on into the next chunk
 
 
+def test_a_grid_chunk_continues_a_table_only_when_it_picks_up_the_same_grid():
+    grid = "| a | b |\n|---|---|\n| 1 | 2 |"
+    captioned = "Table 3.1.  First.\n\n" + grid
+    assert A.table_label({1: {"raw_text": captioned}, 2: {"raw_text": grid}}, 2) == ("Table 3.1", "Table 3.1 First")
+    assert A.table_label({1: {"raw_text": captioned + "\n\nA paragraph after the table."}, 2: {"raw_text": grid}}, 2) == ("", "")  # the table ended before the chunk did
+    assert A.table_label({1: {"raw_text": captioned}, 2: {"raw_text": "| a | b | c |\n|---|---|---|\n| 1 | 2 | 3 |"}}, 2) == ("", "")  # a different grid with no caption of its own
+    assert A.table_label({1: {"raw_text": captioned}, 2: {"raw_text": "Intro line.\n\n" + grid}}, 2) == ("", "")  # prose first: not the same grid carrying on
+
+
 def test_a_merged_chunk_with_two_tables_gives_each_row_the_nearest_caption_before_it():
     raw = ("Table 3.1.  First.\n\n| a | b |\n|---|---|\n| x1 | y1 |\n\nA paragraph between the tables says they will meet.\n\n"
            "Table 3.2.  Second.\n\n| c | d |\n|---|---|\n| x2 | y2 |")

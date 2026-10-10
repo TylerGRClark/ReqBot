@@ -232,6 +232,20 @@ def _is_table_grid(raw_text: str) -> bool:
     return len(_GRID_LINE.findall(raw_text or "")) >= 2
 
 
+def _grid_end(raw_text: str, last: bool):
+    """The first (or last) non-empty line of a chunk when it is a grid line, else None."""
+    lines = [line for line in (raw_text or "").splitlines() if line.strip()]
+    line = (lines[-1] if last else lines[0]) if lines else ""
+    return line if line.lstrip().startswith("|") else None
+
+
+def _continues(earlier: str, later: str) -> bool:
+    """`later` carries on the grid that `earlier` ends with: it opens on a grid line, `earlier` ends on one, and both have the same number of columns. A table with no caption of
+    its own that merely follows a captioned table does not qualify unless it looks like the same grid."""
+    end, start = _grid_end(earlier, True), _grid_end(later, False)
+    return bool(end and start and end.count("|") == start.count("|"))
+
+
 def table_label(chunks: dict, chunk_id, quote: str = "") -> tuple[str, str]:
     """("Table 3.1", "Table 3.1 Incident Reporting Action Matrix") for a row from a table chunk, else ("", ""): the chunk is a table grid and it, or the grid chunks running
     back from it, has a caption such as "Table 3.1.  Incident Reporting Action Matrix.". Read straight from the document; no inference, so no "(inferred)".
@@ -244,6 +258,8 @@ def table_label(chunks: dict, chunk_id, quote: str = "") -> tuple[str, str]:
         raw = (chunks.get(chunk_id - back) or {}).get("raw_text") or ""
         if not _is_table_grid(raw):
             return "", ""
+        if back and not _continues(raw, (chunks.get(chunk_id - back + 1) or {}).get("raw_text") or ""):
+            return "", ""  # the chunk after this one is not a continuation of its grid
         captions = list(_TABLE_CAPTION.finditer(raw))
         caption = captions[-1] if captions else None  # a chunk behind this one: the table that runs on from it is the last one it holds
         if back == 0:
