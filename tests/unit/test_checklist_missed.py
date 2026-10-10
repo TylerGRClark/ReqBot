@@ -110,6 +110,25 @@ def test_a_tier_tag_before_the_full_stop_does_not_hide_an_extracted_sentence():
     assert len(M.split_candidates(chunks, [])[0]) == 1
 
 
+def test_an_extracted_sentence_does_not_hide_the_other_duty_sentences_of_its_paragraph():
+    raw = ("3.5.1. The CFP will isolate the affected system within one hour of detection. The MCCC must notify the 624 OC of the isolation and its cause.\n"
+           "3.5.2. Training. Personnel are trained every year.")
+    chunks = {1: {"chunk_id": 1, "page_start": 2, "section_title_path": [], "raw_text": raw}}
+    extracted = ["The CFP will isolate the affected system within one hour of detection."]  # one of the two duty sentences is extracted; it is contained in the paragraph
+    assert M.find_possible_missed(chunks, extracted) == []  # the paragraph-level scan stops there
+    promoted, rest = M.split_candidates(chunks, extracted)
+    assert [p["text"] for p in promoted] == ["The MCCC must notify the 624 OC of the isolation and its cause."] and rest == []
+
+
+def test_identical_wording_in_two_paragraphs_gives_two_rows_with_their_own_position_and_id():
+    raw = ("2.6.2. Provide a representative to the working group when requested.\n2.8.2. Provide a representative to the working group when requested.\n"
+           "2.9. Training. Personnel are trained every year.")
+    promoted, _ = M.split_candidates({1: {"chunk_id": 1, "page_start": 2, "section_title_path": [], "raw_text": raw}}, [])
+    assert [p["ref"] for p in promoted] == ["2.6.2", "2.8.2"] and promoted[0]["text"] == promoted[1]["text"]
+    assert promoted[0]["offset"] < promoted[1]["offset"] and raw[:promoted[1]["offset"]].rstrip().endswith("2.8.2.")  # each is placed at its own paragraph, the second after its own number
+    assert promoted[0]["checklist_item_id"] != promoted[1]["checklist_item_id"]
+
+
 def test_a_short_duty_sentence_is_covered_only_by_the_same_extracted_sentence():
     raw = "2.20.19.  Support  MAAs  of  TCAs.  ( T-1 )  Assessment types are described in section 3.3.\n2.20.20. Training. Personnel are trained every year."
     chunks = {1: {"chunk_id": 1, "page_start": 2, "section_title_path": [], "raw_text": raw}}

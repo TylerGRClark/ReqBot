@@ -68,8 +68,10 @@ def _covered(unit_norm: str, quotes: list[str]) -> bool:
     return any(len(q) >= MIN_COVER_CHARS and (q in unit_norm or unit_norm in q) for q in quotes)
 
 
-def _scan(chunks: dict, quotes: list[str], extra_verbs=()) -> list[dict]:
-    """The candidate paragraphs in document order, not extracted and not duplicated: chunk, offset in the chunk, text, why, paragraph number, section path, pages."""
+def _scan(chunks: dict, quotes: list[str], extra_verbs=(), check_coverage: bool = True) -> list[dict]:
+    """The candidate paragraphs in document order, not duplicated and, unless `check_coverage` is off, not extracted: chunk, offset in the chunk, text, why, paragraph number,
+    section path, pages. (`split_candidates` turns the paragraph-level coverage check off and judges coverage sentence by sentence: an extracted sentence must not hide the
+    paragraph's other duty sentences.)"""
     covered_by = [normalize(q) for q in quotes if q]
     verbs = checklist_audit.IMPERATIVE_VERBS | {v.lower() for v in extra_verbs if " " not in v}
     seen: set[str] = set()
@@ -93,7 +95,7 @@ def _scan(chunks: dict, quotes: list[str], extra_verbs=()) -> list[dict]:
                 why = "imperative"
             else:
                 continue
-            if _covered(norm, covered_by):
+            if check_coverage and _covered(norm, covered_by):
                 continue
             out.append({"chunk_id": chunk_id, "offset": offset, "unit": unit, "norm": norm, "why": why, "ref": (_REF.match(unit) or [None, ""])[1],
                         "path": [str(p) for p in (chunk.get("section_title_path") or [])], "pages": _page_range(chunk)})
@@ -167,22 +169,25 @@ def split_candidates(chunks: dict, quotes: list[str], extra_verbs=()) -> tuple[l
     """(promoted, still_missed), judged sentence by sentence. A candidate paragraph that carries its own paragraph number is promoted, one entry per sentence that holds a duty and is
     not extracted yet (the whole sentence, not the paragraph: the second sentence of 3.7 is the requirement, the first only introduces it); each entry has the chunk, its offset in the
     chunk, the sentence, the paragraph number, the section path, the pages and an id. A paragraph whose duty sentences are all extracted already is dropped (the paragraph-level scan
-    listed it only because the extracted row carries a lead-in or leaves out a tier tag). Every other candidate stays a possible-missed row, and so does a numbered one with no duty
-    sentence of its own."""
+    listed it only because the extracted row carries a lead-in or leaves out a tier tag). The unextracted duty sentences of a paragraph with no number stay possible-missed rows, a
+    sentence each. A paragraph with no duty sentence of its own stays one possible-missed row unless an extracted row already contains it."""
     covered_by = [normalize(q) for q in quotes if q]
     verbs = checklist_audit.IMPERATIVE_VERBS | {v.lower() for v in extra_verbs if " " not in v}
     promoted, rest = [], []
-    for c in _scan(chunks, quotes, extra_verbs):
+    for c in _scan(chunks, quotes, extra_verbs, check_coverage=False):
         sentences, already = _duty_sentences(c["unit"], covered_by, verbs)
-        if not sentences and already:
+        if not sentences:
+            if not already and not _covered(c["norm"], covered_by):
+                rest.append(_missed_row(c))
             continue
-        if not sentences or not c["ref"]:
-            rest.append(_missed_row(c))
+        if not c["ref"]:
+            rest.extend(_missed_row({**c, "unit": text, "norm": normalize(text)}) for text in sentences)
             continue
         raw = chunks[c["chunk_id"]].get("raw_text") or ""
         for text in sentences:
             pattern = sentence_expand.flex_pattern(text)
-            found = pattern.search(raw) if pattern else None
-            promoted.append({"chunk_id": c["chunk_id"], "offset": found.start() if found else c["offset"], "text": text, "ref": c["ref"], "path": c["path"], "pages": c["pages"],
-                             "checklist_item_id": "MISS-" + hashlib.sha256(f"{c['chunk_id']}|{normalize(text)}".encode()).hexdigest()[:16]})
+            found = pattern.search(raw, c["offset"]) if pattern else None  # from this paragraph on: identical wording in an earlier paragraph is not this one
+            at = found.start() if found else c["offset"]
+            promoted.append({"chunk_id": c["chunk_id"], "offset": at, "text": text, "ref": c["ref"], "path": c["path"], "pages": c["pages"],
+                             "checklist_item_id": "MISS-" + hashlib.sha256(f"{c['chunk_id']}|{at}|{normalize(text)}".encode()).hexdigest()[:16]})
     return promoted, rest
