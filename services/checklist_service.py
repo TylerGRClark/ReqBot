@@ -168,7 +168,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             # WP-46.1 audit layout: who the row applies to, the document's own passage, and specific hints (nothing here is model-made)
             verbs = profile.get("obligation_verbs", [])
             # a row from a table is cited by the table's own caption ("Table 3.1"); the converter's heading for a table is a guess, so no party is read from it either
-            table_ref, table_heading = checklist_audit.table_label(chunks, req.get("chunk_id"))
+            table_ref, table_heading = checklist_audit.table_label(chunks, req.get("chunk_id"), locate_text)
             cite0 = table_ref or checklist_audit.citation(source_ref, "", section_title_path, locate_text)  # the paragraph number as extracted or as the quote opens; inferred ones need the passage
             numbered = None if table_ref else checklist_audit.applies_to_numbered(cite0, hmap, section_title_path)
             applies = "" if table_ref else (numbered if numbered is not None else checklist_audit.applies_to(section_title_path))

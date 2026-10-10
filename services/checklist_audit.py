@@ -220,29 +220,39 @@ def citation(source_ref: str, passage: str, section_title_path, quote: str = "")
 
 # A row from a table is cited by the table, not by a paragraph number. The converter files a table under the last heading it saw (Table 3.1 of AFI 17-203 sits in section 3.3 but
 # arrives under "3.3.1. Objectives"; Table 3.2 arrives under 3.7.3), and the document itself calls the table only "Table 3.1". The caption opens the table's chunk; a table that
-# runs on into the next chunk has no caption there, so a grid chunk without a caption continues the table of the chunk before it.
-_TABLE_CAPTION = re.compile(r"^\s*(Table\s+\d+(?:\.\d+)*)\.(?=\s)[ \t]*([^\n|]*)")  # the full stop after the number, then a space: "Table 3.1 shows ..." is prose
+# runs on into the next chunk has no caption there, so a grid chunk without a caption continues the table of the chunk before it. A chunk that holds prose in front of the table
+# (a merged chunk) is only the table's for a quote located after the table starts.
+_TABLE_CAPTION = re.compile(r"(?m)^[ \t]*(Table\s+(?:[A-Z]{1,2})?\d+(?:\.\d+)*)\.(?=\s)[ \t]*([^\n|]*)")  # "Table 3.1.", "Table A2.1."; "Table 3.1 shows ..." is prose
+_GRID_LINE = re.compile(r"(?m)^[ \t]*\|")
 MAX_TABLE_CHUNKS = 6
 TABLE_HEADING_CHARS = 120
 
 
 def _is_table_grid(raw_text: str) -> bool:
-    return sum(1 for line in (raw_text or "").splitlines() if line.lstrip().startswith("|")) >= 2
+    return len(_GRID_LINE.findall(raw_text or "")) >= 2
 
 
-def table_label(chunks: dict, chunk_id) -> tuple[str, str]:
+def table_label(chunks: dict, chunk_id, quote: str = "") -> tuple[str, str]:
     """("Table 3.1", "Table 3.1 Incident Reporting Action Matrix") for a row from a table chunk, else ("", ""): the chunk is a table grid and it, or the grid chunks running
-    back from it, opens with a caption such as "Table 3.1.  Incident Reporting Action Matrix.". Read straight from the document; no inference, so no "(inferred)"."""
+    back from it, has a caption such as "Table 3.1.  Incident Reporting Action Matrix.". Read straight from the document; no inference, so no "(inferred)". When the row's own
+    chunk has prose in front of the table, the quote must be located after the table starts (the rows before it are not the table's)."""
     if not isinstance(chunk_id, int):
         return "", ""
     for back in range(MAX_TABLE_CHUNKS):
         raw = (chunks.get(chunk_id - back) or {}).get("raw_text") or ""
         if not _is_table_grid(raw):
             return "", ""
-        m = _TABLE_CAPTION.match(raw)
-        if m:
-            number = " ".join(m.group(1).split())
-            title = " ".join(m.group(2).split()).strip(" .")
+        caption = _TABLE_CAPTION.search(raw)
+        if back == 0:
+            table_start = caption.start() if caption else _GRID_LINE.search(raw).start()
+            if raw[:table_start].strip():
+                pattern = _flex_pattern(quote)
+                located = pattern.search(raw) if pattern else None
+                if not located or located.start() < table_start:
+                    return "", ""
+        if caption:
+            number = " ".join(caption.group(1).split())
+            title = " ".join(caption.group(2).split()).strip(" .")
             return number, f"{number} {title}".strip()[:TABLE_HEADING_CHARS]
     return "", ""
 

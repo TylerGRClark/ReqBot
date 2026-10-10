@@ -121,6 +121,18 @@ def test_table_label_reads_the_caption_and_follows_a_table_across_chunks():
     assert A.table_label(chunks, 5) == ("", "")  # a grid with no caption anywhere before it has no label to give
     assert A.table_label(chunks, 6) == ("", "")  # "Table 3.1 shows ..." is prose, not a caption (a caption has a full stop after the number)
     assert A.table_label(chunks, None) == ("", "") and A.table_label({}, 2) == ("", "")
+    # an attachment table ("Table A2.1") is a table too
+    attach = {1: {"raw_text": "Table A2.1.  AF Critical Asset Identification Process.\n\n" + grid}}
+    assert A.table_label(attach, 1) == ("Table A2.1", "Table A2.1 AF Critical Asset Identification Process")
+
+
+def test_a_merged_chunk_with_prose_before_the_table_is_the_tables_only_after_the_caption():
+    raw = "2.1. Intro paragraph. The CFP will notify the MCCC.\n\nTable 3.1.  Reporting Matrix.\n\n| If the originator is | then |\n|---|---|\n| the AFOSI | notify the CFP |"
+    chunks = {7: {"raw_text": raw}, 8: {"raw_text": "| more | rows |\n| a | b |"}}
+    assert A.table_label(chunks, 7, "notify the CFP") == ("Table 3.1", "Table 3.1 Reporting Matrix")  # a cell, located after the caption
+    assert A.table_label(chunks, 7, "The CFP will notify the MCCC.") == ("", "")  # the prose in front of the table keeps its paragraph citation
+    assert A.table_label(chunks, 7, "text that is nowhere in the chunk") == ("", "") and A.table_label(chunks, 7) == ("", "")  # not located: no guess
+    assert A.table_label(chunks, 8, "more") == ("Table 3.1", "Table 3.1 Reporting Matrix")  # the grid runs on into the next chunk
 
 
 def test_a_row_from_a_table_is_cited_by_the_table_and_names_no_party(tmp_path):
