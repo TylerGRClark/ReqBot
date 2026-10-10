@@ -234,22 +234,32 @@ def _is_table_grid(raw_text: str) -> bool:
 
 def table_label(chunks: dict, chunk_id, quote: str = "") -> tuple[str, str]:
     """("Table 3.1", "Table 3.1 Incident Reporting Action Matrix") for a row from a table chunk, else ("", ""): the chunk is a table grid and it, or the grid chunks running
-    back from it, has a caption such as "Table 3.1.  Incident Reporting Action Matrix.". Read straight from the document; no inference, so no "(inferred)". When the row's own
-    chunk has prose in front of the table, the quote must be located after the table starts (the rows before it are not the table's)."""
+    back from it, has a caption such as "Table 3.1.  Incident Reporting Action Matrix.". Read straight from the document; no inference, so no "(inferred)".
+
+    A chunk can also hold prose, or several tables (a merged chunk). So a quote that is located must sit on a grid line, and gets the nearest caption before it; a quote that is not
+    located (a row joined from several cells) gets a label only when the chunk is one table with nothing in front of it. Anything else keeps its paragraph citation."""
     if not isinstance(chunk_id, int):
         return "", ""
     for back in range(MAX_TABLE_CHUNKS):
         raw = (chunks.get(chunk_id - back) or {}).get("raw_text") or ""
         if not _is_table_grid(raw):
             return "", ""
-        caption = _TABLE_CAPTION.search(raw)
+        captions = list(_TABLE_CAPTION.finditer(raw))
+        caption = captions[-1] if captions else None  # a chunk behind this one: the table that runs on from it is the last one it holds
         if back == 0:
-            table_start = caption.start() if caption else _GRID_LINE.search(raw).start()
-            if raw[:table_start].strip():
-                pattern = _flex_pattern(quote)
-                located = pattern.search(raw) if pattern else None
-                if not located or located.start() < table_start:
-                    return "", ""
+            first_table = captions[0].start() if captions else _GRID_LINE.search(raw).start()
+            pattern = _flex_pattern(quote)
+            located = pattern.search(raw) if pattern else None
+            if located:
+                line_start = raw.rfind("\n", 0, located.start()) + 1
+                on_table_line = raw[line_start:].lstrip().startswith("|") or any(c.start() == line_start for c in captions)  # a grid line, or the caption itself
+                if located.start() < first_table or not on_table_line:
+                    return "", ""  # in the prose in front of, or between, the tables
+                caption = ([c for c in captions if c.start() <= located.start()] or [None])[-1]
+            elif raw[:first_table].strip() or len(captions) > 1:
+                return "", ""  # not located, and prose or several tables make a label a guess
+            else:
+                caption = captions[0] if captions else None
         if caption:
             number = " ".join(caption.group(1).split())
             title = " ".join(caption.group(2).split()).strip(" .")

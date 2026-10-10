@@ -135,6 +135,17 @@ def test_a_merged_chunk_with_prose_before_the_table_is_the_tables_only_after_the
     assert A.table_label(chunks, 8, "more") == ("Table 3.1", "Table 3.1 Reporting Matrix")  # the grid runs on into the next chunk
 
 
+def test_a_merged_chunk_with_two_tables_gives_each_row_the_nearest_caption_before_it():
+    raw = ("Table 3.1.  First.\n\n| a | b |\n|---|---|\n| x1 | y1 |\n\nA paragraph between the tables says they will meet.\n\n"
+           "Table 3.2.  Second.\n\n| c | d |\n|---|---|\n| x2 | y2 |")
+    chunks = {3: {"raw_text": raw}}
+    assert A.table_label(chunks, 3, "x1 | y1") == ("Table 3.1", "Table 3.1 First")
+    assert A.table_label(chunks, 3, "x2 | y2") == ("Table 3.2", "Table 3.2 Second")
+    assert A.table_label(chunks, 3, "Second. | c | d |") == ("Table 3.2", "Table 3.2 Second")  # a quote that starts on the caption line belongs to that table
+    assert A.table_label(chunks, 3, "A paragraph between the tables says they will meet.") == ("", "")  # prose between the tables is not a table row
+    assert A.table_label(chunks, 3, "a row joined from cells that is not in the chunk") == ("", "")  # two tables and no position: no guess
+
+
 def test_a_row_from_a_table_is_cited_by_the_table_and_names_no_party(tmp_path):
     run_dir = tmp_path / "doc_20260101_120000"
     run_dir.mkdir()
