@@ -284,6 +284,26 @@ def test_valid_empty_scan_passes(gate, tmp_path):
     assert gate.main([str(tmp_path)]) == 0
 
 
+@pytest.mark.parametrize("name", ["CodeQL", "CodeQL command-line toolchain"])
+@pytest.mark.parametrize("blocking", [False, True])
+def test_action_and_cli_driver_names_preserve_severity_policy(gate, tmp_path, name, blocking):
+    data = sarif({
+        "id": "test/rule", "properties": {"security-severity": "7.0" if blocking else "3.0"},
+    })
+    data["runs"][0]["tool"]["driver"]["name"] = name
+    write_sarif(tmp_path, data)
+    assert gate.evaluate(tmp_path) == (["test/rule"] if blocking else [])
+    assert gate.main([str(tmp_path)]) == (1 if blocking else 0)
+
+
+def test_unrelated_tool_cannot_substitute_for_codeql(gate, tmp_path):
+    data = sarif()
+    data["runs"][0]["results"] = []
+    data["runs"][0]["tool"]["driver"]["name"] = "Other scanner"
+    write_sarif(tmp_path, data)
+    assert gate.main([str(tmp_path)]) == 1
+
+
 def test_inherited_error_level_blocks(gate, tmp_path):
     write_sarif(tmp_path, sarif(
         {"id": "test/rule", "defaultConfiguration": {"level": "error"}},

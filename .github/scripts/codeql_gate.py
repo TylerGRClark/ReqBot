@@ -49,7 +49,10 @@ def scan_file(path):
             raise InvalidSarif("Invalid scan run.")
         tool = run.get("tool")
         driver = tool.get("driver") if isinstance(tool, dict) else None
-        if not isinstance(driver, dict) or driver.get("name") != "CodeQL":
+        # The action's output and the documented CLI format use these two names.
+        if not isinstance(driver, dict) or driver.get("name") not in (
+            "CodeQL", "CodeQL command-line toolchain",
+        ):
             raise InvalidSarif("Expected CodeQL driver evidence.")
         rules = driver.get("rules", [])
         if not isinstance(rules, list) or not all(

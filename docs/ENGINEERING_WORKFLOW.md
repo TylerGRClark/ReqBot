@@ -112,7 +112,9 @@ check, reason and Tyler's authorization. This PR changes no required-check list.
 ### CodeQL blocking policy
 
 The gate requires a SARIF directory containing readable SARIF 2.1.0 files with
-CodeQL runs and explicit results lists. Empty results are valid; missing output
+CodeQL runs and explicit results lists. The accepted driver names are `CodeQL`
+and the [documented CLI name](https://docs.github.com/en/code-security/reference/code-scanning/codeql/codeql-cli/sarif-output),
+`CodeQL command-line toolchain`. Empty results are valid; missing output
 is not. Present invocation records must report successful execution. Every result
 must resolve to a driver rule, with consistent rule ID/index and valid metadata.
 Unsupported references or malformed evidence fail rather than disappear.
