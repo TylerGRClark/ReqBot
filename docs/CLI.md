@@ -225,7 +225,8 @@ Check column). The sheet is one list in document order with a Status dropdown
 (not-started, in-progress, compliant, non-compliant, not-applicable) and a Notes
 column. Passages that look like obligations but were not extracted are listed
 after the items under a clear banner ("possible missed requirements"; CSV rows
-carry the `possible_missed` flag). Assessor fields begin empty; generation does
+carry the `possible_missed` flag); a numbered paragraph's duty sentences found this way are
+ordinary rows in their place in the document, flagged `found_by_text_scan` in the Check column. Assessor fields begin empty; generation does
 not complete an assessment.
 
 ## reindex

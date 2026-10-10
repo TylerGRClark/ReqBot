@@ -65,6 +65,21 @@ def _is_sentence_end(text: str, m: re.Match) -> bool:
     return True
 
 
+def split_sentences(text: str) -> list[str]:
+    """The sentences of `text`, verbatim and in order, cut with the same boundary rules `expand` uses (an abbreviation, a lone initial or a paragraph number does not end one)."""
+    out, start = [], 0
+    for m in _TERMINAL.finditer(text or ""):
+        if _is_sentence_end(text, m):
+            piece = text[start: m.end()].strip()
+            if piece:
+                out.append(piece)
+            start = m.end()
+    tail = (text or "")[start:].strip()
+    if tail:
+        out.append(tail)
+    return out
+
+
 def _unit_bounds(text: str, s: int, e: int) -> tuple[int, int]:
     starts = [m.start() for m in _MARKER.finditer(text)]
     unit_start = max([p for p in starts if p <= s], default=0)
