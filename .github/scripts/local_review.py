@@ -199,7 +199,11 @@ def main(argv=None):
     except (urllib.error.URLError, OSError, ValueError) as err:
         return show("unavailable", f"could not get a reply from Ollama ({type(err).__name__})")
 
-    parsed = parse_review((reply.get("message") or {}).get("content", ""), changed)
+    # Never trust the reply's shape: an advisory tool that must not block a push cannot crash.
+    reply = reply if isinstance(reply, dict) else {}
+    message = reply.get("message")
+    content = message.get("content") if isinstance(message, dict) else None
+    parsed = parse_review(content if isinstance(content, str) else "", changed)
     if parsed is None:
         return show("incomplete", f"the model did not return a valid review (finish: {reply.get('done_reason')})")
     summary, findings, dropped = parsed
@@ -208,8 +212,10 @@ def main(argv=None):
         problems.append(f"the answer was cut off (finish: {reply.get('done_reason')})")
     # Ollama shifts the window and keeps generating (still "stop") when prompt plus answer
     # overflow it, silently dropping the start of the prompt; count generated tokens too.
-    used = (reply.get("prompt_eval_count") or 0) + (reply.get("eval_count") or 0)
-    if used >= NUM_CTX - 64:
+    counts = [reply.get(k) for k in ("prompt_eval_count", "eval_count")]
+    if not all(type(c) is int and c >= 0 for c in counts):
+        problems.append("Ollama did not report token counts, so context use could not be checked")
+    elif sum(counts) >= NUM_CTX - 64:
         problems.append("the prompt and answer filled the context window, so part of the diff may have been dropped")
     status = "incomplete" if problems else "complete"
     return show(status, "; ".join(problems), summary, findings, dropped)

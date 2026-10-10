@@ -31,7 +31,7 @@ def with_diff(module, monkeypatch, diff="diff --git a/x.py b/x.py\n+x = 1\n", ch
 def answer(summary="Looks fine.", findings=(), **extra):
     reply = {
         "message": {"content": json.dumps({"summary": summary, "findings": list(findings)})},
-        "done_reason": "stop", "prompt_eval_count": 3000,
+        "done_reason": "stop", "prompt_eval_count": 3000, "eval_count": 500,
     }
     reply.update(extra)
     return reply
@@ -121,6 +121,20 @@ def test_answer_that_overflows_the_window_is_incomplete_even_when_prompt_fits(re
     assert review.main([]) == 0
     out = capsys.readouterr().out
     assert "incomplete" in out and "context window" in out
+
+
+@pytest.mark.parametrize("reply", [
+    {"message": "model overloaded", "done_reason": "stop"},
+    {"message": {"content": ["not", "text"]}, "done_reason": "stop"},
+    {"message": {"content": '{"summary": "s", "findings": []}'}, "done_reason": "stop",
+     "prompt_eval_count": "many", "eval_count": None},
+    ["unexpected", "list"],
+])
+def test_unexpected_reply_shapes_never_crash_the_advisory_tool(review, monkeypatch, capsys, reply):
+    with_diff(review, monkeypatch)
+    monkeypatch.setattr(review, "chat", lambda *a: reply)
+    assert review.main([]) == 0
+    assert "incomplete" in capsys.readouterr().out
 
 
 def test_cut_off_answer_is_incomplete(review, monkeypatch, capsys):
