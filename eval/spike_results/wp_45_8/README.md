@@ -1,6 +1,6 @@
 # WP-45.8 Stage A — shadow run of the frozen selection resolver (tooling)
 
-Plan: [docs/PHASE45_WP458_PLAN.md](../../../docs/PHASE45_WP458_PLAN.md) section 3, Stage A. Nothing here touches the pipeline, the Step C cache, any `*_requirements_*.jsonl`, Qdrant or the repository's data; ledgers and outputs go to `~/wp45_8_scratch/<label>/`.
+Plan: [docs/PHASE45_WP458_PLAN.md](../../../docs/PHASE45_WP458_PLAN.md) section 3, Stage A. Nothing here touches the pipeline, the Step C cache, any `*_requirements_*.jsonl`, Qdrant or the repository's data; ledgers and outputs go to `~/reqbot-work/scratch/wp45_8_scratch/<label>/`.
 
 ```
 python3 shadow_run.py drills                        # failure drills (no model)

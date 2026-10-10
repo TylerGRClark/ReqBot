@@ -24,7 +24,7 @@ from pipeline import sentence_expand as SE  # noqa: E402
 from services.checklist_service import generate  # noqa: E402
 
 ARMS = ("T2a", "T2b", "D1x")
-SCRATCH = Path.home() / "wp45_11_scratch"
+SCRATCH = Path.home() / "reqbot-work/scratch/wp45_11_scratch"
 SEED, SAMPLE = 4514, 30
 SAMPLE_ARMS = ("T2a", "D1x")
 

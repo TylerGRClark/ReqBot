@@ -31,7 +31,7 @@ from services.checklist_service import generate  # noqa: E402
 BASE = ("T2a", "T2b")
 ARM = "D1x"
 SEED, SAMPLE = 4513, 40
-SCRATCH = Path.home() / "wp45_11_scratch"
+SCRATCH = Path.home() / "reqbot-work/scratch/wp45_11_scratch"
 # The trial changes the Step C prompt on purpose. The baseline replicates ran at cc0b67e; the trial branch is main at f7cb892 plus that one change, and main moved on in between only in the
 # checklist's presentation code (the four files below, which Step C/D and the parent-stem reconstruction never import). They are declared here so the same-code check is not simply switched off.
 CODE = ["pipeline/llm_extract_requirements.py", "pipeline/checklist_export.py", "services/checklist_audit.py", "services/checklist_missed.py", "services/checklist_service.py"]

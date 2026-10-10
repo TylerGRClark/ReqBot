@@ -27,8 +27,8 @@ import score_discovery as SD  # noqa: E402
 from services import checklist_audit as A  # noqa: E402
 from services import checklist_missed as M  # noqa: E402
 
-S12 = Path.home() / "wp45_12_scratch"
-S7 = Path.home() / "wp45_7_scratch"
+S12 = Path.home() / "reqbot-work/scratch/wp45_12_scratch"
+S7 = Path.home() / "reqbot-work/scratch/wp45_7_scratch"
 DOC = "afi17-203"
 SEED, SAMPLE = 4512, 40
 RUNS = {"D0": [S7 / "d0_8b_dev_r1", S7 / "d0_8b_dev_r2"], "D1": [S7 / "d1_8b_dev_r1", S7 / "d1_8b_dev_r2"], "P1": [S12 / "p1_dev_r1", S12 / "p1_dev_r2"]}

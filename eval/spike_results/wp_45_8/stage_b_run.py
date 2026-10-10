@@ -27,7 +27,7 @@ import engine as E  # noqa: E402  (wp_45_1c)
 import run_test as RT  # noqa: E402  (wp_45_1c: frozen-input check, targets, query inputs, swap/restore)
 import variants as V  # noqa: E402  (wp_45_1c)
 
-SHADOW = Path.home() / "wp45_8_scratch" / "wp458_shadow_processed" / "shadow_output.jsonl"
+SHADOW = Path.home() / "reqbot-work/scratch/wp45_8_scratch" / "wp458_shadow_processed" / "shadow_output.jsonl"
 STAGE_A_REPORT = _HERE / "outputs" / "wp458_shadow_processed_report.json"
 ARMS = ("resolver", "hybrid")
 

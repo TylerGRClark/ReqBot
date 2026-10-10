@@ -103,5 +103,5 @@ def run_chunks(chunks, *, model, digest, run_label, ledger, ollama_url, log=prin
 
 def afi_chunks(document):
     """[(document, chunk)] for a whole document from the merged table-fix chunking (T2_256) cache."""
-    path = Path.home() / "wp45_10_cache/d2.94.0/chunks/T2_256" / f"{document}_chunks.jsonl"
+    path = Path.home() / "reqbot-work/scratch/wp45_10_cache/d2.94.0/chunks/T2_256" / f"{document}_chunks.jsonl"
     return [(document, json.loads(x)) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()]

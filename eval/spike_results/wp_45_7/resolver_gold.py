@@ -39,7 +39,7 @@ FROZEN = _HERE / "outputs" / "resolver_gold.json"
 AUDIT_DIR = _ROOT / "eval/spike_results/wp_45_1/audit_results"
 CARD_KEY = _ROOT / "eval/spike_results/wp_45_6/outputs/pack_answers.json"
 CARD_LABELS = _ROOT / "eval/spike_results/wp_45_6/labels"
-SCRATCH = Path.home() / "wp45_6_scratch"
+SCRATCH = Path.home() / "reqbot-work/scratch/wp45_6_scratch"
 SIDE_TAG = {"base": "8b_current_stepD", "new": "qwen2.5_14b"}
 REQUIREMENT_LABELS = ("complete", "needs_lead_in")  # the two "this is a requirement" labels of the audit rubric
 

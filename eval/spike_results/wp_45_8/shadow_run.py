@@ -2,13 +2,13 @@
 """WP-45.8 Stage A: run the frozen selection resolver over every record of a processed corpus, into a scratch directory only (docs/PHASE45_WP458_PLAN.md section 3).
 
   python3 shadow_run.py run    --source processed            # newest run of each document under ~/documents/processed
-  python3 shadow_run.py run    --source arm:T2a              # the scratch arm ~/wp45_11_scratch/T2a/<document>/
+  python3 shadow_run.py run    --source arm:T2a              # the scratch arm ~/reqbot-work/scratch/wp45_11_scratch/T2a/<document>/
   python3 shadow_run.py report --source processed            # counts, routes, seeded sample, substring gate -> outputs/
   python3 shadow_run.py rerun  --source processed            # the seeded 200-record determinism rerun
   python3 shadow_run.py drills                               # failure drills (no model needed)
 
 Nothing here writes to the pipeline, the Step C cache, any `*_requirements_*.jsonl`, Qdrant or the repository's data: the ledger, the shadow output and the report go
-to `~/wp45_8_scratch/<label>/` (outputs/ in this folder holds only the small committed reports). The resolver is the one frozen in WP-45.7e, unchanged: menu_v2,
+to `~/reqbot-work/scratch/wp45_8_scratch/<label>/` (outputs/ in this folder holds only the small committed reports). The resolver is the one frozen in WP-45.7e, unchanged: menu_v2,
 kind prompt, tier R2, model, digest and inference parameters come from the frozen choice, and every pinned resolver file is checked against the frozen manifest.
 
 The string that would be attached is fixed by the plan, before any retrieval measure: the chosen actor span and the chosen parent span (each verbatim), joined with " | "
@@ -39,7 +39,7 @@ import run_selection as RS  # noqa: E402
 import run_stage_c as RSC  # noqa: E402
 import score_resolver as SR  # noqa: E402
 
-SCRATCH = Path.home() / "wp45_8_scratch"
+SCRATCH = Path.home() / "reqbot-work/scratch/wp45_8_scratch"
 PROCESSED = Path.home() / "documents" / "processed"
 REGISTRY = "v6"
 # Files that may differ from the frozen manifest, each with the reason checked below. pipeline/chunk_text.py was changed by the merged T2 table fix (#249):
@@ -102,7 +102,7 @@ def load_source(source):
         name = source[4:]
         if not name or "/" in name or "\\" in name or name.startswith("."):
             raise SystemExit("--source arm:NAME takes a plain arm name")
-        base = Path.home() / "wp45_11_scratch" / name
+        base = Path.home() / "reqbot-work/scratch/wp45_11_scratch" / name
         if not base.is_dir():
             raise SystemExit(f"{base} does not exist")
         dirs = {d.name: d for d in sorted(base.iterdir()) if d.is_dir()}

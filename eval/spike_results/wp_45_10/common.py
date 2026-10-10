@@ -1,7 +1,7 @@
 """WP-45.10: shared helpers for the Docling configuration audit (offline; no LLM; scratch only).
 
 The 13 pinned documents, their source-PDF SHA-256 check against `eval/spike_results/wp_44/after_replay_summary.json`, the installed Docling package
-versions (a manifest line in every output), and the cache location. Conversions and re-chunked outputs are cached under `~/wp45_10_cache/`, outside
+versions (a manifest line in every output), and the cache location. Conversions and re-chunked outputs are cached under `~/reqbot-work/scratch/wp45_10_cache/`, outside
 the repository; nothing here touches `pipeline/`, a Step C cache, a corpus file or Qdrant. See docs/PHASE45_WP4510_PLAN.md.
 """
 
@@ -20,7 +20,7 @@ for _p in (ROOT,):
 
 PINNED = ROOT / "eval" / "spike_results" / "wp_44" / "after_replay_summary.json"
 PDF_DIR = ROOT / "raw_pdfs"
-CACHE = Path.home() / "wp45_10_cache"
+CACHE = Path.home() / "reqbot-work/scratch/wp45_10_cache"
 PACKAGES = ("docling", "docling-core", "docling-parse", "docling-ibm-models")
 
 

@@ -26,7 +26,7 @@ for _p in (_ROOT, _ROOT / "eval/spike_results/wp_45_1e", _ROOT / "eval/spike_res
 import common  # noqa: E402
 import score as S  # noqa: E402  (wp_45_1e)
 
-SCRATCH = Path.home() / "wp45_11_scratch"
+SCRATCH = Path.home() / "reqbot-work/scratch/wp45_11_scratch"
 E1 = _ROOT / "eval/spike_results/wp_45_1e"
 SAMPLE_DOCS = ("DODI 8410.03", "afman17-2101", "NIST.SP.800-125")
 

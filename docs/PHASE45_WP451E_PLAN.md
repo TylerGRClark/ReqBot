@@ -95,7 +95,7 @@ list markers, then split into tokens. Two different questions use two different 
 
 All thresholds (0.90, 0.50) are fixed before looking at any result and are not tuned.
 
-**Secondary traces.** The same pieces are traced through the fresh 8B and the 14B runs left in `~/wp45_6_scratch`,
+**Secondary traces.** The same pieces are traced through the fresh 8B and the 14B runs left in `~/reqbot-work/scratch/wp45_6_scratch`,
 steps 1 to 3 only (those runs were never indexed). This gives each model's recall against the source.
 
 ## 4. What is reported

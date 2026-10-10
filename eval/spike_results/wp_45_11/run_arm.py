@@ -5,8 +5,8 @@
   python3 run_arm.py --arm T1  --chunks d2.122.0-core2.100.0:default
   python3 run_arm.py --arm B0a --chunks d2.94.0:256 --docs "DODI 8410.03" --max-chunks 3      # a smoke test
 
-`--chunks TAG:LABEL` names the chunk files written by `wp_45_10/rechunk.py` (`~/wp45_10_cache/TAG/chunks/LABEL/<doc>_chunks.jsonl`). Each document is copied into
-`~/wp45_11_scratch/<arm>/<doc>/` and the existing pipeline is run unchanged with `--skip-to C`, so arms differ only in the chunk files. The 13 pinned PDFs are
+`--chunks TAG:LABEL` names the chunk files written by `wp_45_10/rechunk.py` (`~/reqbot-work/scratch/wp45_10_cache/TAG/chunks/LABEL/<doc>_chunks.jsonl`). Each document is copied into
+`~/reqbot-work/scratch/wp45_11_scratch/<arm>/<doc>/` and the existing pipeline is run unchanged with `--skip-to C`, so arms differ only in the chunk files. The 13 pinned PDFs are
 hash-checked; every run records the chunk file hash, the Docling package versions of the chunk cache, the model digest, the command and the Step C status counts.
 An arm directory that already holds a document is never reused.
 """
@@ -30,7 +30,7 @@ for _p in (_ROOT, _ROOT / "eval/spike_results/wp_45_10", _ROOT / "eval/spike_res
 import common  # noqa: E402  (wp_45_10: pinned documents, PDF hashes, cache location)
 from run_model import status_summary  # noqa: E402  (wp_45_6: Step C completion counts from raw_responses.jsonl)
 
-SCRATCH = Path.home() / "wp45_11_scratch"
+SCRATCH = Path.home() / "reqbot-work/scratch/wp45_11_scratch"
 MODEL = "llama3.1:8b-instruct-q4_K_M"
 
 

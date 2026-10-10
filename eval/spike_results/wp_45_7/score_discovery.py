@@ -16,7 +16,7 @@ The labels are the 45.1(e) ones, made under rubric version 1: permission-only pi
 a `should` recommendation was. The dev set therefore under-credits an arm that correctly returns permissions; the kind pass
 (`pack_devkind.md`) will say how many such pieces there are.
 
-  python3 eval/spike_results/wp_45_7/score_discovery.py --runs d0=~/wp45_7_scratch/d0_8b_dev_r1 d1=~/wp45_7_scratch/d1_8b_dev_r1 \\
+  python3 eval/spike_results/wp_45_7/score_discovery.py --runs d0=~/reqbot-work/scratch/wp45_7_scratch/d0_8b_dev_r1 d1=~/reqbot-work/scratch/wp45_7_scratch/d1_8b_dev_r1 \\
       --baseline d0 [--out results.json]
 """
 

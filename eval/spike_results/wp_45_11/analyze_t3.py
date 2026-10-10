@@ -28,7 +28,7 @@ import score_arms as SA  # noqa: E402  (this folder: the same arm validation R1/
 import analyze_chunks as AC  # noqa: E402  (wp_45_10: gold items, norm, chunk loading, lead-in pieces)
 import score_resolver as SR  # noqa: E402  (wp_45_7: the registered stem-overlap rule)
 
-SCRATCH = Path.home() / "wp45_11_scratch"
+SCRATCH = Path.home() / "reqbot-work/scratch/wp45_11_scratch"
 MIN_QUOTE = 40
 
 

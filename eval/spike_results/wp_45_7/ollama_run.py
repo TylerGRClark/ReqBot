@@ -20,7 +20,7 @@ import requests
 
 log = logging.getLogger(__name__)
 
-DEFAULT_SCRATCH = Path.home() / "wp45_7_scratch"
+DEFAULT_SCRATCH = Path.home() / "reqbot-work/scratch/wp45_7_scratch"
 NUM_CTX = 8192
 STATUSES = ("complete", "truncated", "window_overrun", "untreatable", "failed")
 DONE = ("complete", "truncated", "window_overrun", "untreatable")  # failed is redone on resume
