@@ -175,11 +175,11 @@ def _duty_sentences(unit: str, covered_by: list[str], verbs) -> tuple[list[str],
 
 
 def split_candidates(chunks: dict, quotes: list[str], extra_verbs=()) -> tuple[list[dict], list[dict]]:
-    """(promoted, still_missed), judged sentence by sentence. A candidate paragraph that carries its own paragraph number is promoted, one entry per sentence that holds a duty and is
-    not extracted yet (the whole sentence, not the paragraph: the second sentence of 3.7 is the requirement, the first only introduces it); each entry has the chunk, its offset in the
-    chunk, the sentence, the paragraph number, the section path, the pages and an id. A paragraph whose duty sentences are all extracted already is dropped (the paragraph-level scan
-    listed it only because the extracted row carries a lead-in or leaves out a tier tag). The unextracted duty sentences of a paragraph with no number stay possible-missed rows, a
-    sentence each. A paragraph with no duty sentence of its own stays one possible-missed row unless an extracted row already contains it."""
+    """(promoted, still_missed), judged sentence by sentence. A candidate paragraph is promoted, one entry per sentence that holds a duty and is not extracted yet (the whole sentence,
+    not the paragraph: the second sentence of 3.7 is the requirement, the first only introduces it); each entry has the chunk, its offset in the chunk, the sentence, the paragraph
+    number ("" for a paragraph with no number of its own, which the row builder then cites by inference, marked "(inferred)"), the section path, the pages and an id. A paragraph
+    whose duty sentences are all extracted already is dropped (the paragraph-level scan listed it only because the extracted row carries a lead-in or leaves out a tier tag).
+    A paragraph with no duty sentence of its own stays one possible-missed row unless an extracted row already contains it."""
     covered_by = [normalize(q) for q in quotes if q]
     verbs = checklist_audit.IMPERATIVE_VERBS | {v.lower() for v in extra_verbs if " " not in v}
     promoted, rest = [], []
@@ -189,10 +189,7 @@ def split_candidates(chunks: dict, quotes: list[str], extra_verbs=()) -> tuple[l
             if not already and not _covered(c["norm"], covered_by):
                 rest.append(_missed_row(c))
             continue
-        if not c["ref"]:
-            rest.extend(_missed_row({**c, "unit": text, "norm": normalize(text)}) for text in sentences)
-            continue
-        raw = chunks[c["chunk_id"]].get("raw_text") or ""
+        raw = chunks[c["chunk_id"]].get("raw_text") or ""  # a paragraph with no number of its own is promoted like a numbered one (ref empty: the row is cited by inference)
         for text in sentences:
             pattern = sentence_expand.flex_pattern(text)
             found = pattern.search(raw, c["offset"]) if pattern else None  # from this paragraph on: identical wording in an earlier paragraph is not this one

@@ -106,15 +106,22 @@ def requirements_path(processed_dir: Path, doc_key: str) -> Path:
 
 
 def _found_item(c: dict, chunks: dict, hmap: dict, para_map: dict, verbs) -> dict:
-    """A checklist row for a duty sentence the text scan found in a numbered paragraph that was not extracted. It is built like an extracted row (citation, section, who it applies to,
+    """A checklist row for a duty sentence the text scan found in a paragraph that was not extracted. It is built like an extracted row (citation, section, who it applies to,
     passage, parent paragraph, flags), flagged found_by_text_scan and left for review; nothing here is model-made."""
-    cite, path, text = c["ref"], c["path"], c["text"]  # the paragraph's own number, read from the document: exact, not inferred
+    cite, path, text = c["ref"], c["path"], c["text"]  # the paragraph's own number, read from the document: exact, not inferred; empty when the paragraph has none
+    own_number = bool(cite)
     numbered = checklist_audit.applies_to_numbered(cite, hmap, path)
     applies = numbered if numbered is not None else checklist_audit.applies_to(path)
     flags = checklist_audit.item_flags(text, cite, applies, verbs)
     chunk = chunks.get(c["chunk_id"])
     prev_chunk = chunks.get(c["chunk_id"] - 1)
     passage, found = checklist_audit.build_passage(text, chunk, prev_chunk, set(flags), c["offset"])
+    if not own_number:  # cited like an extracted row without a number: the nearest number before it, marked "(inferred)", else the nearest numbered heading
+        cite = checklist_audit.citation("", passage, path, text)
+        numbered = checklist_audit.applies_to_numbered(cite, hmap, path) if cite else None
+        if numbered is not None:
+            applies = numbered
+            flags = checklist_audit.item_flags(text, cite, applies, verbs)
     flags = ["found_by_text_scan"] + flags
     if not passage:
         flags.append("no_passage")
