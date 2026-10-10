@@ -129,6 +129,37 @@ def test_identical_wording_in_two_paragraphs_gives_two_rows_with_their_own_posit
     assert promoted[0]["checklist_item_id"] != promoted[1]["checklist_item_id"]
 
 
+def test_a_later_imperative_sentence_qualifies_a_paragraph_that_has_no_modal():
+    raw = "3.6. Incident Analysis. Incident analysis describes the process of finding out what happened. Include the mission owner.\n3.7. Training. Personnel are trained every year."
+    chunks = {1: {"chunk_id": 1, "page_start": 2, "section_title_path": [], "raw_text": raw}}
+    assert M.find_possible_missed(chunks, []) == []  # the paragraph-level scan looks at the first word only
+    promoted, _ = M.split_candidates(chunks, [])
+    assert [p["text"] for p in promoted] == ["Include the mission owner."] and promoted[0]["ref"] == "3.6"
+
+
+def test_the_sentences_of_a_chunk_with_one_numbered_paragraph_keep_its_number():
+    raw = "3.6. Incident Analysis. Incident analysis describes the process. The CFP will notify the MCCC of every incident. Include the mission owner in the process."
+    promoted, rest = M.split_candidates({1: {"chunk_id": 1, "page_start": 2, "section_title_path": [], "raw_text": raw}}, [])
+    assert [(p["ref"], p["text"]) for p in promoted] == [("3.6", "The CFP will notify the MCCC of every incident."), ("3.6", "Include the mission owner in the process.")] and rest == []
+    no_number = "Incident analysis describes the process. The CFP will notify the MCCC of every incident."
+    promoted, rest = M.split_candidates({1: {"chunk_id": 1, "page_start": 2, "section_title_path": [], "raw_text": no_number}}, [])
+    assert promoted == [] and len(rest) == 1  # no number anywhere in the chunk: nothing to inherit, so it stays in the block
+
+
+def test_a_found_row_is_marked_in_its_own_paragraph_when_the_wording_repeats(tmp_path):
+    run_dir = tmp_path / "doc_20260101_120000"
+    run_dir.mkdir()
+    raw = "2.6.2. Provide a representative to the working group when requested.\n2.8.2. Provide a representative to the working group when requested.\n2.9. Training. Personnel are trained every year."
+    (run_dir / "doc_requirements_normalized.jsonl").write_text(json.dumps({"requirement_id": "REQ-1", "source_quote": "Personnel are trained every year.", "source_ref": "2.9", "chunk_id": 1,
+                                                                            "section_title_path": [], "domain_tags": [], "confidence": None, "page_start": 2, "page_end": 2}) + "\n")
+    (run_dir / "doc_chunks.jsonl").write_text(json.dumps({"chunk_id": 1, "page_start": 2, "section_title_path": [], "raw_text": raw}) + "\n")
+    items = generate(tmp_path, "doc", "cybersecurity")["items"]
+    first, second = [i for i in items if "found_by_text_scan" in i["item_flags"]]
+    assert first["citation"] == "2.6.2" and second["citation"] == "2.8.2"
+    assert first["passage"].count(">>") == 1 and second["passage"].count(">>") == 1
+    assert first["passage"].index(">>") < first["passage"].index("2.8.2.") and second["passage"].index(">>") > second["passage"].index("2.8.2.")  # the second row's mark is after its own number
+
+
 def test_a_short_duty_sentence_is_covered_only_by_the_same_extracted_sentence():
     raw = "2.20.19.  Support  MAAs  of  TCAs.  ( T-1 )  Assessment types are described in section 3.3.\n2.20.20. Training. Personnel are trained every year."
     chunks = {1: {"chunk_id": 1, "page_start": 2, "section_title_path": [], "raw_text": raw}}

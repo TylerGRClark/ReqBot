@@ -114,7 +114,7 @@ def _found_item(c: dict, chunks: dict, hmap: dict, para_map: dict, verbs) -> dic
     flags = checklist_audit.item_flags(text, cite, applies, verbs)
     chunk = chunks.get(c["chunk_id"])
     prev_chunk = chunks.get(c["chunk_id"] - 1)
-    passage, found = checklist_audit.build_passage(text, chunk, prev_chunk, set(flags))
+    passage, found = checklist_audit.build_passage(text, chunk, prev_chunk, set(flags), c["offset"])
     flags = ["found_by_text_scan"] + flags
     if not passage:
         flags.append("no_passage")
