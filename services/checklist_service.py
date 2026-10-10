@@ -120,7 +120,7 @@ def _found_item(c: dict, chunks: dict, hmap: dict, para_map: dict, verbs, first_
 
     numbered = None if table_ref else checklist_audit.applies_to_numbered(cite, hmap, path)
     applies = "" if table_ref else (numbered if numbered is not None else checklist_audit.applies_to(path))  # the converter's heading for a table is a guess: no party is read from it
-    flags = row_flags(cite, applies)
+    flags = row_flags(c["ref"], applies)  # the paragraph's own number, not the table label: a "Table" reference would flag a whole sentence in a cell as a table scrap and withhold its question
     chunk = chunks.get(c["chunk_id"])
     prev_chunk = chunks.get(c["chunk_id"] - 1)
     passage, found = checklist_audit.build_passage(text, chunk, prev_chunk, set(flags), c["offset"])
