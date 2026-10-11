@@ -9,7 +9,7 @@ import SynthesisBox from '../components/SynthesisBox'
 import AppShell from '../components/AppShell'
 import { useSynthesis } from '../hooks/useSynthesis'
 import {
-  pageRange, clampTopK, parseTopKParam, MIN_TOP_K, MAX_TOP_K, DEFAULT_TOP_K,
+  pageRange, refLabel, clampTopK, parseTopKParam, MIN_TOP_K, MAX_TOP_K, DEFAULT_TOP_K,
 } from '../utils/ui'
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -34,9 +34,9 @@ function EvidenceCard({ req, from }: { req: EvidenceRequirement; from: string })
             </span>
           )}
           {pages && <span className="text-xs text-gray-500 shrink-0">{pages}</span>}
-          {req.source_ref && (
+          {refLabel(req) && (
             <span className="text-xs font-medium text-gray-700 truncate max-w-[12rem] min-w-0">
-              {req.source_ref}
+              {refLabel(req)}
             </span>
           )}
         </div>

@@ -21,6 +21,17 @@ export function docValue(doc: { source_pdf?: string; doc_key: string }): string 
 }
 
 /**
+ * The reference a result shows: the citation read from the document when the index was
+ * built (a paragraph number, "Table 3.1", "Front matter", marked "(inferred)" when it was
+ * worked out from the text before the quote), else the source_ref the extractor recorded.
+ * Mirrors core/display.py's requirement_citation. source_ref itself is never replaced:
+ * Evidence groups by it. Accepts null as well as undefined (EvidenceRequirement fields).
+ */
+export function refLabel(item: { citation?: string | null; source_ref?: string | null }): string {
+  return (item.citation || item.source_ref || '').trim()
+}
+
+/**
  * Joins a section hierarchy breadcrumb (e.g. ["3", "3.2", "3.2.1 Access Control"])
  * into a readable path, or '—' if empty. Shared by ChecklistTable and TraceView
  * (WP-31.1) -- both render the same list[str] hierarchy field from the backend.

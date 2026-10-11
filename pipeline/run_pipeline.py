@@ -490,7 +490,7 @@ def main() -> None:
         from pipeline import embed_context_index as _embed_ctx
 
         try:
-            _embed.run(index_path, ollama_url=args.ollama_url, qdrant_url=args.qdrant_url)
+            _embed.run(index_path, ollama_url=args.ollama_url, qdrant_url=args.qdrant_url, payload_extras=_embed.derived_payload_fields(index_path))
         except Exception as e:
             log.warning("Qdrant indexing failed (%s) — pipeline artifacts are still available", e)
 

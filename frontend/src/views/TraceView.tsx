@@ -7,7 +7,7 @@ import type { TraceResponse, Requirement } from '../api/types'
 import AppShell from '../components/AppShell'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorBanner from '../components/ErrorBanner'
-import { pageRange, formatPath } from '../utils/ui'
+import { pageRange, formatPath, refLabel } from '../utils/ui'
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
@@ -49,8 +49,8 @@ function CrossMatchCard({ match, from }: { match: Requirement; from: string }) {
         </div>
       </div>
       <p className="text-sm text-gray-700 leading-snug">{snippet}</p>
-      {match.source_ref && (
-        <p className="mt-1.5 text-xs text-gray-400 truncate">{match.source_ref}</p>
+      {refLabel(match) && (
+        <p className="mt-1.5 text-xs text-gray-400 truncate">{refLabel(match)}</p>
       )}
     </Link>
   )
@@ -217,8 +217,8 @@ export default function TraceView() {
                   <blockquote className="border-l-4 border-blue-200 pl-4 text-sm text-gray-700 italic leading-relaxed">
                     {req.source_quote}
                   </blockquote>
-                  {req.source_ref && (
-                    <p className="mt-2 text-xs text-gray-400">{req.source_ref}</p>
+                  {refLabel(req) && (
+                    <p className="mt-2 text-xs text-gray-400">{refLabel(req)}</p>
                   )}
                 </>
               ) : (

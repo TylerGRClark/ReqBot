@@ -29,6 +29,7 @@ const evidenceRequirementSchema = z.object({
   source_quote: z.string().nullish(),
   explained_text: z.string().nullish(),
   source_ref: z.string().nullish(),
+  citation: z.string().nullish(),
   source_pdf: z.string().nullish(),
   document_id: z.string().nullish(),
   domain_tags: z.array(z.string()).nullish(),

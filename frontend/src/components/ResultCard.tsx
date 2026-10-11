@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import type { AskResult } from '../api/types'
-import { pageRange } from '../utils/ui'
+import { pageRange, refLabel } from '../utils/ui'
 
 interface Props {
   result: AskResult
@@ -35,9 +35,9 @@ export default function ResultCard({ result, index }: Props) {
             {result.source_pdf}
           </span>
           {pages && <span className="text-xs text-gray-500 shrink-0">{pages}</span>}
-          {result.source_ref && (
+          {refLabel(result) && (
             <span className="text-xs font-medium text-gray-700 truncate max-w-[12rem] min-w-0">
-              {result.source_ref}
+              {refLabel(result)}
             </span>
           )}
         </div>
