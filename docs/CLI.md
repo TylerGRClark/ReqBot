@@ -32,6 +32,7 @@ Unless listed otherwise, service URL flags default to the effective
 | `evidence` | Export a grouped evidence pack. |
 | `checklist` | Export a checklist from processed requirement artifacts. |
 | `questions` | Write draft audit questions for a document's checklist rows (local model; shown by `checklist`). |
+| `kinds` | Label each checklist row with the kind of statement it is (rule-based, no model; written to a side file, nothing else reads it yet). |
 | `reindex` | Rebuild indexes from processed artifacts without extraction. |
 | `index` | Index one requirement JSONL file directly. |
 | `index-context` | Index one source-chunk JSONL file directly. |
@@ -206,6 +207,14 @@ reqbot checklist --doc policy --format xlsx --output checklist.xlsx   # the Audi
 ```
 
 Writes one draft yes/no audit question per checklist row to `<doc>_audit_questions.jsonl` beside the document's requirements, using the local Ollama model (default `qwen2.5:14b`; `--model`, `--ollama-url`). Rows that look like fragments, definitions or descriptions get no question. A question that mentions a number, acronym or name not found in the row's own text is kept and marked in the row's notes. Questions are drafts for the auditor to check; rerunning reuses unchanged rows and retries failed ones. Building a checklist never calls a model.
+
+## kinds
+
+```bash
+reqbot kinds --doc policy
+```
+
+Labels each checklist row with the kind of statement it is (a duty with a named party, a command, a recommendation, a permission, a prohibition, an exemption, a definition or description, a statement of who the document applies to, a pointer, a table row, text in a form template, cover-page text, or `unknown`) and writes the labels, the rule that fired and a few tags (`refers_back`, `list_item`, `fragment`) to `<doc>_kinds.jsonl` beside the document's requirements. It reads the same rows as `checklist`, uses wording rules and no model, and changes nothing else: this is stage 1 of the requirement-kind proposal (docs/PIPELINE_REDESIGN_PLAN.md, section 10), and no reader uses the labels yet.
 
 ## checklist
 
