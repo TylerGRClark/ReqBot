@@ -1167,6 +1167,23 @@ def cmd_questions(args: argparse.Namespace) -> int:
     return 1 if counts["errors"] else 0
 
 
+def cmd_kinds(args: argparse.Namespace) -> int:
+    """Label each checklist row with the kind of statement it is, in a sidecar file (requirement kind, stage 1; docs/PIPELINE_REDESIGN_PLAN.md section 10). No model call."""
+    from services import checklist_service, requirement_kind
+
+    processed_dir = _cfg.processed_dir_path()
+    try:
+        checklist = checklist_service.generate(processed_dir, args.doc, args.profile)
+        path = requirement_kind.sidecar_path(checklist_service.requirements_path(processed_dir, args.doc))
+    except (ValueError, FileNotFoundError) as e:
+        log.error("%s", e)
+        return 1
+    records = requirement_kind.label_items(checklist["items"])
+    requirement_kind.write(path, records)
+    print(f"Requirement kinds for {args.doc}: {requirement_kind.counts(records)}\nWritten to: {path}")
+    return 0
+
+
 def cmd_checklist(args: argparse.Namespace) -> int:
     """Generate an audit checklist from validated requirements for a document."""
     from services import checklist_service
@@ -1767,6 +1784,14 @@ def main() -> None:
         help="Domain profile name (default: cybersecurity)",
     )
 
+    # kinds
+    p_kinds = subparsers.add_parser(
+        "kinds",
+        help="Label each checklist row with the kind of statement it is (rule-based, no model; written to a sidecar file, nothing else reads it yet)",
+    )
+    p_kinds.add_argument("--doc", type=str, required=True, help="Document key (PDF stem), as shown by reqbot docs")
+    p_kinds.add_argument("--profile", type=str, default="cybersecurity", help="Domain profile name (default: cybersecurity)")
+
     # questions
     p_questions = subparsers.add_parser(
         "questions",
@@ -1841,6 +1866,7 @@ def main() -> None:
         "ask": cmd_ask,
         "batch": cmd_batch,
         "checklist": cmd_checklist,
+        "kinds": cmd_kinds,
         "questions": cmd_questions,
         "docs": cmd_docs,
         "reindex": cmd_reindex,

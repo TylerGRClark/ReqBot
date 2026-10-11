@@ -1,0 +1,19 @@
+{
+ "rows": 1358,
+ "excluded": 60,
+ "by_kind": {
+  "cover_page_text": 38,
+  "duty_with_actor": 404,
+  "unknown": 174,
+  "duty_imperative": 567,
+  "permission": 67,
+  "recommendation": 21,
+  "exemption": 2,
+  "pointer": 5,
+  "table_row": 28,
+  "prohibition": 18,
+  "form_template_text": 24,
+  "definition_or_description": 7,
+  "applicability": 3
+ }
+}

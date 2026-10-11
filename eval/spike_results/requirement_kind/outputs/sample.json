@@ -1,0 +1,152 @@
+[
+ {
+  "id": "CHK-dc0732f11913c988",
+  "doc": "AFI 10-2402",
+  "kind": "pointer"
+ },
+ {
+  "id": "CHK-7a9dd07c137d07a1",
+  "doc": "AFI 17-203",
+  "kind": "table_row"
+ },
+ {
+  "id": "CHK-1c1a38a8c346a7ac",
+  "doc": "DAFMAN 17-1305",
+  "kind": "form_template_text"
+ },
+ {
+  "id": "CHK-f22710e5a0255c2d",
+  "doc": "DAFMAN 17-1305",
+  "kind": "cover_page_text"
+ },
+ {
+  "id": "CHK-abe4fc47754a54bb",
+  "doc": "AFI 10-2402",
+  "kind": "definition_or_description"
+ },
+ {
+  "id": "CHK-9eff543141ee4584",
+  "doc": "AFI 17-203",
+  "kind": "recommendation"
+ },
+ {
+  "id": "CHK-502a529e534dbaf4",
+  "doc": "AFI 17-203",
+  "kind": "applicability"
+ },
+ {
+  "id": "CHK-929c688860642846",
+  "doc": "DAFMAN 17-1305",
+  "kind": "duty_with_actor"
+ },
+ {
+  "id": "CHK-a311ecd8ae0c8fd4",
+  "doc": "AFI 17-203",
+  "kind": "table_row"
+ },
+ {
+  "id": "MISS-49eb74b74a853b60",
+  "doc": "DAFMAN 17-1305",
+  "kind": "recommendation"
+ },
+ {
+  "id": "CHK-9e10306a6e713dad",
+  "doc": "AFMAN 17-2101",
+  "kind": "duty_imperative"
+ },
+ {
+  "id": "CHK-eec1bc1c7a3b5096",
+  "doc": "AFMAN 17-2101",
+  "kind": "permission"
+ },
+ {
+  "id": "CHK-71ea0cc50c325f30",
+  "doc": "DAFMAN 17-1305",
+  "kind": "prohibition"
+ },
+ {
+  "id": "CHK-a5afa17a41a31738",
+  "doc": "AFMAN 17-2101",
+  "kind": "exemption"
+ },
+ {
+  "id": "CHK-44ed70d9d277f96f",
+  "doc": "AFI 17-203",
+  "kind": "pointer"
+ },
+ {
+  "id": "CHK-28541c4f8da430cc",
+  "doc": "AFPD 17-1",
+  "kind": "duty_imperative"
+ },
+ {
+  "id": "CHK-2bc2bc895d3f9601",
+  "doc": "AFI 17-203",
+  "kind": "applicability"
+ },
+ {
+  "id": "CHK-77c9d5a5309b7cda",
+  "doc": "AFI 10-2402",
+  "kind": "permission"
+ },
+ {
+  "id": "CHK-655aad1dfabcfd54",
+  "doc": "AFPD 17-1",
+  "kind": "duty_imperative"
+ },
+ {
+  "id": "CHK-f616a4561c76ad0e",
+  "doc": "AFMAN 17-2101",
+  "kind": "unknown"
+ },
+ {
+  "id": "CHK-c16b34f7c2b3e50e",
+  "doc": "DAFMAN 17-1305",
+  "kind": "prohibition"
+ },
+ {
+  "id": "CHK-1bdc013fabcb876b",
+  "doc": "AFI 10-2402",
+  "kind": "unknown"
+ },
+ {
+  "id": "CHK-33b39e41b6de77be",
+  "doc": "DAFMAN 17-1305",
+  "kind": "permission"
+ },
+ {
+  "id": "MISS-f2ad7e2fa47cff9b",
+  "doc": "DAFMAN 17-1305",
+  "kind": "duty_with_actor"
+ },
+ {
+  "id": "CHK-068d2626acf88722",
+  "doc": "DAFMAN 17-1305",
+  "kind": "definition_or_description"
+ },
+ {
+  "id": "CHK-5a97e41ea32bf1d6",
+  "doc": "AFI 10-2402",
+  "kind": "form_template_text"
+ },
+ {
+  "id": "CHK-861728bc87f9efdd",
+  "doc": "AFI 13-550",
+  "kind": "cover_page_text"
+ },
+ {
+  "id": "CHK-b429f5d82904b91c",
+  "doc": "AFI 17-203",
+  "kind": "unknown"
+ },
+ {
+  "id": "CHK-809b4ab572482608",
+  "doc": "AFMAN 17-2101",
+  "kind": "exemption"
+ },
+ {
+  "id": "CHK-b0a5b1761c9c5063",
+  "doc": "DAFMAN 17-1305",
+  "kind": "duty_with_actor"
+ }
+]

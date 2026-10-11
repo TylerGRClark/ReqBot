@@ -1,0 +1,262 @@
+[
+ {
+  "sample": 1,
+  "id": "CHK-71ea0cc50c325f30",
+  "document": "DAFMAN 17-1305",
+  "ref": "4.1.7",
+  "owner_kind": "permission",
+  "also_accepted": [],
+  "note": "second reader right: a grant limited by a later negation"
+ },
+ {
+  "sample": 1,
+  "id": "CHK-f616a4561c76ad0e",
+  "document": "AFMAN 17-2101",
+  "ref": "2.8.2.1",
+  "owner_kind": "duty_with_actor",
+  "also_accepted": [],
+  "note": "second reader right"
+ },
+ {
+  "sample": 1,
+  "id": "CHK-1bdc013fabcb876b",
+  "document": "AFI 10-2402",
+  "ref": "2.21.4",
+  "owner_kind": "duty_imperative",
+  "also_accepted": [],
+  "note": "second reader right"
+ },
+ {
+  "sample": 1,
+  "id": "CHK-861728bc87f9efdd",
+  "document": "AFI 13-550",
+  "ref": "Front matter",
+  "owner_kind": "applicability",
+  "also_accepted": [
+   "cover_page_text"
+  ],
+  "note": "both right: front matter, and what it says is applicability"
+ },
+ {
+  "sample": 1,
+  "id": "CHK-b429f5d82904b91c",
+  "document": "AFI 17-203",
+  "ref": "2.5.3.2",
+  "owner_kind": "duty_with_actor",
+  "also_accepted": [],
+  "note": "second reader right"
+ },
+ {
+  "sample": 2,
+  "id": "CHK-3f3faf6bb1eb2d5f",
+  "document": "AFI 10-2402",
+  "ref": "2.20.1.1",
+  "owner_kind": "exemption",
+  "also_accepted": [],
+  "note": "second reader right"
+ },
+ {
+  "sample": 2,
+  "id": "CHK-0b9157682e778e34",
+  "document": "AFI 13-550",
+  "ref": "5.3.4",
+  "owner_kind": "duty_imperative",
+  "also_accepted": [],
+  "note": "second reader right"
+ },
+ {
+  "sample": 2,
+  "id": "CHK-58a38fad55aa6214",
+  "document": "AFI 10-2402",
+  "ref": "Front matter",
+  "owner_kind": "applicability",
+  "also_accepted": [
+   "cover_page_text"
+  ],
+  "note": "both right ('front page fluff'); second reader a little more correct"
+ },
+ {
+  "sample": 2,
+  "id": "CHK-1bd918142a42465e",
+  "document": "AFI 10-2402",
+  "ref": "3.3.3.4.2 (inferred)",
+  "owner_kind": "definition_or_description",
+  "also_accepted": [],
+  "note": "not a permission, a declaration"
+ },
+ {
+  "sample": 2,
+  "id": "CHK-a3398a3b3a22f966",
+  "document": "DAFMAN 17-1305",
+  "ref": "4.1.11",
+  "owner_kind": "definition_or_description",
+  "also_accepted": [],
+  "note": "an eligibility condition; could be made a requirement, probably more than needed"
+ },
+ {
+  "sample": 2,
+  "id": "CHK-bebc07b8f8ad1b86",
+  "document": "AFPD 17-1",
+  "ref": "3.2.2",
+  "owner_kind": "duty_imperative",
+  "also_accepted": [],
+  "note": "not just a permission; the imperative is to execute all responsibilities, no party stated"
+ },
+ {
+  "sample": 2,
+  "id": "CHK-f9fae1ca1cad8d67",
+  "document": "DAFMAN 17-1305",
+  "ref": "4.1.5",
+  "owner_kind": "duty_with_actor",
+  "also_accepted": [
+   "exemption"
+  ],
+  "note": "both right; an exemption but also a requirement, more of a duty"
+ },
+ {
+  "sample": 2,
+  "id": "CHK-9900972e35429b81",
+  "document": "AFI 17-203",
+  "ref": "3.7.2.3",
+  "owner_kind": "definition_or_description",
+  "also_accepted": [],
+  "note": "second reader right"
+ },
+ {
+  "sample": 2,
+  "id": "CHK-abb1d5b0e3d023fc",
+  "document": "AFI 13-550",
+  "ref": "6.3.5.1",
+  "owner_kind": "duty_with_actor",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 2,
+  "id": "CHK-63c526164563eb21",
+  "document": "DAFMAN 17-1305",
+  "ref": "2.19.5",
+  "owner_kind": "duty_imperative",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 2,
+  "id": "CHK-876774252b6c9ce0",
+  "document": "AFI 10-2402",
+  "ref": "Table A2.1",
+  "owner_kind": "table_row",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-57d80b7eb7856833",
+  "document": "AFMAN 17-2101",
+  "ref": "2.3.5",
+  "owner_kind": "pointer",
+  "also_accepted": [],
+  "note": "rules right: a pointer, or talk about a process; not a command attached to a party (the second reader's command was wrong)"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-f58e1375c7b81b1c",
+  "document": "AFI 17-203",
+  "ref": "2.5.1.1.8",
+  "owner_kind": "definition_or_description",
+  "also_accepted": [],
+  "note": "second reader right: a description of cyber defense"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-bb322e984ecea4e4",
+  "document": "AFI 10-2402",
+  "ref": "Front matter",
+  "owner_kind": "duty_with_actor",
+  "also_accepted": [],
+  "note": "second reader right: a substantive requirement, not boilerplate front matter"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-f547cc5f8c0274d1",
+  "document": "AFMAN 17-2101",
+  "ref": "3.1.1.2.1",
+  "owner_kind": "prohibition",
+  "also_accepted": [],
+  "note": "rules right: kind of a prohibition (commercial connections only for what DISN cannot support)"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-39a473b900c9d768",
+  "document": "AFI 13-550",
+  "ref": "3.1 (inferred)",
+  "owner_kind": "duty_with_actor",
+  "also_accepted": [
+   "definition_or_description"
+  ],
+  "note": "more than a description: the council is to provide a decision-making structure and forum; both readers saw the same thing"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-d78d2e95f1af4492",
+  "document": "AFI 10-2402",
+  "ref": "4.1",
+  "owner_kind": "duty_with_actor",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-53d6d1bb2590b573",
+  "document": "AFI 10-2402",
+  "ref": "2.21.14",
+  "owner_kind": "duty_imperative",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-35b1bd2d85bb208f",
+  "document": "AFI 17-203",
+  "ref": "3.7.2.3 (inferred)",
+  "owner_kind": "recommendation",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-3847b2e54ede22f8",
+  "document": "AFMAN 17-2101",
+  "ref": "3.1.1",
+  "owner_kind": "prohibition",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-c7b1eece4fa715db",
+  "document": "AFI 17-203",
+  "ref": "Front matter",
+  "owner_kind": "applicability",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-30fc90d488088d8a",
+  "document": "DAFMAN 17-1305",
+  "ref": "Figure A2.3",
+  "owner_kind": "form_template_text",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-ae883f14133019fd",
+  "document": "DAFMAN 17-1305",
+  "ref": "Front matter",
+  "owner_kind": "cover_page_text",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ }
+]
