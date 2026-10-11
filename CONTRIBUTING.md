@@ -11,8 +11,8 @@ Every contributor must sign the [Contributor License Agreement](CLA.md) before
 any code, documentation, or other contribution can be merged. No exceptions.
 
 The CLA assigns copyright of your contributions to the project maintainer. This
-is required to preserve dual licensing (AGPL v3 + commercial). Without sole
-copyright ownership, the project cannot offer commercial licenses.
+is required to maintain proprietary copyright ownership and commercial licensing.
+Without sole copyright ownership, the project cannot offer commercial licenses.
 
 **What this means for you:**
 
