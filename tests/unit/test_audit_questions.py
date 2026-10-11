@@ -193,3 +193,67 @@ def test_a_lead_in_from_the_previous_chunk_brings_the_previous_chunk_into_the_pa
     (run / "doc_requirements_normalized.jsonl").write_text(json.dumps(req) + "\n", encoding="utf-8")
     item = generate(tmp_path, "doc", "cybersecurity")["items"][0]
     assert "The USD(A&S):" in item["passage"] and ">> Develops budget recommendations. <<" in item["passage"]
+
+
+def test_the_prompt_takes_the_actor_from_the_requirement_before_the_applies_to_line():
+    assert "the \"Applies to\" line is the actor only when the requirement names none" in AQ.PROMPT
+    assert "Name who must act if the material says so" not in AQ.PROMPT
+    prompt = AQ.build_prompt(_item(1, "Required courses will be designated by the program office."))
+    assert "Requirement: Required courses will be designated by the program office." in prompt and "Applies to: Commanders" in prompt
+
+
+def test_a_subject_term_found_only_in_the_surrounding_text_is_marked_for_review(tmp_path):
+    passage = "3.3.3.6. The HAF CARM Program will collaborate with the MA office to provide submissions. >> Submissions should include justification. <<"
+    item = _item(1, "Submissions should include justification.", applies_to="", parent_ref="3.3", parent_text="TCA Assessment Processes.", passage=passage)
+    assert AQ.passage_only_terms("Does the HAF CARM Program include justification in submissions?", item) == ["HAF", "CARM", "Program"]
+    AQ.draft_questions([item], tmp_path / "q.jsonl", call=lambda p: _answer("Does the HAF CARM Program include justification in submissions?"))
+    AQ.apply([item], tmp_path / "q.jsonl")
+    assert any(r.startswith("question-actor-not-in-row: HAF, CARM, Program") for r in item["review_reasons"]) and item["requires_human_review"] is True
+    assert "surrounding text" in item["generation_notes"]
+
+
+def test_an_actor_named_in_the_requirement_its_heading_or_its_parent_is_not_marked(tmp_path):
+    passage = "2.6.1. Serve as the lead. >> Provide SMEs when requested. <<"
+    item = _item(1, "Provide SMEs when requested.", applies_to="Assistant Secretary of the Air Force, Financial Management and Comptroller (SAF/FM)", passage=passage)
+    assert AQ.passage_only_terms("Does SAF/FM provide SMEs when requested?", item) == []
+    assert AQ.passage_only_terms("Does the unit provide SMEs when requested?", item) == []
+    item2 = _item(2, "Provide SMEs when requested.", applies_to="", parent_ref="2.12.6", parent_text="Establish a HAF CARM program office, which:", passage=">> Provide SMEs when requested. <<")
+    assert AQ.passage_only_terms("Does the HAF CARM program office provide SMEs when requested?", item2) == []
+    AQ.draft_questions([item], tmp_path / "q.jsonl", call=lambda p: _answer("Does SAF/FM provide SMEs when requested?"))
+    AQ.apply([item], tmp_path / "q.jsonl")
+    assert not any(r.startswith("question-actor-not-in-row") for r in item.get("review_reasons", []))
+
+
+def test_a_question_that_does_not_open_with_an_auxiliary_has_no_subject_to_check():
+    item = _item(1, "Provide SMEs when requested.", passage="The HAF CARM Program ... >> Provide SMEs when requested. <<")
+    assert AQ.passage_only_terms("Whether the HAF CARM Program provides SMEs.", item) == []
+    assert AQ.passage_only_terms("", item) == [] and AQ.passage_only_terms(None, item) == []
+
+
+def test_the_word_null_written_as_text_is_no_question_not_a_question():
+    assert AQ.parse_answer('{"question": null}') is None
+    assert AQ.parse_answer('{"question": "null"}') is None
+    assert AQ.parse_answer('{"question": " Null. "}') is None
+    assert AQ.parse_answer('{"question": "N/A"}') is None and AQ.parse_answer('{"question": ""}') is None
+    assert AQ.parse_answer('{"question": "Does the unit report nulls?"}') == "Does the unit report nulls?"
+
+
+def test_a_stored_null_string_is_read_as_no_question(tmp_path):
+    item = _item(1, "Commanders shall review logs monthly.")
+    path = tmp_path / "q.jsonl"
+    path.write_text(json.dumps({"checklist_item_id": "CL-1", "question": "null", "skipped_because": [], "unverified_terms": [], "model": AQ.MODEL, "input_hash": "x"}) + "\n")
+    assert AQ.load(path)["CL-1"]["question"] is None
+    assert AQ.apply([item], path) == 0 and not item.get("audit_question")
+
+
+def test_a_run_that_gets_the_string_null_counts_it_as_no_question(tmp_path):
+    item = _item(1, "This document will guide the assessment team.")
+    counts = AQ.draft_questions([item], tmp_path / "q.jsonl", call=lambda p: json.dumps({"question": "null"}))
+    assert counts["questions"] == 0 and counts["no_question"] == 1 and counts["errors"] == 0
+    assert AQ.load(tmp_path / "q.jsonl")["CL-1"]["question"] is None
+
+
+def test_a_question_opening_with_a_modal_is_checked_for_an_actor_from_the_surrounding_text():
+    item = _item(1, "Provide SMEs when requested.", applies_to="", passage="The HAF CARM Program will meet. >> Provide SMEs when requested. <<")
+    assert AQ.passage_only_terms("Can the HAF CARM Program provide SMEs when requested?", item) == ["HAF", "CARM", "Program"]
+    assert AQ.passage_only_terms("Will the HAF CARM Program provide SMEs when requested?", item) == ["HAF", "CARM", "Program"]

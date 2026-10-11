@@ -1,8 +1,9 @@
 """WP-46.6: draft audit questions for checklist rows (a suggestion for the auditor; never part of the requirement data).
 
 One yes/no question per row, written by a local model from the row's own text only (applies-to line, parent paragraph, the requirement and the passage around it), as in the WP-46.4
-experiment (prompt v3; see eval/spike_results/wp_46_4/README.md). Rows that look like fragments, descriptions or definitions get no question. A question that names a number, acronym or
-capitalized word that the row's text does not contain is kept but marked, so the auditor checks it.
+experiment (prompt v3; see eval/spike_results/wp_46_4/README.md) with the actor rule of prompt v4 (eval/spike_results/question_prompt_v4/README.md: the actor is the one the requirement names, else the "Applies to" line). Rows that look like fragments, descriptions or definitions get no question. A question that names a number, acronym or
+capitalized word that the row's text does not contain is kept but marked, so the auditor checks it; so is a question whose subject uses a term found only in the surrounding text,
+not in the requirement, its "Applies to" line or its parent paragraph (the actor may have been taken from a neighbouring sentence).
 
 Questions are written by `reqbot questions --doc DOC` to a sidecar file beside the document's requirements (`<doc>_audit_questions.jsonl`) and read back by `checklist_service.generate`,
 so building a checklist never calls a model. A record is reused when the exact prompt it was written from is unchanged.
@@ -28,7 +29,7 @@ PROMPT = """You help an auditor check whether a unit follows a regulation.
 Write ONE short yes/no audit question that checks whether the requirement below is being met.
 Rules:
 - Use only the words and facts in the material below. Do not add numbers, deadlines, roles, systems or documents that are not in it.
-- Name who must act if the material says so (the "Applies to" line or the requirement itself). If the requirement does not say who acts and nothing below does either, ask about "the unit".
+- Name who must act. If the requirement itself says who acts (for example "by the program office" or "the commander will"), use that; the "Applies to" line is the actor only when the requirement names none. If neither says, ask about "the unit".
 - If the requirement only gives permission or describes how things are (may, can, is authorized to, is defined as), answer with null.
 - If the requirement is a fragment, a definition, a description, or states no duty that can be checked, answer with null.
 
@@ -76,6 +77,22 @@ def unverified_terms(question: str, material: str) -> list[str]:
     return out
 
 
+_AUXILIARY = re.compile(r"^(?:does|do|did|have|has|is|are|was|were|can|could|will|would|shall|should|must|may|might)\s+", re.IGNORECASE)
+SUBJECT_WORDS = 9  # a question opens "Does <who> <verb> ...": the words that can hold the actor
+
+
+def passage_only_terms(question: str, item: dict) -> list[str]:
+    """Numbers, acronyms and capitalized words in the subject of the question that the surrounding text contains but the requirement, its "Applies to" line and its parent paragraph
+    do not. The model may have taken the actor from the sentence before or after; the auditor checks it. Terms absent from the whole row are marked by `unverified_terms`."""
+    opening = _AUXILIARY.match((question or "").strip())
+    if not opening:
+        return []
+    subject = " ".join(question.strip()[opening.end():].split()[:SUBJECT_WORDS])
+    own = " ".join([item.get("applies_to") or "", item.get("parent_text") or "", item.get("source_quote") or ""])
+    in_row = set(unverified_terms(subject, row_material(item)))
+    return [t for t in unverified_terms(subject, own) if t not in in_row]
+
+
 def row_material(item: dict) -> str:
     return " ".join([item.get("applies_to") or "", item.get("parent_text") or "", item.get("source_quote") or "", item.get("passage") or ""])
 
@@ -112,13 +129,21 @@ def ollama_call(prompt: str, model: str, ollama_url: str, timeout: int = 120, re
     raise RuntimeError("unreachable")
 
 
+_NO_QUESTION = frozenset({"", "null", "none", "n/a", "na"})
+
+
+def no_question(text) -> bool:
+    """True for no answer, or for the word the model was told to answer with written as a string ("null", "None", "N/A"): that is "no question", never a question to show."""
+    return text is None or not isinstance(text, str) or text.strip().strip("\"'.").lower() in _NO_QUESTION
+
+
 def parse_answer(text: str) -> str | None:
-    """The question, or None when the model answered null or an empty string. Raises ValueError for anything that is not the expected JSON."""
+    """The question, or None when the model answered null (as JSON null or as the string "null") or an empty string. Raises ValueError for anything that is not the expected JSON."""
     parsed = json.loads(text)
     if not isinstance(parsed, dict) or "question" not in parsed:
         raise ValueError("no question key")
     q = parsed["question"]
-    return q.strip() if isinstance(q, str) and q.strip() else None
+    return None if no_question(q) else q.strip()
 
 
 def load(path: Path) -> dict[str, dict]:
@@ -132,6 +157,8 @@ def load(path: Path) -> dict[str, dict]:
                 except json.JSONDecodeError:
                     continue
                 if isinstance(rec, dict) and rec.get("checklist_item_id"):
+                    if no_question(rec.get("question")):
+                        rec["question"] = None  # a record written when "null" as text was taken for a question
                     out[rec["checklist_item_id"]] = rec
     except OSError:
         pass
@@ -217,6 +244,14 @@ def apply(items: list[dict], path: Path) -> int:
             terms = ", ".join(rec["unverified_terms"])
             note += " Not found in the row's text: " + terms + "."
             reason = f"question-has-terms-not-in-row: {terms}"
+            if reason not in item.setdefault("review_reasons", []):
+                item["review_reasons"].append(reason)
+            item["requires_human_review"] = True
+        elsewhere = passage_only_terms(rec["question"], item)
+        if elsewhere:
+            terms = ", ".join(elsewhere)
+            note += " Only in the surrounding text, not in the requirement or its heading: " + terms + "."
+            reason = f"question-actor-not-in-row: {terms}"
             if reason not in item.setdefault("review_reasons", []):
                 item["review_reasons"].append(reason)
             item["requires_human_review"] = True
