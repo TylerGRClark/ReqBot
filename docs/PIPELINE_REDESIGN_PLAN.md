@@ -1,4 +1,4 @@
-# Pipeline redesign — plan (nothing in this document is built)
+# Pipeline redesign — plan (partly built: the status table says which steps; section 10 is a new proposal, nothing in it is built)
 
 *Written 2026-10-09 from a discussion with the owner. This is a plan for review: no code, no data and no behavior changes with this PR. Each change below becomes its own PR, with its measurements and pass rules written down before any result is read. A phase number has not been assigned.*
 
@@ -17,6 +17,7 @@
 | 8 to 10 Faithfulness check, repair, re-check | not built; own plan and the owner's rating first |
 | Model-picks (resolver) for prose documents | not built; waits for rebuilt test groups |
 | Data | the 13 reference documents were re-run with the new code, the Qdrant index rebuilt from them, draft questions regenerated |
+| Requirement kind (section 10) | **proposed, 2026-10-11**; the owner settled the list of kinds the same day. Stage 1 (write the kind, no behavior change) is next; nothing else is built |
 
 ## 1. Principles (the owner's)
 
@@ -156,3 +157,119 @@ Each PR registers its pass rules before any result is read (the project's standi
 ## 9. What this plan does not claim
 
 It does not say the rules are better than a model for context; they are cheaper, auditable and verbatim, and they are weakest where documents have little structure. It rests on the 2026-10-09 re-ingest of the 13 pinned documents; the labeled sets are small and one rater's. Nothing here has been run. The draft-question sidecars and the Qdrant index built before the ID change must be rebuilt after step 4.
+
+## 10. Requirement kind (proposal; nothing in this section is built)
+
+*Written 2026-10-11 from a discussion with the owner, who saw that the pipeline treats every requirement the same way and has too few "if this, then that" paths. This section is a proposal for review: no code, no data and no behavior changes with it. Each stage in 10.6 becomes its own PR, with its measurements and pass rules written down before any result is read.*
+
+### 10.1 What the code does today
+
+The code does branch on what a quote is, in many places, but each place has its own rule and none stores the result. The chart "How one requirement is treated, by kind" in [Architecture](ARCHITECTURE.md) draws every branch. In short:
+
+- **Branches that exist:** Step D can reject a quote for seven different reasons (in the October 2026 runs of the 13 documents four occurred: not found in the chunk, 117; cut-off fragment, 93; repeated heading, 40; the change-log check depends on a generated description and is inactive while descriptions are off); whole-sentence expansion and lead-in attachment each have conditions; a citation depends on whether the row sits in a table, a numbered paragraph, an unnumbered paragraph, the cover pages or a form template; `item_flags` marks six sorts of wording; the question writer withholds a question for five flags and adds a rule for negations; two review marks check the question's terms and actor.
+- **What does not branch:** requirement finding sends every chunk (paragraph, list, table, definition) through one prompt. No field records what *kind* of statement a quote is (a duty, a prohibition, a permission, a definition, a statement of who the document applies to, a table row, an instruction inside a form). Each later step finds out again, from the wording, only the part it needs, so the same sentence can be handled differently by two steps.
+
+What that costs, measured on the three audit AFIs (779 rows, October 2026):
+
+- 16 rows are instructions for filling in a form template ("Describe what happens to the mission should the asset fail ..."). They are on the sheet with draft audit questions as if they were duties on the unit.
+- The negation test fired on 63 of 1,418 rows of the six Air Force documents, 15 of them in the three AFIs, and turned a duty into "Does the unit **avoid** ..." (fixed by a narrower test, under evaluation). With the narrower wording, real prohibitions in the three AFIs number 3 rows (0.4%).
+- 32 rows begin by pointing back ("This roster will be maintained ..."): not auditable without the sentence before. 23 rows are cover-page text and 32 are table rows.
+- 181 rows (23%) carry no wording cue at all: no modal verb and no imperative verb ("The process begins at the mission owner level ...").
+
+### 10.2 The proposal
+
+One new step, **kind**, between context attaching (step 6) and screening (step 7). It reads the explained text, the citation context and the existing hint flags, and writes its fields beside the root. It does not take a step number yet: steps 7 to 12 keep their numbers in this plan, the status table and the charts. Stage 1 stores the labels in a side file, not in a pipeline step; the step is numbered, and every later step, the status table, the charts and the `--skip-to` mapping are renumbered together in one pull request, when it moves into the pipeline (stage 3 or later).
+
+| Field | Content |
+|---|---|
+| `kind` | One value from the list in 10.3, or `unknown`. |
+| `kind_reasons` | The rule that fired and the words it matched, so the owner can see why. |
+| `kind_tags` | Things that are true besides the kind: `refers_back`, `list_item`, `fragment`, and the location of a row whose own words outrank its position (`front_matter`). |
+| `kind_by_wording` | Only on a row whose kind comes from where it sits (`table_row`, `form_template_text`, `cover_page_text`): the kind its words alone would give. A duty sentence in a table cell is a `table_row` and, by its wording, a `duty_with_actor`. |
+
+Properties, all from the principles in section 1:
+
+- Rule-based and verbatim: it reads words and position, never a model, and never edits the root or the explained text.
+- It flags and labels; it never rejects. `unknown` is a legal answer and is shown as such.
+- It follows the one-file-per-step pattern of section 8 (a new file; nothing rewritten in place).
+- It moves existing logic to one place. The pieces already in `checklist_audit.item_flags`, the question writer's negation test and the citation labels are read from here in the end, instead of being worked out again in each consumer.
+
+### 10.3 A first list of kinds (a draft for the owner to edit)
+
+Two sorts of kind share this list. Most are decided by the row's **wording** (a duty, a permission, a prohibition, a definition, a statement of who the document covers, a pointer). Three are decided by where the row **sits**: `table_row`, `form_template_text`, `cover_page_text`. A row can be both. The rule, from the owner's rating of 2026-10-11: where a row's own words say who the document applies to, that wins over the front matter it sits in (`applicability`, tagged `front_matter`); otherwise position decides `kind`, and `kind_by_wording` keeps what the words say, so no later step has to guess again and no duty is lost to a position label. Stage 2 chooses question eligibility from `kind_by_wording` for those three kinds, not from `kind` alone.
+
+| Kind | What it is | First rule (wording or position) | Draft treatment |
+|---|---|---|---|
+| `duty_with_actor` | States what a named party must do | `shall`, `will`, `must`, `is responsible`, `required to`, `ensure` | A question about that party |
+| `duty_imperative` | A command with no modal and no stated actor ("Establish partnerships ...") | Opens with an imperative verb; actor read from the heading | A question about the heading's party; flagged when none |
+| `recommendation` | Says what should happen | `should`, no stronger modal | Question allowed, marked as a recommendation |
+| `permission` | Says what may be done | `may`, `can`, `is authorized to`, no stronger modal | Stays a row; no draft question |
+| `prohibition` | Forbids something | a modal followed by `not`, `cannot`, `never`, `prohibited`, `is not authorized / permitted / allowed / appropriate / waivable` | The "is it avoided" question |
+| `exemption` | Says something does not apply or is not required | `does not apply`, `is exempt`, `does not have to`, `not required to` | Stays a row; no draft question |
+| `definition_or_description` | Defines or describes | no modal and a cue such as `means`, `is defined as`, `such as` | Stays a row; no draft question |
+| `applicability` | Says who the document covers | `This Instruction applies to ...` | Kept as context |
+| `pointer` | Points elsewhere | `can be found in`, `refer to`, `see paragraph` | Stays a row; no draft question |
+| `table_row` | A table cell or row | cited by a table caption | Cited by the table; a question only for a complete sentence |
+| `form_template_text` | An instruction or field inside a form template | cited by a figure or attachment caption, in a template of roman-numeral parts | Flagged "instruction for filling in a form"; no draft question |
+| `cover_page_text` | Cover-page and preamble text before paragraph 1 | cited as Front matter | Kept; flagged as administrative |
+| `unknown` | No wording cue | none of the above | Handled as today; flagged "no wording cue" |
+
+### 10.4 What a first set of these rules says on the three AFIs
+
+A throwaway prototype of the rules above (not repo code), run on AFI 10-2402, 13-550 and 17-203 (779 rows). The rules are first drafts: no rating has been done, and the examples show where they are wrong.
+
+| Kind | Rows | Share | Where the first rule is wrong |
+|---|---|---|---|
+| `duty_with_actor` | 277 | 35.6% | Includes "To ensure AF capabilities ... can be executed" (a purpose clause, not a duty) |
+| `duty_imperative` | 182 | 23.4% | |
+| `unknown` | 181 | 23.2% | Third-person present tense ("The CARM Program utilizes ...", "Reviews access lists annually") is a duty in some places and a description in others |
+| `permission` | 37 | 4.7% | Includes "so commanders **can** identify ..." (a purpose clause) |
+| `table_row` | 32 | 4.1% | |
+| `cover_page_text` | 23 | 3.0% | Some are real duties ("Ensure all records ... adhere to ...") |
+| `form_template_text` | 16 | 2.1% | |
+| `recommendation` | 15 | 1.9% | Includes "... should the asset fail" (a condition) |
+| `definition_or_description` | 6 | 0.8% | |
+| `pointer` | 5 | 0.6% | |
+| `prohibition` | 3 | 0.4% | Includes "TCAs cannot exist without ..." (a description) |
+| `applicability` | 2 | 0.3% | |
+| `exemption` | 0 | 0% | The rule matched nothing in these three AFIs |
+
+Tags: `refers_back` 32 rows, `list_item` 35 rows.
+
+Two things follow. First, 59% of rows are plain duties that need no special handling, so most of the benefit is in the small kinds and in telling `unknown` from a real duty. Second, `unknown` is the biggest group and the rules cannot split it: that is where a lead-in, a heading or, later, a model label would have to help, which is its own plan.
+
+### 10.5 What reads the kind, in order
+
+1. **The review sheet**: "why it needs a look" reads the kind and tags instead of working them out again.
+2. **The draft question writer**: which kinds get a question, and which prompt. This is where the negation fix, the actor rule and the form-template rows meet.
+3. **The checklist flags**: `item_flags` becomes a read of the kind, not a second set of rules.
+4. **Later, each with its own plan**: the extraction prompt varying by the kind of chunk (a table, a list, a paragraph); search weighting that puts cover-page and template text last.
+
+### 10.6 Stages and measures
+
+Each stage is a separate PR; pass rules are registered before any result is read, as in the previous experiments. The numbers below are proposals for the owner.
+
+| Stage | Change | Pass rules (proposed) |
+|---|---|---|
+| 1 | Write `kind`, `kind_reasons`, `kind_tags` to a new file for the 13 documents. **No behavior change.** | Kinds computed for every record; the share of each kind reported; the owner rates a seeded sample of 30 rows stratified by kind as right, wrong or unclear: right at least 85% overall and no kind below 70%; the `unknown` share reported. |
+| 2 | The draft question writer reads the kind (which kinds get a question; the negation prompt only for `prohibition`). | Same shape as the prohibition-rule test: changed rows against a noise floor, owner rating of the changed rows, no inversion. |
+| 3 | The review sheet and `item_flags` read the kind. | Row for row the same flags and reasons as before, except where the owner has settled otherwise. |
+
+### 10.7 Decisions for the owner
+
+**Settled by the owner (2026-10-11):**
+
+1. **The list in 10.3 is kept as drafted** (13 kinds including `unknown`). Stage 1 may start.
+
+**Open, and needed only before stage 2:**
+
+2. **Form-template and cover-page text**: stay on the sheet, flagged, or move to a separate context sheet.
+3. **Permission and recommendation rows**: keep a draft question, or none.
+
+**Open, can wait:**
+
+4. **The `unknown` group (23% of rows)**: accept `unknown` for now, or plan a model label for it later (own plan, own rating).
+
+### 10.8 What this does not claim
+
+It does not say rules can recognise every kind: the prototype's `unknown` group and its false matches show where they cannot. It rests on three AFIs and a first set of wording rules that nobody has rated. Real prohibitions are rare in these documents, so the larger gain is likely to come from the form-template, cover-page and `unknown` groups than from prohibitions.

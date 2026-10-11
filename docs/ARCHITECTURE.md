@@ -153,7 +153,7 @@ flowchart TD
     C4 --> Y
     Y{"Starts in lower case, a table scrap,<br/>a definition, or not found in its passage?"}
     Y -->|yes| Z1["Row kept and flagged; no draft question"]
-    Y -->|no| P{"Wording with a negation?<br/>(shall not, must not, cannot, never, prohibited,<br/>and for now also do not, does not, is not, are not)"}
+    Y -->|no| P{"Wording with a negation?<br/>(shall not, must not, cannot, never, prohibited, forbidden,<br/>a sentence that opens with Do not, or is not authorized,<br/>permitted, allowed, appropriate, acceptable)"}
     P -->|yes| P1["Prompt adds: this forbids something,<br/>ask whether it is avoided"]
     P -->|no| P2["Standard prompt"]
     P1 --> M["Model writes one question,<br/>or null for a permission,<br/>a description or a fragment"]
