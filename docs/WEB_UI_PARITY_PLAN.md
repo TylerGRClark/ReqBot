@@ -48,11 +48,15 @@ Also in stage 1: `reqbot jobs` (list, show, cancel) and read-only API routes (`G
 
 Today the web page cannot change anything. The API is documented read-only, CORS allows GET and POST only, and the one write route (`POST /api/config`) only accepts the machine ReqBot runs on, as a stopgap because ReqBot has no login (authentication and multi-user hosting are on the backburner, `docs/TODO_future_improvements.txt`). Starting jobs changes that: anyone who could reach the page could start 50-minute jobs on the owner's Ollama machine and add files to the library.
 
-Proposal:
+Decided with the owner on 2026-10-11 (D1): **one rule for every case, an access code.** The owner opens the page from the same machine on some days and from another computer or a virtual machine on others, and expects the model machine and the Qdrant machine to be elsewhere, so the rule must not depend on where the browser is.
 
-1. **A switch, "Allow starting jobs from the browser", in Settings, off by default** (also `REQBOT_ALLOW_JOBS`). With it off the page behaves as today and the new routes answer 403.
-2. **Who is allowed when it is on** is the open decision D1 (section 7): the same machine only (the rule `POST /api/config` has), or any machine that presents an access token.
-3. **Always:** uploads are checked as in section 3; one job runs at a time; log text is the pipeline's existing log (no document text beyond it); `reqbot serve` prints a notice when jobs are on and the server listens on a non-loopback address; every started job records who asked (client address) and when.
+1. **Jobs can be started only when an access code is configured.** `reqbot token` creates a random code and saves it in the config; a container can set `REQBOT_ACCESS_TOKEN` instead. With no code configured the page stays read-only exactly as today and the job routes answer 403. There is no separate on/off switch: setting a code is the switch.
+2. **The page asks for the code the first time something needs it and keeps it in that browser.** The code is never sent by any API route (so `GET /api/config` and Settings cannot reveal it), never logged, compared in constant time, and failed attempts are delayed.
+3. **Same machine or another computer makes no difference.** "Same machine only", the rule `POST /api/config` has, is not used here: behind a container, a virtual machine or a proxy the server can see the gateway's or proxy's address instead of loopback, which would lock the owner out of their own page in exactly the setups they use.
+4. **Always:** uploads are checked as in section 3; one job runs at a time; the log text is the pipeline's existing log (no document text beyond it); `reqbot serve` prints a notice when a code is set and the server listens on a non-loopback address; every started job records who asked (client address) and when.
+5. **What this is not:** a multi-user login (authentication and multi-user hosting stay on the backburner). The code travels over plain HTTP on a trusted network; anything beyond that is the operator's reverse proxy with TLS, as the Docker example already says.
+
+**Where the work runs.** A job runs on the machine ReqBot runs on and reaches the Ollama and Qdrant machines by the addresses in the config, exactly as `reqbot ingest` does, so those can be anywhere. PDF reading (Docling) runs on the ReqBot machine. A separate worker machine is not planned; a job is a saved command plus its progress lines, so nothing in this design prevents one later.
 
 ## 5. The web screens (stage 3, then stage 4)
 
@@ -67,9 +71,9 @@ Proposal:
 
 | Stage | Change | Must show |
 |---|---|---|
-| 0 | This plan | the owner's decisions D1 to D3 |
+| 0 | This plan | the owner's decisions D2 and D3 (D1 is decided) |
 | 1 | Job engine, `--progress-json`, `reqbot jobs`, read-only job routes | with a stub command: success, failure, cancel, server restart (`running` becomes `interrupted`), queue order, one at a time, progress parsing; the real `reqbot ingest` unchanged when the option is absent (output byte-identical) |
-| 2 | Upload and import routes, "start ingest" route, the Settings switch and access rule, replace-on-reingest in indexing | refusals (not a PDF, wrong extension, too large, path parts in the name, switch off, wrong caller); a small PDF through the real pipeline from an upload: the run folder holds the same files a CLI run writes and `reqbot docs` lists it; a second upload of the same file leaves no stale point |
+| 2 | Upload and import routes, "start ingest" route, `reqbot token` and the access-code check, replace-on-reingest in indexing | refusals (not a PDF, wrong extension, too large, path parts in the name, no code configured, missing or wrong code); the code absent from every API response and log; a small PDF through the real pipeline from an upload: the run folder holds the same files a CLI run writes and `reqbot docs` lists it; a second upload of the same file leaves no stale point |
 | 3 | Corpus drop zone, banner, job list | component tests (a dropped folder yields the PDFs inside it, progress renders, errors show); the owner drops a document and watches it finish |
 | 4 | Draft-questions and rebuild jobs and their buttons | the sidecar equals what `reqbot questions` writes; an interrupted rebuild leaves the live index untouched |
 | 5 | Remove a document (its run folders move to a trash folder, its points are deleted, with a confirmation), first-run wizard | nothing deleted without a confirmation; the document leaves search and the Corpus list |
@@ -78,7 +82,7 @@ No stage adds a model call (jobs run commands that already exist), changes extra
 
 ## 7. Decisions for the owner
 
-1. **D1, who may start jobs (needed before stage 2).** (a) Only the machine ReqBot runs on, the rule `POST /api/config` already has: the simplest, but you cannot use it from another computer. (b) Any machine on the network that presents an access token, which ReqBot creates and Settings shows once: needed if the page is opened from another computer. Recommended: (b), with (a) as what happens until a token exists.
+1. **D1, who may start jobs: decided 2026-10-11.** An access code for every case (section 4). Nothing more is needed from the owner on this.
 2. **D2, a document already in the library (needed before stage 2).** Recommended: replace, as in section 3. The alternative is to keep both versions searchable, which makes the same paragraph appear twice in every search.
 3. **D3, the inbox folder (needed before stage 2).** Default `<processed_dir>/.inbox`; say if another place suits your setup.
 
