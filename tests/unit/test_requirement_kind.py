@@ -89,3 +89,52 @@ def test_sidecar_round_trip_and_counts(tmp_path):
 def test_sidecar_path_sits_beside_the_requirements_file(tmp_path):
     p = tmp_path / "doc_20260101_120000" / "afi_requirements_normalized.jsonl"
     assert RK.sidecar_path(p).name == "afi_kinds.jsonl" and RK.sidecar_path(p).parent == p.parent
+
+
+def test_a_permission_that_a_later_negation_limits_is_a_permission():
+    # DAFMAN 17-1305 4.1.7: the grant opens the sentence, the prohibition limits it
+    q = "Authorizing Officials may extend time limits for a specifically dated period, not to exceed six months, and shall not authorize any consecutive waivers (T-0)."
+    assert _kind(q) == "permission"
+    assert _kind("Users may not connect personal devices.") == "prohibition"
+    assert _kind("Waivers shall not be granted, but may be requested in writing.") == "prohibition"
+    assert _kind("(T-1) Do not connect personal devices to the network.") == "prohibition"
+
+
+def test_a_sentence_that_opens_with_a_command_is_an_imperative_duty_whatever_modal_word_follows():
+    for q in ("Ensure the Air Force Office of Special Investigations, in coordination with the program office, provides policy.",
+              "Research actions that can be taken to respond to the risk.",
+              "Provide cost data to AFIMSC so they can fund the work.",
+              "Assist in the execution of MAAs as required by the MAJCOM/DRU CARM POC.",
+              "(T-1) Ensure units that will deploy complete the training.",
+              "Immediately notify the contractor company to stop the work.",
+              "As the DIB functional area lead, provide a report to the program office.",
+              "2) In addition: Focus CARM activities on DoD mission requirements."):
+        assert _kind(q) == "duty_imperative", q
+
+
+def test_a_noun_that_opens_the_sentence_is_not_a_command():
+    assert _kind("Use of the form shall be limited to the program office.") == "duty_with_actor"
+    assert _kind("Design authorities shall review the specifications.") == "duty_with_actor"
+    assert _kind("Reports shall be filed within five days.") == "duty_with_actor"
+
+
+def test_a_named_actor_then_a_colon_then_a_command_is_a_duty_with_an_actor():
+    r = RK.classify(_item("The I-NOSCs: Report suspected or confirmed events to the ACD units in accordance with standing rules of engagement."))
+    assert r["kind"] == "duty_with_actor" and "The I-NOSCs" in r["kind_reasons"][0]
+    assert _kind("Note: Use the form for all requests.") != "duty_with_actor"
+
+
+def test_a_retained_responsibility_is_a_duty_with_an_actor():
+    q = "All CMO not part of the MAJCOM CMO's consolidation effort retain their CMO responsibilities to: Provision, track, and manage circuits."
+    assert _kind(q) == "duty_with_actor"
+
+
+def test_an_applicability_sentence_in_the_front_matter_is_applicability_and_keeps_the_front_matter_tag():
+    r = RK.classify(_item("This instruction applies to all Regular Air Force and civilian personnel.", citation="Front matter", item_flags=["applicability_statement"]))
+    assert r["kind"] == "applicability" and "front_matter" in r["kind_tags"]
+    r = RK.classify(_item("Compliance with this publication is mandatory.", citation="Front matter"))
+    assert r["kind"] == "cover_page_text" and "front_matter" not in r["kind_tags"]
+
+
+def test_the_rules_version_names_the_second_rule_set():
+    assert RK.RULES_VERSION == "kind-rules-2"
