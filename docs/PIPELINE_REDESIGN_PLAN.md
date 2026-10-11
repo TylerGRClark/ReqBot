@@ -17,7 +17,7 @@
 | 8 to 10 Faithfulness check, repair, re-check | not built; own plan and the owner's rating first |
 | Model-picks (resolver) for prose documents | not built; waits for rebuilt test groups |
 | Data | the 13 reference documents were re-run with the new code, the Qdrant index rebuilt from them, draft questions regenerated |
-| Requirement kind (section 10) | **proposed, 2026-10-11**: nothing built; waits for the owner to settle the list of kinds |
+| Requirement kind (section 10) | **proposed, 2026-10-11**; the owner settled the list of kinds the same day. Stage 1 (write the kind, no behavior change) is next; nothing else is built |
 
 ## 1. Principles (the owner's)
 
@@ -252,11 +252,19 @@ Each stage is a separate PR; pass rules are registered before any result is read
 | 2 | The draft question writer reads the kind (which kinds get a question; the negation prompt only for `prohibition`). | Same shape as the prohibition-rule test: changed rows against a noise floor, owner rating of the changed rows, no inversion. |
 | 3 | The review sheet and `item_flags` read the kind. | Row for row the same flags and reasons as before, except where the owner has settled otherwise. |
 
-### 10.7 Open decisions for the owner
+### 10.7 Decisions for the owner
 
-1. **The list in 10.3**: add, remove or rename kinds before anything is built.
+**Settled by the owner (2026-10-11):**
+
+1. **The list in 10.3 is kept as drafted** (13 kinds including `unknown`). Stage 1 may start.
+
+**Open, and needed only before stage 2:**
+
 2. **Form-template and cover-page text**: stay on the sheet, flagged, or move to a separate context sheet.
 3. **Permission and recommendation rows**: keep a draft question, or none.
+
+**Open, can wait:**
+
 4. **The `unknown` group (23% of rows)**: accept `unknown` for now, or plan a model label for it later (own plan, own rating).
 
 ### 10.8 What this does not claim
