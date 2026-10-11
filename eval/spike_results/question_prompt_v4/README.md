@@ -46,3 +46,28 @@ Adopting means changing the prompt in `services/audit_questions.py`; every store
 
 `PYTHONPATH=. python3 eval/spike_results/question_prompt_v4/run_prompt_v4.py --ollama-url http://192.168.90.100:11434`
 Writes `outputs/runs.jsonl`, `outputs/measures.json` and the rating sheet (`~/reqbot-work/checklists/question_prompt_v4_rating.xlsx`).
+
+## v4 result and the next round (written after reading the v4 outputs, before any output of the arms below was generated)
+
+Run 2026-10-11, 267 rows compared (Set A 20, Set B 207, Set C 40); 0 model errors. Noise floor: re-running the same v3 prompt changed 7 of 60 questions (12%); v4 changed 27 of the same 60 (45%) and 107 of 207 in Set B, so the change is real.
+
+Against the adopt rules as registered:
+1. **Target row:** v4 asks "Are required courses designated by the HAF CARM Program office?" (v3: the blended question). Met, pending the owner's rating.
+2. Rated worse at most 10%: not yet rated.
+3. At most 1 usable Set A row worse: rows 7 and 10 lost their named actor ("Does SAF/FM provide a finance representative ...?" became "Is a finance representative provided ...?"). Probably not met.
+4. **Null rate rise at most 5 points: not met.** 20 of 267 (7.5%) to 35 of 267 (13.1%), +5.6 points; Set B 9.7% to 16.4%, +6.7. Of the 16 questions that became null, my reading is that about 14 are permissions or descriptions that v3 wrongly turned into questions ("This AFI may be supplemented at any level."), one is a duty inside a table ("Malicious code ... should be categorized as Category 1 or Category 2 incidents") that is now lost; that reading is mine, not the owner's.
+5. **Blend proxy falls: not met** (6 of 267 both). In Set A it fell 2 to 1; the proxy also fires on rows whose marked sentence points back ("This coordination should occur ...") where the earlier sentence is needed.
+
+Also seen: 24 questions that said "the unit" under v3 now name the actor from the "Applies to" line; row 21 still spells "MA" out wrongly (out of scope for v4).
+
+v4 is **not adopted**. Rules 3 to 5 are kept exactly as registered for the arms below; a waiver of any of them is the owner's call, with the reason recorded, never mine.
+
+**Round 2, all on the same 268 rows, same model and settings, one question per arm per row:**
+- Arm S: the scope rule alone (rule 2 as in v3).
+- Arm R: the v4 actor rule alone (no scope rule).
+- Arm V5: scope rule + an actor rule rewritten to stop the passive wording: "Name who acts and make that the subject of the question. If the requirement itself says who acts (for example "by the program office" or "the commander will"), use that; otherwise use the "Applies to" line. If neither says, ask about "the unit". Do not use the passive voice."
+
+Added measures (code, no rating): "lost actor" = a v3 question that opens "Does/Do <someone other than the unit>" and an arm question that opens "Is/Are/Was/Were"; "gained actor" = v3 "the unit" and an arm question that names someone; and the list of questions that became null, printed for reading.
+A rating sheet is built for the best arm only (the same row selection and seeds as v4).
+
+Run: `PYTHONPATH=. python3 eval/spike_results/question_prompt_v4/run_arms.py --ollama-url http://192.168.90.100:11434`
