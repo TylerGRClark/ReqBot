@@ -41,6 +41,37 @@ The [developer reference](../ARCHITECTURE.md) contains the module/import map.
 Older documents, log lines and command options name the stages by letter (Step A to
 Step F); this page gives both. New work uses the names by job.
 
+The same flow as a picture (GitHub draws it from the text below it). Arrows are labelled with the
+file each stage writes; dashed items are not part of a normal run.
+
+```mermaid
+flowchart TD
+    PDF["Source PDF"]
+    A["PDF reading (Step A)<br/>Docling: layout, headings, tables, pages"]
+    B["Chunking (Step B)<br/>sections, parent context, 256-token chunks"]
+    C["Requirement finding (Step C)<br/>local model returns the quotes that look like duties"]
+    D["Normalizing and checking (Step D)<br/>quote checks, junk filters, deduplication,<br/>anchor, whole-sentence expansion, lead-in"]
+    E["Totals and final file (Step E)"]
+    F["Search indexing (Step F)<br/>dense and sparse vectors"]
+    OFF["Enrichment (D.5) and description check (D.6)<br/>switched off"]
+    QD[("Qdrant<br/>grc_requirements, grc_context")]
+    OL["Ollama<br/>extraction model, embedding model"]
+
+    PDF --> A
+    A -->|"*_ancestry.json"| B
+    B -->|"*_chunks.jsonl"| C
+    C -->|"*_extracted_requirements.jsonl"| D
+    D -->|"*_requirements_normalized.jsonl"| E
+    D --> F
+    F --> QD
+    D -.-> OFF
+    OL -.- C
+    OL -.- F
+
+    classDef off stroke-dasharray: 5 5,color:#777;
+    class OFF off;
+```
+
 ### Planned changes
 
 The [pipeline redesign plan](PIPELINE_REDESIGN_PLAN.md) describes where the pipeline is
@@ -101,6 +132,33 @@ by inference, marked "(inferred)", or not at all); other passages of that kind, 
 separately as possible missed requirements. Draft audit questions
 come from `reqbot questions`, which writes a sidecar file (`*_audit_questions.jsonl`) that
 the checklist reads; they are drafts for the auditor to check.
+
+How one checklist is put together. Building it reads files only; the one model call is the
+separate `reqbot questions` step, whose output the checklist reads back:
+
+```mermaid
+flowchart TD
+    RUN[("Newest processed run<br/>*_requirements_normalized.jsonl<br/>*_chunks.jsonl")]
+    ROWS["Rows from extracted requirements<br/>citation, section heading, parent paragraph,<br/>who it applies to, passage with the quote marked,<br/>hint flags"]
+    SCAN["Text scan<br/>duty sentences that were not extracted"]
+    FOUND["Found rows (found_by_text_scan)<br/>or listed as possible missed"]
+    MERGE["Rows in document order"]
+    SIDE[("Draft questions<br/>*_audit_questions.jsonl")]
+    APPLY["Question and review marks added<br/>no model call"]
+    OUT["Checklist: sheet, CSV, JSON, Markdown,<br/>web screen, MCP tool"]
+    WRITE["reqbot questions --doc<br/>separate step, local model writes one question per row"]
+
+    RUN --> ROWS
+    RUN --> SCAN
+    SCAN --> FOUND
+    ROWS --> MERGE
+    FOUND --> MERGE
+    MERGE --> APPLY
+    SIDE --> APPLY
+    APPLY --> OUT
+    MERGE -.->|"rows to ask about"| WRITE
+    WRITE --> SIDE
+```
 
 ## Artifacts and the source of record
 
