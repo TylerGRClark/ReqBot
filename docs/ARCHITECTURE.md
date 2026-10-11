@@ -107,6 +107,78 @@ flowchart TD
     class FAIL side;
 ```
 
+### How one requirement is treated, by kind
+
+Not every requirement takes the same path. This chart follows one quote through the places where
+the code makes a different choice depending on what the quote is. Red boxes are records that are
+set aside. Where a box says "the plan flags these instead", the redesign plan replaces a
+rejection with a flag.
+
+```mermaid
+flowchart TD
+    Q["A quote returned by requirement finding<br/>(one prompt for every chunk)"]
+    SCAN["Text scan finds a duty sentence<br/>that nobody extracted"]
+
+    Q --> E1{"Empty, a repeated heading,<br/>or a change-log entry?"}
+    E1 -->|yes| R1["Rejected"]
+    E1 -->|no| E2{"Found in its chunk?<br/>(fuzzy match and word coverage)"}
+    E2 -->|no| R2["Rejected: not grounded"]
+    E2 -->|yes| E3{"Cut-off fragment (including a lead-in<br/>that ends in a colon), or a definition<br/>pointer such as X, as defined in Y?"}
+    E3 -->|yes| R3["Rejected today<br/>(the plan flags these instead)"]
+    E3 -->|no| E4{"Dangling clause with no subject?"}
+    E4 -->|"yes, and no section header supplies one"| R4["Rejected"]
+    E4 -->|"no, or a header supplies the subject"| A["Anchored: where it sits in its chunk,<br/>exact or not"]
+
+    A --> X{"Whole sentence found exactly once,<br/>2 or more words, under 700 characters?"}
+    X -->|yes| X1["Whole sentence kept beside the quote"]
+    X -->|no| X2["Quote used as it is"]
+    X1 --> L{"A list item?"}
+    X2 --> L
+    L -->|"yes, and a line above ends in a colon"| L1["That lead-in attached in front"]
+    L -->|"yes, no such line"| L2["Stays a bare list item"]
+    L -->|no| C0
+    L1 --> C0
+    L2 --> C0
+    SCAN --> C0
+
+    C0{"Where does it sit?"}
+    C0 -->|"in a table"| C1["Cited by the table caption;<br/>no responsible party read from the heading"]
+    C0 -->|"a numbered paragraph"| C2["Cited by its paragraph number;<br/>party from the numbered ancestors"]
+    C0 -->|"an unnumbered paragraph"| C3["Cited by the nearest number before it,<br/>marked inferred; party from the section path"]
+    C0 -->|"cover pages, or a template"| C4["Cited as Front matter,<br/>or by the figure caption"]
+
+    C1 --> Y
+    C2 --> Y
+    C3 --> Y
+    C4 --> Y
+    Y{"Starts in lower case, a table scrap,<br/>a definition, or not found in its passage?"}
+    Y -->|yes| Z1["Row kept and flagged; no draft question"]
+    Y -->|no| P{"Wording with a negation?<br/>(shall not, must not, cannot, never, prohibited,<br/>and for now also do not, does not, is not, are not)"}
+    P -->|yes| P1["Prompt adds: this forbids something,<br/>ask whether it is avoided"]
+    P -->|no| P2["Standard prompt"]
+    P1 --> M["Model writes one question,<br/>or null for a permission,<br/>a description or a fragment"]
+    P2 --> M
+    M --> K["Marked for review if a term, or the actor,<br/>is not in the row itself"]
+
+    classDef reject fill:#fee2e2,stroke:#dc2626,color:#7f1d1d;
+    classDef keep fill:#d1fae5,stroke:#059669,color:#064e3b;
+    classDef note fill:#e0e7ff,stroke:#4f46e5,color:#1e1b4b;
+    class R1,R2,R3,R4 reject;
+    class Z1 note;
+    class K keep;
+```
+
+What this chart does not show is that several things are *not* decided by kind. Requirement
+finding sends every chunk through the same prompt, whether it holds a paragraph, a list, a
+table or a definition. No stored field records what kind of requirement a quote is (a duty, a
+prohibition, a permission, a definition, a statement of who the document applies to, a table
+row, an instruction inside a form template); the later steps each rediscover the parts of that
+they need, from the wording, with their own rules.
+
+One of those rules is under test: the negation test in the chart reads a plain "does not" in a
+condition or a description ("... if this capability does not exist") as a prohibition, which can
+turn a duty into the question "does the unit avoid ...". A narrower test is being evaluated.
+
 ### Planned changes
 
 The [pipeline redesign plan](PIPELINE_REDESIGN_PLAN.md) describes where the pipeline is
