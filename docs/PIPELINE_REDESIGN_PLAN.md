@@ -178,13 +178,14 @@ What that costs, measured on the three audit AFIs (779 rows, October 2026):
 
 ### 10.2 The proposal
 
-One new step, **kind**, between context attaching (step 6) and screening (step 7). It reads the explained text, the citation context and the existing hint flags, and writes three fields beside the root:
+One new step, **kind**, between context attaching (step 6) and screening (step 7). It reads the explained text, the citation context and the existing hint flags, and writes its fields beside the root. It does not take a step number yet: steps 7 to 12 keep their numbers in this plan, the status table and the charts. Stage 1 stores the labels in a side file, not in a pipeline step; the step is numbered, and every later step, the status table, the charts and the `--skip-to` mapping are renumbered together in one pull request, when it moves into the pipeline (stage 3 or later).
 
 | Field | Content |
 |---|---|
 | `kind` | One value from the list in 10.3, or `unknown`. |
 | `kind_reasons` | The rule that fired and the words it matched, so the owner can see why. |
-| `kind_tags` | Things that are true besides the kind: `refers_back`, `list_item`. |
+| `kind_tags` | Things that are true besides the kind: `refers_back`, `list_item`, `fragment`, and the location of a row whose own words outrank its position (`front_matter`). |
+| `kind_by_wording` | Only on a row whose kind comes from where it sits (`table_row`, `form_template_text`, `cover_page_text`): the kind its words alone would give. A duty sentence in a table cell is a `table_row` and, by its wording, a `duty_with_actor`. |
 
 Properties, all from the principles in section 1:
 
@@ -194,6 +195,8 @@ Properties, all from the principles in section 1:
 - It moves existing logic to one place. The pieces already in `checklist_audit.item_flags`, the question writer's negation test and the citation labels are read from here in the end, instead of being worked out again in each consumer.
 
 ### 10.3 A first list of kinds (a draft for the owner to edit)
+
+Two sorts of kind share this list. Most are decided by the row's **wording** (a duty, a permission, a prohibition, a definition, a statement of who the document covers, a pointer). Three are decided by where the row **sits**: `table_row`, `form_template_text`, `cover_page_text`. A row can be both. The rule, from the owner's rating of 2026-10-11: where a row's own words say who the document applies to, that wins over the front matter it sits in (`applicability`, tagged `front_matter`); otherwise position decides `kind`, and `kind_by_wording` keeps what the words say, so no later step has to guess again and no duty is lost to a position label. Stage 2 chooses question eligibility from `kind_by_wording` for those three kinds, not from `kind` alone.
 
 | Kind | What it is | First rule (wording or position) | Draft treatment |
 |---|---|---|---|
