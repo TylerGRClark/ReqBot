@@ -71,3 +71,19 @@ Added measures (code, no rating): "lost actor" = a v3 question that opens "Does/
 A rating sheet is built for the best arm only (the same row selection and seeds as v4).
 
 Run: `PYTHONPATH=. python3 eval/spike_results/question_prompt_v4/run_arms.py --ollama-url http://192.168.90.100:11434`
+
+## Round 2 result (the arms ran 2026-10-11, 267 rows, 0 model errors; written after reading the arm outputs)
+
+| Arm | Null (v3: 20) | New nulls | Lost actor | Gained actor | Unverified (v3: 5) | Blend proxy (v3: 6) | Target row |
+|---|---|---|---|---|---|---|---|
+| v4 (scope + actor) | 35 | 16 | 3 | 24 | 5 | 6 | fixed |
+| S (scope only) | 33 | 14 | 2 | 3 | 5 | 6 | **null** |
+| **R (actor rule only)** | **19** | **4** | **1** | **25** | **6** | **5** | **fixed** |
+| V5 (scope + no passive) | 32 | 15 | 0 | 36 | 3 | 3 | fixed; but "Do you ..." in 6 questions |
+
+- The scope rule does not help and costs: S withholds the target row and writes passive questions on rows 7 and 10 (the named actor lost). The actor rule alone is what fixes the target.
+- Arm R: null rate unchanged, 4 new nulls (three permissions or descriptions, one back-reference: all correct to skip), rows 7 and 10 keep their named actor, 25 questions that said "the unit" now name the actor from the "Applies to" line (for example "Does the HAF CARM program office coordinate ..."). Wording changed on 131 of 267 rows (noise floor 12%), most of it the actor.
+- Arm V5 uses "you" as the subject in 6 questions: rejected.
+- Limits: the blend proxy is weak (6 suspects in 267 under v3, so the original fault is rare, about 1 in 100); row 21's wrong spell-out is not fixed by any arm ("MA" still invented); R writes "Do the HAF CARM Program office designate ..." (grammar) on the target.
+
+Candidate: **R** = rule 2 of prompt v3 replaced by the v4 actor rule, nothing else. Against the registered adopt rules: 1 met (pending rating), 3 expected (no Set A row regressed by my reading, pending rating), 4 met, 5 met (weakly). Rating sheet: `~/reqbot-work/checklists/question_prompt_rating_actor_rule.xlsx` (all changed Set A rows, up to 15 of B and 10 of C). Rule 2 (worse at most 10%) and the owner's rating of rule 1 decide.

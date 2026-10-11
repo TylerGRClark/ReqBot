@@ -1,0 +1,42 @@
+{
+  "V4": {
+    "rows": 267,
+    "changed": 134,
+    "null_v3": 20,
+    "null_arm": 35,
+    "new_null": 16,
+    "lost_actor": 3,
+    "gained_actor": 24,
+    "errors": 0
+  },
+  "S": {
+    "rows": 267,
+    "changed": 113,
+    "null_v3": 20,
+    "null_arm": 33,
+    "new_null": 14,
+    "lost_actor": 2,
+    "gained_actor": 3,
+    "errors": 0
+  },
+  "R": {
+    "rows": 267,
+    "changed": 131,
+    "null_v3": 20,
+    "null_arm": 19,
+    "new_null": 4,
+    "lost_actor": 1,
+    "gained_actor": 25,
+    "errors": 0
+  },
+  "V5": {
+    "rows": 267,
+    "changed": 164,
+    "null_v3": 20,
+    "null_arm": 32,
+    "new_null": 15,
+    "lost_actor": 0,
+    "gained_actor": 36,
+    "errors": 0
+  }
+}
