@@ -79,4 +79,4 @@ planning documents, and the backlog.
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md), including the contributor license
 agreement, before submitting changes. ReqBot is licensed under
-[AGPL-3.0-or-later](LICENSE).
+[All Rights Reserved](LICENSE).
