@@ -38,3 +38,16 @@ Adopting means changing the pattern in `services/audit_questions.py`; stored que
 
 `PYTHONPATH=. python3 eval/spike_results/prohibition_rule/run_prohibition_rule.py --ollama-url http://192.168.90.100:11434`
 Writes `outputs/runs.jsonl`, `outputs/measures.json` and the rating sheet `~/reqbot-work/checklists/prohibition_rule_rating.xlsx`.
+
+## Result (run 2026-10-11, 71 released rows, 0 model errors; written after reading the outputs)
+
+By code: questions containing "avoid": 62 (current) to 0 (new). Null: 9 to 17 (+11.3 points; the limit was 15). Changed 63 of 71 against a noise floor of 8 of 71 (the current prompt re-run).
+Rows with an identical prompt, asserted: 2,404. Rules 1, 3 and 4 are met.
+
+My reading (not the owner's rating): the 12 released rows of the three AFIs: 9 clearly better (the inverted "Does the unit avoid informing the HAF CARM Program office ..." became "Does MAJCOM/DRUs inform the HAF CARM Program office ..."), 3 about the same (descriptions that ask a fact-check question or give none), none worse.
+The other 59 released rows: nearly all inversions fixed ("Does the Contracting Officer avoid notifying the contractor company ..." became "Did the Contracting Officer immediately notify ..."), many descriptions now get no question, a few get a fact-check question.
+Two rows are real prohibitions that lose the rule: DAFMAN 17-1305 3.4.3 ("... requirements outlined are not waivable") and 4.4.5.3.1 ("Waivers are not appropriate for granting time extensions ..."); under the new pattern they got a positive-form question.
+
+**Adjustment before adoption.** `is/are not` followed by `appropriate`, `acceptable`, `permissible` or `waivable` is added to the pattern. It is still a subset of the old pattern, and it restores the rule to exactly those 2 rows, so their prompts and stored questions are the current ones: no new output is involved. Released rows after the adjustment: 69.
+
+Rule 2 (owner rating of the 12 AFI rows) is open.

@@ -1,0 +1,11 @@
+{
+  "released_rows": 71,
+  "errors": 0,
+  "identical_prompt_rows_asserted": 2404,
+  "avoid_current": 62,
+  "avoid_new": 0,
+  "null_current": 9,
+  "null_new": 17,
+  "changed_new_vs_current": 63,
+  "noise_floor_changed_rerun_vs_current": 8
+}
