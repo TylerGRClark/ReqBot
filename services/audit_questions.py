@@ -40,8 +40,12 @@ Passage (the requirement is marked >> <<):
 {passage}
 
 Answer as JSON: {{"question": "<the question>"}} or {{"question": null}}."""
+# A prohibition is a modal negation, cannot / never / prohibited / forbidden, a sentence that opens with "Do not", or "is/are not" followed by a word that forbids ("authorized", "permitted",
+# "allowed", "appropriate", "acceptable", "permissible", "waivable", "to"). A plain "does not" / "is not" inside a condition or description ("... if this capability does not exist") is not one:
+# it used to turn those rows into "Does the unit avoid ...?" questions that ask the opposite (eval/spike_results/prohibition_rule/README.md).
 PROHIBITION = re.compile(
-    r"\b(?:shall|must|should|will|may|can|could|would|do|does|did|is|are|be)\s+not\b(?!\s+(?:limited|only|necessarily))|\bcannot\b|\bnever\b|\bprohibited\b|\bforbidden\b", re.IGNORECASE)
+    r"\b(?:shall|must|should|will|may|can|could|would)\s+not\b(?!\s+(?:limited|only|necessarily))|\bcannot\b|\bnever\b|\bprohibited\b|\bforbidden\b"
+    r"|\b(?:is|are)\s+not\s+(?:authorized|permitted|allowed|appropriate|acceptable|permissible|waivable|to)\b|^\W*(?:\([\w-]+\)\s*)?(?:do|does)\s+not\b", re.IGNORECASE)
 PROHIBITION_RULE = "- This requirement forbids something. Ask whether it is avoided (\"Does the unit avoid ...?\"); do not ask whether it happens.\n"
 SCHEMA = {"type": "object", "properties": {"question": {"type": ["string", "null"]}}, "required": ["question"]}
 _TERM = re.compile(r"\b(?:\d[\w./-]*|[A-Z]{2,}[\w/&-]*|[A-Z][A-Za-z]*[a-z][A-Z][A-Za-z]*|[A-Z][a-z]+(?![A-Za-z])(?:\s+[A-Z][a-z]+(?![A-Za-z]))*)")  # a number, an acronym, a mixed-case name (StoreFront, FedRAMP, DoD), or capitalized whole words

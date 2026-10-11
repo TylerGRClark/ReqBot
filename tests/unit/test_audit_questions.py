@@ -1,5 +1,6 @@
 """WP-46.6: draft audit questions (sidecar file; the model call is injected, never made)."""
 import json
+import re
 
 from services import audit_questions as AQ
 
@@ -62,6 +63,26 @@ def test_terms_the_row_does_not_contain_are_marked_not_removed(tmp_path):
 def test_the_prohibition_rule_is_added_only_for_a_prohibition():
     assert "forbids" in AQ.build_prompt(_item(1, "Users shall not share accounts."))
     assert "forbids" not in AQ.build_prompt(_item(1, "Users shall review accounts."))
+
+
+def test_prohibition_forms_are_recognized():
+    for text in ("Do not release the report.", "(T-1) Do not release the report.", "Users cannot reuse passwords.", "Disclosure is prohibited.", "Personnel must not leave the area.",
+                 "Waivers are not appropriate for granting time extensions.", "The requirements outlined are not waivable.", "Visitors are not allowed in the room.", "Personnel may not enter."):
+        assert AQ.PROHIBITION.search(text), text
+    assert not AQ.PROHIBITION.search("Examples include, but are not limited to, logs.")
+
+
+def test_a_plain_negation_in_a_condition_or_description_is_not_a_prohibition():
+    for text in ("MAJCOM/DRUs will inform the HAF CARM Program office if this capability does not exist.", "DCAs are not an independent tier of assets, but are a high-priority subset of Tier 1 TCAs.",
+                 "This list does not include every weapon system.", "The unit does not share keys.", "Report systems that do not meet the standard."):
+        assert not AQ.PROHIBITION.search(text), text
+        assert "forbids" not in AQ.build_prompt(_item(1, text))
+
+
+def test_the_narrowed_pattern_never_fires_where_the_old_one_did_not():
+    old = re.compile(r"\b(?:shall|must|should|will|may|can|could|would|do|does|did|is|are|be)\s+not\b(?!\s+(?:limited|only|necessarily))|\bcannot\b|\bnever\b|\bprohibited\b|\bforbidden\b", re.IGNORECASE)
+    for text in ("Do not release.", "(T-1) Do not release.", "Waivers are not appropriate.", "It is not to be shared.", "This does not apply.", "The unit shall not exceed it.", "The CFP shall notify the MCCC."):
+        assert old.search(text) or not AQ.PROHIBITION.search(text), text
 
 
 def test_apply_leaves_rows_without_a_record_alone(tmp_path):
