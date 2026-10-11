@@ -28,22 +28,23 @@ The [developer reference](../ARCHITECTURE.md) contains the module/import map.
 
 | Stage | Work | Main output |
 |---|---|---|
-| PDF reading (Step A) | Docling reads layout, headings, tables, and page provenance. | `*_ancestry.json` and an in-memory parsed document. |
-| Chunking (Step B) | Structure-aware chunking adds section paths and parent context; the profile can exclude sections. | `*_chunks.jsonl` |
-| Requirement finding (Step C) | Ollama returns, for each chunk, the quotes that look like duties, with references. The prompt is inclusive: it asks for anything that tells a party what it must, should, may or must not do. Raw responses and parse failures are retained. This output is the **root** of each requirement and is never edited. | `*_extracted_requirements.jsonl` |
-| Normalizing and checking (Step D) | One step today, doing several jobs: validate fields and quote grounding, drop junk (headings, change-log lines, fragments), attach page and section metadata, deduplicate, record where each quote sits in its chunk and how exactly it matches (the `anchor_*` fields), build the explained text (the whole sentence it sits in), and assign IDs (hashed from the root). Deterministic parent-stem reconstruction follows. | `*_requirements_normalized.jsonl` |
-| Enrichment (Step D.5) | **Switched off** (October 2026): the code stays, but the pipeline no longer adds descriptions, domain tags or requirement types. | `*_requirements_enriched.jsonl` |
-| Description check (Step D.6) | **Switched off** with enrichment: there are no generated descriptions to check. | `*_requirements_gated.jsonl` |
-| Totals and final file (Step E) | Aggregate the selected output and record statistics. | `*_final_output.json`, `*_stats.json` |
-| Index requirements (Step F) | Embed selected requirement artifacts with dense Ollama embeddings and sparse BM25 features. | Qdrant `grc_requirements` |
-| Index context (Step F) | Embed source chunks with the same dense/sparse strategy. | Qdrant `grc_context` |
+| PDF reading | Docling reads layout, headings, tables, and page provenance. | `*_ancestry.json` and an in-memory parsed document. |
+| Chunking | Structure-aware chunking adds section paths and parent context; the profile can exclude sections. | `*_chunks.jsonl` |
+| Requirement finding | Ollama returns, for each chunk, the quotes that look like duties, with references. The prompt is inclusive: it asks for anything that tells a party what it must, should, may or must not do. Raw responses and parse failures are retained. This output is the **root** of each requirement and is never edited. | `*_extracted_requirements.jsonl` |
+| Normalizing and checking | One step today, doing several jobs: validate fields and quote grounding, drop junk (headings, change-log lines, fragments), attach page and section metadata, deduplicate, record where each quote sits in its chunk and how exactly it matches (the `anchor_*` fields), build the explained text (the whole sentence it sits in), and assign IDs (hashed from the root). Deterministic parent-stem reconstruction follows. | `*_requirements_normalized.jsonl` |
+| Enrichment | **Switched off** (October 2026): the code stays, but the pipeline no longer adds descriptions, domain tags or requirement types. | `*_requirements_enriched.jsonl` |
+| Description check | **Switched off** with enrichment: there are no generated descriptions to check. | `*_requirements_gated.jsonl` |
+| Totals and final file | Aggregate the selected output and record statistics. | `*_final_output.json`, `*_stats.json` |
+| Index requirements | Embed selected requirement artifacts with dense Ollama embeddings and sparse BM25 features. | Qdrant `grc_requirements` |
+| Index context | Embed source chunks with the same dense/sparse strategy. | Qdrant `grc_context` |
 
-Older documents, log lines and command options name the stages by letter (Step A to
-Step F); this page gives both. New work uses the names by job.
+Older documents, log lines and command options name the stages by letter; the naming map
+in section 6 of the [redesign plan](PIPELINE_REDESIGN_PLAN.md) translates them. New work uses
+the names by job.
 
 The same flow as a picture, laid out as the [redesign plan](PIPELINE_REDESIGN_PLAN.md) lays it out:
 one job per step (GitHub draws it from the text below it). Green steps are built and run on
-their own; amber steps work today but still run inside Step D together with other jobs;
+their own; amber steps work today but still run inside the normalizing module together with other jobs;
 grey dashed steps are in the plan and not built, or switched off. The steps run in order, but not
 every record takes every path: records that cannot be anchored or are empty are set aside, and
 only rows the faithfulness check flags go through repair.
@@ -51,17 +52,17 @@ only rows the faithfulness check flags go through repair.
 ```mermaid
 flowchart TD
     subgraph READ["Read the document"]
-        N1["1 PDF reading<br/>PDF to a structured document<br/>(Step A)"]
-        N2["2 Chunking<br/>cut into chunks, keep the raw text<br/>(Step B)"]
+        N1["1 PDF reading<br/>PDF to a structured document"]
+        N2["2 Chunking<br/>cut into chunks, keep the raw text"]
     end
     subgraph FIND["Find the requirements"]
-        N3["3 Requirement finding<br/>one call per chunk returns the quotes<br/>local 8B model (Step C)"]
-        N4["4 Anchoring<br/>find the quote in the chunk text,<br/>record where and whether exact<br/>(inside Step D today)"]
-        N5["5 De-duplication<br/>collapse the same quote<br/>from the same reference<br/>(inside Step D today)"]
+        N3["3 Requirement finding<br/>one call per chunk returns the quotes<br/>local 8B model"]
+        N4["4 Anchoring<br/>find the quote in the chunk text,<br/>record where and whether exact<br/>(inside the normalizing module today)"]
+        N5["5 De-duplication<br/>collapse the same quote<br/>from the same reference<br/>(inside the normalizing module today)"]
     end
     subgraph BUILD["Build what a reader sees"]
-        N6["6 Context attaching<br/>whole sentence and lead-in kept beside<br/>the quote, never replacing it<br/>(inside Step D today)"]
-        N7["7 Screening<br/>flag the clear non-requirements,<br/>judging the explained text<br/>(not built: junk filters still<br/>run first, in Step D)"]
+        N6["6 Context attaching<br/>whole sentence and lead-in kept beside<br/>the quote, never replacing it<br/>(inside the normalizing module today)"]
+        N7["7 Screening<br/>flag the clear non-requirements,<br/>judging the explained text<br/>(not built: junk filters still<br/>run first, in the<br/>normalizing module)"]
     end
     subgraph CHECK["Check and repair (planned)"]
         N8["8 Faithfulness check<br/>does the explained text still mean<br/>what the quote means? 14B model<br/>(not built)"]
@@ -69,13 +70,13 @@ flowchart TD
         N10["10 Re-check<br/>the same check on the repaired text<br/>(not built)"]
     end
     subgraph PUBLISH["Publish"]
-        N11["11 Totals and final file<br/>(Step E)"]
-        N12["12 Search indexing<br/>dense and sparse vectors into Qdrant<br/>(Step F)"]
+        N11["11 Totals and final file"]
+        N12["12 Search indexing<br/>dense and sparse vectors into Qdrant"]
     end
     FAIL["Rejected records<br/>kept in a failures file"]
     CL["On demand: checklist building<br/>citation, passage, flags, draft questions<br/>no model call"]
     DQ["On demand: draft questions<br/>14B model, written to a side file<br/>(reqbot questions)"]
-    OFF["Switched off: tagging, requirement types,<br/>descriptions and the description check<br/>(old Steps D.5 and D.6)"]
+    OFF["Switched off: tagging, requirement types,<br/>descriptions and the description check"]
 
     N1 --> N2
     N2 --> N3
@@ -190,11 +191,11 @@ so it is inactive while descriptions are switched off.
 The [pipeline redesign plan](PIPELINE_REDESIGN_PLAN.md) describes where the pipeline is
 going. Built so far: the anchor fields, the root kept untouched with the explained text
 beside it, enrichment and the description check switched off, `confidence` dropped, and
-readers showing the explained text. Still to come: Step D split into separate steps and
+readers showing the explained text. Still to come: the normalizing module split into separate steps and
 screening on the explained text. In short: the root stays exactly as the model returned it and is never edited;
 checking that the root is word for word in the source becomes its own early step
 (anchoring); the whole-sentence expansion and lead-in attachment move into a separate
-"explained" layer beside the root; screening judges that explained text; Step D is split
+"explained" layer beside the root; screening judges that explained text; the normalizing module is split
 so each step does one job; and tagging, typing, descriptions and the description check
 are switched off, with the explained text used in their place.
 
@@ -204,7 +205,7 @@ and [Operations](OPERATIONS.md#resume-an-interrupted-run).
 
 ### What validation establishes
 
-Normalizing and checking (Step D) applies known-chunk grounding checks that combine
+Normalizing and checking applies known-chunk grounding checks that combine
 fuzzy character matching and a word-coverage threshold. They reject some invented quotes
 while preserving formatting variants and list obligations the model joined to their
 lead-in. These are heuristic checks, not proof that every quote is verbatim or
@@ -224,7 +225,7 @@ model glued onto a list item is kept in front of the sentence.
 
 Parent-stem reconstruction attaches `parent_stem` and combined `embedding_text`
 to fragment records while preserving their `source_quote`.
-Generated descriptions are distinct from source quotes. The description check (Step D.6) has
+Generated descriptions are distinct from source quotes. The description check has
 deterministic checks and, when the optional MiniCheck dependency is available,
 an entailment check. A rejected description is cleared; its requirement remains.
 

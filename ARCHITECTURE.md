@@ -2,8 +2,8 @@
 
 For a component and pipeline overview, read [Architecture](docs/ARCHITECTURE.md).
 The pipeline is named by job (PDF reading, chunking, requirement finding, ...); the older
-letters (Step A to Step F) are given beside the names. Where it is going is in the
-[pipeline redesign plan](docs/PIPELINE_REDESIGN_PLAN.md).
+letters still seen in older documents and log lines are translated by the naming map in
+the [pipeline redesign plan](docs/PIPELINE_REDESIGN_PLAN.md), which also says where it is going.
 For setup, commands, and defaults, use the [documentation index](docs/README.md).
 This page maps implementation ownership and change dependencies for contributors.
 
@@ -42,16 +42,16 @@ This page maps implementation ownership and change dependencies for contributors
 | Module | Pipeline step / responsibility |
 |---|---|
 | `pipeline/run_pipeline.py` | In-process stage sequencing, resume boundaries, stage failure/fallback behavior. |
-| `pipeline/section_parser.py` | PDF reading (Step A): Docling PDF conversion and ancestry/page/parent metadata. |
-| `pipeline/chunk_text.py` | Chunking (Step B): HybridChunker, breadcrumbs, section exclusions, and chunk artifacts. |
-| `pipeline/llm_extract_requirements.py` | Requirement finding (Step C): the inclusive prompt, Ollama extraction, response parsing, prompt-hash cache. |
-| `pipeline/parse_and_normalize.py` | Normalizing and checking (Step D): quote checks, junk filters, deduplication, whole-sentence expansion, document/requirement identity. Several jobs in one module today; the redesign plan splits it. |
-| `pipeline/sentence_expand.py` | Expands a quote to the whole sentence it sits in (verbatim); called by Step D. |
-| `pipeline/enrich_requirements.py` | Enrichment (Step D.5): LLM descriptions/classification, plus deterministic parent-stem reconstruction. |
-| `pipeline/entailment_gate.py` | Description check (Step D.6): optional MiniCheck scoring, gated artifact/failure output. |
-| `pipeline/aggregate_and_export.py` | Totals and final file (Step E). |
-| `pipeline/embed_and_index.py` | Search indexing (Step F): dense/sparse requirement vectors, Qdrant schema and payloads. |
-| `pipeline/embed_context_index.py` | Search indexing (Step F): dense/sparse context vectors and linked chunk identity. |
+| `pipeline/section_parser.py` | PDF reading: Docling PDF conversion and ancestry/page/parent metadata. |
+| `pipeline/chunk_text.py` | Chunking: HybridChunker, breadcrumbs, section exclusions, and chunk artifacts. |
+| `pipeline/llm_extract_requirements.py` | Requirement finding: the inclusive prompt, Ollama extraction, response parsing, prompt-hash cache. |
+| `pipeline/parse_and_normalize.py` | Normalizing and checking: quote checks, junk filters, deduplication, whole-sentence expansion, document/requirement identity. Several jobs in one module today; the redesign plan splits it. |
+| `pipeline/sentence_expand.py` | Expands a quote to the whole sentence it sits in (verbatim); called by the normalizing module. |
+| `pipeline/enrich_requirements.py` | Enrichment: LLM descriptions/classification (switched off), plus deterministic parent-stem reconstruction (still runs). |
+| `pipeline/entailment_gate.py` | Description check (switched off): optional MiniCheck scoring, gated artifact/failure output. |
+| `pipeline/aggregate_and_export.py` | Totals and final file. |
+| `pipeline/embed_and_index.py` | Search indexing: dense/sparse requirement vectors, Qdrant schema and payloads. |
+| `pipeline/embed_context_index.py` | Search indexing: dense/sparse context vectors and linked chunk identity. |
 | `pipeline/checklist_export.py` | CSV/JSON/Markdown/XLSX serialization and spreadsheet formula handling. |
 | `pipeline/repair_ligatures.py` | Text repair helper. |
 
