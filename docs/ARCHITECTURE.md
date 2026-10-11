@@ -41,35 +41,40 @@ The [developer reference](../ARCHITECTURE.md) contains the module/import map.
 Older documents, log lines and command options name the stages by letter (Step A to
 Step F); this page gives both. New work uses the names by job.
 
-The same flow as a picture (GitHub draws it from the text below it). Arrows are labelled with the
-file each stage writes; dashed items are not part of a normal run.
+The same flow as a picture, laid out as the [redesign plan](PIPELINE_REDESIGN_PLAN.md) lays it out:
+one job per step (GitHub draws it from the text below it). Green steps are built and run on
+their own; amber steps work today but still run inside Step D together with other jobs;
+grey dashed steps are in the plan and not built, or switched off.
 
 ```mermaid
 flowchart TD
-    PDF["Source PDF"]
-    A["PDF reading (Step A)<br/>Docling: layout, headings, tables, pages"]
-    B["Chunking (Step B)<br/>sections, parent context, 256-token chunks"]
-    C["Requirement finding (Step C)<br/>local model returns the quotes that look like duties"]
-    D["Normalizing and checking (Step D)<br/>quote checks, junk filters, deduplication,<br/>anchor, whole-sentence expansion, lead-in"]
-    E["Totals and final file (Step E)"]
-    F["Search indexing (Step F)<br/>dense and sparse vectors"]
-    OFF["Enrichment (D.5) and description check (D.6)<br/>switched off"]
-    QD[("Qdrant<br/>grc_requirements, grc_context")]
-    OL["Ollama<br/>extraction model, embedding model"]
+    N1["1 PDF reading<br/>PDF to a structured document<br/>(Step A)"]
+    N2["2 Chunking<br/>cut into chunks, keep the raw text<br/>(Step B)"]
+    N3["3 Requirement finding<br/>one call per chunk returns the quotes<br/>local 8B model (Step C)"]
+    N4["4 Anchoring<br/>find the quote in the chunk text,<br/>record where and whether exact<br/>(inside Step D today)"]
+    N5["5 De-duplication<br/>collapse the same quote from the same reference<br/>(inside Step D today)"]
+    N6["6 Context attaching<br/>whole sentence and lead-in kept beside the quote<br/>(inside Step D today; citation and heading<br/>are still worked out per checklist)"]
+    N7["7 Screening<br/>flag the clear non-requirements,<br/>judging the explained text<br/>(not built: junk filters still run first, in Step D)"]
+    N8["8 Faithfulness check<br/>does the explained text still mean<br/>what the quote means? 14B model<br/>(not built)"]
+    N9["9 Repair<br/>one attempt at a better version,<br/>flagged rows only (not built)"]
+    N10["10 Re-check<br/>the same check on the repaired text<br/>(not built)"]
+    N11["11 Totals and final file<br/>(Step E)"]
+    N12["12 Search indexing<br/>dense and sparse vectors into Qdrant<br/>(Step F)"]
+    CL["On demand: checklist building<br/>citation, passage, flags, draft questions<br/>no model call"]
+    DQ["On demand: draft questions<br/>14B model, written to a side file<br/>(reqbot questions)"]
+    OFF["Switched off: tagging, requirement types,<br/>descriptions and the description check<br/>(old Steps D.5 and D.6)"]
 
-    PDF --> A
-    A -->|"*_ancestry.json"| B
-    B -->|"*_chunks.jsonl"| C
-    C -->|"*_extracted_requirements.jsonl"| D
-    D -->|"*_requirements_normalized.jsonl"| E
-    D --> F
-    F --> QD
-    D -.-> OFF
-    OL -.- C
-    OL -.- F
+    N1 --> N2 --> N3 --> N4 --> N5 --> N6 --> N7 --> N8 --> N9 --> N10 --> N11 --> N12
+    N6 --> CL
+    CL -.->|"rows to ask about"| DQ
+    DQ -.->|"read back by the checklist"| CL
 
-    classDef off stroke-dasharray: 5 5,color:#777;
-    class OFF off;
+    classDef built fill:#d1fae5,stroke:#059669,color:#064e3b;
+    classDef inside fill:#fef3c7,stroke:#d97706,color:#78350f;
+    classDef planned fill:#f3f4f6,stroke:#6b7280,color:#374151,stroke-dasharray: 5 5;
+    class N1,N2,N3,N11,N12,CL,DQ built;
+    class N4,N5,N6 inside;
+    class N7,N8,N9,N10,OFF planned;
 ```
 
 ### Planned changes
