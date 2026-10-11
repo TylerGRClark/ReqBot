@@ -136,8 +136,8 @@ def test_an_applicability_sentence_in_the_front_matter_is_applicability_and_keep
     assert r["kind"] == "cover_page_text" and "front_matter" not in r["kind_tags"]
 
 
-def test_the_rules_version_names_the_second_rule_set():
-    assert RK.RULES_VERSION == "kind-rules-2"
+def test_the_rules_version_names_the_current_rule_set():
+    assert RK.RULES_VERSION == "kind-rules-3"
 
 
 def test_a_row_whose_kind_comes_from_its_position_also_keeps_what_its_words_say():
@@ -148,3 +148,30 @@ def test_a_row_whose_kind_comes_from_its_position_also_keeps_what_its_words_say(
     r = RK.classify(_item("Provide the name of the asset owner.", citation="Figure A3.1"))
     assert r["kind"] == "form_template_text" and r["kind_by_wording"] == "duty_imperative"
     assert "kind_by_wording" not in RK.classify(_item("The Director will approve the list."))
+
+
+def test_exemption_command_and_applicability_wordings_the_second_sample_missed():
+    assert _kind("Any organization which can demonstrate a lack of TCAs will be exempt from CARM programmatic responsibilities.") == "exemption"
+    assert _kind("Be a voting member of the Configuration Control Board.") == "duty_imperative"
+    assert RK.classify(_item("This Instruction is applicable to HAF, MAJCOM, FOA and DRU.", citation="Front matter"))["kind"] == "applicability"
+    assert _kind("This Instruction is also applicable to contractors.") == "applicability"
+    assert _kind("Examples of strategies include modifying network access controls.") == "definition_or_description"
+
+
+def test_a_can_in_a_purpose_or_relative_clause_is_not_a_permission():
+    assert _kind("The report is provided to the installation so coordination can occur across all levels.") == "unknown"
+    assert _kind("Personnel who may be assigned to the program receive a briefing.") != "permission"
+    assert _kind("The commander may waive the requirement.") == "permission"
+    assert _kind("The commander may waive the requirement so that training can continue.") == "permission"
+
+
+def test_a_duty_that_a_later_exemption_limits_is_a_duty():
+    q = "Contracted personnel are required to meet foundational qualifications but are not required to meet residential requirements unless required by the Authorizing Official."
+    assert _kind(q) == "duty_with_actor"
+    assert _kind("Tenant units are not required to accomplish the facility checks.") == "exemption"
+
+
+def test_a_lead_in_that_only_introduces_a_list_does_not_decide_the_kind_of_its_item():
+    q = "These responsibilities may be summarized as follows:: Execute all responsibilities and functions outlined in statutes and directives."
+    assert _kind(q) == "duty_imperative"
+    assert _kind("The AF/A3 will perform the following: Execute the plan.") == "duty_with_actor"

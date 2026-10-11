@@ -97,3 +97,54 @@ The second reader (a different model run as an agent that never saw the rules' l
 Counting every disagreement for the reader would give right 22 of 30 (73%): below the 85% bar. The owner's adjudication decides which of the 8 the reader is right on; the rules are revised after it, not before
 (a third sample with a new seed follows). Nothing reads the labels, so no checklist changes while this is open.
 
+### Owner adjudication of the second sample (2026-10-11)
+
+His answers are recorded in `outputs/owner_adjudication.json` with the first sample's. "Both right" counts as right for the rules' label, as in the first sample.
+
+| Row | Rules said | Owner |
+|---|---|---|
+| AFI 10-2402 2.20.1.1 ("will be exempt") | duty with a party | exemption (second reader right) |
+| AFI 13-550 5.3.4 ("Be a voting member of ...") | unknown | command, no party (second reader right) |
+| AFI 10-2402 front matter ("is applicable to") | cover page | both right ("front page fluff"); applicability a little more correct |
+| AFI 10-2402 3.3.3.4.2 ("The ATR is provided to ... so coordination can occur") | permission | not a permission, a declaration: description (second reader right) |
+| DAFMAN 17-1305 4.1.11 ("Issuance of any vouchers requires ...") | unknown | description (second reader right): an eligibility condition; it could be written as a requirement, probably more than needed |
+| AFPD 17-1 3.2.2 ("... may be summarized as follows:: Execute all responsibilities ...") | permission | command with no party stated (second reader right) |
+| DAFMAN 17-1305 4.1.5 ("... required to meet ... but are not required to meet ...") | exemption | both right; more of a duty (second reader more right) |
+| AFI 17-203 3.7.2.3 ("Examples of strategies include ...") | unknown | description (second reader right) |
+| the 3 agreed spot-check rows he answered (AFI 13-550 6.3.5.1, DAFMAN 17-1305 2.19.5, AFI 10-2402 Table A2.1) | | all right |
+
+Not yet answered: the other 2 spot-check rows (DAFMAN 17-1305 Figure A2.3, form-template text; DAFMAN 17-1305 front matter, cover-page text).
+
+Against the registered pass: 6 rows wrong (2.20.1.1, 5.3.4, 3.3.3.4.2, 4.1.11, 3.2.2, 3.7.2.3), so right 24 of 30 (80%), counting the 17 agreed rows he did not see as right: **rule 1 not met**.
+Rule 2: `unknown` 3 of 3 sampled rows wrong and `permission` 2 of 3 wrong: **not met**. kind-rules-2 fails; stage 1 is still not accepted.
+Of the 6, 3 were a wrong positive label ("will be exempt" as a duty; two purpose or lead-in modals read as permissions) and 3 were `unknown` where a wording cue existed (a command opening with "Be", an "Examples ... include" sentence, "requires").
+
+## Revision: kind-rules-3
+
+Every change comes from the adjudication above; the pattern behind each is general, not the row. All 16 adjudicated rows and the 20 and 17 agreed rows of the two samples were checked after the change.
+
+1. `will be exempt` / `be exempt` is an exemption; a duty that a later exemption limits ("are required to ... but are not required to ...") is a duty. The exemption pattern now also reads "will / shall / must be exempt".
+2. `Be` opens a command ("Be a voting member of ...", "Be responsible for ...").
+3. "This Instruction is applicable to / also applies to" is applicability, in the front matter or anywhere; the checklist's own hint read only "applies to".
+4. A "may / can" inside a purpose clause ("so coordination can occur") or a relative clause ("actions that can be taken", "personnel who may be assigned") grants nothing, so it is no permission.
+5. A lead-in that only introduces a list ("These responsibilities may be summarized as follows::") does not decide the kind of its item; the item does. A lead-in that carries a duty word ("The AF/A3 will perform the following:") still does.
+6. A sentence that opens with "Examples of ..." describes.
+7. Command verbs: decide, set, charter (seen opening rows that were `unknown`).
+
+Effect on the 1,418 rows of the six documents (rules-2 to rules-3): 18 rows change. permission to command 5 (the AFPD 17-1 3.2.x list), permission to unknown 4, duty to exemption 3 ("Any organization which can demonstrate a lack of TCAs will be exempt ..."),
+unknown to command 2, cover page to applicability 1, unknown to description 1, duty to command 1, exemption to duty 1. I read all 18; all are right or no worse than before.
+Of the 16 adjudicated rows, 14 now have the owner's kind; the two that do not are the `unknown` rows he called declarations (3.3.3.4.2, 4.1.11), which have no wording cue the rules can use: they stay `unknown` on purpose.
+Kind shares (rules-3): command 573, duty with a party 412, unknown 179 (12.6%), permission 72, cover page 40, table row 32, form template 28, recommendation 25, prohibition 21, description 12, applicability 9, pointer 9, exemption 6.
+
+## Third sample (rules fixed before it is drawn)
+
+Population: the six documents, labelled by kind-rules-3. The 60 rows of the first two samples are excluded (they were used to revise the rules). Seed 71. Same draw rule as the first sample.
+The second reader labels all 30 rows blind. The owner adjudicates the rows where the two disagree and 5 of the rows where they agree (the two commonest kinds, then three more at random); if any of those 5 is wrong, he rates the remaining agreed rows too.
+Pass: the same two rules (right at least 85%; no kind with more than one wrong among its sampled rows), counted on the 30 rows, and the share of every kind reported.
+Reported as well, not a pass rule: of the rows that were given a kind other than `unknown`, the share right; and what the owner calls each `unknown` row. An `unknown` row changes nothing for any reader, so a wrong positive label is the costlier error;
+if rule 2 fails only because of `unknown` rows, the owner is asked once whether `unknown` rows should be scored apart (the registered rule is not changed by this note).
+
+```
+python3 cli/reqbot.py kinds --doc DOC       # the six documents, rules-3
+PYTHONPATH=. python3 eval/spike_results/requirement_kind/make_rating_sheet.py --seed 71 --exclude eval/spike_results/requirement_kind/outputs/sample.json --exclude eval/spike_results/requirement_kind/outputs/sample_kind-rules-2_seed61.json
+```

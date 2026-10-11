@@ -11,7 +11,7 @@ from pathlib import Path
 
 from services import checklist_audit
 
-RULES_VERSION = "kind-rules-2"
+RULES_VERSION = "kind-rules-3"
 KINDS = (
     "duty_with_actor", "duty_imperative", "recommendation", "permission", "prohibition", "exemption", "definition_or_description", "applicability", "pointer", "table_row",
     "form_template_text", "cover_page_text", "unknown",
@@ -25,7 +25,7 @@ _PROHIBIT = re.compile(
     r"\b(?:shall|must|should|will|may|can|could|would)\s+not\b(?!\s+(?:limited|only|necessarily))|\bcannot\b|\bnever\b|\bprohibited\b|\bforbidden\b"
     r"|\b(?:is|are)\s+not\s+(?:authorized|permitted|allowed|appropriate|acceptable|permissible|waivable|to)\b|^\W*(?:\([\w-]+\)\s*)?(?:do|does)\s+not\b", re.IGNORECASE)
 _EXEMPT = re.compile(
-    r"\b(?:does|do)\s+not\s+apply\b|\b(?:is|are)\s+exempt\b|\b(?:does|do)\s+not\s+have\s+to\b|\bnot\s+required\s+to\b|\b(?:is|are)\s+not\s+required\b", re.IGNORECASE)
+    r"\b(?:does|do)\s+not\s+apply\b|\b(?:(?:will|shall|must)\s+)?(?:is|are|be)\s+exempt\b|\b(?:does|do)\s+not\s+have\s+to\b|\bnot\s+required\s+to\b|\b(?:is|are)\s+not\s+required\b", re.IGNORECASE)
 _POINTER = re.compile(
     r"\b(?:can|may)\s+be\s+found\s+(?:in|at|on)\b|\bare\s+listed\s+in\b|\bis\s+available\s+(?:at|on|in)\b|\brefer\s+to\b|\bsee\s+(?:paragraph|section|attachment|reference|table|figure)\b",
     re.IGNORECASE)
@@ -35,9 +35,9 @@ _BACK_REFERENCE = re.compile(r"^\W*(?:\([\w-]+\)\s*)?(?:\d+\)?\s*)?(?:In additio
 
 # Verbs that open a command in an AFI duty list. The shared list (the "no actor stated" hint) is left alone; these are verbs seen opening rows that kind-rules-1 left `unknown`.
 _COMMAND_VERBS = checklist_audit.IMPERATIVE_VERBS | frozenset({
-    "adhere", "appoint", "assist", "brief", "categorize", "characterize", "collect", "configure", "confirm", "consolidate", "create", "define", "deliver", "deploy", "design", "engage",
+    "adhere", "appoint", "assist", "be", "brief", "categorize", "characterize", "charter", "collect", "configure", "confirm", "consolidate", "create", "decide", "define", "deliver", "deploy", "design", "engage",
     "enter", "facilitate", "focus", "foster", "fulfill", "incorporate", "include", "inform", "interpret", "isolate", "leverage", "link", "optimize", "pay", "publish", "receive",
-    "reconcile", "reduce", "register", "resolve", "serve", "share", "sign", "synchronize", "take", "terminate", "transfer", "understand", "utilize", "work", "act",
+    "reconcile", "reduce", "register", "resolve", "serve", "set", "share", "sign", "synchronize", "take", "terminate", "transfer", "understand", "utilize", "work", "act",
 })
 _TIER_MARK = re.compile(r"^\W*(?:\(\s*[A-Za-z]-\d\s*\)\s*)+")
 _IN_ADDITION = re.compile(r"^(?:\d+\)\s*)?In addition:\s*", re.IGNORECASE)
@@ -47,6 +47,24 @@ _MODAL_SOON = re.compile(r"^(?:\S+\s+){0,3}?(?<!that )(?<!who )(?<!which )(?:sha
 _ACTOR_COLON = re.compile(r"^(?P<actor>[A-Z][^:;.]{1,70}?):\s+(?P<rest>\S.*)$", re.DOTALL)
 _NOT_AN_ACTOR = frozenset({"in addition", "note", "notes", "example", "examples", "exception", "exceptions", "reminder", "caution", "warning", "purpose", "rationale", "for example"})
 _RESPONSIBILITY = re.compile(r"\b(?:retain|retains|have|has|assume|assumes|bear|bears)\s+(?:\S+\s+){0,4}?responsibilit(?:y|ies)\b", re.IGNORECASE)
+
+
+_APPLICABLE_TO = re.compile(r"^\W*(?:\([\w-]+\)\s*)?(?:This|These|The)\s+(?:\S+\s+){0,3}?(?:(?:also\s+)?(?:applies|apply)|(?:is|are)\s+(?:also\s+)?applicable)\s+to\b", re.IGNORECASE)
+_PURPOSE_CLAUSE = re.compile(r"\b(?:so\s+that|so|in\s+order\s+that|in\s+order\s+for)\s", re.IGNORECASE)  # "... so coordination can occur": the "can" gives no permission
+_RELATIVE_MODAL = re.compile(r"\b(?:that|which|who)\s+$", re.IGNORECASE)  # "actions that can be taken", "personnel who may be assigned"
+_LEAD_IN = re.compile(r"^(?P<lead>[^:]{0,200}?\b(?:as\s+follows|the\s+following)\s*:+)\s*(?P<rest>\S.*)$", re.IGNORECASE | re.DOTALL)
+_EXAMPLES = re.compile(r"^\W*(?:For\s+example,?\s+)?Examples?\b", re.IGNORECASE)
+
+
+def first_permission(text: str):
+    """The first "may / can / is authorized to ..." that grants something: not one inside a purpose clause ("so coordination can occur") or a relative clause ("actions that can be taken")."""
+    purpose = _PURPOSE_CLAUSE.search(text)
+    limit = purpose.start() if purpose else len(text)
+    for m in _PERMIT.finditer(text):
+        if m.start() >= limit or _RELATIVE_MODAL.search(text[:m.start()]):
+            continue
+        return m
+    return None
 
 
 def _opening(text: str) -> str:
@@ -105,49 +123,60 @@ def classify(item: dict, *, use_position: bool = True) -> dict:
     flags = set(item.get("item_flags") or [])
     citation = str(item.get("citation") or "")
     kind, reasons = None, []
+    text = quote
+    lead = _LEAD_IN.match(quote)
+    if lead and not _STRONG_DUTY.search(lead.group("lead")):
+        text = lead.group("rest")  # "These responsibilities may be summarized as follows:: Execute ...": the lead-in only introduces the list; the item is the row
 
     def decide(name: str, why: str, match=None):
         nonlocal kind, reasons
         if kind is None:
             kind, reasons = name, [why + (f": {match.group(0).strip()!r}" if match else "")]
 
+    applies = "applicability_statement" in flags or _APPLICABLE_TO.search(quote)
     if use_position and citation.startswith("Figure"):
         decide("form_template_text", f"cited by a figure caption ({citation})")
-    elif use_position and citation == "Front matter" and "applicability_statement" in flags:
+    elif use_position and citation == "Front matter" and applies:
         decide("applicability", "says who the document applies to (in the front matter)")
     elif use_position and citation == "Front matter":
         decide("cover_page_text", "cited as front matter")
     elif use_position and citation.startswith("Table"):
         decide("table_row", f"cited by a table caption ({citation})")
-    elif "applicability_statement" in flags:
+    elif applies:
         decide("applicability", "says who the document applies to")
-    elif (m := _POINTER.search(quote)) and not _STRONG.search(quote):
+    elif (m := _POINTER.search(text)) and not _STRONG.search(text):
         decide("pointer", "points elsewhere", m)
-    elif m := _PROHIBIT.search(quote):
-        allowed = _PERMIT.search(quote)
+    elif m := _PROHIBIT.search(text):
+        allowed = first_permission(text)
         if allowed and allowed.start() < m.start():  # "may extend ..., but shall not authorize consecutive waivers": the grant comes first and the negation limits it
             decide("permission", "grants a permission that a later negation limits", allowed)
         else:
             decide("prohibition", "a negation of an obligation or permission", m)
-    elif m := _EXEMPT.search(quote):
-        decide("exemption", "says something does not apply or is not required", m)
-    elif "definition_or_description" in flags and not _STRONG_DUTY.search(quote):
+    elif m := _EXEMPT.search(text):
+        duty = _STRONG_DUTY.search(text)
+        if duty and duty.start() < m.start():  # "are required to meet X but are not required to meet Y": the duty comes first and the exemption limits it
+            decide("duty_with_actor", "a duty that a later exemption limits", duty)
+        else:
+            decide("exemption", "says something does not apply or is not required", m)
+    elif "definition_or_description" in flags and not _STRONG_DUTY.search(text):
         decide("definition_or_description", "defines or describes, no obligation word")
-    elif _PURPOSE.match(quote) and not _STRONG_DUTY.search(quote):
+    elif _EXAMPLES.match(text) and not _STRONG_DUTY.search(text):
+        decide("definition_or_description", "gives examples")
+    elif _PURPOSE.match(text) and not _STRONG_DUTY.search(text):
         decide("unknown", "opens with a purpose clause (To ...) and has no obligation word")
-    elif verb := leading_command(quote):
-        decide("duty_imperative", f"opens with a command ({verb}) and names no actor")
-    elif pair := named_actor_then_command(quote):
+    elif verb := leading_command(text):
+        decide("duty_imperative", f"opens with a command ({verb}) and names no actor" + (" (after a lead-in that only introduces the list)" if text is not quote else ""))
+    elif pair := named_actor_then_command(text):
         decide("duty_with_actor", f"names its actor ({pair[0]}), then a command ({pair[1]})")
-    elif m := _STRONG.search(quote):
+    elif m := _STRONG.search(text):
         decide("duty_with_actor", "an obligation word", m)
-    elif m := _RESPONSIBILITY.search(quote):
+    elif m := _RESPONSIBILITY.search(text):
         decide("duty_with_actor", "says who retains or has a responsibility", m)
-    elif m := _SHOULD.search(quote):
+    elif m := _SHOULD.search(text):
         decide("recommendation", "says what should happen", m)
-    elif m := _PERMIT.search(quote):
+    elif m := first_permission(text):
         decide("permission", "says what may be done", m)
-    elif "no_stated_actor" in flags or checklist_audit._is_verb(checklist_audit._first_word(quote), _COMMAND_VERBS):
+    elif "no_stated_actor" in flags or checklist_audit._is_verb(checklist_audit._first_word(text), _COMMAND_VERBS):
         decide("duty_imperative", "opens with a command and names no actor")
     else:
         decide("unknown", "no wording cue")
