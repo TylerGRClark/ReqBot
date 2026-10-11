@@ -104,3 +104,21 @@ Row 10 is the target (2.17.26): better. Row 9 (2.17.23): both questions invent a
 Adopt rules as registered: 1 met (target better), 2 met (worse 0 of 19), 3 met (0 of 9 Set A rows worse), 4 met (null rate 19 against 20), 5 met (weakly). **Arm R meets every registered rule.**
 
 My own reading of the 15 unrated rows (my reading, not the owner's rating): 7 better or same; worse: row 33 (2.17.12.1: the question asks about the purpose clause with a wrong actor and drops the duty), row 35 (Table 3.1: names the CST/CSL for action 4; the table assigns action 4 to the I-NOSC), and a tense or grammar nit on rows 21 ("Did"), 28 ("Does MAJCOM/DRUs"). Outside the sheet, 3.3.3 ("Submissions should include justification...") takes the previous sentence's actor and duty. So arm R is bolder about naming an actor from the passage: about 25 questions gain a grounded actor, about 3 in 267 name a wrong one where v3 said "the unit". Mitigation, not built: a review reason when the actor named in the question is not in the requirement, its "Applies to" line or its parent paragraph.
+
+## Correction: the string "null" (found 2026-10-11, after the adoption branch was built)
+
+`parse_answer` stored the model's answer `{"question": "null"}` (the word as a string) as a question, so those rows showed the text "null" in the Audit Question column: 22 rows across AFI 10-2402, 13-550 and 17-203 (13, 1 and 8), next to 76 truly blank cells. The experiment measures above counted only true empty answers as "null", so the null rates were understated and the arms differed partly in how the model wrote "no question" (JSON null against the string).
+
+Recounted on the same 267 rows, treating the string "null" as no question:
+
+| Arm | Null as first reported | Null, corrected | Share |
+|---|---|---|---|
+| v3 | 20 | 36 | 13.5% |
+| v4 (scope + actor) | 35 | 41 | 15.4% |
+| S (scope only) | 33 | 46 | 17.2% |
+| **R (actor only)** | 19 | 40 | 15.0% |
+| V5 | 32 | 45 | 16.9% |
+
+Consequences: rule 4 (null rate up at most 5 points) is met by R (+1.5 points) and would also have been met by v4 (+1.9). **v4's rejection therefore rests on rule 3** (rows 7 and 10 lost their named actor), not on the null rate. R's adoption stands: it met every rule, now with correct figures. Rows that became null under R: 9 (permissions, descriptions and two real duties: "(T-3) Required courses will be designated by the HAF CARM Program office." and "No event will be closed out as a Category 8."); 5 went the other way.
+
+Fix (in the adoption PR): `no_question()` treats null, none, n/a and the empty string as no question; `parse_answer` and `load` apply it, so old sidecars read correctly too. Whole-document effect on the three AFIs (779 rows), old sheets against the adopted prompt: 676 rows keep their question, 91 stay without one, 7 gain a question (about four of them describe or permit rather than require), 5 lose one (three correctly).

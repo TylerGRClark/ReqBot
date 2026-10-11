@@ -77,7 +77,7 @@ def unverified_terms(question: str, material: str) -> list[str]:
     return out
 
 
-_AUXILIARY = re.compile(r"^(?:does|do|did|have|has|is|are|was|were)\s+", re.IGNORECASE)
+_AUXILIARY = re.compile(r"^(?:does|do|did|have|has|is|are|was|were|can|could|will|would|shall|should|must|may|might)\s+", re.IGNORECASE)
 SUBJECT_WORDS = 9  # a question opens "Does <who> <verb> ...": the words that can hold the actor
 
 
@@ -129,13 +129,21 @@ def ollama_call(prompt: str, model: str, ollama_url: str, timeout: int = 120, re
     raise RuntimeError("unreachable")
 
 
+_NO_QUESTION = frozenset({"", "null", "none", "n/a", "na"})
+
+
+def no_question(text) -> bool:
+    """True for no answer, or for the word the model was told to answer with written as a string ("null", "None", "N/A"): that is "no question", never a question to show."""
+    return text is None or not isinstance(text, str) or text.strip().strip("\"'.").lower() in _NO_QUESTION
+
+
 def parse_answer(text: str) -> str | None:
-    """The question, or None when the model answered null or an empty string. Raises ValueError for anything that is not the expected JSON."""
+    """The question, or None when the model answered null (as JSON null or as the string "null") or an empty string. Raises ValueError for anything that is not the expected JSON."""
     parsed = json.loads(text)
     if not isinstance(parsed, dict) or "question" not in parsed:
         raise ValueError("no question key")
     q = parsed["question"]
-    return q.strip() if isinstance(q, str) and q.strip() else None
+    return None if no_question(q) else q.strip()
 
 
 def load(path: Path) -> dict[str, dict]:
@@ -149,6 +157,8 @@ def load(path: Path) -> dict[str, dict]:
                 except json.JSONDecodeError:
                     continue
                 if isinstance(rec, dict) and rec.get("checklist_item_id"):
+                    if no_question(rec.get("question")):
+                        rec["question"] = None  # a record written when "null" as text was taken for a question
                     out[rec["checklist_item_id"]] = rec
     except OSError:
         pass

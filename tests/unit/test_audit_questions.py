@@ -228,3 +228,32 @@ def test_a_question_that_does_not_open_with_an_auxiliary_has_no_subject_to_check
     item = _item(1, "Provide SMEs when requested.", passage="The HAF CARM Program ... >> Provide SMEs when requested. <<")
     assert AQ.passage_only_terms("Whether the HAF CARM Program provides SMEs.", item) == []
     assert AQ.passage_only_terms("", item) == [] and AQ.passage_only_terms(None, item) == []
+
+
+def test_the_word_null_written_as_text_is_no_question_not_a_question():
+    assert AQ.parse_answer('{"question": null}') is None
+    assert AQ.parse_answer('{"question": "null"}') is None
+    assert AQ.parse_answer('{"question": " Null. "}') is None
+    assert AQ.parse_answer('{"question": "N/A"}') is None and AQ.parse_answer('{"question": ""}') is None
+    assert AQ.parse_answer('{"question": "Does the unit report nulls?"}') == "Does the unit report nulls?"
+
+
+def test_a_stored_null_string_is_read_as_no_question(tmp_path):
+    item = _item(1, "Commanders shall review logs monthly.")
+    path = tmp_path / "q.jsonl"
+    path.write_text(json.dumps({"checklist_item_id": "CL-1", "question": "null", "skipped_because": [], "unverified_terms": [], "model": AQ.MODEL, "input_hash": "x"}) + "\n")
+    assert AQ.load(path)["CL-1"]["question"] is None
+    assert AQ.apply([item], path) == 0 and not item.get("audit_question")
+
+
+def test_a_run_that_gets_the_string_null_counts_it_as_no_question(tmp_path):
+    item = _item(1, "This document will guide the assessment team.")
+    counts = AQ.draft_questions([item], tmp_path / "q.jsonl", call=lambda p: json.dumps({"question": "null"}))
+    assert counts["questions"] == 0 and counts["no_question"] == 1 and counts["errors"] == 0
+    assert AQ.load(tmp_path / "q.jsonl")["CL-1"]["question"] is None
+
+
+def test_a_question_opening_with_a_modal_is_checked_for_an_actor_from_the_surrounding_text():
+    item = _item(1, "Provide SMEs when requested.", applies_to="", passage="The HAF CARM Program will meet. >> Provide SMEs when requested. <<")
+    assert AQ.passage_only_terms("Can the HAF CARM Program provide SMEs when requested?", item) == ["HAF", "CARM", "Program"]
+    assert AQ.passage_only_terms("Will the HAF CARM Program provide SMEs when requested?", item) == ["HAF", "CARM", "Program"]
