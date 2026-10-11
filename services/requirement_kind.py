@@ -11,7 +11,7 @@ from pathlib import Path
 
 from services import checklist_audit
 
-RULES_VERSION = "kind-rules-4"
+RULES_VERSION = "kind-rules-5"
 KINDS = (
     "duty_with_actor", "duty_imperative", "recommendation", "permission", "prohibition", "exemption", "definition_or_description", "applicability", "pointer", "table_row",
     "form_template_text", "cover_page_text", "unknown",
@@ -54,9 +54,8 @@ _PURPOSE_CLAUSE = re.compile(r"\b(?:so\s+that|so|in\s+order\s+that|in\s+order\s+
 _RELATIVE_MODAL = re.compile(r"(?:\b(?:that|which|who)\s+|\b(?:through|by|for|in|with|to|from|on|at|under|within|against)\s+(?:which|whom)\s+(?:\S+\s+){0,5})$", re.IGNORECASE)  # "actions that can be taken", "forum through which officials can elevate"
 _LEAD_IN = re.compile(r"^(?P<lead>[^:]{0,200}?\b(?:as\s+follows|the\s+following)\s*:+)\s*(?P<rest>\S.*)$", re.IGNORECASE | re.DOTALL)
 _POINTS_TO = re.compile(r"\b(?:can|may)\s+be\s+(?:found|located|viewed|seen)\b", re.IGNORECASE)  # "can be found in ..." points; it grants nothing
-_RELATIVE_NEGATION = re.compile(r"\b(?:that|which|who)\s+(?:cannot|can\s+not)\b", re.IGNORECASE)  # "connections that cannot be supported by ..." describes
-_SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[A-Z(])")
 _THIS_DOCUMENT_PROVIDES = re.compile(r"^\W*This\s+(?:\w+\s+){0,2}?(?:provides|describes|establishes|prescribes|implements)\b", re.IGNORECASE)  # front matter that says what the document is
+_RELATIVE_NEGATION = re.compile(r"\b(?:that|which|who)\s+(?:cannot|can\s+not)\b", re.IGNORECASE)  # "Units that cannot meet X must coordinate ...": the relative clause describes the subject of a duty
 _EXAMPLES = re.compile(r"^\W*(?:For\s+example,?\s+)?Examples?\b", re.IGNORECASE)
 
 
@@ -69,11 +68,6 @@ def first_permission(text: str):
             continue
         return m
     return None
-
-
-def _mask(text: str, pattern) -> str:
-    """`text` with what `pattern` matches blanked out, so positions stay the same."""
-    return pattern.sub(lambda m: " " * len(m.group(0)), text)
 
 
 def _opening(text: str) -> str:
@@ -143,8 +137,9 @@ def classify(item: dict, *, use_position: bool = True) -> dict:
             kind, reasons = name, [why + (f": {match.group(0).strip()!r}" if match else "")]
 
     applies = "applicability_statement" in flags or _APPLICABLE_TO.search(quote)
-    first_sentence = _SENTENCE_END.split(text, maxsplit=1)[0]
-    negated = _mask(text, _RELATIVE_NEGATION)
+    negated = text
+    if (rel := _RELATIVE_NEGATION.search(text)) and _STRONG_DUTY.search(text, rel.end()):  # a "cannot" in a relative clause is a prohibition only when no duty word follows it
+        negated = text[:rel.start()] + " " * (rel.end() - rel.start()) + text[rel.end():]
     if use_position and citation.startswith("Figure"):
         decide("form_template_text", f"cited by a figure caption ({citation})")
     elif use_position and citation == "Front matter" and applies:
@@ -155,7 +150,7 @@ def classify(item: dict, *, use_position: bool = True) -> dict:
         decide("table_row", f"cited by a table caption ({citation})")
     elif applies:
         decide("applicability", "says who the document applies to")
-    elif (m := _POINTER.search(first_sentence)) and not _STRONG.search(text):
+    elif (m := _POINTER.search(text)) and not _STRONG.search(text):
         decide("pointer", "points elsewhere", m)
     elif m := _PROHIBIT.search(negated):
         allowed = first_permission(text)

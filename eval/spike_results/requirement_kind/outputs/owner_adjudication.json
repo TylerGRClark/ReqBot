@@ -148,5 +148,115 @@
   "owner_kind": "table_row",
   "also_accepted": [],
   "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-57d80b7eb7856833",
+  "document": "AFMAN 17-2101",
+  "ref": "2.3.5",
+  "owner_kind": "pointer",
+  "also_accepted": [],
+  "note": "rules right: a pointer, or talk about a process; not a command attached to a party (the second reader's command was wrong)"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-f58e1375c7b81b1c",
+  "document": "AFI 17-203",
+  "ref": "2.5.1.1.8",
+  "owner_kind": "definition_or_description",
+  "also_accepted": [],
+  "note": "second reader right: a description of cyber defense"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-bb322e984ecea4e4",
+  "document": "AFI 10-2402",
+  "ref": "Front matter",
+  "owner_kind": "duty_with_actor",
+  "also_accepted": [],
+  "note": "second reader right: a substantive requirement, not boilerplate front matter"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-f547cc5f8c0274d1",
+  "document": "AFMAN 17-2101",
+  "ref": "3.1.1.2.1",
+  "owner_kind": "prohibition",
+  "also_accepted": [],
+  "note": "rules right: kind of a prohibition (commercial connections only for what DISN cannot support)"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-39a473b900c9d768",
+  "document": "AFI 13-550",
+  "ref": "3.1 (inferred)",
+  "owner_kind": "duty_with_actor",
+  "also_accepted": [
+   "definition_or_description"
+  ],
+  "note": "more than a description: the council is to provide a decision-making structure and forum; both readers saw the same thing"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-d78d2e95f1af4492",
+  "document": "AFI 10-2402",
+  "ref": "4.1",
+  "owner_kind": "duty_with_actor",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-53d6d1bb2590b573",
+  "document": "AFI 10-2402",
+  "ref": "2.21.14",
+  "owner_kind": "duty_imperative",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-35b1bd2d85bb208f",
+  "document": "AFI 17-203",
+  "ref": "3.7.2.3 (inferred)",
+  "owner_kind": "recommendation",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-3847b2e54ede22f8",
+  "document": "AFMAN 17-2101",
+  "ref": "3.1.1",
+  "owner_kind": "prohibition",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-c7b1eece4fa715db",
+  "document": "AFI 17-203",
+  "ref": "Front matter",
+  "owner_kind": "applicability",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-30fc90d488088d8a",
+  "document": "DAFMAN 17-1305",
+  "ref": "Figure A2.3",
+  "owner_kind": "form_template_text",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
+ },
+ {
+  "sample": 3,
+  "id": "CHK-ae883f14133019fd",
+  "document": "DAFMAN 17-1305",
+  "ref": "Front matter",
+  "owner_kind": "cover_page_text",
+  "also_accepted": [],
+  "note": "spot-check, owner agreed"
  }
 ]

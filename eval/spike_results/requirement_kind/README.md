@@ -185,3 +185,37 @@ Kind shares (rules-4): command 578, duty with a party 423, unknown 173 (12.2%), 
 Over the three samples the rows the rules call `unknown` were wrong in the registered sense every time (9 of 9): early on because a wording cue was missed (fixed one by one), now because they are statements with no cue. Those rows get no behavior change from any reader, so a wrong positive label is the costlier error.
 Question for the owner: score `unknown` apart (right when the sentence really has no wording cue; report what he calls each), and apply the registered pass rules to the positive labels? The registered rule is unchanged until he answers.
 The next sample is drawn after the answer, with this recorded first.
+
+### Owner adjudication of the third sample (2026-10-11)
+
+Recorded in `outputs/owner_adjudication.json`. Rows are those where the rules (version 3, as drawn) and the second reader disagreed; his words are shortened.
+
+| Row | Rules (v3) | Second reader | Owner |
+|---|---|---|---|
+| AFMAN 17-2101 2.3.5 ("Provides AF customers guidance ... Details ... can be found in ...") | pointer | command | rules right: a pointer, or talk about a process; not a command attached to a party |
+| AFI 17-203 2.5.1.1.8 ("Air Force Cyber Defense performs ...") | unknown | description | second reader right: a description of cyber defense |
+| AFMAN 17-2101 2.1.1 ("Long Haul Communication is an enabler ..., the Air Force responsibilities ... are: ...") | unknown | duty with a party | unsure: a run-on sentence with several things in it (not scored) |
+| AFMAN 17-2101 3.1.1.2.1 ("Permanent CISPs are connections ... that cannot be supported by a DISN connection") | prohibition | description | rules right: kind of a prohibition (commercial connections for what DISN cannot support) |
+| AFI 10-2402 front matter ("Units that cannot meet AF requirements ... must coordinate with their MAJCOM") | cover page | duty with a party | second reader right: substantive, not boilerplate |
+| AFI 13-550 3.1 ("The Council provides a ... forum through which ... can elevate ...") | permission | description | more than a description: a duty on the council; both readers saw the same thing |
+| AFI 17-203 2.2.2 ("Is designated ... and is responsible for ...") | duty with a party | command | not answered |
+| AFMAN 17-2101 2.8.3.4 ("Outage and restoration records are maintained ...") | unknown | command (low) | not answered |
+| the 5 agreed spot-check rows, and the 2 rows of the second sample left open | | | all right |
+
+Against the registered pass: 3 rows wrong (2.5.1.1.8, front matter, 3.1), 1 unsure, 2 not answered: right 24 to 26 of 30 (80 to 87%) depending on the 3 rows not ruled on. **Not clearly met**; `unknown` 1 wrong and 2 open of 3.
+
+## Revision: kind-rules-5 (the version in the code)
+
+Two of the rules-4 changes contradict his rulings and are undone:
+
+1. A pointer is again looked for in the whole row (his ruling on 2.3.5). The added pointer wordings ("can be found with/within/under/through/via", "is/are explained, described, outlined ... in") stay.
+2. A "cannot" in a relative clause is a prohibition again (his ruling on 3.1.1.2.1), except where a duty word follows it in the same sentence ("Units that cannot meet X must coordinate ..." is a duty, his ruling on the front-matter row).
+
+Against all 28 rows he has ruled on (the three samples), kind-rules-5 matches his kind on 24. The 4 that do not are rows the rules call `unknown` (the ATR and voucher declarations of the second sample, "Air Force Cyber Defense performs ...",
+and "The Council provides ..." which he calls a duty); no positive label contradicts a ruling.
+
+## Status
+
+Merged at the owner's instruction on 2026-10-11 although the registered pass was not met on any of the three samples. Stage 1 is a side file that nothing reads; this does not accept it. A later stage that reads the labels needs its own decision:
+a bar that scores `unknown` rows apart, or a model label for them. The 28 ruled rows and the readers' 90 labels are the answer key for either.
+

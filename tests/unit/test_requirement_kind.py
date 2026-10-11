@@ -137,7 +137,7 @@ def test_an_applicability_sentence_in_the_front_matter_is_applicability_and_keep
 
 
 def test_the_rules_version_names_the_current_rule_set():
-    assert RK.RULES_VERSION == "kind-rules-4"
+    assert RK.RULES_VERSION == "kind-rules-5"
 
 
 def test_a_row_whose_kind_comes_from_its_position_also_keeps_what_its_words_say():
@@ -177,16 +177,18 @@ def test_a_lead_in_that_only_introduces_a_list_does_not_decide_the_kind_of_its_i
     assert _kind("The AF/A3 will perform the following: Execute the plan.") == "duty_with_actor"
 
 
-def test_a_pointer_in_a_second_sentence_does_not_make_the_row_a_pointer():
+def test_a_row_that_points_elsewhere_is_a_pointer_even_when_a_first_sentence_describes_a_process():
+    # the owner's ruling on AFMAN 17-2101 2.3.5: a pointer, not a command attached to a party
     q = "Provides AF customers guidance on how to process waivers. Details on the process can be found in appendix G at https://www.example.mil."
-    assert _kind(q) == "duty_imperative"
+    assert _kind(q) == "pointer"
     assert _kind("Details on the process can be found in appendix G.") == "pointer"
     assert _kind("See paragraph 3. The unit shall report within 24 hours.") == "duty_with_actor"
 
 
-def test_a_modal_or_negation_inside_a_relative_clause_does_not_decide_the_kind():
+def test_a_cannot_in_a_relative_clause_is_still_a_prohibition_and_a_can_in_one_is_no_permission():
+    # the owner's ruling on AFMAN 17-2101 3.1.1.2.1: "kind of a prohibition"
+    assert _kind("Permanent connections are connections to support requirements that cannot be supported by a standard connection.") == "prohibition"
     assert _kind("The Council provides a forum through which senior officials can elevate issues.") != "permission"
-    assert _kind("Permanent connections are connections to support requirements that cannot be supported by a standard connection.") != "prohibition"
     assert _kind("Systems that cannot be patched shall not connect to the network.") == "prohibition"
 
 
