@@ -15,9 +15,9 @@ from services import audit_questions as aq  # noqa: E402
 RULE2_V5 = ('- Name who acts and make that the subject of the question. If the requirement itself says who acts (for example "by the program office" or "the commander '
             'will"), use that; otherwise use the "Applies to" line. If neither says, ask about "the unit". Do not use the passive voice.\n')
 ARMS = {
-    "S": aq.PROMPT.replace(R.RULE2_V3, R.SCOPE_V4 + R.RULE2_V3),
-    "R": aq.PROMPT.replace(R.RULE2_V3, R.RULE2_V4),
-    "V5": aq.PROMPT.replace(R.RULE2_V3, R.SCOPE_V4 + RULE2_V5),
+    "S": R.PROMPT_V3.replace(R.RULE2_V3, R.SCOPE_V4 + R.RULE2_V3),
+    "R": R.PROMPT_V3.replace(R.RULE2_V3, R.RULE2_V4),
+    "V5": R.PROMPT_V3.replace(R.RULE2_V3, R.SCOPE_V4 + RULE2_V5),
 }
 OUT = R.OUT
 UNIT = re.compile(r"^(does|do)\s+the unit\b", re.I)

@@ -31,8 +31,19 @@ RULE2_V4 = ('- Name who must act. If the requirement itself says who acts (for e
             'actor only when the requirement names none. If neither says, ask about "the unit".\n')
 SCOPE_V4 = ("- Ask only about the requirement marked >> << in the passage. The sentences around it are background: do not ask about them and do not put their duties into "
             "the question.\n")
-assert RULE2_V3 in aq.PROMPT
-PROMPT_V4 = aq.PROMPT.replace(RULE2_V3, SCOPE_V4 + RULE2_V4)
+PROMPT_V3 = aq.PROMPT.replace(RULE2_V4, RULE2_V3)  # services/audit_questions.py now carries the actor rule (arm R); the v3 text is rebuilt from it
+PROMPT_V4 = PROMPT_V3.replace(RULE2_V3, SCOPE_V4 + RULE2_V4)
+
+
+def build_prompt_v3(item: dict) -> str:
+    return build_with(PROMPT_V3, item)
+
+
+def build_with(template: str, item: dict) -> str:
+    if aq.PROHIBITION.search(item.get("source_quote") or ""):
+        template = template.replace("- If the requirement is a fragment,", aq.PROHIBITION_RULE + "- If the requirement is a fragment,")
+    parent = f"{item.get('parent_ref') or ''} {item.get('parent_text') or ''}".strip()
+    return template.format(applies=item.get("applies_to") or "(none)", parent=parent or "(none)", quote=item.get("source_quote") or "", passage=(item.get("passage") or "")[:1500])
 
 
 def build_prompt_v4(item: dict) -> str:
@@ -130,7 +141,7 @@ def main():
                 if err:
                     rec["v4_error"] = err
             if s in ("A", "C") and "v3_rerun" not in rec and "v3_rerun_error" not in rec:
-                rec["v3_rerun"], err = ask(aq.build_prompt(it), args.ollama_url)
+                rec["v3_rerun"], err = ask(build_prompt_v3(it), args.ollama_url)
                 if err:
                     rec["v3_rerun_error"] = err
             rec["blend_v3"] = blend_words(it, rec["v3_stored"] or "")
