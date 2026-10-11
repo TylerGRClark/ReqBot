@@ -119,7 +119,7 @@ flowchart TD
     Q["A quote returned by requirement finding<br/>(one prompt for every chunk)"]
     SCAN["Text scan finds a duty sentence<br/>that nobody extracted"]
 
-    Q --> E1{"Empty, a repeated heading,<br/>or a change-log entry?"}
+    Q --> E1{"Empty, or a heading repeated<br/>as if it were a requirement?"}
     E1 -->|yes| R1["Rejected"]
     E1 -->|no| E2{"Found in its chunk?<br/>(fuzzy match and word coverage)"}
     E2 -->|no| R2["Rejected: not grounded"]
@@ -178,6 +178,12 @@ they need, from the wording, with their own rules.
 One of those rules is under test: the negation test in the chart reads a plain "does not" in a
 condition or a description ("... if this capability does not exist") as a prohibition, which can
 turn a duty into the question "does the unit avoid ...". A narrower test is being evaluated.
+
+A note on the red boxes: the code has seven rejection checks, but in the October 2026 runs of
+the 13 documents only three kinds of rejection occurred: not found in the chunk (117 records),
+cut-off fragment (93) and repeated heading (40). The empty-quote, definition-pointer and
+dangling-clause checks did not fire, and the change-log check depends on a generated description,
+so it is inactive while descriptions are switched off.
 
 ### Planned changes
 
