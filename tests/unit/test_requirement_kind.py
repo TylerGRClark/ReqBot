@@ -137,7 +137,7 @@ def test_an_applicability_sentence_in_the_front_matter_is_applicability_and_keep
 
 
 def test_the_rules_version_names_the_current_rule_set():
-    assert RK.RULES_VERSION == "kind-rules-3"
+    assert RK.RULES_VERSION == "kind-rules-4"
 
 
 def test_a_row_whose_kind_comes_from_its_position_also_keeps_what_its_words_say():
@@ -175,3 +175,36 @@ def test_a_lead_in_that_only_introduces_a_list_does_not_decide_the_kind_of_its_i
     q = "These responsibilities may be summarized as follows:: Execute all responsibilities and functions outlined in statutes and directives."
     assert _kind(q) == "duty_imperative"
     assert _kind("The AF/A3 will perform the following: Execute the plan.") == "duty_with_actor"
+
+
+def test_a_pointer_in_a_second_sentence_does_not_make_the_row_a_pointer():
+    q = "Provides AF customers guidance on how to process waivers. Details on the process can be found in appendix G at https://www.example.mil."
+    assert _kind(q) == "duty_imperative"
+    assert _kind("Details on the process can be found in appendix G.") == "pointer"
+    assert _kind("See paragraph 3. The unit shall report within 24 hours.") == "duty_with_actor"
+
+
+def test_a_modal_or_negation_inside_a_relative_clause_does_not_decide_the_kind():
+    assert _kind("The Council provides a forum through which senior officials can elevate issues.") != "permission"
+    assert _kind("Permanent connections are connections to support requirements that cannot be supported by a standard connection.") != "prohibition"
+    assert _kind("Systems that cannot be patched shall not connect to the network.") == "prohibition"
+
+
+def test_a_responsibilities_lead_in_and_an_opening_is_are_name_no_subject_or_name_a_duty():
+    assert _kind("The Air Force responsibilities for DISN LHC are: Program, budget and fund the DISN.") == "duty_with_actor"
+    r = RK.classify(_item("Is designated the Certification Authority for SAP networks and is responsible for coordinating enclave-wide activities."))
+    assert r["kind"] == "duty_imperative" and "no subject" in r["kind_reasons"][0]
+
+
+def test_a_duty_word_in_the_front_matter_lets_the_wording_decide_and_keeps_the_location_as_a_tag():
+    r = RK.classify(_item("Units that cannot meet requirements must coordinate with their MAJCOM.", citation="Front matter"))
+    assert r["kind"] == "duty_with_actor" and "front_matter" in r["kind_tags"]
+    assert RK.classify(_item("Compliance with this publication is mandatory.", citation="Front matter"))["kind"] == "cover_page_text"
+
+
+def test_more_pointer_wordings_and_front_matter_that_says_what_the_document_is():
+    assert _kind("Additional information can be found with the qualification matrix information for the role.") == "pointer"
+    assert _kind("These requirements are explained in DoDM 8140.03 Chapter 3.") == "pointer"
+    assert _kind("The CFP is responsible for the process as described in AFI 10-701.") == "duty_with_actor"
+    r = RK.classify(_item("This directive provides a means by which the AF will align cyberspace programs.", citation="Front matter"))
+    assert r["kind"] == "cover_page_text"

@@ -148,3 +148,40 @@ if rule 2 fails only because of `unknown` rows, the owner is asked once whether 
 python3 cli/reqbot.py kinds --doc DOC       # the six documents, rules-3
 PYTHONPATH=. python3 eval/spike_results/requirement_kind/make_rating_sheet.py --seed 71 --exclude eval/spike_results/requirement_kind/outputs/sample.json --exclude eval/spike_results/requirement_kind/outputs/sample_kind-rules-2_seed61.json
 ```
+
+## Result of kind-rules-3 on the third sample (2026-10-11, owner adjudication pending)
+
+The second reader (`outputs/second_reader_rules3_seed71.json`; rules' labels `outputs/rule_labels_rules3_seed71.json`) agreed with the rules on 22 of 30 (73%) again. The first sample was 25 of 30, the second 22 of 30.
+The 8 disagreements, and what each did to the rules:
+
+| Row | Rules said | Second reader said | Rules-4 |
+|---|---|---|---|
+| AFMAN 17-2101 2.3.5 ("Provides AF customers guidance ... Details ... can be found in ...") | pointer | command | command: a pointer must be in the sentence that opens the row, and "can be found" is no permission |
+| AFI 17-203 2.5.1.1.8 ("Air Force Cyber Defense performs continuous operations ...") | unknown | description | unknown (a present-tense statement with a subject and no cue) |
+| AFMAN 17-2101 2.1.1 ("... the Air Force responsibilities for DISN LHC are: Program, budget ...") | unknown | duty with a party | duty with a party ("responsibilities ... are:") |
+| AFMAN 17-2101 3.1.1.2.1 ("Permanent CISPs are connections ... that cannot be supported by ...") | prohibition | description | unknown (a "cannot" inside a relative clause describes) |
+| AFI 10-2402 front matter ("Units that cannot meet AF requirements ... must coordinate with their MAJCOM") | cover page | duty with a party | duty with a party (a duty word in the front matter: the wording decides, location kept as the tag `front_matter`) |
+| AFI 13-550 3.1 ("The Council provides ... forum through which AF senior officials can elevate ...") | permission | description | unknown (a "can" in "through which ... can" belongs to the relative clause) |
+| AFI 17-203 2.2.2 ("Is designated ... and is responsible for coordinating ...") | duty with a party | command | command: a sentence that opens with "Is" has no subject; the heading supplies it |
+| AFMAN 17-2101 2.8.3.4 ("Outage and restoration records are maintained in accordance with ...") | unknown | command (low) | unknown (passive, no cue) |
+
+Counting every disagreement against the rules: right 22 of 30 (73%), unknown 3 of 3 wrong. **The registered pass is not met on this sample either**, and the owner has not adjudicated it yet.
+
+## Revision: kind-rules-4
+
+1. A pointer must be in the sentence that opens the row; "can be found in/at/on/with/within/under/through/via" and "is/are explained, described, outlined, detailed, addressed or discussed in" point, and "can be found ..." grants nothing.
+2. "responsibilities ... are:" and "responsibilities ... include:" name a duty with a party.
+3. A "cannot" in a relative clause ("that cannot be supported by ...") describes; it is not a prohibition. A "may / can" in "through which ... can" is part of the relative clause.
+4. A sentence that opens with "Is" or "Are" names no subject; it is a statement whose party comes from the heading (command, no party stated).
+5. A duty word (shall, must, will, is responsible, required to) in the front matter lets the wording decide; the location stays as the tag `front_matter`. A sentence that says what the document is ("This directive provides ...") stays cover-page text.
+
+Effect on the 1,418 rows of the six documents (rules-3 to rules-4): 19 rows change; I read all of them. Positive labels that disagree with the reader or the owner on the 90 sample rows: 0 (this is in-sample: the rules were revised on those rows).
+All 6 remaining disagreements are rows the rules call `unknown`: present-tense statements with a subject and no obligation word ("The Council provides ...", "Air Force Cyber Defense performs ...", "The ATR is provided ...", "Issuance of any vouchers requires ...", a passive "records are maintained ...").
+The owner called two of them a declaration (description) and the reader calls most of them a description; the words alone cannot separate them from the duties written the same way ("CFPs implement ...").
+Kind shares (rules-4): command 578, duty with a party 423, unknown 173 (12.2%), permission 70, cover page 34, table row 32, form template 28, recommendation 24, prohibition 20, description 12, applicability 9, pointer 9, exemption 6.
+
+## Open: how `unknown` rows are scored
+
+Over the three samples the rows the rules call `unknown` were wrong in the registered sense every time (9 of 9): early on because a wording cue was missed (fixed one by one), now because they are statements with no cue. Those rows get no behavior change from any reader, so a wrong positive label is the costlier error.
+Question for the owner: score `unknown` apart (right when the sentence really has no wording cue; report what he calls each), and apply the registered pass rules to the positive labels? The registered rule is unchanged until he answers.
+The next sample is drawn after the answer, with this recorded first.
