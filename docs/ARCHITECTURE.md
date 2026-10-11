@@ -138,24 +138,27 @@ separate `reqbot questions` step, whose output the checklist reads back:
 
 ```mermaid
 flowchart TD
-    RUN[("Newest processed run<br/>*_requirements_normalized.jsonl<br/>*_chunks.jsonl")]
+    RUN[("Newest processed run<br/>requirements file: gated, else enriched, else normalized<br/>*_chunks.jsonl")]
     ROWS["Rows from extracted requirements<br/>citation, section heading, parent paragraph,<br/>who it applies to, passage with the quote marked,<br/>hint flags"]
     SCAN["Text scan<br/>duty sentences that were not extracted"]
-    FOUND["Found rows (found_by_text_scan)<br/>or listed as possible missed"]
+    FOUND["Found rows (found_by_text_scan)<br/>duty sentences, placed in document order"]
+    POSS["Possible missed requirements<br/>passages with no duty sentence of their own"]
     MERGE["Rows in document order"]
     SIDE[("Draft questions<br/>*_audit_questions.jsonl")]
     APPLY["Question and review marks added<br/>no model call"]
     OUT["Checklist: sheet, CSV, JSON, Markdown,<br/>web screen, MCP tool"]
-    WRITE["reqbot questions --doc<br/>separate step, local model writes one question per row"]
+    WRITE["reqbot questions --doc<br/>separate step, local model<br/>asks for a question for each eligible row<br/>(none for fragments, definitions, descriptions, permissions)"]
 
     RUN --> ROWS
     RUN --> SCAN
     SCAN --> FOUND
+    SCAN --> POSS
     ROWS --> MERGE
     FOUND --> MERGE
     MERGE --> APPLY
     SIDE --> APPLY
     APPLY --> OUT
+    POSS -->|"listed below the rows"| OUT
     MERGE -.->|"rows to ask about"| WRITE
     WRITE --> SIDE
 ```
