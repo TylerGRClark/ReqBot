@@ -87,3 +87,20 @@ Run: `PYTHONPATH=. python3 eval/spike_results/question_prompt_v4/run_arms.py --o
 - Limits: the blend proxy is weak (6 suspects in 267 under v3, so the original fault is rare, about 1 in 100); row 21's wrong spell-out is not fixed by any arm ("MA" still invented); R writes "Do the HAF CARM Program office designate ..." (grammar) on the target.
 
 Candidate: **R** = rule 2 of prompt v3 replaced by the v4 actor rule, nothing else. Against the registered adopt rules: 1 met (pending rating), 3 expected (no Set A row regressed by my reading, pending rating), 4 met, 5 met (weakly). Rating sheet: `~/reqbot-work/checklists/question_prompt_rating_actor_rule.xlsx` (all changed Set A rows, up to 15 of B and 10 of C). Rule 2 (worse at most 10%) and the owner's rating of rule 1 decide.
+
+## Owner rating of arm R (2026-10-11) and the adopt rules
+
+The owner rated sheet rows 2 to 20 of 34 (all 9 Set A rows and the first 10 Set B rows; Set C and the last 5 of Set B not rated).
+
+| | Rows |
+|---|---|
+| Better | 10 (3, 4, 5, 6, 8, 10, 13, 14, 16, 17); 4, 5 and 6 conditional on the actor being grounded: it is (the "Applies to" line and parent paragraph 2.12.6 read "Establish a HAF CARM program office, which:") |
+| Leaning better | 2 (12, 15: row 15 loses the plural "agents" and drops the purpose clause) |
+| Same | 7 (2, 7, 9, 11, 18, 19, 20) |
+| Worse | 0 |
+
+Row 10 is the target (2.17.26): better. Row 9 (2.17.23): both questions invent a spelling of "MA" (v3 "Major Army Commands", R "Major Automated Data Processing"; the document says Mission Assurance), equally bad. Row 18 (AFI 13-550 1.5.6): not a requirement (a statement of what the AN/USQ-225 does not include); both questions turn it into a prohibition, because the prohibition rule fires on "does not".
+
+Adopt rules as registered: 1 met (target better), 2 met (worse 0 of 19), 3 met (0 of 9 Set A rows worse), 4 met (null rate 19 against 20), 5 met (weakly). **Arm R meets every registered rule.**
+
+My own reading of the 15 unrated rows (my reading, not the owner's rating): 7 better or same; worse: row 33 (2.17.12.1: the question asks about the purpose clause with a wrong actor and drops the duty), row 35 (Table 3.1: names the CST/CSL for action 4; the table assigns action 4 to the I-NOSC), and a tense or grammar nit on rows 21 ("Did"), 28 ("Does MAJCOM/DRUs"). Outside the sheet, 3.3.3 ("Submissions should include justification...") takes the previous sentence's actor and duty. So arm R is bolder about naming an actor from the passage: about 25 questions gain a grounded actor, about 3 in 267 name a wrong one where v3 said "the unit". Mitigation, not built: a review reason when the actor named in the question is not in the requirement, its "Applies to" line or its parent paragraph.
