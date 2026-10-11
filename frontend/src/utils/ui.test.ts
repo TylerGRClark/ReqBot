@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { clampTopK, docValue, formatPath, pageRange, parseTopKParam } from './ui'
+import { clampTopK, docValue, formatPath, pageRange, parseTopKParam, refLabel } from './ui'
 
 describe('pageRange', () => {
   it('returns null when start is missing', () => {
@@ -104,5 +104,22 @@ describe('parseTopKParam', () => {
   it('falls back to the default for a non-numeric string', () => {
     // Number('abc') is NaN, which clampTopK's Number.isFinite guard catches.
     expect(parseTopKParam('abc')).toBe(20)
+  })
+})
+
+describe('refLabel', () => {
+  it('prefers the citation read from the document', () => {
+    expect(refLabel({ citation: 'Table 3.1', source_ref: '(T-2)' })).toBe('Table 3.1')
+  })
+
+  it('falls back to the recorded source_ref when there is no citation', () => {
+    expect(refLabel({ source_ref: '3.4.2' })).toBe('3.4.2')
+    expect(refLabel({ citation: '', source_ref: '3.4.2' })).toBe('3.4.2')
+    expect(refLabel({ citation: null, source_ref: '3.4.2' })).toBe('3.4.2')
+  })
+
+  it('is empty when neither is set', () => {
+    expect(refLabel({})).toBe('')
+    expect(refLabel({ citation: null, source_ref: null })).toBe('')
   })
 })

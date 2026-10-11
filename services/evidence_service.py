@@ -17,7 +17,7 @@ if str(_ROOT) not in sys.path:
 log = logging.getLogger(__name__)
 
 from core import constants as _const
-from core.display import requirement_text
+from core.display import requirement_citation, requirement_text
 from core.profiles import load_profile as _load_profile
 
 _EVIDENCE_AUDITOR_PROMPT = """You are a strict compliance auditor reviewing evidence for a System Security Plan (SSP).
@@ -150,7 +150,8 @@ def _group_key_and_label(p: dict) -> tuple[str, str]:
     req_id = p.get("requirement_id") or uuid.uuid4().hex
 
     if not ref:
-        return f"__no_ref__{req_id}", "(no ref)"
+        # keyed by the record, as before; labeled by the citation read from the document when the index has one
+        return f"__no_ref__{req_id}", requirement_citation(p) or "(no ref)"
 
     if _BARE_FRAGMENT_RE.match(ref):
         raw_path = p.get("section_ref_path")

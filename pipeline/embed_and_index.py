@@ -71,15 +71,20 @@ def build_embedding_text(req: dict) -> str | None:
     return text
 
 
-def build_payload(req: dict, embedding_model: str, embedding_dim: int) -> dict:
+def build_payload(req: dict, embedding_model: str, embedding_dim: int, extra: dict | None = None) -> dict:
     """Build lean Qdrant payload from a requirement record.
 
     embedding_model/embedding_dim are indexing-time facts, not JSONL fields —
     the same JSONL can be reindexed multiple times with a different embedding
     model over its lifetime, so this is captured here (payload), not baked
     into the source-of-record artifact (WP-25.6c).
+
+    `extra` holds fields derived at indexing time from the document's own text
+    (today: `citation`, the label the checklist gives the row; see
+    services.checklist_service.requirement_citations). They are payload only:
+    never part of the embedded text, and never a replacement for a record field.
     """
-    return {
+    payload = {
         "requirement_id": req["requirement_id"],
         "document_id": req.get("document_id", ""),
         "source_pdf": req.get("source_pdf", ""),
@@ -108,7 +113,11 @@ def build_payload(req: dict, embedding_model: str, embedding_dim: int) -> dict:
         "run_timestamp": req.get("run_timestamp", ""),
         "embedding_model": embedding_model,
         "embedding_dim": embedding_dim,
+        "citation": "",  # the reader-facing label (paragraph number, "Table 3.1", "Front matter"); filled from `extra`
     }
+    if extra:
+        payload.update(extra)
+    return payload
 
 
 def embed_batch(texts: list[str], client: ollama.Client, model: str = EMBEDDING_MODEL) -> list[list[float]]:
@@ -201,6 +210,7 @@ def run(
     collection_name: str = COLLECTION_NAME,
     batch_size: int = 32,
     embedding_model: str = EMBEDDING_MODEL,
+    payload_extras: dict | None = None,
 ) -> int:
     """Embed requirements and index into Qdrant.
 
@@ -216,6 +226,9 @@ def run(
         batch_size:         Requirements per embedding batch.
         embedding_model:    Ollama embedding model — written into each point's
                              payload as provenance (WP-25.6c).
+        payload_extras:     {requirement_id: {field: value}} merged into that
+                             requirement's payload (the caller derives them from
+                             the document; see build_payload).
 
     Returns:
         Number of requirements successfully indexed.
@@ -314,7 +327,7 @@ def run(
             points.append(models.PointStruct(
                 id=requirement_point_id(req),
                 vector={"dense": dense_emb, "sparse": sparse_emb},
-                payload=build_payload(req, embedding_model, len(dense_emb)),
+                payload=build_payload(req, embedding_model, len(dense_emb), (payload_extras or {}).get(req.get("requirement_id", ""))),
             ))
 
         total_skipped += batch_skipped

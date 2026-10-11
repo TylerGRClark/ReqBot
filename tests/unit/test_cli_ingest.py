@@ -63,6 +63,24 @@ def test_default_indexes_both_requirements_and_context(tmp_path):
     assert kwargs["document_id"] == "hash-a"
 
 
+def test_ingest_passes_the_citation_labels_to_the_indexer(tmp_path):
+    pdf = tmp_path / "doc.pdf"
+    pdf.write_bytes(b"%PDF-1.4")
+    out_dir = tmp_path / "out"
+    extras = {"REQ-1": {"citation": "3.4.2 (inferred)"}}
+
+    with patch("pipeline.run_pipeline.run", return_value=_make_fake_index_path(out_dir)), \
+         patch("pipeline.embed_and_index.run") as mock_embed, \
+         patch("pipeline.embed_context_index.run"), \
+         patch("cli.reqbot._citation_extras", return_value=extras) as mock_extras:
+        rc = cmd_ingest(_args(pdf, out_dir))
+
+    assert rc == 0
+    mock_extras.assert_called_once()
+    _, kwargs = mock_embed.call_args
+    assert kwargs["payload_extras"] == extras
+
+
 def test_no_index_writes_artifacts_but_skips_both_indexing_calls(tmp_path):
     pdf = tmp_path / "doc.pdf"
     pdf.write_bytes(b"%PDF-1.4")

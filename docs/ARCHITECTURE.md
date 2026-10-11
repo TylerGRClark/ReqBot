@@ -328,6 +328,13 @@ become a default retrieval step.
 `grc_requirements` stores requirement payloads and vectors. `grc_context` stores
 source chunks and vectors. Indexed payloads retain embedding model/dimension
 provenance; result warnings help identify a corpus built with another model.
+Each requirement payload also carries `citation`, the reference the checklist gives
+that row (a paragraph number, a table such as `Table 3.1`, `Front matter`), read from
+the document's own text when the index is built by the same function the checklist
+uses (`services/checklist_service.py`, called from the CLI's indexing commands). It
+sits beside `source_ref` and never replaces it: Evidence groups by `source_ref`, and
+the embedded text carries it, so the label changes no vector. Readers show
+`citation`, else `source_ref` (`core/display.py: requirement_citation`).
 
 - `doc_key`: PDF filename stem used for artifact lookup and checklists.
 - `source_pdf`: PDF filename used in source filters and presentation.

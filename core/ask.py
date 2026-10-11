@@ -27,7 +27,7 @@ from fastembed import SparseTextEmbedding
 from qdrant_client import QdrantClient, models
 
 from core import constants as _constants
-from core.display import requirement_text
+from core.display import requirement_citation, requirement_text
 from core.profiles import default_profile
 from core.reranker import DEFAULT_RERANK_MODEL, rerank as rerank_candidates
 
@@ -303,7 +303,7 @@ def format_evidence(results: list[dict]) -> str:
             else:
                 page_info = f"pp.{hit['page_start']}-{hit['page_end']}"
 
-        ref = hit.get("source_ref", "")
+        ref = requirement_citation(hit)
         source = hit.get("source_pdf", "")
         cite_parts = [x for x in [source, ref, page_info] if x]
         cite = ", ".join(cite_parts)
@@ -352,7 +352,7 @@ def print_results_table(results: list[dict]) -> None:
             else:
                 page_info = f"pp.{hit['page_start']}-{hit['page_end']}"
 
-        ref = hit.get("source_ref", "")
+        ref = requirement_citation(hit)
         source = hit.get("source_pdf", "")
 
         print(f"[{i}] Score: {score:.4f} | {hit.get('requirement_id', '?')}")

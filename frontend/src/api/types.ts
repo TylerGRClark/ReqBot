@@ -24,6 +24,7 @@ export interface Requirement {
   source_quote: string
   explained_text?: string     // the whole-sentence layer beside the root quote; absent on older records
   source_ref: string
+  citation?: string           // the label read from the document at index time (paragraph number, "Table 3.1", "Front matter"); absent on an index built before it
   document_id: string
   source_pdf: string
   domain_tags: string[]
@@ -138,6 +139,7 @@ export interface ComparePayload {
   source_quote?: string
   explained_text?: string
   source_ref: string
+  citation?: string
   source_pdf: string
   document_id: string
   domain_tags?: string[]
@@ -211,6 +213,7 @@ export interface EvidenceRequirement {
   source_quote?: string | null
   explained_text?: string | null
   source_ref?: string | null
+  citation?: string | null
   source_pdf?: string | null
   document_id?: string | null
   domain_tags?: string[] | null

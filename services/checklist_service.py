@@ -185,6 +185,75 @@ def _merge_in_order(items: list[dict], keys: list[tuple], extra: list[dict], ext
     return merged
 
 
+def _quotes(req: dict) -> tuple[str, str, str]:
+    """(root, shown text, locating text) of a record. The root is exactly what requirement finding returned; the shown text is the explained requirement when the record has one;
+    the passage is located by the sentence itself, because a lead-in attached from the line above is not contiguous with it in the document (the root is contiguous text, and older
+    records have only the root)."""
+    root = req.get("source_quote", "")
+    sentence_parts = [p.get("text") for p in (req.get("explained_parts") or []) if p.get("kind") == "sentence" and p.get("text")]
+    return root, req.get("explained_text") or root, (sentence_parts[-1] if sentence_parts else root)
+
+
+def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs) -> dict:
+    """Where a record sits in its document, read from the document: how it is cited, who it applies to, its hint flags and the passage around its quote. No model.
+
+    The checklist and the search index both call this, so the label an auditor sees on a sheet and the one a search result shows cannot drift apart. `table_ref` is the table's label
+    ("Table 3.1") when the row sits in a table, else ""; `found` says whether the quote was located in its passage."""
+    extracted_quote, source_quote, locate_text = _quotes(req)
+    source_ref = req.get("source_ref") or ""
+    section_title_path = req.get("section_title_path") or []
+    # a row from a table is cited by the table's own caption ("Table 3.1"); the converter's heading for a table is a guess, so no party is read from it either
+    table_ref, table_heading = checklist_audit.table_label(chunks, req.get("chunk_id"), locate_text)
+    cite0 = table_ref or checklist_audit.citation(source_ref, "", section_title_path, locate_text)  # the paragraph number as extracted or as the quote opens; inferred ones need the passage
+    numbered = None if table_ref else checklist_audit.applies_to_numbered(cite0, hmap, section_title_path)
+    applies = "" if table_ref else (numbered if numbered is not None else checklist_audit.applies_to(section_title_path))
+    flags = checklist_audit.item_flags(source_quote, source_ref, applies, verbs)
+    chunk_id = req.get("chunk_id")
+    chunk = chunks.get(chunk_id)
+    prev_chunk = chunks.get(chunk_id - 1) if isinstance(chunk_id, int) else None
+    # whether to put the end of the previous chunk in front of the passage depends on the item being a list item or starting mid-sentence: judge that from the root and the sentence,
+    # not from the explained text (which starts with the lead-in), and always when a lead-in was attached by rule (it may sit in the previous chunk)
+    has_rule_lead_in = any(p.get("kind") == "lead_in" and p.get("origin") == "rule" for p in (req.get("explained_parts") or []))
+    passage_flags = set(flags) | set(checklist_audit.item_flags(extracted_quote, source_ref, applies, verbs)) | ({"list_item"} if has_rule_lead_in else set())
+    passage, found = checklist_audit.build_passage(locate_text, chunk, prev_chunk, passage_flags)
+    cite = table_ref or checklist_audit.citation(source_ref, passage, section_title_path, locate_text)
+    if cite != cite0:  # an inferred paragraph number: the numbering can now say who the row applies to
+        numbered = checklist_audit.applies_to_numbered(cite, hmap, section_title_path)
+        if numbered is not None:
+            applies = numbered
+            flags = checklist_audit.item_flags(source_quote, source_ref, applies, verbs)
+    if not cite:  # nothing numbered to cite: where the row sits, read from the document ("Front matter", "Figure A3.1")
+        cite = checklist_audit.unnumbered_label(chunks, chunk_id, locate_text, first_numbered)
+    return {"citation": cite, "table_ref": table_ref, "table_heading": table_heading, "applies": applies, "flags": flags, "passage": passage, "found": found}
+
+
+def requirement_citations(jsonl_path) -> dict[str, str]:
+    """{requirement_id: citation} for every record of a requirements file: the label the checklist gives the row (a paragraph number, "Table 3.1", "Front matter", marked
+    "(inferred)" when it was worked out from the text before the quote), read from the document's chunk file beside it. The search index stores it next to `source_ref`, which it
+    never replaces (Evidence groups by it and the embedded text carries it). A record with no `requirement_id` or no text is left out; a file with no chunk file beside it still
+    gets the paragraph numbers the records themselves carry. No model."""
+    jsonl_path = Path(jsonl_path)
+    chunks = _load_chunks(jsonl_path)
+    hmap = _heading_map(chunks)
+    first_numbered = checklist_audit.first_numbered_chunk(chunks)
+    out: dict[str, str] = {}
+    with open(jsonl_path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                req = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            req_id = req.get("requirement_id", "")
+            if not req_id or not _quotes(req)[1]:
+                continue
+            # the verbs only decide the "no stated actor" hint, which does not change where a row sits or how it is cited
+            out[req_id] = _locate_row(req, chunks, hmap, first_numbered, ())["citation"]
+    return out
+
+
 def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     """Generate a checklist envelope dict from normalized requirements for doc_key.
 
@@ -225,11 +294,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
                 source_pdf = req.get("source_pdf", "")
 
             req_id = req.get("requirement_id", "")
-            extracted_quote = req.get("source_quote", "")  # the root: exactly what requirement finding returned
-            source_quote = req.get("explained_text") or extracted_quote  # what the sheet shows: the explained requirement when the record has one
-            # The passage is located by the sentence itself: a lead-in attached from the line above is not contiguous with it in the document, so the full explained text would never be found
-            sentence_parts = [p.get("text") for p in (req.get("explained_parts") or []) if p.get("kind") == "sentence" and p.get("text")]
-            locate_text = sentence_parts[-1] if sentence_parts else extracted_quote  # the root is contiguous text; older records have only the root
+            extracted_quote, source_quote, locate_text = _quotes(req)  # the root; what the sheet shows (the explained requirement when the record has one); what the passage is located by
             all_quotes.append(source_quote)
             all_quotes.extend(q for q in [extracted_quote, *(req.get("merged_roots") or [])] if q)
 
@@ -249,32 +314,15 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
 
             # WP-46.1 audit layout: who the row applies to, the document's own passage, and specific hints (nothing here is model-made)
             verbs = profile.get("obligation_verbs", [])
-            # a row from a table is cited by the table's own caption ("Table 3.1"); the converter's heading for a table is a guess, so no party is read from it either
-            table_ref, table_heading = checklist_audit.table_label(chunks, req.get("chunk_id"), locate_text)
-            cite0 = table_ref or checklist_audit.citation(source_ref, "", section_title_path, locate_text)  # the paragraph number as extracted or as the quote opens; inferred ones need the passage
-            numbered = None if table_ref else checklist_audit.applies_to_numbered(cite0, hmap, section_title_path)
-            applies = "" if table_ref else (numbered if numbered is not None else checklist_audit.applies_to(section_title_path))
-            flags = checklist_audit.item_flags(source_quote, source_ref, applies, verbs)
+            where = _locate_row(req, chunks, hmap, first_numbered, verbs)
+            table_ref, table_heading, cite = where["table_ref"], where["table_heading"], where["citation"]
+            applies, flags, passage = where["applies"], where["flags"], where["passage"]
             parent_ref, parent_text = checklist_audit.parent_paragraph(source_ref, para_map)
             chunk_id = req.get("chunk_id")
             chunk = chunks.get(chunk_id)
-            prev_chunk = chunks.get(chunk_id - 1) if isinstance(chunk_id, int) else None
-            # whether to put the end of the previous chunk in front of the passage depends on the item being a list item or starting mid-sentence: judge that from the root and the sentence,
-            # not from the explained text (which starts with the lead-in), and always when a lead-in was attached by rule (it may sit in the previous chunk)
-            has_rule_lead_in = any(p.get("kind") == "lead_in" and p.get("origin") == "rule" for p in (req.get("explained_parts") or []))
-            passage_flags = set(flags) | set(checklist_audit.item_flags(extracted_quote, source_ref, applies, verbs)) | ({"list_item"} if has_rule_lead_in else set())
-            passage, found = checklist_audit.build_passage(locate_text, chunk, prev_chunk, passage_flags)
-            cite = table_ref or checklist_audit.citation(source_ref, passage, section_title_path, locate_text)
-            if cite != cite0:  # an inferred paragraph number: the numbering can now say who the row applies to
-                numbered = checklist_audit.applies_to_numbered(cite, hmap, section_title_path)
-                if numbered is not None:
-                    applies = numbered
-                    flags = checklist_audit.item_flags(source_quote, source_ref, applies, verbs)
-            if not cite:  # nothing numbered to cite: where the row sits, read from the document ("Front matter", "Figure A3.1")
-                cite = checklist_audit.unnumbered_label(chunks, chunk_id, locate_text, first_numbered)
             if not passage:
                 flags.append("no_passage")
-            elif not found:
+            elif not where["found"]:
                 flags.append("quote_not_located_in_passage")
 
             review_reasons: list[str] = []

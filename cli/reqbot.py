@@ -35,6 +35,7 @@ from datetime import datetime as _dt
 import requests
 
 from core import config as _config
+from core.display import requirement_citation as _requirement_citation
 from core.display import requirement_text
 
 logging.basicConfig(
@@ -78,6 +79,17 @@ def _read_document_id(jsonl_path: str) -> str | None:
             jsonl_path, e,
         )
     return None
+
+
+def _citation_extras(jsonl_path) -> dict:
+    """{requirement_id: {"citation": label}} for the index payload: the label the checklist gives each row, read from the document beside the requirements file (a paragraph
+    number, "Table 3.1", "Front matter"). A label is a display aid, so failing to work it out never fails an indexing run: the index then simply has none and readers show `source_ref`."""
+    try:
+        from services import checklist_service as _checklist
+        return {rid: {"citation": cite} for rid, cite in _checklist.requirement_citations(jsonl_path).items() if cite}
+    except Exception as e:
+        log.warning("Citation labels not computed for %s: %s — the index will carry source_ref only", jsonl_path, e)
+        return {}
 
 
 def cmd_ingest(args: argparse.Namespace) -> int:
@@ -130,6 +142,7 @@ def cmd_ingest(args: argparse.Namespace) -> int:
         _embed.run(
             index_path, qdrant_url=args.qdrant_url, ollama_url=args.ollama_url,
             embedding_model=_cfg.embedding_model,
+            payload_extras=_citation_extras(index_path),
         )
     except Exception as e:
         log.error("Index into Qdrant failed: %s", e)
@@ -172,6 +185,7 @@ def cmd_index(args: argparse.Namespace) -> int:
             recreate=args.recreate,
             batch_size=args.batch_size or 32,
             embedding_model=_cfg.embedding_model,
+            payload_extras=_citation_extras(args.jsonl),
         )
         return 0
     except Exception as e:
@@ -284,6 +298,7 @@ def cmd_batch(args: argparse.Namespace) -> int:
             _embed.run(
                 index_path, qdrant_url=args.qdrant_url, ollama_url=args.ollama_url,
                 embedding_model=_cfg.embedding_model,
+                payload_extras=_citation_extras(index_path),
             )
         except Exception as e:
             log.warning("Indexing failed for %s: %s — pipeline artifacts still saved", pdf_path.name, e)
@@ -452,6 +467,7 @@ def _reindex_requirements(req_files: dict, qdrant_url: str, ollama_url: str, emb
                 collection_name=temp_name,
                 recreate=(i == 0),
                 embedding_model=embedding_model,
+                payload_extras=_citation_extras(jsonl_path),
             )
         except Exception as e:
             log.error("Indexing failed for %s: %s", jsonl_path.name, e)
@@ -756,7 +772,8 @@ def cmd_trace(args: argparse.Namespace) -> int:
     payload = result["requirement"]
     cross_matches = result["cross_matches"]
     context_text = result["context_text"]
-    source_ref = payload.get("source_ref", "")
+    source_ref = _requirement_citation(payload)
+    extracted_ref = (payload.get("source_ref") or "").strip()
 
     if json_output:
         out: dict = {
@@ -793,6 +810,8 @@ def cmd_trace(args: argparse.Namespace) -> int:
     print("----------")
     print(f"  {'Document:':<14} {payload.get('source_pdf', '—')}")
     print(f"  {'Source ref:':<14} {source_ref or '—'}")
+    if extracted_ref and extracted_ref != source_ref:
+        print(f"  {'As extracted:':<14} {extracted_ref}")
     print(f"  {'Page:':<14} {page_str}")
     print(f"  {'Domain profile:':<14} {payload.get('domain_profile', 'cybersecurity')}")
     print(f"  {'Extracted by:':<14} {payload.get('extraction_model', 'unknown')}")

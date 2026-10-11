@@ -111,7 +111,14 @@ Response envelope:
 The example illustrates an empty result, not a measured response. Every nonempty
 result is a flattened requirement payload with `score`, normally including
 `requirement_id`, `document_id`, `source_pdf`, `source_quote`, `source_ref`,
-`description`, page/chunk provenance, section paths, tags, type, and confidence.
+`citation`, `description`, page/chunk provenance, section paths, tags, type, and
+confidence. `citation` is the reference to show: the label the checklist gives the
+row, read from the document when the index was built (a paragraph number, a table
+such as `Table 3.1`, `Front matter`; `(inferred)` marks a paragraph number worked
+out from the text before the quote). It is empty when the index was built without
+one or the document has nothing to cite, and then `source_ref` is the one to show.
+`source_ref` is the reference as the extractor recorded it and is never replaced:
+Evidence groups by it and the index embeds it.
 `context_text` is added when requested and available; do not require it on
 every hit. Fields can be absent in older indexed artifacts.
 
@@ -193,7 +200,8 @@ Response fields are `query`, `timestamp` (UTC ISO 8601), `group_order`,
 - `context_text`: optional surrounding source text, or null.
 
 Use `groups[key].source_ref` for display, not the raw key: records without usable
-references can have synthetic per-requirement keys. `synthesis_text` is an empty
+references can have synthetic per-requirement keys (such a group is labeled by the
+record's `citation` when it has one, else `(no ref)`). `synthesis_text` is an empty
 string when skipped or unavailable. No matching evidence is reported as a
 not-found error rather than the search endpoint's empty-result envelope.
 
