@@ -67,9 +67,11 @@ def test_the_prohibition_rule_is_added_only_for_a_prohibition():
 
 def test_prohibition_forms_are_recognized():
     for text in ("Do not release the report.", "(T-1) Do not release the report.", "Users cannot reuse passwords.", "Disclosure is prohibited.", "Personnel must not leave the area.",
-                 "Waivers are not appropriate for granting time extensions.", "The requirements outlined are not waivable.", "Visitors are not allowed in the room.", "Personnel may not enter."):
+                 "Waivers are not appropriate for granting time extensions.", "The requirements outlined are not waivable.", "Visitors are not allowed in the room.", "Personnel may not enter.",
+                 "Submit the form to the office. Do not release the report.", "Notify the commander. (T-1) Do not release the report.", "2) Do not release the report."):
         assert AQ.PROHIBITION.search(text), text
     assert not AQ.PROHIBITION.search("Examples include, but are not limited to, logs.")
+    assert not AQ.PROHIBITION.search("This issuance: Does not alter existing authorities.")  # a description that follows a colon, not a sentence that opens with Do not
 
 
 def test_a_plain_negation_in_a_condition_or_description_is_not_a_prohibition():

@@ -72,6 +72,8 @@ Better 11 (two of them because no question is the right answer, one a duplicate)
 All four rules are met. After the adjustment the released rows are 69: "avoid" questions 60 to 0; null 9 to 17 of 69 (+11.6 points, limit 15); owner rating 0 worse; byte-identical prompts for every other row (asserted).
 `services/audit_questions.py` carries the adjusted pattern. One correction in the same change, with no effect on any row of the 13 documents: the tier marker before a sentence-opening "Do not" is read with its hyphen
 ("(T-1) Do not ..."); the pre-registered `\(\w+\)` did not match it, and no released row starts that way.
+Review (Codex, on the pull request): the sentence-opening "Do not" also matches at the start of any later sentence of a quote ("Submit the form. Do not release the report."), and the baseline pattern in `run_prohibition_rule.py` is a frozen copy of the old
+one instead of `aq.PROHIBITION`. Neither changes any row: no quote of the 2,599 checklist rows of the 13 documents has a "Do not" that opens a later sentence, and the 69 released rows are the same.
 The questions he rated are written into the sidecars by `write_rated_questions.py` (dry run: 69 rows written, 2 rows keep the rule, and every row of the 11 changed documents is answered from the sidecar with no model call).
 
 ## Found on the way: the same sentence twice

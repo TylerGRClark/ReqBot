@@ -21,6 +21,9 @@ LABEL = {"afi10-2402": "AFI 10-2402", "afi13-550": "AFI 13-550", "afi17-203": "A
 NEW = re.compile(
     r"\b(?:shall|must|should|will|may|can|could|would)\s+not\b(?!\s+(?:limited|only|necessarily))|\bcannot\b|\bnever\b|\bprohibited\b|\bforbidden\b"
     r"|\b(?:is|are)\s+not\s+(?:authorized|permitted|allowed|to)\b|^\W*(?:\(\w+\)\s*)?(?:do|does)\s+not\b", re.IGNORECASE)
+# The pattern before the change, frozen: `aq.PROHIBITION` is the adopted pattern once the change is merged, so the baseline of this record must not read it.
+OLD = re.compile(
+    r"\b(?:shall|must|should|will|may|can|could|would|do|does|did|is|are|be)\s+not\b(?!\s+(?:limited|only|necessarily))|\bcannot\b|\bnever\b|\bprohibited\b|\bforbidden\b", re.IGNORECASE)
 AVOID = re.compile(r"\bavoid(?:s|ing)?\b", re.IGNORECASE)
 
 
@@ -60,7 +63,7 @@ def main():
             q = it.get("source_quote") or ""
             if not q.strip() or aq.skipped_because(it):
                 continue
-            old, new = bool(aq.PROHIBITION.search(q)), bool(NEW.search(q))
+            old, new = bool(OLD.search(q)), bool(NEW.search(q))
             assert not (new and not old), "the narrowed pattern must be a subset of the old one"
             if old and not new:
                 released.append((key, it))
