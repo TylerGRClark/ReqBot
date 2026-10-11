@@ -61,6 +61,7 @@ Each change traces to the owner's answers above, to the open review comment on t
 5. "retain / have / assume ... responsibilities" is a duty with a named party.
 6. An applicability sentence in the front matter is `applicability`; the location is kept as the tag `front_matter`. Cover-page text with no scope statement stays `cover_page_text`.
 7. Tier marks with a hyphen, "(T-1)", are read in the three patterns that look at the opening of a sentence (they were not).
+8. Not a change to any label: a row whose kind comes from where it sits (table row, form-template text, cover-page text) also carries `kind_by_wording`, the kind its words alone would give, so a duty sentence in a table cell is not reduced to "table row" (Codex, on the plan's pull request). On the six documents 97 rows carry one; 56 of them are a duty, permission, prohibition or the like by their wording. The labels of the second sample are unchanged (30 of 30).
 
 Effect on the 1,418 rows of the six documents (before to after): unknown to command 129, duty with a party to command 116, unknown to duty with a party 19, cover page to applicability 6, permission to command 4, prohibition to permission 1.
 Of the first sample only the 5 disputed rows change, and each now has the label the owner chose. I read 28 of the changed rows at random: all 28 were right. This is a regression check, not a measurement; the second sample is the measurement.

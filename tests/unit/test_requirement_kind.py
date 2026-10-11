@@ -138,3 +138,13 @@ def test_an_applicability_sentence_in_the_front_matter_is_applicability_and_keep
 
 def test_the_rules_version_names_the_second_rule_set():
     assert RK.RULES_VERSION == "kind-rules-2"
+
+
+def test_a_row_whose_kind_comes_from_its_position_also_keeps_what_its_words_say():
+    r = RK.classify(_item("The CST/CSL will notify the CFP within one hour.", citation="Table 3.1"))
+    assert r["kind"] == "table_row" and r["kind_by_wording"] == "duty_with_actor"
+    r = RK.classify(_item("Compliance with this publication is mandatory.", citation="Front matter"))
+    assert r["kind"] == "cover_page_text" and r["kind_by_wording"] == "unknown"
+    r = RK.classify(_item("Provide the name of the asset owner.", citation="Figure A3.1"))
+    assert r["kind"] == "form_template_text" and r["kind_by_wording"] == "duty_imperative"
+    assert "kind_by_wording" not in RK.classify(_item("The Director will approve the list."))

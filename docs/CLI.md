@@ -214,7 +214,7 @@ Writes one draft yes/no audit question per checklist row to `<doc>_audit_questio
 reqbot kinds --doc policy
 ```
 
-Labels each checklist row with the kind of statement it is (a duty with a named party, a command, a recommendation, a permission, a prohibition, an exemption, a definition or description, a statement of who the document applies to, a pointer, a table row, text in a form template, cover-page text, or `unknown`) and writes the labels, the rule that fired and a few tags (`refers_back`, `list_item`, `fragment`) to `<doc>_kinds.jsonl` beside the document's requirements. It reads the same rows as `checklist`, uses wording rules and no model, and changes nothing else: this is stage 1 of the requirement-kind proposal (docs/PIPELINE_REDESIGN_PLAN.md, section 10), and no reader uses the labels yet.
+Labels each checklist row with the kind of statement it is (a duty with a named party, a command, a recommendation, a permission, a prohibition, an exemption, a definition or description, a statement of who the document applies to, a pointer, a table row, text in a form template, cover-page text, or `unknown`) and writes the labels, the rule that fired and a few tags (`refers_back`, `list_item`, `fragment`, `front_matter`) to `<doc>_kinds.jsonl`. A row whose kind comes from where it sits (a table row, form-template text, cover-page text) also carries `kind_by_wording`: what its words alone would make it beside the document's requirements. It reads the same rows as `checklist`, uses wording rules and no model, and changes nothing else: this is stage 1 of the requirement-kind proposal (docs/PIPELINE_REDESIGN_PLAN.md, section 10), and no reader uses the labels yet.
 
 ## checklist
 

@@ -95,8 +95,12 @@ def named_actor_then_command(quote: str):
     return (m.group("actor").strip(), verb) if verb else None
 
 
-def classify(item: dict) -> dict:
-    """{"kind", "kind_reasons", "kind_tags"} for one checklist item. The first rule that matches decides the kind; the reasons name the rule and the words it matched."""
+POSITION_KINDS = frozenset({"table_row", "form_template_text", "cover_page_text"})  # decided by where the row sits, not by what it says
+
+
+def classify(item: dict, *, use_position: bool = True) -> dict:
+    """{"kind", "kind_reasons", "kind_tags"} for one checklist item, and `kind_by_wording` when the kind comes from where the row sits (what the kind would be if its position were ignored:
+    a duty sentence in a table cell is a table_row and a duty). The first rule that matches decides the kind; the reasons name the rule and the words it matched."""
     quote = item.get("source_quote") or ""
     flags = set(item.get("item_flags") or [])
     citation = str(item.get("citation") or "")
@@ -107,13 +111,13 @@ def classify(item: dict) -> dict:
         if kind is None:
             kind, reasons = name, [why + (f": {match.group(0).strip()!r}" if match else "")]
 
-    if citation.startswith("Figure"):
+    if use_position and citation.startswith("Figure"):
         decide("form_template_text", f"cited by a figure caption ({citation})")
-    elif citation == "Front matter" and "applicability_statement" in flags:
+    elif use_position and citation == "Front matter" and "applicability_statement" in flags:
         decide("applicability", "says who the document applies to (in the front matter)")
-    elif citation == "Front matter":
+    elif use_position and citation == "Front matter":
         decide("cover_page_text", "cited as front matter")
-    elif citation.startswith("Table"):
+    elif use_position and citation.startswith("Table"):
         decide("table_row", f"cited by a table caption ({citation})")
     elif "applicability_statement" in flags:
         decide("applicability", "says who the document applies to")
@@ -157,7 +161,10 @@ def classify(item: dict) -> dict:
         tags.append("fragment")
     if citation == "Front matter" and kind != "cover_page_text":
         tags.append("front_matter")
-    return {"kind": kind, "kind_reasons": reasons, "kind_tags": tags}
+    out = {"kind": kind, "kind_reasons": reasons, "kind_tags": tags}
+    if kind in POSITION_KINDS and use_position:
+        out["kind_by_wording"] = classify(item, use_position=False)["kind"]
+    return out
 
 
 def sidecar_path(requirements_path: Path) -> Path:
