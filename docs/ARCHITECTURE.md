@@ -41,6 +41,150 @@ The [developer reference](../ARCHITECTURE.md) contains the module/import map.
 Older documents, log lines and command options name the stages by letter (Step A to
 Step F); this page gives both. New work uses the names by job.
 
+The same flow as a picture, laid out as the [redesign plan](PIPELINE_REDESIGN_PLAN.md) lays it out:
+one job per step (GitHub draws it from the text below it). Green steps are built and run on
+their own; amber steps work today but still run inside Step D together with other jobs;
+grey dashed steps are in the plan and not built, or switched off. The steps run in order, but not
+every record takes every path: records that cannot be anchored or are empty are set aside, and
+only rows the faithfulness check flags go through repair.
+
+```mermaid
+flowchart TD
+    subgraph READ["Read the document"]
+        N1["1 PDF reading<br/>PDF to a structured document<br/>(Step A)"]
+        N2["2 Chunking<br/>cut into chunks, keep the raw text<br/>(Step B)"]
+    end
+    subgraph FIND["Find the requirements"]
+        N3["3 Requirement finding<br/>one call per chunk returns the quotes<br/>local 8B model (Step C)"]
+        N4["4 Anchoring<br/>find the quote in the chunk text,<br/>record where and whether exact<br/>(inside Step D today)"]
+        N5["5 De-duplication<br/>collapse the same quote<br/>from the same reference<br/>(inside Step D today)"]
+    end
+    subgraph BUILD["Build what a reader sees"]
+        N6["6 Context attaching<br/>whole sentence and lead-in kept beside<br/>the quote, never replacing it<br/>(inside Step D today)"]
+        N7["7 Screening<br/>flag the clear non-requirements,<br/>judging the explained text<br/>(not built: junk filters still<br/>run first, in Step D)"]
+    end
+    subgraph CHECK["Check and repair (planned)"]
+        N8["8 Faithfulness check<br/>does the explained text still mean<br/>what the quote means? 14B model<br/>(not built)"]
+        N9["9 Repair<br/>one attempt at a better version<br/>(not built)"]
+        N10["10 Re-check<br/>the same check on the repaired text<br/>(not built)"]
+    end
+    subgraph PUBLISH["Publish"]
+        N11["11 Totals and final file<br/>(Step E)"]
+        N12["12 Search indexing<br/>dense and sparse vectors into Qdrant<br/>(Step F)"]
+    end
+    FAIL["Rejected records<br/>kept in a failures file"]
+    CL["On demand: checklist building<br/>citation, passage, flags, draft questions<br/>no model call"]
+    DQ["On demand: draft questions<br/>14B model, written to a side file<br/>(reqbot questions)"]
+    OFF["Switched off: tagging, requirement types,<br/>descriptions and the description check<br/>(old Steps D.5 and D.6)"]
+
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+    N5 --> N6
+    N6 --> N7
+    N7 --> N8
+    N2 -.->|"chunk text"| N4
+    N2 -.->|"chunk text"| N6
+    N4 -->|"cannot be anchored and fails grounding"| FAIL
+    N7 -->|"empty, heading echo, change-log"| FAIL
+    N8 -->|"ok"| N11
+    N8 -->|"flagged rows only"| N9
+    N9 --> N10
+    N10 -->|"kept, and flagged if it still fails"| N11
+    N11 --> N12
+    N6 --> CL
+    CL -.->|"rows to ask about"| DQ
+    DQ -.->|"read back by the checklist"| CL
+
+    classDef built fill:#d1fae5,stroke:#059669,color:#064e3b;
+    classDef inside fill:#fef3c7,stroke:#d97706,color:#78350f;
+    classDef planned fill:#f3f4f6,stroke:#6b7280,color:#374151,stroke-dasharray: 5 5;
+    classDef side fill:#e0e7ff,stroke:#4f46e5,color:#1e1b4b;
+    class N1,N2,N3,N11,N12,CL,DQ built;
+    class N4,N5,N6 inside;
+    class N7,N8,N9,N10,OFF planned;
+    class FAIL side;
+```
+
+### How one requirement is treated, by kind
+
+Not every requirement takes the same path. This chart follows one quote through the places where
+the code makes a different choice depending on what the quote is. Red boxes are records that are
+set aside. Where a box says "the plan flags these instead", the redesign plan replaces a
+rejection with a flag.
+
+```mermaid
+flowchart TD
+    Q["A quote returned by requirement finding<br/>(one prompt for every chunk)"]
+    SCAN["Text scan finds a duty sentence<br/>that nobody extracted"]
+
+    Q --> E1{"Empty, or a heading repeated<br/>as if it were a requirement?"}
+    E1 -->|yes| R1["Rejected"]
+    E1 -->|no| E2{"Found in its chunk?<br/>(fuzzy match and word coverage)"}
+    E2 -->|no| R2["Rejected: not grounded"]
+    E2 -->|yes| E3{"Cut-off fragment (including a lead-in<br/>that ends in a colon), or a definition<br/>pointer such as X, as defined in Y?"}
+    E3 -->|yes| R3["Rejected today<br/>(the plan flags these instead)"]
+    E3 -->|no| E4{"Dangling clause with no subject?"}
+    E4 -->|"yes, and no section header supplies one"| R4["Rejected"]
+    E4 -->|"no, or a header supplies the subject"| A["Anchored: where it sits in its chunk,<br/>exact or not"]
+
+    A --> X{"Whole sentence found exactly once,<br/>2 or more words, under 700 characters?"}
+    X -->|yes| X1["Whole sentence kept beside the quote"]
+    X -->|no| X2["Quote used as it is"]
+    X1 --> L{"A list item?"}
+    X2 --> L
+    L -->|"yes, and a line above ends in a colon"| L1["That lead-in attached in front"]
+    L -->|"yes, no such line"| L2["Stays a bare list item"]
+    L -->|no| C0
+    L1 --> C0
+    L2 --> C0
+    SCAN --> C0
+
+    C0{"Where does it sit?"}
+    C0 -->|"in a table"| C1["Cited by the table caption;<br/>no responsible party read from the heading"]
+    C0 -->|"a numbered paragraph"| C2["Cited by its paragraph number;<br/>party from the numbered ancestors"]
+    C0 -->|"an unnumbered paragraph"| C3["Cited by the nearest number before it,<br/>marked inferred; party from the section path"]
+    C0 -->|"cover pages, or a template"| C4["Cited as Front matter,<br/>or by the figure caption"]
+
+    C1 --> Y
+    C2 --> Y
+    C3 --> Y
+    C4 --> Y
+    Y{"Starts in lower case, a table scrap,<br/>a definition, or not found in its passage?"}
+    Y -->|yes| Z1["Row kept and flagged; no draft question"]
+    Y -->|no| P{"Wording with a negation?<br/>(shall not, must not, cannot, never, prohibited,<br/>and for now also do not, does not, is not, are not)"}
+    P -->|yes| P1["Prompt adds: this forbids something,<br/>ask whether it is avoided"]
+    P -->|no| P2["Standard prompt"]
+    P1 --> M["Model writes one question,<br/>or null for a permission,<br/>a description or a fragment"]
+    P2 --> M
+    M --> K["Marked for review if a term, or the actor,<br/>is not in the row itself"]
+
+    classDef reject fill:#fee2e2,stroke:#dc2626,color:#7f1d1d;
+    classDef keep fill:#d1fae5,stroke:#059669,color:#064e3b;
+    classDef note fill:#e0e7ff,stroke:#4f46e5,color:#1e1b4b;
+    class R1,R2,R3,R4 reject;
+    class Z1 note;
+    class K keep;
+```
+
+What this chart does not show is that several things are *not* decided by kind. Requirement
+finding sends every chunk through the same prompt, whether it holds a paragraph, a list, a
+table or a definition. No stored field records what kind of requirement a quote is (a duty, a
+prohibition, a permission, a definition, a statement of who the document applies to, a table
+row, an instruction inside a form template); the later steps each rediscover the parts of that
+they need, from the wording, with their own rules.
+
+One of those rules is under test: the negation test in the chart reads a plain "does not" in a
+condition or a description ("... if this capability does not exist") as a prohibition, which can
+turn a duty into the question "does the unit avoid ...". A narrower test is being evaluated.
+
+A note on the red boxes: the code has seven rejection checks, but in the October 2026 runs of
+the 13 documents only three kinds of rejection occurred: not found in the chunk (117 records),
+cut-off fragment (93) and repeated heading (40). The empty-quote, definition-pointer and
+dangling-clause checks did not fire, and the change-log check depends on a generated description,
+so it is inactive while descriptions are switched off.
+
 ### Planned changes
 
 The [pipeline redesign plan](PIPELINE_REDESIGN_PLAN.md) describes where the pipeline is
@@ -101,6 +245,36 @@ by inference, marked "(inferred)", or not at all); other passages of that kind, 
 separately as possible missed requirements. Draft audit questions
 come from `reqbot questions`, which writes a sidecar file (`*_audit_questions.jsonl`) that
 the checklist reads; they are drafts for the auditor to check.
+
+How one checklist is put together. Building it reads files only; the one model call is the
+separate `reqbot questions` step, whose output the checklist reads back:
+
+```mermaid
+flowchart TD
+    RUN[("Newest processed run<br/>requirements file: gated, else enriched, else normalized<br/>*_chunks.jsonl")]
+    ROWS["Rows from extracted requirements<br/>citation, section heading, parent paragraph,<br/>who it applies to, passage with the quote marked,<br/>hint flags"]
+    SCAN["Text scan<br/>duty sentences that were not extracted"]
+    FOUND["Found rows (found_by_text_scan)<br/>duty sentences, placed in document order"]
+    POSS["Possible missed requirements<br/>passages with no duty sentence of their own"]
+    MERGE["Rows in document order"]
+    SIDE[("Draft questions<br/>*_audit_questions.jsonl")]
+    APPLY["Question and review marks added<br/>no model call"]
+    OUT["Checklist: sheet, CSV, JSON, Markdown,<br/>web screen, MCP tool"]
+    WRITE["reqbot questions --doc<br/>separate step, local model<br/>asks for a question for each eligible row<br/>(none for fragments, definitions, descriptions, permissions)"]
+
+    RUN --> ROWS
+    RUN --> SCAN
+    SCAN --> FOUND
+    SCAN --> POSS
+    ROWS --> MERGE
+    FOUND --> MERGE
+    MERGE --> APPLY
+    SIDE --> APPLY
+    APPLY --> OUT
+    POSS -->|"listed below the rows"| OUT
+    MERGE -.->|"rows to ask about"| WRITE
+    WRITE --> SIDE
+```
 
 ## Artifacts and the source of record
 
