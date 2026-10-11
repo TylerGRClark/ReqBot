@@ -14,6 +14,7 @@ differ.
 | [Architecture](ARCHITECTURE.md) | Document-to-requirement flow, retrieval, validation, and component ownership. |
 | [Logic diagrams](diagrams/README.md) | What the pipeline and the checklist do today, one diagram per stage, with the real rejection labels and thresholds. |
 | [Pipeline redesign plan](PIPELINE_REDESIGN_PLAN.md) | Where the pipeline is going: root, anchor and explained layers, steps named by job. A plan; none of it is built. |
+| [Web UI parity plan](WEB_UI_PARITY_PLAN.md) | Who sees what (reader and admin), a network MCP service, and running ingest, draft questions and rebuild from the browser: roles, the job service, admin uploads, a runner on another machine. A plan; none of it is built. |
 | [Configuration](CONFIGURATION.md) | Defaults, precedence, environment variables, and model changes. |
 | [Connecting AI tools](AI_TOOLS.md) | MCP setup, subprocess configuration, tools, and troubleshooting. |
 | [CLI reference](CLI.md) | Every public subcommand and its options. |
