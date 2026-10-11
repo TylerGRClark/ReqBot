@@ -26,8 +26,8 @@ You hereby irrevocably assign to the Maintainer all worldwide right, title, and
 interest in and to the copyright in each Contribution, including all rights to
 license, sublicense, and relicense the Contribution.
 
-This assignment allows the Maintainer to distribute the Project under the AGPL
-v3, under commercial licenses, or under any future license, without requiring
+This assignment allows the Maintainer to distribute the Project under proprietary
+terms, under commercial licenses, or under any future license, without requiring
 further permission from you.
 
 ## 3. License Back to Contributor
