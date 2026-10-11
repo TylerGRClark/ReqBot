@@ -16,7 +16,7 @@ The web page reads. Every command that writes, or runs for more than a few secon
 
 | CLI command | In the web page today | Plan |
 |---|---|---|
-| `ask`, `trace`, `compare`, `evidence` | Search, Trace, Compare, Evidence | reader mode keeps Search; the rest are open (section 10) |
+| `ask`, `trace`, `compare`, `evidence` | Search, Trace, Compare, Evidence | reader mode keeps Search; Trace, Compare and Evidence stay admin-only for now (section 10) |
 | `docs`, `checklist` (with export) | Corpus, Checklists | reader mode: Library, Checklists |
 | `status` | System | admin |
 | `init` (guided setup) | Settings edits the config (`POST /api/config`, same machine only) | role rule (stage 1); first-run wizard later (stage 6) |
@@ -77,7 +77,7 @@ Also in this stage: `reqbot jobs` (list, show, cancel) and read-only job routes 
 - **Drag and drop, files or a whole folder.** The browser sends each PDF as one request with the raw PDF as the body, so no multipart library is needed (`python-multipart` is installed here but not declared in `pyproject.toml`; this plan adds no dependency).
 - **Checks on every upload:** the name ends in `.pdf` and is reduced to a plain file name; the first bytes are `%PDF-`; a size cap (default 100 MB) and a page cap. The server **writes to disk as the file arrives and enforces the cap while it streams**, because a chunked upload need not carry a length. Proxies in front commonly cap request bodies and time out; the deployment page says so.
 - **Stored under** `<processed_dir>/.uploads/<job id>/<original file name>.pdf`, so the PDF's stem, which is the document key everywhere in ReqBot, is what the admin uploaded.
-- **"Point it at a folder" on the server** means one configured **inbox folder** (default `<processed_dir>/.inbox`), not an arbitrary path. "Import from the inbox" creates one ingest job per PDF and skips a file whose content was already ingested. This is also where an automatic fetcher would later drop files.
+- **"Point it at a folder" on the server** means one configured **inbox folder** (default `<processed_dir>/.inbox`), not an arbitrary path. It is optional: drag and drop is the main way in, and the inbox suits PDFs that are already on the server or copied over a network share. "Import from the inbox" creates one ingest job per PDF and skips a file whose content was already ingested. This is also where an automatic fetcher would later drop files.
 - **The same file name:** compare content. The same content is skipped. Different content asks the admin, **replace** (the new edition becomes the document's current one; older run folders stay on disk) or **keep both** under a new name. It is never silent.
 - **Replace without a gap.** The indexing step first writes the new run's points (a point's ID comes from its requirement ID, so unchanged requirements are overwritten in place). Only after the document's indexing finishes and the completeness check passes (the check reindex already uses: every expected point present) are the document's points that are not in the new expected set removed. The document is never missing from search; a failure leaves the old points plus some new ones, and a retry converges. This changes what the indexing step does and is confirmed again at build time (stop-and-ask). Acceptance: a failure injected after half the batches leaves the old document fully searchable, and the retry leaves no stale point (backlog item 42).
 - **Handling a file you did not write.** Even an official source is not trusted absolutely. The pipeline runs in the pipeline container with a time limit and a memory limit and no more network than it needs; there is no end-user quarantine because there is no end-user upload. An optional virus scan can come later.
@@ -96,7 +96,7 @@ Also in this stage: `reqbot jobs` (list, show, cancel) and read-only job routes 
 
 What must reach what: the browser reaches the server only; the server reaches Qdrant (search) and the model machine (embedding a query, optional synthesis); the runner reaches the model machine and Qdrant (indexing); the server and the runner share the processed folder.
 
-- **File movement goes behind one interface**, with a **shared-folder** implementation first (a network mount or shared volume). A transfer-over-HTTP implementation can replace it later without touching the rest. Not yet confirmed by the owner (section 10).
+- **File movement goes behind one interface**, with a **shared-folder** implementation first (a network mount or shared volume). A transfer-over-HTTP implementation can replace it later without touching the rest, for a deployment that cannot share a folder. Decided (the owner left this technical choice to the implementer).
 - **A runner on another machine (stage 5)** is a small command on that machine that mounts the shared folder and claims jobs by the lease in section 5. Nothing is pushed to it, so it needs no inbound access.
 - A one-page **deployment shapes** document (all in one, three boxes, enterprise) lists the above for each shape.
 
@@ -125,11 +125,13 @@ No stage adds a model call (jobs run commands that already exist), changes extra
 ## 10. Decisions for the owner
 
 1. **Decided 2026-10-11:** the two audiences; admin-only upload; reader mode with Library, Checklists and Search; Ask as a network MCP service; agnostic sign-in with no accounts of our own; modular deployment with the runner seam built in.
-2. **File movement** between the server and a runner (needed before stage 5). Recommended: a shared folder behind an interface, transfer over HTTP later.
-3. **Trace, Compare and Evidence in reader mode.** They only read. Default: hidden for readers, switchable.
-4. **Users' own documents.** Whether they would ever join the shared library or stay private to the uploader (separate workspaces, a much larger design). Not needed while only admins add documents.
-5. **The same-name rule** in section 6 (content-aware, never silent), and **the inbox folder** (default `<processed_dir>/.inbox`): needed before stage 4.
-6. **Automatic fetching** of official documents: later; where it runs is open.
+2. **File movement between the server and a runner: decided (left to the implementer).** A shared folder behind an interface; transfer over HTTP only if a deployment cannot share a folder.
+3. **Trace, Compare and Evidence: decided, not in reader mode for now.** The owner rarely uses them. They only read, so they can be switched on for readers later without design work.
+4. **The same-name rule and the inbox folder: decided (left to the implementer).** Content-aware and never silent, as in section 6; an optional inbox under the processed folder.
+5. **Still open, and not needed yet:**
+   - Users' own documents: whether they would ever join the shared library or stay private to the uploader (separate workspaces, a much larger design). Not needed while only admins add documents.
+   - Automatic fetching of official documents: a later piece; where it runs is open.
+   - To check with the customer before stage 2: whether the AI tools they may use can connect to a remote MCP server.
 
 ## 11. What this plan does not claim
 
