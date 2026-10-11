@@ -25,7 +25,7 @@ flowchart TD
     subgraph SENT["Judged sentence by sentence"]
         S1{"Sentence of 20 or more characters<br/>with a modal or an opening imperative?"}
         S2{"Only a purpose statement<br/>(The purpose is to ...)<br/>with no strong modal?"}
-        S3{"Already inside an extracted quote?<br/>(25 or more characters, containment either way;<br/>a short sentence only if the text is the same)"}
+        S3{"Covered by an extracted quote?<br/>The quote has 25 or more characters and either text<br/>contains the other, or the two are identical"}
         S4["Uncovered duty sentence"]
         S5["Covered: counted"]
         S1 -->|no| S6["Not a duty sentence"]

@@ -38,6 +38,6 @@ flowchart TD
     class O1,O2,O3,O4 off;
 ```
 
-Nothing on this diagram runs today. Dashed boxes are planned; grey boxes are switched off.
+Green boxes run today and are shown only to place the rest. No dashed box runs in the pipeline, and grey boxes are switched off. Kind labels exist only as a side file that nothing reads yet.
 
 Back to the [diagram index](README.md).

@@ -27,7 +27,7 @@ flowchart TD
         PS2{"Passage result"}
         PS3["no_passage flag<br/>(chunk missing)"]
         PS4["quote_not_located_in_passage flag<br/>(whole chunk shown, unmarked)"]
-        PR["Parent paragraph: nearest numbered ancestor<br/>present in the document, text cut at a word"]
+        PR["Parent paragraph: the nearest numbered ancestor present<br/>in the document, text cut at a word<br/>Extracted row: looked up from its extracted reference only<br/>(none when that is empty or not a paragraph number)<br/>Found row: looked up from its citation"]
         RR["Review reasons: no source reference, no section path,<br/>no page numbers, low confidence (when a record has one),<br/>profile mismatch"]
         POS["Position kept: chunk and offset in the chunk"]
     end
