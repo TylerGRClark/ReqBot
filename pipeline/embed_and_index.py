@@ -351,6 +351,21 @@ def run(
     return total_indexed
 
 
+def derived_payload_fields(requirements_jsonl) -> dict:
+    """The `payload_extras` for a direct-script run: {requirement_id: {"citation": label}}, read from the document beside the requirements file with the checklist's own code
+    (services/checklist_service.py). `run()` itself imports nothing from services so this module stays independently runnable: an entry point that sits above it (the CLI, or the
+    `main()` of a script) passes the result in. Fail-soft: if the repository's services cannot be imported, the index simply carries `source_ref` only."""
+    try:
+        root = str(Path(__file__).resolve().parent.parent)
+        if root not in sys.path:
+            sys.path.insert(0, root)
+        from services import checklist_service
+        return checklist_service.index_payload_extras(requirements_jsonl)
+    except Exception as e:
+        log.warning("Citation labels not computed for %s: %s; the index will carry source_ref only", requirements_jsonl, e)
+        return {}
+
+
 def _positive_int(value: str) -> int:
     """Argparse type: integer that must be > 0."""
     try:
@@ -422,6 +437,7 @@ def main() -> None:
             collection_name=args.collection_name,
             batch_size=args.batch_size,
             embedding_model=args.embedding_model,
+            payload_extras=derived_payload_fields(reqs_path),
         )
     except RuntimeError as e:
         log.error("%s", e)

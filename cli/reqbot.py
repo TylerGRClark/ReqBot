@@ -82,14 +82,9 @@ def _read_document_id(jsonl_path: str) -> str | None:
 
 
 def _citation_extras(jsonl_path) -> dict:
-    """{requirement_id: {"citation": label}} for the index payload: the label the checklist gives each row, read from the document beside the requirements file (a paragraph
-    number, "Table 3.1", "Front matter"). A label is a display aid, so failing to work it out never fails an indexing run: the index then simply has none and readers show `source_ref`."""
-    try:
-        from services import checklist_service as _checklist
-        return {rid: {"citation": cite} for rid, cite in _checklist.requirement_citations(jsonl_path).items() if cite}
-    except Exception as e:
-        log.warning("Citation labels not computed for %s: %s — the index will carry source_ref only", jsonl_path, e)
-        return {}
+    """{requirement_id: {"citation": label}} for the index payload (see services.checklist_service.index_payload_extras; never raises)."""
+    from services import checklist_service as _checklist
+    return _checklist.index_payload_extras(jsonl_path)
 
 
 def cmd_ingest(args: argparse.Namespace) -> int:
@@ -772,8 +767,8 @@ def cmd_trace(args: argparse.Namespace) -> int:
     payload = result["requirement"]
     cross_matches = result["cross_matches"]
     context_text = result["context_text"]
-    source_ref = _requirement_citation(payload)
-    extracted_ref = (payload.get("source_ref") or "").strip()
+    source_ref = payload.get("source_ref", "")  # as extracted: what trace matched other documents on
+    shown_ref = _requirement_citation(payload)  # what is shown for the requirement itself
 
     if json_output:
         out: dict = {
@@ -809,9 +804,9 @@ def cmd_trace(args: argparse.Namespace) -> int:
     print("\nProvenance")
     print("----------")
     print(f"  {'Document:':<14} {payload.get('source_pdf', '—')}")
-    print(f"  {'Source ref:':<14} {source_ref or '—'}")
-    if extracted_ref and extracted_ref != source_ref:
-        print(f"  {'As extracted:':<14} {extracted_ref}")
+    print(f"  {'Source ref:':<14} {shown_ref or '—'}")
+    if source_ref and source_ref.strip() != shown_ref:
+        print(f"  {'As extracted:':<14} {source_ref.strip()}")
     print(f"  {'Page:':<14} {page_str}")
     print(f"  {'Domain profile:':<14} {payload.get('domain_profile', 'cybersecurity')}")
     print(f"  {'Extracted by:':<14} {payload.get('extraction_model', 'unknown')}")

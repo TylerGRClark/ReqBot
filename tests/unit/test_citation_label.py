@@ -160,3 +160,52 @@ def test_reindex_passes_each_documents_labels_to_the_indexer(tmp_path):
             pass  # only the call into the indexer matters here; the alias swap needs a live Qdrant
     _, kwargs = mock_embed.call_args
     assert kwargs["payload_extras"]["REQ-table"] == {"citation": "Table 3.1"}
+
+
+def test_trace_shows_the_citation_but_reports_matches_by_the_extracted_reference(capsys):
+    from types import SimpleNamespace
+
+    from cli.reqbot import cmd_trace
+
+    payload = {"requirement_id": "REQ-1", "source_pdf": "a.pdf", "source_ref": "(T-2)", "citation": "Table 3.1", "source_quote": "Units will report."}
+    result = {"requirement": payload, "cross_matches": [{"requirement_id": "REQ-2", "source_pdf": "b.pdf", "source_ref": "(T-2)", "source_quote": "x"}], "context_text": None}
+    with patch("services.trace_service.trace", return_value=result):
+        rc = cmd_trace(SimpleNamespace(requirement_id="REQ-1", qdrant_url="http://q", json_output=False, context=False))
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "Source ref:    Table 3.1" in out and "As extracted:  (T-2)" in out
+    assert "Cross-Framework Matches (same source_ref: (T-2))" in out  # matching was done on the extracted reference, so that is what is reported
+    assert "same source_ref: Table 3.1" not in out
+
+
+def test_trace_with_no_extracted_reference_does_not_claim_a_search_by_the_citation(capsys):
+    from types import SimpleNamespace
+
+    from cli.reqbot import cmd_trace
+
+    payload = {"requirement_id": "REQ-1", "source_pdf": "a.pdf", "source_ref": "", "citation": "2.1 (inferred)", "source_quote": "Units will report."}
+    with patch("services.trace_service.trace", return_value={"requirement": payload, "cross_matches": [], "context_text": None}):
+        cmd_trace(SimpleNamespace(requirement_id="REQ-1", qdrant_url="http://q", json_output=False, context=False))
+    out = capsys.readouterr().out
+    assert "Source ref:    2.1 (inferred)" in out and "No other documents found" not in out
+
+
+def test_the_direct_script_entry_points_pass_the_labels_too(tmp_path):
+    """`python3 pipeline/embed_and_index.py` and `run_pipeline.py --index` are supported ways to index; run() itself stays free of services, so they pass the labels in."""
+    import sys
+
+    from pipeline import embed_and_index
+
+    path = _doc(tmp_path) / "doc_requirements_normalized.jsonl"
+    assert embed_and_index.derived_payload_fields(path)["REQ-table"] == {"citation": "Table 3.1"}
+    with patch("pipeline.embed_and_index.run") as mock_run, patch.object(sys, "argv", ["embed_and_index.py", str(path)]):
+        embed_and_index.main()
+    assert mock_run.call_args.kwargs["payload_extras"]["REQ-inferred"] == {"citation": "2.1 (inferred)"}
+
+
+def test_a_failure_to_read_the_labels_never_stops_a_direct_script_run(tmp_path):
+    from pipeline import embed_and_index
+
+    path = _doc(tmp_path) / "doc_requirements_normalized.jsonl"
+    with patch("services.checklist_service.requirement_citations", side_effect=RuntimeError("boom")):
+        assert embed_and_index.derived_payload_fields(path) == {}

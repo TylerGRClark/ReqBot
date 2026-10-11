@@ -254,6 +254,16 @@ def requirement_citations(jsonl_path) -> dict[str, str]:
     return out
 
 
+def index_payload_extras(jsonl_path) -> dict:
+    """{requirement_id: {"citation": label}} for the search index: `requirement_citations`, without the blanks, in the shape the indexer merges into each payload. A label is a display
+    aid, so failing to work it out never fails an indexing run: the index then has none and readers show `source_ref`."""
+    try:
+        return {rid: {"citation": cite} for rid, cite in requirement_citations(jsonl_path).items() if cite}
+    except Exception as e:
+        log.warning("Citation labels not computed for %s: %s; the index will carry source_ref only", jsonl_path, e)
+        return {}
+
+
 def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     """Generate a checklist envelope dict from normalized requirements for doc_key.
 
