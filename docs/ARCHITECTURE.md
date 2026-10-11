@@ -44,27 +44,55 @@ Step F); this page gives both. New work uses the names by job.
 The same flow as a picture, laid out as the [redesign plan](PIPELINE_REDESIGN_PLAN.md) lays it out:
 one job per step (GitHub draws it from the text below it). Green steps are built and run on
 their own; amber steps work today but still run inside Step D together with other jobs;
-grey dashed steps are in the plan and not built, or switched off.
+grey dashed steps are in the plan and not built, or switched off. The steps run in order, but not
+every record takes every path: records that cannot be anchored or are empty are set aside, and
+only rows the faithfulness check flags go through repair.
 
 ```mermaid
 flowchart TD
-    N1["1 PDF reading<br/>PDF to a structured document<br/>(Step A)"]
-    N2["2 Chunking<br/>cut into chunks, keep the raw text<br/>(Step B)"]
-    N3["3 Requirement finding<br/>one call per chunk returns the quotes<br/>local 8B model (Step C)"]
-    N4["4 Anchoring<br/>find the quote in the chunk text,<br/>record where and whether exact<br/>(inside Step D today)"]
-    N5["5 De-duplication<br/>collapse the same quote from the same reference<br/>(inside Step D today)"]
-    N6["6 Context attaching<br/>whole sentence and lead-in kept beside the quote<br/>(inside Step D today; citation and heading<br/>are still worked out per checklist)"]
-    N7["7 Screening<br/>flag the clear non-requirements,<br/>judging the explained text<br/>(not built: junk filters still run first, in Step D)"]
-    N8["8 Faithfulness check<br/>does the explained text still mean<br/>what the quote means? 14B model<br/>(not built)"]
-    N9["9 Repair<br/>one attempt at a better version,<br/>flagged rows only (not built)"]
-    N10["10 Re-check<br/>the same check on the repaired text<br/>(not built)"]
-    N11["11 Totals and final file<br/>(Step E)"]
-    N12["12 Search indexing<br/>dense and sparse vectors into Qdrant<br/>(Step F)"]
+    subgraph READ["Read the document"]
+        N1["1 PDF reading<br/>PDF to a structured document<br/>(Step A)"]
+        N2["2 Chunking<br/>cut into chunks, keep the raw text<br/>(Step B)"]
+    end
+    subgraph FIND["Find the requirements"]
+        N3["3 Requirement finding<br/>one call per chunk returns the quotes<br/>local 8B model (Step C)"]
+        N4["4 Anchoring<br/>find the quote in the chunk text,<br/>record where and whether exact<br/>(inside Step D today)"]
+        N5["5 De-duplication<br/>collapse the same quote<br/>from the same reference<br/>(inside Step D today)"]
+    end
+    subgraph BUILD["Build what a reader sees"]
+        N6["6 Context attaching<br/>whole sentence and lead-in kept beside<br/>the quote, never replacing it<br/>(inside Step D today)"]
+        N7["7 Screening<br/>flag the clear non-requirements,<br/>judging the explained text<br/>(not built: junk filters still<br/>run first, in Step D)"]
+    end
+    subgraph CHECK["Check and repair (planned)"]
+        N8["8 Faithfulness check<br/>does the explained text still mean<br/>what the quote means? 14B model<br/>(not built)"]
+        N9["9 Repair<br/>one attempt at a better version<br/>(not built)"]
+        N10["10 Re-check<br/>the same check on the repaired text<br/>(not built)"]
+    end
+    subgraph PUBLISH["Publish"]
+        N11["11 Totals and final file<br/>(Step E)"]
+        N12["12 Search indexing<br/>dense and sparse vectors into Qdrant<br/>(Step F)"]
+    end
+    FAIL["Rejected records<br/>kept in a failures file"]
     CL["On demand: checklist building<br/>citation, passage, flags, draft questions<br/>no model call"]
     DQ["On demand: draft questions<br/>14B model, written to a side file<br/>(reqbot questions)"]
     OFF["Switched off: tagging, requirement types,<br/>descriptions and the description check<br/>(old Steps D.5 and D.6)"]
 
-    N1 --> N2 --> N3 --> N4 --> N5 --> N6 --> N7 --> N8 --> N9 --> N10 --> N11 --> N12
+    N1 --> N2
+    N2 --> N3
+    N3 --> N4
+    N4 --> N5
+    N5 --> N6
+    N6 --> N7
+    N7 --> N8
+    N2 -.->|"chunk text"| N4
+    N2 -.->|"chunk text"| N6
+    N4 -->|"cannot be anchored and fails grounding"| FAIL
+    N7 -->|"empty, heading echo, change-log"| FAIL
+    N8 -->|"ok"| N11
+    N8 -->|"flagged rows only"| N9
+    N9 --> N10
+    N10 -->|"kept, and flagged if it still fails"| N11
+    N11 --> N12
     N6 --> CL
     CL -.->|"rows to ask about"| DQ
     DQ -.->|"read back by the checklist"| CL
@@ -72,9 +100,11 @@ flowchart TD
     classDef built fill:#d1fae5,stroke:#059669,color:#064e3b;
     classDef inside fill:#fef3c7,stroke:#d97706,color:#78350f;
     classDef planned fill:#f3f4f6,stroke:#6b7280,color:#374151,stroke-dasharray: 5 5;
+    classDef side fill:#e0e7ff,stroke:#4f46e5,color:#1e1b4b;
     class N1,N2,N3,N11,N12,CL,DQ built;
     class N4,N5,N6 inside;
     class N7,N8,N9,N10,OFF planned;
+    class FAIL side;
 ```
 
 ### Planned changes
