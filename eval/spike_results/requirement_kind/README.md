@@ -77,3 +77,22 @@ python3 cli/reqbot.py kinds --doc DOC                        # the six documents
 PYTHONPATH=. python3 eval/spike_results/requirement_kind/make_rating_sheet.py --seed 61 --exclude eval/spike_results/requirement_kind/outputs/sample.json
 ```
 
+## Result of kind-rules-2 on the second sample (2026-10-11, owner adjudication pending)
+
+The second reader (a different model run as an agent that never saw the rules' labels; `outputs/second_reader_rules2_seed61.json`; rules' labels `outputs/rule_labels_rules2_seed61.json`) agreed with the rules on 22 of 30 rows
+(73%; the first sample was 25 of 30). The 8 disagreements, by what they show:
+
+| Row | Rules said | Second reader said | What it shows |
+|---|---|---|---|
+| AFI 10-2402 2.20.1.1 ("... will be exempt from CARM programmatic responsibilities") | duty with a party | exemption | the exemption pattern reads "is/are exempt", not "will be exempt" |
+| AFI 13-550 5.3.4 ("Be a voting member of ...") | unknown | command, no party | "Be" opens a command |
+| AFI 10-2402 front matter ("This Instruction is applicable to ...") | cover page | applicability | the applicability hint reads "applies to", not "is applicable to" |
+| AFI 10-2402 3.3.3.4.2 ("The ATR is provided to ... so coordination can occur ...") | permission | description | "can" inside a purpose clause read as a permission |
+| DAFMAN 17-1305 4.1.11 ("Issuance of any vouchers requires the individual is assigned ...") | unknown | description (low confidence) | a judgment call: a condition stated with "requires" |
+| AFPD 17-1 3.2.2 ("These responsibilities may be summarized as follows:: Execute all responsibilities ...") | permission | command, no party | a lead-in that only introduces a list is read as the row's kind |
+| DAFMAN 17-1305 4.1.5 ("... are required to meet foundational qualifications ... but are not required to meet residential requirements ...") | exemption | duty with a party | the duty comes first; the exemption limits it (the same order rule as permission and prohibition) |
+| AFI 17-203 3.7.2.3 ("Examples of strategies include ...") | unknown | description | a sentence that gives examples |
+
+Counting every disagreement for the reader would give right 22 of 30 (73%): below the 85% bar. The owner's adjudication decides which of the 8 the reader is right on; the rules are revised after it, not before
+(a third sample with a new seed follows). Nothing reads the labels, so no checklist changes while this is open.
+
