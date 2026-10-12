@@ -324,3 +324,18 @@ def test_a_second_start_for_a_name_that_slipped_past_the_check_is_skipped_not_an
     r = env.client().post("/api/jobs/ingest", json={"upload_id": up["upload_id"]}, headers=env.headers)
     monkeypatch.setattr(js.JobStore, "enqueue", real)
     assert r.status_code == 200 and r.json()["result"] == "skipped" and r.json()["job_id"] == "JOB-20261012-000000-aaaaaa"
+
+
+def test_replace_starts_a_job_that_replaces_and_keep_both_does_not(env):
+    env.library("afi99-1", "old-content-hash")
+    up = upload(env, "afi99-1.pdf", tiny_pdf(1, "new edition")).json()
+    c, h = env.client(), env.headers
+    both = c.post("/api/jobs/ingest", json={"upload_id": up["upload_id"], "if_exists": "keep_both"}, headers=h)
+    assert both.status_code == 202
+    job = js.default_store().list_jobs()[0]
+    assert "--replace" not in job["argv"] and job["params"]["replace"] is False
+    js.default_store().cancel(job["id"])
+    rep = c.post("/api/jobs/ingest", json={"upload_id": up["upload_id"], "if_exists": "replace"}, headers=h)
+    assert rep.status_code == 202
+    job = js.default_store().list_jobs()[0]
+    assert "--replace" in job["argv"] and job["params"]["replace"] is True and job["params"]["stem"] == "afi99-1"

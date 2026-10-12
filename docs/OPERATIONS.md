@@ -83,7 +83,7 @@ it, or "Choose files", "Choose a folder", or "Import from inbox". It asks for th
 admin access code once (`reqbot token` prints it) and remembers it in that browser;
 with `reqbot token --open` it asks for nothing. A file whose name is already in the
 library with different content is not decided silently: the screen asks whether to
-replace it or keep both. A banner shows the running job's step; the job list has
+replace it or keep both. Replace removes the old copy's stale rows from search only after the new copy is completely in and every row is verified present, so the document is never missing from search; if the new run had a chunk that failed or was cut off, the old rows are kept and the log says to run it again. A banner shows the running job's step; the job list has
 Cancel and Retry and the end of each log. The server runs the queue
 (`reqbot serve`).
 

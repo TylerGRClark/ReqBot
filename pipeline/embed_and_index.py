@@ -220,6 +220,7 @@ def run(
     batch_size: int = 32,
     embedding_model: str = EMBEDDING_MODEL,
     payload_extras: dict | None = None,
+    prune_stale: bool = False,
 ) -> int:
     """Embed requirements and index into Qdrant.
 
@@ -238,6 +239,10 @@ def run(
         payload_extras:     {requirement_id: {field: value}} merged into that
                              requirement's payload (the caller derives them from
                              the document; see build_payload).
+        prune_stale:        Replace the document: after every point is written and
+                             verified present, remove the document's points (by
+                             source_pdf) that this run no longer has. Never before.
+                             See pipeline/index_replace.py.
 
     Returns:
         Number of requirements successfully indexed.
@@ -250,7 +255,7 @@ def run(
     log.info("Loaded %d requirements", len(requirements))
 
     if not requirements:
-        log.warning("No requirements to index")
+        log.warning("No requirements to index%s", "; replace was asked for, so the old points are kept" if prune_stale else "")
         return 0
 
     ollama_client = ollama.Client(host=ollama_url)
@@ -352,6 +357,16 @@ def run(
 
     if total_skipped:
         log.warning("%d requirements skipped due to embedding failures", total_skipped)
+
+    if prune_stale:
+        try:
+            from pipeline import index_replace
+        except ImportError:  # a bare script run from pipeline/: replace is only asked for through the package
+            log.warning("Replace was asked for but pipeline.index_replace could not be imported; nothing was removed")
+        else:
+            names = [r.get("source_pdf") for r in requirements if r.get("source_pdf")]
+            index_replace.prune_if_complete(client, collection_name, max(set(names), key=names.count) if names else "",
+                                            expected_point_ids(requirements), skipped=total_skipped)
 
     collection_info = client.get_collection(collection_name)
     log.info(

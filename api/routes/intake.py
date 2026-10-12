@@ -86,7 +86,9 @@ def _start(processed_dir, store, pdf_path, stem: str, sha256: str, if_exists: st
             run_stem = intake_service.free_stem(processed_dir, stem, jobs)
             run_path = intake_service.renamed_copy(pdf_path, run_stem, processed_dir)
     try:
+        # "replace" also removes, once the new run is fully indexed and verified, the document's points that the new run no longer has (pipeline/index_replace.py)
         job = job_service.enqueue_ingest(run_path, store=store, requested_by=requested_by,
+                                         replace=(status == "same_name_different_content" and if_exists == "replace"),
                                          params_extra={"sha256": sha256, "if_exists": if_exists if status == "same_name_different_content" else "n/a"})
     except JobAlreadyQueued as e:  # another request got there between the check above and the write
         return {"result": "skipped", "reason": "queued", "document": run_stem, "job_id": e.job_id, "message": f"{run_stem} is already queued or running."}

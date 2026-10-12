@@ -348,7 +348,9 @@ Adding a document is two requests, so a question can be asked in between.
    `options: ["replace", "keep_both"]` when the name is in the library with
    different content and `if_exists` is `ask`. It is never decided silently.
    `keep_both` ingests under a new name (`<name>_2`, ...); `replace` makes the new
-   run the document's current one.
+   run the document's current one and runs the ingest with `--replace`: once the
+   new run is fully indexed and verified, the document's earlier points that it
+   no longer has are removed from search (never before).
 
 `POST /api/jobs/questions` (`{"doc_key": "afi17-203"}`) and `POST /api/jobs/reindex`
 (`{"requirements_only": false}`) queue the other two long commands. 202 with

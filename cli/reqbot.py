@@ -99,6 +99,11 @@ def cmd_ingest(args: argparse.Namespace) -> int:
     if getattr(args, "progress_json", False):
         _progress.enable()
 
+    replace = bool(getattr(args, "replace", False))
+    if replace and (getattr(args, "max_chunks", None) or getattr(args, "no_index", False)):
+        log.error("--replace needs the whole document indexed: it cannot be combined with --max-chunks or --no-index")
+        return 1
+
     pdf_path = Path(args.pdf).resolve()
     if not pdf_path.exists():
         log.error("PDF not found: %s", pdf_path)
@@ -138,6 +143,18 @@ def cmd_ingest(args: argparse.Namespace) -> int:
         _progress.emit("done")
         return 0
 
+    if replace:
+        from pipeline import index_replace as _index_replace
+        gaps = _index_replace.extraction_gaps(
+            Path(index_path).parent / f"{_resolver.doc_key_from_requirements_path(Path(index_path))}_raw_responses.jsonl")
+        if gaps:
+            log.warning(
+                "Replace skipped: %s. The new points are indexed but the old ones are kept, because this run may be missing requirements the old index has. "
+                "Run it again to retry those chunks.",
+                " and ".join(f"{n} chunk(s) {k}" for k, n in gaps.items()),
+            )
+            replace = False
+
     # Index by default (uses enriched JSONL if enrichment ran, else normalized)
     _progress.emit("indexing")
     try:
@@ -145,6 +162,7 @@ def cmd_ingest(args: argparse.Namespace) -> int:
             index_path, qdrant_url=args.qdrant_url, ollama_url=args.ollama_url,
             embedding_model=_cfg.embedding_model,
             payload_extras=_citation_extras(index_path),
+            prune_stale=replace,
         )
     except Exception as e:
         log.error("Index into Qdrant failed: %s", e)
@@ -167,6 +185,7 @@ def cmd_ingest(args: argparse.Namespace) -> int:
                 qdrant_url=args.qdrant_url,
                 ollama_url=args.ollama_url,
                 embedding_model=_cfg.embedding_model,
+                prune_stale=replace,
             )
         except Exception as e:
             log.error("Index context into Qdrant failed: %s", e)
@@ -1793,6 +1812,11 @@ def main() -> None:
         type=str,
         default="cybersecurity",
         help="Domain profile name (default: cybersecurity). Profile must exist in profiles/<name>.json.",
+    )
+    p_ingest.add_argument(
+        "--replace", action="store_true",
+        help="Replace this document in the search index: once the new run is fully indexed and verified, remove the document's earlier points that it no longer has "
+             "(never before; needs the whole document, so not with --max-chunks or --no-index)",
     )
     p_ingest.add_argument(
         "--progress-json", action="store_true", dest="progress_json",
