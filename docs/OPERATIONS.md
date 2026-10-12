@@ -76,6 +76,17 @@ already mounts).
 - **Cancel.** `reqbot jobs cancel <id>` stops the whole process group; the run
   folder is kept.
 
+### From the web page
+
+The Corpus screen has the same thing for an admin: drop PDFs (or a whole folder) on
+it, or "Choose files", "Choose a folder", or "Import from inbox". It asks for the
+admin access code once (`reqbot token` prints it) and remembers it in that browser;
+with `reqbot token --open` it asks for nothing. A file whose name is already in the
+library with different content is not decided silently: the screen asks whether to
+replace it or keep both. A banner shows the running job's step; the job list has
+Cancel and Retry and the end of each log. The server runs the queue
+(`reqbot serve`).
+
 ## Resume an interrupted run
 
 Resume in the **same run directory** to retain the requirement-finding step's (Step C) prompt-hash cache.
