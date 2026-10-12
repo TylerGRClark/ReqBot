@@ -611,7 +611,7 @@ def reserve_run_dir(base: Path, stem: str) -> Path:
 
 
 def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=None, no_index: bool = False, max_chunks: int | None = None,
-                   requested_by: str = "", params_extra: dict | None = None) -> dict:
+                   requested_by: str = "", params_extra: dict | None = None, replace: bool = False) -> dict:
     """Queue `reqbot ingest` for one PDF. The job creates its run folder itself and passes it to the command, so a retry runs in the same folder and requirement finding reuses the
     answers it already has."""
     pdf = Path(pdf_path).expanduser().resolve()
@@ -619,6 +619,8 @@ def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=N
         raise ValueError(f"not a PDF file: {pdf_path}")
     if max_chunks is not None and max_chunks < 1:
         raise ValueError("max_chunks must be 1 or more")
+    if replace and (no_index or max_chunks):
+        raise ValueError("replace needs the whole document indexed: not with no_index or max_chunks")
     cfg = cfg or _config.load()
     store = store or default_store(cfg.processed_dir_path())
     run_dir = reserve_run_dir(cfg.processed_dir_path(), pdf.stem)
@@ -632,12 +634,14 @@ def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=N
         argv.append("--no-index")
     if max_chunks:
         argv += ["--max-chunks", str(max_chunks)]
+    if replace:
+        argv.append("--replace")
     models = [cfg.extraction_model] + ([] if no_index else [cfg.embedding_model])
     requires = {"ollama_url": cfg.ollama_url, "ollama_models": [m for m in models if m], "qdrant_url": "" if no_index else cfg.qdrant_url}
     env = {} if no_index else {"REQBOT_EMBEDDING_MODEL": cfg.embedding_model}  # the ingest command has no flag for it; the environment overrides config
     try:
         return store.enqueue("ingest", argv, title=f"Ingest {pdf.name}", run_dir=str(run_dir), requires=requires, env=env,
-                             params={"pdf": str(pdf), "stem": pdf.stem, "no_index": no_index, "max_chunks": max_chunks, **(params_extra or {})},
+                             params={"pdf": str(pdf), "stem": pdf.stem, "no_index": no_index, "max_chunks": max_chunks, "replace": replace, **(params_extra or {})},
                              requested_by=requested_by, exclusive=("stem", pdf.stem))
     except JobAlreadyQueued:
         try:

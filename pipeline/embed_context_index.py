@@ -176,6 +176,7 @@ def run(
     collection_name: str = COLLECTION_NAME,
     batch_size: int = 32,
     embedding_model: str = EMBEDDING_MODEL,
+    prune_stale: bool = False,
 ) -> int:
     """Embed text chunks and index into Qdrant grc_context.
 
@@ -193,6 +194,9 @@ def run(
         batch_size:      Chunks per embedding batch.
         embedding_model: Ollama embedding model — written into each point's
                          payload as provenance (WP-25.6c).
+        prune_stale:     Replace the document: after every chunk is written and
+                         verified present, remove this source's chunks that this
+                         run no longer has (pipeline/index_replace.py).
 
     Returns:
         Number of chunks successfully indexed.
@@ -311,6 +315,14 @@ def run(
 
     if total_skipped:
         log.warning("%d chunks skipped due to embedding failures", total_skipped)
+
+    if prune_stale:
+        try:
+            from pipeline import index_replace
+        except ImportError:  # a bare script run from pipeline/: replace is only asked for through the package
+            log.warning("Replace was asked for but pipeline.index_replace could not be imported; nothing was removed")
+        else:
+            index_replace.prune_if_complete(client, collection_name, source_pdf, expected_point_ids(document_id, chunks), skipped=total_skipped)
 
     collection_info = client.get_collection(collection_name)
     log.info(
