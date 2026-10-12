@@ -12,6 +12,8 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+from core.artifact_resolver import find_run_files  # noqa: E402
+
 log = logging.getLogger(__name__)
 
 
@@ -77,7 +79,7 @@ def check(
     # --- Processed documents ---
     if processed_dir.exists():
         docs = []
-        for nf in sorted(processed_dir.rglob("*_requirements_normalized.jsonl")):
+        for nf in find_run_files(processed_dir, "_requirements_normalized.jsonl"):
             count = sum(1 for line in open(nf, encoding="utf-8") if line.strip())
             try:
                 display = "~/" + str(nf.relative_to(Path.home()))

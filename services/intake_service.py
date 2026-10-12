@@ -204,13 +204,13 @@ def renamed_copy(src: Path, new_stem: str, processed_dir: Path) -> Path:
 
 def library_documents(processed_dir: Path) -> dict[str, dict]:
     """{document key: {"hash": sha256 of its PDF, "source_pdf": file name, "path": requirements file}} for the newest run of each document in the library."""
-    from core.artifact_resolver import doc_key_from_requirements_path
+    from core.artifact_resolver import doc_key_from_requirements_path, find_run_files
 
     latest: dict[str, Path] = {}
     root = Path(processed_dir)
     if not root.exists():
         return {}
-    for p in root.rglob("*_requirements_normalized.jsonl"):
+    for p in find_run_files(root, "_requirements_normalized.jsonl"):
         key = doc_key_from_requirements_path(p)
         if key not in latest or p.stat().st_mtime > latest[key].stat().st_mtime:
             latest[key] = p
