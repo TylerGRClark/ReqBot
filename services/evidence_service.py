@@ -21,20 +21,20 @@ from core.display import requirement_citation, requirement_text
 from core.profiles import load_profile as _load_profile
 
 _EVIDENCE_AUDITOR_PROMPT = """You are a strict compliance auditor reviewing evidence for a System Security Plan (SSP).
-You have been given a set of retrieved compliance requirements grouped by control ID.
+You have been given a set of retrieved compliance requirements grouped by their section reference (for a framework such as NIST, its control ID).
 Your task is to produce a concise Executive Summary for the evidence pack.
 
 Rules you MUST follow:
 1. {category_rule}
 2. Summarize what the evidence collectively requires — in plain, precise language an auditor would use.
-3. Flag any gaps: controls that appear in only one framework, or controls with conflicting language across frameworks.
+3. Flag any gaps: requirements that appear in only one document, or requirements with conflicting language across documents.
 4. Do NOT invent requirements not present in the evidence.
 5. Do NOT provide implementation guidance — only describe what the evidence says.
 6. Keep the summary under 250 words. Use bullet points for clarity.
 
 QUERY: {query}
 
-EVIDENCE GROUPS ({group_count} control groups, {source_count} sources):
+EVIDENCE GROUPS ({group_count} requirement groups, {source_count} sources):
 {evidence_summary}
 
 Write the Executive Summary now:"""
@@ -398,7 +398,7 @@ def build(
                 # itself is groups' internal dict key, which for the empty/bare-fragment
                 # fallback (WP-32.3) is an unlabeled-looking singleton like
                 # "__no_ref__REQ-xxxx" and must never reach the LLM prompt.
-                f"[{i}] Control: {g['source_ref']}  |  Sources: {len(g['sources'])}\n"
+                f"[{i}] Reference: {g['source_ref']}  |  Sources: {len(g['sources'])}\n"
                 f"    {primary}"
             )
 
