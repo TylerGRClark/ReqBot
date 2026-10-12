@@ -457,8 +457,9 @@ def make_runner_identity() -> dict:
 class JobRunner:
     """Claims queued jobs and runs each as a child process, one at a time."""
 
-    def __init__(self, store: JobStore, *, lease_seconds: float = LEASE_SECONDS, term_grace: float = TERM_GRACE_SECONDS, popen=subprocess.Popen):
+    def __init__(self, store: JobStore, *, lease_seconds: float = LEASE_SECONDS, term_grace: float = TERM_GRACE_SECONDS, popen=subprocess.Popen, cfg=None):
         self.store = store
+        self.cfg = cfg  # used to queue a follow-up job; None means the current config at that moment
         self.identity = make_runner_identity()
         self.lease_seconds = lease_seconds
         self.term_grace = term_grace
@@ -485,6 +486,27 @@ class JobRunner:
 
     def _finish(self, job: dict, state: str, **kw) -> None:
         self.store.finish(job["id"], job["attempt"], self.identity["id"], state, **kw)
+
+    def _queue_followup(self, job: dict) -> None:
+        """An ingest queued with `then_questions` queues the draft-questions job for its document once its command has exited cleanly (called just before the job is marked
+        succeeded). What happens is written to the ingest job's log; a problem here never changes the ingest job's own result."""
+        params = job.get("params") or {}
+        if job.get("kind") != "ingest" or not params.get("then_questions"):
+            return
+        stem = params.get("stem") or ""
+        try:
+            queued = enqueue_questions(stem, store=self.store, cfg=self.cfg, requested_by=job.get("requested_by", ""))
+            note = f"Queued {queued['id']} to write draft questions for {stem}."
+        except JobAlreadyQueued as e:
+            note = f"Draft questions for {stem} are already queued or running ({e.job_id})."
+        except Exception as e:  # noqa: BLE001 - nothing here may take the runner down
+            log.warning("Job %s: could not queue the draft-questions job: %s", job["id"], e)
+            note = f"Could not queue the draft-questions job for {stem}: {e}"
+        try:
+            with open(self.store.log_path(job["id"]), "ab", buffering=0) as f:
+                f.write(f"{note}\n".encode())
+        except OSError:
+            pass
 
     def _run(self, job: dict) -> None:
         job_id, attempt, rid = job["id"], job["attempt"], self.identity["id"]
@@ -557,6 +579,9 @@ class JobRunner:
             elif outcome == "cancel":
                 self._finish(job, "cancelled", exit_code=rc)
             elif rc == 0:
+                # The follow-up is queued first: a crash between the two writes then leaves a spare questions job (its one-at-a-time rule absorbs a repeat) rather than losing
+                # the follow-up for good, because a succeeded job is never looked at again.
+                self._queue_followup(job)
                 self._finish(job, "succeeded", exit_code=0)
             else:
                 tail = [ln for ln in self.store.log_tail(job_id, 2000).splitlines() if ln.strip()]
@@ -616,9 +641,9 @@ def reserve_run_dir(base: Path, stem: str) -> Path:
 
 
 def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=None, no_index: bool = False, max_chunks: int | None = None,
-                   requested_by: str = "", params_extra: dict | None = None, replace: bool = False) -> dict:
+                   requested_by: str = "", params_extra: dict | None = None, replace: bool = False, then_questions: bool = False) -> dict:
     """Queue `reqbot ingest` for one PDF. The job creates its run folder itself and passes it to the command, so a retry runs in the same folder and requirement finding reuses the
-    answers it already has."""
+    answers it already has. With `then_questions`, the runner queues the document's draft-questions job when this one has succeeded (the same job `reqbot jobs add questions` makes)."""
     pdf = Path(pdf_path).expanduser().resolve()
     if pdf.suffix.lower() != ".pdf" or not pdf.is_file():
         raise ValueError(f"not a PDF file: {pdf_path}")
@@ -626,6 +651,8 @@ def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=N
         raise ValueError("max_chunks must be 1 or more")
     if replace and (no_index or max_chunks):
         raise ValueError("replace needs the whole document indexed: not with no_index or max_chunks")
+    if then_questions and max_chunks:
+        raise ValueError("draft questions need the whole document: not with max_chunks")
     cfg = cfg or _config.load()
     store = store or default_store(cfg.processed_dir_path())
     run_dir = reserve_run_dir(cfg.processed_dir_path(), pdf.stem)
@@ -645,8 +672,10 @@ def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=N
     requires = {"ollama_url": cfg.ollama_url, "ollama_models": [m for m in models if m], "qdrant_url": "" if no_index else cfg.qdrant_url}
     env = {} if no_index else {"REQBOT_EMBEDDING_MODEL": cfg.embedding_model}  # the ingest command has no flag for it; the environment overrides config
     try:
-        return store.enqueue("ingest", argv, title=f"Ingest {pdf.name}", run_dir=str(run_dir), requires=requires, env=env,
-                             params={"pdf": str(pdf), "stem": pdf.stem, "no_index": no_index, "max_chunks": max_chunks, "replace": replace, **(params_extra or {})},
+        title = f"Ingest {pdf.name}" + (", then write draft questions" if then_questions else "")
+        return store.enqueue("ingest", argv, title=title, run_dir=str(run_dir), requires=requires, env=env,
+                             params={"pdf": str(pdf), "stem": pdf.stem, "no_index": no_index, "max_chunks": max_chunks, "replace": replace,
+                                     "then_questions": then_questions, **(params_extra or {})},
                              requested_by=requested_by, exclusive=("stem", pdf.stem))
     except JobAlreadyQueued:
         try:
@@ -711,5 +740,5 @@ def summarize(job: dict) -> dict:
     command = " ".join(["reqbot"] + [str(a) for a in argv[2:]]) if len(argv) > 2 else " ".join(argv)
     keys = ("id", "kind", "title", "state", "attempt", "created_at", "started_at", "finished_at", "progress", "error", "exit_code",
             "run_dir", "requested_by", "retry_of", "cancel_requested")
-    params = {k: v for k, v in (job.get("params") or {}).items() if k in ("doc_key", "profile", "stem", "requirements_only", "replace")}  # what a screen matches a job to its document by
+    params = {k: v for k, v in (job.get("params") or {}).items() if k in ("doc_key", "profile", "stem", "requirements_only", "replace", "then_questions")}  # what a screen matches a job to its document by
     return {**{k: job.get(k) for k in keys}, "command": command, "params": params}

@@ -52,8 +52,36 @@ describe('AddDocuments', () => {
     const { onStarted } = setup('open')
     choose([pdf()])
     await screen.findByText('Queued')
-    expect(startIngest).toHaveBeenCalledWith('UP-20261012-010101-abcdef', 'ask')
+    expect(startIngest).toHaveBeenCalledWith('UP-20261012-010101-abcdef', 'ask', false)
     expect(onStarted).toHaveBeenCalled()
+  })
+
+  it('asks for draft questions too, for an upload, a decision and the inbox, only when the box is ticked', async () => {
+    uploadPdf.mockResolvedValue(uploaded('new'))
+    startIngest.mockResolvedValue({ result: 'queued', document: 'afi99-1', job: null })
+    getInbox.mockResolvedValue({ folder: '/data/inbox', exists: true, truncated: false, files: [{ name: 'new-one.pdf', size: 10, status: 'new' }] })
+    importInbox.mockResolvedValue({ queued: 1, results: [{ file: 'new-one.pdf', result: 'queued' }] })
+    setup('open')
+    const box = screen.getByLabelText(/also write draft audit questions/i) as HTMLInputElement
+    expect(box.checked).toBe(false)
+    fireEvent.click(box)
+    expect(box.checked).toBe(true)
+    choose([pdf()])
+    await screen.findByText('Queued')
+    expect(startIngest).toHaveBeenCalledWith('UP-20261012-010101-abcdef', 'ask', true)
+    fireEvent.click(screen.getByText('Import from inbox'))
+    fireEvent.click(await screen.findByText('Import the new ones'))
+    await waitFor(() => expect(importInbox).toHaveBeenCalledWith(null, 'ask', true))
+  })
+
+  it('follows the box for a same-name decision made after the file was uploaded', async () => {
+    uploadPdf.mockResolvedValue(uploaded('same_name_different_content'))
+    startIngest.mockResolvedValue({ result: 'queued', document: 'afi99-1', job: null })
+    setup('open')
+    choose([pdf()])
+    fireEvent.click(await screen.findByText('Replace it'))
+    await screen.findByText('Queued to replace the library copy.')
+    expect(startIngest).toHaveBeenLastCalledWith('UP-20261012-010101-abcdef', 'replace', false)
   })
 
   it('leaves out files that are not PDFs and says so when nothing is left', async () => {
@@ -112,7 +140,7 @@ describe('AddDocuments', () => {
     expect(startIngest).not.toHaveBeenCalled()
     fireEvent.click(screen.getByText('Keep both'))
     await screen.findByText('Queued as afi99-1_2.')
-    expect(startIngest).toHaveBeenCalledWith('UP-20261012-010101-abcdef', 'keep_both')
+    expect(startIngest).toHaveBeenCalledWith('UP-20261012-010101-abcdef', 'keep_both', false)
   })
 
   it('can replace, and can leave a file out', async () => {
@@ -122,7 +150,7 @@ describe('AddDocuments', () => {
     choose([pdf()])
     fireEvent.click(await screen.findByText('Replace it'))
     await screen.findByText('Queued to replace the library copy.')
-    expect(startIngest).toHaveBeenCalledWith('UP-20261012-010101-abcdef', 'replace')
+    expect(startIngest).toHaveBeenCalledWith('UP-20261012-010101-abcdef', 'replace', false)
     cleanup()
     vi.clearAllMocks()
     uploadPdf.mockResolvedValue(uploaded('same_name_different_content'))
@@ -160,7 +188,7 @@ describe('AddDocuments', () => {
     await screen.findByText('new-one.pdf')
     expect(screen.getByText('Already in the library')).toBeInTheDocument()
     fireEvent.click(screen.getByText('Import the new ones'))
-    await waitFor(() => expect(importInbox).toHaveBeenCalledWith(null, 'ask'))
+    await waitFor(() => expect(importInbox).toHaveBeenCalledWith(null, 'ask', false))
     expect(onStarted).toHaveBeenCalled()
   })
 

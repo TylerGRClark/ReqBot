@@ -244,6 +244,12 @@ def test_jobs_add_ingest_queues_the_command_without_running_it(tmp_path, capsys)
     (job,) = s.list_jobs()
     assert job["state"] == "queued" and "--no-index" in job["argv"] and job["requested_by"] == "cli"
     assert reqbot.cmd_jobs(SimpleNamespace(jobs_command="add", add_kind="ingest", pdf=str(tmp_path / "nope.pdf"), no_index=False, max_chunks=None)) == 1
+    assert job["params"]["then_questions"] is False
+    other = tmp_path / "other.pdf"
+    other.write_bytes(b"%PDF-1.4")
+    with patch.object(reqbot, "_job_store", return_value=s), patch.object(reqbot, "_cfg", cfg):
+        rc = reqbot.cmd_jobs(SimpleNamespace(jobs_command="add", add_kind="ingest", pdf=str(other), no_index=False, max_chunks=None, then_questions=True))
+    assert rc == 0 and s.list_jobs()[0]["params"]["then_questions"] is True
 
 
 # -- trusted-network mode ---------------------------------------------------------
