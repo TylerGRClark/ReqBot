@@ -7,7 +7,10 @@ new run no longer has stays behind as a stale point. To replace a document prope
   2. removes the document's points that are not in the new expected set (matched by `source_pdf`; nothing else is touched).
 
 The old points are therefore never removed before the new ones are in. A failure at any moment leaves the old document fully searchable plus whatever new points were written,
-and a retry converges. An incomplete run (an embedding failed and was skipped) prunes nothing.
+and a retry converges. An incomplete run prunes nothing: an embedding that failed and was skipped, or (checked by the caller with `extraction_gaps`) a chunk the model failed on or
+whose answer was cut off. A run with no requirements at all prunes nothing either (that is far more likely a failed extraction than an edition with no rules).
+
+"The document" is the file name: ReqBot's document key is the PDF's stem, so a replacement is a file of the same name. A file with another name is another document.
 """
 import logging
 
@@ -16,6 +19,29 @@ from qdrant_client import models
 log = logging.getLogger(__name__)
 
 BATCH = 256
+
+
+def extraction_gaps(raw_responses_path) -> dict:
+    """{"failed": n, "truncated": m}: chunks of the run whose answer from the model failed or was cut off, read from the run's `*_raw_responses.jsonl`. A run with any of these is
+    missing requirements that the old index may hold, so replacing on it would delete real rules; the caller keeps the old points and asks for a re-run (which retries those chunks).
+    A missing file, or a record without a status (older runs), counts as no gap."""
+    import json
+    from pathlib import Path
+
+    gaps = {"failed": 0, "truncated": 0}
+    try:
+        for line in Path(raw_responses_path).read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            try:
+                status = json.loads(line).get("status")
+            except ValueError:
+                continue
+            if status in gaps:
+                gaps[status] += 1
+    except OSError:
+        pass
+    return {k: v for k, v in gaps.items() if v}
 
 
 def all_present(client, collection_name: str, expected_ids) -> bool:

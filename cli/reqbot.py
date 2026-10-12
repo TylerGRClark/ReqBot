@@ -143,6 +143,18 @@ def cmd_ingest(args: argparse.Namespace) -> int:
         _progress.emit("done")
         return 0
 
+    if replace:
+        from pipeline import index_replace as _index_replace
+        gaps = _index_replace.extraction_gaps(
+            Path(index_path).parent / f"{_resolver.doc_key_from_requirements_path(Path(index_path))}_raw_responses.jsonl")
+        if gaps:
+            log.warning(
+                "Replace skipped: %s. The new points are indexed but the old ones are kept, because this run may be missing requirements the old index has. "
+                "Run it again to retry those chunks.",
+                " and ".join(f"{n} chunk(s) {k}" for k, n in gaps.items()),
+            )
+            replace = False
+
     # Index by default (uses enriched JSONL if enrichment ran, else normalized)
     _progress.emit("indexing")
     try:

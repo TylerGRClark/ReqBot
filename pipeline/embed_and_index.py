@@ -255,7 +255,7 @@ def run(
     log.info("Loaded %d requirements", len(requirements))
 
     if not requirements:
-        log.warning("No requirements to index")
+        log.warning("No requirements to index%s", "; replace was asked for, so the old points are kept" if prune_stale else "")
         return 0
 
     ollama_client = ollama.Client(host=ollama_url)

@@ -222,3 +222,52 @@ def test_the_job_carries_replace_only_when_asked_and_only_for_a_whole_document(t
 def test_expected_ids_ignore_records_that_are_not_indexed():
     recs = [{"requirement_id": "REQ-1", "source_quote": "x"}, {"requirement_id": "REQ-2", "source_quote": ""}]
     assert set(expected_point_ids(recs)) == _ids("REQ-1")
+
+
+# -- the reviewer's findings on this change -------------------------------------------------
+
+def test_extraction_gaps_counts_failed_and_cut_off_chunks_and_nothing_else(tmp_path):
+    p = tmp_path / "doc_raw_responses.jsonl"
+    p.write_text("\n".join(json.dumps(r) for r in [
+        {"chunk_id": 0, "status": "complete"}, {"chunk_id": 1, "status": "failed"}, {"chunk_id": 2, "status": "truncated"},
+        {"chunk_id": 3, "status": "failed"}, {"chunk_id": 4},  # an older record with no status
+    ]) + "\nnot json\n")
+    assert index_replace.extraction_gaps(p) == {"failed": 2, "truncated": 1}
+    assert index_replace.extraction_gaps(tmp_path / "missing.jsonl") == {}
+    p.write_text(json.dumps({"chunk_id": 0, "status": "complete"}) + "\n")
+    assert index_replace.extraction_gaps(p) == {}
+
+
+def test_ingest_replace_keeps_the_old_points_when_the_run_had_a_failed_chunk(tmp_path):
+    from cli.reqbot import cmd_ingest
+
+    pdf = tmp_path / "doc.pdf"
+    pdf.write_bytes(b"%PDF-1.4")
+    out = tmp_path / "out"
+    out.mkdir()
+    idx = out / "DOC_requirements_normalized.jsonl"
+    idx.write_text(json.dumps({"document_id": "d", "requirement_id": "REQ-1"}) + "\n")
+    (out / "DOC_chunks.jsonl").write_text(json.dumps({"chunk_id": 0, "text": "x"}) + "\n")
+    raw = out / "DOC_raw_responses.jsonl"
+    for statuses, expect in ((["complete", "failed"], False), (["complete", "complete"], True)):
+        raw.write_text("".join(json.dumps({"chunk_id": i, "status": s}) + "\n" for i, s in enumerate(statuses)))
+        with patch("pipeline.run_pipeline.run", return_value=str(idx)), patch("pipeline.embed_and_index.run") as req, patch("pipeline.embed_context_index.run") as ctx:
+            assert cmd_ingest(_ingest_args(pdf=str(pdf), output_dir=str(out), replace=True)) == 0
+        assert req.call_count == 1 and ctx.call_count == 1  # the new points are indexed either way
+        assert req.call_args.kwargs["prune_stale"] is expect and ctx.call_args.kwargs["prune_stale"] is expect
+
+
+def test_an_empty_replacement_removes_nothing(tmp_path):
+    q = FakeQdrant()
+    _index(q, _reqs(tmp_path / "a.jsonl", ["REQ-1", "REQ-2"]))
+    empty = tmp_path / "empty.jsonl"
+    empty.write_text("")
+    assert _index(q, str(empty), prune_stale=True) == 0
+    assert set(q.points) == _ids("REQ-1", "REQ-2") and q.deletes == 0
+
+
+def test_a_file_with_another_name_is_another_document(tmp_path):
+    q = FakeQdrant()
+    _index(q, _reqs(tmp_path / "a.jsonl", ["REQ-1", "REQ-2"], source_pdf="afi99-1.pdf"))
+    _index(q, _reqs(tmp_path / "b.jsonl", ["REQ-3"], source_pdf="afi99-1-2026.pdf"), prune_stale=True)
+    assert set(q.points) == _ids("REQ-1", "REQ-2", "REQ-3")  # the replacement of "afi99-1.pdf" is a file called afi99-1.pdf
