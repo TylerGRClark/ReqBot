@@ -75,4 +75,18 @@ describe('RemoveDocument', () => {
     expect(admin.getAdminToken()).toBe('my-code')
     expect(removeDocument).not.toHaveBeenCalled()
   })
+
+  it('forgets a code the server refuses and asks for the current one', async () => {
+    getAccess.mockResolvedValue('code')
+    admin.setAdminToken('old-code')
+    removeDocument.mockRejectedValue(new admin.AdminAuthError())
+    const onRemoved = vi.fn()
+    render(<RemoveDocument docKey="afi99-1" onRemoved={onRemoved} />)
+    fireEvent.click(await screen.findByText('Remove this document…'))
+    fireEvent.change(screen.getByLabelText("Type the document's name to confirm"), { target: { value: 'afi99-1' } })
+    fireEvent.click(screen.getByText('Remove it'))
+    await screen.findByText('The access code was not accepted. Paste the current one.')
+    expect(admin.getAdminToken()).toBe('')
+    expect(onRemoved).not.toHaveBeenCalled()
+  })
 })
