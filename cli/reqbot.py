@@ -1325,7 +1325,7 @@ def _print_setup_check(result: dict) -> None:
         state = "installed" if m["installed"] else "NOT INSTALLED" if m["installed"] is False else "unknown (Ollama did not answer)"
         need = "needed" if m["required"] else "optional"
         print(f"{mark(m['installed'])} Model  {m['name'] or '(not set)'}  {state}  [{need}: {m['needed_for']}]")
-        if m["installed"] is False:
+        if m["installed"] is False and m["name"]:  # an unset model has no name to pull
             print(f"       to install it, on the machine that runs Ollama: ollama pull {m['name']}")
     folder = result["folder"]
     print(f"{mark(folder['writable'])} Folder {folder['path']}  {folder['message']}")

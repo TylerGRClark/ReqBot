@@ -303,3 +303,49 @@ def test_init_check_fails_and_says_what_when_a_required_model_is_missing(tmp_pat
         rc = reqbot.cmd_init(SimpleNamespace(check=True))
     out = capsys.readouterr().out
     assert rc == 1 and "NOT INSTALLED" in out and "ollama pull llama3.1:8b-instruct-q4_K_M" in out and "Not ready yet" in out
+
+
+# -- replies that are valid JSON but not the shape (review findings on #329) ------------------------
+
+@pytest.mark.parametrize("payload", [[], None, "models", 7, {}, {"models": "not a list"}])
+def test_a_reply_that_is_not_ollamas_shape_is_a_message_not_a_crash(payload):
+    with patch.object(ss.requests, "get", lambda url, timeout=None, allow_redirects=True: _Resp(payload)):
+        ok, message, names = ss.test_ollama("http://o:1")
+    assert ok is False and names == [] and "not like Ollama" in message
+
+
+def test_a_null_model_list_is_an_ollama_with_no_models_yet():
+    """A service written in Go answers `"models": null` for an empty list."""
+    with patch.object(ss.requests, "get", lambda url, timeout=None, allow_redirects=True: _Resp({"models": None})):
+        assert ss.test_ollama("http://o:1") == (True, "OK (0 models found)", [])
+
+
+@pytest.mark.parametrize("payload", [[], None, {}, {"result": None}, {"result": "x"}, {"result": {"collections": "not a list"}}])
+def test_a_reply_that_is_not_qdrants_shape_is_a_message_not_a_crash(payload):
+    with patch.object(ss.requests, "get", lambda url, timeout=None, allow_redirects=True: _Resp(payload)):
+        ok, message = ss.test_qdrant("http://q:1")
+    assert ok is False and "not like Qdrant" in message
+
+
+def test_a_null_collection_list_is_a_qdrant_with_no_collections_yet():
+    with patch.object(ss.requests, "get", lambda url, timeout=None, allow_redirects=True: _Resp({"result": {"collections": None}})):
+        assert ss.test_qdrant("http://q:1") == (True, "OK (0 collections)")
+
+
+def test_the_check_route_survives_a_service_that_answers_with_nulls(cfg_env):
+    with patch.object(ss.requests, "get", lambda url, timeout=None, allow_redirects=True: _Resp({"models": None, "result": None})):
+        r = LOOPBACK.post("/api/setup/check", json={})
+    assert r.status_code == 200 and r.json()["qdrant"]["ok"] is False and r.json()["ollama"]["ok"] is True
+
+
+def test_init_check_does_not_print_a_pull_command_without_a_model_name(tmp_path, capsys):
+    from cli import reqbot
+
+    cfg = _cli_cfg(tmp_path)
+    cfg.extraction_model = cfg.rewrite_model = VALUES["default_model"]
+    cfg.synthesis_model = ""  # synthesis is local and its model is not set
+    with patch.object(reqbot, "_cfg", cfg), patch.object(ss.requests, "get", fake_services()):
+        reqbot.cmd_init(SimpleNamespace(check=True))
+    out = capsys.readouterr().out
+    assert "(not set)" in out and "ollama pull \n" not in out and "ollama pull  " not in out
+    assert not any(line.strip() == "to install it, on the machine that runs Ollama: ollama pull" for line in out.splitlines())

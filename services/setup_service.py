@@ -13,6 +13,8 @@ import requests
 
 TIMEOUT_SECONDS = 5.0
 NOT_AN_ADDRESS = "That is not a web address. Use the form http://host:port"
+NOT_OLLAMA = "Something answered there, but not like Ollama (the reply was not a list of models)."
+NOT_QDRANT = "Something answered there, but not like Qdrant (the reply was not a list of collections)."
 
 
 def clean_url(url: str | None) -> str:
@@ -56,11 +58,17 @@ def test_ollama(url: str) -> tuple[bool, str, list[str]]:
         resp = requests.get(f"{base}/api/tags", timeout=TIMEOUT_SECONDS, allow_redirects=False)
         if resp.status_code >= 400:
             return False, f"Ollama answered with an error (HTTP {resp.status_code}) at that address.", []
-        names = [str(m["name"]) for m in resp.json().get("models", []) if isinstance(m, dict) and "name" in m]
+        data = resp.json()
     except requests.RequestException as e:
         return False, _unreachable("Ollama", e), []
-    except (ValueError, KeyError, AttributeError):
-        return False, "Something answered there, but not like Ollama (the reply was not a list of models).", []
+    except ValueError:
+        return False, NOT_OLLAMA, []
+    if not isinstance(data, dict) or "models" not in data:
+        return False, NOT_OLLAMA, []
+    models = data["models"] if data["models"] is not None else []  # a service written in Go answers null for an empty list
+    if not isinstance(models, list):
+        return False, NOT_OLLAMA, []
+    names = [str(m["name"]) for m in models if isinstance(m, dict) and isinstance(m.get("name"), str)]
     count = len(names)
     return True, f"OK ({count} model{'s' if count != 1 else ''} found)", names
 
@@ -75,11 +83,18 @@ def test_qdrant(url: str) -> tuple[bool, str]:
         resp = requests.get(f"{base}/collections", timeout=TIMEOUT_SECONDS, allow_redirects=False)
         if resp.status_code >= 400:
             return False, f"Qdrant answered with an error (HTTP {resp.status_code}) at that address."
-        count = len(resp.json().get("result", {}).get("collections", []))
+        data = resp.json()
     except requests.RequestException as e:
         return False, _unreachable("Qdrant", e)
-    except (ValueError, KeyError, AttributeError):
-        return False, "Something answered there, but not like Qdrant (the reply was not a list of collections)."
+    except ValueError:
+        return False, NOT_QDRANT
+    result = data.get("result") if isinstance(data, dict) else None
+    collections = result.get("collections") if isinstance(result, dict) else "no result"
+    if collections is None:
+        collections = []
+    if not isinstance(collections, list):
+        return False, NOT_QDRANT
+    count = len(collections)
     return True, f"OK ({count} collection{'s' if count != 1 else ''})"
 
 
