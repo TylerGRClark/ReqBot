@@ -1,17 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { getAccess, getAdminToken } from '../api/admin'
 import type { AdminMode } from '../api/admin'
-import { useJobs } from '../hooks/useJobs'
-import AddDocuments from './AddDocuments'
-import JobsPanel from './JobsPanel'
+import { useJobs } from './useJobs'
 
 /**
- * The admin part of the Corpus page: add documents, and see the jobs they start (docs/WEB_UI_PARITY_PLAN.md, section 8).
- * It asks the server which way admin actions are protected, and shows nothing at all until that is known. `onLibraryChanged`
- * is called when a job finishes, so the document list can reload.
+ * What the Library page needs to know about adding documents (docs/WEB_UI_PARITY_PLAN.md, section 8): which way admin actions are protected on this server
+ * (`mode`, null until the server has answered), whether this browser may use them (`enabled`), and the job list while it may.
+ * `onLibraryChanged` is called when the job that was running has finished, so the document list can reload.
  */
-export default function AdminSection({ onLibraryChanged }: { onLibraryChanged: () => void }) {
+export function useAdmin(onLibraryChanged: () => void) {
   const [mode, setMode] = useState<AdminMode | null>(null)
+  const [asked, setAsked] = useState(false)
   const [, setCodeVersion] = useState(0)
   const hasCode = getAdminToken() !== ''
   const enabled = mode === 'open' || (mode === 'code' && hasCode)
@@ -22,6 +21,7 @@ export default function AdminSection({ onLibraryChanged }: { onLibraryChanged: (
     getAccess()
       .then(m => { if (alive) setMode(m) })
       .catch(() => { if (alive) setMode(null) })
+      .finally(() => { if (alive) setAsked(true) })
     return () => { alive = false }
   }, [])
 
@@ -43,12 +43,17 @@ export default function AdminSection({ onLibraryChanged }: { onLibraryChanged: (
   }, [refreshJobs])
   const afterStart = useCallback(() => { refreshJobs() }, [refreshJobs])
 
-  if (mode === null) return null
-  return (
-    <>
-      <AddDocuments mode={mode} onStarted={afterStart} onCodeChanged={codeChanged} codeRejected={mode === 'code' && jobs.authNeeded && hasCode} />
-      {enabled && <JobsPanel data={jobs.data} onChanged={jobs.refresh} />}
-      {enabled && jobs.error && <p className="text-xs text-red-700 mb-4">{jobs.error}</p>}
-    </>
-  )
+  return {
+    mode,
+    /** The server has been asked (it may have failed to answer: `mode` is then still null). */
+    asked,
+    enabled,
+    jobs,
+    codeChanged,
+    afterStart,
+    /** The server turned down the code this browser saved. */
+    codeRejected: mode === 'code' && jobs.authNeeded && hasCode,
+  }
 }
+
+export type AdminState = ReturnType<typeof useAdmin>

@@ -78,13 +78,13 @@ already mounts).
 
 ### From the web page
 
-The Corpus screen has the same thing for an admin: drop PDFs (or a whole folder) on
-it, or "Choose files", "Choose a folder", or "Import from inbox". It asks for the
+The Library page has the same thing for an admin: choose **Add documents** and a side panel opens (it stays open next to the list, and
+`/library?add=1` opens it directly). Drop PDFs (or a whole folder) on it, or "Choose files", "Choose a folder", or "Import from inbox". It asks for the
 admin access code once (`reqbot token` prints it) and remembers it in that browser;
 with `reqbot token --open` it asks for nothing. A file whose name is already in the
 library with different content is not decided silently: the screen asks whether to
-replace it or keep both. Replace removes the old copy's stale rows from search only after the new copy is completely in and every row is verified present, so the document is never missing from search; if the new run had a chunk that failed or was cut off, the old rows are kept and the log says to run it again. A banner shows the running job's step; the job list has
-Cancel and Retry and the end of each log. The server runs the queue
+replace it or keep both. Replace removes the old copy's stale rows from search only after the new copy is completely in and every row is verified present, so the document is never missing from search; if the new run had a chunk that failed or was cut off, the old rows are kept and the log says to run it again. While a job runs a strip across the top of the Library page shows its step (and how many
+wait), with **History** to open the panel's activity list: the latest few jobs, **Show older** for more, Cancel and Retry, and the end of each log. The server runs the queue
 (`reqbot serve`). A tick box above the drop zone, "Also write draft audit questions", queues each document's draft-questions job as soon as its ingest has succeeded (the command line equivalent is `reqbot jobs add ingest FILE --questions`); it is off by default because the question writer is a second, larger model and the run takes longer, and the same job can always be started later from the document's checklist page.
 
 ### Draft questions and a library rebuild as jobs
@@ -93,7 +93,7 @@ The two other long commands run the same way and show up in the same job list. F
 
 **First run and health checks.** A new server shows a prompt at the top of every page, "ReqBot has not been set up on this server yet", that leads to `/setup`: a five-step guided page (the two services and whether they answer, the models and the `ollama pull` command for a missing one, who writes answers, the documents folder and admin protection, a review of what will change). It must be opened on the server machine itself, like Settings, and it saves through the same writer as `reqbot init`. The admin access code or trusted-network mode is only ever switched on the server with `reqbot token`; the page shows which is on and the command. `reqbot init --check` runs the same checks from a terminal and exits 1 when something required is missing.
 
-To take a document out of the library, open it on the Corpus page and choose **Remove this document…**, then type its name to confirm (the command line is `reqbot remove --doc NAME`, which only says what would happen until `--yes` is added). Its saved runs move to a dated folder under `.trash` inside the processed folder, and its rows leave both search collections; nothing is deleted. To put a document back, move its folders out of `.trash` and run **Rebuild the library**. It is refused while an ingest or draft-questions job for that document is queued or running. A folder whose name starts with a dot (the trash, `.uploads`, `.jobs`, `.inbox`) is not part of the library: it is never listed, searched, or read by a rebuild, so a removed document stays out until you put it back. Nothing prunes `.trash`; empty it by hand when you are sure.
+To take a document out of the library, open it from the Library page and choose **Remove this document…**, then type its name to confirm (the command line is `reqbot remove --doc NAME`, which only says what would happen until `--yes` is added). Its saved runs move to a dated folder under `.trash` inside the processed folder, and its rows leave both search collections; nothing is deleted. To put a document back, move its folders out of `.trash` and run **Rebuild the library**. It is refused while an ingest or draft-questions job for that document is queued or running. A folder whose name starts with a dot (the trash, `.uploads`, `.jobs`, `.inbox`) is not part of the library: it is never listed, searched, or read by a rebuild, so a removed document stays out until you put it back. Nothing prunes `.trash`; empty it by hand when you are sure.
 
 ```bash
 reqbot jobs add questions --doc afi17-203   # draft audit questions; unchanged rows are reused

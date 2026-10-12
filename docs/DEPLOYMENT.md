@@ -235,7 +235,7 @@ If the frontend was built, run:
 reqbot serve
 ```
 
-Open `http://127.0.0.1:8000`. Search, trace, comparison, evidence, corpus,
+Open `http://127.0.0.1:8000`. Search, trace, comparison, evidence, library,
 checklists, system status, and settings are available through the GUI.
 Without a frontend build, use `/api-docs` and the CLI.
 

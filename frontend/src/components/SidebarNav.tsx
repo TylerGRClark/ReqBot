@@ -6,7 +6,7 @@ const NAV_ITEMS = [
   { to: '/compare', label: 'Compare' },
   { to: '/evidence', label: 'Evidence' },
   { to: '/checklists', label: 'Checklists' },
-  { to: '/corpus', label: 'Corpus' },
+  { to: '/library', label: 'Library' },
   { to: '/system', label: 'System' },
   { to: '/settings', label: 'Settings' },
 ]
