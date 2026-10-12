@@ -225,8 +225,11 @@ If you pick `3` now you can switch on written answers later by pulling
 ## Step 4: Ingest your first PDF
 
 Ingestion reads the PDF, extracts requirements with the AI model, checks them
-against the source text, and indexes them for search. It is done from the
-command line; the web page cannot ingest.
+against the source text, and indexes them for search. It can be done from the
+command line (below) or from the web page's Corpus screen: run `reqbot token` on
+the server once (or `reqbot token --open` on a network you trust), run `reqbot
+serve`, then drop PDFs, or a whole folder, onto the Corpus page. The page shows
+progress and keeps a list of jobs. See [Operations](OPERATIONS.md#run-an-ingest-as-a-background-job).
 
 **Python path:**
 

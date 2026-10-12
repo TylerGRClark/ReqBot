@@ -1,8 +1,9 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as api from '../api/client'
 import type { DocsEntry, DocsResponse } from '../api/types'
 import AppShell from '../components/AppShell'
+import AdminSection from '../components/AdminSection'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorBanner from '../components/ErrorBanner'
 import { docValue } from '../utils/ui'
@@ -95,15 +96,17 @@ export default function CorpusView() {
   const [sortKey, setSortKey] = useState<SortKey>('name')
   const [sortAsc, setSortAsc] = useState(true)
 
-  useEffect(() => {
+  const loadDocs = useCallback(() => {
     api
       .docs()
-      .then(res => { setData(res) })
+      .then(res => { setData(res); setError(null) })
       .catch((err: unknown) => {
         setError(err instanceof Error ? err.message : 'Failed to load documents')
       })
       .finally(() => { setLoading(false) })
   }, [])
+
+  useEffect(() => { loadDocs() }, [loadDocs])
 
   const filtered = useMemo<DocsEntry[]>(() => {
     if (!data) return []
@@ -136,6 +139,9 @@ export default function CorpusView() {
   return (
     <AppShell>
       <main className="max-w-4xl mx-auto px-6 py-8">
+        {/* Admin: add documents and watch the jobs they start (shows nothing until the server says which mode it is in) */}
+        <AdminSection onLibraryChanged={loadDocs} />
+
         {/* Loading */}
         {loading && <LoadingSpinner />}
 
@@ -195,7 +201,7 @@ export default function CorpusView() {
         {/* Empty corpus */}
         {!loading && !error && data && data.total_docs === 0 && (
           <p className="text-sm text-gray-500">
-            No documents indexed yet. Ingest documents via the CLI.
+            No documents indexed yet. Drop a PDF above, or ingest one with the command line.
           </p>
         )}
       </main>
