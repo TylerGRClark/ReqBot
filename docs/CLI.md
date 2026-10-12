@@ -300,8 +300,14 @@ job at once naming the one that does not.
 
 `reqbot token` creates the admin access code (saved in
 `~/.config/reqbot/access.json`, readable by you only; `REQBOT_ADMIN_TOKEN`
-overrides it, for a container). `--rotate` replaces it. The job routes of the
-HTTP API need it, see [API](API.md#jobs).
+overrides it, for a container). `--rotate` replaces it. The job and upload routes
+of the HTTP API need it, see [API](API.md#jobs).
+
+`reqbot token --open` is for a network you trust: it stops asking for a code, so
+anyone who can reach the server can add documents and start jobs (the server
+prints a warning at start when it listens beyond this machine). `reqbot token
+--require` undoes it. The same can be set in a container with
+`REQBOT_ADMIN_OPEN=1`. There is no web route that can turn it on.
 
 ## serve and mcp
 

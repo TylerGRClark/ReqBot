@@ -33,7 +33,19 @@ if str(_ROOT) not in sys.path:
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routes import ask, checklist, compare, config, docs, evidence, intake, jobs, status, trace
+from api.routes import (
+    access,
+    ask,
+    checklist,
+    compare,
+    config,
+    docs,
+    evidence,
+    intake,
+    jobs,
+    status,
+    trace,
+)
 
 log = logging.getLogger(__name__)
 
@@ -75,6 +87,7 @@ app.include_router(compare.router, prefix="/api")
 app.include_router(evidence.router, prefix="/api")
 app.include_router(checklist.router, prefix="/api")
 app.include_router(config.router, prefix="/api")
+app.include_router(access.router, prefix="/api")  # public: which mode admin actions are in (never the code)
 app.include_router(jobs.router, prefix="/api")  # admin only: answers 403 until an admin access code is configured
 app.include_router(intake.router, prefix="/api")  # admin only: uploads, the inbox and starting an ingest
 

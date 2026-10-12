@@ -29,6 +29,7 @@ documents the envelopes returned by the routes and shared services.
 | POST | `/api/checklist/export` | Download a checklist file. |
 | GET | `/api/config` | Effective configuration and environment overrides. |
 | POST | `/api/config` | Partially update settings; loopback-only. |
+| GET | `/api/access` | Which way admin actions are protected here: `{"admin": "unconfigured"`, `"code"` or `"open"}`. Public; never the code. |
 | GET | `/api/jobs` | The jobs, newest first (admin access code required). |
 | GET | `/api/jobs/{job_id}` | One job with the tail of its log (admin access code required). |
 | POST | `/api/uploads?filename=NAME.pdf` | Store one PDF sent as the raw body; returns its id and where it stands against the library (admin). |
@@ -319,7 +320,9 @@ plus `log_tail`. A job has `id`, `kind`, `title`, `state` (`queued`, `running`,
 These routes are **admin only**. Send the admin access code created by
 `reqbot token` as `Authorization: Bearer <code>` (or `X-ReqBot-Token: <code>`).
 With no code configured on the server they answer 403 and the API behaves as it
-did before; a missing or wrong code is 401. No route returns the code, and
+did before; a missing or wrong code is 401. If the operator ran `reqbot token --open`
+(or set `REQBOT_ADMIN_OPEN=1`) for a network they trust, no code is asked for;
+`GET /api/access` tells a screen which of the three modes it is in. No route returns the code, and
 `GET /api/config` does not include it. The code travels in clear text on plain
 HTTP, so beyond a trusted network put TLS in front. Cancelling and retrying are
 `POST /api/jobs/{job_id}/cancel` and `/retry`; starting is described next.
