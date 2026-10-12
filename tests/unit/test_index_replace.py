@@ -45,12 +45,11 @@ class FakeQdrant:
         return [SimpleNamespace(id=i) for i in ids if str(i) in self.points]
 
     def scroll(self, collection_name, scroll_filter=None, limit=256, offset=None, with_payload=False, with_vectors=False):
-        want = scroll_filter.must[0].match.value if scroll_filter else None
-        ids = [i for i, pl in self.points.items() if want is None or pl.get("source_pdf") == want]
+        ids = list(self.points)
         start = offset or 0
         part = ids[start:start + limit]
         nxt = start + limit if start + limit < len(ids) else None
-        return [SimpleNamespace(id=i) for i in part], nxt
+        return [SimpleNamespace(id=i, payload=({k: self.points[i].get(k) for k in with_payload} if isinstance(with_payload, list) else None)) for i in part], nxt
 
     def delete(self, collection_name, points_selector):
         self.deletes += 1
@@ -271,3 +270,12 @@ def test_a_file_with_another_name_is_another_document(tmp_path):
     _index(q, _reqs(tmp_path / "a.jsonl", ["REQ-1", "REQ-2"], source_pdf="afi99-1.pdf"))
     _index(q, _reqs(tmp_path / "b.jsonl", ["REQ-3"], source_pdf="afi99-1-2026.pdf"), prune_stale=True)
     assert set(q.points) == _ids("REQ-1", "REQ-2", "REQ-3")  # the replacement of "afi99-1.pdf" is a file called afi99-1.pdf
+
+
+def test_the_same_document_is_found_whatever_the_case_of_its_extension(tmp_path):
+    q = FakeQdrant()
+    _index(q, _reqs(tmp_path / "a.jsonl", ["REQ-1", "REQ-2"], source_pdf="policy.PDF"))  # ingested from an inbox as policy.PDF
+    _index(q, _reqs(tmp_path / "o.jsonl", ["REQ-X"], source_pdf="other.pdf"))
+    _index(q, _reqs(tmp_path / "b.jsonl", ["REQ-1", "REQ-3"], source_pdf="policy.pdf"), prune_stale=True)  # replaced by an upload, whose extension is lower case
+    assert set(q.points) == _ids("REQ-1", "REQ-3", "REQ-X")
+    assert index_replace.document_key("Policy.Pdf") == "Policy" and index_replace.document_key("afi99-1_chunks.jsonl") == "afi99-1_chunks.jsonl"

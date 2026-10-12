@@ -4,7 +4,7 @@ An ordinary indexing run only adds and overwrites: a point's ID comes from the r
 new run no longer has stays behind as a stale point. To replace a document properly the indexer, after it has written the new run's points:
 
   1. checks the new run is complete: every expected point is present in the collection (the check `reqbot reindex` already makes before it swaps an index); and only then
-  2. removes the document's points that are not in the new expected set (matched by `source_pdf`; nothing else is touched).
+  2. removes the document's points that are not in the new expected set (matched by the document's name, `source_pdf` without its `.pdf`; nothing else is touched).
 
 The old points are therefore never removed before the new ones are in. A failure at any moment leaves the old document fully searchable plus whatever new points were written,
 and a retry converges. An incomplete run prunes nothing: an embedding that failed and was skipped, or (checked by the caller with `extraction_gaps`) a chunk the model failed on or
@@ -55,14 +55,27 @@ def all_present(client, collection_name: str, expected_ids) -> bool:
     return True
 
 
+def document_key(source_pdf: str) -> str:
+    """The document a `source_pdf` value belongs to: its name without a trailing `.pdf` in any letter case. ReqBot's document key is the file's stem, so `policy.PDF` (ingested
+    from an inbox) and `policy.pdf` (an upload, whose extension is made lower case) are one document. The context collection's value (`<stem>_chunks.jsonl`) is left as it is."""
+    name = (source_pdf or "").strip()
+    return name[:-4] if name.lower().endswith(".pdf") else name
+
+
 def stale_ids(client, collection_name: str, source_pdf: str, expected_ids) -> list:
-    """The IDs of points whose `source_pdf` is this document's and that are not in the expected set."""
+    """The IDs of points that belong to this document (same `document_key` of their `source_pdf`) and are not in the expected set.
+
+    The collection is read through once with only the `source_pdf` field, and the comparison is made here, because a server-side exact match could not see `policy.PDF` and
+    `policy.pdf` as the same document."""
     expected = set(expected_ids)
-    flt = models.Filter(must=[models.FieldCondition(key="source_pdf", match=models.MatchValue(value=source_pdf))])
+    key = document_key(source_pdf)
     stale, offset = [], None
     while True:
-        points, offset = client.scroll(collection_name=collection_name, scroll_filter=flt, limit=BATCH, offset=offset, with_payload=False, with_vectors=False)
-        stale.extend(p.id for p in points if str(p.id) not in expected)
+        points, offset = client.scroll(collection_name=collection_name, limit=BATCH, offset=offset, with_payload=["source_pdf"], with_vectors=False)
+        for p in points:
+            name = (getattr(p, "payload", None) or {}).get("source_pdf") or ""
+            if document_key(name) == key and str(p.id) not in expected:
+                stale.append(p.id)
         if offset is None:
             return stale
 
