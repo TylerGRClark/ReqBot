@@ -202,6 +202,11 @@ development workflow uses system Python; see [CONTRIBUTING.md](../CONTRIBUTING.m
 reqbot init
 ```
 
+Prefer a web page? With `reqbot serve` running, open `/setup` on the same machine (the
+page shows a prompt at the top until a configuration has been saved). It asks the
+same things, tests each address and model as you go, and saves through the same
+writer. `reqbot init --check` runs the same checks from the command line any time.
+
 The wizard asks about a dozen questions. Each shows its default in square
 brackets; pressing Enter accepts it. For a first run, press Enter for
 everything **except** the last question:

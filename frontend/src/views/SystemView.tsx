@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { Link } from 'react-router-dom'
 import * as api from '../api/client'
 import { startReindex } from '../api/admin'
 import type { StatusResponse } from '../api/types'
@@ -41,6 +42,10 @@ export default function SystemView() {
             {loading ? 'Checking…' : 'Refresh'}
           </button>
         </div>
+
+        <p className="text-sm text-gray-600">
+          Something not answering, or a model missing? <Link to="/setup" className="text-blue-700 underline">Run the setup check</Link>.
+        </p>
 
         {loading && <LoadingSpinner />}
         {!loading && error && <ErrorBanner message={error} onRetry={load} />}

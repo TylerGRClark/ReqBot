@@ -56,6 +56,17 @@ be running; the wizard does not install them or pull models.
 `reqbot setup` runs the same flow. Its legacy `--advanced` option is accepted
 but has no effect.
 
+```bash
+reqbot init --check
+```
+
+Tests the saved configuration and changes nothing: both services answer, every
+model ReqBot will ask for is installed (with the `ollama pull` command for a
+missing one), and the documents folder is writable. Exit code 0 when ready, 1
+when not. A model that is only needed for an optional feature (draft questions,
+written answers, understanding questions in Ask) is reported but does not make
+the result "not ready". It is the same check the web setup wizard runs.
+
 ## status and docs
 
 ```bash

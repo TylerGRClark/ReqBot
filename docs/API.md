@@ -29,6 +29,8 @@ documents the envelopes returned by the routes and shared services.
 | POST | `/api/checklist/export` | Download a checklist file. |
 | GET | `/api/config` | Effective configuration and environment overrides. |
 | POST | `/api/config` | Partially update settings; loopback-only. |
+| GET | `/api/setup` | Whether a configuration has been saved yet: `{"config_file", "needs_setup", "questions_model"}`. Public; carries no value from the file. |
+| POST | `/api/setup/check` | Test a configuration (services, models, documents folder) without saving it; loopback-only, writes nothing. |
 | GET | `/api/access` | Which way admin actions are protected here: `{"admin": "unconfigured"`, `"code"` or `"open"}`. Public; never the code. |
 | GET | `/api/jobs` | The jobs, newest first (admin access code required). |
 | GET | `/api/jobs/{job_id}` | One job with the tail of its log (admin access code required). |
@@ -310,6 +312,25 @@ POST accepts only direct loopback client addresses. Containers, proxies, or
 remote browsers may appear as non-loopback clients and receive 403. Environment
 overrides still win after a successful file update. CLI sessions started before
 the edit should be restarted to load new settings.
+
+### First-run setup
+
+`GET /api/setup` says whether a configuration has been saved; the web app shows a
+prompt to the setup wizard (`/setup`) until it has. `POST /api/setup/check` takes
+any of `ollama_url`, `qdrant_url`, `embedding_model`, `default_model`,
+`extraction_model`, `rewrite_model`, `synthesis_model`, `synthesis_backend`
+(what is left out is taken from the current configuration; a role model left
+out follows the default model as it does at load time) and returns
+`{ollama: {url, ok, message, models}, qdrant: {url, ok, message}, models:
+[{role, name, needed_for, required, installed}], folder: {path, exists,
+writable, message}, ready}`. `installed` is `null` when Ollama could not be asked.
+`ready` is true when both services answer, every required model is installed and
+the folder is writable; an optional model that is missing only costs its own
+feature. The route makes the server call the addresses it is given, so it
+answers only a direct loopback client (403 otherwise), takes only plain http(s)
+addresses, does not follow redirects and writes nothing. It is the same check as
+`reqbot init --check`. Saving goes through `POST /api/config`; admin protection
+is switched with `reqbot token` on the server, never over HTTP.
 
 ## Jobs
 

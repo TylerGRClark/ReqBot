@@ -186,9 +186,11 @@ def preflight(requires: dict | None, timeout: float = 5.0) -> str | None:
             data = _get_json(f"{ollama}/api/tags", timeout)
         except (OSError, ValueError, urllib.error.URLError) as e:
             return f"The model machine (Ollama) did not answer at {ollama}: {e}"
-        have = {str(m.get("name", "")) for m in (data.get("models") or []) if isinstance(m, dict)}
-        have |= {n[: -len(":latest")] for n in have if n.endswith(":latest")}
-        missing = [m for m in (requires.get("ollama_models") or []) if m and m not in have and f"{m}:latest" not in have]
+        # the same "is this model installed" rule the setup wizard uses
+        from services import setup_service
+
+        have = setup_service.installed_names(str(m.get("name", "")) for m in (data.get("models") or []) if isinstance(m, dict))
+        missing = [m for m in (requires.get("ollama_models") or []) if m and not setup_service.has_model(m, have)]
         if missing:
             return f"The model machine at {ollama} does not have the model(s): {', '.join(missing)}."
     qdrant = (requires.get("qdrant_url") or "").rstrip("/")
