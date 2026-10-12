@@ -246,8 +246,8 @@ export async function retryJob(id: string): Promise<JobSummary> {
 }
 
 /** Write draft audit questions for one document, as a job. `skipped` means one is already queued or running for it. */
-export async function startQuestions(docKey: string): Promise<QueueResponse> {
-  return (await request(queueSchema, 'questions', '/jobs/questions', { method: 'POST', body: JSON.stringify({ doc_key: docKey }) })).data
+export async function startQuestions(docKey: string, profile = 'cybersecurity'): Promise<QueueResponse> {
+  return (await request(queueSchema, 'questions', '/jobs/questions', { method: 'POST', body: JSON.stringify({ doc_key: docKey, profile }) })).data
 }
 
 /** Rebuild the search library from the saved documents, as a job. `skipped` means a rebuild is already queued or running. */

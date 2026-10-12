@@ -55,7 +55,7 @@ describe('JobAction', () => {
     const { start } = show()
     fireEvent.click(await screen.findByText('Write draft audit questions'))
     await waitFor(() => expect(start).toHaveBeenCalledTimes(1))
-    await screen.findByText('Writing questions, row 40 of 133')
+    await screen.findByText('Writing questions: 40 of 133 rows done')
     expect(screen.queryByText('Write draft audit questions')).not.toBeInTheDocument() // no second start while it runs
   })
 
@@ -121,10 +121,21 @@ describe('JobAction', () => {
     getAccess.mockResolvedValue('open')
     listJobs.mockResolvedValue(jobs([job({ state: 'running', progress: { step: 'questions', done: 1, total: 2 } })]))
     const { onSucceeded } = show()
-    await screen.findByText('Writing questions, row 1 of 2')
+    await screen.findByText('Writing questions: 1 of 2 rows done')
     listJobs.mockResolvedValue(jobs([job({ state: 'succeeded', finished_at: '2026-10-12T05:00:00Z' })]))
     await act(async () => { await new Promise(r => setTimeout(r, 3300)) }) // the list is read again every 3 seconds while a job runs
     await waitFor(() => expect(onSucceeded).toHaveBeenCalledTimes(1))
     expect(screen.getByText(/Last run finished/)).toBeInTheDocument()
   }, 10000)
+
+  it('tells the page when a job it started finished between two reads, never seen running', async () => {
+    getAccess.mockResolvedValue('open')
+    const done = job({ id: 'JOB-20261012-020202-bbbbbb', state: 'succeeded', finished_at: '2026-10-12T05:00:00Z' })
+    // the list read before the click is empty; the first read after the click already shows the job finished
+    listJobs.mockResolvedValueOnce(jobs([])).mockResolvedValue(jobs([done]))
+    const { start, onSucceeded } = show()
+    start.mockResolvedValue({ result: 'queued', job: done })
+    fireEvent.click(await screen.findByText('Write draft audit questions'))
+    await waitFor(() => expect(onSucceeded).toHaveBeenCalledTimes(1))
+  })
 })

@@ -63,8 +63,8 @@ export default function ChecklistPreviewView() {
               <JobAction
                 label="Write draft audit questions"
                 confirm="This asks the model to write a draft question for each row that has none yet. It can take several minutes for a long document, and rows that have not changed are reused. The questions are drafts to check before use."
-                pick={jobs => jobs.find(j => j.kind === 'questions' && j.params?.doc_key === docId)}
-                start={() => startQuestions(docId)}
+                pick={jobs => jobs.find(j => j.kind === 'questions' && j.params?.doc_key === docId && (j.params?.profile ?? 'cybersecurity') === profile)}
+                start={() => startQuestions(docId, profile)}
                 onSucceeded={() => setReloadTick(t => t + 1)}
               />
               <ExportButtonGroup docKey={docId} profile={profile} />

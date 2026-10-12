@@ -42,13 +42,20 @@ export default function JobAction({ label, pick, start, confirm, onSucceeded }: 
 
   const mine = pick(jobs.data?.jobs ?? [])
 
-  // tell the page once when the job it was watching finishes well
+  // Tell the page once when the job it was watching finishes well. A job this panel started counts even if polling never caught it
+  // queued or running (a short run can go from queued to done between two polls).
   const lastState = useRef<string | null>(null)
+  const started = useRef<string | null>(null)
   useEffect(() => {
     const now = mine?.state ?? null
-    if (lastState.current && (lastState.current === 'queued' || lastState.current === 'running') && now === 'succeeded') onSucceeded?.()
+    const wasLive = lastState.current === 'queued' || lastState.current === 'running'
+    const isStarted = !!mine && mine.id === started.current
+    if (now === 'succeeded' && (wasLive || isStarted)) {
+      started.current = null
+      onSucceeded?.()
+    }
     lastState.current = now
-  }, [mine?.state, onSucceeded])
+  }, [mine?.id, mine?.state, onSucceeded])
 
   const go = useCallback(async () => {
     setBusy(true)
@@ -57,6 +64,7 @@ export default function JobAction({ label, pick, start, confirm, onSucceeded }: 
     try {
       const r = await start()
       if (r.result === 'skipped') setProblem(r.message ?? 'That is already queued or running.')
+      else started.current = r.job?.id ?? r.job_id ?? null
       jobs.refresh()
     } catch (e) {
       if (e instanceof AdminAuthError) {

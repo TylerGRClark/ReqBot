@@ -658,7 +658,7 @@ QUESTIONS_MODEL = "qwen2.5:14b"  # the model `reqbot questions` writes with by d
 _DOC_KEY_BAD = re.compile(r"[\\/\x00-\x1f*?\[\]]")
 
 
-def enqueue_questions(doc_key: str, *, store: JobStore | None = None, cfg=None, requested_by: str = "") -> dict:
+def enqueue_questions(doc_key: str, *, store: JobStore | None = None, cfg=None, requested_by: str = "", profile: str = "cybersecurity") -> dict:
     """Queue `reqbot questions --doc <doc_key>`: draft audit questions for one document's checklist rows. Only a document that is in the library can be named, and at most one
     such job per document is queued or running at a time. Rows whose input is unchanged are reused by the command, so running it again is cheap."""
     from core.artifact_resolver import resolve_requirement_file
@@ -666,16 +666,27 @@ def enqueue_questions(doc_key: str, *, store: JobStore | None = None, cfg=None, 
     key = (doc_key or "").strip()
     if not key or _DOC_KEY_BAD.search(key) or key.startswith("."):
         raise ValueError(f"not a document key: {doc_key!r}")
+    profile = (profile or "cybersecurity").strip()
+    if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", profile):
+        raise ValueError(f"not a profile name: {profile!r}")
+    from core.profiles import load_profile
+
+    try:
+        load_profile(profile)  # the checklist the questions are written for is built with this profile, so it has to exist
+    except (ValueError, FileNotFoundError, OSError):
+        raise ValueError(f"unknown profile: {profile!r}") from None
     cfg = cfg or _config.load()
     store = store or default_store(cfg.processed_dir_path())
     try:
         resolve_requirement_file(cfg.processed_dir_path(), key)
     except (ValueError, FileNotFoundError, OSError):
         raise LookupError(f"No document {key!r} is in the library.") from None
-    argv = [sys.executable, str(CLI_SCRIPT), "questions", "--doc", key, "--model", QUESTIONS_MODEL, "--ollama-url", cfg.ollama_url, "--progress-json"]
+    argv = [sys.executable, str(CLI_SCRIPT), "questions", "--doc", key, "--profile", profile, "--model", QUESTIONS_MODEL, "--ollama-url", cfg.ollama_url, "--progress-json"]
     requires = {"ollama_url": cfg.ollama_url, "ollama_models": [QUESTIONS_MODEL], "qdrant_url": ""}
-    return store.enqueue("questions", argv, title=f"Draft questions for {key}", requires=requires, params={"doc_key": key, "model": QUESTIONS_MODEL},
-                         requested_by=requested_by, exclusive=("doc_key", key))  # only questions jobs carry params.doc_key
+    # one per document and profile: the checklist rows (and so the questions) depend on the profile
+    return store.enqueue("questions", argv, title=f"Draft questions for {key}", requires=requires,
+                         params={"doc_key": key, "profile": profile, "model": QUESTIONS_MODEL, "questions_key": f"{key}|{profile}"},
+                         requested_by=requested_by, exclusive=("questions_key", f"{key}|{profile}"))
 
 
 def enqueue_reindex(*, store: JobStore | None = None, cfg=None, requirements_only: bool = False, requested_by: str = "") -> dict:
@@ -698,5 +709,5 @@ def summarize(job: dict) -> dict:
     command = " ".join(["reqbot"] + [str(a) for a in argv[2:]]) if len(argv) > 2 else " ".join(argv)
     keys = ("id", "kind", "title", "state", "attempt", "created_at", "started_at", "finished_at", "progress", "error", "exit_code",
             "run_dir", "requested_by", "retry_of", "cancel_requested")
-    params = {k: v for k, v in (job.get("params") or {}).items() if k in ("doc_key", "stem", "requirements_only", "replace")}  # what a screen matches a job to its document by
+    params = {k: v for k, v in (job.get("params") or {}).items() if k in ("doc_key", "profile", "stem", "requirements_only", "replace")}  # what a screen matches a job to its document by
     return {**{k: job.get(k) for k in keys}, "command": command, "params": params}
