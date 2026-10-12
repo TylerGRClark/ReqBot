@@ -62,22 +62,35 @@ def document_key(source_pdf: str) -> str:
     return name[:-4] if name.lower().endswith(".pdf") else name
 
 
-def stale_ids(client, collection_name: str, source_pdf: str, expected_ids) -> list:
-    """The IDs of points that belong to this document (same `document_key` of their `source_pdf`) and are not in the expected set.
+def points_of_document(client, collection_name: str, source_pdf: str) -> list:
+    """The IDs of every point that belongs to this document (same `document_key` of their `source_pdf`).
 
     The collection is read through once with only the `source_pdf` field, and the comparison is made here, because a server-side exact match could not see `policy.PDF` and
     `policy.pdf` as the same document."""
-    expected = set(expected_ids)
     key = document_key(source_pdf)
-    stale, offset = [], None
+    found, offset = [], None
     while True:
         points, offset = client.scroll(collection_name=collection_name, limit=BATCH, offset=offset, with_payload=["source_pdf"], with_vectors=False)
         for p in points:
             name = (getattr(p, "payload", None) or {}).get("source_pdf") or ""
-            if document_key(name) == key and str(p.id) not in expected:
-                stale.append(p.id)
+            if document_key(name) == key:
+                found.append(p.id)
         if offset is None:
-            return stale
+            return found
+
+
+def stale_ids(client, collection_name: str, source_pdf: str, expected_ids) -> list:
+    """The IDs of the document's points that are not in the expected set."""
+    expected = set(expected_ids)
+    return [i for i in points_of_document(client, collection_name, source_pdf) if str(i) not in expected]
+
+
+def delete_document_points(client, collection_name: str, source_pdf: str) -> int:
+    """Remove every point of the document from the collection (the "remove a document" step); returns how many. Nothing of any other document is touched."""
+    ids = points_of_document(client, collection_name, source_pdf)
+    for start in range(0, len(ids), BATCH):
+        client.delete(collection_name=collection_name, points_selector=models.PointIdsList(points=ids[start:start + BATCH]))
+    return len(ids)
 
 
 def prune_if_complete(client, collection_name: str, source_pdf: str, expected_ids, *, skipped: int = 0) -> int:

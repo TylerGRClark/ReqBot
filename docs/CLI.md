@@ -38,6 +38,7 @@ Unless listed otherwise, service URL flags default to the effective
 | `index-context` | Index one source-chunk JSONL file directly. |
 | `jobs` | Long-running jobs: list, show, cancel, retry, add an ingest, or run the queue (`worker`). |
 | `token` | Create, show or replace the admin access code that lets a request start or manage jobs. |
+| `remove` | Remove a document from the library: its run folders go to a trash folder and its rows leave search. Needs `--yes`. |
 | `serve` | Start the HTTP API and built web GUI, and run queued jobs in the background. |
 | `mcp` | Start a local stdio MCP server. |
 | `setup` | Deprecated alias for `init`. |
@@ -274,6 +275,22 @@ trace/context can join them. If omitted, context indexing derives a filename ID.
 These are low-level collection operations. **`--recreate` replaces the target
 collection**, affecting other indexed documents; it is not a single-document
 refresh. Prefer `reindex` for a complete library rebuild.
+
+## remove
+
+```bash
+reqbot remove --doc afi17-203          # says what would happen; changes nothing
+reqbot remove --doc afi17-203 --yes    # does it
+```
+
+Removing is never a delete. The document's run folders (`<doc>_<date>_<time>` under the
+processed folder) are moved to `<processed_dir>/.trash/<removal time>/`, and its rows are
+taken out of both search collections (the requirements and the source-text chunks);
+nothing else changes, and the original PDF is not touched. It is refused while an
+ingest or draft-questions job for that document is queued or running. The search
+index is cleaned first and the folders moved second, so a failure in between leaves
+the document listed and running the command again finishes the job. To put a
+document back, move its folders out of the trash and run `reqbot reindex`.
 
 ## jobs and token
 
