@@ -22,12 +22,27 @@ otherwise have that substring collapsed everywhere it appears, producing a
 mangled doc_key that no longer matches the real *_chunks.jsonl file and
 silently breaking context indexing downstream (Codex PR #92 review).
 """
+import os
 from pathlib import Path
 
 _GATED_SUFFIX = "_requirements_gated"
 _ENRICHED_SUFFIX = "_requirements_enriched"
 _NORMALIZED_SUFFIX = "_requirements_normalized"
 _EXTRACTED_SUFFIX = "_extracted_requirements"
+
+
+def find_run_files(processed_dir: Path, name_suffix: str) -> list[Path]:
+    """Every file under processed_dir whose name ends with `name_suffix` (for example `_requirements_normalized.jsonl`), sorted.
+
+    A folder whose name starts with a dot is never entered: `.trash` (removed documents), `.uploads`, `.jobs` and `.inbox` hold things that are not part of the library, and a removed
+    document must not be listed, searched or rebuilt back into search. Only folders *below* processed_dir are judged, so a library that itself lives under a dot folder
+    (`~/.reqbot/processed`) is read as usual. This is the one place that decides what counts as a saved document; everything that lists or rebuilds the library goes through it.
+    """
+    found: list[Path] = []
+    for dirpath, dirnames, filenames in os.walk(Path(processed_dir)):
+        dirnames[:] = [d for d in dirnames if not d.startswith(".")]
+        found.extend(Path(dirpath) / name for name in filenames if name.endswith(name_suffix))
+    return sorted(found)
 
 
 def _strip_suffix(stem: str, *suffixes: str) -> str:
@@ -103,7 +118,7 @@ def resolve_latest_requirement_files(processed_dir: Path) -> dict[str, Path]:
     for suffix, key in (
         (_GATED_SUFFIX, "gated"), (_ENRICHED_SUFFIX, "enriched"), (_NORMALIZED_SUFFIX, "normalized"),
     ):
-        for p in processed_dir.rglob(f"*{suffix}.jsonl"):
+        for p in find_run_files(processed_dir, f"{suffix}.jsonl"):
             doc_key = doc_key_from_requirements_path(p)
             by_doc.setdefault(doc_key, {}).setdefault(p.parent, {})[key] = p
 

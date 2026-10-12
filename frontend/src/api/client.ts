@@ -49,7 +49,11 @@ export async function ask(req: AskRequest): Promise<AskResponse> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(req),
   })
-  if (!res.ok) throw new Error(`ask failed: ${res.status} ${res.statusText}`)
+  if (!res.ok) {
+    // the server says why in words (an unknown document filter, an unreachable index): show that, not the bare status
+    const detail = await res.json().then((b: { detail?: unknown }) => (typeof b.detail === 'string' ? b.detail : '')).catch(() => '')
+    throw new Error(detail || `ask failed: ${res.status} ${res.statusText}`)
+  }
   return res.json() as Promise<AskResponse>
 }
 

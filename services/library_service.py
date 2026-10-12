@@ -18,7 +18,7 @@ import shutil
 import time
 from pathlib import Path
 
-from core.artifact_resolver import doc_key_from_requirements_path
+from core.artifact_resolver import doc_key_from_requirements_path, find_run_files
 
 DOCS_COLLECTION = "grc_requirements"
 CONTEXT_COLLECTION = "grc_context"
@@ -56,9 +56,8 @@ def artifact_folders(processed_dir: Path, doc_key: str) -> list[tuple[Path, bool
     if not root.is_dir():
         return []
     folders: dict[Path, bool] = {}
-    for p in root.rglob("*_requirements_normalized.jsonl"):
-        rel = p.relative_to(root)
-        if any(part.startswith(".") for part in rel.parts[:-1]) or doc_key_from_requirements_path(p) != doc_key:
+    for p in find_run_files(root, "_requirements_normalized.jsonl"):  # never inside a hidden folder: the trash is not the library
+        if doc_key_from_requirements_path(p) != doc_key:
             continue
         folder = p.parent
         mine = {f.name for f in _mine(folder, doc_key)}

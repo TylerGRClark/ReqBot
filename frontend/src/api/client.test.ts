@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { evidence, getConfig } from './client'
+import { ask, evidence, getConfig } from './client'
 
 const VALID_CONFIG_RESPONSE = {
   config: {
@@ -80,5 +80,29 @@ describe('evidence fail-closed validation', () => {
     await expect(evidence({ topic: 'access control' })).rejects.toThrow(/did not match the expected shape/)
     expect(warnSpy).toHaveBeenCalled()
     warnSpy.mockRestore()
+  })
+})
+
+describe('ask failures', () => {
+  it("shows the server's reason, not just the status", async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: false,
+      status: 404,
+      statusText: 'Not Found',
+      json: () => Promise.resolve({ detail: 'Unknown document_ids (no matching indexed document): test-policy-99-1' }),
+    }))
+    await expect(ask({ question: 'backups', document_ids: ['test-policy-99-1'] })).rejects.toThrow(
+      'Unknown document_ids (no matching indexed document): test-policy-99-1',
+    )
+  })
+
+  it('falls back to the status when the server gives no reason', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: false,
+      status: 503,
+      statusText: 'Service Unavailable',
+      json: () => Promise.reject(new Error('not json')),
+    }))
+    await expect(ask({ question: 'backups' })).rejects.toThrow('ask failed: 503 Service Unavailable')
   })
 })

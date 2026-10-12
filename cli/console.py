@@ -24,6 +24,7 @@ if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
 from core import config as _config
+from core.artifact_resolver import find_run_files
 from core.profiles import default_profile as _default_profile
 from cli import reqbot as _reqbot
 
@@ -442,11 +443,11 @@ class GrcaiConsole(cmd.Cmd):
             return seen
 
         latest_norm = _latest(
-            sorted(processed_dir.rglob("*_requirements_normalized.jsonl")),
+            find_run_files(processed_dir, "_requirements_normalized.jsonl"),
             "_requirements_normalized",
         )
         latest_fail = _latest(
-            sorted(processed_dir.rglob("*_normalization_failures.jsonl")),
+            find_run_files(processed_dir, "_normalization_failures.jsonl"),
             "_normalization_failures",
         )
 

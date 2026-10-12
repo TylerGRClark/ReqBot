@@ -4,7 +4,7 @@ A job is a saved command line plus its state. The runner executes it as a child 
 and any crash stay out of the web server, and cancelling is ending a process. Nothing here imports the pipeline.
 
 Where things live: `<processed_dir>/.jobs/<id>.json` (state), `<id>.log` (the command's own log, written by the child itself, so it survives a server crash) and `.lock`. That is
-inside the folder the Docker example already mounts, and `rglob("*_requirements_normalized.jsonl")` does not see it.
+inside the folder the Docker example already mounts, and the library scan (`core.artifact_resolver.find_run_files`) never enters a folder whose name starts with a dot.
 
 The rules:
   - One job runs at a time, whichever runner started it. The queue is first in, first out and lives on disk.
