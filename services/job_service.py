@@ -51,6 +51,7 @@ TERM_GRACE_SECONDS = 15.0
 KILL_WAIT_SECONDS = 5.0
 POLL_SECONDS = 2.0
 LOG_TAIL_BYTES = 6000
+JOB_ENV_ALLOWED = frozenset({"REQBOT_EMBEDDING_MODEL"})  # the only variables a job may set for its child
 
 
 def _now_iso() -> str:
@@ -265,10 +266,11 @@ class JobStore:
 
     # -- queueing --
     def enqueue(self, kind: str, argv: list[str], *, title: str, run_dir: str = "", requires: dict | None = None,
-                params: dict | None = None, requested_by: str = "", retry_of: str | None = None) -> dict:
+                params: dict | None = None, requested_by: str = "", retry_of: str | None = None, env: dict | None = None) -> dict:
         job_id = f"JOB-{time.strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:6]}"
         job = {
             "id": job_id, "kind": kind, "title": title, "argv": [str(a) for a in argv], "run_dir": run_dir, "requires": requires or {}, "params": params or {},
+            "env": {k: str(v) for k, v in (env or {}).items() if k in JOB_ENV_ALLOWED},
             "requested_by": requested_by, "retry_of": retry_of, "state": "queued", "attempt": 0, "created_at": _now_iso(), "created_ts": time.time(),
             "started_at": None, "finished_at": None, "lease": None, "pid": None, "pgid": None, "pid_stamp": None, "progress": None,
             "cancel_requested": False, "exit_code": None, "error": "",
@@ -286,6 +288,11 @@ class JobStore:
             if job["state"] == "queued":
                 job.update(state="cancelled", finished_at=_now_iso())
                 self._write(job)
+                if job.get("run_dir"):
+                    try:
+                        Path(job["run_dir"]).rmdir()  # only an empty folder: what was reserved and never used
+                    except OSError:
+                        pass
             elif job["state"] == "running" and not job.get("cancel_requested"):
                 job["cancel_requested"] = True
                 self._write(job)
@@ -299,7 +306,7 @@ class JobStore:
         if job["state"] not in RETRYABLE:
             raise ValueError(f"job {job_id} is {job['state']}; only a failed, cancelled or interrupted job can be retried")
         return self.enqueue(job["kind"], job["argv"], title=job["title"], run_dir=job.get("run_dir", ""), requires=job.get("requires"),
-                            params=job.get("params"), requested_by=job.get("requested_by", ""), retry_of=job["id"])
+                            params=job.get("params"), requested_by=job.get("requested_by", ""), retry_of=job["id"], env=job.get("env"))
 
     # -- running --
     def claim_next(self, runner: dict, lease_seconds: float = LEASE_SECONDS) -> dict | None:
@@ -370,6 +377,7 @@ class JobStore:
         if not self.dir.exists():
             return []
         host = socket.gethostname()
+        me = runner or {"id": f"reconciler:{host}:{os.getpid()}", "host": host, "pid": os.getpid(), "stamp": proc_start_stamp(os.getpid())}
         now = time.time()
         stale: list[dict] = []
         with self._locked():
@@ -377,11 +385,18 @@ class JobStore:
                 if job["state"] != "running":
                     continue
                 lease = job.get("lease") or {}
-                if runner and lease.get("runner") == runner["id"]:
+                if lease.get("runner") == me["id"]:
                     continue
                 expired = float(lease.get("expires_at", 0)) <= now
                 dead_here = lease.get("host") == host and not pid_alive(lease.get("runner_pid"), lease.get("runner_stamp"))
                 if expired or dead_here or not lease:
+                    # Fence it before the lock is released: a new attempt number and a lease of ours, so its former owner (perhaps only paused) can no longer renew,
+                    # finish or write progress, and learns it has lost the job at its next heartbeat. If this process dies before settling it, the lease expires
+                    # (or its runner pid is dead) and the next reconcile takes over.
+                    job["attempt"] = job.get("attempt", 0) + 1
+                    job["lease"] = {"runner": me["id"], "host": me["host"], "runner_pid": me["pid"], "runner_stamp": me["stamp"],
+                                    "expires_at": now + grace + KILL_WAIT_SECONDS + 30}
+                    self._write(job)
                     stale.append(job)
         settled = []
         for job in stale:  # the stops happen outside the lock: they can take seconds
@@ -391,7 +406,7 @@ class JobStore:
                 continue
             with self._locked():
                 current = self.get(job["id"])
-                if not current or current["state"] != "running" or current.get("attempt") != job.get("attempt"):
+                if not self._mine(current, job["attempt"], me["id"]):
                     continue
                 cancelled = bool(current.get("cancel_requested"))
                 current.update(state="cancelled" if cancelled else "interrupted", finished_at=_now_iso(), lease=None,
@@ -453,7 +468,7 @@ class JobRunner:
         logf = open(log_path, "ab", buffering=0)
         try:
             logf.write(f"\n=== attempt {attempt} started {_now_iso()} on {self.identity['host']} ===\n{' '.join(job['argv'])}\n".encode())
-            env = dict(os.environ, PYTHONUNBUFFERED="1")
+            env = dict(os.environ, PYTHONUNBUFFERED="1", **{k: v for k, v in (job.get("env") or {}).items() if k in JOB_ENV_ALLOWED})
             try:
                 proc = self._popen(job["argv"], stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=logf, cwd=str(_ROOT), env=env,
                                    start_new_session=True, text=True, bufsize=1)
@@ -559,6 +574,19 @@ def default_store(processed_dir: Path | str | None = None) -> JobStore:
     return JobStore(base / ".jobs")
 
 
+def reserve_run_dir(base: Path, stem: str) -> Path:
+    """Create and return `<base>/<stem>_<YYYYMMDD>_<HHMMSS>`, moving on a second at a time while that name is taken, so two jobs for PDFs with the same stem can never share a run
+    folder (and so never reuse each other's chunks or cached answers). Creating the folder is the reservation (it is atomic); an explicit retry reuses its job's folder on purpose."""
+    when = time.time()
+    while True:
+        candidate = base / f"{stem}_{time.strftime('%Y%m%d_%H%M%S', time.localtime(when))}"
+        try:
+            candidate.mkdir(parents=True)
+            return candidate
+        except FileExistsError:
+            when += 1
+
+
 def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=None, no_index: bool = False, max_chunks: int | None = None,
                    requested_by: str = "") -> dict:
     """Queue `reqbot ingest` for one PDF. The job creates its run folder itself and passes it to the command, so a retry runs in the same folder and requirement finding reuses the
@@ -570,8 +598,10 @@ def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=N
         raise ValueError("max_chunks must be 1 or more")
     cfg = cfg or _config.load()
     store = store or default_store(cfg.processed_dir_path())
-    run_dir = cfg.processed_dir_path() / f"{pdf.stem}_{time.strftime('%Y%m%d_%H%M%S')}"
+    run_dir = reserve_run_dir(cfg.processed_dir_path(), pdf.stem)
+    # Every choice the command depends on is fixed now, so what is checked before the run is what runs, however long the job waits and whatever config does meanwhile.
     argv = [sys.executable, str(CLI_SCRIPT), "ingest", str(pdf), "--output-dir", str(run_dir),
+            "--extraction-model", cfg.extraction_model, "--enrichment-model", cfg.enrichment_model,
             "--ollama-url", cfg.ollama_url, "--qdrant-url", cfg.qdrant_url, "--progress-json"]
     if no_index:
         argv.append("--no-index")
@@ -579,7 +609,8 @@ def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=N
         argv += ["--max-chunks", str(max_chunks)]
     models = [cfg.extraction_model] + ([] if no_index else [cfg.embedding_model])
     requires = {"ollama_url": cfg.ollama_url, "ollama_models": [m for m in models if m], "qdrant_url": "" if no_index else cfg.qdrant_url}
-    return store.enqueue("ingest", argv, title=f"Ingest {pdf.name}", run_dir=str(run_dir), requires=requires,
+    env = {} if no_index else {"REQBOT_EMBEDDING_MODEL": cfg.embedding_model}  # the ingest command has no flag for it; the environment overrides config
+    return store.enqueue("ingest", argv, title=f"Ingest {pdf.name}", run_dir=str(run_dir), requires=requires, env=env,
                          params={"pdf": str(pdf), "no_index": no_index, "max_chunks": max_chunks}, requested_by=requested_by)
 
 

@@ -4,6 +4,7 @@ Every job here runs a tiny stub script, never the real pipeline. Real child proc
 import http.server
 import json
 import os
+import re
 import signal
 import socket
 import subprocess
@@ -12,6 +13,7 @@ import threading
 import time
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 import pytest
 
@@ -377,7 +379,7 @@ def test_a_failed_preflight_fails_the_job_at_once_without_starting_it(tmp_path):
 def _cfg(tmp_path: Path):
     return SimpleNamespace(
         ollama_url="http://ollama.test:11434", qdrant_url="http://qdrant.test:6333", extraction_model="llama3.1:8b",
-        embedding_model="nomic-embed-text", processed_dir_path=lambda: tmp_path / "processed",
+        enrichment_model="llama3.1:8b", embedding_model="nomic-embed-text", processed_dir_path=lambda: tmp_path / "processed",
     )
 
 
@@ -486,3 +488,101 @@ def test_the_loop_stops_when_the_runner_is_shut_down(tmp_path):
     runner.shutdown()
     t.join(timeout=5)
     assert not t.is_alive()
+
+
+# -- the reviewer's findings on this change ---------------------------------------
+
+def test_two_jobs_for_the_same_stem_never_share_a_run_folder(tmp_path):
+    pdf = tmp_path / "afi99-1.pdf"
+    pdf.write_bytes(b"%PDF-1.4")
+    store, cfg = _store(tmp_path), _cfg(tmp_path)
+    first = js.enqueue_ingest(pdf, store=store, cfg=cfg)
+    second = js.enqueue_ingest(pdf, store=store, cfg=cfg)  # inside the same second
+    third = js.enqueue_ingest(pdf, store=store, cfg=cfg)
+    dirs = [first["run_dir"], second["run_dir"], third["run_dir"]]
+    assert len(set(dirs)) == 3 and all(Path(d).is_dir() for d in dirs)
+    assert all(re.fullmatch(r"afi99-1_\d{8}_\d{6}", Path(d).name) for d in dirs)  # the name pattern the rest of ReqBot expects
+    assert all(job["argv"][job["argv"].index("--output-dir") + 1] == job["run_dir"] for job in (first, second, third))
+
+
+def test_a_retry_keeps_its_run_folder_and_a_cancelled_queued_job_releases_an_unused_one(tmp_path):
+    pdf = tmp_path / "doc.pdf"
+    pdf.write_bytes(b"%PDF-1.4")
+    store, cfg = _store(tmp_path), _cfg(tmp_path)
+    job = js.enqueue_ingest(pdf, store=store, cfg=cfg)
+    run_dir = Path(job["run_dir"])
+    assert run_dir.is_dir()
+    store.cancel(job["id"])
+    assert not run_dir.exists()  # reserved and never used
+    kept = js.enqueue_ingest(pdf, store=store, cfg=cfg)
+    (Path(kept["run_dir"]) / "doc_chunks.jsonl").write_text("{}")  # work was done in it
+    store.cancel(kept["id"])
+    assert Path(kept["run_dir"]).is_dir()  # never removed when it holds anything
+    assert store.retry(kept["id"])["run_dir"] == kept["run_dir"]
+
+
+def test_reconcile_fences_the_job_so_a_paused_owner_cannot_renew_while_it_is_stopped(tmp_path):
+    store = _store(tmp_path)
+    job = _queue(store, _script(tmp_path, "pass"))
+    old = {"id": "old-runner", "host": "some-other-host", "pid": 1, "stamp": "x"}
+    assert store.claim_next(old, lease_seconds=60)["attempt"] == 1
+    with store._locked():  # its lease ran out (the machine was paused)
+        j = store.get(job["id"])
+        j["lease"]["expires_at"] = time.time() - 1
+        store._write(j)
+    seen = {}
+    original = js._stop_recorded_child
+
+    def stop_while_the_owner_wakes_up(j, grace):
+        # the owner comes back in the middle of the stop and tries everything it can
+        seen["heartbeat"] = store.heartbeat(job["id"], 1, "old-runner", 60)
+        seen["finish"] = store.finish(job["id"], 1, "old-runner", "succeeded", exit_code=0)
+        seen["progress_job"] = store.get(job["id"])
+        return original(j, grace)
+
+    me = {"id": "new-runner", "host": socket.gethostname(), "pid": os.getpid(), "stamp": js.proc_start_stamp(os.getpid())}
+    with patch.object(js, "_stop_recorded_child", stop_while_the_owner_wakes_up):
+        assert store.reconcile(me, grace=1) == [job["id"]]
+    assert seen["heartbeat"] == "lost" and seen["finish"] is False
+    assert seen["progress_job"]["state"] == "running" and seen["progress_job"]["lease"]["runner"] == "new-runner"
+    final = store.get(job["id"])
+    assert final["state"] == "interrupted" and final["attempt"] == 2
+
+
+def test_a_reconciler_that_died_midway_leaves_a_job_the_next_one_can_settle(tmp_path):
+    store = _store(tmp_path)
+    job = _queue(store, _script(tmp_path, "pass"))
+    with store._locked():  # fenced by a reconciler whose process is gone
+        j = store.get(job["id"])
+        j.update(state="running", attempt=2, lease={"runner": "reconciler:x", "host": socket.gethostname(), "runner_pid": _dead_pid(),
+                                                     "runner_stamp": "gone", "expires_at": time.time() + 300})
+        store._write(j)
+    assert store.reconcile(None, grace=1) == [job["id"]]
+    assert store.get(job["id"])["state"] == "interrupted"
+
+
+def test_the_models_are_fixed_when_the_job_is_queued(tmp_path):
+    pdf = tmp_path / "doc.pdf"
+    pdf.write_bytes(b"%PDF-1.4")
+    cfg = _cfg(tmp_path)
+    store = _store(tmp_path)
+    job = js.enqueue_ingest(pdf, store=store, cfg=cfg)
+    argv = job["argv"]
+    assert argv[argv.index("--extraction-model") + 1] == "llama3.1:8b" and argv[argv.index("--enrichment-model") + 1] == "llama3.1:8b"
+    assert job["env"] == {"REQBOT_EMBEDDING_MODEL": "nomic-embed-text"}
+    cfg.embedding_model = "a-different-model"  # config changes while the job waits
+    cfg.extraction_model = "another-model"
+    assert store.get(job["id"])["env"] == {"REQBOT_EMBEDDING_MODEL": "nomic-embed-text"}
+    assert store.get(job["id"])["requires"]["ollama_models"] == ["llama3.1:8b", "nomic-embed-text"]
+    store.cancel(job["id"])
+    assert store.retry(job["id"])["env"] == job["env"]  # a retry keeps the same snapshot
+
+
+def test_a_job_may_set_only_the_allow_listed_environment_and_its_child_gets_it(tmp_path):
+    store = _store(tmp_path)
+    out = tmp_path / "env.txt"
+    job = store.enqueue("stub", [sys.executable, str(_script(tmp_path, f"import os\nopen({str(out)!r}, 'w').write(repr((os.environ.get('REQBOT_EMBEDDING_MODEL'), os.environ.get('LD_PRELOAD'))))")),],
+                        title="env", env={"REQBOT_EMBEDDING_MODEL": "snap", "LD_PRELOAD": "/evil.so"})
+    assert job["env"] == {"REQBOT_EMBEDDING_MODEL": "snap"}  # anything else is dropped at queue time
+    _runner(store).run_pending_once()
+    assert out.read_text() == repr(("snap", os.environ.get("LD_PRELOAD")))
