@@ -1686,7 +1686,7 @@ def cmd_jobs(args: argparse.Namespace) -> int:
     if action == "add":
         try:
             if args.add_kind == "questions":
-                job = _jobs.enqueue_questions(args.doc, store=store, cfg=_cfg, requested_by="cli")
+                job = _jobs.enqueue_questions(args.doc, store=store, cfg=_cfg, requested_by="cli", profile=args.profile)
             elif args.add_kind == "reindex":
                 job = _jobs.enqueue_reindex(store=store, cfg=_cfg, requirements_only=args.requirements_only, requested_by="cli")
             else:
@@ -2119,7 +2119,9 @@ def main() -> None:
     p_add_ingest.add_argument("pdf", type=str)
     p_add_ingest.add_argument("--no-index", action="store_true", dest="no_index")
     p_add_ingest.add_argument("--max-chunks", type=int, default=None, dest="max_chunks", help="Limit chunks (testing)")
-    add_sub.add_parser("questions", help="Queue draft audit questions for one document").add_argument("--doc", required=True, help="Document key, as shown by reqbot docs")
+    p_add_questions = add_sub.add_parser("questions", help="Queue draft audit questions for one document")
+    p_add_questions.add_argument("--doc", required=True, help="Document key, as shown by reqbot docs")
+    p_add_questions.add_argument("--profile", default="cybersecurity", help="Domain profile the checklist is built with (default: cybersecurity)")
     p_add_reindex = add_sub.add_parser("reindex", help="Queue a rebuild of the search library from the saved documents")
     p_add_reindex.add_argument("--requirements-only", action="store_true", dest="requirements_only")
     jobs_sub.add_parser("worker", help="Run the queue in the foreground (what 'reqbot serve' does in a background thread)")

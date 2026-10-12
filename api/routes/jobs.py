@@ -63,6 +63,7 @@ def retry_job(job_id: str) -> dict:
 
 class QuestionsRequest(BaseModel):
     doc_key: str = Field(min_length=1, max_length=255)
+    profile: str = Field(default="cybersecurity", max_length=64)  # the profile the checklist on screen was built with
 
 
 class ReindexRequest(BaseModel):
@@ -90,7 +91,7 @@ def _answer(out: dict):
 def start_questions(req: QuestionsRequest, request: Request):
     """Write draft audit questions for one document (the model machine, in the background). 202 when queued; 200 `skipped` when the same document is already queued or running."""
     who = request.client.host if request.client else ""
-    return _answer(_queued(lambda: job_service.enqueue_questions(req.doc_key, requested_by=who)))
+    return _answer(_queued(lambda: job_service.enqueue_questions(req.doc_key, requested_by=who, profile=req.profile)))
 
 
 @router.post("/jobs/reindex", status_code=202)

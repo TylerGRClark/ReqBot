@@ -30,7 +30,7 @@ describe('JobsPanel', () => {
     render(<JobsPanel data={{ jobs: [running, job({ id: 'JOB-q' })], running: 'JOB-r', queued: 1 }} onChanged={() => {}} />)
     const banner = screen.getByRole('status')
     expect(banner).toHaveTextContent('Ingest afi17-203.pdf')
-    expect(banner).toHaveTextContent('Finding requirements, section 121 of 427')
+    expect(banner).toHaveTextContent('Finding requirements: 120 of 427 sections done')
     expect(banner).toHaveTextContent('1 waiting')
   })
 

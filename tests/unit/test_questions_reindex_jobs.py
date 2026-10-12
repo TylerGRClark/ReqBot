@@ -94,7 +94,7 @@ def test_the_summary_carries_what_a_screen_matches_a_job_to_its_document_by(tmp_
     store = JobStore(tmp_path / "processed" / ".jobs")
     job = js.enqueue_questions("afi99-1", store=store, cfg=_cfg(tmp_path))
     s = js.summarize(job)
-    assert s["params"] == {"doc_key": "afi99-1"} and "model" not in s["params"] and "argv" not in s
+    assert s["params"] == {"doc_key": "afi99-1", "profile": "cybersecurity"} and "model" not in s["params"] and "argv" not in s
 
 
 # -- the routes -----------------------------------------------------------------------------
@@ -204,3 +204,39 @@ def test_retrying_over_the_api_answers_409_when_the_same_thing_is_already_queued
     c.post("/api/jobs/questions", json={"doc_key": "afi99-1"}, headers=h)
     r = c.post(f"/api/jobs/{first['id']}/retry", headers=h)
     assert r.status_code == 409 and "already queued or running" in r.json()["detail"]
+
+
+def test_the_profile_the_checklist_was_built_with_goes_to_the_questions_job(tmp_path):
+    _library(tmp_path, "afi99-1")
+    store, cfg = JobStore(tmp_path / "processed" / ".jobs"), _cfg(tmp_path)
+    job = js.enqueue_questions("afi99-1", store=store, cfg=cfg)
+    assert job["argv"][job["argv"].index("--profile") + 1] == "cybersecurity" and job["params"]["profile"] == "cybersecurity"
+    for bad in ("../x", "a b", "", "x" * 80):
+        if bad:
+            with pytest.raises(ValueError):
+                js.enqueue_questions("afi99-1", store=store, cfg=cfg, profile=bad)
+    with pytest.raises(ValueError, match="unknown profile"):
+        js.enqueue_questions("afi99-1", store=store, cfg=cfg, profile="no-such-profile")
+
+
+def test_one_questions_job_per_document_and_profile(tmp_path):
+    _library(tmp_path, "afi99-1")
+    store, cfg = JobStore(tmp_path / "processed" / ".jobs"), _cfg(tmp_path)
+    from core import (
+        profiles as _profiles,  # only one profile ships; a second one is stood in for here
+    )
+    with patch.object(_profiles, "load_profile", lambda name: {"name": name}):
+        js.enqueue_questions("afi99-1", store=store, cfg=cfg, profile="cybersecurity")
+        with pytest.raises(js.JobAlreadyQueued):
+            js.enqueue_questions("afi99-1", store=store, cfg=cfg, profile="cybersecurity")
+        second = js.enqueue_questions("afi99-1", store=store, cfg=cfg, profile="another")  # a different profile is a different checklist
+    assert second["params"]["profile"] == "another"
+
+
+def test_the_route_passes_the_profile_and_refuses_an_unknown_one(env):
+    _library(env.tmp, "afi99-1")
+    c, h = _client(), env.headers
+    ok = c.post("/api/jobs/questions", json={"doc_key": "afi99-1", "profile": "cybersecurity"}, headers=h)
+    assert ok.status_code == 202 and ok.json()["job"]["params"]["profile"] == "cybersecurity"
+    bad = c.post("/api/jobs/questions", json={"doc_key": "afi99-1", "profile": "no-such-profile"}, headers=h)
+    assert bad.status_code == 422 and bad.json()["detail"]["code"] == "bad_request"
