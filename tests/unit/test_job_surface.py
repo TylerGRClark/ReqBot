@@ -236,7 +236,8 @@ def test_jobs_add_ingest_queues_the_command_without_running_it(tmp_path, capsys)
     pdf = tmp_path / "doc.pdf"
     pdf.write_bytes(b"%PDF-1.4")
     s = JobStore(tmp_path / ".jobs")
-    cfg = SimpleNamespace(ollama_url="http://o", qdrant_url="http://q", extraction_model="m", embedding_model="e", processed_dir_path=lambda: tmp_path / "p")
+    cfg = SimpleNamespace(ollama_url="http://o", qdrant_url="http://q", extraction_model="m", enrichment_model="m", embedding_model="e",
+                          processed_dir_path=lambda: tmp_path / "p")
     with patch.object(reqbot, "_job_store", return_value=s), patch.object(reqbot, "_cfg", cfg):
         rc = reqbot.cmd_jobs(SimpleNamespace(jobs_command="add", add_kind="ingest", pdf=str(pdf), no_index=True, max_chunks=2))
     assert rc == 0
