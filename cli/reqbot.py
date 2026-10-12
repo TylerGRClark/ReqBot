@@ -1714,6 +1714,39 @@ def cmd_jobs(args: argparse.Namespace) -> int:
     return 1
 
 
+def cmd_remove(args: argparse.Namespace) -> int:
+    """Remove a document from the library: run folders to the trash, points out of search. Needs --yes; without it only says what would happen."""
+    from services import job_service as _jobs
+    from services import library_service as _library
+
+    processed_dir = _cfg.processed_dir_path()
+    try:
+        plan = _library.describe(processed_dir, args.doc)
+    except (ValueError, LookupError) as e:
+        log.error("%s", e)
+        return 1
+    if not args.yes:
+        print(f"Removing {plan['document']} would move {len(plan['run_folders'])} run folder(s) to {processed_dir / _library.TRASH}/ and take its rows out of search:")
+        for name in plan["run_folders"]:
+            print(f"  {name}")
+        print("Nothing was changed. Run it again with --yes to do it (it can be undone: move the folders back and run 'reqbot reindex').")
+        return 1
+    from qdrant_client import QdrantClient
+
+    try:
+        out = _library.remove_document(processed_dir, args.doc, confirm=True, confirm_name=args.doc, client=QdrantClient(url=args.qdrant_url),
+                                       active_jobs=_jobs.default_store(processed_dir).list_jobs())
+    except _library.RemoveBlocked as e:
+        log.error("A job for %s is queued or running (%s); cancel it or wait for it first.", args.doc, ", ".join(e.job_ids))
+        return 1
+    except (ValueError, LookupError, RuntimeError) as e:
+        log.error("%s", e)
+        return 1
+    print(f"Removed {out['document']}: {len(out['run_folders_moved'])} run folder(s) moved to {out['trash']}; "
+          f"{out['points_removed']['requirements']} requirement row(s) and {out['points_removed']['context']} context chunk(s) taken out of search.")
+    return 0
+
+
 def cmd_serve(args: argparse.Namespace) -> int:
     """Start the ReqBot API server (the page reads; queued jobs run in the background)."""
     try:
@@ -2057,6 +2090,12 @@ def main() -> None:
         help="Do not run queued jobs in this process (a separate 'reqbot jobs worker' does)",
     )
 
+    # remove
+    p_remove = subparsers.add_parser("remove", help="Remove a document from the library (run folders to the trash, rows out of search); needs --yes")
+    p_remove.add_argument("--doc", type=str, required=True, help="Document key, as shown by reqbot docs")
+    p_remove.add_argument("--yes", action="store_true", help="Do it (without this, only says what would happen)")
+    p_remove.add_argument("--qdrant-url", type=str, default=_cfg.qdrant_url, dest="qdrant_url")
+
     # token
     p_token = subparsers.add_parser("token", help="Create, show or replace the admin access code (lets a request start jobs)")
     p_token.add_argument("--rotate", action="store_true", help="Replace the saved code with a new one")
@@ -2116,6 +2155,7 @@ def main() -> None:
         "compare": cmd_compare,
         "evidence": cmd_evidence,
         "serve": cmd_serve,
+        "remove": cmd_remove,
         "token": cmd_token,
         "jobs": cmd_jobs,
         "mcp": cmd_mcp,

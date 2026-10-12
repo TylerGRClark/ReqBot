@@ -36,6 +36,7 @@ documents the envelopes returned by the routes and shared services.
 | POST | `/api/jobs/ingest` | Start the full pipeline for an uploaded PDF (admin). |
 | GET | `/api/inbox` | The PDFs waiting in the inbox folder and where each stands (admin). |
 | POST | `/api/jobs/inbox` | Start one ingest per PDF in the inbox (admin). |
+| POST | `/api/documents/remove` | Remove a document: run folders to the trash, rows out of search. Needs `confirm: true` and the exact key (admin). |
 | POST | `/api/jobs/questions` | Write draft audit questions for one document, as a job (admin). Body `{"doc_key"}`. |
 | POST | `/api/jobs/reindex` | Rebuild the search library from the saved documents, as a job (admin). Body `{"requirements_only": false}`. |
 | POST | `/api/jobs/{job_id}/cancel` | Cancel a queued job, or ask a running one to stop (admin). |
@@ -328,6 +329,18 @@ did before; a missing or wrong code is 401. If the operator ran `reqbot token --
 `GET /api/config` does not include it. The code travels in clear text on plain
 HTTP, so beyond a trusted network put TLS in front. Cancelling and retrying are
 `POST /api/jobs/{job_id}/cancel` and `/retry`; starting is described next.
+
+## Removing a document (admin)
+
+`POST /api/documents/remove` with `{"doc_key": "afi17-203", "confirm": true, "confirm_name": "afi17-203"}`.
+It is never a delete: the document's run folders are moved to
+`<processed_dir>/.trash/<removal time>/` and its rows are taken out of both search
+collections. Without `confirm: true` and the exact key repeated as `confirm_name`
+nothing happens (422 `confirmation_required`). 404 `no_such_document`; 409
+`jobs_active` while an ingest or draft-questions job for it is queued or running
+(with the job ids); 503 `index_unreachable` when the search index could not be
+cleaned, in which case nothing was moved and the request can simply be repeated.
+200 returns `{"document", "run_folders_moved", "trash", "points_removed": {"requirements", "context"}}`.
 
 ## Adding documents (admin)
 

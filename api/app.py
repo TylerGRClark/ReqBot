@@ -43,6 +43,7 @@ from api.routes import (
     evidence,
     intake,
     jobs,
+    library,
     status,
     trace,
 )
@@ -89,6 +90,7 @@ app.include_router(checklist.router, prefix="/api")
 app.include_router(config.router, prefix="/api")
 app.include_router(access.router, prefix="/api")  # public: which mode admin actions are in (never the code)
 app.include_router(jobs.router, prefix="/api")  # admin only: answers 403 until an admin access code is configured
+app.include_router(library.router, prefix="/api")  # admin only: remove a document (to the trash, with a confirmation)
 app.include_router(intake.router, prefix="/api")  # admin only: uploads, the inbox and starting an ingest
 
 # SPA static file serving — only when the frontend build exists.
