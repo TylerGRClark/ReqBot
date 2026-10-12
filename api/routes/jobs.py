@@ -1,7 +1,8 @@
 """Job routes (docs/WEB_UI_PARITY_PLAN.md, stages 3 and 4): list and read, cancel and retry. Admin only.
 
 Starting a job is in `api/routes/intake.py`, next to the uploads that feed it."""
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from pydantic import BaseModel, Field
 
 from api.deps import require_admin
 from services import job_service
@@ -57,3 +58,37 @@ def retry_job(job_id: str) -> dict:
     except ValueError as e:
         raise HTTPException(status_code=409, detail=str(e)) from None
     return job_service.summarize(new)
+
+
+class QuestionsRequest(BaseModel):
+    doc_key: str = Field(min_length=1, max_length=255)
+
+
+class ReindexRequest(BaseModel):
+    requirements_only: bool = False
+
+
+def _queued(build) -> dict:
+    """Run an enqueue; a job for the same thing already queued or running is "skipped", an unknown document is a 404, a bad key a 422."""
+    try:
+        return {"result": "queued", "job": job_service.summarize(build())}
+    except job_service.JobAlreadyQueued as e:
+        return {"result": "skipped", "reason": "queued", "job_id": e.job_id, "message": "That is already queued or running."}
+    except LookupError as e:
+        raise HTTPException(status_code=404, detail={"code": "no_such_document", "message": str(e)}) from None
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail={"code": "bad_request", "message": str(e)}) from None
+
+
+@router.post("/jobs/questions", status_code=202)
+def start_questions(req: QuestionsRequest, request: Request) -> dict:
+    """Write draft audit questions for one document (the model machine, in the background). 202 when queued; the same document already queued or running answers `skipped`."""
+    who = request.client.host if request.client else ""
+    return _queued(lambda: job_service.enqueue_questions(req.doc_key, requested_by=who))
+
+
+@router.post("/jobs/reindex", status_code=202)
+def start_reindex(req: ReindexRequest, request: Request) -> dict:
+    """Rebuild the search library from the saved documents (no re-extraction). One rebuild at a time."""
+    who = request.client.host if request.client else ""
+    return _queued(lambda: job_service.enqueue_reindex(requirements_only=req.requirements_only, requested_by=who))

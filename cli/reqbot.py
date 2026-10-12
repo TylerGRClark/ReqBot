@@ -461,7 +461,10 @@ def _reindex_requirements(req_files: dict, qdrant_url: str, ollama_url: str, emb
 
     items = sorted(req_files.items())
     failed = []
+    from pipeline import progress as _progress
+
     for i, (doc_key, jsonl_path) in enumerate(items):
+        _progress.emit("reindex", i, len(items))
         log.info("[%d/%d] Indexing: %s", i + 1, len(items), jsonl_path.name)
         try:
             _embed.run(
@@ -547,7 +550,10 @@ def _reindex_context(req_files: dict, qdrant_url: str, ollama_url: str, embeddin
     failed = []
     skipped = []
 
-    for doc_key, req_path in items:
+    from pipeline import progress as _progress
+
+    for n, (doc_key, req_path) in enumerate(items):
+        _progress.emit("reindex-context", n, len(items))
         # Exact match on doc_key, not an unfiltered glob()[0] — a run directory
         # could in principle hold artifacts for more than one document, and
         # grabbing an arbitrary chunks file would pair the wrong document_id
@@ -640,6 +646,10 @@ def cmd_reindex(args: argparse.Namespace) -> int:
     --requirements-only skips the slower, CPU-bound grc_context rebuild.
     """
     from core.artifact_resolver import resolve_latest_requirement_files
+    from pipeline import progress as _progress
+
+    if getattr(args, "progress_json", False):
+        _progress.enable()
 
     processed_dir = _cfg.processed_dir_path()
     if not processed_dir.exists():
@@ -654,13 +664,21 @@ def cmd_reindex(args: argparse.Namespace) -> int:
     log.info("Found %d document(s) to reindex", len(req_files))
 
     if not _reindex_requirements(req_files, args.qdrant_url, args.ollama_url, _cfg.embedding_model):
+        log.error("The requirements index was NOT rebuilt and the live index is untouched. Run the rebuild again.")
         return 1
+    log.info("The requirements index is rebuilt and live.")
 
     if getattr(args, "requirements_only", False):
         log.info("Skipped grc_context rebuild (--requirements-only)")
+        _progress.emit("done")
         return 0
 
-    return 0 if _reindex_context(req_files, args.qdrant_url, args.ollama_url, _cfg.embedding_model) else 1
+    if not _reindex_context(req_files, args.qdrant_url, args.ollama_url, _cfg.embedding_model):
+        # the two collections are swapped one after the other, not together (docs/OPERATIONS.md): say plainly which half is done
+        log.error("The context index was NOT rebuilt: the new requirements index is already live beside the old context index. Run the rebuild again to bring the context up to date.")
+        return 1
+    _progress.emit("done")
+    return 0
 
 
 def cmd_docs(args: argparse.Namespace) -> int:
@@ -1171,8 +1189,11 @@ def cmd_evidence(args: argparse.Namespace) -> int:
 
 def cmd_questions(args: argparse.Namespace) -> int:
     """Write draft audit questions for a document's checklist rows to a sidecar file (WP-46.6); `reqbot checklist` shows them."""
+    from pipeline import progress as _progress
     from services import audit_questions, checklist_service
 
+    if getattr(args, "progress_json", False):
+        _progress.enable()
     processed_dir = _cfg.processed_dir_path()
     try:
         checklist = checklist_service.generate(processed_dir, args.doc, args.profile)
@@ -1183,10 +1204,13 @@ def cmd_questions(args: argparse.Namespace) -> int:
     counts = audit_questions.draft_questions(
         checklist["items"], path, model=args.model, ollama_url=args.ollama_url,
         progress=lambda c: log.info("questions so far: %s", c),
+        on_row=lambda done, total: _progress.emit("questions", done, total),
     )
-    print(f"Draft audit questions for {args.doc}: {counts}\nWritten to: {path}")
+    print(f"Draft audit questions for {args.doc}: {counts}\nWritten to: {path}", file=sys.stderr if _progress.enabled() else sys.stdout)
     if counts.get("aborted"):
         log.error("Stopped: the model could not be reached %d times in a row (%s). Rows already written were kept.", audit_questions.MAX_CONSECUTIVE_FAILURES, args.ollama_url)
+    if not counts["errors"]:
+        _progress.emit("done")
     return 1 if counts["errors"] else 0
 
 
@@ -1642,8 +1666,13 @@ def cmd_jobs(args: argparse.Namespace) -> int:
 
     if action == "add":
         try:
-            job = _jobs.enqueue_ingest(args.pdf, store=store, cfg=_cfg, no_index=args.no_index, max_chunks=args.max_chunks, requested_by="cli")
-        except ValueError as e:
+            if args.add_kind == "questions":
+                job = _jobs.enqueue_questions(args.doc, store=store, cfg=_cfg, requested_by="cli")
+            elif args.add_kind == "reindex":
+                job = _jobs.enqueue_reindex(store=store, cfg=_cfg, requirements_only=args.requirements_only, requested_by="cli")
+            else:
+                job = _jobs.enqueue_ingest(args.pdf, store=store, cfg=_cfg, no_index=args.no_index, max_chunks=args.max_chunks, requested_by="cli")
+        except (ValueError, LookupError) as e:
             log.error("%s", e)
             return 1
         print(f"Queued {job['id']}: {job['title']}")
@@ -1868,6 +1897,7 @@ def main() -> None:
     )
     p_reindex.add_argument("--ollama-url", type=str, default=_cfg.ollama_url, dest="ollama_url")
     p_reindex.add_argument("--qdrant-url", type=str, default=_cfg.qdrant_url, dest="qdrant_url")
+    p_reindex.add_argument("--progress-json", action="store_true", dest="progress_json", help="Print one JSON progress line per document on stdout (used by the job runner)")
 
     # compare
     p_compare = subparsers.add_parser(
@@ -1953,6 +1983,7 @@ def main() -> None:
     p_questions.add_argument("--profile", type=str, default="cybersecurity", help="Domain profile name (default: cybersecurity)")
     p_questions.add_argument("--model", type=str, default="qwen2.5:14b", help="Ollama model that writes the questions (default: qwen2.5:14b)")
     p_questions.add_argument("--ollama-url", type=str, default=_cfg.ollama_url, dest="ollama_url")
+    p_questions.add_argument("--progress-json", action="store_true", dest="progress_json", help="Print one JSON progress line per row on stdout (used by the job runner)")
 
     # trace
     p_trace = subparsers.add_parser("trace", help="Trace full provenance of a requirement by ID")
@@ -2025,6 +2056,9 @@ def main() -> None:
     p_add_ingest.add_argument("pdf", type=str)
     p_add_ingest.add_argument("--no-index", action="store_true", dest="no_index")
     p_add_ingest.add_argument("--max-chunks", type=int, default=None, dest="max_chunks", help="Limit chunks (testing)")
+    add_sub.add_parser("questions", help="Queue draft audit questions for one document").add_argument("--doc", required=True, help="Document key, as shown by reqbot docs")
+    p_add_reindex = add_sub.add_parser("reindex", help="Queue a rebuild of the search library from the saved documents")
+    p_add_reindex.add_argument("--requirements-only", action="store_true", dest="requirements_only")
     jobs_sub.add_parser("worker", help="Run the queue in the foreground (what 'reqbot serve' does in a background thread)")
 
     # mcp

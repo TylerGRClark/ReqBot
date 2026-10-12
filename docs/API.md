@@ -36,6 +36,8 @@ documents the envelopes returned by the routes and shared services.
 | POST | `/api/jobs/ingest` | Start the full pipeline for an uploaded PDF (admin). |
 | GET | `/api/inbox` | The PDFs waiting in the inbox folder and where each stands (admin). |
 | POST | `/api/jobs/inbox` | Start one ingest per PDF in the inbox (admin). |
+| POST | `/api/jobs/questions` | Write draft audit questions for one document, as a job (admin). Body `{"doc_key"}`. |
+| POST | `/api/jobs/reindex` | Rebuild the search library from the saved documents, as a job (admin). Body `{"requirements_only": false}`. |
 | POST | `/api/jobs/{job_id}/cancel` | Cancel a queued job, or ask a running one to stop (admin). |
 | POST | `/api/jobs/{job_id}/retry` | Queue a failed, cancelled or interrupted job again, in the same run folder (admin). |
 
@@ -347,6 +349,15 @@ Adding a document is two requests, so a question can be asked in between.
    different content and `if_exists` is `ask`. It is never decided silently.
    `keep_both` ingests under a new name (`<name>_2`, ...); `replace` makes the new
    run the document's current one.
+
+`POST /api/jobs/questions` (`{"doc_key": "afi17-203"}`) and `POST /api/jobs/reindex`
+(`{"requirements_only": false}`) queue the other two long commands. 202 with
+`{"result": "queued", "job"}`; 200 `{"result": "skipped"}` when the same thing is already
+queued or running (one questions job per document, one rebuild at a time); 404
+`no_such_document` for a key not in the library. A rebuild swaps the requirements
+collection and then the context collection, one after the other: if the second
+fails the job fails and its log says the new requirements are already live beside
+the old context, and running it again brings the context up to date.
 
 `GET /api/inbox` lists the PDFs in the configured inbox folder (default
 `<processed_dir>/.inbox`, `REQBOT_INBOX_DIR`) with the same standing, and

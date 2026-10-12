@@ -278,11 +278,14 @@ refresh. Prefer `reindex` for a complete library rebuild.
 
 A job is a long-running command that runs in the background, one at a time, with
 its state and log saved under `<processed_dir>/.jobs/`. Only commands ReqBot
-builds itself can be queued (today: the full ingest of one PDF); nothing is run
+builds itself can be queued (the full ingest of one PDF, draft audit questions for one
+document, and a rebuild of the search library); nothing is run
 through a shell and no caller supplies a command line.
 
 ```bash
 reqbot jobs add ingest /path/to/policy.pdf        # queue it (add --no-index, --max-chunks N)
+reqbot jobs add questions --doc afi17-203          # draft audit questions for one document
+reqbot jobs add reindex                            # rebuild the search library (--requirements-only)
 reqbot jobs list                                  # newest first; --json for scripts
 reqbot jobs show JOB-20261012-012154-24c122       # state, progress, end of the log
 reqbot jobs cancel JOB-...                        # a queued job at once; a running one is stopped
