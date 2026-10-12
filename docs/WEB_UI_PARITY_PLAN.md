@@ -1,6 +1,6 @@
 # Web UI parity plan: who sees what, and running long jobs from the browser (proposal; nothing in it is built)
 
-*Status 2026-10-12: stage 3 (the job engine, section 5) is built and merged, and stage 4 (section 6) is built: the uploads, inbox, start-ingest, cancel and retry routes and the same-name rule, the Corpus screen with a drop zone for files or a folder, the access-code prompt, the progress banner and the job list (all merged), and replace-without-a-gap (`reqbot ingest --replace`, `pipeline/index_replace.py`). Stage 6, the jobs behind "write draft audit questions" and "rebuild library" (`reqbot jobs add questions|reindex`, `POST /api/jobs/questions|reindex`, `--progress-json` on both commands), and their buttons (the checklist screen and System) are built; removing a document is not. Only the access-code role source exists (plus trusted-network mode). Written 2026-10-11 from a discussion with the owner, then revised the same day after a review against the code and after the owner narrowed the direction (section 1). This is a plan for review: no code, no data and no behavior changes with this PR. Each stage in section 9 becomes its own PR, with its tests and pass rules written down before building.*
+*Status 2026-10-12: stage 3 (the job engine, section 5) is built and merged, and stage 4 (section 6) is built: the uploads, inbox, start-ingest, cancel and retry routes and the same-name rule, the Corpus screen with a drop zone for files or a folder, the access-code prompt, the progress banner and the job list (all merged), and replace-without-a-gap (`reqbot ingest --replace`, `pipeline/index_replace.py`). Stage 6, the jobs behind "write draft audit questions" and "rebuild library" (`reqbot jobs add questions|reindex`, `POST /api/jobs/questions|reindex`, `--progress-json` on both commands), and their buttons (the checklist screen and System) are built. Removing a document is built too: `reqbot remove` and `POST /api/documents/remove` (run folders to a trash folder, rows out of search, only with the exact key repeated) and the "Remove this document…" button on the document page with a typed-name confirmation. The first-run wizard is not built; it waits for the owner to confirm its shape. Only the access-code role source exists (plus trusted-network mode). Written 2026-10-11 from a discussion with the owner, then revised the same day after a review against the code and after the owner narrowed the direction (section 1). This is a plan for review: no code, no data and no behavior changes with this PR. Each stage in section 9 becomes its own PR, with its tests and pass rules written down before building.*
 
 ## 1. Direction (the owner, 2026-10-11)
 
@@ -21,12 +21,12 @@ The web page reads. Every command that writes, or runs for more than a few secon
 | `status` | System | admin |
 | `init` (guided setup) | Settings edits the config (`POST /api/config`, same machine only) | role rule (stage 1); first-run wizard later (stage 6) |
 | `ingest`, `batch` | **none** ("Ingest documents via the CLI") | **stages 3 and 4**, admin |
-| `questions` (draft audit questions) | none | **stage 6** |
-| `reindex` (rebuild the search library) | none | **stage 6** |
+| `questions` (draft audit questions) | Checklist screen: "Write draft audit questions" | built (stage 6) |
+| `reindex` (rebuild the search library) | System: "Rebuild the library" | built (stage 6) |
 | `mcp` | not a web feature; local only | **stage 2** (network service) |
 | `kinds` | none | when something reads the kinds (nothing does yet) |
 | `index`, `index-context` | none | not planned: ingest and rebuild cover them |
-| *(no command)* remove a document | none, in the CLI either | stage 6 |
+| `remove` (take a document out of the library) | Document page: "Remove this document…" with a typed-name confirmation | built (stage 6) |
 
 ## 3. Roles and sign-in (stage 1)
 
