@@ -26,6 +26,7 @@ def _doc(processed: Path, key: str, runs: tuple[str, ...] = ("20261001_120000",)
 
 
 def _points(q: FakeQdrant, key: str, n: int = 3, chunks: bool = False) -> None:
+    q.exists = True
     for i in range(n):
         q.points[f"{key}-{'c' if chunks else 'r'}{i}"] = {"source_pdf": f"{key}_chunks.jsonl" if chunks else f"{key}.pdf"}
 
@@ -176,3 +177,101 @@ def test_the_command_only_describes_without_yes_and_does_it_with_yes(library, ca
         assert reqbot.cmd_remove(SimpleNamespace(doc="afi99-1", yes=True, qdrant_url="http://q")) == 0
         assert "Removed afi99-1" in capsys.readouterr().out and not folders[0].exists() and not q.points
         assert reqbot.cmd_remove(SimpleNamespace(doc="afi99-1", yes=True, qdrant_url="http://q")) == 1  # already gone
+
+
+# -- the reviewer's findings on this change ----------------------------------------------------
+
+class NotFound(Exception):
+    status_code = 404
+
+
+class SomeMissing(FakeQdrant):
+    """An index where some collections were never created."""
+
+    def __init__(self, missing=()):
+        super().__init__()
+        self.missing = set(missing)
+
+    def get_collection(self, name):
+        if name in self.missing:
+            raise NotFound(f"Collection `{name}` doesn't exist!")
+        return super().get_collection(name)
+
+
+def test_a_rebuild_in_progress_blocks_a_removal(library):
+    _doc(library, "afi99-1")
+    q = FakeQdrant()
+    _points(q, "afi99-1")
+    for state in ("queued", "running"):
+        with pytest.raises(lib.RemoveBlocked):
+            lib.remove_document(library, "afi99-1", confirm=True, confirm_name="afi99-1", client=q,
+                                active_jobs=[{"id": "R1", "kind": "reindex", "state": state, "params": {"requirements_only": False}}])
+    assert len(q.points) == 3
+    finished = [{"id": "R0", "kind": "reindex", "state": "succeeded", "params": {}}]
+    assert lib.remove_document(library, "afi99-1", confirm=True, confirm_name="afi99-1", client=q, active_jobs=finished)["document"] == "afi99-1"
+
+
+def test_a_document_is_found_from_its_artifacts_wherever_its_folder_is_called(library):
+    custom = library / "my-own-folder"
+    custom.mkdir()
+    (custom / "afi99-1_requirements_normalized.jsonl").write_text(json.dumps({"requirement_id": "R", "source_quote": "x"}) + "\n")
+    (custom / "afi99-1_chunks.jsonl").write_text("{}\n")
+    out = lib.remove_document(library, "afi99-1", confirm=True, confirm_name="afi99-1", active_jobs=[])
+    assert out["run_folders_moved"] == ["my-own-folder"] and not custom.exists()
+    assert (Path(out["trash"]) / "my-own-folder" / "afi99-1_chunks.jsonl").is_file()
+
+
+def test_a_folder_shared_with_another_document_gives_up_only_this_documents_files(library):
+    shared = library / "batch_run"
+    shared.mkdir()
+    for key in ("afi99-1", "afi99-1_2", "afi10-2402"):
+        (shared / f"{key}_requirements_normalized.jsonl").write_text(json.dumps({"requirement_id": "R", "source_quote": "x"}) + "\n")
+        (shared / f"{key}_chunks.jsonl").write_text("{}\n")
+    (shared / "notes.txt").write_text("someone's notes")
+    out = lib.remove_document(library, "afi99-1", confirm=True, confirm_name="afi99-1", active_jobs=[])
+    assert out["files_moved"] == 2
+    left = sorted(p.name for p in shared.iterdir())
+    assert left == ["afi10-2402_chunks.jsonl", "afi10-2402_requirements_normalized.jsonl", "afi99-1_2_chunks.jsonl", "afi99-1_2_requirements_normalized.jsonl", "notes.txt"]
+    assert sorted(p.name for p in (Path(out["trash"]) / "batch_run").iterdir()) == ["afi99-1_chunks.jsonl", "afi99-1_requirements_normalized.jsonl"]
+
+
+def test_artifacts_lying_directly_in_the_processed_folder_are_moved_file_by_file(library):
+    (library / "afi99-1_requirements_normalized.jsonl").write_text(json.dumps({"requirement_id": "R", "source_quote": "x"}) + "\n")
+    (library / "afi99-1_audit_questions.jsonl").write_text("{}\n")
+    (library / "other.pdf").write_bytes(b"%PDF-1.4")
+    out = lib.remove_document(library, "afi99-1", confirm=True, confirm_name="afi99-1", active_jobs=[])
+    assert library.is_dir() and (library / "other.pdf").is_file() and not list(library.glob("afi99-1_*"))
+    assert out["files_moved"] == 2
+
+
+def test_a_removed_document_in_the_trash_is_not_found_again(library):
+    _doc(library, "afi99-1")
+    lib.remove_document(library, "afi99-1", confirm=True, confirm_name="afi99-1", active_jobs=[])
+    assert list((library / ".trash").rglob("afi99-1_requirements_normalized.jsonl"))
+    with pytest.raises(LookupError):
+        lib.describe(library, "afi99-1")
+    with pytest.raises(LookupError):
+        lib.remove_document(library, "afi99-1", confirm=True, confirm_name="afi99-1", active_jobs=[])
+
+
+def test_collections_that_do_not_exist_are_already_clean(library):
+    folders = _doc(library, "afi99-1")
+    q = SomeMissing(missing={lib.DOCS_COLLECTION, lib.CONTEXT_COLLECTION})  # a document ingested without indexing, or a fresh install
+    out = lib.remove_document(library, "afi99-1", confirm=True, confirm_name="afi99-1", active_jobs=[], client=q)
+    assert out["points_removed"] == {"requirements": 0, "context": 0} and not folders[0].exists()
+    _doc(library, "afi10-2402")
+    half = SomeMissing(missing={lib.CONTEXT_COLLECTION})
+    _points(half, "afi10-2402", 2)
+    assert lib.remove_document(library, "afi10-2402", confirm=True, confirm_name="afi10-2402", active_jobs=[], client=half)["points_removed"] == {"requirements": 2, "context": 0}
+
+
+def test_an_index_that_cannot_be_reached_is_not_mistaken_for_clean(library):
+    folders = _doc(library, "afi99-1")
+
+    class Down(FakeQdrant):
+        def get_collection(self, name):
+            raise OSError("connection refused")
+
+    with pytest.raises(RuntimeError, match="Nothing was moved"):
+        lib.remove_document(library, "afi99-1", confirm=True, confirm_name="afi99-1", active_jobs=[], client=Down())
+    assert folders[0].is_dir()

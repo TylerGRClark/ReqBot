@@ -39,6 +39,6 @@ def remove_document(req: RemoveRequest) -> dict:
     except LookupError as e:
         raise HTTPException(status_code=404, detail={"code": "no_such_document", "message": str(e)}) from None
     except library_service.RemoveBlocked as e:
-        raise HTTPException(status_code=409, detail={"code": "jobs_active", "message": "A job for this document is queued or running; cancel it or wait for it first.", "job_ids": e.job_ids}) from None
+        raise HTTPException(status_code=409, detail={"code": "jobs_active", "message": "A job that uses this document (an ingest or draft questions for it, or a rebuild of the library) is queued or running; cancel it or wait for it first.", "job_ids": e.job_ids}) from None
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail={"code": "index_unreachable", "message": str(e)}) from None
