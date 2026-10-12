@@ -159,6 +159,18 @@ def test_the_folder_check_tells_existing_new_and_unwritable_apart(tmp_path):
         assert ss.check_folder(tmp_path / "later")["writable"] is False
 
 
+def test_a_path_taken_by_a_file_or_a_broken_link_is_not_a_usable_folder(tmp_path):
+    (tmp_path / "taken").write_text("a file")
+    (tmp_path / "link-to-file").symlink_to(tmp_path / "taken")
+    (tmp_path / "broken").symlink_to(tmp_path / "nowhere")
+    for name in ("taken", "link-to-file", "broken"):
+        out = ss.check_folder(tmp_path / name)
+        assert out["writable"] is False and out["exists"] is True and "not a folder" in out["message"], name
+    (tmp_path / "real").mkdir()
+    (tmp_path / "link-to-folder").symlink_to(tmp_path / "real")
+    assert ss.check_folder(tmp_path / "link-to-folder")["writable"] is True
+
+
 def test_a_role_left_unset_follows_the_default_model_and_synthesis_is_listed_only_when_local():
     roles = {r["role"]: r for r in ss.model_roles(VALUES, "qwen2.5:14b")}
     assert roles["extraction"]["name"] == roles["rewrite"]["name"] == "llama3.1:8b-instruct-q4_K_M"

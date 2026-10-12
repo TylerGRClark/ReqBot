@@ -14,7 +14,7 @@ vi.mock('../api/client', async importOriginal => {
 })
 vi.mock('../api/setup', async importOriginal => {
   const actual = await importOriginal<typeof import('../api/setup')>()
-  return { ...actual, checkSetup: vi.fn() }
+  return { ...actual, checkSetup: vi.fn(), getSetupState: vi.fn() }
 })
 vi.mock('../api/admin', async importOriginal => {
   const actual = await importOriginal<typeof import('../api/admin')>()
@@ -25,6 +25,7 @@ const getConfig = vi.mocked(client.getConfig)
 const updateConfig = vi.mocked(client.updateConfig)
 const checkSetup = vi.mocked(setup.checkSetup)
 const getAccess = vi.mocked(admin.getAccess)
+const getSetupState = vi.mocked(setup.getSetupState)
 
 function config(over: Partial<ConfigResponse['config']> = {}, env: string[] = []): ConfigResponse {
   return {
@@ -66,6 +67,7 @@ beforeEach(() => {
   getConfig.mockResolvedValue(config())
   checkSetup.mockResolvedValue(checked())
   getAccess.mockResolvedValue('code')
+  getSetupState.mockResolvedValue({ config_file: true, needs_setup: false, questions_model: 'qwen2.5:14b' })
 })
 afterEach(cleanup)
 
@@ -144,6 +146,22 @@ describe('SetupView', () => {
     await screen.findByText(/Nothing has been changed/)
     expect(screen.getByText('Save these settings')).toBeDisabled()
     expect(updateConfig).not.toHaveBeenCalled()
+  })
+
+  it('on a first run saves the values shown even when nothing was changed, so the setup can be completed', async () => {
+    getSetupState.mockResolvedValue({ config_file: false, needs_setup: true, questions_model: 'qwen2.5:14b' })
+    updateConfig.mockResolvedValue(config())
+    show()
+    await goTo('5. Review')
+    await screen.findByText(/Nothing has been saved on this server yet/)
+    const save = screen.getByText('Save these settings')
+    await waitFor(() => expect(save).toBeEnabled())
+    fireEvent.click(save)
+    await waitFor(() => expect(updateConfig).toHaveBeenCalledTimes(1))
+    expect(updateConfig).toHaveBeenCalledWith(expect.objectContaining({
+      ollama_url: 'http://ollama:11434', qdrant_url: 'http://qdrant:6333', embedding_model: 'nomic-embed-text', synthesis_backend: 'local',
+    }))
+    await screen.findByText(/Saved\. Next:/)
   })
 
   it('shows what the server said when the save is refused', async () => {

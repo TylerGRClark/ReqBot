@@ -4,7 +4,7 @@ import * as api from '../api/client'
 import type { ConfigResponse, ConfigUpdateRequest } from '../api/types'
 import { getAccess } from '../api/admin'
 import type { AdminMode } from '../api/admin'
-import { checkSetup } from '../api/setup'
+import { checkSetup, getSetupState } from '../api/setup'
 import type { SetupCheck, SetupValues } from '../api/setup'
 import AppShell from '../components/AppShell'
 import LoadingSpinner from '../components/LoadingSpinner'
@@ -97,6 +97,7 @@ export default function SetupView() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
+  const [needsSetup, setNeedsSetup] = useState(false) // no configuration file has been saved yet: the defaults shown are not on disk
 
   const values = useCallback((f: Form): SetupValues => ({
     ollama_url: f.ollama_url,
@@ -133,6 +134,7 @@ export default function SetupView() {
       })
       .catch((e: unknown) => { if (alive) setLoadError(e instanceof Error ? e.message : 'Could not load the configuration') })
     getAccess().then(m => { if (alive) setAccess(m) }).catch(() => { if (alive) setAccess(null) })
+    getSetupState().then(s => { if (alive) setNeedsSetup(s.needs_setup) }).catch(() => { if (alive) setNeedsSetup(false) })
     return () => { alive = false }
   }, [runCheck])
 
@@ -149,11 +151,13 @@ export default function SetupView() {
     setSaving(true)
     setSaveError(null)
     try {
-      const res = await api.updateConfig(changes)
+      // On a first run nothing is on disk, so even an unchanged form is saved (the file is what marks ReqBot as set up); later only what changed is sent.
+      const res = await api.updateConfig(needsSetup ? { ...form } : changes)
       const f = toForm(res.config)
       setBaseline(f)
       setForm(f)
       setEnvOverridden(res.env_overridden)
+      setNeedsSetup(false)
       setSaved(true)
       void runCheck(f)
     } catch (e) {
@@ -354,7 +358,12 @@ export default function SetupView() {
 
         {step === 4 && (
           <section aria-label="Review" className="space-y-4">
-            {changedKeys.length === 0 && !saved && <p className="text-sm text-gray-700">Nothing has been changed. The saved settings stay as they are.</p>}
+            {changedKeys.length === 0 && !saved && !needsSetup && <p className="text-sm text-gray-700">Nothing has been changed. The saved settings stay as they are.</p>}
+            {needsSetup && (
+              <p className="text-sm text-gray-700">
+                Nothing has been saved on this server yet, so what you see is the built-in defaults. Saving writes the values on these pages, which marks ReqBot as set up.
+              </p>
+            )}
             {changedKeys.length > 0 && (
               <ul className="text-sm space-y-1" aria-label="Changes">
                 {changedKeys.map(k => (
@@ -375,7 +384,7 @@ export default function SetupView() {
                 Saved. Next: <Link to="/corpus" className="underline">add your first document</Link> or <Link to="/search" className="underline">try a search</Link>.
               </p>
             )}
-            <button onClick={() => void save()} disabled={saving || changedKeys.length === 0} className="text-sm bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 disabled:opacity-50">
+            <button onClick={() => void save()} disabled={saving || (changedKeys.length === 0 && !needsSetup)} className="text-sm bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 disabled:opacity-50">
               {saving ? 'Saving…' : 'Save these settings'}
             </button>
           </section>

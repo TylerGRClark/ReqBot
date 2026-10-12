@@ -88,6 +88,9 @@ def check_folder(path: str | Path) -> dict:
     import os
 
     folder = Path(path).expanduser()
+    if os.path.lexists(folder) and not folder.is_dir():  # a file, or a link that leads nowhere or to a file: nothing can be created there
+        return {"path": str(folder), "exists": True, "writable": False,
+                "message": "Something that is not a folder is at that path (a file or a broken link). Move it, or choose another path."}
     if folder.is_dir():
         ok = os.access(folder, os.W_OK | os.X_OK)
         return {"path": str(folder), "exists": True, "writable": ok,
