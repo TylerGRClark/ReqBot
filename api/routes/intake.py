@@ -22,11 +22,13 @@ router = APIRouter(dependencies=[Depends(require_admin)])
 class IngestRequest(BaseModel):
     upload_id: str = Field(min_length=1, max_length=64)
     if_exists: Literal["ask", "replace", "keep_both"] = "ask"
+    then_questions: bool = False  # also write the draft audit questions once the document is in the library
 
 
 class InboxRequest(BaseModel):
     files: list[str] | None = Field(default=None, max_length=500)
     if_exists: Literal["ask", "replace", "keep_both"] = "ask"
+    then_questions: bool = False
 
 
 def _refuse(e: IntakeError) -> HTTPException:
@@ -66,7 +68,7 @@ async def upload_pdf(request: Request, filename: str = Query(..., min_length=1, 
     return {**_public(meta), "library": intake_service.classify(processed_dir, meta["stem"], meta["sha256"], jobs)}
 
 
-def _start(processed_dir, store, pdf_path, stem: str, sha256: str, if_exists: str, requested_by: str) -> dict:
+def _start(processed_dir, store, pdf_path, stem: str, sha256: str, if_exists: str, requested_by: str, then_questions: bool = False) -> dict:
     """Queue one ingest, or say why not. Returns {"result": "queued"|"skipped"|"needs_decision", ...}."""
     jobs = store.list_jobs()
     where = intake_service.classify(processed_dir, stem, sha256, jobs)
@@ -88,7 +90,7 @@ def _start(processed_dir, store, pdf_path, stem: str, sha256: str, if_exists: st
     try:
         # "replace" also removes, once the new run is fully indexed and verified, the document's points that the new run no longer has (pipeline/index_replace.py)
         job = job_service.enqueue_ingest(run_path, store=store, requested_by=requested_by,
-                                         replace=(status == "same_name_different_content" and if_exists == "replace"),
+                                         replace=(status == "same_name_different_content" and if_exists == "replace"), then_questions=then_questions,
                                          params_extra={"sha256": sha256, "if_exists": if_exists if status == "same_name_different_content" else "n/a"})
     except JobAlreadyQueued as e:  # another request got there between the check above and the write
         return {"result": "skipped", "reason": "queued", "document": run_stem, "job_id": e.job_id, "message": f"{run_stem} is already queued or running."}
@@ -105,7 +107,7 @@ def start_ingest(req: IngestRequest, request: Request) -> dict:
         meta = intake_service.read_upload(processed_dir, req.upload_id)
     except IntakeError as e:
         raise _refuse(e) from None
-    out = _start(processed_dir, job_service.default_store(processed_dir), meta["path"], meta["stem"], meta["sha256"], req.if_exists, _client(request))
+    out = _start(processed_dir, job_service.default_store(processed_dir), meta["path"], meta["stem"], meta["sha256"], req.if_exists, _client(request), req.then_questions)
     if out["result"] == "needs_decision":
         raise HTTPException(status_code=409, detail={"code": out["reason"], **{k: out[k] for k in ("message", "options", "document")}})
     if out["result"] == "skipped":
@@ -139,7 +141,7 @@ def import_inbox(req: InboxRequest, request: Request) -> dict:
             continue
         try:
             intake_service.check_pdf_file(path)
-            out = _start(processed_dir, store, str(path), path.stem, intake_service.file_sha256(path), req.if_exists, _client(request))
+            out = _start(processed_dir, store, str(path), path.stem, intake_service.file_sha256(path), req.if_exists, _client(request), req.then_questions)
         except IntakeError as e:
             results.append({"file": name, "result": "refused", "code": e.code, "message": e.message})
             continue

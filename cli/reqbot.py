@@ -1690,7 +1690,8 @@ def cmd_jobs(args: argparse.Namespace) -> int:
             elif args.add_kind == "reindex":
                 job = _jobs.enqueue_reindex(store=store, cfg=_cfg, requirements_only=args.requirements_only, requested_by="cli")
             else:
-                job = _jobs.enqueue_ingest(args.pdf, store=store, cfg=_cfg, no_index=args.no_index, max_chunks=args.max_chunks, requested_by="cli")
+                job = _jobs.enqueue_ingest(args.pdf, store=store, cfg=_cfg, no_index=args.no_index, max_chunks=args.max_chunks, requested_by="cli",
+                                           then_questions=bool(getattr(args, "then_questions", False)))
         except (ValueError, LookupError) as e:
             log.error("%s", e)
             return 1
@@ -2119,6 +2120,7 @@ def main() -> None:
     p_add_ingest.add_argument("pdf", type=str)
     p_add_ingest.add_argument("--no-index", action="store_true", dest="no_index")
     p_add_ingest.add_argument("--max-chunks", type=int, default=None, dest="max_chunks", help="Limit chunks (testing)")
+    p_add_ingest.add_argument("--questions", action="store_true", dest="then_questions", help="Also queue the draft audit questions for the document when the ingest has succeeded")
     p_add_questions = add_sub.add_parser("questions", help="Queue draft audit questions for one document")
     p_add_questions.add_argument("--doc", required=True, help="Document key, as shown by reqbot docs")
     p_add_questions.add_argument("--profile", default="cybersecurity", help="Domain profile the checklist is built with (default: cybersecurity)")

@@ -354,7 +354,10 @@ Adding a document is two requests, so a question can be asked in between.
    with identical content), `same_content_other_name`, `same_name_different_content`
    or `queued`. A refusal has `detail: {code, message}`: `not_pdf` (415),
    `too_large` (413), `too_many_pages` (422), `unreadable` (422), `bad_name` (400).
-2. `POST /api/jobs/ingest` with `{"upload_id": "...", "if_exists": "ask" | "replace" | "keep_both"}`.
+2. `POST /api/jobs/ingest` with `{"upload_id": "...", "if_exists": "ask" | "replace" | "keep_both", "then_questions": false}`.
+   `then_questions: true` also queues the document's draft-questions job (the same
+   job as `POST /api/jobs/questions`) when the ingest has succeeded; it is off by
+   default, and a failed ingest queues nothing.
    202 with `{"result": "queued", "document", "job"}` when queued; 200 with
    `{"result": "skipped", "reason"}` when there is nothing to do (same content,
    or the name is already queued); 409 `same_name_different_content` with
@@ -376,7 +379,7 @@ the old context, and running it again brings the context up to date.
 
 `GET /api/inbox` lists the PDFs in the configured inbox folder (default
 `<processed_dir>/.inbox`, `REQBOT_INBOX_DIR`) with the same standing, and
-`POST /api/jobs/inbox` (`{"files": [names] | null, "if_exists"}`) queues one ingest
+`POST /api/jobs/inbox` (`{"files": [names] | null, "if_exists", "then_questions"}`) queues one ingest
 per PDF. No path is ever taken from a request: only an upload id this server
 made, or a file name that is a PDF directly in the inbox. The limits are
 environment variables: `REQBOT_MAX_UPLOAD_MB` (100), `REQBOT_MAX_PDF_PAGES`

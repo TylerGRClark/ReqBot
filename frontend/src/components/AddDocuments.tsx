@@ -51,6 +51,8 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
   const [codeInput, setCodeInput] = useState('')
   const [promptReason, setPromptReason] = useState<string | null>(null)
   const [justSaved, setJustSaved] = useState(false) // a code was entered here and has not been refused yet: the job list's older "rejected" answer no longer applies
+  const [alsoQuestions, setAlsoQuestions] = useState(false)
+  const alsoQuestionsRef = useRef(false) // read when a request is made, so a file still uploading follows the box as it stands when it is queued
   const held = useRef<File[]>([])
   const filesInput = useRef<HTMLInputElement>(null)
   const folderInput = useRef<HTMLInputElement>(null)
@@ -74,7 +76,7 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
         const up = await uploadPdf(file, f => update(id, { progress: f }))
         const where = up.library
         if (where.status === 'new') {
-          const r = await startIngest(up.upload_id, 'ask')
+          const r = await startIngest(up.upload_id, 'ask', alsoQuestionsRef.current)
           update(id, r.result === 'queued'
             ? { phase: 'queued', message: 'Queued. It will start when the machine is free.' }
             : { phase: 'skipped', message: r.message ?? 'Nothing to do.' })
@@ -148,7 +150,7 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
     if (!item.uploadId) return
     update(item.id, { phase: 'uploading', progress: 1, message: '' })
     try {
-      const r = await startIngest(item.uploadId, ifExists)
+      const r = await startIngest(item.uploadId, ifExists, alsoQuestionsRef.current)
       update(item.id, r.result === 'queued'
         ? { phase: 'queued', message: ifExists === 'replace' ? 'Queued to replace the library copy.' : `Queued as ${r.document ?? 'a second copy'}.` }
         : { phase: 'skipped', message: r.message ?? 'Nothing to do.' })
@@ -186,7 +188,7 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
     setInboxBusy(true)
     setInboxError(null)
     try {
-      setInboxResult(await importInbox(files, ifExists))
+      setInboxResult(await importInbox(files, ifExists, alsoQuestionsRef.current))
       setInbox(await getInbox())
       onStarted()
     } catch (e) {
@@ -258,6 +260,17 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
         }`}
       >
         <p className="text-gray-700">Drop PDFs or a whole folder here</p>
+        <label className="mt-3 flex items-center justify-center gap-2 text-xs text-gray-700">
+          <input
+            type="checkbox"
+            checked={alsoQuestions}
+            onChange={e => {
+              alsoQuestionsRef.current = e.target.checked
+              setAlsoQuestions(e.target.checked)
+            }}
+          />
+          Also write draft audit questions when each document is done (takes longer; you can do it later from the checklist page)
+        </label>
         <div className="mt-3 flex items-center justify-center gap-3">
           <button onClick={() => filesInput.current?.click()} className="text-sm text-blue-700 border border-blue-300 rounded px-3 py-1.5 hover:bg-blue-50">
             Choose files
