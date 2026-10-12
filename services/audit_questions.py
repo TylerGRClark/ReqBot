@@ -175,9 +175,10 @@ def write(path: Path, records: dict[str, dict]) -> None:
     os.replace(tmp, path)
 
 
-def draft_questions(items: list[dict], path: Path, *, model: str = MODEL, ollama_url: str = "", call=None, progress=None) -> dict:
+def draft_questions(items: list[dict], path: Path, *, model: str = MODEL, ollama_url: str = "", call=None, progress=None, on_row=None) -> dict:
     """Write or refresh the sidecar for `items` (checklist items). `call(prompt) -> text` replaces the Ollama call in tests. Returns counts.
-    A record whose input is unchanged is kept; a row whose answer cannot be parsed after one retry is recorded with `error` and is retried on the next run."""
+    A record whose input is unchanged is kept; a row whose answer cannot be parsed after one retry is recorded with `error` and is retried on the next run.
+    `on_row(done, total)` is called after every row (the job runner's progress: row i of N)."""
     if call is None and not ollama_url:
         raise ValueError("ollama_url is required when no call function is given")
     call = call or (lambda prompt: ollama_call(prompt, model, ollama_url))
@@ -185,6 +186,7 @@ def draft_questions(items: list[dict], path: Path, *, model: str = MODEL, ollama
     records: dict[str, dict] = dict(existing)  # rows not in this run (another profile, an interrupted run) keep their records; apply() checks each against its row
     consecutive_failures = 0
     counts = {"rows": 0, "questions": 0, "no_question": 0, "skipped_by_code": 0, "reused": 0, "errors": 0, "with_unverified_terms": 0}
+    total_rows = sum(1 for it in items if (it.get("source_quote") or "").strip())
     for item in items:
         if not (item.get("source_quote") or "").strip():
             continue
@@ -225,6 +227,8 @@ def draft_questions(items: list[dict], path: Path, *, model: str = MODEL, ollama
         counts["questions"] += bool(rec.get("question"))
         counts["no_question"] += not rec.get("question") and not rec.get("error")
         counts["with_unverified_terms"] += bool(rec.get("unverified_terms"))
+        if on_row:
+            on_row(counts["rows"], total_rows)
         if progress and counts["rows"] % 25 == 0:
             progress(counts)
             write(path, records)

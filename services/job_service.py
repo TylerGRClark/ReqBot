@@ -289,6 +289,7 @@ class JobStore:
         job = {
             "id": job_id, "kind": kind, "title": title, "argv": [str(a) for a in argv], "run_dir": run_dir, "requires": requires or {}, "params": params or {},
             "env": {k: str(v) for k, v in (env or {}).items() if k in JOB_ENV_ALLOWED},
+            "exclusive": list(exclusive) if exclusive else None,  # kept so a retry is held to the same rule as the original
             "requested_by": requested_by, "retry_of": retry_of, "state": "queued", "attempt": 0, "created_at": _now_iso(), "created_ts": time.time(),
             "started_at": None, "finished_at": None, "lease": None, "pid": None, "pgid": None, "pid_stamp": None, "progress": None,
             "cancel_requested": False, "exit_code": None, "error": "",
@@ -328,8 +329,10 @@ class JobStore:
             raise ValueError(f"no such job: {job_id}")
         if job["state"] not in RETRYABLE:
             raise ValueError(f"job {job_id} is {job['state']}; only a failed, cancelled or interrupted job can be retried")
+        excl = job.get("exclusive")
         return self.enqueue(job["kind"], job["argv"], title=job["title"], run_dir=job.get("run_dir", ""), requires=job.get("requires"),
-                            params=job.get("params"), requested_by=job.get("requested_by", ""), retry_of=job["id"], env=job.get("env"))
+                            params=job.get("params"), requested_by=job.get("requested_by", ""), retry_of=job["id"], env=job.get("env"),
+                            exclusive=(excl[0], excl[1]) if excl else None)
 
     # -- running --
     def claim_next(self, runner: dict, lease_seconds: float = LEASE_SECONDS) -> dict | None:
@@ -651,10 +654,49 @@ def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=N
         raise
 
 
+QUESTIONS_MODEL = "qwen2.5:14b"  # the model `reqbot questions` writes with by default (services.audit_questions.MODEL); fixed in the job's command when it is queued
+_DOC_KEY_BAD = re.compile(r"[\\/\x00-\x1f*?\[\]]")
+
+
+def enqueue_questions(doc_key: str, *, store: JobStore | None = None, cfg=None, requested_by: str = "") -> dict:
+    """Queue `reqbot questions --doc <doc_key>`: draft audit questions for one document's checklist rows. Only a document that is in the library can be named, and at most one
+    such job per document is queued or running at a time. Rows whose input is unchanged are reused by the command, so running it again is cheap."""
+    from core.artifact_resolver import resolve_requirement_file
+
+    key = (doc_key or "").strip()
+    if not key or _DOC_KEY_BAD.search(key) or key.startswith("."):
+        raise ValueError(f"not a document key: {doc_key!r}")
+    cfg = cfg or _config.load()
+    store = store or default_store(cfg.processed_dir_path())
+    try:
+        resolve_requirement_file(cfg.processed_dir_path(), key)
+    except (ValueError, FileNotFoundError, OSError):
+        raise LookupError(f"No document {key!r} is in the library.") from None
+    argv = [sys.executable, str(CLI_SCRIPT), "questions", "--doc", key, "--model", QUESTIONS_MODEL, "--ollama-url", cfg.ollama_url, "--progress-json"]
+    requires = {"ollama_url": cfg.ollama_url, "ollama_models": [QUESTIONS_MODEL], "qdrant_url": ""}
+    return store.enqueue("questions", argv, title=f"Draft questions for {key}", requires=requires, params={"doc_key": key, "model": QUESTIONS_MODEL},
+                         requested_by=requested_by, exclusive=("doc_key", key))  # only questions jobs carry params.doc_key
+
+
+def enqueue_reindex(*, store: JobStore | None = None, cfg=None, requirements_only: bool = False, requested_by: str = "") -> dict:
+    """Queue `reqbot reindex`: rebuild the search library from the saved documents (no re-extraction). The live index is untouched until the new one is complete; the two
+    halves (requirements, then context) are swapped one after the other, and the job's log says which one is done if the second fails. One rebuild at a time."""
+    cfg = cfg or _config.load()
+    store = store or default_store(cfg.processed_dir_path())
+    argv = [sys.executable, str(CLI_SCRIPT), "reindex", "--ollama-url", cfg.ollama_url, "--qdrant-url", cfg.qdrant_url, "--progress-json"]
+    if requirements_only:
+        argv.append("--requirements-only")
+    requires = {"ollama_url": cfg.ollama_url, "ollama_models": [cfg.embedding_model], "qdrant_url": cfg.qdrant_url}
+    return store.enqueue("reindex", argv, title="Rebuild the search library" + (" (requirements only)" if requirements_only else ""), requires=requires,
+                         env={"REQBOT_EMBEDDING_MODEL": cfg.embedding_model}, params={"requirements_only": requirements_only, "kind": "reindex"},
+                         requested_by=requested_by, exclusive=("kind", "reindex"))
+
+
 def summarize(job: dict) -> dict:
     """What a list or a screen shows: the job without its lease internals, and the command without the interpreter."""
     argv = job.get("argv") or []
     command = " ".join(["reqbot"] + [str(a) for a in argv[2:]]) if len(argv) > 2 else " ".join(argv)
     keys = ("id", "kind", "title", "state", "attempt", "created_at", "started_at", "finished_at", "progress", "error", "exit_code",
             "run_dir", "requested_by", "retry_of", "cancel_requested")
-    return {**{k: job.get(k) for k in keys}, "command": command}
+    params = {k: v for k, v in (job.get("params") or {}).items() if k in ("doc_key", "stem", "requirements_only", "replace")}  # what a screen matches a job to its document by
+    return {**{k: job.get(k) for k in keys}, "command": command, "params": params}

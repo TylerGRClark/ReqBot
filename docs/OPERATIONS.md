@@ -87,6 +87,21 @@ replace it or keep both. Replace removes the old copy's stale rows from search o
 Cancel and Retry and the end of each log. The server runs the queue
 (`reqbot serve`).
 
+### Draft questions and a library rebuild as jobs
+
+The two other long commands run the same way and show up in the same job list:
+
+```bash
+reqbot jobs add questions --doc afi17-203   # draft audit questions; unchanged rows are reused
+reqbot jobs add reindex                     # rebuild the search library, no re-extraction
+```
+
+A rebuild builds each collection beside the live one and swaps it in only when
+complete, so searches keep working throughout. The requirements collection is
+swapped first and the context collection second; if the second fails, the job
+fails and its log says the new requirements are already live beside the old
+context. Run the rebuild again to bring the context up to date.
+
 ## Resume an interrupted run
 
 Resume in the **same run directory** to retain the requirement-finding step's (Step C) prompt-hash cache.
