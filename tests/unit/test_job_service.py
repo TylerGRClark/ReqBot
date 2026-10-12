@@ -586,3 +586,15 @@ def test_a_job_may_set_only_the_allow_listed_environment_and_its_child_gets_it(t
     assert job["env"] == {"REQBOT_EMBEDDING_MODEL": "snap"}  # anything else is dropped at queue time
     _runner(store).run_pending_once()
     assert out.read_text() == repr(("snap", os.environ.get("LD_PRELOAD")))
+
+
+def test_an_unset_model_role_leaves_its_flag_out_and_none_never_becomes_an_argument(tmp_path):
+    pdf = tmp_path / "doc.pdf"
+    pdf.write_bytes(b"%PDF-1.4")
+    cfg = _cfg(tmp_path)
+    cfg.enrichment_model = None
+    job = js.enqueue_ingest(pdf, store=_store(tmp_path), cfg=cfg, no_index=True)
+    assert "--enrichment-model" not in job["argv"] and "None" not in job["argv"]
+    assert "--extraction-model" in job["argv"]
+    with pytest.raises(ValueError):
+        _store(tmp_path).enqueue("stub", [sys.executable, None], title="x")

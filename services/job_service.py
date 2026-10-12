@@ -267,6 +267,8 @@ class JobStore:
     # -- queueing --
     def enqueue(self, kind: str, argv: list[str], *, title: str, run_dir: str = "", requires: dict | None = None,
                 params: dict | None = None, requested_by: str = "", retry_of: str | None = None, env: dict | None = None) -> dict:
+        if any(not isinstance(a, (str, Path)) for a in argv):
+            raise ValueError("a job's command line may hold only strings and paths")  # str(None) would become the argument "None"
         job_id = f"JOB-{time.strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:6]}"
         job = {
             "id": job_id, "kind": kind, "title": title, "argv": [str(a) for a in argv], "run_dir": run_dir, "requires": requires or {}, "params": params or {},
@@ -600,9 +602,11 @@ def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=N
     store = store or default_store(cfg.processed_dir_path())
     run_dir = reserve_run_dir(cfg.processed_dir_path(), pdf.stem)
     # Every choice the command depends on is fixed now, so what is checked before the run is what runs, however long the job waits and whatever config does meanwhile.
-    argv = [sys.executable, str(CLI_SCRIPT), "ingest", str(pdf), "--output-dir", str(run_dir),
-            "--extraction-model", cfg.extraction_model, "--enrichment-model", cfg.enrichment_model,
-            "--ollama-url", cfg.ollama_url, "--qdrant-url", cfg.qdrant_url, "--progress-json"]
+    argv = [sys.executable, str(CLI_SCRIPT), "ingest", str(pdf), "--output-dir", str(run_dir)]
+    for flag, value in (("--extraction-model", cfg.extraction_model), ("--enrichment-model", cfg.enrichment_model)):
+        if value:  # an unset role is left to the command's own fallback; the string "None" must never reach it
+            argv += [flag, str(value)]
+    argv += ["--ollama-url", cfg.ollama_url, "--qdrant-url", cfg.qdrant_url, "--progress-json"]
     if no_index:
         argv.append("--no-index")
     if max_chunks:
