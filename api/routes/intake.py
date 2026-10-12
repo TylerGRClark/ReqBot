@@ -14,6 +14,7 @@ from api.deps import require_admin
 from core import config as _config
 from services import intake_service, job_service
 from services.intake_service import IntakeError
+from services.job_service import JobAlreadyQueued
 
 router = APIRouter(dependencies=[Depends(require_admin)])
 
@@ -87,6 +88,8 @@ def _start(processed_dir, store, pdf_path, stem: str, sha256: str, if_exists: st
     try:
         job = job_service.enqueue_ingest(run_path, store=store, requested_by=requested_by,
                                          params_extra={"sha256": sha256, "if_exists": if_exists if status == "same_name_different_content" else "n/a"})
+    except JobAlreadyQueued as e:  # another request got there between the check above and the write
+        return {"result": "skipped", "reason": "queued", "document": run_stem, "job_id": e.job_id, "message": f"{run_stem} is already queued or running."}
     except ValueError as e:
         raise HTTPException(status_code=422, detail={"code": "not_startable", "message": str(e)}) from None
     return {"result": "queued", "document": run_stem, "job": job_service.summarize(job)}
@@ -124,7 +127,7 @@ def import_inbox(req: InboxRequest, request: Request) -> dict:
     folder = intake_service.inbox_dir(processed_dir)
     if not folder.is_dir():
         raise HTTPException(status_code=404, detail={"code": "no_inbox", "message": f"The inbox folder does not exist: {folder}"})
-    available = {p.name: p for p in folder.iterdir() if p.is_file() and p.suffix.lower() == ".pdf" and not p.name.startswith(".")}
+    available = intake_service.inbox_pdfs(folder)
     names = sorted(available) if req.files is None else req.files
     results = []
     for name in names:

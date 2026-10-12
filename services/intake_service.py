@@ -257,13 +257,28 @@ def free_stem(processed_dir: Path, stem: str, jobs: list[dict]) -> str:
     return f"{stem}_{n}"
 
 
+def inbox_pdfs(folder: Path) -> dict[str, Path]:
+    """{name: path} of the PDFs directly in the inbox. Regular files only: a symbolic link, a hidden file or anything in a sub-folder is left out, so a link cannot make the
+    server read a file from somewhere else."""
+    root = folder.resolve()
+    out: dict[str, Path] = {}
+    for p in folder.iterdir():
+        if p.name.startswith(".") or p.suffix.lower() != ".pdf" or p.is_symlink() or not p.is_file():
+            continue
+        if p.resolve().parent != root:
+            continue
+        out[p.name] = p
+    return out
+
+
 def list_inbox(processed_dir: Path, jobs: list[dict]) -> dict:
-    """The PDFs in the inbox with where each stands. Names only are listed; a file that is not a regular `.pdf` file in the folder itself is not."""
+    """The PDFs in the inbox with where each stands (see `inbox_pdfs` for what counts)."""
     folder = inbox_dir(processed_dir)
     if not folder.is_dir():
         return {"folder": str(folder), "exists": False, "files": [], "truncated": False}
     files = []
-    entries = sorted(p for p in folder.iterdir() if p.is_file() and p.suffix.lower() == ".pdf" and not p.name.startswith("."))
+    pdfs = inbox_pdfs(folder)
+    entries = [pdfs[name] for name in sorted(pdfs)]
     for p in entries[:INBOX_LIST_LIMIT]:
         try:
             digest = file_sha256(p)

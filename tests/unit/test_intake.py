@@ -292,3 +292,35 @@ def test_cancel_and_retry_a_job_over_the_api(env):
     assert again.status_code == 202 and again.json()["state"] == "queued" and again.json()["retry_of"] == job["id"]
     assert c.post("/api/jobs/JOB-nope/cancel", headers=h).status_code == 404
     assert c.post("/api/jobs/.lock/cancel", headers=h).status_code == 404
+
+
+def test_a_symbolic_link_in_the_inbox_is_never_listed_or_imported(env, tmp_path):
+    inbox = env.processed / ".inbox"
+    inbox.mkdir()
+    outside = tmp_path / "elsewhere.pdf"
+    outside.write_bytes(tiny_pdf(1, "outside"))
+    (inbox / "linked.pdf").symlink_to(outside)
+    (inbox / "real.pdf").write_bytes(tiny_pdf(1, "real"))
+    sub = inbox / "sub"
+    sub.mkdir()
+    (sub / "deep.pdf").write_bytes(tiny_pdf())
+    names = [f["name"] for f in env.client().get("/api/inbox", headers=env.headers).json()["files"]]
+    assert names == ["real.pdf"]
+    r = env.client().post("/api/jobs/inbox", json={"files": ["linked.pdf", "real.pdf", "sub/deep.pdf"]}, headers=env.headers).json()
+    by = {x["file"]: x for x in r["results"]}
+    assert by["real.pdf"]["result"] == "queued"
+    assert by["linked.pdf"]["code"] == "not_in_inbox" and by["sub/deep.pdf"]["code"] == "not_in_inbox"
+    assert [j["params"]["stem"] for j in js.default_store().list_jobs()] == ["real"]
+
+
+def test_a_second_start_for_a_name_that_slipped_past_the_check_is_skipped_not_an_error(env, monkeypatch):
+    up = upload(env, "afi99-9.pdf", tiny_pdf()).json()
+    real = js.JobStore.enqueue
+
+    def lose_the_race(self, *a, **kw):  # another request wrote the same name between the library check and this write
+        raise js.JobAlreadyQueued("JOB-20261012-000000-aaaaaa")
+
+    monkeypatch.setattr(js.JobStore, "enqueue", lose_the_race)
+    r = env.client().post("/api/jobs/ingest", json={"upload_id": up["upload_id"]}, headers=env.headers)
+    monkeypatch.setattr(js.JobStore, "enqueue", real)
+    assert r.status_code == 200 and r.json()["result"] == "skipped" and r.json()["job_id"] == "JOB-20261012-000000-aaaaaa"
