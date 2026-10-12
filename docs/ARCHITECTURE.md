@@ -12,7 +12,7 @@ API, and MCP server expose those workflows.
 |---|---|
 | `pipeline/` | Parse PDFs, chunk source text, extract/validate/enrich requirements, export artifacts, and build indexes. |
 | `core/` | Configuration, profiles, artifact selection, retrieval, synthesis, and shared utilities. |
-| `services/` | Return structured search, trace, comparison, evidence, checklist, status, and configuration results. |
+| `services/` | Return structured search, trace, comparison, evidence, checklist, status, and configuration results; `job_service.py` queues long commands and runs them one at a time as child processes (state under `<processed_dir>/.jobs/`). |
 | `cli/` | CLI and interactive-shell command parsing and presentation. |
 | `api/` | HTTP request validation, error mapping, and frontend serving. |
 | `mcp_server/` | Local stdio tools over shared services. |

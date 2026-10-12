@@ -36,7 +36,9 @@ Unless listed otherwise, service URL flags default to the effective
 | `reindex` | Rebuild indexes from processed artifacts without extraction. |
 | `index` | Index one requirement JSONL file directly. |
 | `index-context` | Index one source-chunk JSONL file directly. |
-| `serve` | Start the HTTP API and built web GUI. |
+| `jobs` | Long-running jobs: list, show, cancel, retry, add an ingest, or run the queue (`worker`). |
+| `token` | Create, show or replace the admin access code that lets a request start or manage jobs. |
+| `serve` | Start the HTTP API and built web GUI, and run queued jobs in the background. |
 | `mcp` | Start a local stdio MCP server. |
 | `setup` | Deprecated alias for `init`. |
 
@@ -87,6 +89,7 @@ Requirements and source context are indexed automatically after the pipeline.
 | `--profile NAME` | Domain profile; default `cybersecurity`. |
 | `--max-chunks N` | Limit requirement finding (Step C) for inspection/testing; produces a partial corpus. |
 | `--no-index` | Write artifacts without indexing. |
+| `--progress-json` | Also print one JSON progress line per step on stdout, for the job runner (`{"step":"finding","done":120,"total":427}`); the log stays on stderr. Without it the output is unchanged. |
 | `--skip-enrichment` | Accepted, with no effect: enrichment (descriptions, tags, types) is switched off. Deterministic parent-stem reconstruction always runs. |
 | `--skip-description-gate` | Accepted, with no effect: the description check is switched off. |
 | `--ollama-url URL` | Override the Ollama connection. |
@@ -271,6 +274,35 @@ These are low-level collection operations. **`--recreate` replaces the target
 collection**, affecting other indexed documents; it is not a single-document
 refresh. Prefer `reindex` for a complete library rebuild.
 
+## jobs and token
+
+A job is a long-running command that runs in the background, one at a time, with
+its state and log saved under `<processed_dir>/.jobs/`. Only commands ReqBot
+builds itself can be queued (today: the full ingest of one PDF); nothing is run
+through a shell and no caller supplies a command line.
+
+```bash
+reqbot jobs add ingest /path/to/policy.pdf        # queue it (add --no-index, --max-chunks N)
+reqbot jobs list                                  # newest first; --json for scripts
+reqbot jobs show JOB-20261012-012154-24c122       # state, progress, end of the log
+reqbot jobs cancel JOB-...                        # a queued job at once; a running one is stopped
+reqbot jobs retry JOB-...                         # same command, same run folder
+reqbot jobs worker                                # run the queue in the foreground
+```
+
+The queue is run by `reqbot serve` (a thread of the server) or by `reqbot jobs
+worker`; either one, one job at a time, whichever started it. A job that was
+running when its runner died is stopped (a child process can outlive its server)
+and marked `interrupted`; `retry` runs it again in the same run folder, where
+requirement finding reuses the answers it already has. Before it starts, the
+runner checks that the model machine, the model and Qdrant answer, and fails the
+job at once naming the one that does not.
+
+`reqbot token` creates the admin access code (saved in
+`~/.config/reqbot/access.json`, readable by you only; `REQBOT_ADMIN_TOKEN`
+overrides it, for a container). `--rotate` replaces it. The job routes of the
+HTTP API need it, see [API](API.md#jobs).
+
 ## serve and mcp
 
 ```bash
@@ -280,7 +312,9 @@ reqbot serve --host 127.0.0.1 --port 8000
 
 `serve` accepts `--host` (default `127.0.0.1`) and a positive `--port`
 (default 8000). The built GUI is at `/`, Swagger at `/api-docs`, and endpoints
-under `/api/`. A frontend build is optional for API use.
+under `/api/`. A frontend build is optional for API use. The server also runs
+the job queue in a background thread (see [jobs](#jobs-and-token)); `--no-runner`
+turns that off when a separate `reqbot jobs worker` does the work.
 
 `reqbot mcp` starts the stdio server and has no transport, host, or port flags.
 It requires the `mcp` extra and is normally launched by an AI client.

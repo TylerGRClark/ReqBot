@@ -168,6 +168,7 @@ def run(
 
     from pipeline import chunk_text as chunk_text_mod
     from pipeline import llm_extract_requirements
+    from pipeline import progress
     from pipeline import parse_and_normalize
     from pipeline import aggregate_and_export
 
@@ -205,6 +206,7 @@ def run(
             log.info("=" * 60)
             log.info("Starting PDF reading (Step A: PDF → Docling ancestry map)")
             log.info("=" * 60)
+            progress.emit("reading")
             from pipeline import section_parser as _section_parser
             ancestry_result = _section_parser.run(str(pdf), str(out_dir))
 
@@ -213,6 +215,7 @@ def run(
             log.info("=" * 60)
             log.info("Starting chunking (Step B: Docling HybridChunker + breadcrumb injection)")
             log.info("=" * 60)
+            progress.emit("chunking")
             # If --skip-to B, Step A was skipped so we need the ancestry
             if ancestry_result is None:
                 log.info("Step A was skipped — running section_parser to obtain DoclingDocument")
@@ -231,6 +234,7 @@ def run(
         log.info("Starting requirement finding (Step C: LLM extraction, Pass 1 mode)")
         log.info("Requirement finding — extraction model: %s", extraction_model)
         log.info("=" * 60)
+        progress.emit("finding")
         try:
             llm_extract_requirements.run(
                 str(chunks_path), str(out_dir),
@@ -247,6 +251,7 @@ def run(
         log.info("=" * 60)
         log.info("Starting normalizing and checking (Step D)")
         log.info("=" * 60)
+        progress.emit("checking")
         try:
             parse_and_normalize.run(
                 str(reqs_path), str(chunks_path), str(pdf), str(out_dir),
@@ -337,6 +342,7 @@ def run(
         log.info("=" * 60)
         log.info("Starting totals and final file (Step E)")
         log.info("=" * 60)
+        progress.emit("totals")
         # Fresh Step A/B in this invocation is always docling (WP-34.1: the only
         # path left). Resuming past it (--skip-to C/D/E) means chunks_path is a
         # pre-existing artifact that may predate this migration -- detect the

@@ -45,6 +45,12 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
+
+def _emit_progress(step: str, done: int, total: int) -> None:
+    """One machine-readable progress line when `--progress-json` is on (pipeline/progress.py); nothing otherwise."""
+    from pipeline import progress
+    progress.emit(step, done, total)
+
 # Only used as a fallback default for validate_requirement()/process_chunk() when
 # called directly without a profile (run(), the real Step C entry point, always
 # passes profile["domain_tags"]/["requirement_types"] explicitly instead --
@@ -885,6 +891,7 @@ def run(
     ):
         for i, chunk in enumerate(chunks):
             chunk_id = chunk["chunk_id"]
+            _emit_progress("finding", i, len(chunks))  # chunks finished so far, so the first line says 0 of N
 
             cached_status = accepted.get((chunk_id, prompt_hashes[chunk_id]))
             if cached_status is not None:

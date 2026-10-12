@@ -94,6 +94,11 @@ def cmd_ingest(args: argparse.Namespace) -> int:
     from pipeline import embed_and_index as _embed
     from pipeline import embed_context_index as _embed_ctx
 
+    from pipeline import progress as _progress
+
+    if getattr(args, "progress_json", False):
+        _progress.enable()
+
     pdf_path = Path(args.pdf).resolve()
     if not pdf_path.exists():
         log.error("PDF not found: %s", pdf_path)
@@ -130,9 +135,11 @@ def cmd_ingest(args: argparse.Namespace) -> int:
         return 1
 
     if getattr(args, "no_index", False):
+        _progress.emit("done")
         return 0
 
     # Index by default (uses enriched JSONL if enrichment ran, else normalized)
+    _progress.emit("indexing")
     try:
         _embed.run(
             index_path, qdrant_url=args.qdrant_url, ollama_url=args.ollama_url,
@@ -152,6 +159,7 @@ def cmd_ingest(args: argparse.Namespace) -> int:
     doc_key = _resolver.doc_key_from_requirements_path(Path(index_path))
     chunk_path = out_dir_path / f"{doc_key}_chunks.jsonl"
     if chunk_path.exists():
+        _progress.emit("indexing-context")
         try:
             _embed_ctx.run(
                 str(chunk_path),
@@ -166,6 +174,7 @@ def cmd_ingest(args: argparse.Namespace) -> int:
     else:
         log.warning("No chunks.jsonl found in %s — skipping context index", out_dir_path)
 
+    _progress.emit("done")
     return 0
 
 
@@ -1539,8 +1548,114 @@ def cmd_setup(args: argparse.Namespace) -> int:
     return cmd_init(args)
 
 
+def cmd_token(args: argparse.Namespace) -> int:
+    """Create (or show, or rotate) the admin access code that lets a request start jobs."""
+    from core import access as _access
+
+    if _access.source() == "environment":
+        print(f"The admin access code comes from the environment variable {_access.ENV_ADMIN_TOKEN}, which takes precedence over the saved one.")
+        return 0
+    token, created = _access.create_admin_token(rotate=args.rotate)
+    print(f"Admin access code{' (new)' if created else ''}:\n  {token}")
+    print(f"Saved in {_access.ACCESS_PATH}, readable by you only. A request that starts or manages jobs sends it as 'Authorization: Bearer <code>'.")
+    print("To replace it: reqbot token --rotate")
+    return 0
+
+
+def _job_store():
+    from services import job_service as _jobs
+    return _jobs.default_store(_cfg.processed_dir_path())
+
+
+def _job_progress_text(job: dict) -> str:
+    p = job.get("progress") or {}
+    if not p:
+        return ""
+    return f"{p.get('step', '')} {p.get('done')}/{p.get('total')}" if p.get("total") else str(p.get("step", ""))
+
+
+def cmd_jobs(args: argparse.Namespace) -> int:
+    """List, show, cancel, retry and add jobs, or run the queue in the foreground (worker)."""
+    from services import job_service as _jobs
+
+    store = _job_store()
+    action = args.jobs_command
+
+    if action == "list":
+        jobs = store.list_jobs(args.limit)
+        if args.json_output:
+            print(json.dumps([_jobs.summarize(j) for j in jobs], indent=2, ensure_ascii=False))
+            return 0
+        if not jobs:
+            print("No jobs.")
+            return 0
+        print(f"{'ID':<28} {'STATE':<12} {'PROGRESS':<22} TITLE")
+        for j in jobs:
+            print(f"{j['id']:<28} {j['state']:<12} {_job_progress_text(j):<22} {j['title']}")
+        return 0
+
+    if action in ("show", "cancel", "retry"):
+        try:
+            job = store.get(args.job_id)
+        except ValueError:
+            job = None
+        if job is None:
+            log.error("No such job: %s", args.job_id)
+            return 1
+        if action == "cancel":
+            job = store.cancel(args.job_id)
+            print(f"{job['id']}: {'cancelled' if job['state'] == 'cancelled' else 'cancel requested (' + job['state'] + ')'}")
+            return 0
+        if action == "retry":
+            try:
+                new = store.retry(args.job_id)
+            except ValueError as e:
+                log.error("%s", e)
+                return 1
+            print(f"Queued {new['id']} (retry of {job['id']}). Run the queue with: reqbot jobs worker (or reqbot serve).")
+            return 0
+        if args.json_output:
+            print(json.dumps({**_jobs.summarize(job), "log_tail": store.log_tail(job["id"])}, indent=2, ensure_ascii=False))
+            return 0
+        s = _jobs.summarize(job)
+        for key in ("id", "title", "state", "attempt", "command", "run_dir", "created_at", "started_at", "finished_at", "exit_code", "error"):
+            if s.get(key) not in (None, ""):
+                print(f"{key + ':':<12} {s[key]}")
+        if _job_progress_text(job):
+            print(f"{'progress:':<12} {_job_progress_text(job)}")
+        tail = store.log_tail(job["id"], 2000)
+        if tail.strip():
+            print("\n--- end of log ---\n" + tail.rstrip())
+        return 0
+
+    if action == "add":
+        try:
+            job = _jobs.enqueue_ingest(args.pdf, store=store, cfg=_cfg, no_index=args.no_index, max_chunks=args.max_chunks, requested_by="cli")
+        except ValueError as e:
+            log.error("%s", e)
+            return 1
+        print(f"Queued {job['id']}: {job['title']}")
+        print("It runs when a runner is up: reqbot serve (the server runs the queue), or reqbot jobs worker.")
+        return 0
+
+    if action == "worker":
+        import threading
+        runner = _jobs.JobRunner(store)
+        stop = threading.Event()
+        log.info("Job runner %s started; queue in %s. Ctrl+C to stop (a running job is ended and marked interrupted).", runner.identity["id"], store.dir)
+        try:
+            runner.run_forever(stop)
+        except KeyboardInterrupt:
+            stop.set()
+            print("Stopped. A job that was running was ended and marked 'interrupted'; retry it with: reqbot jobs retry <id>")
+        return 0
+
+    log.error("Unknown jobs command: %s", action)
+    return 1
+
+
 def cmd_serve(args: argparse.Namespace) -> int:
-    """Start the ReqBot read-only API server."""
+    """Start the ReqBot API server (the page reads; queued jobs run in the background)."""
     try:
         import uvicorn
     except ImportError:
@@ -1557,6 +1672,10 @@ def cmd_serve(args: argparse.Namespace) -> int:
 
     host = getattr(args, "host", "127.0.0.1")
     port = getattr(args, "port", 8000)
+    if not getattr(args, "no_runner", False):
+        from services import job_service as _jobs
+        _jobs.start_background_runner(_job_store())
+        log.info("Job runner started (queued jobs run here, one at a time; --no-runner to turn this off)")
     log.info("Starting ReqBot API on http://%s:%s", host, port)
     log.info("Swagger UI available at http://%s:%s/api-docs", host, port)
     uvicorn.run(app, host=host, port=port, log_level="info")
@@ -1630,6 +1749,10 @@ def main() -> None:
         type=str,
         default="cybersecurity",
         help="Domain profile name (default: cybersecurity). Profile must exist in profiles/<name>.json.",
+    )
+    p_ingest.add_argument(
+        "--progress-json", action="store_true", dest="progress_json",
+        help="Print one JSON progress line per step on stdout (used by the job runner; the log stays on stderr)",
     )
     p_ingest.add_argument("--ollama-url", type=str, default=_cfg.ollama_url, dest="ollama_url")
     p_ingest.add_argument("--qdrant-url", type=str, default=_cfg.qdrant_url, dest="qdrant_url")
@@ -1850,7 +1973,7 @@ def main() -> None:
     p_status.add_argument("--qdrant-url", type=str, default=_cfg.qdrant_url, dest="qdrant_url")
 
     # serve
-    p_serve = subparsers.add_parser("serve", help="Start the read-only ReqBot API server")
+    p_serve = subparsers.add_parser("serve", help="Start the ReqBot API server (also runs queued jobs in the background)")
     p_serve.add_argument(
         "--host", type=str, default="127.0.0.1",
         help="Bind host (default: 127.0.0.1; use 0.0.0.0 to expose on all interfaces)",
@@ -1859,6 +1982,33 @@ def main() -> None:
         "--port", type=_positive_int, default=8000,
         help="Port to listen on (default: 8000)",
     )
+    p_serve.add_argument(
+        "--no-runner", action="store_true", dest="no_runner",
+        help="Do not run queued jobs in this process (a separate 'reqbot jobs worker' does)",
+    )
+
+    # token
+    p_token = subparsers.add_parser("token", help="Create, show or replace the admin access code (lets a request start jobs)")
+    p_token.add_argument("--rotate", action="store_true", help="Replace the saved code with a new one")
+
+    # jobs
+    p_jobs = subparsers.add_parser("jobs", help="Long-running jobs: list, show, cancel, retry, add, or run the queue (worker)")
+    jobs_sub = p_jobs.add_subparsers(dest="jobs_command", required=True)
+    p_jobs_list = jobs_sub.add_parser("list", help="List jobs, newest first")
+    p_jobs_list.add_argument("--limit", type=_positive_int, default=20)
+    p_jobs_list.add_argument("--json", action="store_true", dest="json_output")
+    p_jobs_show = jobs_sub.add_parser("show", help="Show one job and the end of its log")
+    p_jobs_show.add_argument("job_id")
+    p_jobs_show.add_argument("--json", action="store_true", dest="json_output")
+    jobs_sub.add_parser("cancel", help="Cancel a queued job, or ask a running one to stop").add_argument("job_id")
+    jobs_sub.add_parser("retry", help="Queue a failed, cancelled or interrupted job again (same run folder)").add_argument("job_id")
+    p_jobs_add = jobs_sub.add_parser("add", help="Queue a job")
+    add_sub = p_jobs_add.add_subparsers(dest="add_kind", required=True)
+    p_add_ingest = add_sub.add_parser("ingest", help="Queue the full pipeline for one PDF")
+    p_add_ingest.add_argument("pdf", type=str)
+    p_add_ingest.add_argument("--no-index", action="store_true", dest="no_index")
+    p_add_ingest.add_argument("--max-chunks", type=int, default=None, dest="max_chunks", help="Limit chunks (testing)")
+    jobs_sub.add_parser("worker", help="Run the queue in the foreground (what 'reqbot serve' does in a background thread)")
 
     # mcp
     subparsers.add_parser(
@@ -1891,6 +2041,8 @@ def main() -> None:
         "compare": cmd_compare,
         "evidence": cmd_evidence,
         "serve": cmd_serve,
+        "token": cmd_token,
+        "jobs": cmd_jobs,
         "mcp": cmd_mcp,
     }
 

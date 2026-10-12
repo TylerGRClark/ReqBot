@@ -53,6 +53,15 @@ EMBEDDING_MODEL = "nomic-embed-text"
 SPARSE_MODEL = "Qdrant/bm25"
 
 
+def _emit_progress(step: str, done: int, total: int) -> None:
+    """One progress line when `--progress-json` is on. A bare script run from pipeline/ cannot import the package module and has no such option, so it prints nothing."""
+    try:
+        from pipeline import progress
+    except ImportError:
+        return
+    progress.emit(step, done, total)
+
+
 def load_jsonl(path: Path) -> list[dict]:
     """Load records from a JSONL file."""
     records = []
@@ -296,6 +305,7 @@ def run(
         client.upsert(collection_name=collection_name, points=points)
         total_indexed += len(points)
         log.info("Indexed %d/%d chunks", total_indexed, len(chunks))
+        _emit_progress("indexing-context", total_indexed, len(chunks))
 
     elapsed = time.time() - start
 

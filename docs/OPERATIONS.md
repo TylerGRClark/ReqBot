@@ -46,6 +46,36 @@ and validation boundaries.
 On an Ollama host with GPU support, `ollama ps` or its API helps inspect model
 placement. This is independent of Docling's parsing work on the ReqBot host.
 
+## Run an ingest as a background job
+
+For a long document, queue the ingest instead of holding a terminal:
+
+```bash
+reqbot jobs add ingest /path/to/policy.pdf
+reqbot serve                  # the server runs the queue, one job at a time
+# or, without a server:
+reqbot jobs worker            # the queue in the foreground (Ctrl+C to stop)
+reqbot jobs list              # state and progress; reqbot jobs show <id> for the log
+```
+
+The job writes the same run folder a direct `reqbot ingest` writes, so everything
+else (`docs`, `checklist`, `questions`, `reindex`) treats it the same way. Its state
+and log are under `<processed_dir>/.jobs/` (inside the folder the Docker example
+already mounts).
+
+- **One at a time.** Whichever runner started it, only one job runs; the rest wait
+  in the order they were queued.
+- **A job whose runner died.** The next runner to start stops any process the dead
+  one left behind, waits for it to be gone, and marks the job `interrupted`; only
+  then does the queue move. `reqbot jobs retry <id>` runs it again in the same run
+  folder, so finished chunks are not paid for twice (reading and chunking the PDF
+  are repeated).
+- **Wrong address, missing model.** Before the work starts, the runner asks the
+  model machine and Qdrant to answer and checks the models exist. The job fails
+  at once, naming which one did not, instead of failing at the last step.
+- **Cancel.** `reqbot jobs cancel <id>` stops the whole process group; the run
+  folder is kept.
+
 ## Resume an interrupted run
 
 Resume in the **same run directory** to retain the requirement-finding step's (Step C) prompt-hash cache.

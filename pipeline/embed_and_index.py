@@ -48,6 +48,15 @@ def load_jsonl(path: Path) -> list[dict]:
     return records
 
 
+def _emit_progress(step: str, done: int, total: int) -> None:
+    """One progress line when `--progress-json` is on. A bare script run from pipeline/ cannot import the package module and has no such option, so it prints nothing."""
+    try:
+        from pipeline import progress
+    except ImportError:
+        return
+    progress.emit(step, done, total)
+
+
 def build_embedding_text(req: dict) -> str | None:
     """Build deterministic embedding text from a requirement record.
 
@@ -337,6 +346,7 @@ def run(
         client.upsert(collection_name=collection_name, points=points)
         total_indexed += len(points)
         log.info("Indexed %d/%d requirements", total_indexed, len(requirements))
+        _emit_progress("indexing", total_indexed, len(requirements))
 
     elapsed = time.time() - start
 
