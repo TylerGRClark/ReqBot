@@ -57,6 +57,13 @@ column means no dedicated `REQBOT_*` override is implemented.
 The loader also exposes `authority`, derived from the registry. It is not a
 persisted config setting.
 
+Adding documents from the web page is limited by environment variables only, so a
+browser-editable settings screen cannot raise them: `REQBOT_MAX_UPLOAD_MB` (default
+100), `REQBOT_MAX_PDF_PAGES` (default 1500) and `REQBOT_INBOX_DIR` (default
+`<processed_dir>/.inbox`). The page count behind the page cap is read with
+`pypdfium2`, which `pyproject.toml` pins by name (`==5.5.0`, the version in the
+known-good set; it also arrives through Docling's standard install).
+
 The admin access code (job routes) is deliberately not a config setting: it is
 kept in `~/.config/reqbot/access.json` (created by `reqbot token`) or taken from
 the environment variable `REQBOT_ADMIN_TOKEN`, so `GET /api/config` and Settings

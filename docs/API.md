@@ -29,12 +29,21 @@ documents the envelopes returned by the routes and shared services.
 | POST | `/api/checklist/export` | Download a checklist file. |
 | GET | `/api/config` | Effective configuration and environment overrides. |
 | POST | `/api/config` | Partially update settings; loopback-only. |
+| GET | `/api/access` | Which way admin actions are protected here: `{"admin": "unconfigured"`, `"code"` or `"open"}`. Public; never the code. |
 | GET | `/api/jobs` | The jobs, newest first (admin access code required). |
 | GET | `/api/jobs/{job_id}` | One job with the tail of its log (admin access code required). |
+| POST | `/api/uploads?filename=NAME.pdf` | Store one PDF sent as the raw body; returns its id and where it stands against the library (admin). |
+| POST | `/api/jobs/ingest` | Start the full pipeline for an uploaded PDF (admin). |
+| GET | `/api/inbox` | The PDFs waiting in the inbox folder and where each stands (admin). |
+| POST | `/api/jobs/inbox` | Start one ingest per PDF in the inbox (admin). |
+| POST | `/api/jobs/{job_id}/cancel` | Cancel a queued job, or ask a running one to stop (admin). |
+| POST | `/api/jobs/{job_id}/retry` | Queue a failed, cancelled or interrupted job again, in the same run folder (admin). |
 
-Request/response bodies are JSON except file exports. There are no HTTP ingest,
-index-rebuild, or assessor-edit endpoints in this implementation: the job routes
-only read.
+Request/response bodies are JSON except file exports and the PDF upload (the raw
+body). The only endpoints that change anything besides settings are the admin
+routes for adding documents and managing jobs (see [Jobs](#jobs) and
+[Adding documents](#adding-documents-admin)); there are no index-rebuild or
+assessor-edit endpoints in this implementation.
 
 ## Status and document inventory
 
@@ -311,11 +320,41 @@ plus `log_tail`. A job has `id`, `kind`, `title`, `state` (`queued`, `running`,
 These routes are **admin only**. Send the admin access code created by
 `reqbot token` as `Authorization: Bearer <code>` (or `X-ReqBot-Token: <code>`).
 With no code configured on the server they answer 403 and the API behaves as it
-did before; a missing or wrong code is 401. No route returns the code, and
+did before; a missing or wrong code is 401. If the operator ran `reqbot token --open`
+(or set `REQBOT_ADMIN_OPEN=1`) for a network they trust, no code is asked for;
+`GET /api/access` tells a screen which of the three modes it is in. No route returns the code, and
 `GET /api/config` does not include it. The code travels in clear text on plain
-HTTP, so beyond a trusted network put TLS in front. Starting, cancelling and
-retrying a job from the API arrive with the screens that use them; today they
-are CLI commands (`reqbot jobs`).
+HTTP, so beyond a trusted network put TLS in front. Cancelling and retrying are
+`POST /api/jobs/{job_id}/cancel` and `/retry`; starting is described next.
+
+## Adding documents (admin)
+
+Adding a document is two requests, so a question can be asked in between.
+
+1. `POST /api/uploads?filename=afi17-203.pdf` with the PDF as the raw request
+   body (`Content-Type: application/pdf`). The file is checked and stored, and
+   the answer (201) says what it is and where it stands:
+   `{"upload_id", "filename", "stem", "size", "pages", "sha256", "library": {"status", "document"}}`.
+   `library.status` is `new`, `same_content` (this name is already in the library
+   with identical content), `same_content_other_name`, `same_name_different_content`
+   or `queued`. A refusal has `detail: {code, message}`: `not_pdf` (415),
+   `too_large` (413), `too_many_pages` (422), `unreadable` (422), `bad_name` (400).
+2. `POST /api/jobs/ingest` with `{"upload_id": "...", "if_exists": "ask" | "replace" | "keep_both"}`.
+   202 with `{"result": "queued", "document", "job"}` when queued; 200 with
+   `{"result": "skipped", "reason"}` when there is nothing to do (same content,
+   or the name is already queued); 409 `same_name_different_content` with
+   `options: ["replace", "keep_both"]` when the name is in the library with
+   different content and `if_exists` is `ask`. It is never decided silently.
+   `keep_both` ingests under a new name (`<name>_2`, ...); `replace` makes the new
+   run the document's current one.
+
+`GET /api/inbox` lists the PDFs in the configured inbox folder (default
+`<processed_dir>/.inbox`, `REQBOT_INBOX_DIR`) with the same standing, and
+`POST /api/jobs/inbox` (`{"files": [names] | null, "if_exists"}`) queues one ingest
+per PDF. No path is ever taken from a request: only an upload id this server
+made, or a file name that is a PDF directly in the inbox. The limits are
+environment variables: `REQBOT_MAX_UPLOAD_MB` (100), `REQBOT_MAX_PDF_PAGES`
+(1500). The server runs the queue (`reqbot serve`, or `reqbot jobs worker`).
 
 ## Errors and access
 

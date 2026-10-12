@@ -1552,6 +1552,18 @@ def cmd_token(args: argparse.Namespace) -> int:
     """Create (or show, or rotate) the admin access code that lets a request start jobs."""
     from core import access as _access
 
+    want_open, want_require = getattr(args, "open", False), getattr(args, "require", False)
+    if want_open or want_require:
+        _access.set_open(bool(want_open))
+        if want_open:
+            print("Trusted-network mode is ON: anyone who can reach this server can add documents and start jobs, and no code is asked for.")
+            print("Turn it off again with: reqbot token --require")
+        else:
+            print("Trusted-network mode is OFF: starting jobs needs the access code (reqbot token shows how to create one).")
+        return 0
+    if _access.is_open():
+        print("Trusted-network mode is ON (no code is asked for). To require a code again: reqbot token --require")
+        return 0
     if _access.source() == "environment":
         print(f"The admin access code comes from the environment variable {_access.ENV_ADMIN_TOKEN}, which takes precedence over the saved one.")
         return 0
@@ -1676,6 +1688,9 @@ def cmd_serve(args: argparse.Namespace) -> int:
         from services import job_service as _jobs
         _jobs.start_background_runner(_job_store())
         log.info("Job runner started (queued jobs run here, one at a time; --no-runner to turn this off)")
+    from core import access as _access
+    if _access.is_open() and host not in ("127.0.0.1", "localhost", "::1"):
+        log.warning("Admin actions are OPEN: anyone who can reach http://%s:%s can add documents and start jobs (trusted-network mode; reqbot token --require turns it off)", host, port)
     log.info("Starting ReqBot API on http://%s:%s", host, port)
     log.info("Swagger UI available at http://%s:%s/api-docs", host, port)
     uvicorn.run(app, host=host, port=port, log_level="info")
@@ -1990,6 +2005,8 @@ def main() -> None:
     # token
     p_token = subparsers.add_parser("token", help="Create, show or replace the admin access code (lets a request start jobs)")
     p_token.add_argument("--rotate", action="store_true", help="Replace the saved code with a new one")
+    p_token.add_argument("--open", action="store_true", help="Trusted network: stop asking for a code (anyone who can reach the server can add documents)")
+    p_token.add_argument("--require", action="store_true", help="Ask for the code again (undo --open)")
 
     # jobs
     p_jobs = subparsers.add_parser("jobs", help="Long-running jobs: list, show, cancel, retry, add, or run the queue (worker)")

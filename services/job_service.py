@@ -21,6 +21,7 @@ import fcntl
 import json
 import logging
 import os
+import re
 import signal
 import socket
 import subprocess
@@ -43,6 +44,7 @@ from core import config as _config
 log = logging.getLogger(__name__)
 
 CLI_SCRIPT = _ROOT / "cli" / "reqbot.py"
+JOB_ID = re.compile(r"^JOB-\d{8}-\d{6}-[0-9a-f]{6}$")  # the only shape this module makes
 STATES = ("queued", "running", "succeeded", "failed", "cancelled", "interrupted")
 RETRYABLE = ("failed", "cancelled", "interrupted")
 LEASE_SECONDS = 60.0
@@ -202,6 +204,14 @@ def preflight(requires: dict | None, timeout: float = 5.0) -> str | None:
 # The store
 # ---------------------------------------------------------------------------
 
+class JobAlreadyQueued(ValueError):
+    """An exclusive enqueue found a queued or running job with the same key (for an ingest: the same document name)."""
+
+    def __init__(self, job_id: str):
+        super().__init__(f"already queued or running as {job_id}")
+        self.job_id = job_id
+
+
 class JobStore:
     """Jobs as small JSON files in one directory. Every read-modify-write happens under an advisory lock on `.lock`; a write goes to a temporary file and is renamed."""
 
@@ -210,9 +220,14 @@ class JobStore:
 
     # -- files --
     def _path(self, job_id: str) -> Path:
-        if not job_id or "/" in job_id or "\\" in job_id or job_id.startswith("."):
+        """The job file for an id. Only an id of the exact shape this module makes is accepted, and the normalized path must stay inside the jobs folder."""
+        if not JOB_ID.match(job_id or ""):
             raise ValueError(f"not a job id: {job_id!r}")
-        return self.dir / f"{job_id}.json"
+        base = os.path.normpath(str(self.dir))
+        full = os.path.normpath(os.path.join(base, f"{job_id}.json"))
+        if not full.startswith(base + os.sep):
+            raise ValueError(f"not a job id: {job_id!r}")
+        return Path(full)
 
     def log_path(self, job_id: str) -> Path:
         return self._path(job_id).with_suffix(".log")
@@ -266,7 +281,8 @@ class JobStore:
 
     # -- queueing --
     def enqueue(self, kind: str, argv: list[str], *, title: str, run_dir: str = "", requires: dict | None = None,
-                params: dict | None = None, requested_by: str = "", retry_of: str | None = None, env: dict | None = None) -> dict:
+                params: dict | None = None, requested_by: str = "", retry_of: str | None = None, env: dict | None = None,
+                exclusive: tuple[str, str] | None = None) -> dict:
         if any(not isinstance(a, (str, Path)) for a in argv):
             raise ValueError("a job's command line may hold only strings and paths")  # str(None) would become the argument "None"
         job_id = f"JOB-{time.strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:6]}"
@@ -278,6 +294,11 @@ class JobStore:
             "cancel_requested": False, "exit_code": None, "error": "",
         }
         with self._locked():
+            if exclusive:  # checked under the same lock that writes the job, so two requests at once cannot both pass
+                key, value = exclusive
+                for other in self._all():
+                    if other["state"] in ("queued", "running") and (other.get("params") or {}).get(key) == value:
+                        raise JobAlreadyQueued(other["id"])
             self._write(job)
         return job
 
@@ -590,7 +611,7 @@ def reserve_run_dir(base: Path, stem: str) -> Path:
 
 
 def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=None, no_index: bool = False, max_chunks: int | None = None,
-                   requested_by: str = "") -> dict:
+                   requested_by: str = "", params_extra: dict | None = None) -> dict:
     """Queue `reqbot ingest` for one PDF. The job creates its run folder itself and passes it to the command, so a retry runs in the same folder and requirement finding reuses the
     answers it already has."""
     pdf = Path(pdf_path).expanduser().resolve()
@@ -614,8 +635,16 @@ def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=N
     models = [cfg.extraction_model] + ([] if no_index else [cfg.embedding_model])
     requires = {"ollama_url": cfg.ollama_url, "ollama_models": [m for m in models if m], "qdrant_url": "" if no_index else cfg.qdrant_url}
     env = {} if no_index else {"REQBOT_EMBEDDING_MODEL": cfg.embedding_model}  # the ingest command has no flag for it; the environment overrides config
-    return store.enqueue("ingest", argv, title=f"Ingest {pdf.name}", run_dir=str(run_dir), requires=requires, env=env,
-                         params={"pdf": str(pdf), "no_index": no_index, "max_chunks": max_chunks}, requested_by=requested_by)
+    try:
+        return store.enqueue("ingest", argv, title=f"Ingest {pdf.name}", run_dir=str(run_dir), requires=requires, env=env,
+                             params={"pdf": str(pdf), "stem": pdf.stem, "no_index": no_index, "max_chunks": max_chunks, **(params_extra or {})},
+                             requested_by=requested_by, exclusive=("stem", pdf.stem))
+    except JobAlreadyQueued:
+        try:
+            run_dir.rmdir()  # the folder reserved a moment ago was never used
+        except OSError:
+            pass
+        raise
 
 
 def summarize(job: dict) -> dict:

@@ -1,6 +1,6 @@
-"""Job routes (docs/WEB_UI_PARITY_PLAN.md, stage 3): read-only, admin only.
+"""Job routes (docs/WEB_UI_PARITY_PLAN.md, stages 3 and 4): list and read, cancel and retry. Admin only.
 
-Starting, cancelling and retrying come with the screens that use them (stage 4)."""
+Starting a job is in `api/routes/intake.py`, next to the uploads that feed it."""
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from api.deps import require_admin
@@ -33,3 +33,27 @@ def get_job(job_id: str) -> dict:
     if job is None:
         raise HTTPException(status_code=404, detail=f"No such job: {job_id}")
     return {**job_service.summarize(job), "log_tail": store.log_tail(job_id)}
+
+
+@router.post("/jobs/{job_id}/cancel")
+def cancel_job(job_id: str) -> dict:
+    """Cancel a queued job at once, or ask a running one to stop (its runner ends the process within about a second)."""
+    store = job_service.default_store()
+    try:
+        job = store.cancel(job_id)
+    except ValueError:
+        job = None
+    if job is None:
+        raise HTTPException(status_code=404, detail=f"No such job: {job_id}")
+    return job_service.summarize(job)
+
+
+@router.post("/jobs/{job_id}/retry", status_code=202)
+def retry_job(job_id: str) -> dict:
+    """Queue a failed, cancelled or interrupted job again, in the same run folder."""
+    store = job_service.default_store()
+    try:
+        new = store.retry(job_id)
+    except ValueError as e:
+        raise HTTPException(status_code=409, detail=str(e)) from None
+    return job_service.summarize(new)

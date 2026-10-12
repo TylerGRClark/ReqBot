@@ -244,3 +244,67 @@ def test_jobs_add_ingest_queues_the_command_without_running_it(tmp_path, capsys)
     (job,) = s.list_jobs()
     assert job["state"] == "queued" and "--no-index" in job["argv"] and job["requested_by"] == "cli"
     assert reqbot.cmd_jobs(SimpleNamespace(jobs_command="add", add_kind="ingest", pdf=str(tmp_path / "nope.pdf"), no_index=False, max_chunks=None)) == 1
+
+
+# -- trusted-network mode ---------------------------------------------------------
+
+def test_open_mode_is_off_by_default_and_asks_for_no_code_when_on(code_file, monkeypatch):
+    monkeypatch.delenv(access.ENV_ADMIN_OPEN, raising=False)
+    assert access.admin_mode() == "unconfigured" and not access.is_open()
+    access.create_admin_token()
+    assert access.admin_mode() == "code" and access.check_admin(None) == "missing"
+    access.set_open(True)
+    assert access.admin_mode() == "open" and access.check_admin(None) == "ok" and access.check_admin("anything") == "ok"
+    access.set_open(False)
+    assert access.admin_mode() == "code" and access.check_admin(None) == "missing"
+
+
+def test_open_mode_keeps_the_code_and_the_file_stays_private(code_file):
+    token, _ = access.create_admin_token()
+    access.set_open(True)
+    assert access.admin_token() == token
+    assert stat.S_IMODE(os.stat(code_file).st_mode) == 0o600
+    new, created = access.create_admin_token(rotate=True)
+    assert created and new != token and access.is_open()  # rotating the code does not change the mode
+
+
+def test_the_environment_variable_turns_open_mode_on_without_the_file(code_file, monkeypatch):
+    for value in ("1", "true", "YES", "on"):
+        monkeypatch.setenv(access.ENV_ADMIN_OPEN, value)
+        assert access.admin_mode() == "open"
+    for value in ("0", "false", "", "maybe"):
+        monkeypatch.setenv(access.ENV_ADMIN_OPEN, value)
+        assert access.admin_mode() == "unconfigured"
+
+
+def test_admin_routes_need_no_code_in_open_mode_and_a_screen_can_ask_which_mode(code_file, store):
+    c = _client()
+    assert c.get("/api/access").json() == {"admin": "unconfigured"}
+    assert c.get("/api/jobs").status_code == 403
+    token, _ = access.create_admin_token()
+    assert c.get("/api/access").json() == {"admin": "code"}
+    assert c.get("/api/jobs").status_code == 401
+    access.set_open(True)
+    assert c.get("/api/access").json() == {"admin": "open"}
+    assert c.get("/api/jobs").status_code == 200
+    assert token not in c.get("/api/access").text
+
+
+def test_nothing_in_the_api_can_turn_open_mode_on(code_file):
+    c = _client()
+    for method, path in (("post", "/api/access"), ("put", "/api/access"), ("post", "/api/config")):
+        r = getattr(c, method)(path, json={"admin": "open", "open": True})
+        assert r.status_code in (403, 404, 405, 422), (method, path, r.status_code)
+    assert not access.is_open()
+
+
+def test_the_token_command_switches_open_mode_on_and_off(code_file, capsys):
+    from cli.reqbot import cmd_token
+
+    assert cmd_token(SimpleNamespace(rotate=False, open=True, require=False)) == 0
+    assert access.admin_mode() == "open" and "ON" in capsys.readouterr().out
+    assert cmd_token(SimpleNamespace(rotate=False, open=False, require=False)) == 0
+    shown = capsys.readouterr().out
+    assert "ON" in shown and "--require" in shown  # asking for the code while open says so, and how to turn it off
+    assert cmd_token(SimpleNamespace(rotate=False, open=False, require=True)) == 0
+    assert not access.is_open() and "OFF" in capsys.readouterr().out

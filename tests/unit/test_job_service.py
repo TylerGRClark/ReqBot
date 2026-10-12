@@ -492,17 +492,60 @@ def test_the_loop_stops_when_the_runner_is_shut_down(tmp_path):
 
 # -- the reviewer's findings on this change ---------------------------------------
 
-def test_two_jobs_for_the_same_stem_never_share_a_run_folder(tmp_path):
+def test_run_folders_reserved_in_the_same_second_are_all_different(tmp_path):
+    base = tmp_path / "processed"
+    base.mkdir()
+    dirs = [js.reserve_run_dir(base, "afi99-1") for _ in range(4)]  # inside the same second
+    assert len({d.name for d in dirs}) == 4 and all(d.is_dir() for d in dirs)
+    assert all(re.fullmatch(r"afi99-1_\d{8}_\d{6}", d.name) for d in dirs)  # the name pattern the rest of ReqBot expects
+    pdf = tmp_path / "afi99-1.pdf"
+    pdf.write_bytes(b"%PDF-1.4")
+    job = js.enqueue_ingest(pdf, store=_store(tmp_path), cfg=_cfg(tmp_path))
+    assert job["argv"][job["argv"].index("--output-dir") + 1] == job["run_dir"] and Path(job["run_dir"]).is_dir()
+
+
+def test_the_same_name_cannot_be_queued_twice_even_by_requests_at_the_same_moment(tmp_path):
     pdf = tmp_path / "afi99-1.pdf"
     pdf.write_bytes(b"%PDF-1.4")
     store, cfg = _store(tmp_path), _cfg(tmp_path)
+    outcomes = []
+
+    def go():
+        try:
+            outcomes.append(js.enqueue_ingest(pdf, store=store, cfg=cfg)["id"])
+        except js.JobAlreadyQueued as e:
+            outcomes.append(("refused", e.job_id))
+
+    threads = [threading.Thread(target=go) for _ in range(8)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    queued = [o for o in outcomes if isinstance(o, str)]
+    assert len(queued) == 1 and len(store.list_jobs()) == 1
+    assert all(o[1] == queued[0] for o in outcomes if isinstance(o, tuple))
+    # the folders reserved by the refused attempts were released: only the winner's is left
+    assert [d.name for d in (tmp_path / "processed").iterdir() if d.is_dir() and not d.name.startswith(".")] == [Path(store.list_jobs()[0]["run_dir"]).name]
+
+
+def test_a_finished_job_no_longer_blocks_the_name(tmp_path):
+    pdf = tmp_path / "doc.pdf"
+    pdf.write_bytes(b"%PDF-1.4")
+    store, cfg = _store(tmp_path), _cfg(tmp_path)
     first = js.enqueue_ingest(pdf, store=store, cfg=cfg)
-    second = js.enqueue_ingest(pdf, store=store, cfg=cfg)  # inside the same second
-    third = js.enqueue_ingest(pdf, store=store, cfg=cfg)
-    dirs = [first["run_dir"], second["run_dir"], third["run_dir"]]
-    assert len(set(dirs)) == 3 and all(Path(d).is_dir() for d in dirs)
-    assert all(re.fullmatch(r"afi99-1_\d{8}_\d{6}", Path(d).name) for d in dirs)  # the name pattern the rest of ReqBot expects
-    assert all(job["argv"][job["argv"].index("--output-dir") + 1] == job["run_dir"] for job in (first, second, third))
+    with pytest.raises(js.JobAlreadyQueued):
+        js.enqueue_ingest(pdf, store=store, cfg=cfg)
+    store.cancel(first["id"])
+    assert js.enqueue_ingest(pdf, store=store, cfg=cfg)["state"] == "queued"
+
+
+def test_only_the_exact_job_id_shape_reaches_a_file(tmp_path):
+    store = _store(tmp_path)
+    for bad in ("JOB-1", "../JOB-20261012-010101-abcdef", "JOB-20261012-010101-ABCDEF", "JOB-20261012-010101-abcdef/../x", "JOB-20261012-010101-abcdef.json", "x" * 400):
+        with pytest.raises(ValueError):
+            store.get(bad)
+    job = _queue(store, _script(tmp_path, "pass"))
+    assert store.get(job["id"])["id"] == job["id"]
 
 
 def test_a_retry_keeps_its_run_folder_and_a_cancelled_queued_job_releases_an_unused_one(tmp_path):
