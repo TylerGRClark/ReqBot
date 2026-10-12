@@ -89,7 +89,7 @@ Cancel and Retry and the end of each log. The server runs the queue
 
 ### Draft questions and a library rebuild as jobs
 
-The two other long commands run the same way and show up in the same job list:
+The two other long commands run the same way and show up in the same job list. From the web page an admin starts them with **Write draft audit questions** on a document's checklist screen (the table reloads when it finishes) and **Rebuild the library** on System (asks for a confirmation first); both show their progress and why they failed, and can be cancelled.
 
 ```bash
 reqbot jobs add questions --doc afi17-203   # draft audit questions; unchanged rows are reused
