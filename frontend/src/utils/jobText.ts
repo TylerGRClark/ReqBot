@@ -9,6 +9,9 @@ export function stepLabel(progress: JobSummary['progress']): string {
     case 'chunking': return 'Splitting it into sections'
     case 'finding':
       return total ? `Finding requirements, section ${Math.min((done ?? 0) + 1, total)} of ${total}` : 'Finding requirements'
+    case 'questions': return total ? `Writing questions, row ${Math.min((done ?? 0), total)} of ${total}` : 'Writing questions'
+    case 'reindex': return total ? `Rebuilding the library, document ${Math.min((done ?? 0) + 1, total)} of ${total}` : 'Rebuilding the library'
+    case 'reindex-context': return total ? `Rebuilding the source text, document ${Math.min((done ?? 0) + 1, total)} of ${total}` : 'Rebuilding the source text'
     case 'checking': return 'Checking what was found'
     case 'totals': return 'Writing the totals'
     case 'indexing': return total ? `Adding to search, ${done ?? 0} of ${total}` : 'Adding to search'

@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import * as api from '../api/client'
+import { startReindex } from '../api/admin'
 import type { StatusResponse } from '../api/types'
 import AppShell from '../components/AppShell'
 import SystemHealthPanel from '../components/SystemHealthPanel'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorBanner from '../components/ErrorBanner'
+import JobAction from '../components/JobAction'
 
 export default function SystemView() {
   const [data, setData] = useState<StatusResponse | null>(null)
@@ -43,6 +45,16 @@ export default function SystemView() {
         {loading && <LoadingSpinner />}
         {!loading && error && <ErrorBanner message={error} onRetry={load} />}
         {!loading && !error && data && <SystemHealthPanel data={data} />}
+
+        <section aria-label="Search library" className="space-y-2">
+          <JobAction
+            label="Rebuild the library"
+            confirm="This rebuilds the search library from the saved documents. It does not read the PDFs again. It can take several minutes; searches keep using the current library until the new one is complete. If it stops partway, run it again."
+            pick={jobs => jobs.find(j => j.kind === 'reindex')}
+            start={() => startReindex(false)}
+            onSucceeded={load}
+          />
+        </section>
 
       </main>
     </AppShell>

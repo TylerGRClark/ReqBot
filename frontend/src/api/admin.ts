@@ -99,6 +99,8 @@ export const jobSummarySchema = z.object({
   requested_by: z.string().nullish(),
   retry_of: z.string().nullish(),
   cancel_requested: z.boolean().nullish(),
+  /** What a screen matches a job to its document by (`doc_key` for draft questions, `requirements_only` for a rebuild). */
+  params: z.record(z.string(), z.unknown()).nullish(),
 })
 
 const jobsSchema = z.object({
@@ -134,6 +136,14 @@ const startSchema = z.object({
   job: jobSummarySchema.nullish(),
 })
 
+const queueSchema = z.object({
+  result: z.enum(['queued', 'skipped']),
+  job: jobSummarySchema.nullish(),
+  reason: z.string().nullish(),
+  job_id: z.string().nullish(),
+  message: z.string().nullish(),
+})
+
 const inboxSchema = z.object({
   folder: z.string(),
   exists: z.boolean(),
@@ -167,6 +177,7 @@ export type JobDetail = z.infer<typeof jobDetailSchema>
 export type JobsResponse = z.infer<typeof jobsSchema>
 export type UploadResponse = z.infer<typeof uploadSchema>
 export type StartResponse = z.infer<typeof startSchema>
+export type QueueResponse = z.infer<typeof queueSchema>
 export type InboxResponse = z.infer<typeof inboxSchema>
 export type InboxImportResponse = z.infer<typeof inboxImportSchema>
 export type LibraryStanding = z.infer<typeof librarySchema>
@@ -232,6 +243,16 @@ export async function cancelJob(id: string): Promise<JobSummary> {
 
 export async function retryJob(id: string): Promise<JobSummary> {
   return (await request(jobSummarySchema, 'retry', `/jobs/${encodeURIComponent(id)}/retry`, { method: 'POST' })).data
+}
+
+/** Write draft audit questions for one document, as a job. `skipped` means one is already queued or running for it. */
+export async function startQuestions(docKey: string): Promise<QueueResponse> {
+  return (await request(queueSchema, 'questions', '/jobs/questions', { method: 'POST', body: JSON.stringify({ doc_key: docKey }) })).data
+}
+
+/** Rebuild the search library from the saved documents, as a job. `skipped` means a rebuild is already queued or running. */
+export async function startReindex(requirementsOnly = false): Promise<QueueResponse> {
+  return (await request(queueSchema, 'rebuild', '/jobs/reindex', { method: 'POST', body: JSON.stringify({ requirements_only: requirementsOnly }) })).data
 }
 
 export async function getInbox(): Promise<InboxResponse> {

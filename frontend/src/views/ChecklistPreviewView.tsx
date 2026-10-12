@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useParams, useSearchParams, Link } from 'react-router-dom'
 import * as api from '../api/client'
+import { startQuestions } from '../api/admin'
 import type { ChecklistEnvelope, ChecklistItem } from '../api/types'
 import AppShell from '../components/AppShell'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorBanner from '../components/ErrorBanner'
 import ChecklistTable, { needsAttention } from '../components/ChecklistTable'
 import ExportButtonGroup from '../components/ExportButtonGroup'
+import JobAction from '../components/JobAction'
 
 export default function ChecklistPreviewView() {
   const { docId } = useParams<{ docId: string }>()
@@ -17,6 +19,7 @@ export default function ChecklistPreviewView() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [flaggedOnly, setFlaggedOnly] = useState(false)
+  const [reloadTick, setReloadTick] = useState(0) // bumped when draft questions finish, so the table shows them
 
   useEffect(() => {
     if (!docId) return
@@ -31,7 +34,7 @@ export default function ChecklistPreviewView() {
         setError(err instanceof Error ? err.message : 'Failed to load checklist')
       })
       .finally(() => setLoading(false))
-  }, [docId, profile])
+  }, [docId, profile, reloadTick])
 
   const items: ChecklistItem[] = data?.items ?? []
   const missed: ChecklistItem[] = data?.possible_missed ?? []
@@ -56,7 +59,16 @@ export default function ChecklistPreviewView() {
           </div>
 
           {data && docId && (
-            <ExportButtonGroup docKey={docId} profile={profile} />
+            <div className="flex flex-wrap items-start gap-3">
+              <JobAction
+                label="Write draft audit questions"
+                confirm="This asks the model to write a draft question for each row that has none yet. It can take several minutes for a long document, and rows that have not changed are reused. The questions are drafts to check before use."
+                pick={jobs => jobs.find(j => j.kind === 'questions' && j.params?.doc_key === docId)}
+                start={() => startQuestions(docId)}
+                onSucceeded={() => setReloadTick(t => t + 1)}
+              />
+              <ExportButtonGroup docKey={docId} profile={profile} />
+            </div>
           )}
         </div>
 
