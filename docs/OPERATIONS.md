@@ -91,6 +91,8 @@ Cancel and Retry and the end of each log. The server runs the queue
 
 The two other long commands run the same way and show up in the same job list. From the web page an admin starts them with **Write draft audit questions** on a document's checklist screen (the table reloads when it finishes) and **Rebuild the library** on System (asks for a confirmation first); both show their progress and why they failed, and can be cancelled.
 
+To take a document out of the library, open it on the Corpus page and choose **Remove this document…**, then type its name to confirm (the command line is `reqbot remove --doc NAME`, which only says what would happen until `--yes` is added). Its saved runs move to a dated folder under `.trash` inside the processed folder, and its rows leave both search collections; nothing is deleted. To put a document back, move its folders out of `.trash` and run **Rebuild the library**. It is refused while an ingest or draft-questions job for that document is queued or running. Nothing prunes `.trash`; empty it by hand when you are sure.
+
 ```bash
 reqbot jobs add questions --doc afi17-203   # draft audit questions; unchanged rows are reused
 reqbot jobs add reindex                     # rebuild the search library, no re-extraction

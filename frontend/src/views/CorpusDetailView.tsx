@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import * as api from '../api/client'
 import type { DocsEntry, DocsResponse } from '../api/types'
 import AppShell from '../components/AppShell'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorBanner from '../components/ErrorBanner'
+import RemoveDocument from '../components/RemoveDocument'
 import { docValue } from '../utils/ui'
 
 export default function CorpusDetailView() {
   const { docId } = useParams<{ docId: string }>()
+  const navigate = useNavigate()
   const [data, setData] = useState<DocsResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -90,6 +92,8 @@ export default function CorpusDetailView() {
                 Generate checklist
               </Link>
             </div>
+
+            <RemoveDocument docKey={doc.doc_key} onRemoved={() => navigate('/corpus')} />
           </>
         )}
 

@@ -144,6 +144,14 @@ const queueSchema = z.object({
   message: z.string().nullish(),
 })
 
+const removedSchema = z.object({
+  document: z.string(),
+  run_folders_moved: z.array(z.string()),
+  files_moved: z.number().nullish(),
+  trash: z.string(),
+  points_removed: z.object({ requirements: z.number(), context: z.number() }),
+})
+
 const inboxSchema = z.object({
   folder: z.string(),
   exists: z.boolean(),
@@ -178,6 +186,7 @@ export type JobsResponse = z.infer<typeof jobsSchema>
 export type UploadResponse = z.infer<typeof uploadSchema>
 export type StartResponse = z.infer<typeof startSchema>
 export type QueueResponse = z.infer<typeof queueSchema>
+export type RemovedResponse = z.infer<typeof removedSchema>
 export type InboxResponse = z.infer<typeof inboxSchema>
 export type InboxImportResponse = z.infer<typeof inboxImportSchema>
 export type LibraryStanding = z.infer<typeof librarySchema>
@@ -253,6 +262,12 @@ export async function startQuestions(docKey: string, profile = 'cybersecurity'):
 /** Rebuild the search library from the saved documents, as a job. `skipped` means a rebuild is already queued or running. */
 export async function startReindex(requirementsOnly = false): Promise<QueueResponse> {
   return (await request(queueSchema, 'rebuild', '/jobs/reindex', { method: 'POST', body: JSON.stringify({ requirements_only: requirementsOnly }) })).data
+}
+
+/** Take a document out of the library. The server refuses unless `confirmName` repeats the document's exact key; its run folders go to a trash folder, nothing is deleted. */
+export async function removeDocument(docKey: string, confirmName: string): Promise<RemovedResponse> {
+  const body = { doc_key: docKey, confirm: true, confirm_name: confirmName }
+  return (await request(removedSchema, 'removal', '/documents/remove', { method: 'POST', body: JSON.stringify(body) })).data
 }
 
 export async function getInbox(): Promise<InboxResponse> {
