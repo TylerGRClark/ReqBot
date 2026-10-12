@@ -101,7 +101,10 @@ export default function LibraryView() {
   // the "add documents" panel: closed until asked for (or until a link says `?add=1`, as the setup page's "add your first document" does)
   const [params] = useSearchParams()
   const [panelOpen, setPanelOpen] = useState(params.get('add') === '1')
+  // once opened the panel stays on the page (hidden when closed): closing it must not throw away an upload that is still going or a "replace or keep both" question waiting for an answer
+  const [panelUsed, setPanelUsed] = useState(panelOpen)
   const [historyAsked, setHistoryAsked] = useState(0)
+  const openPanel = useCallback(() => { setPanelUsed(true); setPanelOpen(true) }, [])
 
   const loadDocs = useCallback(() => {
     api
@@ -149,7 +152,7 @@ export default function LibraryView() {
   return (
     <AppShell>
       {/* while something is being read, rebuilt or written: what it is and how far along (nothing when idle) */}
-      <WorkingStrip data={admin.enabled ? admin.jobs.data : null} onHistory={() => { setPanelOpen(true); setHistoryAsked(n => n + 1) }} />
+      <WorkingStrip data={admin.enabled ? admin.jobs.data : null} onHistory={() => { openPanel(); setHistoryAsked(n => n + 1) }} />
 
       <div className="flex flex-col lg:flex-row lg:items-start">
         <main className="flex-1 min-w-0 w-full max-w-4xl mx-auto px-6 py-8">
@@ -165,7 +168,7 @@ export default function LibraryView() {
               )}
             </div>
             <button
-              onClick={() => setPanelOpen(open => !open)}
+              onClick={() => (panelOpen ? setPanelOpen(false) : openPanel())}
               aria-expanded={panelOpen}
               aria-controls="add-documents-panel"
               className="bg-blue-600 text-white text-sm font-semibold rounded px-4 py-2 hover:bg-blue-700"
@@ -230,7 +233,7 @@ export default function LibraryView() {
           )}
         </main>
 
-        {panelOpen && <AddPanel admin={admin} onClose={() => setPanelOpen(false)} historyAsked={historyAsked} />}
+        {panelUsed && <AddPanel admin={admin} open={panelOpen} onClose={() => setPanelOpen(false)} historyAsked={historyAsked} />}
       </div>
     </AppShell>
   )

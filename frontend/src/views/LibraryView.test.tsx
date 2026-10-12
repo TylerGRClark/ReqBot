@@ -12,7 +12,7 @@ vi.mock('../api/client', async importOriginal => {
 })
 vi.mock('../api/admin', async importOriginal => {
   const actual = await importOriginal<typeof import('../api/admin')>()
-  return { ...actual, getAccess: vi.fn(), listJobs: vi.fn(), getInbox: vi.fn() }
+  return { ...actual, getAccess: vi.fn(), listJobs: vi.fn(), getInbox: vi.fn(), uploadPdf: vi.fn() }
 })
 vi.mock('../api/setup', async importOriginal => {
   const actual = await importOriginal<typeof import('../api/setup')>()
@@ -23,6 +23,7 @@ const docs = vi.mocked(client.docs)
 const status = vi.mocked(client.status)
 const getAccess = vi.mocked(admin.getAccess)
 const listJobs = vi.mocked(admin.listJobs)
+const uploadPdf = vi.mocked(admin.uploadPdf)
 const getSetupState = vi.mocked(setup.getSetupState)
 
 function entry(key: string, count: number) {
@@ -70,6 +71,39 @@ describe('Library page', () => {
     fireEvent.click(within(panel).getByText('Close'))
     expect(screen.queryByRole('complementary', { name: 'Add documents' })).not.toBeInTheDocument()
     expect(docs).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps what was started in the panel when it is closed and opened again', async () => {
+    uploadPdf.mockReturnValue(new Promise(() => {})) // an upload that is still going
+    show('/library?add=1')
+    const panel = await screen.findByRole('complementary', { name: 'Add documents' })
+    const file = new File(['%PDF-1.4'], 'afi99-1.pdf', { type: 'application/pdf' })
+    fireEvent.change(within(panel).getByLabelText('Choose PDF files'), { target: { files: [file] } })
+    expect(await within(panel).findByText('afi99-1.pdf')).toBeInTheDocument()
+    expect(within(panel).getByText(/Uploading/)).toBeInTheDocument()
+
+    fireEvent.click(within(panel).getByText('Close'))
+    expect(screen.queryByRole('complementary', { name: 'Add documents' })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Add documents' }))
+    const again = await screen.findByRole('complementary', { name: 'Add documents' })
+    expect(within(again).getByText('afi99-1.pdf')).toBeInTheDocument()
+    expect(within(again).getByText(/Uploading/)).toBeInTheDocument()
+    expect(uploadPdf).toHaveBeenCalledTimes(1)
+  })
+
+  it('brings the panel into view and puts the focus in it when it opens', async () => {
+    const scrollIntoView = vi.fn()
+    Element.prototype.scrollIntoView = scrollIntoView
+    try {
+      show()
+      await screen.findByText('test-policy-99-1.pdf')
+      fireEvent.click(screen.getByRole('button', { name: 'Add documents' }))
+      const panel = await screen.findByRole('complementary', { name: 'Add documents' })
+      await waitFor(() => expect(scrollIntoView).toHaveBeenCalled())
+      expect(panel).toHaveFocus()
+    } finally {
+      delete (Element.prototype as { scrollIntoView?: unknown }).scrollIntoView
+    }
   })
 
   it('opens with the panel showing when the address says ?add=1 (the setup page links there)', async () => {
