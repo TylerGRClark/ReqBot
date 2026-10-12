@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { collectPdfFiles, isPdfName, pdfsFromFileList } from './pdfFiles'
+import { MAX_FOLDER_DEPTH, collectPdfFiles, isPdfName, pdfsFromFileList } from './pdfFiles'
 
 function file(name: string): File {
   return new File(['%PDF-1.4'], name, { type: 'application/pdf' })
@@ -80,5 +80,13 @@ describe('collectPdfFiles', () => {
     const dt = { items: [], files: [file('a.pdf'), file('b.docx')] } as unknown as DataTransfer
     expect((await collectPdfFiles(dt)).map(f => f.name)).toEqual(['a.pdf'])
     expect(await collectPdfFiles(null)).toEqual([])
+  })
+
+  it('stops at the documented depth and no further', async () => {
+    let inner: FakeEntry = dirEntry('deepest', [fileEntry('too-deep.pdf')])
+    for (let i = MAX_FOLDER_DEPTH; i > 0; i--) inner = dirEntry(`level-${i}`, [inner])
+    const shallow = dirEntry('a', [fileEntry('near.pdf')])
+    const names = (await collectPdfFiles(transfer([inner, shallow]))).map(f => f.name)
+    expect(names).toEqual(['near.pdf'])
   })
 })

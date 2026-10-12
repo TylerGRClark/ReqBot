@@ -5,6 +5,9 @@
  * read in the browser and nothing is sent until the caller uploads each file. Anything that is not a `.pdf`, and any hidden
  * file or folder (a name starting with a dot), is left out.
  */
+/** How many folder levels are walked. Real document folders are a few levels deep; the bound only keeps a pathological tree from running away. Deeper PDFs are left out. */
+export const MAX_FOLDER_DEPTH = 20
+
 export function isPdfName(name: string): boolean {
   return /\.pdf$/i.test(name) && !name.startsWith('.')
 }
@@ -38,7 +41,7 @@ function readAll(reader: ReturnType<NonNullable<EntryLike['createReader']>>): Pr
 }
 
 async function walk(entry: EntryLike, out: File[], depth: number): Promise<void> {
-  if (entry.name.startsWith('.') || depth > 20) return
+  if (entry.name.startsWith('.') || depth > MAX_FOLDER_DEPTH) return
   if (entry.isFile && entry.file && isPdfName(entry.name)) {
     out.push(await new Promise<File>((ok, fail) => entry.file!(ok, fail)))
   } else if (entry.isDirectory && entry.createReader) {

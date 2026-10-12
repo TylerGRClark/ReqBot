@@ -50,6 +50,7 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
   const [notice, setNotice] = useState<string | null>(null)
   const [codeInput, setCodeInput] = useState('')
   const [promptReason, setPromptReason] = useState<string | null>(null)
+  const [justSaved, setJustSaved] = useState(false) // a code was entered here and has not been refused yet: the job list's older "rejected" answer no longer applies
   const held = useRef<File[]>([])
   const filesInput = useRef<HTMLInputElement>(null)
   const folderInput = useRef<HTMLInputElement>(null)
@@ -63,7 +64,8 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
     setItems(prev => prev.map(i => (i.id === id ? { ...i, ...patch } : i)))
   }, [])
 
-  const needsCode = mode === 'code' && (!getAdminToken() || codeRejected)
+  const rejected = codeRejected && !justSaved
+  const needsCode = mode === 'code' && (!getAdminToken() || rejected)
 
   const begin = useCallback(
     async (file: File, id: number): Promise<boolean> => {
@@ -90,6 +92,7 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
       } catch (e) {
         if (e instanceof AdminAuthError) {
           clearAdminToken()
+          setJustSaved(false)
           onCodeChanged()
           update(id, { phase: 'error', message: 'The access code was not accepted.' })
           return false
@@ -102,13 +105,13 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
   )
 
   const run = useCallback(
-    async (files: File[]) => {
+    async (files: File[], codeJustEntered = false) => {
       setNotice(null)
       if (files.length === 0) {
         setNotice('No PDF files were found in what you chose.')
         return
       }
-      if (mode === 'code' && (!getAdminToken() || codeRejected)) {
+      if (!codeJustEntered && mode === 'code' && (!getAdminToken() || codeRejected)) {
         held.current = [...held.current, ...files]
         setPromptReason(codeRejected ? 'The saved code was not accepted. Paste the current one.' : null)
         setNotice(`${files.length} file${files.length === 1 ? '' : 's'} will be added as soon as you enter the access code.`)
@@ -133,11 +136,12 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
     setAdminToken(codeInput)
     setCodeInput('')
     setPromptReason(null)
+    setJustSaved(true)
     onCodeChanged()
     const waiting = held.current
     held.current = []
     setNotice(null)
-    if (waiting.length) await run(waiting)
+    if (waiting.length) await run(waiting, true) // the code was just stored: do not hold them again because the job list has not been asked yet
   }
 
   async function decide(item: Item, ifExists: IfExists) {

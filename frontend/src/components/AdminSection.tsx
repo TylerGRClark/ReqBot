@@ -36,8 +36,12 @@ export default function AdminSection({ onLibraryChanged }: { onLibraryChanged: (
     lastRunning.current = now
   }, [jobs.data, onLibraryChanged])
 
-  const codeChanged = useCallback(() => setCodeVersion(v => v + 1), [])
-  const afterStart = useCallback(() => { jobs.refresh() }, [jobs])
+  const refreshJobs = jobs.refresh
+  const codeChanged = useCallback(() => {
+    setCodeVersion(v => v + 1)
+    refreshJobs() // ask again at once with the new code, rather than at the next poll
+  }, [refreshJobs])
+  const afterStart = useCallback(() => { refreshJobs() }, [refreshJobs])
 
   if (mode === null) return null
   return (
