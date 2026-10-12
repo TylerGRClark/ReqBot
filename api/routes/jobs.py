@@ -2,6 +2,7 @@
 
 Starting a job is in `api/routes/intake.py`, next to the uploads that feed it."""
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from api.deps import require_admin
@@ -80,15 +81,20 @@ def _queued(build) -> dict:
         raise HTTPException(status_code=422, detail={"code": "bad_request", "message": str(e)}) from None
 
 
+def _answer(out: dict):
+    """202 for a job that was queued; 200 for "skipped" (nothing was accepted), as the ingest route does."""
+    return out if out["result"] == "queued" else JSONResponse(status_code=200, content=out)
+
+
 @router.post("/jobs/questions", status_code=202)
-def start_questions(req: QuestionsRequest, request: Request) -> dict:
-    """Write draft audit questions for one document (the model machine, in the background). 202 when queued; the same document already queued or running answers `skipped`."""
+def start_questions(req: QuestionsRequest, request: Request):
+    """Write draft audit questions for one document (the model machine, in the background). 202 when queued; 200 `skipped` when the same document is already queued or running."""
     who = request.client.host if request.client else ""
-    return _queued(lambda: job_service.enqueue_questions(req.doc_key, requested_by=who))
+    return _answer(_queued(lambda: job_service.enqueue_questions(req.doc_key, requested_by=who)))
 
 
 @router.post("/jobs/reindex", status_code=202)
-def start_reindex(req: ReindexRequest, request: Request) -> dict:
-    """Rebuild the search library from the saved documents (no re-extraction). One rebuild at a time."""
+def start_reindex(req: ReindexRequest, request: Request):
+    """Rebuild the search library from the saved documents (no re-extraction). One rebuild at a time: 200 `skipped` when one is already queued or running."""
     who = request.client.host if request.client else ""
-    return _queued(lambda: job_service.enqueue_reindex(requirements_only=req.requirements_only, requested_by=who))
+    return _answer(_queued(lambda: job_service.enqueue_reindex(requirements_only=req.requirements_only, requested_by=who)))

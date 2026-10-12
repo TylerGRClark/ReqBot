@@ -289,6 +289,7 @@ class JobStore:
         job = {
             "id": job_id, "kind": kind, "title": title, "argv": [str(a) for a in argv], "run_dir": run_dir, "requires": requires or {}, "params": params or {},
             "env": {k: str(v) for k, v in (env or {}).items() if k in JOB_ENV_ALLOWED},
+            "exclusive": list(exclusive) if exclusive else None,  # kept so a retry is held to the same rule as the original
             "requested_by": requested_by, "retry_of": retry_of, "state": "queued", "attempt": 0, "created_at": _now_iso(), "created_ts": time.time(),
             "started_at": None, "finished_at": None, "lease": None, "pid": None, "pgid": None, "pid_stamp": None, "progress": None,
             "cancel_requested": False, "exit_code": None, "error": "",
@@ -328,8 +329,10 @@ class JobStore:
             raise ValueError(f"no such job: {job_id}")
         if job["state"] not in RETRYABLE:
             raise ValueError(f"job {job_id} is {job['state']}; only a failed, cancelled or interrupted job can be retried")
+        excl = job.get("exclusive")
         return self.enqueue(job["kind"], job["argv"], title=job["title"], run_dir=job.get("run_dir", ""), requires=job.get("requires"),
-                            params=job.get("params"), requested_by=job.get("requested_by", ""), retry_of=job["id"], env=job.get("env"))
+                            params=job.get("params"), requested_by=job.get("requested_by", ""), retry_of=job["id"], env=job.get("env"),
+                            exclusive=(excl[0], excl[1]) if excl else None)
 
     # -- running --
     def claim_next(self, runner: dict, lease_seconds: float = LEASE_SECONDS) -> dict | None:

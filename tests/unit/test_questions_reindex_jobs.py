@@ -111,7 +111,7 @@ def test_start_questions_queues_then_skips_a_duplicate_and_refuses_an_unknown_do
     r = c.post("/api/jobs/questions", json={"doc_key": "afi99-1"}, headers=h)
     assert r.status_code == 202 and r.json()["result"] == "queued" and r.json()["job"]["kind"] == "questions"
     again = c.post("/api/jobs/questions", json={"doc_key": "afi99-1"}, headers=h)
-    assert again.status_code == 202 and again.json()["result"] == "skipped" and again.json()["job_id"] == r.json()["job"]["id"]
+    assert again.status_code == 200 and again.json()["result"] == "skipped" and again.json()["job_id"] == r.json()["job"]["id"]  # nothing was accepted: 200, not 202
     missing = c.post("/api/jobs/questions", json={"doc_key": "nope"}, headers=h)
     assert missing.status_code == 404 and missing.json()["detail"]["code"] == "no_such_document"
     bad = c.post("/api/jobs/questions", json={"doc_key": "../x"}, headers=h)
@@ -123,7 +123,8 @@ def test_start_reindex_queues_one_rebuild(env):
     c, h = _client(), env.headers
     r = c.post("/api/jobs/reindex", json={"requirements_only": True}, headers=h)
     assert r.status_code == 202 and r.json()["job"]["kind"] == "reindex" and r.json()["job"]["params"]["requirements_only"] is True
-    assert c.post("/api/jobs/reindex", json={}, headers=h).json()["result"] == "skipped"
+    again = c.post("/api/jobs/reindex", json={}, headers=h)
+    assert again.status_code == 200 and again.json()["result"] == "skipped"
 
 
 # -- progress -------------------------------------------------------------------------------
@@ -173,3 +174,33 @@ def test_reindex_says_which_half_is_done_when_the_context_half_fails(caplog):
             assert cmd_reindex(args) == 1
     text = caplog.text
     assert "requirements index is rebuilt and live" in text and "context index was NOT rebuilt" in text and "already live beside the old context" in text
+
+
+def test_a_retry_is_held_to_the_same_one_at_a_time_rule_as_the_original(tmp_path):
+    _library(tmp_path, "afi99-1")
+    store, cfg = JobStore(tmp_path / "processed" / ".jobs"), _cfg(tmp_path)
+    first = js.enqueue_questions("afi99-1", store=store, cfg=cfg)
+    store.cancel(first["id"])
+    second = js.enqueue_questions("afi99-1", store=store, cfg=cfg)  # a new one was queued after the first was cancelled
+    with pytest.raises(js.JobAlreadyQueued) as e:
+        store.retry(first["id"])
+    assert e.value.job_id == second["id"]
+    store.cancel(second["id"])
+    assert store.retry(first["id"])["state"] == "queued"  # nothing in the way now
+    # a rebuild too
+    r1 = js.enqueue_reindex(store=store, cfg=cfg)
+    store.cancel(r1["id"])
+    r2 = js.enqueue_reindex(store=store, cfg=cfg)
+    with pytest.raises(js.JobAlreadyQueued):
+        store.retry(r1["id"])
+    assert r2["state"] == "queued"
+
+
+def test_retrying_over_the_api_answers_409_when_the_same_thing_is_already_queued(env):
+    _library(env.tmp, "afi99-1")
+    c, h = _client(), env.headers
+    first = c.post("/api/jobs/questions", json={"doc_key": "afi99-1"}, headers=h).json()["job"]
+    c.post(f"/api/jobs/{first['id']}/cancel", headers=h)
+    c.post("/api/jobs/questions", json={"doc_key": "afi99-1"}, headers=h)
+    r = c.post(f"/api/jobs/{first['id']}/retry", headers=h)
+    assert r.status_code == 409 and "already queued or running" in r.json()["detail"]
