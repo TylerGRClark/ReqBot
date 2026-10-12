@@ -18,6 +18,10 @@ dependencies = [
     "docling-core==2.99.0",
     "docling-parse==5.7.0",
     "docling-ibm-models==3.13.0",
+    # 2026-10-12: services/intake_service.py reads a PDF's page count with pypdfium2, in a child process with memory and CPU limits. It was already installed (docling-slim[standard]
+    # and pdfplumber pull it in) but only transitively; it is named here so it cannot disappear with a Docling change. Docling asks for >=4.30.0,!=4.30.1,<6.0.0; 5.5.0 is the version
+    # in the known-good set. Decision: owner, 2026-10-12 ("good to pin the pypdfium2 dependency as long as it's written down").
+    "pypdfium2==5.5.0",
     "fastembed==0.7.4",
     "qdrant-client==1.17.0",
     "ollama==0.6.1",
