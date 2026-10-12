@@ -61,7 +61,7 @@ function CrossMatchCard({ match, from }: { match: Requirement; from: string }) {
 function backLabelFor(path: string): string {
   if (path.startsWith('/compare')) return '← Back to compare'
   if (path.startsWith('/evidence')) return '← Back to evidence'
-  if (path.startsWith('/corpus')) return '← Back to corpus'
+  if (path.startsWith('/library') || path.startsWith('/corpus')) return '← Back to library'
   return '← Back to search'
 }
 

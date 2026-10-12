@@ -72,4 +72,16 @@ describe('JobsPanel', () => {
     fireEvent.click(screen.getByText('Cancel'))
     await screen.findByText('No such job')
   })
+
+  it('can leave the running-job banner to the page, and list only the newest few with a way to see older ones', () => {
+    const onShowMore = vi.fn()
+    const jobs = [1, 2, 3, 4].map(n => job({ id: `JOB-${n}`, title: `Ingest doc-${n}.pdf`, state: n === 1 ? 'running' : 'succeeded' }))
+    render(<JobsPanel data={{ jobs, running: 'JOB-1', queued: 0 }} onChanged={() => {}} banner={false} limit={2} heading="Recent activity" onShowMore={onShowMore} />)
+    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Recent activity' })).toBeInTheDocument()
+    expect(screen.getByText('Ingest doc-2.pdf')).toBeInTheDocument()
+    expect(screen.queryByText('Ingest doc-3.pdf')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText('Show older (2)'))
+    expect(onShowMore).toHaveBeenCalled()
+  })
 })

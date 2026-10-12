@@ -92,14 +92,27 @@ function JobRow({ job, onChanged }: { job: JobSummary; onChanged: () => void }) 
   )
 }
 
-export default function JobsPanel({ data, onChanged }: { data: JobsResponse | null; onChanged: () => void }) {
+interface PanelProps {
+  data: JobsResponse | null
+  onChanged: () => void
+  /** Show the banner for the running job above the list (the Library page shows it as a strip across the top instead). */
+  banner?: boolean
+  /** How many of the newest jobs to list. */
+  limit?: number
+  heading?: string
+  /** When given, and there are more jobs than `limit`, a button asks for more. */
+  onShowMore?: () => void
+}
+
+export default function JobsPanel({ data, onChanged, banner = true, limit = 10, heading = 'Jobs', onShowMore }: PanelProps) {
   if (!data) return null
   const running = data.jobs.find(j => j.id === data.running) ?? data.jobs.find(j => j.state === 'running')
-  const rest = data.jobs.slice(0, 10)
+  const rest = data.jobs.slice(0, limit)
+  const older = data.jobs.length - rest.length
   return (
-    <section aria-label="Jobs" className="mb-6">
-      {running && <Banner job={running} waiting={data.queued} />}
-      <h2 className="text-xs uppercase tracking-wide text-gray-400 mb-2">Jobs</h2>
+    <section aria-label={heading}>
+      {banner && running && <Banner job={running} waiting={data.queued} />}
+      <h2 className="text-xs uppercase tracking-wide text-gray-400 mb-2">{heading}</h2>
       {rest.length === 0 ? (
         <p className="text-sm text-gray-500">No jobs yet. Drop a PDF above to start one.</p>
       ) : (
@@ -108,6 +121,11 @@ export default function JobsPanel({ data, onChanged }: { data: JobsResponse | nu
             <JobRow key={j.id} job={j} onChanged={onChanged} />
           ))}
         </ul>
+      )}
+      {older > 0 && onShowMore && (
+        <button onClick={onShowMore} className="mt-3 text-sm text-blue-700 hover:underline">
+          Show older ({older})
+        </button>
       )}
     </section>
   )

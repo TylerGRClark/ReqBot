@@ -200,7 +200,7 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
 
   if (mode === 'unconfigured') {
     return (
-      <div className="border border-gray-200 bg-gray-50 rounded-lg p-4 text-sm text-gray-700 mb-6">
+      <div className="border border-gray-200 bg-gray-50 rounded-lg p-4 text-sm text-gray-700">
         <p className="font-medium text-gray-900">Adding documents from the browser is switched off on this server.</p>
         <p className="mt-1">
           To turn it on, run <code className="bg-white border border-gray-200 rounded px-1">reqbot token</code> on the server (this page then asks for the code), or{' '}
@@ -213,9 +213,7 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
   const showPrompt = needsCode || promptReason !== null
 
   return (
-    <section aria-label="Add documents" className="mb-6">
-      <h2 className="text-xs uppercase tracking-wide text-gray-400 mb-2">Add documents</h2>
-
+    <div>
       {showPrompt && (
         <div className="border border-amber-200 bg-amber-50 rounded-lg p-4 mb-3">
           <p className="text-sm text-amber-900">
@@ -255,7 +253,7 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
         }}
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
-        className={`border-2 border-dashed rounded-lg p-6 text-center text-sm transition-colors ${
+        className={`border-2 border-dashed rounded-lg p-4 text-center text-sm transition-colors ${
           dragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white'
         }`}
       >
@@ -271,7 +269,7 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
           />
           Also write draft audit questions when each document is done (takes longer; you can do it later from the checklist page)
         </label>
-        <div className="mt-3 flex items-center justify-center gap-3">
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
           <button onClick={() => filesInput.current?.click()} className="text-sm text-blue-700 border border-blue-300 rounded px-3 py-1.5 hover:bg-blue-50">
             Choose files
           </button>
@@ -387,6 +385,6 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
           )}
         </div>
       )}
-    </section>
+    </div>
   )
 }

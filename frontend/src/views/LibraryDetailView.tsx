@@ -8,7 +8,7 @@ import ErrorBanner from '../components/ErrorBanner'
 import RemoveDocument from '../components/RemoveDocument'
 import { docValue } from '../utils/ui'
 
-export default function CorpusDetailView() {
+export default function LibraryDetailView() {
   const { docId } = useParams<{ docId: string }>()
   const navigate = useNavigate()
   const [data, setData] = useState<DocsResponse | null>(null)
@@ -32,8 +32,8 @@ export default function CorpusDetailView() {
       <main className="max-w-4xl mx-auto px-6 py-8 space-y-6">
 
         <div>
-          <Link to="/corpus" className="text-sm text-blue-600 hover:underline">
-            ← Back to corpus
+          <Link to="/library" className="text-sm text-blue-600 hover:underline">
+            ← Back to library
           </Link>
         </div>
 
@@ -93,7 +93,7 @@ export default function CorpusDetailView() {
               </Link>
             </div>
 
-            <RemoveDocument docKey={doc.doc_key} onRemoved={() => navigate('/corpus')} />
+            <RemoveDocument docKey={doc.doc_key} onRemoved={() => navigate('/library')} />
           </>
         )}
 

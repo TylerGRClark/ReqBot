@@ -381,7 +381,7 @@ export default function SetupView() {
             {saveError && <ErrorBanner message={saveError} />}
             {saved && (
               <p role="status" className="text-sm text-green-800 bg-green-50 border border-green-200 rounded px-3 py-2">
-                Saved. Next: <Link to="/corpus" className="underline">add your first document</Link> or <Link to="/search" className="underline">try a search</Link>.
+                Saved. Next: <Link to="/library?add=1" className="underline">add your first document</Link> or <Link to="/search" className="underline">try a search</Link>.
               </p>
             )}
             <button onClick={() => void save()} disabled={saving || (changedKeys.length === 0 && !needsSetup)} className="text-sm bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 disabled:opacity-50">

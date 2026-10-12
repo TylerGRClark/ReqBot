@@ -246,7 +246,7 @@ export default function SettingsView() {
         setEnvOverridden(res.env_overridden)
         setSaveMessage(
           embeddingChanged
-            ? 'Saved. This does not retroactively re-embed your existing corpus — run '
+            ? 'Saved. This does not retroactively re-embed your existing library — run '
               + '"reqbot reindex" afterward, or search results may show mismatch warnings until you do.'
             : 'Saved — takes effect on the next request, no restart needed.',
         )
@@ -330,7 +330,7 @@ export default function SettingsView() {
               label="Embedding model" id="embedding_model" value={form.embedding_model}
               onChange={v => { set('embedding_model', v) }}
               hint="Defines the vector shape already stored in Qdrant — changing this does not
-                    retroactively re-embed the existing corpus. Run reqbot reindex afterward."
+                    retroactively re-embed the existing library. Run reqbot reindex afterward."
               overridden={envOverridden.includes('embedding_model')}
             />
           </section>

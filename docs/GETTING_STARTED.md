@@ -231,10 +231,10 @@ If you pick `3` now you can switch on written answers later by pulling
 
 Ingestion reads the PDF, extracts requirements with the AI model, checks them
 against the source text, and indexes them for search. It can be done from the
-command line (below) or from the web page's Corpus screen: run `reqbot token` on
+command line (below) or from the web page's Library screen: run `reqbot token` on
 the server once (or `reqbot token --open` on a network you trust), run `reqbot
-serve`, then drop PDFs, or a whole folder, onto the Corpus page. The page shows
-progress and keeps a list of jobs. See [Operations](OPERATIONS.md#run-an-ingest-as-a-background-job).
+serve`, choose **Add documents** on the Library page, then drop PDFs, or a whole
+folder, onto the panel. The page shows progress and keeps a list of jobs. See [Operations](OPERATIONS.md#run-an-ingest-as-a-background-job).
 
 **Python path:**
 
@@ -322,12 +322,12 @@ The left-hand menu has:
 | Compare | Compare one control or topic across two documents. |
 | Evidence | Gather requirements about a topic into an evidence pack. |
 | Checklists | Build and download an audit checklist (CSV, JSON, Markdown, or Excel) for one document. |
-| Corpus | See each ingested document and its requirements. |
+| Library | See each ingested document and its requirements, and add or remove documents. |
 | System | Check that Ollama and Qdrant are healthy. |
 | Settings | Change service addresses and models. With Docker, edit `docker-compose.yml` instead; saving here may be refused for connections that come through the container. |
 
 With synthesis set to None, the written-answer features (such as the
-Evidence summary) stay empty; search, trace, compare, the corpus view, and
+Evidence summary) stay empty; search, trace, compare, the library view, and
 checklists work as normal.
 
 The page works from the same computer by default. To reach it from another
@@ -365,7 +365,7 @@ organization complies.
 | Docker: Ollama is running but ReqBot cannot reach it (Linux) | Ollama is listening on loopback only. See the Ollama options in Path A, step 2. |
 | `Failed to connect to Ollama` | Same as above: Ollama is not reachable at the configured address. |
 | Model not found or `not available on the configured Ollama server` | Pull the model on the machine running Ollama, then check `ollama list`. |
-| `reqbot docs` says `Processed documents directory not found` (or the Corpus page shows the same error) | The documents folder does not exist yet. `reqbot init` creates it, and so does the first ingest. |
+| `reqbot docs` says `Processed documents directory not found` (or the Library page shows the same error) | The documents folder does not exist yet. `reqbot init` creates it, and so does the first ingest. |
 | `ask` returns no results | Confirm `reqbot docs` lists a document, and try a topic that the PDF covers. A search for words the document never uses returns little or nothing. |
 | Stale or duplicate-looking results after ingesting the same PDF again | Run `reqbot reindex`. It rebuilds the search index from each document's latest run. |
 | The web page says not found, but `/api-docs` works | The web page was not built. Build it (`bash build/build-frontend.sh`) **before** `pip3 install`, then install again. |
