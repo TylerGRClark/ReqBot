@@ -29,9 +29,12 @@ documents the envelopes returned by the routes and shared services.
 | POST | `/api/checklist/export` | Download a checklist file. |
 | GET | `/api/config` | Effective configuration and environment overrides. |
 | POST | `/api/config` | Partially update settings; loopback-only. |
+| GET | `/api/jobs` | The jobs, newest first (admin access code required). |
+| GET | `/api/jobs/{job_id}` | One job with the tail of its log (admin access code required). |
 
 Request/response bodies are JSON except file exports. There are no HTTP ingest,
-index-rebuild, or assessor-edit endpoints in this implementation.
+index-rebuild, or assessor-edit endpoints in this implementation: the job routes
+only read.
 
 ## Status and document inventory
 
@@ -296,6 +299,24 @@ remote browsers may appear as non-loopback clients and receive 403. Environment
 overrides still win after a successful file update. CLI sessions started before
 the edit should be restarted to load new settings.
 
+## Jobs
+
+`GET /api/jobs` returns `{"jobs": [...], "running": "<job id>" | null, "queued": <count>}`
+(query `limit`, 1 to 200, default 50); `GET /api/jobs/{job_id}` returns one job
+plus `log_tail`. A job has `id`, `kind`, `title`, `state` (`queued`, `running`,
+`succeeded`, `failed`, `cancelled`, `interrupted`), `attempt`, `command`,
+`progress` (the last `{"step", "done", "total", "at"}`), `error`, `exit_code`,
+`run_dir`, `requested_by`, `created_at`, `started_at`, `finished_at`.
+
+These routes are **admin only**. Send the admin access code created by
+`reqbot token` as `Authorization: Bearer <code>` (or `X-ReqBot-Token: <code>`).
+With no code configured on the server they answer 403 and the API behaves as it
+did before; a missing or wrong code is 401. No route returns the code, and
+`GET /api/config` does not include it. The code travels in clear text on plain
+HTTP, so beyond a trusted network put TLS in front. Starting, cancelling and
+retrying a job from the API arrive with the screens that use them; today they
+are CLI commands (`reqbot jobs`).
+
 ## Errors and access
 
 Route-generated errors have `{"detail":"message"}`. Request-validation errors
@@ -305,7 +326,8 @@ a string detail.
 | Status | Typical condition |
 |---|---|
 | 400 | Unsupported export format, missing profile, or rejected settings update. |
-| 403 | Configuration POST from a non-loopback client. |
+| 401 | A job route without the admin access code, or with a wrong one. |
+| 403 | Configuration POST from a non-loopback client; a job route when no admin access code is configured. |
 | 404 | Unknown search document filter, unknown requirement/document key, or no comparison/evidence matches. |
 | 422 | Missing/invalid request field or out-of-range numeric value. |
 | 503 | Backend connection failure or required processed artifacts unavailable. |

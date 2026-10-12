@@ -57,6 +57,11 @@ column means no dedicated `REQBOT_*` override is implemented.
 The loader also exposes `authority`, derived from the registry. It is not a
 persisted config setting.
 
+The admin access code (job routes) is deliberately not a config setting: it is
+kept in `~/.config/reqbot/access.json` (created by `reqbot token`) or taken from
+the environment variable `REQBOT_ADMIN_TOKEN`, so `GET /api/config` and Settings
+cannot reveal it.
+
 HTTP request defaults are defined by the API request models: for example,
 `/api/ask` defaults to `top_k=20` and `min_score=0.02` even if those file settings
 have changed. MCP and CLI commands also have some fixed per-command defaults;
