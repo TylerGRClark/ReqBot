@@ -265,6 +265,25 @@ def test_a_succeeded_ingest_queues_the_questions_job_for_its_document(tmp_path):
     assert f"Queued {queued[0]['id']}" in store.log_tail(ingest["id"])
 
 
+def test_the_follow_up_is_queued_before_the_ingest_is_marked_succeeded(tmp_path):
+    """A crash between the two writes must not lose the follow-up: a succeeded job is never looked at again."""
+    _library(tmp_path, "afi99-1")
+    store = JobStore(tmp_path / "processed" / ".jobs")
+    ingest = _ingest_job(store)
+    seen = {}
+    real_finish = store.finish
+
+    def finish(job_id, attempt, runner_id, state, **kw):
+        if state == "succeeded":
+            seen["questions_jobs_at_that_moment"] = len(_questions_jobs(store))
+        return real_finish(job_id, attempt, runner_id, state, **kw)
+
+    store.finish = finish  # type: ignore[method-assign]
+    js.JobRunner(store, cfg=_cfg(tmp_path)).run_pending_once()
+    assert seen == {"questions_jobs_at_that_moment": 1}
+    assert store.get(ingest["id"])["state"] == "succeeded"
+
+
 def test_nothing_is_queued_when_the_ingest_fails_or_the_choice_was_not_made(tmp_path):
     _library(tmp_path, "afi99-1")
     store = JobStore(tmp_path / "processed" / ".jobs")

@@ -486,8 +486,8 @@ class JobRunner:
         self.store.finish(job["id"], job["attempt"], self.identity["id"], state, **kw)
 
     def _queue_followup(self, job: dict) -> None:
-        """An ingest queued with `then_questions` queues the draft-questions job for its document once it has succeeded. What happens is written to the ingest job's log; a
-        problem here never changes the ingest job's own result."""
+        """An ingest queued with `then_questions` queues the draft-questions job for its document once its command has exited cleanly (called just before the job is marked
+        succeeded). What happens is written to the ingest job's log; a problem here never changes the ingest job's own result."""
         params = job.get("params") or {}
         if job.get("kind") != "ingest" or not params.get("then_questions"):
             return
@@ -577,8 +577,10 @@ class JobRunner:
             elif outcome == "cancel":
                 self._finish(job, "cancelled", exit_code=rc)
             elif rc == 0:
-                if self.store.finish(job_id, attempt, rid, "succeeded", exit_code=0):
-                    self._queue_followup(job)
+                # The follow-up is queued first: a crash between the two writes then leaves a spare questions job (its one-at-a-time rule absorbs a repeat) rather than losing
+                # the follow-up for good, because a succeeded job is never looked at again.
+                self._queue_followup(job)
+                self._finish(job, "succeeded", exit_code=0)
             else:
                 tail = [ln for ln in self.store.log_tail(job_id, 2000).splitlines() if ln.strip()]
                 what = f"ended by signal {-rc}" if rc < 0 else f"exited with code {rc}"
