@@ -590,7 +590,7 @@ def reserve_run_dir(base: Path, stem: str) -> Path:
 
 
 def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=None, no_index: bool = False, max_chunks: int | None = None,
-                   requested_by: str = "") -> dict:
+                   requested_by: str = "", params_extra: dict | None = None) -> dict:
     """Queue `reqbot ingest` for one PDF. The job creates its run folder itself and passes it to the command, so a retry runs in the same folder and requirement finding reuses the
     answers it already has."""
     pdf = Path(pdf_path).expanduser().resolve()
@@ -615,7 +615,8 @@ def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=N
     requires = {"ollama_url": cfg.ollama_url, "ollama_models": [m for m in models if m], "qdrant_url": "" if no_index else cfg.qdrant_url}
     env = {} if no_index else {"REQBOT_EMBEDDING_MODEL": cfg.embedding_model}  # the ingest command has no flag for it; the environment overrides config
     return store.enqueue("ingest", argv, title=f"Ingest {pdf.name}", run_dir=str(run_dir), requires=requires, env=env,
-                         params={"pdf": str(pdf), "no_index": no_index, "max_chunks": max_chunks}, requested_by=requested_by)
+                         params={"pdf": str(pdf), "stem": pdf.stem, "no_index": no_index, "max_chunks": max_chunks, **(params_extra or {})},
+                         requested_by=requested_by)
 
 
 def summarize(job: dict) -> dict:

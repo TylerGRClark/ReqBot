@@ -1,6 +1,6 @@
 # Web UI parity plan: who sees what, and running long jobs from the browser (proposal; nothing in it is built)
 
-*Status 2026-10-12: stage 3 (the job engine, section 5) is built, with only the access-code role source; nothing else in this plan is built. Written 2026-10-11 from a discussion with the owner, then revised the same day after a review against the code and after the owner narrowed the direction (section 1). This is a plan for review: no code, no data and no behavior changes with this PR. Each stage in section 9 becomes its own PR, with its tests and pass rules written down before building.*
+*Status 2026-10-12: stage 3 (the job engine, section 5) is built and merged, and the backend of stage 4 (uploads, inbox, start-ingest, cancel and retry routes, the same-name rule; section 6) is built, with only the access-code role source; the admin screens and replace-without-a-gap are not. Written 2026-10-11 from a discussion with the owner, then revised the same day after a review against the code and after the owner narrowed the direction (section 1). This is a plan for review: no code, no data and no behavior changes with this PR. Each stage in section 9 becomes its own PR, with its tests and pass rules written down before building.*
 
 ## 1. Direction (the owner, 2026-10-11)
 
