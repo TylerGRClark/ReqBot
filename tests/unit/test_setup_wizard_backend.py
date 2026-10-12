@@ -103,6 +103,39 @@ def test_an_unreachable_service_says_so_and_returns_no_models():
     assert not ok_q and message_q.startswith("Could not reach Qdrant there")
 
 
+def test_the_text_of_an_exception_never_reaches_the_message():
+    """The message goes to a browser: an exception can carry an internal host name or a path."""
+    def get(url, timeout=None, allow_redirects=True):
+        raise requests.ConnectionError("HTTPConnectionPool(host='10.1.2.3', port=11434): secret-internal-detail")
+
+    def slow(url, timeout=None, allow_redirects=True):
+        raise requests.Timeout("secret-internal-detail")
+
+    for fn, kind in ((get, "refused or the address could not be found"), (slow, "did not answer within 5 seconds")):
+        with patch.object(ss.requests, "get", fn):
+            _, message, _ = ss.test_ollama("http://o:1")
+            _, message_q = ss.test_qdrant("http://q:1")
+        assert kind in message and kind in message_q
+        assert "secret-internal-detail" not in message + message_q and "10.1.2.3" not in message + message_q
+
+
+def test_an_error_status_or_a_reply_that_is_not_theirs_is_said_in_fixed_words():
+    with patch.object(ss.requests, "get", lambda url, timeout=None, allow_redirects=True: _Resp({}, status=503)):
+        assert "HTTP 503" in ss.test_ollama("http://o:1")[1] and "HTTP 503" in ss.test_qdrant("http://q:1")[1]
+
+    class _Odd:
+        status_code = 200
+
+        def json(self):
+            raise ValueError("not json: <html>secret-internal-detail</html>")
+
+    with patch.object(ss.requests, "get", lambda url, timeout=None, allow_redirects=True: _Odd()):
+        ok, message, names = ss.test_ollama("http://o:1")
+        _, message_q = ss.test_qdrant("http://q:1")
+    assert not ok and names == [] and "not like Ollama" in message and "not like Qdrant" in message_q
+    assert "secret-internal-detail" not in message + message_q
+
+
 def test_redirects_are_not_followed():
     seen = {}
 

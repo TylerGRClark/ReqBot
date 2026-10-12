@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 import requests
 
 TIMEOUT_SECONDS = 5.0
+NOT_AN_ADDRESS = "That is not a web address. Use the form http://host:port"
 
 
 def clean_url(url: str | None) -> str:
@@ -19,7 +20,7 @@ def clean_url(url: str | None) -> str:
     text = (url or "").strip().rstrip("/")
     parts = urlparse(text)
     if parts.scheme not in ("http", "https") or not parts.hostname or parts.username or parts.password:
-        raise ValueError("That is not a web address. Use the form http://host:port")
+        raise ValueError(NOT_AN_ADDRESS)
     return text
 
 
@@ -34,18 +35,32 @@ def has_model(name: str, installed: set[str]) -> bool:
     return bool(name) and (name in installed or f"{name}:latest" in installed)
 
 
+def _unreachable(service: str, error: Exception) -> str:
+    """One fixed sentence per kind of failure. The exception's own text is never passed on: it can carry internal host names or paths, and this reaches a browser."""
+    if isinstance(error, requests.Timeout):
+        why = f"it did not answer within {int(TIMEOUT_SECONDS)} seconds"
+    elif isinstance(error, requests.ConnectionError):
+        why = "the connection was refused or the address could not be found"
+    else:
+        why = "the request could not be made"
+    return f"Could not reach {service} there: {why}."
+
+
 def test_ollama(url: str) -> tuple[bool, str, list[str]]:
     """Returns (reachable, one plain sentence, the installed model names)."""
     try:
         base = clean_url(url)
-    except ValueError as e:
-        return False, str(e), []
+    except ValueError:
+        return False, NOT_AN_ADDRESS, []
     try:
         resp = requests.get(f"{base}/api/tags", timeout=TIMEOUT_SECONDS, allow_redirects=False)
-        resp.raise_for_status()
+        if resp.status_code >= 400:
+            return False, f"Ollama answered with an error (HTTP {resp.status_code}) at that address.", []
         names = [str(m["name"]) for m in resp.json().get("models", []) if isinstance(m, dict) and "name" in m]
-    except (requests.RequestException, ValueError, KeyError) as e:
-        return False, f"Could not reach Ollama there: {str(e)[:200]}", []
+    except requests.RequestException as e:
+        return False, _unreachable("Ollama", e), []
+    except (ValueError, KeyError, AttributeError):
+        return False, "Something answered there, but not like Ollama (the reply was not a list of models).", []
     count = len(names)
     return True, f"OK ({count} model{'s' if count != 1 else ''} found)", names
 
@@ -54,14 +69,17 @@ def test_qdrant(url: str) -> tuple[bool, str]:
     """Returns (reachable, one plain sentence)."""
     try:
         base = clean_url(url)
-    except ValueError as e:
-        return False, str(e)
+    except ValueError:
+        return False, NOT_AN_ADDRESS
     try:
         resp = requests.get(f"{base}/collections", timeout=TIMEOUT_SECONDS, allow_redirects=False)
-        resp.raise_for_status()
+        if resp.status_code >= 400:
+            return False, f"Qdrant answered with an error (HTTP {resp.status_code}) at that address."
         count = len(resp.json().get("result", {}).get("collections", []))
-    except (requests.RequestException, ValueError, AttributeError) as e:
-        return False, f"Could not reach Qdrant there: {str(e)[:200]}"
+    except requests.RequestException as e:
+        return False, _unreachable("Qdrant", e)
+    except (ValueError, KeyError, AttributeError):
+        return False, "Something answered there, but not like Qdrant (the reply was not a list of collections)."
     return True, f"OK ({count} collection{'s' if count != 1 else ''})"
 
 
