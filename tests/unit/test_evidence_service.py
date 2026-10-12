@@ -457,3 +457,13 @@ def test_build_synthesis_prompt_falls_back_to_default_rule_on_mixed_profiles():
     _, mock_synthesize, _ = _run_build(hits=hits, synthesize=True)
     prompt = mock_synthesize.call_args.kwargs["raw_prompt"]
     assert "AC, IA, AU" in prompt
+
+
+def test_synthesis_prompt_does_not_call_every_requirement_a_control():
+    """A policy's "3.1" is a section reference, not a control: the instructions said "control" throughout, so the written answer called every requirement one."""
+    hits = [_fake_hit(domain_profile=None)]
+    _, mock_synthesize, _ = _run_build(hits=hits, synthesize=True)
+    prompt = mock_synthesize.call_args.kwargs["raw_prompt"]
+    assert "control ID)" in prompt  # a framework's own word is still mentioned once, as the example
+    assert "control groups" not in prompt and "Control:" not in prompt and "controls that appear" not in prompt
+    assert "requirement groups" in prompt and "Reference:" in prompt
