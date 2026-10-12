@@ -339,3 +339,28 @@ def test_replace_starts_a_job_that_replaces_and_keep_both_does_not(env):
     assert rep.status_code == 202
     job = js.default_store().list_jobs()[0]
     assert "--replace" in job["argv"] and job["params"]["replace"] is True and job["params"]["stem"] == "afi99-1"
+
+
+# -- also write draft questions -----------------------------------------------------
+
+def test_the_questions_choice_is_off_by_default_and_is_kept_on_the_job_when_asked(env):
+    c, h = env.client(), env.headers
+    a = upload(env, "afi99-1.pdf", tiny_pdf(1, "a")).json()
+    assert c.post("/api/jobs/ingest", json={"upload_id": a["upload_id"]}, headers=h).status_code == 202
+    plain = js.default_store().list_jobs()[0]
+    assert plain["params"]["then_questions"] is False and "draft questions" not in plain["title"]
+    b = upload(env, "afi99-2.pdf", tiny_pdf(1, "b")).json()
+    r = c.post("/api/jobs/ingest", json={"upload_id": b["upload_id"], "then_questions": True}, headers=h)
+    assert r.status_code == 202 and r.json()["job"]["params"]["then_questions"] is True
+    job = js.default_store().get(r.json()["job"]["id"])
+    assert job["params"]["then_questions"] is True and job["title"].endswith("then write draft questions")
+
+
+def test_the_questions_choice_applies_to_every_file_of_an_inbox_import(env):
+    inbox = env.processed / ".inbox"
+    inbox.mkdir()
+    (inbox / "one.pdf").write_bytes(tiny_pdf(1, "one"))
+    (inbox / "two.pdf").write_bytes(tiny_pdf(1, "two"))
+    r = env.client().post("/api/jobs/inbox", json={"then_questions": True}, headers=env.headers)
+    assert r.status_code == 202 and r.json()["queued"] == 2
+    assert all(j["params"]["then_questions"] is True for j in js.default_store().list_jobs())

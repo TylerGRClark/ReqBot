@@ -240,3 +240,78 @@ def test_the_route_passes_the_profile_and_refuses_an_unknown_one(env):
     assert ok.status_code == 202 and ok.json()["job"]["params"]["profile"] == "cybersecurity"
     bad = c.post("/api/jobs/questions", json={"doc_key": "afi99-1", "profile": "no-such-profile"}, headers=h)
     assert bad.status_code == 422 and bad.json()["detail"]["code"] == "bad_request"
+
+
+# -- an ingest that also writes draft questions --------------------------------------------
+
+def _ingest_job(store, script: str = "pass", *, then: bool = True, stem: str = "afi99-1") -> dict:
+    """An ingest-kind job that runs a stub command, so the runner's follow-up can be tested without the pipeline."""
+    return store.enqueue("ingest", [sys.executable, "-c", script], title=f"Ingest {stem}.pdf", params={"stem": stem, "then_questions": then}, requested_by="cli")
+
+
+def _questions_jobs(store) -> list[dict]:
+    return [j for j in store.list_jobs() if j["kind"] == "questions"]
+
+
+def test_a_succeeded_ingest_queues_the_questions_job_for_its_document(tmp_path):
+    _library(tmp_path, "afi99-1")
+    store = JobStore(tmp_path / "processed" / ".jobs")
+    ingest = _ingest_job(store)
+    assert js.JobRunner(store, cfg=_cfg(tmp_path)).run_pending_once() == ingest["id"]
+    assert store.get(ingest["id"])["state"] == "succeeded"
+    queued = _questions_jobs(store)
+    assert len(queued) == 1 and queued[0]["state"] == "queued" and queued[0]["params"]["doc_key"] == "afi99-1"
+    assert queued[0]["requested_by"] == "cli"
+    assert f"Queued {queued[0]['id']}" in store.log_tail(ingest["id"])
+
+
+def test_nothing_is_queued_when_the_ingest_fails_or_the_choice_was_not_made(tmp_path):
+    _library(tmp_path, "afi99-1")
+    store = JobStore(tmp_path / "processed" / ".jobs")
+    failing = _ingest_job(store, "import sys; sys.exit(3)")
+    js.JobRunner(store, cfg=_cfg(tmp_path)).run_pending_once()
+    assert store.get(failing["id"])["state"] == "failed" and _questions_jobs(store) == []
+    plain = _ingest_job(store, then=False)
+    js.JobRunner(store, cfg=_cfg(tmp_path)).run_pending_once()
+    assert store.get(plain["id"])["state"] == "succeeded" and _questions_jobs(store) == []
+
+
+def test_a_questions_job_already_waiting_is_not_doubled_and_the_ingest_still_succeeds(tmp_path):
+    _library(tmp_path, "afi99-1")
+    store = JobStore(tmp_path / "processed" / ".jobs")
+    ingest = _ingest_job(store)  # queued first, so it is the one the runner takes
+    waiting = js.enqueue_questions("afi99-1", store=store, cfg=_cfg(tmp_path))
+    assert js.JobRunner(store, cfg=_cfg(tmp_path)).run_pending_once() == ingest["id"]
+    assert store.get(ingest["id"])["state"] == "succeeded"
+    assert [j["id"] for j in _questions_jobs(store)] == [waiting["id"]]
+    assert "already queued or running" in store.log_tail(ingest["id"])
+
+
+def test_a_follow_up_that_cannot_be_queued_does_not_change_the_ingest_result(tmp_path):
+    (tmp_path / "processed").mkdir()  # the document is not in the library, so no questions job can be made for it
+    store = JobStore(tmp_path / "processed" / ".jobs")
+    ingest = _ingest_job(store, stem="not-there")
+    js.JobRunner(store, cfg=_cfg(tmp_path)).run_pending_once()
+    assert store.get(ingest["id"])["state"] == "succeeded" and _questions_jobs(store) == []
+    assert "Could not queue the draft-questions job for not-there" in store.log_tail(ingest["id"])
+
+
+def test_a_retried_ingest_keeps_the_choice(tmp_path):
+    _library(tmp_path, "afi99-1")
+    store = JobStore(tmp_path / "processed" / ".jobs")
+    first = _ingest_job(store, "import sys; sys.exit(2)")
+    js.JobRunner(store, cfg=_cfg(tmp_path)).run_pending_once()
+    again = store.retry(first["id"])
+    assert again["params"]["then_questions"] is True
+
+
+def test_the_ingest_command_for_jobs_add_takes_the_choice_and_a_partial_run_cannot(tmp_path):
+    pdf = tmp_path / "afi99-1.pdf"
+    pdf.write_bytes(b"%PDF-1.4\n")
+    (tmp_path / "processed").mkdir()
+    store = JobStore(tmp_path / "processed" / ".jobs")
+    job = js.enqueue_ingest(pdf, store=store, cfg=_cfg(tmp_path), then_questions=True)
+    assert job["params"]["then_questions"] is True and job["title"] == "Ingest afi99-1.pdf, then write draft questions"
+    with pytest.raises(ValueError, match="whole document"):
+        js.enqueue_ingest(pdf, store=store, cfg=_cfg(tmp_path), then_questions=True, max_chunks=3)
+    assert js.summarize(job)["params"]["then_questions"] is True

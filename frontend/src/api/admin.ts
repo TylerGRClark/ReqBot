@@ -275,16 +275,18 @@ export async function getInbox(): Promise<InboxResponse> {
 }
 
 /** Start one ingest per PDF in the inbox (all of them when `files` is null). */
-export async function importInbox(files: string[] | null, ifExists: IfExists = 'ask'): Promise<InboxImportResponse> {
-  return (await request(inboxImportSchema, 'inbox import', '/jobs/inbox', { method: 'POST', body: JSON.stringify({ files, if_exists: ifExists }) })).data
+export async function importInbox(files: string[] | null, ifExists: IfExists = 'ask', thenQuestions = false): Promise<InboxImportResponse> {
+  const body = { files, if_exists: ifExists, then_questions: thenQuestions }
+  return (await request(inboxImportSchema, 'inbox import', '/jobs/inbox', { method: 'POST', body: JSON.stringify(body) })).data
 }
 
 /**
  * Start the pipeline for an uploaded PDF. Resolves with the result, or rejects with an AdminRequestError whose code is
  * `same_name_different_content` (status 409) when the name is already in the library with other content and `ifExists` is 'ask'.
  */
-export async function startIngest(uploadId: string, ifExists: IfExists = 'ask'): Promise<StartResponse> {
-  return (await request(startSchema, 'start', '/jobs/ingest', { method: 'POST', body: JSON.stringify({ upload_id: uploadId, if_exists: ifExists }) })).data
+export async function startIngest(uploadId: string, ifExists: IfExists = 'ask', thenQuestions = false): Promise<StartResponse> {
+  const body = { upload_id: uploadId, if_exists: ifExists, then_questions: thenQuestions }
+  return (await request(startSchema, 'start', '/jobs/ingest', { method: 'POST', body: JSON.stringify(body) })).data
 }
 
 /**

@@ -302,6 +302,7 @@ through a shell and no caller supplies a command line.
 
 ```bash
 reqbot jobs add ingest /path/to/policy.pdf        # queue it (add --no-index, --max-chunks N)
+reqbot jobs add ingest policy.pdf --questions      # and queue its draft audit questions when it has succeeded
 reqbot jobs add questions --doc afi17-203          # draft audit questions for one document
 reqbot jobs add reindex                            # rebuild the search library (--requirements-only)
 reqbot jobs list                                  # newest first; --json for scripts
