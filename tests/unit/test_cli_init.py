@@ -59,7 +59,7 @@ class _FakeResp:
         return self._json
 
 
-def _fake_get(url, timeout=5):
+def _fake_get(url, timeout=5, **_kw):
     if "/api/tags" in url:
         return _FakeResp({"models": [{"name": "nomic-embed-text"}, {"name": "llama3.1:8b-instruct-q4_K_M"}]})
     if "/collections" in url:
@@ -170,7 +170,7 @@ def test_init_retries_url_on_failed_connection(tmp_path):
     """A failed connectivity test re-prompts unless the user chooses to keep it."""
     call_count = {"n": 0}
 
-    def _flaky_get(url, timeout=5):
+    def _flaky_get(url, timeout=5, **_kw):
         if "/collections" in url:
             call_count["n"] += 1
             if call_count["n"] == 1:

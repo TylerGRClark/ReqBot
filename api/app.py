@@ -14,6 +14,8 @@ Endpoints (all prefixed /api/):
   POST /api/checklist/export    — Export a checklist as CSV, JSON, or Markdown
   GET  /api/config              — Effective config values + env-override flags
   POST /api/config              — Partial config.json update (loopback only)
+  GET  /api/setup               — Is ReqBot set up yet (no config file saved)
+  POST /api/setup/check         — Test a configuration: services, models, folder (loopback only)
 
 GUI (when frontend/dist/ is built):
   GET  /{any}                — catch-all: serves real file if it exists in dist/,
@@ -44,6 +46,7 @@ from api.routes import (
     intake,
     jobs,
     library,
+    setup,
     status,
     trace,
 )
@@ -89,6 +92,7 @@ app.include_router(evidence.router, prefix="/api")
 app.include_router(checklist.router, prefix="/api")
 app.include_router(config.router, prefix="/api")
 app.include_router(access.router, prefix="/api")  # public: which mode admin actions are in (never the code)
+app.include_router(setup.router, prefix="/api")  # first-run setup: is it set up (public), test these values (loopback only)
 app.include_router(jobs.router, prefix="/api")  # admin only: answers 403 until an admin access code is configured
 app.include_router(library.router, prefix="/api")  # admin only: remove a document (to the trash, with a confirmation)
 app.include_router(intake.router, prefix="/api")  # admin only: uploads, the inbox and starting an ingest

@@ -1301,27 +1301,47 @@ def cmd_checklist(args: argparse.Namespace) -> int:
 
 
 def _test_ollama(url: str) -> tuple[bool, str, list[str]]:
-    """Test Ollama connectivity. Returns (ok, message, model_names_list)."""
-    try:
-        resp = requests.get(f"{url}/api/tags", timeout=5)
-        resp.raise_for_status()
-        models = resp.json().get("models", [])
-        names = [m["name"] for m in models]
-        count = len(names)
-        return True, f"OK ({count} model{'s' if count != 1 else ''} found)", names
-    except requests.RequestException as e:
-        return False, f"FAILED — {e}", []
+    """Test Ollama connectivity. Returns (ok, message, model_names_list). The check itself is shared with the setup wizard (services/setup_service.py)."""
+    from services import setup_service
+
+    return setup_service.test_ollama(url)
 
 
 def _test_qdrant(url: str) -> tuple[bool, str]:
-    """Test Qdrant connectivity. Returns (ok, message)."""
-    try:
-        resp = requests.get(f"{url}/collections", timeout=5)
-        resp.raise_for_status()
-        count = len(resp.json().get("result", {}).get("collections", []))
-        return True, f"OK ({count} collection{'s' if count != 1 else ''})"
-    except requests.RequestException as e:
-        return False, f"FAILED — {e}"
+    """Test Qdrant connectivity. Returns (ok, message). Shared with the setup wizard."""
+    from services import setup_service
+
+    return setup_service.test_qdrant(url)
+
+
+def _print_setup_check(result: dict) -> None:
+    """The setup check as plain lines: what answers, which models are there, and whether ReqBot is ready."""
+    def mark(ok):
+        return "OK  " if ok else "FAIL" if ok is False else "??  "
+
+    print(f"{mark(result['ollama']['ok'])} Ollama  {result['ollama']['url']}  {result['ollama']['message']}")
+    print(f"{mark(result['qdrant']['ok'])} Qdrant  {result['qdrant']['url']}  {result['qdrant']['message']}")
+    for m in result["models"]:
+        state = "installed" if m["installed"] else "NOT INSTALLED" if m["installed"] is False else "unknown (Ollama did not answer)"
+        need = "needed" if m["required"] else "optional"
+        print(f"{mark(m['installed'])} Model  {m['name'] or '(not set)'}  {state}  [{need}: {m['needed_for']}]")
+        if m["installed"] is False and m["name"]:  # an unset model has no name to pull
+            print(f"       to install it, on the machine that runs Ollama: ollama pull {m['name']}")
+    folder = result["folder"]
+    print(f"{mark(folder['writable'])} Folder {folder['path']}  {folder['message']}")
+    print("\nReady to use." if result["ready"] else "\nNot ready yet: fix the lines marked FAIL above (optional models only cost their own feature).")
+
+
+def _cmd_init_check() -> int:
+    """`reqbot init --check`: the checks the setup wizard shows, against the saved configuration. Changes nothing. Exit code 0 when ready, 1 otherwise."""
+    from services import setup_service
+    from services.job_service import QUESTIONS_MODEL
+
+    values = {k: getattr(_cfg, k, None) for k in ("ollama_url", "qdrant_url", "embedding_model", "default_model", "extraction_model", "rewrite_model", "synthesis_model",
+                                                    "synthesis_backend")}
+    result = setup_service.run_check(values, _cfg.processed_dir_path(), QUESTIONS_MODEL)
+    _print_setup_check(result)
+    return 0 if result["ready"] else 1
 
 
 def cmd_init(args: argparse.Namespace) -> int:
@@ -1332,6 +1352,9 @@ def cmd_init(args: argparse.Namespace) -> int:
     manage the Qdrant or Ollama services themselves — both are expected to
     already be running somewhere reachable by URL.
     """
+    if getattr(args, "check", False):
+        return _cmd_init_check()
+
     print("\nReqBot Setup")
     print("============")
 
@@ -1406,13 +1429,20 @@ def cmd_init(args: argparse.Namespace) -> int:
         # which branch above was taken (Codex review: don't trust raw
         # `ollama pull`/`ollama list` output as a second source of truth).
         _, _, available_models = _test_ollama(ollama_url)
+        from services import setup_service as _setup_service
+
+        _installed = _setup_service.installed_names(available_models)
+
+        def _model_installed(name: str) -> bool:
+            """The same rule the wizard and a queued job's pre-flight use: a configured `nomic-embed-text` is the installed `nomic-embed-text:latest`."""
+            return _setup_service.has_model(name, _installed)
 
         # Embedding model — independent of default_model; it defines the vector shape
         # already stored in Qdrant. Changing it requires a full 'reqbot reindex'
         # afterward, not just a config edit (WP-25.6c) — ReqBot still works and warns
         # on mismatches in the meantime rather than blocking queries.
         embedding_model = _prompt("Embedding model", _cfg.embedding_model)
-        if available_models and embedding_model not in available_models:
+        if available_models and not _model_installed(embedding_model):
             print(f"  [!] Warning: '{embedding_model}' not found on Ollama server.")
             print(f"      Available: {', '.join(available_models)}")
         if embedding_model != _cfg.embedding_model:
@@ -1424,27 +1454,27 @@ def cmd_init(args: argparse.Namespace) -> int:
 
         # Models — warn if not present on the server
         default_model = _prompt("Default model (fallback for all pipeline stages)", _cfg.default_model)
-        if available_models and default_model not in available_models:
+        if available_models and not _model_installed(default_model):
             print(f"  [!] Warning: '{default_model}' not found on Ollama server.")
             print(f"      Available: {', '.join(available_models)}")
 
         extraction_model = _prompt_role_model("Step C extraction model (default: same as above)", default_model)
-        if extraction_model and available_models and extraction_model not in available_models:
+        if extraction_model and available_models and not _model_installed(extraction_model):
             print(f"  [!] Warning: '{extraction_model}' not found on Ollama server.")
             print(f"      Available: {', '.join(available_models)}")
 
         enrichment_model = _prompt_role_model("Step D.5 enrichment model (default: same as above)", default_model)
-        if enrichment_model and available_models and enrichment_model not in available_models:
+        if enrichment_model and available_models and not _model_installed(enrichment_model):
             print(f"  [!] Warning: '{enrichment_model}' not found on Ollama server.")
             print(f"      Available: {', '.join(available_models)}")
 
         rewrite_model = _prompt_role_model("Query-rewrite/HyDE model (default: same as above)", default_model)
-        if rewrite_model and available_models and rewrite_model not in available_models:
+        if rewrite_model and available_models and not _model_installed(rewrite_model):
             print(f"  [!] Warning: '{rewrite_model}' not found on Ollama server.")
             print(f"      Available: {', '.join(available_models)}")
 
         synthesis_model = _prompt("Synthesis model", _cfg.synthesis_model)
-        if available_models and synthesis_model not in available_models:
+        if available_models and not _model_installed(synthesis_model):
             print(f"  [!] Warning: '{synthesis_model}' not found on Ollama server.")
             print(f"      Available: {', '.join(available_models)}")
 
@@ -2065,11 +2095,12 @@ def main() -> None:
     )
 
     # init
-    subparsers.add_parser(
+    p_init = subparsers.add_parser(
         "init",
         help="Guided first-run setup — configure Qdrant/Ollama URLs and synthesis "
              "preferences (does not install or manage either service)",
     )
+    p_init.add_argument("--check", action="store_true", help="Only test the saved configuration (services reachable, models installed, folder writable); change nothing")
 
     # status
     p_status = subparsers.add_parser("status", help="Show system status")
