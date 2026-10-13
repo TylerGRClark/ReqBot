@@ -56,12 +56,20 @@ def _csv_safe(value: object) -> object:
     return value
 
 
+def _attention_reasons(item: dict) -> list:
+    """The review reasons worth showing on the sheet. Low confidence says nothing (it is true of nearly every row; the number stays in the Conf. column), and a missing source
+    reference is moot when the sheet shows a citation read from the document in its place."""
+    reasons = [r for r in (item.get("review_reasons") or []) if r != "low-confidence"]
+    if _ref(item):
+        reasons = [r for r in reasons if r != "missing-source-ref"]
+    return reasons
+
+
 def _needs_attention(item: dict) -> bool:
-    """A row worth a reader's second look in the sheet: a specific hint (item_flags) or a missing citation/tag. Confidence alone no longer shades every row (the pipeline's
-    confidence is below the review threshold on nearly every record, so it separated nothing); the number itself stays in its column and `requires_human_review` stays in JSON."""
-    if item.get("item_flags"):
-        return True
-    return any(r != "low-confidence" for r in (item.get("review_reasons") or []))
+    """A row worth a reader's second look in the sheet: a specific hint (item_flags) or a specific review reason (see `_attention_reasons`). Confidence alone no longer marks
+    every row (the pipeline's confidence is below the review threshold on nearly every record, so it separated nothing); the number itself stays in its column and
+    `requires_human_review` stays in JSON."""
+    return bool(item.get("item_flags")) or bool(_attention_reasons(item))
 
 
 def _ref(item: dict) -> str:
@@ -266,7 +274,8 @@ def _xlsx_values(item: dict) -> dict:
         "audit_question": _csv_safe(item.get("audit_question") or ""),
         "status": _csv_safe(item.get("status") or ""),
         "assessor_notes": _csv_safe(item.get("assessor_notes") or ""),
-        "item_flags": _csv_safe(_join(item.get("item_flags") or [], "; ")),
+        # the tool's hints, then the specific review reasons: the Reasons column is not on the sheet, so a row marked "!" for a reason alone still says why
+        "item_flags": _csv_safe(_join(list(item.get("item_flags") or []) + _attention_reasons(item), "; ")),
         "passage": _csv_safe(item.get("passage") or ""),
         "ref": _csv_safe(_ref(item)),
         "page_refs": _csv_safe(_join(item.get("page_refs") or [], ", ")),
@@ -283,7 +292,7 @@ def to_xlsx(checklist: dict) -> bytes:
     Layout (rows): 1 the document's name, 2 a line of facts (profile, when, how many items, how many are flagged, how many possible missed), 3 the column groups (Ask, Record,
     Context, Locate, Trace), each in its own color, 4 the column headers in the lighter shade of the group's color, then one row per item, then the possible-missed block.
     Columns: Review (a narrow marker: "!" in an amber cell on a row worth a second look), Requirement, Audit Question, Status (a drop-down, colored by what is chosen), Notes,
-    Check (the tool's hints about the row), Passage, Ref, Pages, then the small Item ID and Req IDs, then Conf. and Tags (hidden when no row has a value). Rows alternate in
+    Check (the tool's hints and review reasons for the row), Passage, Ref, Pages, then the small Item ID and Req IDs, then Conf. and Tags (hidden when no row has a value). Rows alternate in
     color by a conditional-format rule, so the stripes stay even when the sheet is sorted or filtered. A row is as tall as its requirement, question and hints need; a long
     passage is cut off at that height and read by clicking its cell (the whole text is in the cell).
 

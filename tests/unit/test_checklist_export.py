@@ -709,3 +709,24 @@ def test_a_possible_missed_row_carries_the_marker_too():
     ws = _sheet({**EMPTY_ENVELOPE, "items": [], "possible_missed": [missed]})
     assert ws.cell(row=ws.max_row, column=1).value == "!"
 
+
+def test_a_marked_row_always_says_why_in_the_check_column():
+    flagged_by_reason = {**COMPLETE_ITEM, "checklist_item_id": "CHK-R", "item_flags": [], "review_reasons": ["question-actor-not-in-row: CST/CSL", "low-confidence"]}
+    ws = _sheet({**EMPTY_ENVELOPE, "items": [flagged_by_reason]})
+    assert ws.cell(row=5, column=1).value == "!"
+    check = ws.cell(row=5, column=_col(ws, "Check")).value
+    assert "question-actor-not-in-row: CST/CSL" in check and "low-confidence" not in check
+    with_hint = {**COMPLETE_ITEM, "item_flags": ["table_fragment"], "review_reasons": ["not-extracted"]}
+    ws = _sheet({**EMPTY_ENVELOPE, "items": [with_hint]})
+    assert ws.cell(row=5, column=_col(ws, "Check")).value == "table_fragment; not-extracted"
+
+
+def test_a_missing_source_ref_is_not_a_reason_to_mark_a_row_that_has_a_citation_on_the_sheet():
+    cited = {**COMPLETE_ITEM, "checklist_item_id": "CHK-C", "item_flags": [], "source_ref": "", "citation": "3.4 (inferred)", "review_reasons": ["missing-source-ref"]}
+    uncited = {**COMPLETE_ITEM, "checklist_item_id": "CHK-U", "item_flags": [], "source_ref": "", "citation": "", "review_reasons": ["missing-source-ref"]}
+    ws = _sheet({**EMPTY_ENVELOPE, "items": [cited, uncited]})
+    assert ws.cell(row=5, column=1).value in (None, "")  # the sheet shows "3.4 (inferred)" in Ref: nothing is missing
+    assert ws.cell(row=6, column=1).value == "!"  # no reference at all: still worth a look, and Check says so
+    assert ws.cell(row=6, column=_col(ws, "Check")).value == "missing-source-ref"
+    assert "1 of them flagged" in ws["A2"].value
+
