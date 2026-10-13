@@ -541,7 +541,7 @@ def test_the_sheet_says_which_document_it_is_and_the_facts_about_it():
     assert ws["A1"].value == "Audit checklist: afi17-203.pdf"
     facts = ws["A2"].value
     assert "Profile: cybersecurity" in facts and "Generated: 2026-10-11 15:04 UTC" in facts and "2 items" in facts
-    assert "shaded for a second look" in facts  # ENVELOPE has one row with a specific reason
+    assert "of them shaded for a second look" in facts  # ENVELOPE has one row with a specific reason; the count is of the extracted items
 
 
 def test_the_title_falls_back_to_the_document_id_and_the_facts_survive_a_bare_envelope():
@@ -601,4 +601,13 @@ def test_the_possible_missed_block_has_a_colored_banner():
     banner = next(r for r in range(5, ws.max_row + 1) if str(ws.cell(row=r, column=1).value or "").startswith("POSSIBLE MISSED"))
     assert ws.cell(row=banner, column=1).fill.patternType == "solid"
     assert "1 possible missed" in ws["A2"].value
+
+
+def test_the_facts_count_shaded_items_apart_from_the_possible_missed_block():
+    flagged = {**COMPLETE_ITEM, "checklist_item_id": "CHK-F", "item_flags": ["table_fragment"]}
+    missed = {**COMPLETE_ITEM, "checklist_item_id": "MISS-1", "item_flags": ["possible_missed"]}
+    facts = _sheet({**EMPTY_ENVELOPE, "items": [flagged], "possible_missed": [missed]})["A2"].value
+    assert "1 item · 1 of them shaded for a second look · 1 possible missed, listed at the bottom" in facts
+    only_missed = _sheet({**EMPTY_ENVELOPE, "items": [], "possible_missed": [missed]})["A2"].value
+    assert "0 items" in only_missed and "of them shaded" not in only_missed and "1 possible missed" in only_missed
 

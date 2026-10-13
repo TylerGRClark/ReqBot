@@ -292,7 +292,7 @@ def to_xlsx(checklist: dict) -> bytes:
     facts.append(f"{len(items_all)} item{'' if len(items_all) == 1 else 's'}")
     shaded = sum(1 for i in items_all if _needs_attention(i))
     if shaded:
-        facts.append(f"{shaded} shaded for a second look")
+        facts.append(f"{shaded} of them shaded for a second look")  # the possible-missed rows below are shaded too: they are counted on their own
     if missed:
         facts.append(f"{len(missed)} possible missed, listed at the bottom")
     ws.cell(row=2, column=1, value=_csv_safe(" · ".join(facts))).font = Font(name=face, size=10, color=soft)
