@@ -189,7 +189,7 @@ Run these from the repository root, in the same activated environment:
 | Install command | Adds |
 |---|---|
 | `pip install ".[remote]"` | Remote synthesis provider SDKs. |
-| `pip install ".[mcp]"` | MCP server support for local AI clients. |
+| `pip install ".[mcp]"` | MCP server support: stdio for local AI clients and the HTTP door for other machines. The Docker image includes it. |
 | `pip install ".[grounding-check]"` | MiniCheck entailment scoring in the description gate. |
 | `pip install ".[rerank]"` | Experimental reranker for programmatic/evaluation use; no public CLI switch. |
 | `pip install ".[dev]"` | Test and lint tools. |
@@ -341,5 +341,34 @@ The API currently has no application authentication. If exposing it beyond
 loopback, provide access control, TLS, and network restrictions in your deployment.
 `POST /api/config` additionally checks the direct client's loopback address;
 browser access through a container bridge may fail that check.
+
+### Serving the MCP door
+
+`reqbot mcp --http` (see [Connecting AI tools](AI_TOOLS.md#serve-the-library-to-other-machines))
+is a separate process from `reqbot serve`, on its own port (8765), with its own
+access codes. It speaks plain HTTP, so put a proxy that terminates TLS in front of
+it as soon as it leaves a trusted network, and let your gateway do any company
+sign-in. Keep the door's own listener on loopback and publish only the proxy:
+
+```bash
+reqbot mcp-code add anna-assistant
+reqbot mcp --http --host 127.0.0.1 --port 8765 --allow-host reqbot.example.org
+```
+
+```caddyfile
+reqbot.example.org {
+    reverse_proxy 127.0.0.1:8765 {
+        header_up Host {host}
+    }
+}
+```
+
+`--allow-host` must name the host name callers type, because the proxy forwards it.
+In a container, run the same command in a second container (or `docker exec`)
+from the same image, set `REQBOT_MCP_CODES`, and publish its port only to the
+proxy. Searches use the model machine, so a limit on simultaneous calls applies
+(`REQBOT_MCP_MAX_CONCURRENT`). If the AI tool is a hosted product that calls in
+from the internet, the address must be reachable from there, which is a decision
+for your network team; ReqBot's codes are not a substitute for their gateway.
 
 For problems after installation, see the [operations runbook](OPERATIONS.md).

@@ -43,7 +43,7 @@ dependencies = [
 # (cloud LLM synthesis; external MCP clients) that a CLI/GUI-only install doesn't
 # need, regardless of how light their own dependencies are.
 remote = ["anthropic>=0.40.0", "openai>=1.50.0"]
-mcp = ["mcp>=1.0.0"]  # WP-26.1-approved: official Python MCP SDK (mcp.server.fastmcp)
+mcp = ["mcp>=1.28.0,<2"]  # WP-26.1-approved: official Python MCP SDK (mcp.server.fastmcp). The floor rose from 1.0.0 on 2026-10-13 (owner approved) for the network door (mcp_server/network.py): stateless streamable HTTP, per-request context, Host-header protection; built and tested against 1.28.1 and 1.30.0. Capped below 2: mcp 2.x renamed FastMCP to MCPServer (mcp.server.fastmcp is gone), so an unbounded range resolved to 2.x on a fresh install and broke `reqbot mcp`; moving to 2.x is its own change.
 # WP-35.4: Step D.6's description-grounding entailment check (pipeline/entailment_gate.py).
 # Gated out of base -- its GitHub install pulls torch/transformers/datasets/openai/pyarrow,
 # a heavy footprint not needed for basic ingestion (docs/PHASE35_REQUIREMENTS.md §3

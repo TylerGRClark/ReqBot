@@ -30,9 +30,10 @@ Last checked against the code on 2026-10-11 (main at `8b1bab5`).
 | [Draft audit questions](10_draft_questions.md) | How a draft question is written, withheld and read back. |
 | [Kind labels](11_kind_labels.md) | How each row is labelled by what sort of statement it is. |
 | [Delivery](12_delivery.md) | How the checklist reaches an assessor. |
+| [Network MCP door](13_network_mcp.md) | How a call from an AI tool on another machine is let in, run and written down. |
 | [Roadmap: planned or switched off](90_roadmap_not_built.md) | What is planned or switched off, kept apart from what runs. |
 
-Not drawn: Ask, Evidence, Trace and Compare (search and answers), and the screens of the web app.
+Not drawn: Ask, Evidence, Trace and Compare (search and answers), the web app's upload and job path, and the screens of the web app.
 
 ## Keeping them true
 

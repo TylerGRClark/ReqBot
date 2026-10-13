@@ -69,6 +69,13 @@ kept in `~/.config/reqbot/access.json` (created by `reqbot token`) or taken from
 the environment variable `REQBOT_ADMIN_TOKEN`, so `GET /api/config` and Settings
 cannot reveal it.
 
+The network MCP door (`reqbot mcp --http`) is also configured by environment only:
+`REQBOT_MCP_CODES` (access codes as `name=code,name2=code2`, each code at least 24
+characters, for a container; saved codes live in `~/.config/reqbot/mcp_codes.json`,
+hashed, created by `reqbot mcp-code add`), `REQBOT_MCP_MAX_CONCURRENT` (calls at
+once, default 4, 1 to 32) and `REQBOT_MCP_LOG` (the request log, default
+`<processed_dir>/.mcp/requests.jsonl`).
+
 HTTP request defaults are defined by the API request models: for example,
 `/api/ask` defaults to `top_k=20` and `min_score=0.02` even if those file settings
 have changed. MCP and CLI commands also have some fixed per-command defaults;

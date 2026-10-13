@@ -43,7 +43,8 @@ COPY services/ ./services/
 COPY frontend/__init__.py ./frontend/__init__.py
 COPY --from=frontend /frontend/dist ./frontend/dist
 
-RUN pip install --no-cache-dir .
+# The mcp extra rides along so `reqbot mcp --http` (the network door) works in the container; it is off unless started.
+RUN pip install --no-cache-dir ".[mcp]"
 
 EXPOSE 8000
 CMD ["reqbot", "serve", "--host", "0.0.0.0", "--port", "8000"]

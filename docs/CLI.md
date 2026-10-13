@@ -40,7 +40,8 @@ Unless listed otherwise, service URL flags default to the effective
 | `token` | Create, show or replace the admin access code that lets a request start or manage jobs. |
 | `remove` | Remove a document from the library: its run folders go to a trash folder and its rows leave search. Needs `--yes`. |
 | `serve` | Start the HTTP API and built web GUI, and run queued jobs in the background. |
-| `mcp` | Start a local stdio MCP server. |
+| `mcp` | Start the MCP server: stdio for a local AI client, or `--http` to serve other machines. |
+| `mcp-code` | Create, list or revoke the access codes of the network MCP door. |
 | `setup` | Deprecated alias for `init`. |
 
 ## init and setup
@@ -355,9 +356,14 @@ under `/api/`. A frontend build is optional for API use. The server also runs
 the job queue in a background thread (see [jobs](#jobs-and-token)); `--no-runner`
 turns that off when a separate `reqbot jobs worker` does the work.
 
-`reqbot mcp` starts the stdio server and has no transport, host, or port flags.
-It requires the `mcp` extra and is normally launched by an AI client.
-See [Connecting AI tools](AI_TOOLS.md).
+`reqbot mcp` starts the stdio server and is normally launched by an AI client.
+With `--http` it serves the same read-only tools over HTTP to other machines:
+`--host` (default `127.0.0.1`), `--port` (default 8765) and `--allow-host NAME`
+(repeatable; the host names callers use, other `Host` headers are refused). It
+refuses to start until an access code exists: `reqbot mcp-code add NAME` creates
+one and shows it once, `reqbot mcp-code list` shows names and dates, and
+`reqbot mcp-code revoke NAME` cuts one tool off at its next request. Both need the
+`mcp` extra. See [Connecting AI tools](AI_TOOLS.md#serve-the-library-to-other-machines).
 
 ## Interactive shell
 

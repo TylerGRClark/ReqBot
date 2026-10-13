@@ -3,19 +3,25 @@
 [Documentation index](README.md) · [Deployment](DEPLOYMENT.md) · [API](API.md)
 
 ReqBot exposes your library through a Model Context Protocol (MCP) server.
-A compatible AI client launches `reqbot mcp` as a local subprocess and exchanges
-tool calls over **stdio**. The server shares ReqBot's configuration and services.
+There are two ways to connect:
 
-There is no HTTP/SSE/streamable-HTTP MCP endpoint in the current implementation.
-`reqbot serve` starts the HTTP API, not the MCP server. A client that only
-accepts a remote MCP URL cannot connect directly to this stdio server.
+- **Stdio, on the ReqBot machine.** A compatible AI client launches `reqbot mcp`
+  as a local subprocess and exchanges tool calls over **stdio**. The server shares
+  ReqBot's configuration and services. This is the rest of this page.
+- **The network door, for other machines.** `reqbot mcp --http` serves the same
+  seven read-only tools over HTTP to AI tools elsewhere on your network, each with
+  its own revocable access code. It is off unless you start it. See
+  [Serve the library to other machines](#serve-the-library-to-other-machines).
+
+`reqbot serve` starts the web page and HTTP API, not the MCP server.
 
 ## Prepare the environment
 
 On the machine where the client will launch the subprocess, install ReqBot from
 a source checkout with the optional MCP dependency, in a virtual environment
 as described in [Deployment](DEPLOYMENT.md#source-installation). The Docker image
-installs only the base package, so it does not include the MCP server.
+includes the MCP extra, so `reqbot mcp --http` works in the container (it is
+not started unless you run it).
 
 ```bash
 pip install ".[mcp]"
@@ -128,6 +134,42 @@ The external client can independently send returned quotes/context to its own
 model provider. Keeping ReqBot's synthesis backend local or disabled does not
 control that client's data handling. Select the client/provider to match your
 document requirements.
+
+## Serve the library to other machines
+
+`reqbot mcp --http` is the network door: the same seven read-only tools, served
+over HTTP at `/mcp`, for an AI tool that runs on another machine (an assistant a
+colleague uses, a company's own LLM front end). It is meant for a trusted network or
+behind your own gateway; read the list below before exposing it.
+
+```bash
+reqbot mcp-code add claude-desktop-anna     # shows the code once
+reqbot mcp --http --host 0.0.0.0 --port 8765 --allow-host reqbot.example.org
+reqbot mcp-code list                        # names and dates, never the codes
+reqbot mcp-code revoke claude-desktop-anna  # cut one tool off; no restart needed
+```
+
+The connecting tool sends its code on every request as
+`Authorization: Bearer <code>` to `http://<server>:8765/mcp` (streamable HTTP,
+stateless JSON). Without a valid code there is no answer, and the door refuses to
+start when no code exists.
+
+What the door does and does not do:
+
+| | |
+|---|---|
+| **Read-only** | Only `get_status`, `list_documents`, `search_requirements`, `trace_requirement`, `compare_documents`, `map_evidence` and `generate_checklist`. Nothing can add, change or remove a document, start a job or read a setting. A leaked code can only read what these tools return. |
+| **One code per tool** | Each connected tool has its own named code, stored only as a hash. Revoking one stops it on its next request. These codes are separate from the admin code (`reqbot token`) and open no admin route. |
+| **No synthesis** | `map_evidence` has no `synthesize` argument here, and search never writes an answer. The connected AI tool writes its own answer from the returned quotes and citations. Those quotes go to whichever model that tool uses: choose it to match your document handling rules. |
+| **Nothing about the server's layout** | `get_status` says only what is reachable and how many documents and requirements there are (no addresses, folders or model names); `list_documents` leaves out folders; the payload fields that name the models (`extraction_model`, `embedding_model`, `embedding_dim`), a warning that names them, and the model named in a draft question's note are removed from every answer; an error that would name an address or a folder is replaced by a short sentence and a reference. |
+| **A cap on simultaneous calls** | Each search costs two language-model calls and an embedding on your model machine. At most 4 calls run at once (`REQBOT_MCP_MAX_CONCURRENT`, 1 to 32); a call that cannot start within 30 seconds is told the server is busy. A slow call does not stop others. |
+| **A log of every call** | One JSON line per call in `<processed_dir>/.mcp/requests.jsonl` (override with `REQBOT_MCP_LOG`): time, the code's name, tool, shortened arguments (so the question text is kept), success, duration, and for a failure the real error text. The file is private to its owner and rotates once at 5 MB. |
+| **Plain HTTP** | TLS and any company sign-in belong to the gateway in front of it: [Deployment](DEPLOYMENT.md#serving-the-mcp-door). `--allow-host` names the host name callers use; other `Host` headers are refused. |
+
+For a container with no persistent config folder, codes can be supplied as
+`REQBOT_MCP_CODES="name=code,name2=code2"` (each code at least 24 random
+characters). Codes in the environment cannot be revoked with the command; remove
+them there and restart.
 
 ## Troubleshooting
 

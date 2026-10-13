@@ -12,7 +12,7 @@
 
 ## 2. Where things stand
 
-The web page reads. Every command that writes, or runs for more than a few seconds, is CLI-only. MCP is stdio only: a subprocess the user's own AI client starts on the user's own machine (`docs/AI_TOOLS.md`).
+The web page reads. Every command that writes, or runs for more than a few seconds, is CLI-only. MCP over stdio is a subprocess the user's own AI client starts on the user's own machine; the network door for other machines (stage 2a, 2026-10-13) is `reqbot mcp --http` (`docs/AI_TOOLS.md`).
 
 | CLI command | In the web page today | Plan |
 |---|---|---|
@@ -48,6 +48,8 @@ Rules:
 - **Not planned here:** built-in accounts, per-document permissions (everyone sees every document), and per-user private workspaces.
 
 ## 4. Network MCP (stage 2)
+
+**Built 2026-10-13 as stage 2a, for a trusted network (owner: "option 1").** `reqbot mcp --http`: the seven read-only tools over stateless JSON HTTP at `/mcp`; named, revocable access codes (`reqbot mcp-code`, hashed, separate from the admin code); tools run in worker threads with a cap on simultaneous calls; no synthesis; no addresses, folders or model names in an answer or an error; a request log; `--allow-host`; refuses to start without a code; the `mcp` range is `>=1.28.0,<2` (2.x renames the server class); the image includes the extra. **Not built (stage 2b, waits on a customer environment):** sign-in through the customer's identity provider (OIDC/JWT tokens, the SDK's token verifier), a reader role shared with the web page, per-code limits and a TLS recipe beyond the proxy example in `docs/DEPLOYMENT.md`.
 
 Today a user's machine would need a full ReqBot install, direct reach to Qdrant and the model machine, and a copy of the processed files. The installed MCP SDK already has network transports and an auth module, so this is wiring:
 
