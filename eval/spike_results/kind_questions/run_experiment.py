@@ -12,6 +12,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import kind_questions as kq  # noqa: E402
+import round3_checks  # noqa: E402, F401  (registers prompt v5)
 from build_rows import load_rows  # noqa: E402
 from core import config  # noqa: E402
 from services import audit_questions as aq  # noqa: E402
