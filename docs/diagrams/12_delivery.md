@@ -18,8 +18,8 @@ flowchart TD
     ENV --> MCP
 
     subgraph FILE["What an export contains"]
-        X1["Spreadsheet: one sheet, grouped headers,<br/>frozen panes, a Status dropdown,<br/>rows with a hint or a review reason shaded<br/>the possible-missed block under the table, with a banner"]
-        X2["CSV: columns in the order<br/>locate, ask, record, verify, trace"]
+        X1["Spreadsheet: one sheet, grouped headers,<br/>frozen panes, a Status dropdown,<br/>a small Review marker on rows with a hint or a review reason,<br/>alternating stripes, row height set by the requirement,<br/>question, hints and notes (never the passage),<br/>the possible-missed block under the table, with a banner"]
+        X2["CSV: every column with the stored values,<br/>in the order locate, ask, record, verify, trace"]
         X3["Every cell that would start a formula<br/>(= + - @) is given a leading quote"]
         X4["In the spreadsheet, low confidence is left out as a reason<br/>(true of nearly every row, so it says nothing)"]
     end

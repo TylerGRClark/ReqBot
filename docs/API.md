@@ -131,8 +131,10 @@ result is a flattened requirement payload with `score`, normally including
 `citation`, `description`, page/chunk provenance, section paths, tags, type, and
 confidence. `citation` is the reference to show: the label the checklist gives the
 row, read from the document when the index was built (a paragraph number, a table
-such as `Table 3.1`, `Front matter`; `(inferred)` marks a paragraph number worked
-out from the text before the quote). It is empty when the index was built without
+such as `Table 3.1`, `Front matter` for text ahead of the first numbered paragraph;
+`(inferred)` marks a paragraph number worked out from the text before the quote). The
+stored string is `Front matter`; the web pages, the spreadsheet and the Markdown
+export show it as "Opening pages". It is empty when the index was built without
 one or the document has nothing to cite, and then `source_ref` is the one to show.
 `source_ref` is the reference as the extractor recorded it and is never replaced:
 Evidence groups by it and the index embeds it.

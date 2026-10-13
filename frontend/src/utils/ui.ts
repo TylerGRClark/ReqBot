@@ -22,13 +22,17 @@ export function docValue(doc: { source_pdf?: string; doc_key: string }): string 
 
 /**
  * The reference a result shows: the citation read from the document when the index was
- * built (a paragraph number, "Table 3.1", "Front matter", marked "(inferred)" when it was
- * worked out from the text before the quote), else the source_ref the extractor recorded.
- * Mirrors core/display.py's requirement_citation. source_ref itself is never replaced:
- * Evidence groups by it. Accepts null as well as undefined (EvidenceRequirement fields).
+ * built (a paragraph number, "Table 3.1", "Front matter" shown as "Opening pages", marked
+ * "(inferred)" when it was worked out from the text before the quote), else the source_ref
+ * the extractor recorded. Mirrors core/display.py's requirement_citation. source_ref itself
+ * is never replaced: Evidence groups by it. Accepts null as well as undefined
+ * (EvidenceRequirement fields).
  */
 export function refLabel(item: { citation?: string | null; source_ref?: string | null }): string {
-  return (item.citation || item.source_ref || '').trim()
+  const label = (item.citation || item.source_ref || '').trim()
+  // The stored label for text ahead of the first numbered paragraph is "Front matter" (the
+  // index and the kind rules hold it); readers see the plainer name. Mirrors core/display.py.
+  return label === 'Front matter' ? 'Opening pages' : label
 }
 
 /**

@@ -1,5 +1,5 @@
 import type { ChecklistItem } from '../api/types'
-import { formatPath } from '../utils/ui'
+import { formatPath, refLabel } from '../utils/ui'
 
 interface Props {
   items: ChecklistItem[]
@@ -92,7 +92,7 @@ export default function ChecklistTable({ items }: Props) {
             return (
               <tr key={item.checklist_item_id} className="border-b border-gray-100 last:border-b-0">
                 {/* Locate */}
-                <td className={cell}>{item.citation || item.source_ref || '—'}</td>
+                <td className={cell}>{refLabel(item) || '—'}</td>
                 <td className={cell}>{item.section_heading || formatPath(item.section_title_path)}</td>
                 <td className={`${cell} whitespace-nowrap`}>{formatPageRefs(item.page_refs)}</td>
                 <td className={cell}>{item.applies_to || <span className="text-gray-400">—</span>}</td>

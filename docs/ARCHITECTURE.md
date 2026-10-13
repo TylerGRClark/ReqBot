@@ -146,7 +146,7 @@ flowchart TD
     C0 -->|"in a table"| C1["Cited by the table caption;<br/>no responsible party read from the heading"]
     C0 -->|"a numbered paragraph"| C2["Cited by its paragraph number;<br/>party from the numbered ancestors"]
     C0 -->|"an unnumbered paragraph"| C3["Cited by the nearest number before it,<br/>marked inferred; party from the section path"]
-    C0 -->|"cover pages, or a template"| C4["Cited as Front matter,<br/>or by the figure caption"]
+    C0 -->|"cover pages, or a template"| C4["Cited as Front matter (shown as Opening pages),<br/>or by the figure caption"]
 
     C1 --> Y
     C2 --> Y
@@ -330,7 +330,7 @@ become a default retrieval step.
 source chunks and vectors. Indexed payloads retain embedding model/dimension
 provenance; result warnings help identify a corpus built with another model.
 Each requirement payload also carries `citation`, the reference the checklist gives
-that row (a paragraph number, a table such as `Table 3.1`, `Front matter`), read from
+that row (a paragraph number, a table such as `Table 3.1`, `Front matter`, which readers see as "Opening pages"), read from
 the document's own text when the index is built by the same function the checklist
 uses (`services/checklist_service.py`, passed to the indexer by the CLI's indexing commands and by the direct scripts' `--index` path). It
 sits beside `source_ref` and never replaces it: Evidence groups by `source_ref`, and

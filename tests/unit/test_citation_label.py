@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from core.display import requirement_citation
+from core.display import citation_label, requirement_citation
 from pipeline.embed_and_index import build_embedding_text, build_payload
 from pipeline.embed_and_index import run as embed_and_index_run
 from services.checklist_service import generate, requirement_citations
@@ -86,6 +86,18 @@ def test_a_reader_shows_the_citation_and_falls_back_to_source_ref():
     assert requirement_citation({"citation": "", "source_ref": "3.4.2"}) == "3.4.2"
     assert requirement_citation({"source_ref": " 3.4.2 "}) == "3.4.2"
     assert requirement_citation({"citation": None, "source_ref": None}) == "" and requirement_citation(None) == ""
+
+
+def test_a_reader_is_shown_opening_pages_for_the_stored_front_matter_label():
+    assert requirement_citation({"citation": "Front matter", "source_ref": ""}) == "Opening pages"
+    assert requirement_citation({"citation": "", "source_ref": "Front matter"}) == "Opening pages"
+    assert citation_label(" Front matter ") == "Opening pages"
+    # nothing else is renamed, and the stored string is untouched in the record
+    for label in ("3.4.2", "Table 3.1", "Figure A3.1", "3.4.4.3 (inferred)", "Front matter of the manual", ""):
+        assert citation_label(label) == label
+    record = {"citation": "Front matter"}
+    requirement_citation(record)
+    assert record == {"citation": "Front matter"}
 
 
 def test_payload_carries_the_citation_and_the_embedded_text_does_not_change():
