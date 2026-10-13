@@ -8,6 +8,7 @@ All display and export logic lives here and in cli/reqbot.py (WP-21.5).
 import csv
 import io
 import json
+from datetime import datetime
 
 # CSV column order: locate → ask → record → verify → trace
 _CSV_COLUMNS = [
@@ -191,28 +192,59 @@ def _md_item(item: dict, index: int) -> str:
     return "\n".join(lines)
 
 
+# Rows of the workbook: a title and a subtitle, then the column groups and the column headers, then the data
+_XLSX_GROUP_ROW = 3
+_XLSX_HEADER_ROW = 4
+_XLSX_FIRST_DATA_ROW = 5
+_STATUS_COL = 9
+_CONF_COL = 13
+
+
+def _xlsx_title(checklist: dict) -> str:
+    """The document's name for the sheet: the PDF it was read from, else its id (the same fallback the Markdown export uses)."""
+    doc = checklist.get("document") or {}
+    return doc.get("source_pdf") or doc.get("document_id") or "Unknown document"
+
+
+def _when(stamp: object) -> str:
+    """"2026-10-11 15:04 UTC" from the envelope's ISO time; the text as it is when it cannot be read."""
+    text = str(stamp or "")
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return text
+    suffix = " UTC" if parsed.utcoffset() is not None and parsed.utcoffset().total_seconds() == 0 else ""
+    return parsed.strftime("%Y-%m-%d %H:%M") + suffix
+
+
 def to_xlsx(checklist: dict) -> bytes:
     """Return the checklist items as an Excel workbook (XLSX) in bytes.
+
+    Layout (rows): 1 the document's name, 2 a line of facts (profile, when, how many rows, how many are shaded, how many possible missed), 3 the five column groups (Locate, Ask,
+    Record, Verify, Trace), each in its own color, 4 the column headers in the lighter shade of the group's color, then one row per item, then the possible-missed block.
+    The columns and their order are the same as before; the Status column is a drop-down and is colored by what is chosen.
 
     Requires openpyxl (approved WP-23.2 dependency).
     """
     from openpyxl import Workbook
-    from openpyxl.styles import Alignment, Font, PatternFill
+    from openpyxl.formatting.rule import CellIsRule
+    from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
     from openpyxl.utils import get_column_letter
     from openpyxl.worksheet.datavalidation import DataValidation
+    from openpyxl.worksheet.page import PageMargins
 
     # Column definitions: (display_header, item_key, col_width, wrap_text)
     _COLS = [
         ("Ref",            "source_ref",            14, False),
-        ("Section",        "section_title_path",     28, False),
-        ("Pages",          "page_refs",               9, False),
-        ("Applies to",     "applies_to",             24, True),
+        ("Section",        "section_title_path",     26, False),
+        ("Pages",          "page_refs",               8, False),
+        ("Applies to",     "applies_to",             22, True),
         ("Parent para.",   "parent_text",            30, True),
-        ("Requirement",    "source_quote",            36, True),
-        ("Passage",        "passage",                 52, True),
-        ("Audit Question (draft)", "audit_question",          22, True),
-        ("Status",         "status",                  15, False),
-        ("Notes",          "assessor_notes",          22, True),
+        ("Requirement",    "source_quote",            44, True),
+        ("Passage",        "passage",                 56, True),
+        ("Audit Question (draft)", "audit_question",  46, True),
+        ("Status",         "status",                  16, False),
+        ("Notes",          "assessor_notes",          30, True),
         ("Check",          "item_flags",              20, False),
         ("Reasons",        "review_reasons",          22, False),
         ("Conf.",          "confidence",               7, False),
@@ -221,44 +253,75 @@ def to_xlsx(checklist: dict) -> bytes:
         ("Tags",           "domain_tags",             20, False),
     ]
 
-    # Column groups: (label, first_col_1based, last_col_1based)
+    # Column groups: (label, first_col_1based, last_col_1based, band color, header tint). White on the band and dark text on the tint both read at 4.5:1 or better.
     _GROUPS = [
-        ("Locate",  1,  5),
-        ("Ask",     6,  8),
-        ("Record",  9, 10),
-        ("Verify", 11, 13),
-        ("Trace",  14, 16),
+        ("Locate",  1,  5, "1D4ED8", "DBEAFE"),
+        ("Ask",     6,  8, "047857", "D1FAE5"),
+        ("Record",  9, 10, "B45309", "FEF3C7"),
+        ("Verify", 11, 13, "6D28D9", "EDE9FE"),
+        ("Trace",  14, 16, "4B5563", "E5E7EB"),
     ]
 
-    _GROUP_FILL = PatternFill("solid", fgColor="E2E8F0")
+    face = "Calibri"
+    ink, soft = "111827", "4B5563"
+    hairline = Side(style="thin", color="D1D5DB")
+    box = Border(left=hairline, right=hairline, top=hairline, bottom=hairline)
     _FLAGGED_FILL = PatternFill("solid", fgColor="FFFBEB")
-    _HEADER_FONT = Font(bold=True, size=9)
+
+    items_all = checklist.get("items", [])
+    missed = checklist.get("possible_missed", [])
+    title = _xlsx_title(checklist)
 
     wb = Workbook()
     ws = wb.active
     ws.title = "Checklist"
+    ws.sheet_view.showGridLines = False
+    ws.sheet_properties.tabColor = "1D4ED8"
+    wb.properties.title = f"Audit checklist: {title}"
+    wb.properties.creator = "ReqBot"
 
-    # Row 1: group header row
-    for label, c_start, c_end in _GROUPS:
-        cell = ws.cell(row=1, column=c_start, value=label)
-        cell.font = _HEADER_FONT
-        cell.fill = _GROUP_FILL
+    # Rows 1 and 2: which document this is, and the facts about the sheet
+    ws.cell(row=1, column=1, value=_csv_safe(f"Audit checklist: {title}")).font = Font(name=face, size=16, bold=True, color=ink)
+    ws.row_dimensions[1].height = 26
+    ws.cell(row=1, column=1).alignment = Alignment(vertical="center")
+    facts = []
+    if checklist.get("profile"):
+        facts.append(f"Profile: {checklist['profile']}")
+    if checklist.get("generated_at"):
+        facts.append(f"Generated: {_when(checklist['generated_at'])}")
+    facts.append(f"{len(items_all)} item{'' if len(items_all) == 1 else 's'}")
+    shaded = sum(1 for i in items_all if _needs_attention(i))
+    if shaded:
+        facts.append(f"{shaded} shaded for a second look")
+    if missed:
+        facts.append(f"{len(missed)} possible missed, listed at the bottom")
+    ws.cell(row=2, column=1, value=_csv_safe(" · ".join(facts))).font = Font(name=face, size=10, color=soft)
+    ws.row_dimensions[2].height = 16
+
+    # Row 3: the column groups, each band in its own color
+    for label, c_start, c_end, band, _tint in _GROUPS:
+        for col in range(c_start, c_end + 1):
+            ws.cell(row=_XLSX_GROUP_ROW, column=col).fill = PatternFill("solid", fgColor=band)
+        cell = ws.cell(row=_XLSX_GROUP_ROW, column=c_start, value=label)
+        cell.font = Font(name=face, size=10, bold=True, color="FFFFFF")
         cell.alignment = Alignment(horizontal="center", vertical="center")
         if c_start != c_end:
-            ws.merge_cells(
-                start_row=1, start_column=c_start,
-                end_row=1, end_column=c_end,
-            )
+            ws.merge_cells(start_row=_XLSX_GROUP_ROW, start_column=c_start, end_row=_XLSX_GROUP_ROW, end_column=c_end)
+    ws.row_dimensions[_XLSX_GROUP_ROW].height = 18
 
-    # Row 2: column header row
+    # Row 4: the column headers, in the lighter shade of their group's color
+    tint_of = {col: tint for _l, c_start, c_end, _b, tint in _GROUPS for col in range(c_start, c_end + 1)}
+    band_of = {col: band for _l, c_start, c_end, band, _t in _GROUPS for col in range(c_start, c_end + 1)}
     for col_idx, (header, _, _, _) in enumerate(_COLS, start=1):
-        cell = ws.cell(row=2, column=col_idx, value=header)
-        cell.font = _HEADER_FONT
-        cell.fill = _GROUP_FILL
-        cell.alignment = Alignment(horizontal="left", vertical="center")
+        cell = ws.cell(row=_XLSX_HEADER_ROW, column=col_idx, value=header)
+        cell.font = Font(name=face, size=10, bold=True, color=ink)
+        cell.fill = PatternFill("solid", fgColor=tint_of[col_idx])
+        cell.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+        cell.border = Border(left=hairline, right=hairline, top=hairline, bottom=Side(style="medium", color=band_of[col_idx]))
+    ws.row_dimensions[_XLSX_HEADER_ROW].height = 30
 
-    # Freeze panes below both header rows, after Locate group (3 cols)
-    ws.freeze_panes = "D3"
+    # Freeze below the headers, after the Locate group's first three columns (the reference stays in view)
+    ws.freeze_panes = f"D{_XLSX_FIRST_DATA_ROW}"
 
     # Status column data validation (dropdown)
     dv = DataValidation(
@@ -273,7 +336,6 @@ def to_xlsx(checklist: dict) -> bytes:
         ws.column_dimensions[get_column_letter(col_idx)].width = width
 
     # Tags and confidence are no longer assigned by the pipeline: hide those two columns (kept, so positions do not move) unless some row has a value (older runs do)
-    items_all = checklist.get("items", [])
     for header, key, present in (("Conf.", "confidence", lambda v: v is not None), ("Tags", "domain_tags", bool)):
         if not any(present(i.get(key)) for i in items_all):
             ws.column_dimensions[get_column_letter(next(n for n, c in enumerate(_COLS, start=1) if c[0] == header))].hidden = True
@@ -306,35 +368,62 @@ def to_xlsx(checklist: dict) -> bytes:
         row_num = ws.max_row + 1
         for col_idx, (_, _, _, wrap) in enumerate(_COLS, start=1):
             cell = ws.cell(row=row_num, column=col_idx, value=values[col_idx - 1])
-            cell.alignment = Alignment(vertical="top", wrap_text=wrap)
+            cell.font = Font(name=face, size=10, bold=(col_idx == 1), color=ink)
+            cell.alignment = Alignment(vertical="top", wrap_text=wrap, horizontal="center" if col_idx == _STATUS_COL else None)
+            cell.border = box
             if row_fill:
                 cell.fill = row_fill
 
         # Confidence as percentage (value is 0–1 float)
-        ws.cell(row=row_num, column=13).number_format = "0%"
+        ws.cell(row=row_num, column=_CONF_COL).number_format = "0%"
         # Status: register with data validation
-        dv.add(ws.cell(row=row_num, column=9))
+        dv.add(ws.cell(row=row_num, column=_STATUS_COL))
 
-    for item in checklist.get("items", []):
+    for item in items_all:
         write_item(item)
 
     # Auto-filter covers the extracted rows only; the possible-missed section below is separate
     last_item_row = ws.max_row
 
-    missed = checklist.get("possible_missed", [])
     if missed:
         banner_row = ws.max_row + 2
         banner = ws.cell(
             row=banner_row, column=1,
             value=f"POSSIBLE MISSED REQUIREMENTS ({len(missed)}): found in the document text but not extracted. Confirm each; they are not counted above.",
         )
-        banner.font = Font(bold=True, size=10)
+        banner.font = Font(name=face, size=10, bold=True, color="92400E")
+        banner.fill = PatternFill("solid", fgColor="FEF3C7")
+        banner.alignment = Alignment(vertical="center")
         ws.merge_cells(start_row=banner_row, start_column=1, end_row=banner_row, end_column=len(_COLS))
+        ws.row_dimensions[banner_row].height = 24
         for item in missed:
             write_item(item)
 
+    # The Status cell takes the color of what was chosen (not-started stays plain)
+    status_range = f"{get_column_letter(_STATUS_COL)}{_XLSX_FIRST_DATA_ROW}:{get_column_letter(_STATUS_COL)}{max(ws.max_row, _XLSX_FIRST_DATA_ROW)}"
+    for value, fill, ink_color in (
+        ("compliant", "DCFCE7", "166534"),
+        ("non-compliant", "FEE2E2", "991B1B"),
+        ("in-progress", "DBEAFE", "1E40AF"),
+        ("not-applicable", "E5E7EB", "4B5563"),
+    ):
+        ws.conditional_formatting.add(
+            status_range,
+            CellIsRule(operator="equal", formula=[f'"{value}"'], fill=PatternFill(start_color=fill, end_color=fill, fill_type="solid"), font=Font(color=ink_color, bold=True)),
+        )
+
     # Auto-filter: set after rows are written so range covers all data rows
-    ws.auto_filter.ref = f"A2:{get_column_letter(len(_COLS))}{last_item_row}"
+    ws.auto_filter.ref = f"A{_XLSX_HEADER_ROW}:{get_column_letter(len(_COLS))}{max(last_item_row, _XLSX_HEADER_ROW)}"
+
+    # Printing: landscape letter, the group and header rows repeat on every page, the document's name and the page number sit in the footer
+    ws.page_setup.orientation = "landscape"
+    ws.page_setup.paperSize = ws.PAPERSIZE_LETTER
+    ws.print_title_rows = f"{_XLSX_GROUP_ROW}:{_XLSX_HEADER_ROW}"
+    ws.page_margins = PageMargins(left=0.4, right=0.4, top=0.6, bottom=0.6)
+    ws.oddFooter.left.text = title[:100].replace("&", "&&")  # an ampersand is a code in a header or footer
+    ws.oddFooter.left.size = 8
+    ws.oddFooter.right.text = "Page &P of &N"
+    ws.oddFooter.right.size = 8
 
     buf = io.BytesIO()
     wb.save(buf)

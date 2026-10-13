@@ -57,7 +57,7 @@ def test_xlsx_item_count_matches_checklist(processed_dir):
     raw = to_xlsx(checklist)
     wb = openpyxl.load_workbook(io.BytesIO(raw))
     ws = wb.active
-    data_rows = ws.max_row - 2  # two header rows
+    data_rows = ws.max_row - 4  # the title, facts and two header rows
     assert data_rows == len(checklist["items"])
 
 

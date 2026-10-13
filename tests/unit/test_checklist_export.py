@@ -365,15 +365,15 @@ def test_to_xlsx_sheet_name():
     assert "Checklist" in wb.sheetnames
 
 
-def test_to_xlsx_group_headers_in_row_1():
+def test_to_xlsx_group_headers_in_row_3():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    row1_values = [ws.cell(row=1, column=c).value for c in range(1, 17)]
-    assert "Locate" in row1_values
-    assert "Ask" in row1_values
-    assert "Record" in row1_values
-    assert "Verify" in row1_values
-    assert "Trace" in row1_values
+    group_values = [ws.cell(row=3, column=c).value for c in range(1, 17)]  # rows 1 and 2 are the document's name and the facts about the sheet
+    assert "Locate" in group_values
+    assert "Ask" in group_values
+    assert "Record" in group_values
+    assert "Verify" in group_values
+    assert "Trace" in group_values
 
 
 def test_to_xlsx_column_order():
@@ -386,29 +386,28 @@ def test_to_xlsx_column_order():
     ]
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    actual = [ws.cell(row=2, column=c).value for c in range(1, 17)]
+    actual = [ws.cell(row=4, column=c).value for c in range(1, 17)]
     assert actual == expected_headers
 
 
 def test_to_xlsx_freeze_panes():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    assert ws.freeze_panes == "D3"
+    assert ws.freeze_panes == "D5"
 
 
 def test_to_xlsx_auto_filter_covers_data_rows():
-    # ENVELOPE has 2 items → 2 header rows + 2 data rows = max_row 4; filter must end at row 4
+    # ENVELOPE has 2 items → 4 title and header rows + 2 data rows = max_row 6; the filter starts at the column headers (row 4) and must end at row 6
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    assert ws.auto_filter.ref is not None
-    assert ws.auto_filter.ref.endswith("4"), f"expected filter to row 4, got {ws.auto_filter.ref}"
+    assert ws.auto_filter.ref == "A4:P6", f"expected the filter on A4:P6, got {ws.auto_filter.ref}"
 
 
-def test_to_xlsx_auto_filter_empty_checklist_ends_at_row_2():
+def test_to_xlsx_auto_filter_empty_checklist_is_the_header_row_alone():
     wb = _load_xlsx(to_xlsx(EMPTY_ENVELOPE))
     ws = wb["Checklist"]
     assert ws.auto_filter.ref is not None
-    assert ws.auto_filter.ref.endswith("2"), f"expected filter to row 2, got {ws.auto_filter.ref}"
+    assert ws.auto_filter.ref == "A4:P4", f"expected the filter on the header row alone, got {ws.auto_filter.ref}"
 
 
 def test_to_xlsx_status_data_validation_exists():
@@ -420,14 +419,14 @@ def test_to_xlsx_status_data_validation_exists():
 def test_to_xlsx_row_count():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    # 2 header rows + 2 data rows
-    assert ws.max_row == 4
+    # 4 title and header rows + 2 data rows
+    assert ws.max_row == 6
 
 
 def test_to_xlsx_source_quote_present():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    all_values = [ws.cell(row=r, column=6).value for r in range(3, ws.max_row + 1)]
+    all_values = [ws.cell(row=r, column=6).value for r in range(5, ws.max_row + 1)]
     assert any("enforce MFA" in str(v) for v in all_values if v)
 
 
@@ -435,15 +434,15 @@ def test_to_xlsx_empty_items_no_crash():
     result = to_xlsx(EMPTY_ENVELOPE)
     wb = _load_xlsx(result)
     ws = wb["Checklist"]
-    assert ws.max_row == 2  # only 2 header rows
+    assert ws.max_row == 4  # only the title and header rows
 
 
 def test_to_xlsx_flagged_row_has_fill():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    # REVIEW_ITEM is second data row (row 4); COMPLETE_ITEM is row 3
-    flagged_fill = ws.cell(row=4, column=1).fill
-    clean_fill = ws.cell(row=3, column=1).fill
+    # REVIEW_ITEM is second data row (row 6); COMPLETE_ITEM is row 5
+    flagged_fill = ws.cell(row=6, column=1).fill
+    clean_fill = ws.cell(row=5, column=1).fill
     assert flagged_fill.patternType == "solid"
     assert flagged_fill.fgColor.rgb != clean_fill.fgColor.rgb
 
@@ -451,7 +450,7 @@ def test_to_xlsx_flagged_row_has_fill():
 def test_to_xlsx_confidence_percentage_format():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    conf_cell = ws.cell(row=3, column=13)
+    conf_cell = ws.cell(row=5, column=13)
     assert conf_cell.number_format == "0%"
 
 
@@ -460,7 +459,7 @@ def test_to_xlsx_formula_injection_protection():
     checklist = {**EMPTY_ENVELOPE, "items": [item]}
     wb = _load_xlsx(to_xlsx(checklist))
     ws = wb["Checklist"]
-    value = ws.cell(row=3, column=6).value
+    value = ws.cell(row=5, column=6).value
     assert value is not None
     assert str(value).startswith("'")
 
@@ -470,7 +469,7 @@ def test_to_xlsx_sparse_item_no_crash():
     checklist = {**EMPTY_ENVELOPE, "items": [sparse]}
     result = to_xlsx(checklist)
     wb = _load_xlsx(result)
-    assert wb["Checklist"].max_row == 3
+    assert wb["Checklist"].max_row == 5
 
 
 def test_audit_layout_fields_reach_every_export_format():
@@ -482,8 +481,8 @@ def test_audit_layout_fields_reach_every_export_format():
     md = to_markdown(checklist)
     assert "**Applies to:** AF/A3" in md and "**Parent paragraph:** 2.17 MAJCOM/DRUs." in md and ">> The requirement. <<" in md and "**Check:** list_item, no_passage" in md
     ws = _load_xlsx(to_xlsx(checklist))["Checklist"]
-    assert [ws.cell(row=3, column=c).value for c in (4, 5, 7, 11)] == ["AF/A3", "2.17 MAJCOM/DRUs.", "Lead-in:\n>> The requirement. <<", "list_item; no_passage"]
-    status_cell = ws.cell(row=3, column=9)
+    assert [ws.cell(row=5, column=c).value for c in (4, 5, 7, 11)] == ["AF/A3", "2.17 MAJCOM/DRUs.", "Lead-in:\n>> The requirement. <<", "list_item; no_passage"]
+    status_cell = ws.cell(row=5, column=9)
     assert status_cell.value == item["status"] and any(status_cell.coordinate in dv.sqref for dv in ws.data_validations.dataValidation)
 
 
@@ -491,18 +490,18 @@ def test_old_items_without_the_new_fields_still_export():
     old = {k: v for k, v in COMPLETE_ITEM.items() if k not in ("applies_to", "passage", "item_flags")}
     checklist = {**EMPTY_ENVELOPE, "items": [old]}
     assert "source_quote" in to_csv(checklist) and "Checklist" in to_markdown(checklist)
-    assert _load_xlsx(to_xlsx(checklist))["Checklist"].max_row == 3
+    assert _load_xlsx(to_xlsx(checklist))["Checklist"].max_row == 5
 
 
 def test_sheet_shades_only_rows_with_a_specific_reason_not_low_confidence_alone():
     only_confidence = {**COMPLETE_ITEM, "requires_human_review": True, "review_reasons": ["low-confidence"], "item_flags": []}
     flagged = {**COMPLETE_ITEM, "checklist_item_id": "CHK-2", "requires_human_review": True, "review_reasons": ["low-confidence"], "item_flags": ["table_fragment"]}
     ws = _load_xlsx(to_xlsx({**EMPTY_ENVELOPE, "items": [only_confidence, flagged]}))["Checklist"]
-    assert ws.cell(row=3, column=1).fill.patternType is None
-    assert ws.cell(row=4, column=1).fill.patternType == "solid"
-    headers = [c.value for c in ws[2]]
+    assert ws.cell(row=5, column=1).fill.patternType is None
+    assert ws.cell(row=6, column=1).fill.patternType == "solid"
+    headers = [c.value for c in ws[4]]
     assert "Flag" not in headers  # a column that is Yes on every row says nothing
-    assert "low-confidence" not in str(ws.cell(row=3, column=12).value)
+    assert "low-confidence" not in str(ws.cell(row=5, column=12).value)
 
 
 def test_the_citation_is_what_the_sheet_and_markdown_show_in_the_ref_position():
@@ -511,7 +510,7 @@ def test_the_citation_is_what_the_sheet_and_markdown_show_in_the_ref_position():
     row = next(csv.DictReader(io.StringIO(to_csv(checklist))))
     assert row["source_ref"] == "(T-2)" and row["citation"] == "3.4.4.3 (inferred)"  # the extracted value is never replaced in the data
     assert "**Source Ref:** 3.4.4.3 (inferred)" in to_markdown(checklist)
-    assert _load_xlsx(to_xlsx(checklist))["Checklist"].cell(row=3, column=1).value == "3.4.4.3 (inferred)"
+    assert _load_xlsx(to_xlsx(checklist))["Checklist"].cell(row=5, column=1).value == "3.4.4.3 (inferred)"
 
 
 def test_xlsx_hides_the_tags_and_confidence_columns_when_no_row_has_a_value():
@@ -528,3 +527,78 @@ def test_xlsx_hides_the_tags_and_confidence_columns_when_no_row_has_a_value():
 
     assert hidden({**base, "domain_tags": [], "confidence": None}) == (True, True)
     assert hidden({**base, "domain_tags": ["x"], "confidence": 0.9}) == (False, False)
+
+
+# --- the look of the sheet ---
+
+def _sheet(checklist):
+    return _load_xlsx(to_xlsx(checklist))["Checklist"]
+
+
+def test_the_sheet_says_which_document_it_is_and_the_facts_about_it():
+    checklist = {**ENVELOPE, "document": {"source_pdf": "afi17-203.pdf"}, "profile": "cybersecurity", "generated_at": "2026-10-11T15:04:12+00:00"}
+    ws = _sheet(checklist)
+    assert ws["A1"].value == "Audit checklist: afi17-203.pdf"
+    facts = ws["A2"].value
+    assert "Profile: cybersecurity" in facts and "Generated: 2026-10-11 15:04 UTC" in facts and "2 items" in facts
+    assert "shaded for a second look" in facts  # ENVELOPE has one row with a specific reason
+
+
+def test_the_title_falls_back_to_the_document_id_and_the_facts_survive_a_bare_envelope():
+    ws = _sheet({"items": [], "possible_missed": [], "summary": {}, "document": {"document_id": "abc123"}})
+    assert ws["A1"].value == "Audit checklist: abc123"
+    ws = _sheet({"items": [], "possible_missed": [], "summary": {}, "document": {}})
+    assert ws["A1"].value == "Audit checklist: Unknown document"
+    assert ws["A2"].value == "0 items"
+
+
+def test_a_time_that_cannot_be_read_is_shown_as_it_is():
+    ws = _sheet({**EMPTY_ENVELOPE, "generated_at": "yesterday afternoon"})
+    assert "Generated: yesterday afternoon" in ws["A2"].value
+
+
+def test_a_document_name_that_looks_like_a_formula_is_not_one():
+    ws = _sheet({**EMPTY_ENVELOPE, "document": {"source_pdf": "=HYPERLINK(\"http://evil.example\")"}})
+    assert not str(ws["A1"].value).startswith("=")
+    assert str(ws["A1"].value).startswith("Audit checklist: ")
+
+
+def test_each_column_group_has_its_own_color_and_the_headers_carry_the_lighter_shade():
+    ws = _sheet(ENVELOPE)
+    bands = {ws.cell(row=3, column=c).value: ws.cell(row=3, column=c).fill.fgColor.rgb for c in (1, 6, 9, 11, 14)}
+    assert list(bands) == ["Locate", "Ask", "Record", "Verify", "Trace"]
+    assert len(set(bands.values())) == 5
+    assert ws.cell(row=3, column=1).font.color.rgb.endswith("FFFFFF")
+    # a header sits under its group and is shaded in the group's lighter tint, so the groups read down the page
+    assert ws.cell(row=4, column=1).fill.fgColor.rgb == ws.cell(row=4, column=5).fill.fgColor.rgb != ws.cell(row=4, column=6).fill.fgColor.rgb
+    assert ws.cell(row=4, column=1).font.bold
+
+
+def test_the_audit_question_column_has_room():
+    ws = _sheet(ENVELOPE)
+    assert ws.column_dimensions["H"].width >= 40  # the column people read most was 22 characters wide
+
+
+def test_the_status_cell_is_colored_by_what_is_chosen():
+    ws = _sheet(ENVELOPE)
+    rules = [r for ranges in ws.conditional_formatting for r in ranges.rules]
+    wanted = {r.formula[0].strip('"') for r in rules}
+    assert wanted == {"compliant", "non-compliant", "in-progress", "not-applicable"}
+    assert any("I5" in str(rng.sqref) for rng in ws.conditional_formatting)
+
+
+def test_the_sheet_prints_landscape_with_the_headers_repeated_and_the_document_in_the_footer():
+    ws = _sheet({**ENVELOPE, "document": {"source_pdf": "Q&A policy.pdf"}})
+    assert ws.page_setup.orientation == "landscape"
+    assert ws.print_title_rows == "$3:$4"  # absolute, as Excel stores it
+    assert ws.oddFooter.left.text == "Q&&A policy.pdf"  # an ampersand is a code in a footer, so it is doubled
+    assert "Page &P of &N" in ws.oddFooter.right.text
+
+
+def test_the_possible_missed_block_has_a_colored_banner():
+    checklist = {**ENVELOPE, "possible_missed": [{**COMPLETE_ITEM, "checklist_item_id": "MISS-1"}]}
+    ws = _sheet(checklist)
+    banner = next(r for r in range(5, ws.max_row + 1) if str(ws.cell(row=r, column=1).value or "").startswith("POSSIBLE MISSED"))
+    assert ws.cell(row=banner, column=1).fill.patternType == "solid"
+    assert "1 possible missed" in ws["A2"].value
+
