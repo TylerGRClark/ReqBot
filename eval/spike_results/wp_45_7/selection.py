@@ -1,6 +1,6 @@
 """WP-45.7b: the selection resolver's schema, prompt, worked examples and assembler (no LLM is called here).
 
-archive/PHASE45_WP457B_PLAN.md section 2, made concrete. The model sees the evidence bundle and a numbered menu of verbatim spans built by
+docs/PHASE45_WP457B_PLAN.md section 2, made concrete. The model sees the evidence bundle and a numbered menu of verbatim spans built by
 `menu.py`, and returns only `{status, actor, parent}`: the status from the fixed enum, the actor and the parent each a menu id or "none".
 The Ollama JSON-schema `format` makes the ids an enum, so nothing else can be said. `assemble` then builds the answer in the existing
 resolver shape (`resolver.ORDER`): actor and parent are the chosen menu texts, the modality is read by code from the quote (then the chosen parent), and every field the model did not choose is null, so the unchanged checker and scorer apply to it as they are.

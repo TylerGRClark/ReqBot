@@ -1,6 +1,6 @@
 {
   "script": "eval/spike_results/wp_45_7/fresh_pack.py",
-  "plan": "archive/PHASE45_WP457E_PLAN.md",
+  "plan": "docs/PHASE45_WP457E_PLAN.md",
   "drawn": 114,
   "pass_b_cards": 58,
   "by_stratum": {

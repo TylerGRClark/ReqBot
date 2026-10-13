@@ -1,6 +1,6 @@
 """WP-45.7d: the kind-selection resolver's schema, prompt, worked examples and assembler (no LLM is called here).
 
-archive/PHASE45_WP457D_PLAN.md section 2, made concrete. The model sees the evidence bundle and the numbered menu of verbatim spans from
+docs/PHASE45_WP457D_PLAN.md section 2, made concrete. The model sees the evidence bundle and the numbered menu of verbatim spans from
 `menu.py` and answers `{kind, actor, parent}`: the kind is one of `requirement`, `scope_or_context`, `not_a_requirement`, `unresolved`;
 actor and parent are menu ids or "none". It never says how strong a requirement is. The assembler sets the status:
 

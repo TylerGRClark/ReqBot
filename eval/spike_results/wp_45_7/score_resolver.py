@@ -276,7 +276,7 @@ def choose(configs, min_right=None, relative=None):
 
 
 REGISTERED_CONFIGS = frozenset(f"{t}_{m}" for t in ("r0", "r1", "r2") for m in ("8b", "14b"))  # the six the rule was registered for
-# WP-45.7b (archive/PHASE45_WP457B_PLAN.md section 3): four configurations (R0 supplies no context and is dropped), the same gates, plus
+# WP-45.7b (docs/PHASE45_WP457B_PLAN.md section 3): four configurations (R0 supplies no context and is dropped), the same gates, plus
 # attachment right of at least 35 of 55, the best generative (v2) result, 63.6%.
 REGISTRIES = {
     "v2": REGISTERED_CONFIGS,
@@ -285,17 +285,17 @@ REGISTRIES = {
     "v5": frozenset(f"{t}_{m}" for t in ("r1", "r2") for m in ("8b", "14b")),  # WP-45.7d: the same four and the v4 bar, code sets the strength
 }
 V3_MIN_RIGHT = 35 / 55
-# WP-45.7c (archive/PHASE45_WP457C_PLAN.md section 2): the bar is derived from production, not from the generative resolver: right at least
+# WP-45.7c (docs/PHASE45_WP457C_PLAN.md section 2): the bar is derived from production, not from the generative resolver: right at least
 # 20 points above the production stems' rate on the same records, and misleading at most production's plus 5 points.
 V4_RELATIVE = {"min_gain": Fraction(1, 5), "max_misleading_margin": Fraction(1, 20)}
 # The registries that are tied to one design: the ledgers must have been written by that design's prompt, or the rule would silently score
 # the wrong experiment (the v4 and v5 rules are the same arithmetic over different designs).
 EXPECTED_PROMPT = {"v4": SEL.prompt_hash, "v5": K.prompt_hash, "v6": K.prompt_hash}
-# WP-45.7e (archive/PHASE45_WP457E_PLAN.md section 3): v6 has no Stage B choice. Its configuration is DECLARED in a committed file, and its candidates are the
+# WP-45.7e (docs/PHASE45_WP457E_PLAN.md section 3): v6 has no Stage B choice. Its configuration is DECLARED in a committed file, and its candidates are the
 # fresh labeled set, not the spent gold.
 DECLARED = {"v6": "declared_v6.json"}
 GOLDS = {"v4": GOLD, "v5": GOLD, "v6": OUTPUTS / "fresh_gold.json"}
-# The plan's pre-run minimums for the fresh set (archive/PHASE45_WP457E_PLAN.md section 2): below them a gate could have nothing to measure (an empty category makes
+# The plan's pre-run minimums for the fresh set (docs/PHASE45_WP457E_PLAN.md section 2): below them a gate could have nothing to measure (an empty category makes
 # `gate_report` omit its gate), so neither a run nor a verdict may proceed.
 SUFFICIENCY = {"v6": {"real": 80, "non_requirements": 8, "attachment_scored": 60}}
 # v5 and v6 share every value a verdict validates (prompt, tier, model, digest, parameters) and differ only in the menu generator, so the guarded runner stamps each

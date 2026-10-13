@@ -13,7 +13,7 @@ For one candidate quote the menu lists verbatim substrings of text the bundle al
 
 Nothing here is generated: every `text` is a substring of the quote, a heading, the chunk, or a stem candidate, so a value the model
 picks is verbatim by construction. The generator is deterministic and has no model in it. Tier R1 uses the candidate's own chunk and
-headings; R2 adds the previous chunk's tail (the same characters the R2 bundle shows). See archive/PHASE45_WP457B_PLAN.md.
+headings; R2 adds the previous chunk's tail (the same characters the R2 bundle shows). See docs/PHASE45_WP457B_PLAN.md.
 """
 
 import re

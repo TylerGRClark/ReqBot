@@ -1,6 +1,6 @@
 """WP-45.7: validate one resolver answer against the evidence bundle it was given (offline; no LLM).
 
-The field-specific rules of archive/PHASE45_WP457_PLAN.md section 4.6. Every containment test runs on whitespace-normalized text
+The field-specific rules of docs/PHASE45_WP457_PLAN.md section 4.6. Every containment test runs on whitespace-normalized text
 on BOTH sides (`bundle.normalize`), so raw Docling spacing or soft hyphens cannot cause a false failure. A blanket "value is
 in the cited span" test would reject correct answers (a status or a logic value never appears in the text) and omitting it
 would weaken provenance, so each field type gets its own check:

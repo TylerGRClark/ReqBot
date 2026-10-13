@@ -1,6 +1,6 @@
 """WP-45.7: the resolver's output schema, prompt and worked examples (scratch only; no LLM is called here).
 
-archive/PHASE45_WP457_PLAN.md appendix B, made concrete. One candidate per call; the model sees only the evidence bundle that
+docs/PHASE45_WP457_PLAN.md appendix B, made concrete. One candidate per call; the model sees only the evidence bundle that
 `bundle.py` builds. The shape is enforced at generation time by the JSON Schema `format` constraint (as Step C does with
 `_PASS1_FORMAT_SCHEMA`), the prompt lists the allowed values in prose, and the worked examples are strictly valid JSON, so no
 `a | b` placeholder is ever shown to the model. `check_resolution.py` validates the answer; the examples below must pass it

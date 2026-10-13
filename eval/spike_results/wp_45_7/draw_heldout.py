@@ -1,6 +1,6 @@
 """WP-45.7: draw the held-out page set, close it over the chunks that discovery will run on, and freeze it before any labeling.
 
-Rules fixed in archive/PHASE45_WP457_PLAN.md (sections 4.1 and 4.2) and in this docstring before anything is labeled:
+Rules fixed in docs/PHASE45_WP457_PLAN.md (sections 4.1 and 4.2) and in this docstring before anything is labeled:
 
 - Documents: the ten pinned WP-45 documents that are not among the three development documents of WP-45.1(e), plus
   CNSSI No. 1253 (a control catalog; the plan requires that stratum and none of the pinned documents is one). CNSSI 1253 is

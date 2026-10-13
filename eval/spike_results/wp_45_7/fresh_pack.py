@@ -39,7 +39,7 @@ MANIFEST = _HERE / "outputs" / "fresh_pack_manifest.json"
 GOLD = _HERE / "outputs" / "resolver_gold.json"
 AUDIT_PACK_DIR = _ROOT / "eval/spike_results/wp_45_1/audit_pack"
 ORDER_SEED = "wp45.7e/order"
-# How many fresh records per stratum (archive/PHASE45_WP457E_PLAN.md section 2); the `heading` stratum has two records and both were used.
+# How many fresh records per stratum (docs/PHASE45_WP457E_PLAN.md section 2); the `heading` stratum has two records and both were used.
 EXTRA = {"same-chunk": 30, "cross-chunk": 28, "heading": 0, "none+signal": 28, "none+nosignal": 12,
          "not-a-candidate+signal": 8, "not-a-candidate+nosignal": 8}
 FIRST_ID = 201
@@ -145,7 +145,7 @@ def main():
     for r in chosen:
         by[r["stratum"]] = by.get(r["stratum"], 0) + 1
     manifest = {
-        "script": "eval/spike_results/wp_45_7/fresh_pack.py", "plan": "archive/PHASE45_WP457E_PLAN.md",
+        "script": "eval/spike_results/wp_45_7/fresh_pack.py", "plan": "docs/PHASE45_WP457E_PLAN.md",
         "drawn": len(chosen), "pass_b_cards": n_stem, "by_stratum": by, "skipped_as_duplicates_of_spent_gold": skipped,
         "audit_records_excluded_as_the_audit_took_them": len(audit_taken),
         "file_sha256": {"pack_a.md": _sha(PACK_DIR / "pack_a.md"), "pack_b.md": _sha(PACK_DIR / "pack_b.md"), "RUBRIC.md": _sha(PACK_DIR / "RUBRIC.md"),

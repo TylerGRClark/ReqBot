@@ -344,7 +344,7 @@ def test_the_committed_v6_manifest_matches_the_repository_and_names_the_sealed_f
                             "outputs/declared_v6.json", "outputs/fresh_draw_map.json")} <= set(manifest["files"])
     # checked against the repository as of the stage D protocol commit (224e5a8, #241), the tree the one-shot ran from, not the live tree
     S.check_frozen_code("v6", include_sealed=False, root=tree_at_commit("224e5a8", manifest["files"]))
-    plan = (_ROOT / "archive/PHASE45_WP457E_PLAN.md").read_text()
+    plan = (_ROOT / "docs/PHASE45_WP457E_PLAN.md").read_text()
     sealed = manifest["sealed_until_c2"]
     assert sealed[w + "outputs/fresh_gold.json"] in plan  # the hashes in the manifest are the ones fixed in the plan
     assert sealed[w + "fresh_labels/labels_claude_a.jsonl"] in plan and sealed[w + "fresh_labels/labels_claude_b.jsonl"] in plan
