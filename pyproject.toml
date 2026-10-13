@@ -14,7 +14,7 @@ dependencies = [
     # WP-45.11: docling's own pins on these are open ranges, so a fresh install could resolve a
     # newer chunker/parser than the one every Phase 45 measurement used. Held at the resolved
     # versions of the known-good set (docling 2.94.0 stays the last version we measured as clean;
-    # 2.123.0 onward regressed list/code handling -- docs/PHASE45_WP4510_PLAN.md).
+    # 2.123.0 onward regressed list/code handling -- archive/PHASE45_WP4510_PLAN.md).
     "docling-core==2.99.0",
     "docling-parse==5.7.0",
     "docling-ibm-models==3.13.0",
@@ -38,7 +38,7 @@ dependencies = [
 # see archive/PHASE25_REQUIREMENTS.md. Moved into base as of WP-34.1: it's now
 # the only ingestion path (legacy pymupdf/pdfplumber chunking was removed), so
 # making it optional would mean a default install can't ingest anything at all.
-# See docs/PHASE34_REQUIREMENTS.md.
+# See archive/PHASE34_REQUIREMENTS.md.
 # remote and mcp stay gated because they're optional *integration surfaces*
 # (cloud LLM synthesis; external MCP clients) that a CLI/GUI-only install doesn't
 # need, regardless of how light their own dependencies are.
@@ -46,14 +46,14 @@ remote = ["anthropic>=0.40.0", "openai>=1.50.0"]
 mcp = ["mcp>=1.28.0,<2"]  # WP-26.1-approved: official Python MCP SDK (mcp.server.fastmcp). The floor rose from 1.0.0 on 2026-10-13 (owner approved) for the network door (mcp_server/network.py): stateless streamable HTTP, per-request context, Host-header protection; built and tested against 1.28.1 and 1.30.0. Capped below 2: mcp 2.x renamed FastMCP to MCPServer (mcp.server.fastmcp is gone), so an unbounded range resolved to 2.x on a fresh install and broke `reqbot mcp`; moving to 2.x is its own change.
 # WP-35.4: Step D.6's description-grounding entailment check (pipeline/entailment_gate.py).
 # Gated out of base -- its GitHub install pulls torch/transformers/datasets/openai/pyarrow,
-# a heavy footprint not needed for basic ingestion (docs/PHASE35_REQUIREMENTS.md §3
+# a heavy footprint not needed for basic ingestion (archive/PHASE35_REQUIREMENTS.md §3
 # Non-Goals). Pinned to the exact commit this repo's threshold (WP-35.2) was calibrated
 # against, matching this project's general dependency-pinning discipline.
 #
 # `pip install minicheck` installs an unrelated PyPI package that happens to squat this
 # name (a formal state-machine model checker, nothing to do with NLI/fact-checking) --
 # the real MiniCheck (Liyan06/MiniCheck, Bespoke Labs/UPenn) only installs from GitHub,
-# hence the git URL below rather than a plain "minicheck" spec (docs/PHASE34_REQUIREMENTS.md).
+# hence the git URL below rather than a plain "minicheck" spec (archive/PHASE34_REQUIREMENTS.md).
 # Also needs one NLTK resource this extra can't install on its own: run
 # `python3 -c "import nltk; nltk.download('punkt_tab')"` after installing.
 grounding-check = [
@@ -61,7 +61,7 @@ grounding-check = [
 ]
 # WP-43: local cross-encoder reranker (core/reranker.py), opt-in via retrieve(rerank=True).
 # Gated out of base while this stays a measurement-gated spike, not a default-on feature --
-# see docs/PHASE43_REQUIREMENTS.md §5. Lightweight, ONNX-based (no torch requirement),
+# see archive/PHASE43_REQUIREMENTS.md §5. Lightweight, ONNX-based (no torch requirement),
 # downloads a small model to a local cache on first use, same shape as fastembed's existing
 # BM25 model. If reranking later graduates to default-on, moving this into base dependencies
 # is a separate follow-up call.

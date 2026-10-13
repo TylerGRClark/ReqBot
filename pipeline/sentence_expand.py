@@ -1,4 +1,4 @@
-"""WP-45.14: expand an extracted quote to the whole sentence it sits in (pure functions; NOT wired into the pipeline, see docs/PHASE45_WP4514_PLAN.md).
+"""WP-45.14: expand an extracted quote to the whole sentence it sits in (pure functions; NOT wired into the pipeline, see archive/PHASE45_WP4514_PLAN.md).
 
 Owner's rule: a requirement is extracted as at minimum the whole sentence, never an incomplete one. `expand` finds the quote in its chunk's text and returns the complete sentence around
 it, verbatim (whitespace tidied), so a list tail such as "installation of vulnerable applications, and other breaches of existing AF or DoD policy" becomes the sentence it belongs to,

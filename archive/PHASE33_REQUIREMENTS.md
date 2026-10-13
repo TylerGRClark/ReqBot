@@ -325,7 +325,7 @@ five and undercounted as a result, caught in PR #156 review):
    executing, and assessing the effectiveness of these operations."` — invented, not grounded).
    **Closed:** the citation-list *extraction* itself is now structurally prevented before it ever
    reaches Step C (`skip_sections`, WP-34.2/WP-34.3) — confirmed zero new occurrences across 6
-   freshly-ingested post-fix documents (`docs/PHASE35_REQUIREMENTS.md`'s WP-35.1 Findings). As
+   freshly-ingested post-fix documents (`archive/PHASE35_REQUIREMENTS.md`'s WP-35.1 Findings). As
    defense-in-depth for any description-fabrication that isn't tied to a skip-sections-preventable
    extraction, Step D.6's entailment gate (`pipeline/entailment_gate.py`, WP-35.4) now also
    independently catches a fabricated `description` at enrichment time.
@@ -429,8 +429,8 @@ problem (do the specific facts named in the description actually appear in the q
 substring-overlap problem, and is more design work than initially estimated — worth scoping as its
 own investigation before committing to an implementation approach.
 
-**Closed, Phase 35:** that investigation happened as WP-34.4's spike (`docs/PHASE34_REQUIREMENTS.md`)
-and Phase 35 (`docs/PHASE35_REQUIREMENTS.md`) — a claim/entailment check (MiniCheck, WP-35.2) plus a
+**Closed, Phase 35:** that investigation happened as WP-34.4's spike (`archive/PHASE34_REQUIREMENTS.md`)
+and Phase 35 (`archive/PHASE35_REQUIREMENTS.md`) — a claim/entailment check (MiniCheck, WP-35.2) plus a
 deterministic obligation/modality-fabrication check (WP-35.3), calibrated against a real labeled
 dataset (WP-35.1) and wired into the live pipeline as Step D.6 (WP-35.4). `description` fabrication
 is now caught at ingest time, independent of whichever of these five categories produced it.

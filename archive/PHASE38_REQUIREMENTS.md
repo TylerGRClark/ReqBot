@@ -6,7 +6,7 @@ a real pre-doc spot-check of the current corpus, both below)
 **Date:** 2026-07-31
 **Preceded by:** Phase 37 (Retrieval Quality: Eval Harness & Contextual Chunk Embeddings) — WP-37.1
 complete (harness + baseline), WP-37.2 complete as a negative result (contextual embeddings
-reverted, `docs/PHASE37_REQUIREMENTS.md`).
+reverted, `archive/PHASE37_REQUIREMENTS.md`).
 **Followed by:** None currently planned.
 
 ---
@@ -95,7 +95,7 @@ historical):**
   they're three genuinely distinct real directives — the same sentence independently assigned to
   three different responsible offices (AF/A2, A5/8, AFSPC) in the source document. Not a bug — a
   reminder that an apparent pattern needs the same verification as anything else before it goes in a
-  Findings section (see `docs/PHASE37_REQUIREMENTS.md`'s WP-37.2 Findings for the last time this
+  Findings section (see `archive/PHASE37_REQUIREMENTS.md`'s WP-37.2 Findings for the last time this
   exact discipline caught a real mistake in this project).
 
 This confirms the diagnosis has real substance in the *current*, post-Phase-34 pipeline — but at a
@@ -104,7 +104,7 @@ commits to building a trained classifier.
 
 **One more open question, flagged but not resolved here:** the same conversation separately
 recommended deterministic heading-chain context as *preferred* for embedding input in this domain.
-That's in tension with `docs/PHASE37_REQUIREMENTS.md`'s WP-37.2 finding — prepending exactly that
+That's in tension with `archive/PHASE37_REQUIREMENTS.md`'s WP-37.2 finding — prepending exactly that
 kind of context (document title + section heading + parent_context) measurably *regressed*
 retrieval quality on this corpus, root-caused to this corpus's section headings describing
 procedural/bureaucratic structure rather than topic. Unclear whether the other conversation's
@@ -174,7 +174,7 @@ knowing the real rate and shape, not assuming it.
   discovery heuristic (wrong length, happens to contain a modal verb, etc.) would otherwise be
   silently excluded from the denominator too — which could make a real problem look negligible for no
   reason other than the heuristic's own blind spots, exactly the kind of composite-denominator mistake
-  already caught once in this project (`docs/PHASE36_REQUIREMENTS.md`'s WP-36.2 Findings).
+  already caught once in this project (`archive/PHASE36_REQUIREMENTS.md`'s WP-36.2 Findings).
   **Minimum size, not left open-ended (local Codex review, 2026-07-31):** the unbiased sample must
   cover a real minimum — at least 300 records, drawn from at least 8 of the corpus's 13 documents
   (stratified across document, not concentrated in whichever happens to be largest) — small enough to
@@ -256,7 +256,7 @@ binds for 3 of 13 documents (`DODI 5200.01`, `DODI 8551.01`, `afpd_17-1` — eac
 fewer than 15 records under pure proportional allocation), so those documents are over-represented
 in the raw 333 relative to their true share of the 1,872-record corpus. Reporting the unweighted
 44/333 ratio as-is estimates the sample's composition, not the corpus's — the same class of mistake
-as `docs/PHASE36_REQUIREMENTS.md`'s WP-36.2 finding (Codex review, PR #180, caught before this
+as `archive/PHASE36_REQUIREMENTS.md`'s WP-36.2 finding (Codex review, PR #180, caught before this
 number shipped). Weighting each document's local failure rate by its true population share
 (`eval/audit_wp38_1/compute_weighted_prevalence.py`, committed) gives **13.1%**, against 13.2%
 unweighted — in this case the correction is small (the over-sampled documents' failure rates
@@ -300,7 +300,7 @@ small (n=15) but reassuring sign for the just-shipped fix.
   `"This Instruction is effective August 29, 2012."`
 - **Explicit "examples of..." text** (1): `REQ-e41d286c83f4` (afi17-203) — `"Examples of
   strategies include modifying network access controls (e.g., firewall)..."` — this is the exact
-  same record `docs/PHASE37_REQUIREMENTS.md`'s WP-37.2 cited as its root-cause retrieval example;
+  same record `archive/PHASE37_REQUIREMENTS.md`'s WP-37.2 cited as its root-cause retrieval example;
   independently flagged here as a probable over-grab, on unrelated grounds.
 - **Form/acknowledgment-template text** (1): `REQ-db943fb3ade5` (dafman17-1305) — `"I will obtain
   and maintain the necessary DCWF Foundational and Residential Qualifications..."` — first-person

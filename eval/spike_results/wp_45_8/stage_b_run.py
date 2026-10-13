@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""WP-45.8 Stage B: the retrieval test with the resolver's string as the embedded stem (docs/PHASE45_WP458_REGISTRY.md and PHASE45_WP458_STAGEB_ADDENDUM.md).
+"""WP-45.8 Stage B: the retrieval test with the resolver's string as the embedded stem (archive/PHASE45_WP458_REGISTRY.md and PHASE45_WP458_STAGEB_ADDENDUM.md).
 
   python3 stage_b_run.py --inputs plain
   python3 stage_b_run.py --inputs prod --repeat 1        # also 2 and 3; uses the saved rewrite/HyDE inputs of WP-45.1(c), never regenerates them

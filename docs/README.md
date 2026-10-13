@@ -30,8 +30,8 @@ differ.
   standards.
 - [Product requirements](PRODUCT_PRD.md): product direction.
 - [Future improvements](TODO_future_improvements.txt): engineering backlog.
-- `PHASE*_REQUIREMENTS.md` files: work-package plans and measured outcomes.
-- [Archive](../archive/): historical plans and retired approaches.
+- `PHASE*_REQUIREMENTS.md` files: work-package plans and measured outcomes for the current phase.
+- [Archive](../archive/): earlier phases' plans and measured outcomes (Phases 10 to 45), and retired approaches.
 
 Planning documents can describe proposed behavior. The user guides describe
 available behavior; a future work package is not an installation instruction.

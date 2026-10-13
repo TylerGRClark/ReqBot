@@ -12,7 +12,7 @@ For the check's design rationale (why naive obligation-vocabulary presence/
 absence checking gets both directions wrong, and how MODAL_MARKERS/
 ACTION_VERB_FORMS/purpose-clause handling fix it), see
 pipeline/entailment_gate.py's own docstring and
-docs/PHASE35_REQUIREMENTS.md's WP-35.3 Findings.
+archive/PHASE35_REQUIREMENTS.md's WP-35.3 Findings.
 """
 
 import argparse

@@ -1,6 +1,6 @@
 # WP-45.13 — trial of the inclusive extraction prompt (D1x) on the 13 documents (results)
 
-Plan and rules: [docs/PHASE45_WP4513_PLAN.md](../../../docs/PHASE45_WP4513_PLAN.md) (merged before the run). One change: Step C's prompt replaced by the frozen D1 text (rendered prompt hash `7da34da9994793c5`, checked equal), everything else unchanged (model, chunk files `d2.94.0:T2_256`, Step D, parent stems). The prompt lives on a trial branch that is not merged. Baseline and noise floor: the two existing runs T2a and T2b. Scripts: `analyze_d1x.py`; outputs in `outputs/`.
+Plan and rules: [archive/PHASE45_WP4513_PLAN.md](../../../archive/PHASE45_WP4513_PLAN.md) (merged before the run). One change: Step C's prompt replaced by the frozen D1 text (rendered prompt hash `7da34da9994793c5`, checked equal), everything else unchanged (model, chunk files `d2.94.0:T2_256`, Step D, parent stems). The prompt lives on a trial branch that is not merged. Baseline and noise floor: the two existing runs T2a and T2b. Scripts: `analyze_d1x.py`; outputs in `outputs/`.
 
 Code note: the baseline ran at `cc0b67e`, the trial at main `f7cb892` plus the prompt change. Between them only the prompt file and four checklist-presentation files differ (`pipeline/checklist_export.py`, `services/checklist_audit.py`, `services/checklist_missed.py`, `services/checklist_service.py`), which Step C, Step D and the parent-stem reconstruction never import; the scorer was told to exclude exactly those five files (`--allow-code-diff`), so its same-code check was narrowed, not switched off.
 

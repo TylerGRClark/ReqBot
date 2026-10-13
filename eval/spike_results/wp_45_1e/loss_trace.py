@@ -1,6 +1,6 @@
 """WP-45.1(e): follow one labeled obligation through the pipeline and name the first step that lost it (offline, no LLM).
 
-Rules fixed in docs/PHASE45_WP451E_PLAN.md before any result was seen:
+Rules fixed in archive/PHASE45_WP451E_PLAN.md before any result was seen:
 
 - Text is compared as tokens: Unicode NFKC (which also undoes ligatures), lowercase, runs of letters and digits; a leading
   list marker is dropped from the piece.

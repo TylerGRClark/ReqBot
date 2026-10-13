@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""WP-45.8 Stage A: run the frozen selection resolver over every record of a processed corpus, into a scratch directory only (docs/PHASE45_WP458_PLAN.md section 3).
+"""WP-45.8 Stage A: run the frozen selection resolver over every record of a processed corpus, into a scratch directory only (archive/PHASE45_WP458_PLAN.md section 3).
 
   python3 shadow_run.py run    --source processed            # newest run of each document under ~/documents/processed
   python3 shadow_run.py run    --source arm:T2a              # the scratch arm ~/reqbot-work/scratch/wp45_11_scratch/T2a/<document>/

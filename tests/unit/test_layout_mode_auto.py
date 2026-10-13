@@ -3,7 +3,7 @@
 Legacy pymupdf/pdfplumber chunking and the "auto" fallback between backends
 were removed -- docling is now the only ingestion path, and any docling
 failure (missing install, per-document parse failure) is a hard error, not a
-silent downgrade. See docs/PHASE34_REQUIREMENTS.md.
+silent downgrade. See archive/PHASE34_REQUIREMENTS.md.
 
 _docling_available() is tested directly. The run()-level tests confirm a
 docling failure always raises, unconditionally (there is no more distinction

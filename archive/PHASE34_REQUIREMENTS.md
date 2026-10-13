@@ -1,13 +1,13 @@
 # ReqBot Phase 34 — Docling-Only Migration & Actionability Structural Fixes
 
 **Status:** Locked (drafted 2026-07-29; source: WP-33.3's spike findings
-(`docs/PHASE33_REQUIREMENTS.md`, PR #156) plus the docling-only architecture decision made during
-this phase's own brainstorm (`docs/PHASE34_BRAINSTORM.md`, PR #157))
+(`archive/PHASE33_REQUIREMENTS.md`, PR #156) plus the docling-only architecture decision made during
+this phase's own brainstorm (`archive/PHASE34_BRAINSTORM.md`, PR #157))
 **Date:** 2026-07-29
 **Preceded by:** Phase 33 (Profile Vocabulary Deduplication, Skip-Section Gap Visibility &
 Actionability Spike) — closed 2026-07-28, all three WPs complete.
 **Followed by:** Phase 35 (Production Description-Grounding Entailment Gate) —
-`docs/PHASE35_REQUIREMENTS.md`, drafted 2026-07-30. WP-34.4's spike concluded viable-with-a-fix; that
+`archive/PHASE35_REQUIREMENTS.md`, drafted 2026-07-30. WP-34.4's spike concluded viable-with-a-fix; that
 phase turns it into a real Step D.5/D.6 gate.
 
 ---
@@ -33,7 +33,7 @@ must land before WP-34.2 and WP-34.3 can be correctly scoped, because both assum
 `section_title_path` is always available — true only once legacy chunking is gone. This phase started
 from WP-33.3's own Reject-If outcome ("the problem is real and sizable... scope the actual fix as its
 own WP") but diverged significantly from an initial, more speculative plan during a same-session
-brainstorm (`docs/PHASE34_BRAINSTORM.md`) once the corpus was re-ingested via docling and turned out
+brainstorm (`archive/PHASE34_BRAINSTORM.md`) once the corpus was re-ingested via docling and turned out
 to change which failure modes even occur. That document is the "why" for this phase's decisions in
 more narrative detail than belongs here — read it first if a Scope section below raises a "why not X
 instead" question; it also has the full three-round external-review history (Codex, PR #157) behind
@@ -80,7 +80,7 @@ WP-33.3's own framing anticipated.
 
 ### WP-34.1 — Deprecate Legacy Chunking, Docling-Only
 
-**Source:** `docs/PHASE34_BRAINSTORM.md` §6, decided 2026-07-29. Migration scope surveyed against
+**Source:** `archive/PHASE34_BRAINSTORM.md` §6, decided 2026-07-29. Migration scope surveyed against
 current code across three external review rounds (Codex, PR #157), each claim independently verified
 before being accepted.
 
@@ -163,8 +163,8 @@ display correctly via `reqbot docs`.
 
 ### WP-34.2 — Reject Heading-Echoed and Unrepairable-Fragment Quotes in Step D
 
-**Source:** WP-33.3 spike categories 2 and 3 (`docs/PHASE33_REQUIREMENTS.md`), re-evidenced against
-real docling re-ingests in `docs/PHASE34_BRAINSTORM.md` §3. Depends on WP-34.1 (assumes
+**Source:** WP-33.3 spike categories 2 and 3 (`archive/PHASE33_REQUIREMENTS.md`), re-evidenced against
+real docling re-ingests in `archive/PHASE34_BRAINSTORM.md` §3. Depends on WP-34.1 (assumes
 `section_title_path` always exists).
 
 **Problem:** Two related failure modes, both confirmed across both corpus documents' docling
@@ -247,7 +247,7 @@ confirming zero collateral rejections among requirements the new checks weren't 
 
 ### WP-34.3 — Expand `skip_sections` Heading Vocabulary
 
-**Source:** WP-33.3 spike category 4, `docs/PHASE34_BRAINSTORM.md` §3. Depends on WP-34.1.
+**Source:** WP-33.3 spike category 4, `archive/PHASE34_BRAINSTORM.md` §3. Depends on WP-34.1.
 
 **Problem:** `afpd_17-1.pdf`'s glossary/definitions section is headed literally `"Terms"` — not
 covered by the cybersecurity profile's configured `skip_sections` list (`GLOSSARY`, `REFERENCES`,
@@ -338,7 +338,7 @@ list on purpose, and the test passes (confirmed via `pytest`, 50/50 in this file
 ### WP-34.4 — Spike: Description-Grounding Entailment Check
 
 **Source:** WP-33.3 spike's identified gap (no verification exists anywhere in the pipeline for
-whether Step D.5's `description` is actually grounded in `source_quote`), `docs/PHASE34_BRAINSTORM.md`
+whether Step D.5's `description` is actually grounded in `source_quote`), `archive/PHASE34_BRAINSTORM.md`
 §4. Independent of WP-34.1/34.2/34.3 — can run in parallel or any order relative to them.
 
 **Goal:** Determine whether a lightweight NLI (natural language inference) cross-encoder entailment
@@ -454,7 +454,7 @@ Phase 34 is complete when:
    any resulting fix work has been scoped as explicit follow-up — mirroring WP-33.3's own Reject-If
    discipline, not folded silently into this phase.
 4. Full unit suite passes (`pytest`); `ruff check .` passes.
-5. `docs/PHASE33_REQUIREMENTS.md`'s WP-33.3 Findings' five failure-mode categories are all either
+5. `archive/PHASE33_REQUIREMENTS.md`'s WP-33.3 Findings' five failure-mode categories are all either
    closed (1–4) or have a documented spike outcome (the description-fabrication symptom underlying
    parts of 1 and 3, via WP-34.4) — category 5 (rare, low-priority) stays a
    `docs/TODO_future_improvements.txt` note, not a WP, per WP-33.3's own original disposition.

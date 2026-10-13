@@ -5,7 +5,7 @@ DoclingDocument + ancestry map (from section_parser.py) → HybridChunker chunks
 breadcrumb injection and ToC filtering. Use run_structure_aware().
 
 (WP-34.1: legacy pymupdf/pdfplumber fixed-size chunking removed — docling is now the
-only ingestion path. See docs/PHASE34_REQUIREMENTS.md.)
+only ingestion path. See archive/PHASE34_REQUIREMENTS.md.)
 
 Output schema (WP-14.2):
   {"chunk_id": int, "page_start": int, "page_end": int,
@@ -76,7 +76,7 @@ def _should_skip_section(section_title_path: list[str], skip_sections: list[str]
     syntactic rule that accepts one and rejects the other without real semantic
     understanding. A 6-document survey found no live instance of the bad case, and
     a stricter rule risks breaking the confirmed-real one -- left as-is on purpose,
-    not an oversight. See docs/PHASE34_REQUIREMENTS.md's WP-34.3 section.
+    not an oversight. See archive/PHASE34_REQUIREMENTS.md's WP-34.3 section.
     """
     if not skip_sections or not section_title_path:
         return False
@@ -289,7 +289,7 @@ def _chunk_raw_text(chunk: object, doc: object = None, *, seen_table_refs: set |
     verification works against the original document text.
 
     TableItem has neither a `.text` attribute nor `export_to_text()` (WP-42
-    investigation, docs/PHASE42_REQUIREMENTS.md) — it fell through both
+    investigation, archive/PHASE42_REQUIREMENTS.md) — it fell through both
     lookups to "", and when a chunk's only body item was a table, the whole
     function then fell back to chunk.text, which is HybridChunker's own
     default table serializer: a flat "Header = Value" triplet repeated once

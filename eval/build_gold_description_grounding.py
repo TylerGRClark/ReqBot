@@ -8,7 +8,7 @@ eval/gold_description_grounding.jsonl.
 
 Every record in LABELS was checked by hand against its own
 section_title_path/parent_context (not just the bare quote/description pair)
-before being assigned a label -- see docs/PHASE35_REQUIREMENTS.md's WP-35.1
+before being assigned a label -- see archive/PHASE35_REQUIREMENTS.md's WP-35.1
 section for the full reasoning behind each one. The clean_sample entries are
 included as-is (faithful) -- WP-35.1's scope explicitly allows the faithful
 holdout to stay randomly sampled without the same per-record deliberation the
@@ -117,7 +117,7 @@ LABELS = {
         "WP-34.4 known-good (dodi_nsa_approved_crypto). Real modal-verb "
         "substitution (will -> must), same facts. Caught by this WP's harvester's "
         "broad modality heuristic (must appears in description, not in quote) -- "
-        "exactly the over-catch case docs/PHASE35_REQUIREMENTS.md's WP-35.3 "
+        "exactly the over-catch case archive/PHASE35_REQUIREMENTS.md's WP-35.3 "
         "section warns a naive per-word check would false-positive on. Kept "
         "explicitly as a WP-35.3 fixture per that section's own instruction.",
     ),
@@ -230,7 +230,7 @@ LABELS = {
 # turned out to already exist in WP-34.4's proof-of-concept set -- reusing
 # them here as "new" calibration evidence would be circular (WP-35.1 exists
 # specifically because that set was never meant to calibrate a threshold, see
-# docs/PHASE35_REQUIREMENTS.md's Phase Framing). Kept in the file rather than
+# archive/PHASE35_REQUIREMENTS.md's Phase Framing). Kept in the file rather than
 # deleted -- real regression value in confirming WP-35.2's chosen threshold
 # still classifies the original spike cases correctly -- but marked with
 # source="wp_34_4_spike" so WP-35.2's actual calibration sweep can exclude

@@ -1,17 +1,17 @@
 # ReqBot Phase 35 — Production Description-Grounding Entailment Gate
 
 **Status:** Locked (drafted 2026-07-30; source: WP-34.4's spike findings,
-`docs/PHASE34_REQUIREMENTS.md`, PR #164)
+`archive/PHASE34_REQUIREMENTS.md`, PR #164)
 **Date:** 2026-07-30
 **Preceded by:** Phase 34 (Docling-Only Migration & Actionability Structural Fixes) — closed
 2026-07-30, all four WPs complete or spike-concluded.
 **Followed by:** Phase 36 (Entailment-Gate Calibration Fix: Exact-Match Short-Circuit) —
-`docs/PHASE36_REQUIREMENTS.md`, drafted 2026-07-31. WP-35.5's integration gate found that the
+`archive/PHASE36_REQUIREMENTS.md`, drafted 2026-07-31. WP-35.5's integration gate found that the
 entailment threshold chosen in WP-35.2 was calibrated against a faithful population that was 84%
 exact-match (`description == source_quote`) records; that's where Phase 36 came from. (That 84%/77
 figure used literal string equality, the honest count of what was checked at the time; WP-36.1's
 PR #173 later found one more record — `REQ-22336c31702a` — that's exact only after
-case-normalization, making the real number 78/92 (85%). See `docs/PHASE36_REQUIREMENTS.md`'s
+case-normalization, making the real number 78/92 (85%). See `archive/PHASE36_REQUIREMENTS.md`'s
 WP-36.1 Findings for the corrected figure.)
 
 ---
@@ -33,7 +33,7 @@ in `CLAUDE.md` or anywhere else.
 
 ## 1. Phase Framing
 
-WP-34.4's spike (`docs/PHASE34_REQUIREMENTS.md` §4) established that a lightweight NLI entailment
+WP-34.4's spike (`archive/PHASE34_REQUIREMENTS.md` §4) established that a lightweight NLI entailment
 model (MiniCheck, `flan-t5-large`) can catch Step D.5's fabricated-description symptom — a
 `description` that invents content absent from its `source_quote` — with a clear, wide-margin
 signal on real data: 5/6 known-fabricated examples caught, 0/9 false positives. That's the answer to
@@ -126,7 +126,7 @@ would mean tuning to the examples used to prove the concept, not an independent 
   known-bad examples are now structurally prevented at the source, not just 1 or 2. The citation-list
   fabrications (`JP 3-12`, `DoDI 8500.01`) were already covered by the pre-existing `REFERENCES`
   skip_sections entry once docling+skip_sections is properly applied — confirmed in
-  `docs/PHASE34_BRAINSTORM.md` §3 ("Category 1... likely already solved... zero occurrences across
+  `archive/PHASE34_BRAINSTORM.md` §3 ("Category 1... likely already solved... zero occurrences across
   both documents"). The heading-echo fragment (`"All HAF Functionals..."`) is now caught by WP-34.2.
   The glossary-definition case (`"Cybersecurity - Prevention of..."`) is now caught by WP-34.3's
   `TERMS` filter. Only the two subtler cases (`cjcsi_po_service_principal_fragment`,
@@ -634,7 +634,7 @@ documented, not left implicit — and whichever way it's decided, a requirement 
     base since it's the only ingestion path left. Pinned to the exact commit this repo's WP-35.2
     threshold was calibrated against
     (`git+https://github.com/Liyan06/MiniCheck.git@b58b9fa69acbd1015ec970fa65dd752413a053d2`), with
-    the PyPI name-collision warning from `docs/PHASE34_REQUIREMENTS.md` carried into the dependency
+    the PyPI name-collision warning from `archive/PHASE34_REQUIREMENTS.md` carried into the dependency
     comment itself so a future contributor doesn't rediscover it the hard way.
   - *Reject semantics:* **(a)** — clear the `description` field (set to `""`) on rejection, never
     drop the requirement. `source_quote`, `domain_tags`, `requirement_type`, and every other field
@@ -751,7 +751,7 @@ they compose correctly against a real, full pipeline run.
   drop in requirement count *beyond* records whose `source_quote` was independently invalid (if
   WP-35.4 decided full rejection is warranted). Confirm whichever WP-35.4 actually chose is what this
   gate observes — don't assume requirement count should stay flat if the decision was to reject.
-- Update `docs/PHASE33_REQUIREMENTS.md`'s WP-33.3 Findings categories 1 and 3 (both cite the
+- Update `archive/PHASE33_REQUIREMENTS.md`'s WP-33.3 Findings categories 1 and 3 (both cite the
   description-fabrication symptom) to reference this phase's actual fix, closing the loop WP-34.4's
   spike opened.
 
@@ -834,7 +834,7 @@ they compose correctly against a real, full pipeline run.
   every individual faithful description survives — the "provisional, not confident calibration"
   stance already carried through WP-35.2/35.3/35.4's docs is precisely why this doesn't block the
   phase, but it does mean the Gate item below is stated precisely rather than as an unqualified pass.
-- `docs/PHASE33_REQUIREMENTS.md`'s WP-33.3 Findings (categories 1 and 3, both cite the description-
+- `archive/PHASE33_REQUIREMENTS.md`'s WP-33.3 Findings (categories 1 and 3, both cite the description-
   fabrication symptom this phase fixes, plus the Conclusion's forward-looking "claim/entailment
   problem... worth scoping as its own investigation" note) updated with closing pointers to this
   phase's actual implementation, closing the loop WP-34.4's spike opened back in Phase 34.

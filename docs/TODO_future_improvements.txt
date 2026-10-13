@@ -54,7 +54,7 @@ ACTIVE BACKLOG
    path; the legacy pymupdf/pdfplumber chunking path had no section hierarchy
    and silently no-op'd on it. WP-34.1 removed the legacy path entirely --
    docling is now the only ingestion backend, so skip_sections always applies.
-   No remaining gap; see docs/PHASE34_REQUIREMENTS.md.
+   No remaining gap; see archive/PHASE34_REQUIREMENTS.md.
 
 6. Optional LLM-backed audit question generation
    Phase 21 intentionally leaves audit_question blank. A future opt-in feature
@@ -195,7 +195,7 @@ ACTIVE BACKLOG
     of which is genuine vagueness. Full writeup, real examples, and the A/B
     prompt-test methodology (run twice for stability, results were NOT
     stable -- that instability is itself part of the finding):
-    `docs/PHASE33_REQUIREMENTS.md`'s WP-33.3 Findings. Reusable test script +
+    `archive/PHASE33_REQUIREMENTS.md`'s WP-33.3 Findings. Reusable test script +
     both runs' raw output: `eval/actionability_spike.py`,
     `eval/spike_results/wp_33_3/report.md`.
 
@@ -382,7 +382,7 @@ ACTIVE BACKLOG
     the real pipeline as Step D.6 (WP-35.4). A rejected description is
     cleared, never drops the requirement. MiniCheck is a new optional
     `grounding-check` extra (`pyproject.toml`), not a base dependency. See
-    `docs/PHASE35_REQUIREMENTS.md` for the full calibration evidence,
+    `archive/PHASE35_REQUIREMENTS.md` for the full calibration evidence,
     design-decision rationale, and WP-35.5's end-to-end integration
     confirmation (item 33 below is a real, honest limitation the integration
     run surfaced -- not something this item's resolution glosses over).
@@ -405,7 +405,7 @@ ACTIVE BACKLOG
     shape recurs at meaningful scale once WP-35.2's threshold sweep runs
     against the fuller dataset.
 
-33. [MOSTLY RESOLVED -- Phase 36, docs/PHASE36_REQUIREMENTS.md: WP-36.1
+33. [MOSTLY RESOLVED -- Phase 36, archive/PHASE36_REQUIREMENTS.md: WP-36.1
     (exact-match short-circuit) merged 2026-07-31 -- all 4 known exact-match
     false positives confirmed eliminated with no change to fabricated-catch
     rate, live-verified against real MiniCheck (composite gate, real data:
@@ -417,7 +417,7 @@ ACTIVE BACKLOG
     resweep may honestly conclude "no change" rather than find a better
     number. Not blocking anything; revisit only if a larger fabricated-
     example dataset makes recalibration worthwhile. See
-    docs/PHASE36_REQUIREMENTS.md's WP-36.2 section for the full note.]
+    archive/PHASE36_REQUIREMENTS.md's WP-36.2 section for the full note.]
     MiniCheck's entailment score already-measurably rejects a
     description that is a verbatim (word-for-word identical) copy of its own
     source_quote -- 80% of WP-35.2's own reported false-positive rate, not
@@ -478,7 +478,7 @@ ACTIVE BACKLOG
     exact matches no longer need to go through the model at all.
 
 
-34. [RESOLVED -- Phase 44, WP-44.1, docs/PHASE44_REQUIREMENTS.md sections 10-11]
+34. [RESOLVED -- Phase 44, WP-44.1, archive/PHASE44_REQUIREMENTS.md sections 10-11]
     Invented quotes passed Step D's fuzzy grounding gate
     5 of 1,991 measured Step C quotes (scores 62-76 against a threshold of 60)
     stated obligations their chunks do not (a marking table, a bare glossary
@@ -716,7 +716,7 @@ RETRIEVAL EXPERIMENTS
 These are quality experiments, not guaranteed product work.
 
 1. Reranker spike
-   [TRIED -- Phase 43, docs/PHASE43_REQUIREMENTS.md: FlashRank TinyBERT and
+   [TRIED -- Phase 43, archive/PHASE43_REQUIREMENTS.md: FlashRank TinyBERT and
    MiniLM-L-12 failed the pre-agreed gate (no demonstrated benefit under the
    tested configurations; differences within sampling noise at n=35; opt-in
    code retained, rerank defaults to False). The broader question stays open:
@@ -758,7 +758,7 @@ These are quality experiments, not guaranteed product work.
    not query -> ranked-result relevance -- a different thing. Now exists:
    eval/retrieval_eval_harness.py (recall@k, MRR) against
    eval/gold_retrieval_queries.jsonl (16 hand-verified queries, real
-   documented baseline in docs/PHASE37_REQUIREMENTS.md's WP-37.1 Findings).
+   documented baseline in archive/PHASE37_REQUIREMENTS.md's WP-37.1 Findings).
    Use that harness directly for this reranker spike's own Precision@5 gate
    rather than building a second, separate eval set.
 
@@ -871,7 +871,7 @@ These are quality experiments, not guaranteed product work.
    embedding, no LLM call) and measured a real regression against WP-37.1's
    harness, not an improvement: mean recall@5 0.6683->0.58, MRR 0.8542->0.7217
    under a controlled (--no-hyde) before/after comparison
-   (docs/PHASE37_REQUIREMENTS.md WP-37.2 Findings has the full per-query
+   (archive/PHASE37_REQUIREMENTS.md WP-37.2 Findings has the full per-query
    table -- 11 of 12 non-zero queries regressed or held flat (5 regressed,
    6 flat), 1 was genuinely mixed, none improved). Reverted -- not deployed.
 
@@ -1072,7 +1072,7 @@ DECISIONS AND GUARDRAILS
    install including CI, for a benefit ("auto" already delivers) that most
    deployments may not need.
 
-   Superseded 2026-07-29 (WP-34.1, docs/PHASE34_REQUIREMENTS.md): the ~700MB
+   Superseded 2026-07-29 (WP-34.1, archive/PHASE34_REQUIREMENTS.md): the ~700MB
    weight tradeoff above was reconsidered given ReqBot's actual deployment
    context (IT admins standing it up on a real network, not a
    storage-constrained device) and the legacy path's own real cost (no section
@@ -1109,7 +1109,7 @@ DECISIONS AND GUARDRAILS
     and a detector only ships when a labeled gold set (more than one reviewer,
     held-out portion) shows it stays above an explicit recall floor. Missing a
     real requirement is worse than keeping a questionable one. See ACTIVE
-    BACKLOG items 35-36 and docs/PHASE44_REQUIREMENTS.md section 12.
+    BACKLOG items 35-36 and archive/PHASE44_REQUIREMENTS.md section 12.
 
 - seen_table_refs is marked when a chunk's text is built, before run_structure_aware's ToC / skip-section
   filters decide whether the chunk is kept (pipeline/chunk_text.py, typed-table path from PR #189 and the

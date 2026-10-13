@@ -33,9 +33,9 @@ Wires together two independently-built, independently-validated checks:
 Either check rejecting is enough to reject the description (OR, not AND):
 they catch different fabrication shapes, and WP-35.3 exists specifically
 because WP-35.2's entailment score has no signal for a factual/definitional
-quote reframed as an imperative it never states (docs/PHASE35_REQUIREMENTS.md
+quote reframed as an imperative it never states (archive/PHASE35_REQUIREMENTS.md
 §1, Gap 2) — requiring both checks to agree would silently reopen exactly
-that gap. See docs/PHASE35_REQUIREMENTS.md's WP-35.4 section for the full
+that gap. See archive/PHASE35_REQUIREMENTS.md's WP-35.4 section for the full
 "reject" semantics decision (clear description, never drop the requirement)
 and why this is a separate step from Step D.5 rather than folded into it.
 
@@ -81,7 +81,7 @@ log = logging.getLogger(__name__)
 # WP-35.3: deterministic modality/obligation-fabrication check.
 # Moved here from eval/modality_fabrication_check.py (WP-35.4) so it's real
 # production logic, not just an eval script. See that module's own (thinner,
-# now import-only) docstring, and docs/PHASE35_REQUIREMENTS.md's WP-35.3
+# now import-only) docstring, and archive/PHASE35_REQUIREMENTS.md's WP-35.3
 # Findings for the full fixture-by-fixture design rationale.
 # ---------------------------------------------------------------------------
 
@@ -266,7 +266,7 @@ def _score_entailment(scorer, pairs: list[tuple[str, str]]) -> list[float]:
 # unable to introduce fabricated content by definition. Checked against
 # eval/gold_description_grounding.jsonl: 77 of 92 wp_35_1_harvest faithful
 # records (84%) are this exact shape, and 4 of WP-35.2's original 5 measured
-# false positives are this pattern (docs/PHASE36_REQUIREMENTS.md Sec 1). An
+# false positives are this pattern (archive/PHASE36_REQUIREMENTS.md Sec 1). An
 # exact match is excluded from the batch sent to MiniCheck entirely (real
 # compute saved, not just a discarded score -- same pattern as the existing
 # empty-description exclusion below). is_fabricated_obligation() already
@@ -283,7 +283,7 @@ def _is_exact_match(source_quote: str, description: str) -> bool:
     eval/gold_description_grounding.jsonl's near-miss records (a dropped
     leading list marker, a trailing period, a "will"/"must" swap) -- none of
     those are caught by this comparison, so they still reach MiniCheck as
-    intended (docs/PHASE36_REQUIREMENTS.md's WP-36.1 Findings).
+    intended (archive/PHASE36_REQUIREMENTS.md's WP-36.1 Findings).
 
     A missing/None source_quote or description can't be an exact match of
     anything -- pass through as not-exact rather than crash in

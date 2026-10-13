@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""WP-45.11 T3 targeted measure (docs/PHASE45_WP4511_PLAN.md section 3, docs/PHASE45_WP4511_T3_ADDENDUM.md): the chunk-limit arm against the T2-state replicates, on the labeled lead-in items.
+"""WP-45.11 T3 targeted measure (archive/PHASE45_WP4511_PLAN.md section 3, archive/PHASE45_WP4511_T3_ADDENDUM.md): the chunk-limit arm against the T2-state replicates, on the labeled lead-in items.
 
   python3 analyze_t3.py --base T2a T2b --base-chunks d2.94.0:T2_256 --arm T3_512 --arm-chunks d2.94.0:T2_512 --out outputs/t3_512_report.json
 

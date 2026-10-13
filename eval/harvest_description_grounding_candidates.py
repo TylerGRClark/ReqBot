@@ -8,7 +8,7 @@ fabrication shapes found during WP-34.4's spike, plus a random sample of
 unflagged ("clean") pairs as faithful-holdout candidates.
 
 This produces *candidates* for hand review, not the final labeled dataset --
-per WP-35.1's scope (docs/PHASE35_REQUIREMENTS.md), each flagged record still
+per WP-35.1's scope (archive/PHASE35_REQUIREMENTS.md), each flagged record still
 needs its section_title_path/parent_context checked by hand before it can be
 labeled and folded into eval/gold_description_grounding.jsonl. Mirrors the
 same two-step process (structural heuristic -> hand verification) that

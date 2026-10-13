@@ -1,7 +1,7 @@
 """Unit tests for WP-42: table-structure-aware serialization in _chunk_raw_text().
 
 TableItem has neither a `.text` attribute nor `export_to_text()` (confirmed directly
-against the installed docling_core, docs/PHASE42_REQUIREMENTS.md). Before this fix,
+against the installed docling_core, archive/PHASE42_REQUIREMENTS.md). Before this fix,
 that meant a table-only chunk fell through to chunk.text -- HybridChunker's own
 default table serializer, which flattens each cell into a "Header = Value" triplet
 restating the table's full caption per cell (real corpus example: afi17-203
@@ -203,7 +203,7 @@ def test_table_export_failure_does_not_suppress_later_chunks_own_content():
 def test_oversized_table_markdown_logs_warning(caplog):
     # Codex review, PR #189: a table's full markdown is now emitted in a
     # single chunk rather than bounded by HybridChunker's own splitting.
-    # Not a real risk yet (docs/PHASE42_REQUIREMENTS.md: the corpus's
+    # Not a real risk yet (archive/PHASE42_REQUIREMENTS.md: the corpus's
     # largest known table uses ~43% of Step C's context budget), but nothing
     # bounds it either -- a future oversized table should at least be
     # visible in logs, not silently degrade extraction.

@@ -1,7 +1,7 @@
 """WP-40: unit tests for eval/failure_classifier.py's 8-category classification
 logic, against synthetic examples of each category -- proving the classification
 logic is correct independent of any specific real miss (same discipline as
-WP-37.1's harness-math unit tests, docs/PHASE40_REQUIREMENTS.md's Tests/
+WP-37.1's harness-math unit tests, archive/PHASE40_REQUIREMENTS.md's Tests/
 verification bullet).
 """
 from unittest.mock import patch

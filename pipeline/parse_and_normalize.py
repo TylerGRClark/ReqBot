@@ -75,7 +75,7 @@ QUOTE_GROUNDING_THRESHOLD = 60
 # in that gap. It was selected on that same corpus, so it is a measured
 # threshold, not a generalization guarantee. This is a bag-of-words check: it
 # cannot detect real words rearranged to change meaning, and it adds no
-# punctuation/ligature handling (docs/PHASE44_REQUIREMENTS.md section 4).
+# punctuation/ligature handling (archive/PHASE44_REQUIREMENTS.md section 4).
 QUOTE_WORD_COVERAGE_THRESHOLD = 0.8
 
 
@@ -334,7 +334,7 @@ def _is_orphaned_list_item(source_quote: str) -> bool:
     genuinely self-contained from one whose obligation is inherited from a
     parent stem, and rejecting the wrong one silently drops a valid
     requirement -- a worse failure than leaving a visible fragment in place.
-    See docs/PHASE38_REQUIREMENTS.md's WP-38.2 Findings for the full history.
+    See archive/PHASE38_REQUIREMENTS.md's WP-38.2 Findings for the full history.
 
     Product direction (Tyler, PR #181): short enumerated child items are not
     safe to reject by text length alone. They may be valid requirements
@@ -347,7 +347,7 @@ def _is_orphaned_list_item(source_quote: str) -> bool:
     no citation (e.g. "Required NM data update rates.") either -- no safe,
     non-overfit text-level signal for that shape was found during
     calibration. Left as an honest gap, not silently claimed as covered --
-    see docs/PHASE38_REQUIREMENTS.md's WP-38.2 Findings.
+    see archive/PHASE38_REQUIREMENTS.md's WP-38.2 Findings.
     """
     stripped = source_quote.strip()
     if not stripped:
@@ -414,7 +414,7 @@ def _is_dangling_clause(source_quote: str) -> bool:
     distinguishable from genuine subject-less-but-complete list items in
     this corpus without actual grammatical analysis -- left as an honest
     gap rather than a rule broad enough to risk discarding real data. See
-    docs/PHASE38_REQUIREMENTS.md's WP-38.2 Findings.
+    archive/PHASE38_REQUIREMENTS.md's WP-38.2 Findings.
     """
     stripped = source_quote.strip()
     if not stripped:

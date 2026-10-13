@@ -13,7 +13,7 @@ Features exercised:
 
 WP-23.3's overlap-guard/page-contiguity tests were removed under WP-34.1 (legacy
 pymupdf/pdfplumber chunking, the only thing those functions applied to, was
-deleted -- see docs/PHASE34_REQUIREMENTS.md).
+deleted -- see archive/PHASE34_REQUIREMENTS.md).
 """
 import io
 import json

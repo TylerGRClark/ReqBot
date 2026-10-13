@@ -1,12 +1,12 @@
 # ReqBot Phase 36 — Entailment-Gate Calibration Fix: Exact-Match Short-Circuit
 
 **Status:** Locked (drafted 2026-07-31; source: WP-35.5's integration findings,
-`docs/PHASE35_REQUIREMENTS.md`, PR #170; `docs/TODO_future_improvements.txt` item 33)
+`archive/PHASE35_REQUIREMENTS.md`, PR #170; `docs/TODO_future_improvements.txt` item 33)
 **Date:** 2026-07-31
 **Preceded by:** Phase 35 (Production Description-Grounding Entailment Gate) — closed 2026-07-31,
-all five WPs complete, Success Gate met (`docs/PHASE35_REQUIREMENTS.md`).
+all five WPs complete, Success Gate met (`archive/PHASE35_REQUIREMENTS.md`).
 **Followed by:** Phase 37 (Retrieval Quality: Eval Harness & Contextual Chunk Embeddings) —
-`docs/PHASE37_REQUIREMENTS.md`, drafted 2026-07-31. WP-36.2 stays deferred rather than folded into
+`archive/PHASE37_REQUIREMENTS.md`, drafted 2026-07-31. WP-36.2 stays deferred rather than folded into
 Phase 37 — different pipeline stage (entailment-check calibration vs. search/retrieval), different
 concern.
 
@@ -111,7 +111,7 @@ same rigor (real data, real re-validation, no code merged without evidence) as e
 ### WP-36.1 — Exact-Match Short-Circuit for the Entailment Check
 
 **Source:** `docs/TODO_future_improvements.txt` item 33; WP-35.5's Findings
-(`docs/PHASE35_REQUIREMENTS.md`).
+(`archive/PHASE35_REQUIREMENTS.md`).
 
 **Problem:** MiniCheck scores a `description` that is byte-identical to its own `source_quote`
 inconsistently — sometimes below the 0.85 threshold — despite there being no possible fabrication in
@@ -192,7 +192,7 @@ real near-miss case, not just on literal duplicates.
 
 **Deferred (2026-07-31), not abandoned.** WP-36.1 alone already measures well on the live composite
 gate (entailment OR modality, threshold still 0.85): 8/8 fabrications caught, 1/92 faithful false
-positives (`docs/PHASE36_REQUIREMENTS.md`'s WP-36.1 Findings above). That's *better* on the FP axis
+positives (`archive/PHASE36_REQUIREMENTS.md`'s WP-36.1 Findings above). That's *better* on the FP axis
 than this WP's own hand-check estimate for a raised threshold (0.95 gave 8/92 FP) — but that estimate
 was entailment-alone, from `eval/spike_results/wp_35_2/results.json`, and doesn't account for the
 modality check's independent contribution to the 8/8 catch rate at 0.85. **Whoever picks this WP back

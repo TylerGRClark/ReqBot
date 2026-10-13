@@ -6,7 +6,7 @@
   python3 analyze_docs.py --headings                 # H4: Docling's heading level against the numbering-based depth the pipeline uses
   python3 analyze_docs.py --across baseline          # upgrade: this release's baseline against another release's (--other-tag d2.135.0)
 
-Reads `~/reqbot-work/scratch/wp45_10_cache/<tag>/docs/<variant>/<doc>.json` written by convert.py. Every difference is counted and kept in full in the JSON output (`--out`). Nothing here scores quality beyond what the labeled cases allow (see docs/PHASE45_WP4510_PLAN.md section 3).
+Reads `~/reqbot-work/scratch/wp45_10_cache/<tag>/docs/<variant>/<doc>.json` written by convert.py. Every difference is counted and kept in full in the JSON output (`--out`). Nothing here scores quality beyond what the labeled cases allow (see archive/PHASE45_WP4510_PLAN.md section 3).
 """
 
 import argparse
@@ -18,7 +18,7 @@ from pathlib import Path
 
 import common
 
-# afi17-203 Table 3.2 (page 20): Docling's table model merges the table's caption sentence into the column headers (docs/PHASE42_REQUIREMENTS.md). The first
+# afi17-203 Table 3.2 (page 20): Docling's table model merges the table's caption sentence into the column headers (archive/PHASE42_REQUIREMENTS.md). The first
 # detector looked for the table's title and found 0 in every release, which did not reproduce the documented defect; checking the 2.94.0 table showed the merged
 # text is the caption sentence below, in the dataframe column headers. This is the corrected detector (changed after reading the first output, disclosed in the
 # results).
@@ -85,7 +85,7 @@ def table_diffs(base, var):
 
 
 def no_grid_regions(doc):
-    """Items labeled table that are not TableItems (no cell grid): the 'no table grid at all' defect of docs/PHASE42_REQUIREMENTS.md."""
+    """Items labeled table that are not TableItems (no cell grid): the 'no table grid at all' defect of archive/PHASE42_REQUIREMENTS.md."""
     from docling_core.types.doc import TableItem
     n = 0
     for item, _level in doc.iterate_items():

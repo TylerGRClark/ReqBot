@@ -15,7 +15,7 @@ from pipeline.entailment_gate import (
 )
 
 # ---------------------------------------------------------------------------
-# is_fabricated_obligation — real fixtures (docs/PHASE35_REQUIREMENTS.md
+# is_fabricated_obligation — real fixtures (archive/PHASE35_REQUIREMENTS.md
 # WP-35.3 Gate: the known WP-34.4/Codex miss must be caught, real modal
 # paraphrases must not be falsely rejected, and the "ensure"-as-purpose-clause
 # case specifically must not cause a false negative on the original miss).

@@ -3,7 +3,7 @@
 **Status:** Complete. WP-44.1 merged (PR #196) and its live-data cleanup done (§11). WP-44.2 closed as
 measurement only, with no production change (§12); the follow-on work moves to Phase 45.
 **Date:** 2026-10-03
-**Preceded by:** Phase 43 (Reranker Spike) — `docs/PHASE43_REQUIREMENTS.md`, complete (measured
+**Preceded by:** Phase 43 (Reranker Spike) — `archive/PHASE43_REQUIREMENTS.md`, complete (measured
 No-Go, no default changed). This phase is unrelated to retrieval; it hardens Step D's quote
 grounding, which Phase 43's docling-upgrade check (PR #159) happened to surface.
 **Followed by:** Not decided. §6 (Backlog) names what is deliberately left out.

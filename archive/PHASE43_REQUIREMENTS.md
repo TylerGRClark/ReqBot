@@ -4,7 +4,7 @@
 default `ms-marco-TinyBERT-L-2-v2` and the larger `ms-marco-MiniLM-L-12-v2`; neither clears the
 gate. No default changed; see §11 Findings.
 **Date:** 2026-08-02
-**Preceded by:** Phase 42 (Table-Structure-Aware Serialization) — `docs/PHASE42_REQUIREMENTS.md`,
+**Preceded by:** Phase 42 (Table-Structure-Aware Serialization) — `archive/PHASE42_REQUIREMENTS.md`,
 complete. This phase picks up the reranker recommendation carried forward from Phase 40's §8
 Backlog and reaffirmed in Phase 41 and Phase 42's own backlog notes — see §1 below.
 **Followed by:** Not decided. §11's Backlog names one bounded follow-up experiment (§11.5: capture
