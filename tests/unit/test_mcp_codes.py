@@ -113,6 +113,23 @@ def test_long_text_and_long_lists_are_cut_short_in_the_log():
     assert out["n"] == 3 and out["odd"] == "object"
 
 
+def test_a_log_file_that_already_exists_is_made_private(tmp_path):
+    path = tmp_path / "requests.jsonl"
+    path.write_text("", encoding="utf-8")
+    os.chmod(path, 0o644)  # REQBOT_MCP_LOG pointing at a file somebody made earlier
+    RequestLog(path).record(code="anna", tool="get_status", ok=True)
+    assert stat.S_IMODE(os.stat(path).st_mode) == 0o600
+    assert json.loads(path.read_text(encoding="utf-8").splitlines()[0])["tool"] == "get_status"
+
+
+def test_the_codes_file_is_private_even_over_a_leftover_temp_file(codes_file):
+    leftover = codes_file.with_suffix(".tmp")
+    leftover.write_text("", encoding="utf-8")
+    os.chmod(leftover, 0o644)
+    mcp_codes.add("anna")
+    assert stat.S_IMODE(os.stat(codes_file).st_mode) == 0o600
+
+
 def test_the_log_rotates_once_and_a_write_failure_never_raises(tmp_path, monkeypatch):
     monkeypatch.setattr(rl, "MAX_BYTES", 200)
     path = tmp_path / "requests.jsonl"

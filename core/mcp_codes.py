@@ -44,6 +44,8 @@ def _write(entries: list[dict]) -> None:
     CODES_PATH.parent.mkdir(parents=True, exist_ok=True)
     tmp = CODES_PATH.with_suffix(".tmp")
     fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    if hasattr(os, "fchmod"):
+        os.fchmod(fd, 0o600)  # a leftover .tmp file keeps its old mode otherwise
     with os.fdopen(fd, "w", encoding="utf-8") as f:
         json.dump({"codes": entries}, f)
     os.replace(tmp, CODES_PATH)

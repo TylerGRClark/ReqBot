@@ -8,7 +8,8 @@ from the stdio server only where a remote caller changes what is safe:
   * The tools run in worker threads, so one slow search never stops another caller, and at most N run at once (REQBOT_MCP_MAX_CONCURRENT, default 4); a caller that
     cannot be served within 30 seconds is told the server is busy. Each search costs two language-model calls and an embedding on the model machine.
   * No synthesis: `map_evidence` has no `synthesize` argument here. The connected AI tool writes its own answer from the returned quotes.
-  * Nothing about the server's layout is returned: `get_status` says only what is reachable and how much there is, `list_documents` leaves out folders, and an error that
+  * Nothing about the server's layout is returned: `get_status` says only what is reachable and how much there is, `list_documents` leaves out folders, the payload fields
+    and warnings that name the server's models are removed from every answer, and an error that
     would name an address or a folder is replaced by a short sentence and a reference to the line in the request log (core and services messages are written for an operator).
   * Every call is written to the request log (mcp_server/request_log.py) under the name of the code that made it.
 
@@ -32,6 +33,7 @@ from core import config as _config
 from core import mcp_codes
 from mcp_server import server as _stdio
 from mcp_server.request_log import RequestLog
+from services import audit_questions
 
 log = logging.getLogger(__name__)
 
@@ -55,11 +57,16 @@ TOOL_NAMES = (
     "generate_checklist",
 )
 
-_LISTED_DOCUMENT_FIELDS = ("doc_key", "source_pdf", "count", "mode", "run_date", "domain_profile")
+_LISTED_DOCUMENT_FIELDS = ("doc_key", "source_pdf", "count", "mode", "run_date", "profile")  # the names list_docs really emits
 # Error texts the services write for the caller's own input: safe to pass on. Anything else is replaced.
 _PASS_THROUGH = ("top_k must be", "Unknown document_ids", "No requirements found with source_ref", "No results found for", "Requirement not found")
 _MISSING_DOC = re.compile(r"No requirements JSONL found for doc_key '([^']*)'")
 BUSY_MESSAGE = "ReqBot is answering other requests right now. Try again in a moment."
+
+# Payload fields that name the models this server runs (every indexed requirement carries them), and the sentence that would name them in a warning.
+_MODEL_KEYS = frozenset({"extraction_model", "embedding_model", "enrichment_model", "rewrite_model", "synthesis_model", "question_model", "embedding_dim"})
+_MODEL_WORDS = "a language model"
+_EMBEDDING_WARNING = "Some results were indexed with a different embedding model than the server now uses and may be less reliable; the operator can rebuild the library."
 
 
 class _Busy(Exception):
@@ -79,6 +86,40 @@ def client_message(exc: Exception) -> tuple[str, str]:
             return "That profile is not available.", ""
     reference = secrets.token_hex(4)
     return f"ReqBot could not complete that request (reference {reference}). The details are in the server's request log.", reference
+
+
+def _model_names() -> list[str]:
+    """The model names this server is configured with, longest first, so a name that contains another is replaced whole."""
+    names = {audit_questions.MODEL}
+    try:
+        cfg = _config.load()
+        names.update(str(getattr(cfg, k, "") or "") for k in ("embedding_model", "extraction_model", "enrichment_model", "rewrite_model", "synthesis_model"))
+    except Exception:  # an unreadable config must not turn into an unscrubbed answer: the fixed names and keys still apply
+        pass
+    return sorted((n for n in names if n), key=len, reverse=True)
+
+
+def scrub(value, names: list[str]):
+    """A copy of a tool's answer without what names the server's models: the payload fields that carry them, a mismatch warning (rewritten whole), and the configured names
+    wherever they appear in text (a draft question's note says which model wrote it). Everything else, the quotes and citations above all, is returned as it was."""
+    if isinstance(value, dict):
+        out = {}
+        for k, v in value.items():
+            if k in _MODEL_KEYS:
+                continue
+            if k == "warnings" and isinstance(v, list):
+                out[k] = [_EMBEDDING_WARNING if isinstance(w, str) and "embedding model" in w else scrub(w, names) for w in v]
+            else:
+                out[k] = scrub(v, names)
+        return out
+    if isinstance(value, list):
+        return [scrub(v, names) for v in value]
+    if isinstance(value, str):
+        for n in names:
+            if n in value:
+                value = value.replace(n, _MODEL_WORDS)
+        return value
+    return value
 
 
 def public_status() -> dict:
@@ -142,7 +183,7 @@ class _Door:
             self.request_log.record(code=who, tool=tool, arguments=arguments, ok=False, ms=took(), error=f"{type(exc).__name__}: {exc}", reference=reference)
             raise RuntimeError(message) from None
         self.request_log.record(code=who, tool=tool, arguments=arguments, ok=True, ms=took())
-        return result
+        return scrub(result, _model_names())
 
 
 def _describe(fn) -> str:

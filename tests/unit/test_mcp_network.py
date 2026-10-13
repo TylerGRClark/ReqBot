@@ -159,17 +159,51 @@ def test_status_says_what_is_reachable_not_where(door):
     assert not any(s in text for s in INTERNAL)
 
 
-def test_the_document_list_leaves_out_folders(door):
+def test_the_document_list_leaves_out_folders_and_keeps_the_profile(door, tmp_path):
+    """Run through the real document listing on a small processed folder, so the test cannot drift from the fields it really emits."""
     client, code = door
-    listing = {"docs": [{"doc_key": "afi17-203", "source_pdf": "afi17-203.pdf", "path": "~/documents/processed/x/afi17-203_requirements_normalized.jsonl",
-                         "count": 133, "mode": "docling", "run_date": "2026-10-04", "domain_profile": "cybersecurity", "run_dir": "/home/coder/x"}],
-               "total_docs": 1, "total_reqs": 133}
-    with patch("mcp_server.server.docs_service.list_docs", return_value=listing):
+    run = tmp_path / "library" / "afi17-203_20261004_120000"
+    run.mkdir(parents=True)
+    rows = [{"requirement_id": f"REQ-{i}", "source_pdf": "afi17-203.pdf", "domain_profile": "cybersecurity", "source_quote": "Units will report."} for i in range(2)]
+    (run / "afi17-203_requirements_normalized.jsonl").write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
+    cfg = _cfg()
+    cfg.processed_dir_path.return_value = tmp_path / "library"
+    with patch("mcp_server.server._config.load", return_value=cfg):
         failed, text = _call(client, code, "list_documents")
     data = json.loads(text)
-    assert not failed and data["total_docs"] == 1
-    assert set(data["docs"][0]) == {"doc_key", "source_pdf", "count", "mode", "run_date", "domain_profile"}
-    assert "/home" not in text and "processed" not in text
+    assert not failed and data["total_docs"] == 1 and data["total_reqs"] == 2
+    assert data["docs"][0] == {"doc_key": "afi17-203", "source_pdf": "afi17-203.pdf", "count": 2, "mode": data["docs"][0]["mode"], "run_date": "2026-10-04", "profile": "cybersecurity"}
+    assert str(tmp_path) not in text and "path" not in data["docs"][0]
+
+
+def test_the_servers_model_names_are_removed_from_every_answer(door):
+    client, code = door
+    hit = {
+        "requirement_id": "REQ-1", "source_quote": "Units will report.", "citation": "3.1", "source_pdf": "afi17-203.pdf",
+        "extraction_model": "llama3.1:8b", "embedding_model": "nomic-embed-text", "embedding_dim": 768, "pipeline_version": "2026-10",
+        "generation_notes": "Draft audit question written by qwen2.5:14b from the text above; check it before use.",
+    }
+    answer = {
+        "results": [hit], "result_count": 1,
+        "warnings": ["1 of 1 results were indexed with a different embedding model (nomic-embed-text) than your current config (e-model) and may be unreliable; run 'reqbot reindex' to refresh them.",
+                     "Tag and type filters are off: the pipeline no longer assigns domain tags or requirement types, so the filter was ignored."],
+    }
+    with patch("mcp_server.server.ask_service.ask", return_value=answer):
+        failed, text = _call(client, code, "search_requirements", {"question": "report"})
+    data = json.loads(text)
+    assert not failed
+    row = data["results"][0]
+    assert not {"extraction_model", "embedding_model", "embedding_dim"} & set(row)
+    assert row["source_quote"] == "Units will report." and row["citation"] == "3.1" and row["pipeline_version"] == "2026-10"  # provenance stays
+    assert "qwen2.5:14b" not in row["generation_notes"] and "from the text above" in row["generation_notes"]
+    assert not any(n in text for n in ("llama3.1", "nomic-embed-text", "qwen2.5", "e-model"))
+    assert data["warnings"][0].startswith("Some results were indexed with a different embedding model")
+    assert data["warnings"][1].startswith("Tag and type filters are off")  # a warning that names no model is kept as it was
+
+
+def test_scrub_leaves_a_clean_answer_exactly_as_it_was():
+    answer = {"results": [{"source_quote": "Units will report.", "citation": "3.1", "page_start": 4, "tags": ["a"]}], "warnings": [], "n": 1, "ok": True, "none": None}
+    assert network.scrub(answer, ["llama3.1:8b"]) == answer
 
 
 def test_an_error_that_would_name_an_address_is_replaced_and_kept_in_the_log(door, request_log):

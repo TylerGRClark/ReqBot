@@ -62,6 +62,12 @@ class RequestLog:
                 except FileNotFoundError:
                     pass
                 fd = os.open(self.path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
+                try:
+                    if hasattr(os, "fchmod"):
+                        os.fchmod(fd, 0o600)  # a file that already existed keeps its old mode otherwise (REQBOT_MCP_LOG may point at one)
+                except OSError:
+                    os.close(fd)
+                    raise  # cannot make it private: do not write questions into it
                 with os.fdopen(fd, "a", encoding="utf-8") as f:
                     f.write(json.dumps(entry, ensure_ascii=False) + "\n")
         except OSError as exc:
