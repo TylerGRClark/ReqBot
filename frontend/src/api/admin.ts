@@ -238,8 +238,14 @@ export async function getAccess(): Promise<AdminMode> {
   return parsed.data.admin
 }
 
-export async function listJobs(): Promise<JobsResponse> {
-  return (await request(jobsSchema, 'jobs', '/jobs')).data
+/**
+ * How many of the newest jobs the page asks for (the server's most is 200; its default is 50). A folder of PDFs queues one job each, and the rows in the add panel that
+ * follow those jobs have to find theirs.
+ */
+export const JOB_WINDOW = 200
+
+export async function listJobs(limit: number = JOB_WINDOW): Promise<JobsResponse> {
+  return (await request(jobsSchema, 'jobs', `/jobs?limit=${limit}`)).data
 }
 
 export async function getJob(id: string): Promise<JobDetail> {

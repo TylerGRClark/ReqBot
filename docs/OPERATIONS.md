@@ -84,7 +84,7 @@ admin access code once (`reqbot token` prints it) and remembers it in that brows
 with `reqbot token --open` it asks for nothing. A file whose name is already in the
 library with different content is not decided silently: the screen asks whether to
 replace it or keep both. Replace removes the old copy's stale rows from search only after the new copy is completely in and every row is verified present, so the document is never missing from search; if the new run had a chunk that failed or was cut off, the old rows are kept and the log says to run it again. While a job runs a strip across the top of the Library page shows its step (and how many
-wait), with **History** to open the panel's activity list: the latest few jobs, **Show older** for more, Cancel and Retry, and the end of each log. The server runs the queue
+wait), with **History** to open the panel's activity list. Each file you drop shows its own job's progress in the panel and clears itself a few seconds after it is done (a skipped file a little later; one that failed stays, with the reason, until you choose **Clear finished**). The activity list shows: the latest few jobs, **Show older** for more, Cancel and Retry, and the end of each log. The server runs the queue
 (`reqbot serve`). A tick box above the drop zone, "Also write draft audit questions", queues each document's draft-questions job as soon as its ingest has succeeded (the command line equivalent is `reqbot jobs add ingest FILE --questions`); it is off by default because the question writer is a second, larger model and the run takes longer, and the same job can always be started later from the document's checklist page.
 
 ### Draft questions and a library rebuild as jobs

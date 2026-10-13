@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import AddDocuments from './AddDocuments'
 import * as admin from '../api/admin'
 
@@ -206,5 +206,130 @@ describe('AddDocuments', () => {
     await screen.findByText('Queued')
     expect(uploadPdf).toHaveBeenCalledTimes(1)
     expect(screen.queryByLabelText('Access code')).not.toBeInTheDocument()
+  })
+})
+
+describe('rows follow their job and clear themselves', () => {
+  function jobList(...list: Partial<admin.JobSummary>[]): admin.JobsResponse {
+    return {
+      jobs: list.map(j => ({ id: 'JOB-1', kind: 'ingest', title: 'Ingest afi99-1.pdf', state: 'queued', progress: null, ...j }) as admin.JobSummary),
+      running: null,
+      queued: 0,
+    }
+  }
+  const panel = (jobs: admin.JobsResponse | null) => (
+    <AddDocuments mode="open" onStarted={() => {}} onCodeChanged={() => {}} jobs={jobs} />
+  )
+
+  afterEach(() => { vi.useRealTimers() })
+
+  it('shows where the job has got to, then Done, then clears itself', async () => {
+    uploadPdf.mockResolvedValue(uploaded('new'))
+    startIngest.mockResolvedValue({ result: 'queued', document: 'afi99-1', job_id: 'JOB-1', job: null })
+    const { rerender } = render(panel(jobList()))
+    choose([pdf()])
+    await screen.findByText('Queued')
+
+    rerender(panel(jobList({ state: 'running', progress: { step: 'finding', done: 3, total: 10 } })))
+    expect(screen.getByText('Running')).toBeInTheDocument()
+    expect(screen.getByText('Finding requirements: 3 of 10 sections done')).toBeInTheDocument()
+
+    vi.useFakeTimers()
+    rerender(panel(jobList({ state: 'succeeded' })))
+    expect(screen.getByText('Done')).toBeInTheDocument()
+    expect(screen.getByText('Done. It is in the library.')).toBeInTheDocument()
+    act(() => { vi.advanceTimersByTime(6500) })
+    expect(screen.queryByText('afi99-1.pdf')).not.toBeInTheDocument()
+  })
+
+  it('keeps a failed file with the reason until it is cleared', async () => {
+    uploadPdf.mockResolvedValue(uploaded('new'))
+    startIngest.mockResolvedValue({ result: 'queued', document: 'afi99-1', job_id: 'JOB-1', job: null })
+    const { rerender } = render(panel(jobList()))
+    choose([pdf()])
+    await screen.findByText('Queued')
+    vi.useFakeTimers()
+    rerender(panel(jobList({ state: 'failed', error: 'The model machine did not answer.' })))
+    expect(screen.getByText('Failed')).toBeInTheDocument()
+    expect(screen.getByText('Failed: The model machine did not answer.')).toBeInTheDocument()
+    act(() => { vi.advanceTimersByTime(60000) })
+    expect(screen.getByText('afi99-1.pdf')).toBeInTheDocument() // a problem is not hidden by a timer
+    fireEvent.click(screen.getByText('Clear finished'))
+    expect(screen.queryByText('afi99-1.pdf')).not.toBeInTheDocument()
+  })
+
+  it('does not clear a file that is still waiting or running', async () => {
+    uploadPdf.mockResolvedValue(uploaded('new'))
+    startIngest.mockResolvedValue({ result: 'queued', document: 'afi99-1', job_id: 'JOB-1', job: null })
+    const { rerender } = render(panel(jobList()))
+    choose([pdf()])
+    await screen.findByText('Queued')
+    vi.useFakeTimers()
+    rerender(panel(jobList({ state: 'running', progress: { step: 'reading' } })))
+    act(() => { vi.advanceTimersByTime(60000) })
+    expect(screen.getByText('afi99-1.pdf')).toBeInTheDocument()
+    expect(screen.queryByText('Clear finished')).not.toBeInTheDocument()
+  })
+
+  it('clears a skipped file after a while, or at once with Clear finished', async () => {
+    uploadPdf.mockResolvedValue(uploaded('same_content'))
+    render(panel(null))
+    choose([pdf()])
+    expect(await screen.findByText('The same file is already in the library.')).toBeInTheDocument()
+    expect(screen.getByText('Skipped')).toBeInTheDocument()
+    fireEvent.click(screen.getByText('Clear finished'))
+    expect(screen.queryByText('The same file is already in the library.')).not.toBeInTheDocument()
+
+    cleanup()
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    render(panel(null))
+    choose([pdf('other.pdf')])
+    expect(await screen.findByText('The same file is already in the library.')).toBeInTheDocument()
+    await act(async () => { await vi.advanceTimersByTimeAsync(10500) })
+    expect(screen.queryByText('The same file is already in the library.')).not.toBeInTheDocument()
+  })
+
+  it('lets go of a row whose job is older than the whole job list, rather than leaving it queued for good', async () => {
+    uploadPdf.mockResolvedValue(uploaded('new'))
+    startIngest.mockResolvedValue({ result: 'queued', document: 'afi99-1', job_id: 'JOB-OLD', job: null })
+    const { rerender } = render(panel(jobList()))
+    choose([pdf()])
+    await screen.findByText('Queued')
+
+    // fewer jobs than the list can hold: a job that is not there yet is simply not there yet
+    rerender(panel(jobList({ id: 'JOB-OTHER' })))
+    expect(screen.getByText('Queued')).toBeInTheDocument()
+
+    // a full list that no longer includes it: it is older than all of them
+    const full = admin.JOB_WINDOW
+    const crowded: admin.JobsResponse = {
+      jobs: Array.from({ length: full }, (_, n) => ({ id: `JOB-${n}`, kind: 'ingest', title: `Ingest ${n}.pdf`, state: 'succeeded', progress: null }) as admin.JobSummary),
+      running: null,
+      queued: 0,
+    }
+    vi.useFakeTimers()
+    rerender(panel(crowded))
+    expect(screen.getByText('Started')).toBeInTheDocument()
+    expect(screen.getByText('Started earlier. Recent activity shows how it went.')).toBeInTheDocument()
+    act(() => { vi.advanceTimersByTime(10500) })
+    expect(screen.queryByText('afi99-1.pdf')).not.toBeInTheDocument()
+  })
+
+  it('shows an inbox file following its job and can put the inbox card away', async () => {
+    getInbox.mockResolvedValue({ folder: '/data/inbox', exists: true, truncated: false, files: [{ name: 'new-one.pdf', size: 10, status: 'new' }] })
+    importInbox.mockResolvedValue({ queued: 1, results: [{ file: 'new-one.pdf', result: 'queued', document: 'new-one' }] })
+    const { rerender } = render(panel(jobList()))
+    fireEvent.click(screen.getByText('Import from inbox'))
+    await screen.findByText('Import the new ones')
+    fireEvent.click(screen.getByText('Import the new ones'))
+    await waitFor(() => expect(importInbox).toHaveBeenCalled())
+    expect(await screen.findByText('Queued')).toBeInTheDocument()
+
+    rerender(panel(jobList({ id: 'JOB-9', title: 'Ingest new-one.pdf', params: { stem: 'new-one' }, state: 'running', progress: { step: 'finding', done: 1, total: 4 } })))
+    expect(screen.getByText('Running')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText('Clear'))
+    expect(screen.queryByText('Running')).not.toBeInTheDocument()
+    expect(screen.queryByText(/Inbox/)).not.toBeInTheDocument()
   })
 })
