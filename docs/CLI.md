@@ -248,7 +248,7 @@ quote/citation/page provenance, the document's own surrounding passage, an
 "applies to" heading where the structure names one, and specific hints (the
 Check column). The sheet is one list in document order with a Status dropdown
 (not-started, in-progress, compliant, non-compliant, not-applicable) and a Notes
-column. Passages that look like obligations but were not extracted are listed
+column. The Excel sheet opens with the document's name and a line of facts (profile, when it was made, how many items, how many are shaded for a second look), then the five column groups (Locate, Ask, Record, Verify, Trace) each in its own color; the Status cell is colored by what is chosen, and the sheet prints landscape with its headers repeated and the document's name and the page number in the footer. Passages that look like obligations but were not extracted are listed
 after the items under a clear banner ("possible missed requirements"; CSV rows
 carry the `possible_missed` flag); a paragraph's duty sentences found this way, numbered or not, are
 ordinary rows in their place in the document, flagged `found_by_text_scan` in the Check column. Assessor fields begin empty; generation does

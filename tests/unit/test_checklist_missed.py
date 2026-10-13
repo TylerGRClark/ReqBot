@@ -230,10 +230,10 @@ def test_exports_show_the_section_clearly_apart(tmp_path):
     assert sum(1 for r in rows if "found_by_text_scan" in r["item_flags"]) == 3  # the promoted rows are ordinary rows with a flag
     assert "# Possible missed requirements" in to_markdown(checklist)
     ws = openpyxl.load_workbook(io.BytesIO(to_xlsx(checklist)))["Checklist"]
-    assert ws.max_row == 2 + n_items + 1 + 1 + n_missed  # 2 header rows, the items, a blank row, the banner row, the candidates
-    banner = [r for r in range(3, ws.max_row + 1) if str(ws.cell(row=r, column=1).value or "").startswith("POSSIBLE MISSED REQUIREMENTS")]
-    assert banner == [4 + n_items]
-    assert ws.auto_filter.ref.endswith(str(2 + n_items))  # the filter covers the items, found rows included, and not the block
+    assert ws.max_row == 4 + n_items + 1 + 1 + n_missed  # the title, facts and 2 header rows, the items, a blank row, the banner row, the candidates
+    banner = [r for r in range(5, ws.max_row + 1) if str(ws.cell(row=r, column=1).value or "").startswith("POSSIBLE MISSED REQUIREMENTS")]
+    assert banner == [6 + n_items]  # items end on row 4 + n_items, then a blank row, then the banner
+    assert ws.auto_filter.ref.endswith(str(4 + n_items))  # the filter covers the items, found rows included, and not the block
     assert any(ws.cell(row=banner[0] + 1, column=9).coordinate in dv.sqref for dv in ws.data_validations.dataValidation)  # the Status dropdown reaches the candidates too
 
 
