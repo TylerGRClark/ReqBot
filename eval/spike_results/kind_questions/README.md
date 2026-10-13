@@ -1,0 +1,49 @@
+# Kind-aware draft audit questions (spike)
+
+Experiment only. No change to `services/`, any sidecar, the live index or the checklist. Stacked on PR #339 (kind-rules-6, front-matter duties fix), so the experiment sees that fix.
+Pre-registration: `PREREGISTRATION.md` (committed before any model call). Plain-words report for Tyler: `report.md`.
+
+## Files
+
+| File | What |
+|---|---|
+| `PREREGISTRATION.md` | criteria and checks, fixed before the run |
+| `kind_questions.py` | pure functions: rules-7 wrapper, pointer decision, recommendation flag, automatic checks, permission prompts v1 to v3 |
+| `build_rows.py`, `list_rows.py` | checklist rows (no model) for the six documents |
+| `run_experiment.py` | `det` (no model) and `perm` (model calls, serial) |
+| `finalize.py`, `make_report.py` | combine rounds, hand grades, write `report.md` |
+| `outputs/` | per-round answers, final table, summary, pointers, recommendations, kind changes |
+| `tests/unit/test_kind_questions_spike.py` | tests for the pure functions |
+
+Re-run: `python3 build_rows.py <scratch>` then `run_experiment.py <scratch> det`, `perm 1 v1`, `perm 2 v2`, `perm 3 v3 outputs/round3_ids.json`, `finalize.py`, `make_report.py`.
+Model: `services.audit_questions.MODEL` (qwen2.5:14b), temperature 0.1, local Ollama from config, 155 calls in total (70 + 67 + 18).
+
+## Prompt rounds
+
+| Round | Change | Rows | Questions | Fail C1-C4 | Fail C5 |
+|---|---|---|---|---|---|
+| 1 (v1) | first prompt: ask whether the stated limit was met; JSON with grant, limit, question, why_null | 67 (70 incl. 3 later reclassified) | 36 | 3 (C4 x2, one a false alarm from "required" in the source; C1 x1) | 0 |
+| 2 (v2) | defined a real limit; null for descriptive may; two worked examples; ban "is it required", "is the limit that" | 67 | 36 | 0 | 1 |
+| 3 (v3) | purposes / bare adverbs / always-yes questions are not limits | 18 (8 weak + 10 sentinels) | 18 | 0 | 1 |
+
+Final per row: v3 answer for the 18 rows of round 3, otherwise v2.
+
+## Pre-registered criteria: results
+
+| Criterion | Result |
+|---|---|
+| (a) rows dropped: 0 | 0. All 1,418 rows keep a before and after; the 31 permission rows without a new question stay as rows |
+| (b) new permission questions failing an automatic check, target <= 10% | 0 of 36 on C1-C4 (round 1: 3 of 36 = 8.3%); 1 of 36 on the added C5 (limit not verbatim). Hand reading (not pre-registered as a target): 28 good, 6 weak, 2 wrong, so 22% weak or wrong |
+| (c) pointer suppressions that remove a real duty, target 0 | 0 after one fix (first version wrongly suppressed afi10-2402 2.17.29 because "Lead" was not in the verb list). All 11 pointer rows read by hand: 8 suppressed, 3 kept |
+| (d) rows whose kind changes under the rules-7 wrapper | 3 of 1,418, all permission to duty_imperative: dafman17-1305 2.15.18, 2.20.6, 2.21; all judged correct |
+
+## Findings worth keeping
+
+- The leading-imperative defect was not the word "authorize": the verb list lacked it, so a "can" in a later sentence made the row a permission. Same cause for "Deny ...".
+- Permission rows hold many descriptive "may" statements; the model sorts them well but treats purposes as limits.
+- 13 existing permission-row questions would be erased; about 4 of them look useful (see report.md, unsure rows). Proposal: keep the old question when it is a plain "Can ...?" and the new rule says null.
+- 2 of 24 recommendation rows are mislabelled by the kind rules ("should" inside an "if" clause or after "determine if").
+
+## Limits
+
+Single run per prompt, no noise floor. Hand grades are by the agent that wrote the prompt. C1-C4 measure form only. The 3 rules-7 rows were still run through the model in round 1 (their answers are not used).

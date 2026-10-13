@@ -1,0 +1,134 @@
+[
+ {
+  "doc": "afi10-2402",
+  "citation": "2.17.23",
+  "checklist_item_id": "CHK-7c170367ad41cac5",
+  "source_quote": "A list of DoD MA programs can be found in Section 1.4.1.",
+  "kind": "pointer",
+  "before_question": "Does the unit provide a list of DoD MA programs as specified in Section 1.4.1?",
+  "flags": [],
+  "action": "suppress",
+  "reason": "only points to another place (a pointer states no duty of its own; the duty is wherever it points)"
+ },
+ {
+  "doc": "afi10-2402",
+  "citation": "2.17.29",
+  "checklist_item_id": "CHK-ad7b85b0804b97fa",
+  "source_quote": "Lead support efforts with Centers/Wings in execution of Mission Assurance Assessments (MAA) of TCAs. Assessment types and actions are described in section 3.3.",
+  "kind": "pointer",
+  "before_question": "Does the MAJCOM/DRU lead support efforts with Centers/Wings in executing Mission Assurance Assessments (MAA) of TCAs?",
+  "flags": [],
+  "action": "keep",
+  "reason": "also states a duty, so the duty question stays",
+  "duty_sentence": "Lead support efforts with Centers/Wings in execution of Mission Assurance Assessments (MAA) of TCAs."
+ },
+ {
+  "doc": "afi10-2402",
+  "citation": "4.4",
+  "checklist_item_id": "CHK-dc0732f11913c988",
+  "source_quote": "The specifics of the CARM training program can be found on the CARM SharePoint site.",
+  "kind": "pointer",
+  "before_question": null,
+  "flags": [],
+  "action": "suppress",
+  "reason": "only points to another place (a pointer states no duty of its own; the duty is wherever it points)"
+ },
+ {
+  "doc": "afi17-203",
+  "citation": "3.4.1",
+  "checklist_item_id": "CHK-44ed70d9d277f96f",
+  "source_quote": "Refer to paragraph 4 for guidance on identifying exercise incidents/events reported, and the processes for de-conflicting real world and exercise activities.",
+  "kind": "pointer",
+  "before_question": null,
+  "flags": [
+   "definition_or_description"
+  ],
+  "action": "suppress",
+  "reason": "only points to another place (a pointer states no duty of its own; the duty is wherever it points)"
+ },
+ {
+  "doc": "afi17-203",
+  "citation": "3.4.4",
+  "checklist_item_id": "CHK-49e68442d862ee96",
+  "source_quote": "Assess the event against the incident criteria to determine if it is a reportable event or incident (See Table 1.1, Incident Categories).",
+  "kind": "pointer",
+  "before_question": "Does the unit assess the event against the incident criteria to determine if it is a reportable event or incident?",
+  "flags": [
+   "no_stated_actor"
+  ],
+  "action": "keep",
+  "reason": "also states a duty, so the duty question stays",
+  "duty_sentence": "Assess the event against the incident criteria to determine if it is a reportable event or incident (See Table 1.1, Incident Categories)."
+ },
+ {
+  "doc": "afi17-203",
+  "citation": "3.7.3.2",
+  "checklist_item_id": "CHK-fb5c5cf49939f7ca",
+  "source_quote": "A general CIR format with detailed instructions can be found in CJCSI 6510.01B, Appendix B to Enclosure C.",
+  "kind": "pointer",
+  "before_question": null,
+  "flags": [],
+  "action": "suppress",
+  "reason": "only points to another place (a pointer states no duty of its own; the duty is wherever it points)"
+ },
+ {
+  "doc": "afman17-2101",
+  "citation": "1.1.4.2",
+  "checklist_item_id": "CHK-f2f73b419f89922d",
+  "source_quote": "DISA connection process guidance on DISN connectivity can be found in the DISN Connection Process Guide at: https://www.disa.mil/Network-Services/Enterprise-Connections/ConnectionProcess-Guide.",
+  "kind": "pointer",
+  "before_question": null,
+  "flags": [],
+  "action": "suppress",
+  "reason": "only points to another place (a pointer states no duty of its own; the duty is wherever it points)"
+ },
+ {
+  "doc": "afman17-2101",
+  "citation": "2.3.5",
+  "checklist_item_id": "CHK-57d80b7eb7856833",
+  "source_quote": "Provides AF customers guidance on how to process DoDIN waivers. Details on the DOD Waiver process can be found in DISN Connection Process Guide appendix G located at https://www.disa.mil.",
+  "kind": "pointer",
+  "before_question": "Does the AF LHC Flight provide guidance to AF customers on how to process DoDIN waivers?",
+  "flags": [],
+  "action": "keep",
+  "reason": "also states a duty, so the duty question stays",
+  "duty_sentence": "Provides AF customers guidance on how to process DoDIN waivers."
+ },
+ {
+  "doc": "afman17-2101",
+  "citation": "3.1.1.2.2.2",
+  "checklist_item_id": "CHK-f32df4f22f0bdb4a",
+  "source_quote": "For Morale, Welfare and Recreation (MWR) Category A, B, and C activities, refer to AFI 65-106, Appropriated Fund Support of Morale, Welfare, and Recreation (MWR) and Nonappropriated Fund Instrumentalities (NAFIS).",
+  "kind": "pointer",
+  "before_question": null,
+  "flags": [
+   "definition_or_description"
+  ],
+  "action": "suppress",
+  "reason": "only points to another place (a pointer states no duty of its own; the duty is wherever it points)"
+ },
+ {
+  "doc": "afman17-2101",
+  "citation": "3.1.1.2.2.3",
+  "checklist_item_id": "CHK-3b5a4b76e61e11f0",
+  "source_quote": "For Internet access in dormitories, refer to AFI 326005, Unaccompanied Housing Management.",
+  "kind": "pointer",
+  "before_question": null,
+  "flags": [
+   "definition_or_description"
+  ],
+  "action": "suppress",
+  "reason": "only points to another place (a pointer states no duty of its own; the duty is wherever it points)"
+ },
+ {
+  "doc": "dafman17-1305",
+  "citation": "3.4.3 (inferred)",
+  "checklist_item_id": "CHK-d2573b1629ce8a9e",
+  "source_quote": "These requirements are explained in DoDM 8140.03 Chap 3.2 and additional information can be found with the qualification matrix information for appropriate work roles at: https://cyber.mil/wid/dod8140/qualifications-matrices.",
+  "kind": "pointer",
+  "before_question": null,
+  "flags": [],
+  "action": "suppress",
+  "reason": "only points to another place (a pointer states no duty of its own; the duty is wherever it points)"
+ }
+]

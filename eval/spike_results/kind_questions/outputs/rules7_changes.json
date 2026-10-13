@@ -1,0 +1,79 @@
+{
+ "counts_old": {
+  "cover_page_text": 23,
+  "duty_imperative": 588,
+  "duty_with_actor": 423,
+  "unknown": 171,
+  "applicability": 9,
+  "permission": 70,
+  "recommendation": 24,
+  "exemption": 6,
+  "pointer": 11,
+  "definition_or_description": 12,
+  "table_row": 32,
+  "prohibition": 21,
+  "form_template_text": 28
+ },
+ "counts_new": {
+  "cover_page_text": 23,
+  "duty_imperative": 591,
+  "duty_with_actor": 423,
+  "unknown": 171,
+  "applicability": 9,
+  "permission": 67,
+  "recommendation": 24,
+  "exemption": 6,
+  "pointer": 11,
+  "definition_or_description": 12,
+  "table_row": 32,
+  "prohibition": 21,
+  "form_template_text": 28
+ },
+ "changes": [
+  {
+   "doc": "dafman17-1305",
+   "citation": "2.15.18",
+   "checklist_item_id": "CHK-937270a511b9e048",
+   "source_quote": "Deny systems access, document the basis for the action, and initiate removal of contractor personnel who do not meet or maintain DoD approved cyberspace foundational or continuing education requirements (in accordance with contract requirements) via the Contracting Officer (T-0). The Contracting Officer (or Representative) may prescribe other contractual remedies.",
+   "kind_old": "permission",
+   "kind_new": "duty_imperative",
+   "reason_old": [
+    "says what may be done: 'may'"
+   ],
+   "reason_new": [
+    "opens with a command (Deny) and names no actor"
+   ],
+   "before_question": "Do PMs, System Managers, PMOs, Test Agencies, and Units deny systems access to contractor personnel who do not meet DoD approved cyberspace foundational or continuing education requirements?"
+  },
+  {
+   "doc": "dafman17-1305",
+   "citation": "2.20.6",
+   "checklist_item_id": "CHK-f165df9879a1208a",
+   "source_quote": "Authorize release of DoD approved cybersecurity foundational certification data to DoD (T-0). Personnel can access and submit release authorization at this link https://cwip.cce.af.mil (T-1).",
+   "kind_old": "permission",
+   "kind_new": "duty_imperative",
+   "reason_old": [
+    "says what may be done: 'can'"
+   ],
+   "reason_new": [
+    "opens with a command (Authorize) and names no actor"
+   ],
+   "before_question": "Have individuals authorized the release of DoD approved cybersecurity foundational certification data to DoD through https://cwip.cce.af.mil?"
+  },
+  {
+   "doc": "dafman17-1305",
+   "citation": "2.21",
+   "checklist_item_id": "CHK-55b7346ae60033b5",
+   "source_quote": "Authorize release of DoD approved cyberspace foundational certification data to DoD if used to meet foundational requirements. (T-0) Personnel can access and submit release authorization at this link https://cwip.cce.af.mil/ (T-1).",
+   "kind_old": "permission",
+   "kind_new": "duty_imperative",
+   "reason_old": [
+    "says what may be done: 'can'"
+   ],
+   "reason_new": [
+    "opens with a command (Authorize) and names no actor"
+   ],
+   "before_question": "Did personnel authorize the release of DoD approved cyberspace foundational certification data to DoD if used to meet foundational requirements?"
+  }
+ ]
+}
