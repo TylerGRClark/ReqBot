@@ -11,7 +11,7 @@ from pathlib import Path
 
 from services import checklist_audit
 
-RULES_VERSION = "kind-rules-5"
+RULES_VERSION = "kind-rules-6"
 KINDS = (
     "duty_with_actor", "duty_imperative", "recommendation", "permission", "prohibition", "exemption", "definition_or_description", "applicability", "pointer", "table_row",
     "form_template_text", "cover_page_text", "unknown",
@@ -144,7 +144,7 @@ def classify(item: dict, *, use_position: bool = True) -> dict:
         decide("form_template_text", f"cited by a figure caption ({citation})")
     elif use_position and citation == "Front matter" and applies:
         decide("applicability", "says who the document applies to (in the front matter)")
-    elif use_position and citation == "Front matter" and (not _STRONG_DUTY.search(text) or _THIS_DOCUMENT_PROVIDES.match(text)):  # a duty word in the front matter: the wording decides, the location stays a tag
+    elif use_position and citation == "Front matter" and ((not _STRONG_DUTY.search(text) and not leading_command(text)) or _THIS_DOCUMENT_PROVIDES.match(text)):  # a duty word or a command in the front matter: the wording decides, the location stays a tag
         decide("cover_page_text", "cited as front matter")
     elif use_position and citation.startswith("Table"):
         decide("table_row", f"cited by a table caption ({citation})")

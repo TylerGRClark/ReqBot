@@ -137,7 +137,7 @@ def test_an_applicability_sentence_in_the_front_matter_is_applicability_and_keep
 
 
 def test_the_rules_version_names_the_current_rule_set():
-    assert RK.RULES_VERSION == "kind-rules-5"
+    assert RK.RULES_VERSION == "kind-rules-6"
 
 
 def test_a_row_whose_kind_comes_from_its_position_also_keeps_what_its_words_say():
@@ -210,3 +210,12 @@ def test_more_pointer_wordings_and_front_matter_that_says_what_the_document_is()
     assert _kind("The CFP is responsible for the process as described in AFI 10-701.") == "duty_with_actor"
     r = RK.classify(_item("This directive provides a means by which the AF will align cyberspace programs.", citation="Front matter"))
     assert r["kind"] == "cover_page_text"
+
+
+def test_a_command_in_the_front_matter_is_a_duty_not_cover_page_text():
+    # the standard "Compliance and Waivers" lines of an AF publication: real instructions that happen to sit before paragraph 1
+    for quote in ("Ensure that all records created as a result of processes prescribed in this publication are maintained in accordance with AF Manual 33-363.",
+                  "Submit requests for waivers through the chain of command to the appropriate Tier waiver approval authority."):
+        r = RK.classify(_item(quote, citation="Front matter"))
+        assert r["kind"] == "duty_imperative" and "front_matter" in r["kind_tags"], quote
+    assert RK.classify(_item("This publication applies to the Air Force.", citation="Front matter"))["kind"] == "applicability"
