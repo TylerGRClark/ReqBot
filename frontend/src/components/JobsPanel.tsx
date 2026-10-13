@@ -63,23 +63,25 @@ function JobRow({ job, onChanged }: { job: JobSummary; onChanged: () => void }) 
 
   return (
     <li className="bg-white border border-gray-200 rounded-lg p-3">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <span className={`text-xs px-2 py-0.5 rounded shrink-0 ${BADGE[job.state] ?? BADGE.queued}`}>{STATE_LABEL[job.state]}</span>
-        <button onClick={toggle} className="text-sm text-gray-900 truncate text-left hover:underline min-w-0 flex-1" aria-expanded={open}>
-          {job.title}
-        </button>
-        <span className="text-xs text-gray-400 shrink-0">{shortTime(job.finished_at ?? job.started_at ?? job.created_at)}</span>
-        {canCancel(job.state) && (
-          <button disabled={busy} onClick={() => act(cancelJob)} className="text-xs text-gray-600 border border-gray-300 rounded px-2 py-1 hover:bg-gray-50 disabled:opacity-50">
-            Cancel
-          </button>
-        )}
-        {canRetry(job.state) && (
-          <button disabled={busy} onClick={() => act(retryJob)} className="text-xs text-blue-700 border border-blue-300 rounded px-2 py-1 hover:bg-blue-50 disabled:opacity-50">
-            Retry
-          </button>
-        )}
+        <span className="text-xs text-gray-500 min-w-0 truncate">{shortTime(job.finished_at ?? job.started_at ?? job.created_at)}</span>
+        <span className="ml-auto flex items-center gap-2 shrink-0">
+          {canCancel(job.state) && (
+            <button disabled={busy} onClick={() => act(cancelJob)} className="text-xs text-gray-600 border border-gray-300 rounded px-2 py-1 hover:bg-gray-50 disabled:opacity-50">
+              Cancel
+            </button>
+          )}
+          {canRetry(job.state) && (
+            <button disabled={busy} onClick={() => act(retryJob)} className="text-xs text-blue-700 border border-blue-300 rounded px-2 py-1 hover:bg-blue-50 disabled:opacity-50">
+              Retry
+            </button>
+          )}
+        </span>
       </div>
+      <button onClick={toggle} className="mt-1.5 block w-full text-left text-sm text-gray-900 break-words hover:underline" aria-expanded={open}>
+        {job.title}
+      </button>
       {job.state === 'running' && job.cancel_requested && <p className="text-xs text-gray-500 mt-1">Stopping…</p>}
       {job.error && (job.state === 'failed' || job.state === 'interrupted') && <p className="text-xs text-red-700 mt-2">{job.error}</p>}
       {problem && <p className="text-xs text-red-700 mt-2">{problem}</p>}

@@ -59,7 +59,7 @@ export default function AddPanel({ admin, open, onClose, historyAsked }: Props) 
           {asked ? 'The server did not say whether adding documents is switched on. Reload the page to try again.' : 'Checking…'}
         </p>
       ) : (
-        <AddDocuments mode={mode} onStarted={afterStart} onCodeChanged={codeChanged} codeRejected={codeRejected} />
+        <AddDocuments mode={mode} onStarted={afterStart} onCodeChanged={codeChanged} codeRejected={codeRejected} jobs={enabled ? jobs.data : null} />
       )}
 
       {enabled && jobs.error && <p className="text-xs text-red-700">{jobs.error}</p>}

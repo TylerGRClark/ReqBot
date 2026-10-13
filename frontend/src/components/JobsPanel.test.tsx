@@ -84,4 +84,14 @@ describe('JobsPanel', () => {
     fireEvent.click(screen.getByText('Show older (2)'))
     expect(onShowMore).toHaveBeenCalled()
   })
+
+  it('shows the whole title on its own line under the status and time, not cut short beside them', () => {
+    const long = 'Ingest test-policy-99-1.pdf, then write draft questions'
+    render(<JobsPanel data={{ jobs: [job({ title: long, state: 'succeeded', finished_at: '2026-10-12T19:26:00+00:00' })], running: null, queued: 0 }} onChanged={() => {}} />)
+    const title = screen.getByText(long)
+    expect(title.tagName).toBe('BUTTON')
+    expect(title.className).not.toContain('truncate')
+    expect(title.className).toContain('break-words')
+    expect(screen.getByText('Done')).toBeInTheDocument()
+  })
 })

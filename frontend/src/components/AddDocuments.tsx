@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   AdminAuthError,
   AdminRequestError,
@@ -10,7 +10,8 @@ import {
   startIngest,
   uploadPdf,
 } from '../api/admin'
-import type { AdminMode, IfExists, InboxImportResponse, InboxResponse } from '../api/admin'
+import type { AdminMode, IfExists, InboxImportResponse, InboxResponse, JobSummary, JobsResponse } from '../api/admin'
+import { STATE_LABEL, stepLabel, stepPercent } from '../utils/jobText'
 import { collectPdfFiles, pdfsFromFileList } from '../utils/pdfFiles'
 
 type Phase = 'uploading' | 'deciding' | 'queued' | 'skipped' | 'error'
@@ -22,6 +23,8 @@ interface Item {
   progress: number
   message: string
   uploadId?: string
+  /** The job this file started, so its row can follow it to the end. */
+  jobId?: string
 }
 
 const PHASE_STYLE: Record<Phase, string> = {
@@ -30,6 +33,46 @@ const PHASE_STYLE: Record<Phase, string> = {
   queued: 'text-green-700',
   skipped: 'text-gray-600',
   error: 'text-red-700',
+}
+
+/** How long a row that needs nothing more from the person stays before it clears itself (milliseconds). */
+const DONE_VISIBLE_MS = 6000
+const SKIPPED_VISIBLE_MS = 10000
+
+type Tone = 'wait' | 'work' | 'done' | 'bad'
+
+const TONE_STYLE: Record<Tone, string> = {
+  wait: 'text-gray-600',
+  work: 'text-blue-700',
+  done: 'text-green-700',
+  bad: 'text-red-700',
+}
+
+interface Live {
+  text: string
+  tone: Tone
+  pct: number | null
+  /** The job has ended, one way or another. */
+  over: boolean
+}
+
+/** What a job that this panel started is doing, in plain words; null when the job is not in the list (yet). */
+function liveStatus(job: JobSummary | undefined): Live | null {
+  if (!job) return null
+  switch (job.state) {
+    case 'queued': return { text: 'Waiting for its turn.', tone: 'wait', pct: null, over: false }
+    case 'running': return { text: stepLabel(job.progress), tone: 'work', pct: stepPercent(job.progress), over: false }
+    case 'succeeded': return { text: 'Done. It is in the library.', tone: 'done', pct: null, over: true }
+    case 'failed': return { text: job.error ? `Failed: ${job.error}` : 'Failed.', tone: 'bad', pct: null, over: true }
+    case 'cancelled': return { text: 'Cancelled.', tone: 'wait', pct: null, over: true }
+    default: return { text: job.error ? `Interrupted: ${job.error}` : 'Interrupted.', tone: 'bad', pct: null, over: true }
+  }
+}
+
+/** The newest ingest job for a document name (the inbox import reports names, not job numbers). */
+function ingestJobFor(jobs: JobsResponse | null | undefined, stem: string | null | undefined): JobSummary | undefined {
+  if (!jobs || !stem) return undefined
+  return jobs.jobs.find(j => j.kind === 'ingest' && (j.params as { stem?: unknown } | null | undefined)?.stem === stem)
 }
 
 let nextId = 1
@@ -42,9 +85,11 @@ interface Props {
   onCodeChanged: () => void
   /** The server rejected the saved code on a read (the job list). */
   codeRejected?: boolean
+  /** The job list, so a started file's row can show where its job has got to and clear itself when it is done. */
+  jobs?: JobsResponse | null
 }
 
-export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejected = false }: Props) {
+export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejected = false, jobs = null }: Props) {
   const [items, setItems] = useState<Item[]>([])
   const [dragging, setDragging] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
@@ -66,6 +111,26 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
     setItems(prev => prev.map(i => (i.id === id ? { ...i, ...patch } : i)))
   }, [])
 
+  // rows follow their job and clear themselves: a finished one stays a few seconds, a skipped one a little longer; one that went wrong waits to be dismissed
+  const finishedRow = useCallback((i: Item): boolean => {
+    if (i.phase === 'skipped' || i.phase === 'error') return true
+    if (i.phase !== 'queued' || !i.jobId) return false
+    return liveStatus(jobs?.jobs.find(j => j.id === i.jobId))?.over ?? false
+  }, [jobs])
+  const scheduled = useRef(new Set<number>())
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([])
+  useEffect(() => {
+    for (const i of items) {
+      if (scheduled.current.has(i.id)) continue
+      const job = i.phase === 'queued' && i.jobId ? jobs?.jobs.find(j => j.id === i.jobId) : undefined
+      const after = i.phase === 'skipped' ? SKIPPED_VISIBLE_MS : job?.state === 'succeeded' ? DONE_VISIBLE_MS : null
+      if (after === null) continue
+      scheduled.current.add(i.id)
+      timers.current.push(setTimeout(() => setItems(prev => prev.filter(x => x.id !== i.id)), after))
+    }
+  }, [items, jobs])
+  useEffect(() => () => { timers.current.forEach(clearTimeout) }, [])
+
   const rejected = codeRejected && !justSaved
   const needsCode = mode === 'code' && (!getAdminToken() || rejected)
 
@@ -78,7 +143,7 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
         if (where.status === 'new') {
           const r = await startIngest(up.upload_id, 'ask', alsoQuestionsRef.current)
           update(id, r.result === 'queued'
-            ? { phase: 'queued', message: 'Queued. It will start when the machine is free.' }
+            ? { phase: 'queued', jobId: r.job_id ?? r.job?.id ?? undefined, message: 'Queued. It will start when the machine is free.' }
             : { phase: 'skipped', message: r.message ?? 'Nothing to do.' })
           onStarted()
         } else if (where.status === 'same_name_different_content') {
@@ -152,7 +217,7 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
     try {
       const r = await startIngest(item.uploadId, ifExists, alsoQuestionsRef.current)
       update(item.id, r.result === 'queued'
-        ? { phase: 'queued', message: ifExists === 'replace' ? 'Queued to replace the library copy.' : `Queued as ${r.document ?? 'a second copy'}.` }
+        ? { phase: 'queued', jobId: r.job_id ?? r.job?.id ?? undefined, message: ifExists === 'replace' ? 'Queued to replace the library copy.' : `Queued as ${r.document ?? 'a second copy'}.` }
         : { phase: 'skipped', message: r.message ?? 'Nothing to do.' })
       onStarted()
     } catch (e) {
@@ -309,15 +374,29 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
 
       {items.length > 0 && (
         <ul className="mt-3 space-y-2">
-          {items.map(item => (
+          {items.map(item => {
+            const job = item.phase === 'queued' && item.jobId ? jobs?.jobs.find(j => j.id === item.jobId) : undefined
+            const live = liveStatus(job)
+            const style = live ? TONE_STYLE[live.tone] : PHASE_STYLE[item.phase]
+            const label = job ? STATE_LABEL[job.state]
+              : item.phase === 'uploading' ? `Uploading ${Math.round(item.progress * 100)}%`
+              : item.phase === 'deciding' ? 'Needs a decision'
+              : item.phase === 'queued' ? 'Queued'
+              : item.phase === 'skipped' ? 'Skipped'
+              : 'Not added'
+            const message = live ? live.text : item.message
+            return (
             <li key={item.id} className="bg-white border border-gray-200 rounded-lg p-3 text-sm">
               <div className="flex items-center justify-between gap-3">
                 <span className="truncate text-gray-900">{item.name}</span>
-                <span className={`shrink-0 text-xs ${PHASE_STYLE[item.phase]}`}>
-                  {item.phase === 'uploading' ? `Uploading ${Math.round(item.progress * 100)}%` : item.phase === 'deciding' ? 'Needs a decision' : item.phase === 'queued' ? 'Queued' : item.phase === 'skipped' ? 'Skipped' : 'Not added'}
-                </span>
+                <span className={`shrink-0 text-xs ${style}`}>{label}</span>
               </div>
-              {item.message && <p className={`text-xs mt-1 ${PHASE_STYLE[item.phase]}`}>{item.message}</p>}
+              {message && <p className={`text-xs mt-1 break-words ${style}`}>{message}</p>}
+              {live && live.pct !== null && (
+                <div className="mt-2 h-1.5 bg-blue-100 rounded" aria-hidden>
+                  <div className="h-1.5 bg-blue-500 rounded transition-all" style={{ width: `${live.pct}%` }} />
+                </div>
+              )}
               {item.phase === 'deciding' && (
                 <div className="flex gap-2 mt-2">
                   <button onClick={() => decide(item, 'replace')} className="text-xs bg-blue-600 text-white rounded px-2 py-1 hover:bg-blue-700">
@@ -332,8 +411,17 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
                 </div>
               )}
             </li>
-          ))}
+            )
+          })}
         </ul>
+      )}
+      {items.some(finishedRow) && (
+        <button
+          onClick={() => setItems(prev => prev.filter(i => !finishedRow(i)))}
+          className="mt-2 text-xs text-blue-700 hover:underline"
+        >
+          Clear finished
+        </button>
       )}
 
       {(inbox || inboxError) && (
@@ -367,11 +455,14 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
           )}
           {inboxResult && (
             <ul className="mt-3 space-y-1 border-t border-gray-100 pt-2">
-              {inboxResult.results.map(r => (
+              {inboxResult.results.map(r => {
+                const job = r.result === 'queued' ? ingestJobFor(jobs, r.document ?? r.file.replace(/\.pdf$/i, '')) : undefined
+                const live = liveStatus(job)
+                return (
                 <li key={r.file} className="text-xs flex items-center justify-between gap-3">
                   <span className="truncate">{r.file}</span>
-                  <span className="shrink-0 text-gray-600">
-                    {r.result === 'queued' ? 'Queued' : r.result === 'skipped' ? 'Skipped' : r.result === 'needs_decision' ? 'Same name, different content' : (r.message ?? 'Not added')}
+                  <span className={`shrink-0 ${live ? TONE_STYLE[live.tone] : 'text-gray-600'}`}>
+                    {live ? (job ? STATE_LABEL[job.state] : '') : r.result === 'queued' ? 'Queued' : r.result === 'skipped' ? 'Skipped' : r.result === 'needs_decision' ? 'Same name, different content' : (r.message ?? 'Not added')}
                   </span>
                   {r.result === 'needs_decision' && (
                     <span className="shrink-0 flex gap-1">
@@ -380,9 +471,16 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
                     </span>
                   )}
                 </li>
-              ))}
+                )
+              })}
             </ul>
           )}
+          <button
+            onClick={() => { setInbox(null); setInboxResult(null); setInboxError(null) }}
+            className="mt-3 text-xs text-blue-700 hover:underline"
+          >
+            Clear
+          </button>
         </div>
       )}
     </div>
