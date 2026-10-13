@@ -46,6 +46,12 @@ describe('ChecklistTable audit layout', () => {
     expect(screen.queryByText('low-confidence')).toBeNull()
   })
 
+  it('shows text ahead of the first numbered paragraph as "Opening pages"', () => {
+    render(<ChecklistTable items={[{ ...base, source_ref: '', citation: 'Front matter' }]} />)
+    expect(screen.getByText('Opening pages')).toBeTruthy()
+    expect(screen.queryByText('Front matter')).toBeNull()
+  })
+
   it('renders an item with a null confidence and without the new fields', () => {
     render(<ChecklistTable items={[{ ...base, confidence: null }]} />)
     expect(screen.getByText('2.9.2')).toBeTruthy()

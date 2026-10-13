@@ -6,11 +6,11 @@
 
 | WP | What | State |
 |---|---|---|
-| 46.1 | Audit layout: paragraph citation, role, complete passage, specific flags, compliance and notes columns | merged (#264, #265, #269): applies-to heading, verbatim passage, hints, citation (inferred ones marked), Flag column dropped |
+| 46.1 | Audit layout: paragraph citation, role, complete passage, specific flags, compliance and notes columns | merged (#264, #265, #269): applies-to heading, verbatim passage, hints, citation (inferred ones marked), Flag column dropped. The sheet itself was redesigned later (#334, #335): the document's facts on top, column groups, the owner's column order, a Review marker column, alternating stripes, row height capped at the requirement; text ahead of the first numbered paragraph is shown as "Opening pages" |
 | 46.2 | "Possible missed requirements" section (rule-based scan), same sheet | merged (#266): listed apart under a banner in the sheet, CSV, Markdown and the web preview |
 | 46.3 | Context attachment from the document's own structure | merged (#267): parent paragraph from the paragraph numbering, measured on the labeled AFI records (README of `eval/spike_results/wp_46_3`); the model resolver stays on hold |
-| 46.4 | Draft audit questions, marked as drafts | experiment merged (#268), **awaiting the owner's rating** of `eval/spike_results/wp_46_4/outputs/v3_rating_sheet.md`; nothing is wired in |
-| 46.5 | Review on AFI 17-203 and one more AFI, with the owner | pending the owner's review |
+| 46.4 | Draft audit questions, marked as drafts | merged and live: `reqbot questions` writes a side file the checklist reads (#268, #282, #293); actor rule #311; narrowed prohibition rule #315 (his ratings are in `~/reqbot-agent-docs/reqbot/STATE.md`) |
+| 46.5 | Review on AFI 17-203 and one more AFI, with the owner | in progress: he reviewed the flagged rows and the possible-missed block (2026-10-10); his spot-check of about ten requirements he knows are in AFI 17-203 is still outstanding |
 
 ## 1. What the checklist is today (read from `services/checklist_service.py`, `pipeline/checklist_export.py`, and the AFI 17-203 output)
 

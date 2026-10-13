@@ -122,4 +122,12 @@ describe('refLabel', () => {
     expect(refLabel({})).toBe('')
     expect(refLabel({ citation: null, source_ref: null })).toBe('')
   })
+
+  it('shows the stored "Front matter" label as "Opening pages" and nothing else renamed', () => {
+    expect(refLabel({ citation: 'Front matter', source_ref: '' })).toBe('Opening pages')
+    expect(refLabel({ citation: ' Front matter ' })).toBe('Opening pages')
+    expect(refLabel({ citation: 'Figure A3.1' })).toBe('Figure A3.1')
+    expect(refLabel({ citation: 'Table 3.1' })).toBe('Table 3.1')
+    expect(refLabel({ citation: 'Front matter of the manual' })).toBe('Front matter of the manual')
+  })
 })

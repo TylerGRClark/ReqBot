@@ -11,6 +11,8 @@ import json
 import math
 from datetime import datetime
 
+from core.display import citation_label
+
 # CSV column order: locate → ask → record → verify → trace
 _CSV_COLUMNS = [
     "source_ref",
@@ -73,8 +75,9 @@ def _needs_attention(item: dict) -> bool:
 
 
 def _ref(item: dict) -> str:
-    """The citation to show: the paragraph citation (possibly inferred and marked so), else whatever the extractor recorded."""
-    return item.get("citation") or item.get("source_ref") or ""
+    """The citation to show: the paragraph citation (possibly inferred and marked so), else whatever the extractor recorded. The stored "Front matter" is shown as "Opening pages";
+    the JSON export keeps the stored string."""
+    return citation_label(item.get("citation") or item.get("source_ref") or "")
 
 
 def _section(item: dict) -> str:

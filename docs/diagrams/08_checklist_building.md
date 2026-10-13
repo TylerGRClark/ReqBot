@@ -11,7 +11,7 @@ flowchart TD
     subgraph MAPS["Read once from the document's own text"]
         M1["Heading map: paragraph number to title<br/>from numbered headings and run-in titles"]
         M2["Paragraph map: paragraph number to text"]
-        M3["First chunk that holds a numbered paragraph<br/>(for front matter)"]
+        M3["First chunk that holds a numbered paragraph<br/>(for opening pages)"]
     end
 
     subgraph ROW["For each published record"]
@@ -20,7 +20,7 @@ flowchart TD
         S1["Shown text: the explained text, else the root<br/>Locating text: the sentence itself, else the root"]
         S2{"Does the row sit in a table?"}
         T1["Cited by the table caption (Table 3.1)<br/>no party is read from the heading<br/>read straight from the document, never inferred"]
-        C1["Citation, first that works:<br/>1. the extracted reference, if it is a paragraph number<br/>2. the number the quote itself opens with<br/>3. inferred, marked (inferred): the last paragraph number<br/>before the marked requirement in its passage<br/>(the passage is built first, then the citation is settled)<br/>4. the nearest numbered heading<br/>5. nothing numbered: Figure A3.1 or Front matter"]
+        C1["Citation, first that works:<br/>1. the extracted reference, if it is a paragraph number<br/>2. the number the quote itself opens with<br/>3. inferred, marked (inferred): the last paragraph number<br/>before the marked requirement in its passage<br/>(the passage is built first, then the citation is settled)<br/>4. the nearest numbered heading<br/>5. nothing numbered: Figure A3.1, or Front matter<br/>(stored under that name, shown to readers as Opening pages)"]
         P1["Applies to: from the numbering<br/>the nearest numbered ancestor's title when it names the party<br/>(a responsibilities section, or a title that introduces a list)<br/>A row with a dotted number never falls back to the section path<br/>No dotted number: the leaf heading, if it names the party"]
         F1["Six hint flags, from the wording:<br/>starts_mid_sentence, list_item, table_fragment,<br/>no_stated_actor, applicability_statement,<br/>definition_or_description"]
         PS1["Passage: the chunk's own text, quote marked with  >> <<<br/>the end of the previous chunk goes in front<br/>for a list item, a mid-sentence start, or a rule lead-in"]

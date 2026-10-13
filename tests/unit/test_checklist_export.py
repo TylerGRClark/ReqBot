@@ -537,6 +537,17 @@ def test_the_citation_is_what_the_sheet_and_markdown_show_in_the_ref_position():
     assert ws.cell(row=5, column=_col(ws, "Ref")).value == "3.4.4.3 (inferred)"
 
 
+def test_the_stored_front_matter_label_is_shown_as_opening_pages_on_the_sheet_and_markdown_only():
+    item = {**COMPLETE_ITEM, "source_ref": "", "citation": "Front matter"}
+    checklist = {**EMPTY_ENVELOPE, "items": [item]}
+    ws = _load_xlsx(to_xlsx(checklist))["Checklist"]
+    assert ws.cell(row=5, column=_col(ws, "Ref")).value == "Opening pages"
+    assert "**Source Ref:** Opening pages" in to_markdown(checklist)
+    # the data formats keep the stored label, so a script reading them sees what it always saw
+    assert next(csv.DictReader(io.StringIO(to_csv(checklist))))["citation"] == "Front matter"
+    assert json.loads(to_json(checklist))["items"][0]["citation"] == "Front matter"
+
+
 def test_xlsx_hides_the_tags_and_confidence_columns_when_no_row_has_a_value():
     from io import BytesIO
 
