@@ -348,6 +348,11 @@ def _load_xlsx(data: bytes):
     return openpyxl.load_workbook(io.BytesIO(data))
 
 
+def _col(ws, header: str) -> int:
+    """The column number of a header in the sheet's header row (row 4)."""
+    return next(c for c in range(1, ws.max_column + 1) if ws.cell(row=4, column=c).value == header)
+
+
 def test_to_xlsx_returns_bytes():
     result = to_xlsx(ENVELOPE)
     assert isinstance(result, bytes)
@@ -368,46 +373,61 @@ def test_to_xlsx_sheet_name():
 def test_to_xlsx_group_headers_in_row_3():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    group_values = [ws.cell(row=3, column=c).value for c in range(1, 17)]  # rows 1 and 2 are the document's name and the facts about the sheet
-    assert "Locate" in group_values
-    assert "Ask" in group_values
-    assert "Record" in group_values
-    assert "Verify" in group_values
-    assert "Trace" in group_values
+    group_values = [ws.cell(row=3, column=c).value for c in range(1, 14)]  # rows 1 and 2 are the document's name and the facts about the sheet
+    assert [g for g in group_values if g] == ["Ask", "Record", "Context", "Locate", "Trace"]
 
 
 def test_to_xlsx_column_order():
+    # the owner's order: what to check, the question, where to write the finding, the surrounding text, where to find it, then the trace
     expected_headers = [
-        "Ref", "Section", "Pages", "Applies to", "Parent para.",
-        "Requirement", "Passage", "Audit Question (draft)",
-        "Status", "Notes",
-        "Check", "Reasons", "Conf.",
-        "Item ID", "Req IDs", "Tags",
+        "Review",
+        "Requirement", "Audit Question (draft)",
+        "Status", "Notes", "Check",
+        "Passage (click to read all)",
+        "Ref", "Pages",
+        "Item ID", "Req IDs", "Conf.", "Tags",
     ]
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    actual = [ws.cell(row=4, column=c).value for c in range(1, 17)]
+    actual = [ws.cell(row=4, column=c).value for c in range(1, 14)]
     assert actual == expected_headers
+    assert ws.max_column == 13
+
+
+def test_to_xlsx_leaves_section_applies_to_parent_and_reasons_off_the_sheet_but_not_off_the_other_exports():
+    headers = [c.value for c in _load_xlsx(to_xlsx(ENVELOPE))["Checklist"][4]]
+    for gone in ("Section", "Applies to", "Parent para.", "Reasons"):
+        assert gone not in headers
+    csv_header = next(csv.reader(io.StringIO(to_csv(ENVELOPE))))
+    assert {"section_title_path", "applies_to", "parent_paragraph", "review_reasons"} <= set(csv_header)
+
+
+def test_to_xlsx_keeps_the_trace_ids_but_small_and_narrow():
+    ws = _load_xlsx(to_xlsx(ENVELOPE))["Checklist"]
+    for header in ("Item ID", "Req IDs"):
+        col = _col(ws, header)
+        assert ws.column_dimensions[openpyxl.utils.get_column_letter(col)].width <= 12
+        assert ws.cell(row=5, column=col).font.size == 8
 
 
 def test_to_xlsx_freeze_panes():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    assert ws.freeze_panes == "D5"
+    assert ws.freeze_panes == "C5"  # the marker and the requirement stay in view; the headers stay on top
 
 
 def test_to_xlsx_auto_filter_covers_data_rows():
     # ENVELOPE has 2 items → 4 title and header rows + 2 data rows = max_row 6; the filter starts at the column headers (row 4) and must end at row 6
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    assert ws.auto_filter.ref == "A4:P6", f"expected the filter on A4:P6, got {ws.auto_filter.ref}"
+    assert ws.auto_filter.ref == "A4:M6", f"expected the filter on A4:M6, got {ws.auto_filter.ref}"
 
 
 def test_to_xlsx_auto_filter_empty_checklist_is_the_header_row_alone():
     wb = _load_xlsx(to_xlsx(EMPTY_ENVELOPE))
     ws = wb["Checklist"]
     assert ws.auto_filter.ref is not None
-    assert ws.auto_filter.ref == "A4:P4", f"expected the filter on the header row alone, got {ws.auto_filter.ref}"
+    assert ws.auto_filter.ref == "A4:M4", f"expected the filter on the header row alone, got {ws.auto_filter.ref}"
 
 
 def test_to_xlsx_status_data_validation_exists():
@@ -426,7 +446,7 @@ def test_to_xlsx_row_count():
 def test_to_xlsx_source_quote_present():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    all_values = [ws.cell(row=r, column=6).value for r in range(5, ws.max_row + 1)]
+    all_values = [ws.cell(row=r, column=_col(ws, "Requirement")).value for r in range(5, ws.max_row + 1)]
     assert any("enforce MFA" in str(v) for v in all_values if v)
 
 
@@ -437,20 +457,22 @@ def test_to_xlsx_empty_items_no_crash():
     assert ws.max_row == 4  # only the title and header rows
 
 
-def test_to_xlsx_flagged_row_has_fill():
+def test_to_xlsx_flagged_row_has_a_filled_marker_cell_and_no_row_shading():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
     # REVIEW_ITEM is second data row (row 6); COMPLETE_ITEM is row 5
-    flagged_fill = ws.cell(row=6, column=1).fill
-    clean_fill = ws.cell(row=5, column=1).fill
-    assert flagged_fill.patternType == "solid"
-    assert flagged_fill.fgColor.rgb != clean_fill.fgColor.rgb
+    assert ws.cell(row=6, column=1).value == "!"
+    assert ws.cell(row=6, column=1).fill.patternType == "solid"
+    assert ws.cell(row=5, column=1).value in (None, "")
+    assert ws.cell(row=5, column=1).fill.patternType is None
+    # the rest of the row is left to the alternating stripes: no static fill on any other cell
+    assert all(ws.cell(row=6, column=c).fill.patternType is None for c in range(2, 14))
 
 
 def test_to_xlsx_confidence_percentage_format():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    conf_cell = ws.cell(row=5, column=13)
+    conf_cell = ws.cell(row=5, column=_col(ws, "Conf."))
     assert conf_cell.number_format == "0%"
 
 
@@ -459,7 +481,7 @@ def test_to_xlsx_formula_injection_protection():
     checklist = {**EMPTY_ENVELOPE, "items": [item]}
     wb = _load_xlsx(to_xlsx(checklist))
     ws = wb["Checklist"]
-    value = ws.cell(row=5, column=6).value
+    value = ws.cell(row=5, column=_col(ws, "Requirement")).value
     assert value is not None
     assert str(value).startswith("'")
 
@@ -481,8 +503,8 @@ def test_audit_layout_fields_reach_every_export_format():
     md = to_markdown(checklist)
     assert "**Applies to:** AF/A3" in md and "**Parent paragraph:** 2.17 MAJCOM/DRUs." in md and ">> The requirement. <<" in md and "**Check:** list_item, no_passage" in md
     ws = _load_xlsx(to_xlsx(checklist))["Checklist"]
-    assert [ws.cell(row=5, column=c).value for c in (4, 5, 7, 11)] == ["AF/A3", "2.17 MAJCOM/DRUs.", "Lead-in:\n>> The requirement. <<", "list_item; no_passage"]
-    status_cell = ws.cell(row=5, column=9)
+    assert [ws.cell(row=5, column=_col(ws, h)).value for h in ("Passage (click to read all)", "Check")] == ["Lead-in:\n>> The requirement. <<", "list_item; no_passage"]
+    status_cell = ws.cell(row=5, column=_col(ws, "Status"))
     assert status_cell.value == item["status"] and any(status_cell.coordinate in dv.sqref for dv in ws.data_validations.dataValidation)
 
 
@@ -493,15 +515,16 @@ def test_old_items_without_the_new_fields_still_export():
     assert _load_xlsx(to_xlsx(checklist))["Checklist"].max_row == 5
 
 
-def test_sheet_shades_only_rows_with_a_specific_reason_not_low_confidence_alone():
+def test_sheet_marks_only_rows_with_a_specific_reason_not_low_confidence_alone():
     only_confidence = {**COMPLETE_ITEM, "requires_human_review": True, "review_reasons": ["low-confidence"], "item_flags": []}
     flagged = {**COMPLETE_ITEM, "checklist_item_id": "CHK-2", "requires_human_review": True, "review_reasons": ["low-confidence"], "item_flags": ["table_fragment"]}
     ws = _load_xlsx(to_xlsx({**EMPTY_ENVELOPE, "items": [only_confidence, flagged]}))["Checklist"]
-    assert ws.cell(row=5, column=1).fill.patternType is None
-    assert ws.cell(row=6, column=1).fill.patternType == "solid"
+    assert ws.cell(row=5, column=1).value in (None, "") and ws.cell(row=5, column=1).fill.patternType is None
+    assert ws.cell(row=6, column=1).value == "!" and ws.cell(row=6, column=1).fill.patternType == "solid"
     headers = [c.value for c in ws[4]]
     assert "Flag" not in headers  # a column that is Yes on every row says nothing
-    assert "low-confidence" not in str(ws.cell(row=5, column=12).value)
+    assert "Reasons" not in headers
+    assert all("low-confidence" not in str(c.value) for row in ws.iter_rows(min_row=5) for c in row)
 
 
 def test_the_citation_is_what_the_sheet_and_markdown_show_in_the_ref_position():
@@ -510,7 +533,8 @@ def test_the_citation_is_what_the_sheet_and_markdown_show_in_the_ref_position():
     row = next(csv.DictReader(io.StringIO(to_csv(checklist))))
     assert row["source_ref"] == "(T-2)" and row["citation"] == "3.4.4.3 (inferred)"  # the extracted value is never replaced in the data
     assert "**Source Ref:** 3.4.4.3 (inferred)" in to_markdown(checklist)
-    assert _load_xlsx(to_xlsx(checklist))["Checklist"].cell(row=5, column=1).value == "3.4.4.3 (inferred)"
+    ws = _load_xlsx(to_xlsx(checklist))["Checklist"]
+    assert ws.cell(row=5, column=_col(ws, "Ref")).value == "3.4.4.3 (inferred)"
 
 
 def test_xlsx_hides_the_tags_and_confidence_columns_when_no_row_has_a_value():
@@ -523,7 +547,8 @@ def test_xlsx_hides_the_tags_and_confidence_columns_when_no_row_has_a_value():
 
     def hidden(item):
         ws = load_workbook(BytesIO(to_xlsx({"items": [item], "possible_missed": [], "summary": {}, "document": {}}))).active
-        return ws.column_dimensions["M"].hidden, ws.column_dimensions["P"].hidden  # Conf. and Tags
+        letters = [openpyxl.utils.get_column_letter(_col(ws, h)) for h in ("Conf.", "Tags")]
+        return ws.column_dimensions[letters[0]].hidden, ws.column_dimensions[letters[1]].hidden
 
     assert hidden({**base, "domain_tags": [], "confidence": None}) == (True, True)
     assert hidden({**base, "domain_tags": ["x"], "confidence": 0.9}) == (False, False)
@@ -541,7 +566,7 @@ def test_the_sheet_says_which_document_it_is_and_the_facts_about_it():
     assert ws["A1"].value == "Audit checklist: afi17-203.pdf"
     facts = ws["A2"].value
     assert "Profile: cybersecurity" in facts and "Generated: 2026-10-11 15:04 UTC" in facts and "2 items" in facts
-    assert "of them shaded for a second look" in facts  # ENVELOPE has one row with a specific reason; the count is of the extracted items
+    assert "of them flagged (!) for a second look" in facts  # ENVELOPE has one row with a specific reason; the count is of the extracted items
 
 
 def test_the_title_falls_back_to_the_document_id_and_the_facts_survive_a_bare_envelope():
@@ -565,26 +590,27 @@ def test_a_document_name_that_looks_like_a_formula_is_not_one():
 
 def test_each_column_group_has_its_own_color_and_the_headers_carry_the_lighter_shade():
     ws = _sheet(ENVELOPE)
-    bands = {ws.cell(row=3, column=c).value: ws.cell(row=3, column=c).fill.fgColor.rgb for c in (1, 6, 9, 11, 14)}
-    assert list(bands) == ["Locate", "Ask", "Record", "Verify", "Trace"]
+    bands = {ws.cell(row=3, column=c).value: ws.cell(row=3, column=c).fill.fgColor.rgb for c in (1, 4, 7, 8, 10)}
+    assert list(bands) == ["Ask", "Record", "Context", "Locate", "Trace"]
     assert len(set(bands.values())) == 5
     assert ws.cell(row=3, column=1).font.color.rgb.endswith("FFFFFF")
     # a header sits under its group and is shaded in the group's lighter tint, so the groups read down the page
-    assert ws.cell(row=4, column=1).fill.fgColor.rgb == ws.cell(row=4, column=5).fill.fgColor.rgb != ws.cell(row=4, column=6).fill.fgColor.rgb
+    assert ws.cell(row=4, column=1).fill.fgColor.rgb == ws.cell(row=4, column=3).fill.fgColor.rgb != ws.cell(row=4, column=4).fill.fgColor.rgb
     assert ws.cell(row=4, column=1).font.bold
 
 
 def test_the_audit_question_column_has_room():
     ws = _sheet(ENVELOPE)
-    assert ws.column_dimensions["H"].width >= 40  # the column people read most was 22 characters wide
+    col = openpyxl.utils.get_column_letter(_col(ws, "Audit Question (draft)"))
+    assert ws.column_dimensions[col].width >= 40  # the column people read most was 22 characters wide
 
 
 def test_the_status_cell_is_colored_by_what_is_chosen():
     ws = _sheet(ENVELOPE)
-    rules = [r for ranges in ws.conditional_formatting for r in ranges.rules]
+    rules = [r for ranges in ws.conditional_formatting for r in ranges.rules if r.type == "cellIs"]  # the stripes are expression rules, tested on their own
     wanted = {r.formula[0].strip('"') for r in rules}
     assert wanted == {"compliant", "non-compliant", "in-progress", "not-applicable"}
-    assert any("I5" in str(rng.sqref) for rng in ws.conditional_formatting)
+    assert any("D5" in str(rng.sqref) for rng in ws.conditional_formatting)  # the Status column
 
 
 def test_the_sheet_prints_landscape_with_the_headers_repeated_and_the_document_in_the_footer():
@@ -603,11 +629,104 @@ def test_the_possible_missed_block_has_a_colored_banner():
     assert "1 possible missed" in ws["A2"].value
 
 
-def test_the_facts_count_shaded_items_apart_from_the_possible_missed_block():
+def test_the_facts_count_flagged_items_apart_from_the_possible_missed_block():
     flagged = {**COMPLETE_ITEM, "checklist_item_id": "CHK-F", "item_flags": ["table_fragment"]}
     missed = {**COMPLETE_ITEM, "checklist_item_id": "MISS-1", "item_flags": ["possible_missed"]}
     facts = _sheet({**EMPTY_ENVELOPE, "items": [flagged], "possible_missed": [missed]})["A2"].value
-    assert "1 item · 1 of them shaded for a second look · 1 possible missed, listed at the bottom" in facts
+    assert "1 item · 1 of them flagged (!) for a second look · 1 possible missed, listed at the bottom" in facts
     only_missed = _sheet({**EMPTY_ENVELOPE, "items": [], "possible_missed": [missed]})["A2"].value
-    assert "0 items" in only_missed and "of them shaded" not in only_missed and "1 possible missed" in only_missed
+    assert "0 items" in only_missed and "of them flagged" not in only_missed and "1 possible missed" in only_missed
+
+
+# --- row height ---
+
+def _row_heights(item: dict) -> tuple[float, str]:
+    ws = _sheet({**EMPTY_ENVELOPE, "items": [item]})
+    return ws.row_dimensions[5].height, ws.cell(row=5, column=_col(ws, "Passage (click to read all)")).value
+
+
+def test_a_huge_passage_does_not_make_the_row_tall_and_is_kept_whole_in_its_cell():
+    passage = "Lead-in text. " * 300  # about 4,000 characters
+    short = {**COMPLETE_ITEM, "source_quote": "Units shall log access.", "audit_question": "Do units log access?", "passage": passage, "item_flags": []}
+    height, kept = _row_heights(short)
+    assert height <= 4 * 13 + 4  # a couple of lines, not 80
+    assert kept == passage  # nothing is cut from the data: the cell still holds all of it
+
+
+def test_a_row_is_as_tall_as_its_requirement_or_its_question_needs():
+    long_quote = "The commander shall ensure that every member completes the required training before access is granted. " * 4
+    long_question = "Do all members complete the required training before access is granted, and is that recorded? " * 6
+    base = {**COMPLETE_ITEM, "item_flags": [], "passage": "x " * 2000, "assessor_notes": ""}
+    quote_h, _ = _row_heights({**base, "source_quote": long_quote, "audit_question": "Short?"})
+    question_h, _ = _row_heights({**base, "source_quote": "Short.", "audit_question": long_question})
+    both_short_h, _ = _row_heights({**base, "source_quote": "Short.", "audit_question": "Short?"})
+    assert quote_h > both_short_h and question_h > both_short_h
+    assert quote_h >= (len(long_quote) // 48) * 13  # about as many lines as the text needs in a 48-wide column
+
+
+def test_a_row_has_at_least_two_lines_and_never_more_than_excel_allows():
+    empty_h, _ = _row_heights({**COMPLETE_ITEM, "source_quote": "", "audit_question": "", "item_flags": [], "passage": ""})
+    assert empty_h == 2 * 13 + 4
+    huge_h, _ = _row_heights({**COMPLETE_ITEM, "source_quote": "word " * 20000, "audit_question": ""})
+    assert huge_h <= 409.5
+
+
+def test_the_possible_missed_rows_are_capped_the_same_way():
+    missed = {**COMPLETE_ITEM, "checklist_item_id": "MISS-1", "item_flags": ["possible_missed"], "source_quote": "Short.", "audit_question": "", "passage": "p " * 3000}
+    ws = _sheet({**EMPTY_ENVELOPE, "items": [], "possible_missed": [missed]})
+    last = ws.max_row
+    assert ws.row_dimensions[last].height <= 4 * 13 + 4
+
+
+# --- the review marker and the alternating stripes ---
+
+def test_rows_alternate_by_a_rule_that_follows_sorting_and_filtering():
+    ws = _sheet(ENVELOPE)
+    stripes = [(str(rng.sqref), r) for rng in ws.conditional_formatting for r in rng.rules if r.type == "expression"]
+    assert stripes, "no alternating-row rule"
+    assert all("SUBTOTAL(103" in r.formula[0] and "MOD(" in r.formula[0] for _s, r in stripes)  # counts the rows still showing, so a filter keeps the stripes even
+    covered = {rng for rng, _r in stripes}
+    assert any(rng.startswith("B5:") for rng in covered)  # every column after the marker
+    assert any(rng.startswith("A5:A") for rng in covered)  # the marker column too, where it is empty
+
+
+def test_the_status_colors_outrank_the_stripes():
+    ws = _sheet(ENVELOPE)
+    status = [r.priority for rng in ws.conditional_formatting for r in rng.rules if r.type == "cellIs"]
+    stripe = [r.priority for rng in ws.conditional_formatting for r in rng.rules if r.type == "expression"]
+    assert status and stripe and max(status) < min(stripe)  # a lower number wins
+
+
+def test_the_marker_column_is_narrow_and_says_what_it_is():
+    ws = _sheet(ENVELOPE)
+    assert ws.cell(row=4, column=1).value == "Review"
+    assert ws.column_dimensions["A"].width <= 8
+    assert "(!)" in ws["A2"].value  # the facts line says what the mark means
+
+
+def test_a_possible_missed_row_carries_the_marker_too():
+    missed = {**COMPLETE_ITEM, "checklist_item_id": "MISS-1", "item_flags": ["possible_missed"]}
+    ws = _sheet({**EMPTY_ENVELOPE, "items": [], "possible_missed": [missed]})
+    assert ws.cell(row=ws.max_row, column=1).value == "!"
+
+
+def test_a_marked_row_always_says_why_in_the_check_column():
+    flagged_by_reason = {**COMPLETE_ITEM, "checklist_item_id": "CHK-R", "item_flags": [], "review_reasons": ["question-actor-not-in-row: CST/CSL", "low-confidence"]}
+    ws = _sheet({**EMPTY_ENVELOPE, "items": [flagged_by_reason]})
+    assert ws.cell(row=5, column=1).value == "!"
+    check = ws.cell(row=5, column=_col(ws, "Check")).value
+    assert "question-actor-not-in-row: CST/CSL" in check and "low-confidence" not in check
+    with_hint = {**COMPLETE_ITEM, "item_flags": ["table_fragment"], "review_reasons": ["not-extracted"]}
+    ws = _sheet({**EMPTY_ENVELOPE, "items": [with_hint]})
+    assert ws.cell(row=5, column=_col(ws, "Check")).value == "table_fragment; not-extracted"
+
+
+def test_a_missing_source_ref_is_not_a_reason_to_mark_a_row_that_has_a_citation_on_the_sheet():
+    cited = {**COMPLETE_ITEM, "checklist_item_id": "CHK-C", "item_flags": [], "source_ref": "", "citation": "3.4 (inferred)", "review_reasons": ["missing-source-ref"]}
+    uncited = {**COMPLETE_ITEM, "checklist_item_id": "CHK-U", "item_flags": [], "source_ref": "", "citation": "", "review_reasons": ["missing-source-ref"]}
+    ws = _sheet({**EMPTY_ENVELOPE, "items": [cited, uncited]})
+    assert ws.cell(row=5, column=1).value in (None, "")  # the sheet shows "3.4 (inferred)" in Ref: nothing is missing
+    assert ws.cell(row=6, column=1).value == "!"  # no reference at all: still worth a look, and Check says so
+    assert ws.cell(row=6, column=_col(ws, "Check")).value == "missing-source-ref"
+    assert "1 of them flagged" in ws["A2"].value
 

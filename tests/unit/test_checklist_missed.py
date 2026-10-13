@@ -234,7 +234,7 @@ def test_exports_show_the_section_clearly_apart(tmp_path):
     banner = [r for r in range(5, ws.max_row + 1) if str(ws.cell(row=r, column=1).value or "").startswith("POSSIBLE MISSED REQUIREMENTS")]
     assert banner == [6 + n_items]  # items end on row 4 + n_items, then a blank row, then the banner
     assert ws.auto_filter.ref.endswith(str(4 + n_items))  # the filter covers the items, found rows included, and not the block
-    assert any(ws.cell(row=banner[0] + 1, column=9).coordinate in dv.sqref for dv in ws.data_validations.dataValidation)  # the Status dropdown reaches the candidates too
+    assert any(ws.cell(row=banner[0] + 1, column=4).coordinate in dv.sqref for dv in ws.data_validations.dataValidation)  # the Status dropdown reaches the candidates too
 
 
 def test_text_before_the_first_marker_and_bare_bullets_are_units():
