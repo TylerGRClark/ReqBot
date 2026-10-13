@@ -58,6 +58,12 @@ describe('requests', () => {
     expect((init.headers as Record<string, string>).Authorization).toBe('Bearer secret-code')
   })
 
+  it('asks for the newest 200 jobs, not the server default of 50', async () => {
+    const spy = vi.spyOn(globalThis, 'fetch').mockImplementation(() => reply(200, { jobs: [], running: null, queued: 0 }))
+    await listJobs()
+    expect(String(spy.mock.calls[0][0])).toContain('/jobs?limit=200')
+  })
+
   it('sends no header when no code is saved (trusted-network mode)', async () => {
     const spy = vi.spyOn(globalThis, 'fetch').mockImplementation(() => reply(200, { jobs: [], running: null, queued: 0 }))
     await listJobs()

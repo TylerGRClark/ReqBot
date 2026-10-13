@@ -10,6 +10,7 @@ import {
   startIngest,
   uploadPdf,
 } from '../api/admin'
+import { JOB_WINDOW } from '../api/admin'
 import type { AdminMode, IfExists, InboxImportResponse, InboxResponse, JobSummary, JobsResponse } from '../api/admin'
 import { STATE_LABEL, stepLabel, stepPercent } from '../utils/jobText'
 import { collectPdfFiles, pdfsFromFileList } from '../utils/pdfFiles'
@@ -69,6 +70,17 @@ function liveStatus(job: JobSummary | undefined): Live | null {
   }
 }
 
+/** A job that is not in a full list is older than every job in it: it started long ago, and Recent activity (Show older) is where its outcome is. */
+const PAST_WINDOW: Live = { text: 'Started earlier. Recent activity shows how it went.', tone: 'wait', pct: null, over: true }
+
+/** The job a row follows, and what to say about it. The list is only the newest JOB_WINDOW jobs, so a missing job is not the same as an unknown one. */
+function followJob(jobs: JobsResponse | null | undefined, jobId: string | undefined): { job: JobSummary | undefined; live: Live | null } {
+  if (!jobs || !jobId) return { job: undefined, live: null }
+  const job = jobs.jobs.find(j => j.id === jobId)
+  if (job) return { job, live: liveStatus(job) }
+  return { job: undefined, live: jobs.jobs.length >= JOB_WINDOW ? PAST_WINDOW : null }
+}
+
 /** The newest ingest job for a document name (the inbox import reports names, not job numbers). */
 function ingestJobFor(jobs: JobsResponse | null | undefined, stem: string | null | undefined): JobSummary | undefined {
   if (!jobs || !stem) return undefined
@@ -115,15 +127,15 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
   const finishedRow = useCallback((i: Item): boolean => {
     if (i.phase === 'skipped' || i.phase === 'error') return true
     if (i.phase !== 'queued' || !i.jobId) return false
-    return liveStatus(jobs?.jobs.find(j => j.id === i.jobId))?.over ?? false
+    return followJob(jobs, i.jobId).live?.over ?? false
   }, [jobs])
   const scheduled = useRef(new Set<number>())
   const timers = useRef<ReturnType<typeof setTimeout>[]>([])
   useEffect(() => {
     for (const i of items) {
       if (scheduled.current.has(i.id)) continue
-      const job = i.phase === 'queued' && i.jobId ? jobs?.jobs.find(j => j.id === i.jobId) : undefined
-      const after = i.phase === 'skipped' ? SKIPPED_VISIBLE_MS : job?.state === 'succeeded' ? DONE_VISIBLE_MS : null
+      const { job, live } = i.phase === 'queued' ? followJob(jobs, i.jobId) : { job: undefined, live: null }
+      const after = i.phase === 'skipped' || live === PAST_WINDOW ? SKIPPED_VISIBLE_MS : job?.state === 'succeeded' ? DONE_VISIBLE_MS : null
       if (after === null) continue
       scheduled.current.add(i.id)
       timers.current.push(setTimeout(() => setItems(prev => prev.filter(x => x.id !== i.id)), after))
@@ -375,10 +387,10 @@ export default function AddDocuments({ mode, onStarted, onCodeChanged, codeRejec
       {items.length > 0 && (
         <ul className="mt-3 space-y-2">
           {items.map(item => {
-            const job = item.phase === 'queued' && item.jobId ? jobs?.jobs.find(j => j.id === item.jobId) : undefined
-            const live = liveStatus(job)
+            const { job, live } = item.phase === 'queued' ? followJob(jobs, item.jobId) : { job: undefined, live: null }
             const style = live ? TONE_STYLE[live.tone] : PHASE_STYLE[item.phase]
             const label = job ? STATE_LABEL[job.state]
+              : live === PAST_WINDOW ? 'Started'
               : item.phase === 'uploading' ? `Uploading ${Math.round(item.progress * 100)}%`
               : item.phase === 'deciding' ? 'Needs a decision'
               : item.phase === 'queued' ? 'Queued'

@@ -289,6 +289,32 @@ describe('rows follow their job and clear themselves', () => {
     expect(screen.queryByText('The same file is already in the library.')).not.toBeInTheDocument()
   })
 
+  it('lets go of a row whose job is older than the whole job list, rather than leaving it queued for good', async () => {
+    uploadPdf.mockResolvedValue(uploaded('new'))
+    startIngest.mockResolvedValue({ result: 'queued', document: 'afi99-1', job_id: 'JOB-OLD', job: null })
+    const { rerender } = render(panel(jobList()))
+    choose([pdf()])
+    await screen.findByText('Queued')
+
+    // fewer jobs than the list can hold: a job that is not there yet is simply not there yet
+    rerender(panel(jobList({ id: 'JOB-OTHER' })))
+    expect(screen.getByText('Queued')).toBeInTheDocument()
+
+    // a full list that no longer includes it: it is older than all of them
+    const full = admin.JOB_WINDOW
+    const crowded: admin.JobsResponse = {
+      jobs: Array.from({ length: full }, (_, n) => ({ id: `JOB-${n}`, kind: 'ingest', title: `Ingest ${n}.pdf`, state: 'succeeded', progress: null }) as admin.JobSummary),
+      running: null,
+      queued: 0,
+    }
+    vi.useFakeTimers()
+    rerender(panel(crowded))
+    expect(screen.getByText('Started')).toBeInTheDocument()
+    expect(screen.getByText('Started earlier. Recent activity shows how it went.')).toBeInTheDocument()
+    act(() => { vi.advanceTimersByTime(10500) })
+    expect(screen.queryByText('afi99-1.pdf')).not.toBeInTheDocument()
+  })
+
   it('shows an inbox file following its job and can put the inbox card away', async () => {
     getInbox.mockResolvedValue({ folder: '/data/inbox', exists: true, truncated: false, files: [{ name: 'new-one.pdf', size: 10, status: 'new' }] })
     importInbox.mockResolvedValue({ queued: 1, results: [{ file: 'new-one.pdf', result: 'queued', document: 'new-one' }] })
