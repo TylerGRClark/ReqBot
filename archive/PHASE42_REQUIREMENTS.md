@@ -2,7 +2,7 @@
 
 **Status:** Complete (drafted 2026-08-02; source: direct conversation with Tyler after WP-41 merged)
 **Date:** 2026-08-02
-**Preceded by:** Phase 41 (Context Recovery Fixes & Confidence Calibration) — `docs/PHASE41_REQUIREMENTS.md`,
+**Preceded by:** Phase 41 (Context Recovery Fixes & Confidence Calibration) — `archive/PHASE41_REQUIREMENTS.md`,
 complete. This phase picks up the `STEM_NEVER_EXTRACTED`/table-structure-aware serialization candidate
 direction from Phase 40's §5/§8 Backlog (Tyler's choice among reranker / definitional-content-decision /
 table serialization). The reranker and the definitional-content-retrievability question remain deferred

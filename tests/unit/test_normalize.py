@@ -258,7 +258,7 @@ def test_empty_chunk_text_still_rejects_fabricated_quote(tmp_path):
     assert failures[0]["error"] == "quote_not_grounded_in_chunk"
 
 
-# WP-44.1: word-coverage check (docs/PHASE44_REQUIREMENTS.md section 4). The 5 fixtures in
+# WP-44.1: word-coverage check (archive/PHASE44_REQUIREMENTS.md section 4). The 5 fixtures in
 # tests/fixtures/wp44_invented_quote_leaks.json are real quotes that passed the fuzzy
 # gate above (scores 62-76) and were indexed: each states an obligation its chunk (a
 # marking table, a bare glossary term, a cover page, a descriptive matrix) does not.
@@ -368,7 +368,7 @@ def test_novel_word_inventions_are_detected_where_real_words_are_rearranged_is_n
 
 
 # WP-34.2: heading-echo and unrepairable-fragment rejection. Fixtures are the 5
-# real examples confirmed in docs/PHASE34_REQUIREMENTS.md (afpd_17-1.pdf and
+# real examples confirmed in archive/PHASE34_REQUIREMENTS.md (afpd_17-1.pdf and
 # CJCSI 6510.02G.pdf docling re-ingests), plus the original WP-33.3 fixture.
 
 def test_is_heading_echo_exact_match():
@@ -488,7 +488,7 @@ def test_negative_fixture_survives_full_pipeline(tmp_path):
 
 
 # WP-38.2: real fixtures below are drawn from eval/audit_wp38_1/'s hand-labeled
-# audit (docs/PHASE38_REQUIREMENTS.md's WP-38.1/WP-38.2 Findings), not invented
+# audit (archive/PHASE38_REQUIREMENTS.md's WP-38.1/WP-38.2 Findings), not invented
 # examples -- both the positive and negative cases are real quotes this
 # project's own corpus produced.
 
@@ -547,7 +547,7 @@ def test_is_orphaned_list_item_no_longer_rejects_short_marker_items():
     # (Tyler): preserve short enumerated child items until hierarchy-aware
     # parent-stem + child-item reconstruction exists, rather than filter them
     # here. See _is_orphaned_list_item()'s docstring and
-    # docs/PHASE38_REQUIREMENTS.md's WP-38.2 Findings for the full history.
+    # archive/PHASE38_REQUIREMENTS.md's WP-38.2 Findings for the full history.
     #
     # This means REQ-c6aeb8df528b is now a known, accepted miss (a visible
     # fragment, not silently dropped) -- pinned here so that's read as

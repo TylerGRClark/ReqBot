@@ -6,7 +6,7 @@ or already lost.
 
 Joins labeled_failures.jsonl (category/subtype labels) with unbiased_sample.jsonl
 (chunk_id, source_pdf, document_id, document_hash_full -- the fields needed to trace)
-by requirement_id, per docs/PHASE39_REQUIREMENTS.md's WP-39.1 Scope.
+by requirement_id, per archive/PHASE39_REQUIREMENTS.md's WP-39.1 Scope.
 
 For each example, prints:
   - the label (subtype) and source_quote
@@ -38,7 +38,7 @@ def verify_corpus_against_manifest() -> None:
     """Fail loudly if the local corpus has drifted from what
     eval/audit_wp38_1/source_manifest.json was built from -- a re-ingest since then
     can reassign chunk_id values, silently invalidating every downstream trace
-    (Codex review, PR #183: this check was described in docs/PHASE39_REQUIREMENTS.md's
+    (Codex review, PR #183: this check was described in archive/PHASE39_REQUIREMENTS.md's
     Scope but never actually implemented in this script -- fixed here)."""
     with open(FIXTURE_DIR / "source_manifest.json", encoding="utf-8") as f:
         manifest = json.load(f)

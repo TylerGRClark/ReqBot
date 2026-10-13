@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""WP-45.13: score the D1x arm by the rules of docs/PHASE45_WP4513_PLAN.md (offline; reads scratch arms, calls nothing).
+"""WP-45.13: score the D1x arm by the rules of archive/PHASE45_WP4513_PLAN.md (offline; reads scratch arms, calls nothing).
 
   PYTHONPATH=. python3 eval/spike_results/wp_45_13/analyze_d1x.py
 

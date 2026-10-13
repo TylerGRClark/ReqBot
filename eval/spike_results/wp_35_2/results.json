@@ -746,7 +746,7 @@
       "source_quote": "DoD Components will use only NSA-approved cryptographic products to protect classified and/or sensitive national security information processed and transmitted over National Security Systems (NSS).",
       "description": "DoD Components must use only NSA-approved cryptographic products to protect classified and/or sensitive national security information processed and transmitted over National Security Systems (NSS).",
       "label": "faithful",
-      "notes": "WP-34.4 known-good (dodi_nsa_approved_crypto). Real modal-verb substitution (will -> must), same facts. Caught by this WP's harvester's broad modality heuristic (must appears in description, not in quote) -- exactly the over-catch case docs/PHASE35_REQUIREMENTS.md's WP-35.3 section warns a naive per-word check would false-positive on. Kept explicitly as a WP-35.3 fixture per that section's own instruction.",
+      "notes": "WP-34.4 known-good (dodi_nsa_approved_crypto). Real modal-verb substitution (will -> must), same facts. Caught by this WP's harvester's broad modality heuristic (must appears in description, not in quote) -- exactly the over-catch case archive/PHASE35_REQUIREMENTS.md's WP-35.3 section warns a naive per-word check would false-positive on. Kept explicitly as a WP-35.3 fixture per that section's own instruction.",
       "section_title_path": [
         "UNCLASSIFIED"
       ],

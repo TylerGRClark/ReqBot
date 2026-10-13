@@ -1,6 +1,6 @@
 # WP-45.12 — how the extractor is asked what a requirement is (results)
 
-Plan and rules: [docs/PHASE45_WP4512_PLAN.md](../../../docs/PHASE45_WP4512_PLAN.md) (merged before any run). Arms on `llama3.1:8b-instruct-q4_K_M` at temperature 0.1, scratch only: **D0** the production Step C prompt, **D1** the inclusive discovery prompt frozen in WP-45.7, **P1** one call per paragraph asking whether it states a duty (the paragraph's own text becomes the quote). Scripts: `p1.py`, `run_arms.py`, `analyze.py`; report: `outputs/wp4512_report.json`.
+Plan and rules: [archive/PHASE45_WP4512_PLAN.md](../../../archive/PHASE45_WP4512_PLAN.md) (merged before any run). Arms on `llama3.1:8b-instruct-q4_K_M` at temperature 0.1, scratch only: **D0** the production Step C prompt, **D1** the inclusive discovery prompt frozen in WP-45.7, **P1** one call per paragraph asking whether it states a duty (the paragraph's own text becomes the quote). Scripts: `p1.py`, `run_arms.py`, `analyze.py`; report: `outputs/wp4512_report.json`.
 
 ## Labeled development pages (74 owner-adjudicated obligations, 38 chunks; two repeats per arm)
 

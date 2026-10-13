@@ -4,7 +4,7 @@
 with Tyler in the same session that closed WP-38.2)
 **Date:** 2026-07-31
 **Preceded by:** Phase 38 (Extraction Precision: Failure Audit & Targeted Fixes) — both WPs complete,
-`docs/PHASE38_REQUIREMENTS.md`. WP-38.2's own Backlog section named this phase's problem directly:
+`archive/PHASE38_REQUIREMENTS.md`. WP-38.2's own Backlog section named this phase's problem directly:
 short enumerated child list items (e.g. `"(3) Restrain competition."`) can be genuinely incomplete
 without their parent stem (`"Classification shall not be used to:"`), and no text-level Step D rule
 can safely tell that shape apart from a genuinely self-contained short directive — confirmed the hard
@@ -117,7 +117,7 @@ parse, chunking) and gets dropped, or whether it needs to be reconstructed from 
   dumps a chunk's raw text for a known fragment's `chunk_id`) — not production pipeline changes.
 - **Not "smarter embeddings" as a first move.** Only in scope if the audit shows the needed context is
   genuinely unrecoverable earlier in the pipeline, or reconstruction alone doesn't fix retrieval for
-  the affected examples. `docs/PHASE37_REQUIREMENTS.md`'s WP-37.2 (contextual chunk embeddings,
+  the affected examples. `archive/PHASE37_REQUIREMENTS.md`'s WP-37.2 (contextual chunk embeddings,
   reverted) is the standing caution here — don't reach for that lever again without first
   understanding why it didn't work last time.
 - **Not re-auditing over-grab precision** — that's WP-38's own still-open backlog item, unrelated to
@@ -132,7 +132,7 @@ parse, chunking) and gets dropped, or whether it needs to be reconstructed from 
 
 ### WP-39.1 — Parent-Stem Context Loss Audit
 
-**Source:** WP-38.2's Backlog entry (`docs/PHASE38_REQUIREMENTS.md`); this doc's Phase Framing above.
+**Source:** WP-38.2's Backlog entry (`archive/PHASE38_REQUIREMENTS.md`); this doc's Phase Framing above.
 
 **Problem:** No pipeline-stage-by-stage evidence exists for where parent-stem/main-clause context
 gets lost between Docling's raw parse and what actually gets embedded/indexed. Every fix option's
@@ -370,7 +370,7 @@ implemented, no schema changed, no reindex run. This is audit output only.
 
 ### WP-39.2 — Parent-Stem Reconstruction
 
-**Source:** WP-39.1's Findings and Recommendation above (`docs/PHASE39_REQUIREMENTS.md`), scoped
+**Source:** WP-39.1's Findings and Recommendation above (`archive/PHASE39_REQUIREMENTS.md`), scoped
 directly from its evidence rather than assumed — same relationship as WP-38.1 → WP-38.2.
 
 **Problem:** 10 of the 18 known real fragment examples (7 `SAME_CHUNK_STEM_EXTRACTED`, 2
@@ -652,7 +652,7 @@ All four covered by new regression tests (`tests/unit/test_parent_stem_reconstru
   scoped fix, not a `parent_stem` field). Worth their own WP if the rate justifies it after WP-39.2
   ships and the corpus is re-measured.
 - **Over-Grab Precision** — still open from Phase 38, unrelated to this phase's problem; see
-  `docs/PHASE38_REQUIREMENTS.md`'s Backlog.
+  `archive/PHASE38_REQUIREMENTS.md`'s Backlog.
 
 ---
 

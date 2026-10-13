@@ -25,7 +25,7 @@ KEY = _HERE / "outputs" / "fresh_draw_map.json"
 PLAN = _HERE.parents[2] / "docs" / "PHASE45_WP457E_PLAN.md"
 SPENT = _HERE / "outputs" / "resolver_gold.json"
 FROZEN = _HERE / "outputs" / "fresh_gold.json"
-MIN_REAL, MIN_NON_REQUIREMENTS, MIN_ATTACHMENT_SCORED = 80, 8, 60  # docs/PHASE45_WP457E_PLAN.md section 2
+MIN_REAL, MIN_NON_REQUIREMENTS, MIN_ATTACHMENT_SCORED = 80, 8, 60  # archive/PHASE45_WP457E_PLAN.md section 2
 STANDALONE = {"complete", "needs_lead_in", "not_a_requirement"}
 
 
@@ -71,7 +71,7 @@ def rubric_problems(pack, labels):
 def build(pack=PACK, labels=LABELS, key_path=KEY, spent_path=SPENT):
     for path in (labels / "labels_claude_a.jsonl", labels / "labels_claude_b.jsonl"):
         if not path.exists():
-            raise SystemExit(f"{path} does not exist: the fresh labels are sealed outside the repository until stage C2 of docs/PHASE45_WP457E_PLAN.md commits them")
+            raise SystemExit(f"{path} does not exist: the fresh labels are sealed outside the repository until stage C2 of archive/PHASE45_WP457E_PLAN.md commits them")
     problems = rubric_problems(pack, labels)
     if problems:
         raise SystemExit("the labels do not follow the rubric: " + "; ".join(problems[:8]))
@@ -114,7 +114,7 @@ def build(pack=PACK, labels=LABELS, key_path=KEY, spent_path=SPENT):
               "stem_verdicts": {v: sum(g["stem_verdict"] == v for g in gold) for v in sorted({g["stem_verdict"] for g in gold if g["stem_verdict"]})}}
     sufficient = real >= MIN_REAL and non >= MIN_NON_REQUIREMENTS and scored >= MIN_ATTACHMENT_SCORED
     return {
-        "plan": "docs/PHASE45_WP457E_PLAN.md", "labeler": "claude (one labeler; the audit's two labelers and adjudication are not available here)",
+        "plan": "archive/PHASE45_WP457E_PLAN.md", "labeler": "claude (one labeler; the audit's two labelers and adjudication are not available here)",
         "sufficiency": {"required": {"real": MIN_REAL, "non_requirements": MIN_NON_REQUIREMENTS, "attachment_scored": MIN_ATTACHMENT_SCORED}, "met": sufficient},
         "counts": counts,
         "inputs_sha256": {p.name if p.parent.name != "outputs" else f"outputs/{p.name}": _sha(p) for p in (

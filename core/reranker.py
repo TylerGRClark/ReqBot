@@ -4,7 +4,7 @@ Deliberately decoupled from core.ask.retrieve() -- takes a query and a list
 of already-fetched candidate dicts, returns them reordered by a local
 cross-encoder's relevance score. Any future caller (Evidence, Compare) can
 reuse this once it has its own candidate-pool headroom; this module makes no
-assumption about who fetched its input. See docs/PHASE43_REQUIREMENTS.md §4.
+assumption about who fetched its input. See archive/PHASE43_REQUIREMENTS.md §4.
 
 Uses FlashRank (flashrank.Ranker), imported lazily so this module can be
 imported without the optional 'rerank' extra installed -- only actually
@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 # FlashRank's own default. Named explicitly here (not left implicit in a bare
 # Ranker() call) because WP-43's spike measured this exact model and found it
-# doesn't clear the Precision@5 gate -- see docs/PHASE43_REQUIREMENTS.md §11.
+# doesn't clear the Precision@5 gate -- see archive/PHASE43_REQUIREMENTS.md §11.
 # model_name is a parameter specifically so a stronger bundled FlashRank model
 # (e.g. "ms-marco-MiniLM-L-12-v2") can be swapped in and measured without
 # touching this module's shape -- see §11.5's Backlog.

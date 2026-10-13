@@ -4,7 +4,7 @@
 — see Phase Framing below)
 **Date:** 2026-08-01
 **Preceded by:** Phase 39 (Parent-Stem Context Loss Audit & Reconstruction) — WP-39.1/WP-39.2 both
-complete (`docs/PHASE39_REQUIREMENTS.md`). Also directly builds on Phase 37 (Retrieval Quality: Eval
+complete (`archive/PHASE39_REQUIREMENTS.md`). Also directly builds on Phase 37 (Retrieval Quality: Eval
 Harness & Contextual Chunk Embeddings) — this phase reuses, not rebuilds, WP-37.1's harness and gold
 query set.
 **Followed by:** Not decided in advance — this phase's entire purpose is to produce the evidence that
@@ -124,7 +124,7 @@ directly before writing this doc rather than assumed:**
   Candidate WP-41 direction if extraction failure/missing context/table serialization dominate the
   classification — WP-39.2 explicitly deferred these; this phase decides whether that deferral still
   looks right at the classification-prevalence level, not just the 18-example level WP-39.1 traced.
-- **No Over-Grab Precision fix** (open since Phase 38, `docs/PHASE38_REQUIREMENTS.md`'s Backlog).
+- **No Over-Grab Precision fix** (open since Phase 38, `archive/PHASE38_REQUIREMENTS.md`'s Backlog).
   Same reasoning — a candidate WP-41 direction, not built here.
 - **No re-attempt of contextual chunk embeddings**, cheap or LLM-generated version. WP-37.2 already
   measured the cheap version as a real regression; the LLM-generated version is, at most, a candidate
@@ -412,9 +412,9 @@ eventual scope is traceable, not implicit:
 - **Reranker** (`docs/TODO_future_improvements.txt`'s RETRIEVAL EXPERIMENTS item 1) — if ranking-miss
   dominates: right requirements present in a larger candidate pool, just not well-ranked.
 - **`STEM_NEVER_EXTRACTED` / table-structure-aware serialization** (WP-39.2's own deferred backlog,
-  `docs/PHASE39_REQUIREMENTS.md`'s Backlog) — if extraction failure / missing context / table
+  `archive/PHASE39_REQUIREMENTS.md`'s Backlog) — if extraction failure / missing context / table
   serialization dominate.
-- **Over-Grab Precision** (`docs/PHASE38_REQUIREMENTS.md`'s Backlog) — if over-grab dominates.
+- **Over-Grab Precision** (`archive/PHASE38_REQUIREMENTS.md`'s Backlog) — if over-grab dominates.
 - **LLM-generated contextual embeddings** (WP-37.2's own suggested follow-up, contingent on avoiding
   the procedural-vs-topical-framing mistake that sank the cheap version) — only if embedding-miss is
   significant *and* the mechanism looks like WP-37.2's hypothesis rather than something else.
@@ -432,12 +432,12 @@ eventual scope is traceable, not implicit:
 **Decided: WP-41 became a bundled small-fixes WP** (Tyler's direction, 2026-08-01) — gold-label
 corrections, a `section_title_path` fallback for parent-stem reconstruction, and zero-truth/
 confidence-floor calibration. **The reranker and the definitional-content-retrievability question
-(§8) are both deferred, not decided here** — see `docs/PHASE41_REQUIREMENTS.md`.
+(§8) are both deferred, not decided here** — see `archive/PHASE41_REQUIREMENTS.md`.
 
 **Decided: WP-42 took the `STEM_NEVER_EXTRACTED`/table-structure-aware serialization direction**
 (Tyler's direction, 2026-08-02, choosing among this section's 3 candidates) — scoped down to the
 `GARBLED_TABLE` half only (`STEM_NEVER_EXTRACTED` remains separately deferred). See
-`docs/PHASE42_REQUIREMENTS.md`.
+`archive/PHASE42_REQUIREMENTS.md`.
 
 ---
 
@@ -518,7 +518,7 @@ a future WP can pick them up with full context instead of re-discovering it.
   `_is_dangling_clause()` rejection removed the record before reconstruction ever ran on it. Fixed by
   gating the rejection on whether the chunk's `parent_header_text` can recover the subject. Live
   reprocess found 3 real records recovered (not just the 1 originally found), all now with a
-  populated `parent_stem`. See `docs/PHASE41_REQUIREMENTS.md`'s Findings for full detail.
+  populated `parent_stem`. See `archive/PHASE41_REQUIREMENTS.md`'s Findings for full detail.
 
 - **Zero-truth/confidence-floor calibration: done in WP-41, conclusive negative result.** Swept 11
   `min_score` thresholds (0.02–0.5) against the real 45-query gold set: **0/8 zero-truth queries
@@ -540,4 +540,4 @@ a future WP can pick them up with full context instead of re-discovering it.
   distinct row data, just flattened), but 5 (all in one afi17-203 table) have an *additional* defect
   in Docling's own table-structure model itself (the table's caption is merged into every header
   cell) that WP-39.1's own check script never caught since it only verified row values, not headers.
-  See `docs/PHASE42_REQUIREMENTS.md` for the corrected diagnosis and fix.
+  See `archive/PHASE42_REQUIREMENTS.md` for the corrected diagnosis and fix.

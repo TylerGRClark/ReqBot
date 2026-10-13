@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""WP-45.12: score the arms by the rules of docs/PHASE45_WP4512_PLAN.md (offline; reads scratch ledgers, calls nothing).
+"""WP-45.12: score the arms by the rules of archive/PHASE45_WP4512_PLAN.md (offline; reads scratch ledgers, calls nothing).
 
   PYTHONPATH=. python3 analyze.py            # writes outputs/wp4512_report.json and outputs/afi17-203_additions_rating_sheet.md
 

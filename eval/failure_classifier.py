@@ -3,10 +3,10 @@
 
 Built on top of eval/retrieval_eval_harness.py (WP-37.1) -- not a separate
 eval. Every classification cites the specific artifact/check that justified
-it (docs/PHASE40_REQUIREMENTS.md's Guardrails), grounded in real pipeline
+it (archive/PHASE40_REQUIREMENTS.md's Guardrails), grounded in real pipeline
 artifacts rather than intuition about which category a miss "feels like".
 
-Categories (operational definitions: docs/PHASE40_REQUIREMENTS.md Section 4):
+Categories (operational definitions: archive/PHASE40_REQUIREMENTS.md Section 4):
   1. extraction_failure             -- (a) requirement_id confirmed absent
                                         from the current, reprocessed corpus
                                         AND independently confirmed rejected

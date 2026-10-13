@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""WP-44: reproduce the source-quote integrity measurement behind docs/PHASE44_REQUIREMENTS.md §1.
+"""WP-44: reproduce the source-quote integrity measurement behind archive/PHASE44_REQUIREMENTS.md §1.
 
 Reads the latest ingest run of each document under ~/documents/processed/ (read-only) and, for
 every raw Step C quote, records how it relates to its own chunk's text, its word coverage, its

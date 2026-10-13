@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """WP-44.2 (measurement only): where do invented quotes and junk survivors come from?
 
-Reproduces the tables in docs/PHASE44_REQUIREMENTS.md section 12. Read-only on the corpus:
+Reproduces the tables in archive/PHASE44_REQUIREMENTS.md section 12. Read-only on the corpus:
 it replays Step D into a temp directory (eval/step_d_replay.py), joins the result to
 eval/spike_results/wp_44/per_record.jsonl and each document's chunks, and writes
 eval/spike_results/wp_44_2/report.md.

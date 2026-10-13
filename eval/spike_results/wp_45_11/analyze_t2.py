@@ -5,7 +5,7 @@
 
 Versions are `T2base_1..N` (today's chunk text) and `T2new_1..N` (the table fix's text). For each chunk and version: records and Step D survivors per repeat, every
 distinct normalized quote with the number of repeats that produced it and whether Step D kept it, and whether the quote lies in the chunk's table (a quote whose
-words are at least 80% inside one markdown row of the new text's table). The registered rules (docs/PHASE45_WP4511_ADDENDUM.md) are evaluated from this output.
+words are at least 80% inside one markdown row of the new text's table). The registered rules (archive/PHASE45_WP4511_ADDENDUM.md) are evaluated from this output.
 """
 
 import argparse

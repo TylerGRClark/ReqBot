@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""WP-45.8 Stage B: evaluate the registry's rules (H, R, G, C) on the four runs (docs/PHASE45_WP458_REGISTRY.md, PHASE45_WP458_STAGEB_ADDENDUM.md section 2).
+"""WP-45.8 Stage B: evaluate the registry's rules (H, R, G, C) on the four runs (archive/PHASE45_WP458_REGISTRY.md, PHASE45_WP458_STAGEB_ADDENDUM.md section 2).
 
   python3 stage_b_analyze.py --out outputs/stageb_report.json            # reads outputs/stageb_results_{plain,prod_r1,prod_r2,prod_r3}.json
 

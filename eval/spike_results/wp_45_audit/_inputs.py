@@ -13,7 +13,7 @@ FILENAMES = {
     "normalized": "{doc}_requirements_normalized.jsonl",
 }
 # WP-44.1 removed three junk records from these two documents after the manifest was written
-# (docs/PHASE44_REQUIREMENTS.md: 220 -> 218 and 289 -> 288), so the manifest's normalized hash is out of date
+# (archive/PHASE44_REQUIREMENTS.md: 220 -> 218 and 289 -> 288), so the manifest's normalized hash is out of date
 # for them. They are pinned to the post-edit state instead of being skipped, so a further change still stops a run.
 NORMALIZED_POST_WP441_SHA256 = {
     "DODI 5200.48": "fab20d06f580a7f3444a00e29b25e25cb61f779a74acca848b2802cfde1c4a4c",

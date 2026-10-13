@@ -1,6 +1,6 @@
 # Phase 34 Brainstorm — Actionability Fix Options
 
-**Status:** Superseded by the locked phase doc — `docs/PHASE34_REQUIREMENTS.md`. Kept as-is for the
+**Status:** Superseded by the locked phase doc — `archive/PHASE34_REQUIREMENTS.md`. Kept as-is for the
 narrative "why" behind that doc's decisions (including the full three-round external-review history)
 in more detail than belongs in a locked phase doc; the phase doc is the source of truth for current
 WP scope/status.
@@ -9,9 +9,9 @@ WP scope/status.
 brainstorm / discussion draft, explicitly not a locked phase doc, carrying more "why" narrative than a
 normal phase doc would (see `~/reqbot-agent-docs/reqbot/references/work-package-workflow.md` for the
 normal format) — the goal was to react to and refine the approach before locking it into WP scope,
-success criteria, and guardrails. That process is what produced `docs/PHASE34_REQUIREMENTS.md`.
+success criteria, and guardrails. That process is what produced `archive/PHASE34_REQUIREMENTS.md`.
 
-**Source:** WP-33.3's spike (`docs/PHASE33_REQUIREMENTS.md`'s WP-33.3 Findings, PR #156).
+**Source:** WP-33.3's spike (`archive/PHASE33_REQUIREMENTS.md`'s WP-33.3 Findings, PR #156).
 
 **Revision note (2026-07-29):** the first version of this doc (reviewed by Codex, see §5) assumed
 the corpus it was reasoning about was representative. It wasn't — see §2. Re-ingesting via docling
@@ -26,7 +26,7 @@ scenario it was reasoning about (our corpus) turned out to be an edge case, not 
 
 WP-33.3 hand-labeled a random sample of the live corpus and found 37.5% of requirements show some
 form of "cannot be trusted/verified as extracted," decomposing into five failure modes (full detail:
-`docs/PHASE33_REQUIREMENTS.md`'s WP-33.3 Findings). **Why this matters enough to fix:** ReqBot's
+`archive/PHASE33_REQUIREMENTS.md`'s WP-33.3 Findings). **Why this matters enough to fix:** ReqBot's
 value proposition is verbatim, trustworthy extraction — "ingestion captures verbatim... do not invent
 obligations" is a core architecture principle, and at least one of these failure modes (fabricated
 `description` content completing a truncated quote) already violates it in production today.

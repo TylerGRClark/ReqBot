@@ -3,7 +3,7 @@
 from reading trace_examples.py's output (chunk raw_text, ancestry, Step C output) by
 hand -- same discipline as eval/audit_wp38_1/verify_against_rules.py's own LABELS dict.
 
-Categories (see docs/PHASE39_REQUIREMENTS.md's WP-39.1 Findings for the full writeup):
+Categories (see archive/PHASE39_REQUIREMENTS.md's WP-39.1 Findings for the full writeup):
   SAME_CHUNK_STEM_EXTRACTED   -- the stem/main clause is a separate Step C record in the
                                  same chunk; cheapest fix (proximity reconstruction against
                                  already-extracted Step C records, no LLM/chunking change).

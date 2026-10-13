@@ -1,7 +1,7 @@
 """WP-39.2: parent-stem reconstruction tests.
 
 Regression fixtures are real text from eval/audit_wp39_1/'s 18 known FRAGMENT
-examples (docs/PHASE39_REQUIREMENTS.md's WP-39.1 Findings), not hypotheticals --
+examples (archive/PHASE39_REQUIREMENTS.md's WP-39.1 Findings), not hypotheticals --
 same discipline as WP-38.2's own rule tests. Encoded as literal dicts here (not a
 live dependency on ~/documents/processed, which is gitignored and won't exist in a
 fresh checkout or CI) rather than read from disk, but the text and structure below

@@ -31,7 +31,7 @@
   "pipeline/enrich_requirements.py": "74a942aacf84cc49b9412ffaccc8a6f0253122ff3e4f0f6dfd7f8ac5a672382a",
   "pipeline/parse_and_normalize.py": "80c09fe43b8027a266db2a19489aa138f9cc21ad1b8466f5e7922ab52d5990a4"
  },
- "note": "sha256 (paths relative to the repository root) of everything that defines the WP-45.7e frozen configuration: the import closure of the guarded runner, the declaration, the unlabeled draw and pack, and the files that pin the input documents. `sealed_until_c2` lists the files that exist only after the labels are committed, with the hashes fixed in docs/PHASE45_WP457E_PLAN.md. The v6 preflight and verdict refuse to proceed if any differs.",
+ "note": "sha256 (paths relative to the repository root) of everything that defines the WP-45.7e frozen configuration: the import closure of the guarded runner, the declaration, the unlabeled draw and pack, and the files that pin the input documents. `sealed_until_c2` lists the files that exist only after the labels are committed, with the hashes fixed in archive/PHASE45_WP457E_PLAN.md. The v6 preflight and verdict refuse to proceed if any differs.",
  "sealed_until_c2": {
   "eval/spike_results/wp_45_7/fresh_labels/labels_claude_a.jsonl": "d1d01c740f73fa6c14a9275cd2bfb90dcd4ddb30125f5e88bcfa5736533df18b",
   "eval/spike_results/wp_45_7/fresh_labels/labels_claude_b.jsonl": "357d3d036bffd80600d6e56e45c964af3a9734c062bce47d66c795add82aaaf9",

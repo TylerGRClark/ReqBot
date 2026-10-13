@@ -1,6 +1,6 @@
 # WP-45.8 Stage A — shadow run of the frozen selection resolver (tooling)
 
-Plan: [docs/PHASE45_WP458_PLAN.md](../../../docs/PHASE45_WP458_PLAN.md) section 3, Stage A. Nothing here touches the pipeline, the Step C cache, any `*_requirements_*.jsonl`, Qdrant or the repository's data; ledgers and outputs go to `~/reqbot-work/scratch/wp45_8_scratch/<label>/`.
+Plan: [archive/PHASE45_WP458_PLAN.md](../../../archive/PHASE45_WP458_PLAN.md) section 3, Stage A. Nothing here touches the pipeline, the Step C cache, any `*_requirements_*.jsonl`, Qdrant or the repository's data; ledgers and outputs go to `~/reqbot-work/scratch/wp45_8_scratch/<label>/`.
 
 ```
 python3 shadow_run.py drills                        # failure drills (no model)
@@ -45,7 +45,7 @@ Two runs of the frozen resolver (WP-45.7e: menu_v2, kind prompt `6200fa25a374eb3
 
 ## Stage B results (2026-10-08): the retrieval test, under the registry's rules
 
-Rules: [registry #250](../../../docs/PHASE45_WP458_REGISTRY.md) and [the Stage B addendum](../../../docs/PHASE45_WP458_STAGEB_ADDENDUM.md), both merged before any number was computed (`stage_b_run.py`, `stage_b_analyze.py`). Four runs (plain, three production-path repeats on the saved rewrite/HyDE inputs), 111 tested records, target-only mode. The index digest equals the WP-45.1(c) run's. The resolver string (Stage A, run 1) exists for 1,562 of the 1,845 indexed records and for 101 of the 111 tested ones (the rest are abstentions, `not_a_requirement` rows with nothing selected, or flagged; the six non-verbatim records get none). Reports: `outputs/stageb_report.json` (every cell, both tie readings, other metrics, string coverage per group), `outputs/stageb_results_*.json`.
+Rules: [registry #250](../../../archive/PHASE45_WP458_REGISTRY.md) and [the Stage B addendum](../../../archive/PHASE45_WP458_STAGEB_ADDENDUM.md), both merged before any number was computed (`stage_b_run.py`, `stage_b_analyze.py`). Four runs (plain, three production-path repeats on the saved rewrite/HyDE inputs), 111 tested records, target-only mode. The index digest equals the WP-45.1(c) run's. The resolver string (Stage A, run 1) exists for 1,562 of the 1,845 indexed records and for 101 of the 111 tested ones (the rest are abstentions, `not_a_requirement` rows with nothing selected, or flagged; the six non-verbatim records get none). Reports: `outputs/stageb_report.json` (every cell, both tie readings, other metrics, string coverage per group), `outputs/stageb_results_*.json`.
 
 **Registered outcome: H, R and C not triggered; G holds -> "proposal for integration"** (resolver arm; the hybrid arm, reported beside, gives the same).
 

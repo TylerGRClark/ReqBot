@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""WP-45.14: measure the whole-sentence rule on the Step D survivors of T2a, T2b (current prompt) and D1x (inclusive prompt) by the rules of docs/PHASE45_WP4514_PLAN.md (offline; nothing is written
+"""WP-45.14: measure the whole-sentence rule on the Step D survivors of T2a, T2b (current prompt) and D1x (inclusive prompt) by the rules of archive/PHASE45_WP4514_PLAN.md (offline; nothing is written
 to the pipeline, the scratch arms or Qdrant).
 
   PYTHONPATH=. python3 eval/spike_results/wp_45_14/evaluate.py

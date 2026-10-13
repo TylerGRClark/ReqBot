@@ -1,7 +1,7 @@
 # WP-45.1(e): a source-based recall sample
 
 Measurement only. No production code, index or configuration changed; the live Qdrant collection was read once (ids only)
-and the scratch runs from WP-45.6 were read. The plan, reviewed in #209, is `docs/PHASE45_WP451E_PLAN.md`.
+and the scratch runs from WP-45.6 were read. The plan, reviewed in #209, is `archive/PHASE45_WP451E_PLAN.md`.
 
 ## Question
 

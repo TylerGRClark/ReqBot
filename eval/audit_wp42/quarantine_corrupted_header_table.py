@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """WP-42: quarantine the non-verbatim records from afi17-203's corrupted-header table.
 
-docs/PHASE42_REQUIREMENTS.md documents a residual, out-of-scope defect: Docling's own
+archive/PHASE42_REQUIREMENTS.md documents a residual, out-of-scope defect: Docling's own
 table-structure model merges the caption of afi17-203's "Table 3.2. Incident Handling
 and Support Activities" into every header cell (confirmed directly against the raw PDF,
 not introduced by this project's code). Feeding Step C this cleaner-but-still-header-

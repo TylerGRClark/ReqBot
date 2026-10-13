@@ -1,7 +1,7 @@
 """WP-45.7: the deterministic evidence-bundle builder for the resolver (scratch only; no LLM, no Qdrant).
 
 Given one candidate quote and the chunks of its document, build the numbered evidence spans the resolver is shown
-(docs/PHASE45_WP457_PLAN.md, appendix B and section 5, item 1). Three tiers, one change at a time:
+(archive/PHASE45_WP457_PLAN.md, appendix B and section 5, item 1). Three tiers, one change at a time:
 
   R0  the candidate quote only (today's Step D.5 information)
   R1  + the candidate's own chunk, the leaf heading, and the governing-clause candidates the existing stem finders produce,

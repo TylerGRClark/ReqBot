@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """WP-38.2: verify the new/changed Step D rejection rules against WP-38.1's
 own hand-labeled audit fixture (eval/audit_wp38_1/), per the gate in
-docs/PHASE38_REQUIREMENTS.md's WP-38.2 section.
+archive/PHASE38_REQUIREMENTS.md's WP-38.2 section.
 
 Confirms, against all 333 records in eval/audit_wp38_1/unbiased_sample.jsonl:
   1. None of the 284 confirmed-real records get rejected by any current rule
@@ -38,7 +38,7 @@ from pipeline.parse_and_normalize import (
 FIXTURE_DIR = _ROOT / "eval" / "audit_wp38_1"
 
 # Committed floor for each targeted subtype's catch count, from the real
-# results recorded in docs/PHASE38_REQUIREMENTS.md's WP-38.2 Findings. A drop
+# results recorded in archive/PHASE38_REQUIREMENTS.md's WP-38.2 Findings. A drop
 # below these means a rule regressed or was broken/removed -- fails the
 # script rather than just printing a lower number (Codex review, PR #181).
 # orphaned_list_item dropped from 3 to 2 (Codex local review, PR #181, second

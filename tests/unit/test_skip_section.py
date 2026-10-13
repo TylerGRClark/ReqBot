@@ -190,7 +190,7 @@ def test_all_blank_entries_never_skip():
 # NIST.SP.800-171r3.pdf, dafman17-1203.pdf). "Terms" appears independently in
 # three AFI/AFPD/DAFMAN-series documents (not one document's idiosyncratic
 # choice) as their glossary/definitions heading, distinct from and not covered
-# by "GLOSSARY" or "DEFINITIONS" (see docs/PHASE34_REQUIREMENTS.md for the
+# by "GLOSSARY" or "DEFINITIONS" (see archive/PHASE34_REQUIREMENTS.md for the
 # full survey).
 # ---------------------------------------------------------------------------
 

@@ -3,7 +3,7 @@
 **Status:** Locked (drafted 2026-08-01; source: direct conversation with Tyler after WP-40 merged)
 **Date:** 2026-08-01
 **Preceded by:** Phase 40 (Retrieval Quality: Baseline Refresh & Failure Classification) —
-`docs/PHASE40_REQUIREMENTS.md`, complete. This phase implements 2 of WP-40's 3 recommended
+`archive/PHASE40_REQUIREMENTS.md`, complete. This phase implements 2 of WP-40's 3 recommended
 directions (the small companion items); the reranker (WP-40's primary recommendation) and the
 definitional-content-retrievability question are both deferred — see Phase 40's §8 Backlog.
 **Followed by:** Not decided. The reranker and the definitional-content question remain open,

@@ -591,7 +591,7 @@ def retrieve(
         retrieval_ms:   int         wall-clock ms from entry to just before synthesis (pure retrieval)
         warnings:       list[str]   e.g. embedding-model mismatch between config and indexed results
 
-    rerank (WP-43, docs/PHASE43_REQUIREMENTS.md): opt-in, defaults to False -- production
+    rerank (WP-43, archive/PHASE43_REQUIREMENTS.md): opt-in, defaults to False -- production
     behavior is unchanged unless a caller explicitly asks for it. Internal/eval-only for
     now, not exposed via CLI/API/GUI (see Phase 43 §3 Non-Goals). When True:
       - fusion_limit is widened to max(rerank_pool_size, top_k), decoupled entirely from

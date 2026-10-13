@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""WP-45.12: the per-paragraph duty arm (P1) and its ledger, plus the chunk sets the arms run on (scratch only; docs/PHASE45_WP4512_PLAN.md).
+"""WP-45.12: the per-paragraph duty arm (P1) and its ledger, plus the chunk sets the arms run on (scratch only; archive/PHASE45_WP4512_PLAN.md).
 
 P1 asks one question per paragraph of a chunk: does it tell someone to do something, not do something, or permit or recommend something an auditor could check? A paragraph
 judged yes becomes a candidate whose `source_quote` is the paragraph's own text without its leading number or bullet, so no text is generated. The ledger has the shape of

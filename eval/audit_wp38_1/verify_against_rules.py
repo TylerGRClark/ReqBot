@@ -25,7 +25,7 @@ SKIP_SECTIONS = {
 # than imported from pipeline.parse_and_normalize -- WP-38.2 changed both
 # _is_unrepairable_fragment() (removed the word cap) and _is_heading_echo()
 # (now walks the whole section_title_path, not just [-1]) in the live
-# pipeline (see docs/PHASE38_REQUIREMENTS.md's WP-38.2 Findings). Importing
+# pipeline (see archive/PHASE38_REQUIREMENTS.md's WP-38.2 Findings). Importing
 # either live function here would silently reclassify this audit's own
 # findings if the script were ever re-run -- confirmed as a real bug for the
 # fragment predicate (Codex review, PR #181: pinning only the word-count

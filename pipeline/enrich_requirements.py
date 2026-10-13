@@ -361,7 +361,7 @@ def _enrich_single(
 # in run_pipeline.py).
 #
 # Candidacy and lookup signals below were calibrated directly against the 18 known
-# FRAGMENT examples from eval/audit_wp39_1/ (docs/PHASE39_REQUIREMENTS.md's WP-39.1
+# FRAGMENT examples from eval/audit_wp39_1/ (archive/PHASE39_REQUIREMENTS.md's WP-39.1
 # Findings), not assumed from the WP-39.2 scope doc's text alone -- implementation-time
 # calibration found three real gaps beyond what PR #184's review already caught:
 #   1. The scope doc's step-1 signal ("preceding same-chunk record contains a colon")

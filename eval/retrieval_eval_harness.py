@@ -6,7 +6,7 @@ Measures whether `reqbot ask`'s real, unmodified retrieval path
 current production defaults) actually surfaces the right requirements for a
 real question. Distinct from eval/eval_harness.py, which measures Step C
 extraction precision/recall -- this measures search/ask quality, a different
-pipeline stage (docs/PHASE37_REQUIREMENTS.md's Phase Framing).
+pipeline stage (archive/PHASE37_REQUIREMENTS.md's Phase Framing).
 
 Input:  eval/gold_retrieval_queries.jsonl -- hand-labeled queries, each with
         a hand-verified set of relevant requirement_ids (or an empty set for
@@ -17,7 +17,7 @@ Output: recall@k (k=5,10,20), precision@5, and MRR per query and in
         results they returned, since recall/precision/MRR are undefined
         when nothing is relevant), and retrieval latency (mean/p95).
 
-WP-43 (docs/PHASE43_REQUIREMENTS.md) added --rerank/--rerank-pool-size,
+WP-43 (archive/PHASE43_REQUIREMENTS.md) added --rerank/--rerank-pool-size,
 passed through to retrieve() unchanged -- still measurement only, this
 harness makes no retrieval decisions itself; it opts a full run into
 retrieve()'s existing rerank=True path and scores what comes back.
@@ -35,9 +35,9 @@ not reflecting real hyde=True production behavior) or by running N>=3 repeats
 per side and comparing distributions rather than single point estimates --
 not fixed here, since caching/seeding HyDE would mean changing core/ask.py's
 retrieval logic itself, out of this WP's own Non-Goals. See
-docs/PHASE37_REQUIREMENTS.md's WP-37.2 Scope.
+archive/PHASE37_REQUIREMENTS.md's WP-37.2 Scope.
 
-CAUTION #2 (WP-43, docs/PHASE43_REQUIREMENTS.md §11.1): even with hyde=False and
+CAUTION #2 (WP-43, archive/PHASE43_REQUIREMENTS.md §11.1): even with hyde=False and
 rewrite_query()'s deterministic temperature=0.0, re-running the identical
 QUERY against the identical, unchanged corpus and CODE is not guaranteed to
 reproduce every metric exactly. Confirmed directly with same-code reruns (no
@@ -94,7 +94,7 @@ def compute_metrics(relevant_ids: set[str], retrieved_ids: list[str]) -> dict:
     correctly returned little/nothing rather than confidently surfacing
     irrelevant results.
 
-    precision@5 (WP-43, docs/PHASE43_REQUIREMENTS.md): the primary reranker
+    precision@5 (WP-43, archive/PHASE43_REQUIREMENTS.md): the primary reranker
     gate metric -- |relevant ∩ top_5| / 5, the standard precision@k
     definition (divides by k, not by however many were actually returned,
     so a query that returns fewer than 5 results is scored as if the
@@ -151,7 +151,7 @@ def run_harness(
     overrides them (e.g. for a future WP-37.2 before/after comparison run
     with the same overrides on both sides).
 
-    rerank/rerank_pool_size/rerank_model (WP-43, docs/PHASE43_REQUIREMENTS.md):
+    rerank/rerank_pool_size/rerank_model (WP-43, archive/PHASE43_REQUIREMENTS.md):
     passed straight through to retrieve(). When rerank=True, each result
     carries a rerank_score -- captured here for every query's results, not
     only zero-truth ones, so the Findings write-up can compare rerank_score

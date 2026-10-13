@@ -4,7 +4,7 @@
 It pins, by sha256 and with paths relative to the repository root, every project file the guarded runner imports (computed by importing
 `run_stage_c` and loading one pinned document, so the lazily imported input loaders are included), the declaration, the draw and the pack, and the
 two files that pin the input documents. The files that exist only after the labels are committed (the labels and the frozen fresh gold) go under
-`sealed_until_c2` with the hashes fixed in docs/PHASE45_WP457E_PLAN.md; a verdict needs them present and equal.
+`sealed_until_c2` with the hashes fixed in archive/PHASE45_WP457E_PLAN.md; a verdict needs them present and equal.
 
   python3 eval/spike_results/wp_45_7/freeze_v6.py            # writes the manifest (refuses to overwrite without --force)
   python3 eval/spike_results/wp_45_7/freeze_v6.py --check    # recompute the closure and compare it with the committed manifest
@@ -27,7 +27,7 @@ import run_stage_c as SC  # noqa: E402
 
 W = "eval/spike_results/wp_45_7/"
 MANIFEST = _HERE / "outputs" / "frozen_wp457e_code.json"
-PLAN = _ROOT / "docs/PHASE45_WP457E_PLAN.md"
+PLAN = _ROOT / "archive/PHASE45_WP457E_PLAN.md"
 DATA = [W + "outputs/declared_v6.json", W + "outputs/fresh_draw_map.json", W + "outputs/heldout_frozen.json", W + "fresh_pack/pack_a.md",
         W + "fresh_pack/pack_b.md", "eval/spike_results/wp_44/manifest.json"]
 SEALED = [W + "outputs/fresh_gold.json", W + "fresh_labels/labels_claude_a.jsonl", W + "fresh_labels/labels_claude_b.jsonl"]
@@ -69,7 +69,7 @@ def build():
     return {
         "note": ("sha256 (paths relative to the repository root) of everything that defines the WP-45.7e frozen configuration: the import closure of the guarded "
                  "runner, the declaration, the unlabeled draw and pack, and the files that pin the input documents. `sealed_until_c2` lists the files that exist only "
-                 "after the labels are committed, with the hashes fixed in docs/PHASE45_WP457E_PLAN.md. The v6 preflight and verdict refuse to proceed if any differs."),
+                 "after the labels are committed, with the hashes fixed in archive/PHASE45_WP457E_PLAN.md. The v6 preflight and verdict refuse to proceed if any differs."),
         "files": files, "sealed_until_c2": sealed_hashes(),
     }
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""WP-45.11 T3 R2 read (docs/PHASE45_WP4511_T3_ADDENDUM.md section 2a): totals, the trigger, and the seeded 40-record sample to be sorted by hand.
+"""WP-45.11 T3 R2 read (archive/PHASE45_WP4511_T3_ADDENDUM.md section 2a): totals, the trigger, and the seeded 40-record sample to be sorted by hand.
 
   python3 r2_sample.py --base T2a T2b --arm T3_512 --base-chunks d2.94.0:T2_256 --arm-chunks d2.94.0:T2_512 --out outputs/t3_512_r2_sample.json
 

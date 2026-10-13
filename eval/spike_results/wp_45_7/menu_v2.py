@@ -1,4 +1,4 @@
-"""WP-45.7e: the menu generator with the two registered fixes (docs/PHASE45_WP457E_PLAN.md section 1).
+"""WP-45.7e: the menu generator with the two registered fixes (archive/PHASE45_WP457E_PLAN.md section 1).
 
 `menu.py` is frozen (the WP-45.7d verdict pinned it by hash). This module builds the old menu with it and then **filters** that menu, so the change is
 strictly subtractive by construction, including when the old menu hit its entry cap: removing an entry never lets a later candidate in. The two changes,
