@@ -15,7 +15,7 @@ API, and MCP server expose those workflows.
 | `services/` | Return structured search, trace, comparison, evidence, checklist, status, and configuration results; `job_service.py` queues long commands and runs them one at a time as child processes (state under `<processed_dir>/.jobs/`). |
 | `cli/` | CLI and interactive-shell command parsing and presentation. |
 | `api/` | HTTP request validation, error mapping, and frontend serving. |
-| `mcp_server/` | Local stdio tools over shared services. |
+| `mcp_server/` | Read-only tools over shared services: stdio for a local AI client, and an optional HTTP door (`network.py`) for other machines. |
 | `frontend/` | Browser screens and presentation; calls the HTTP API. |
 | Ollama | Dense embeddings and local extraction, enrichment, query, and synthesis model calls. |
 | Qdrant | Rebuildable dense/sparse requirements and source-context indexes. |
@@ -354,6 +354,6 @@ availability gap. See [Operations](OPERATIONS.md#rebuild-the-search-indexes).
 ## Deployment boundaries
 
 The default API listener is loopback, with no application authentication.
-The MCP server is a subprocess using stdio; it is not an HTTP endpoint.
+The MCP server is a subprocess using stdio. The optional network door (`reqbot mcp --http`) serves the same read-only tools over HTTP to other machines, only with a valid per-tool access code, and is not running unless started; see the [network MCP diagram](diagrams/13_network_mcp.md).
 The web GUI requires a frontend build. See [Deployment](DEPLOYMENT.md),
 [Connecting AI tools](AI_TOOLS.md), and [API](API.md) for those interfaces.

@@ -1810,7 +1810,20 @@ def cmd_serve(args: argparse.Namespace) -> int:
 
 
 def cmd_mcp(args: argparse.Namespace) -> int:
-    """Start the ReqBot MCP server (stdio transport)."""
+    """Start the ReqBot MCP server: stdio (an AI tool on this machine starts it), or with --http the network door that serves other machines."""
+    if getattr(args, "http", False):
+        try:
+            from mcp_server.network import run as run_network
+        except ImportError:
+            log.error(
+                "mcp is not installed — run: pip3 install --break-system-packages 'reqbot[mcp]'"
+            )
+            return 1
+        return run_network(
+            host=getattr(args, "host", "127.0.0.1"),
+            port=getattr(args, "port", 8765),
+            allowed_hosts=getattr(args, "allow_hosts", None),
+        )
     try:
         from mcp_server.server import run as run_mcp
     except ImportError:
@@ -1819,6 +1832,44 @@ def cmd_mcp(args: argparse.Namespace) -> int:
         )
         return 1
     run_mcp()
+    return 0
+
+
+def cmd_mcp_code(args: argparse.Namespace) -> int:
+    """Create, list or revoke the access codes of the network MCP door (one per connected tool)."""
+    from core import mcp_codes as _codes
+
+    action = args.mcp_code_command
+    if action == "add":
+        try:
+            code = _codes.add(args.name)
+        except ValueError as e:
+            log.error("%s", e)
+            return 1
+        print(f"Access code for '{args.name}' (shown once, it cannot be looked up again):\n  {code}")
+        print("The connected tool sends it on every request as 'Authorization: Bearer <code>'.")
+        print("Start the door with: reqbot mcp --http   Cut this tool off again with: reqbot mcp-code revoke " + args.name)
+        return 0
+    if action == "revoke":
+        try:
+            removed = _codes.revoke(args.name)
+        except ValueError as e:
+            log.error("%s", e)
+            return 1
+        if not removed:
+            log.error("No code named '%s'. See them with: reqbot mcp-code list", args.name)
+            return 1
+        print(f"Revoked '{args.name}'. It stops working on the next request; a running door needs no restart.")
+        return 0
+    rows = _codes.listing()
+    if not rows:
+        print("No access codes. Create one with: reqbot mcp-code add NAME")
+        return 0
+    print(f"{'NAME':<42} {'CREATED':<22} SOURCE")
+    for r in rows:
+        print(f"{r['name']:<42} {r['created'] or '-':<22} {r['source']}")
+    for name in _codes.rejected_from_environment():
+        print(f"(ignored: '{name}' in {_codes.ENV_CODES} has a bad name or a code under {_codes.MIN_ENV_CODE_LENGTH} characters)")
     return 0
 
 
@@ -2160,10 +2211,23 @@ def main() -> None:
     jobs_sub.add_parser("worker", help="Run the queue in the foreground (what 'reqbot serve' does in a background thread)")
 
     # mcp
-    subparsers.add_parser(
+    p_mcp = subparsers.add_parser(
         "mcp",
-        help="Start the ReqBot MCP server (stdio transport) for external LLM/agent clients",
+        help="Start the ReqBot MCP server for external LLM/agent clients: stdio by default, or --http to serve other machines",
     )
+    p_mcp.add_argument("--http", action="store_true", help="Serve the read-only tools over HTTP to AI tools on other machines (needs an access code: reqbot mcp-code add NAME)")
+    p_mcp.add_argument("--host", default="127.0.0.1", help="With --http: address to listen on (default: this machine only)")
+    p_mcp.add_argument("--port", type=int, default=8765, help="With --http: port (default: 8765)")
+    p_mcp.add_argument("--allow-host", action="append", dest="allow_hosts", default=None, help="With --http: a host name callers use to reach the door (repeatable); other Host headers are refused")
+
+    # mcp-code
+    p_mcp_code = subparsers.add_parser("mcp-code", help="Create, list or revoke the access codes of the network MCP door (one code per connected tool)")
+    mcp_code_sub = p_mcp_code.add_subparsers(dest="mcp_code_command", required=True)
+    p_mcp_code_add = mcp_code_sub.add_parser("add", help="Create a code for a connected tool and show it once")
+    p_mcp_code_add.add_argument("name", help="A short name for the tool or person, e.g. claude-desktop-anna")
+    mcp_code_sub.add_parser("list", help="List the codes by name (never the codes themselves)")
+    p_mcp_code_revoke = mcp_code_sub.add_parser("revoke", help="Cut one connected tool off")
+    p_mcp_code_revoke.add_argument("name")
 
     args = parser.parse_args()
 
@@ -2194,6 +2258,7 @@ def main() -> None:
         "token": cmd_token,
         "jobs": cmd_jobs,
         "mcp": cmd_mcp,
+        "mcp-code": cmd_mcp_code,
     }
 
     rc = commands[args.command](args)
