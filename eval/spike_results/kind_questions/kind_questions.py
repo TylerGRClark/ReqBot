@@ -203,3 +203,64 @@ PERMISSION_PROMPTS["v3"] = PERMISSION_PROMPT_V3
 
 def build_permission_prompt(item: dict, template: str = PERMISSION_PROMPT_V1) -> str:
     return template.format(applies=item.get("applies_to") or "(none)", quote=item.get("source_quote") or "", passage=(item.get("passage") or "")[:1200])
+
+
+# ---- round 2 -----------------------------------------------------------------------------------------------------------
+_PURPOSE_LIMIT = re.compile(r"^\W*(?:(?:in\s+order\s+to|so\s+as\s+to|to)\s+[a-z]+|for\s+(?:additional|further|more|the\s+purpose|guidance|information|reference|use)\b)", re.IGNORECASE)
+_BARE_ADVERB = re.compile(r"^\W*(?:(?!only\b)[a-z]+ly|as\s+(?:required|necessary|appropriate|needed)|when\s+(?:necessary|required|applicable)|if\s+(?:required|necessary))\W*$", re.IGNORECASE)
+
+
+def purpose_not_limit(limit: str | None) -> str | None:
+    """"purpose" or "adverb" when the reported limit is only a purpose or a bare adverb, else None."""
+    text = (limit or "").strip()
+    if _PURPOSE_LIMIT.match(text):
+        return "purpose"
+    if _BARE_ADVERB.match(text):
+        return "adverb"
+    return None
+
+
+_DUTY_SHAPED = re.compile(r"^\W*(?:do|does|did)\b", re.IGNORECASE)
+
+
+def fallback_keeps(old_question: str | None, item: dict) -> tuple[bool, str]:
+    """May the row's existing question stay when the permission rule gave no question? (keep, reason)"""
+    q = (old_question or "").strip()
+    if not q:
+        return False, "no existing question"
+    if aq.unverified_terms(q, aq.row_material(item)):
+        return False, "existing question not grounded"
+    if _DUTY_WORDS.search(q):
+        return False, "existing question has duty words"
+    if _DUTY_SHAPED.match(q):
+        return False, "existing question is duty-shaped (Does/Do/Did) for a may"
+    return True, "existing question is permission-shaped or neutral and grounded"
+
+
+_SHOULD_IN_IF = re.compile(r"\b(?:determine[sd]?|decide[sd]?|assess(?:es)?)\s+(?:if|whether)\b[^.;]*?\bshould\b|\bshould\s+(?:those|these|this|that|such)\b", re.IGNORECASE)
+
+
+def should_is_condition(quote: str) -> bool:
+    """True when the row's "should" sits inside an if / whether / determine clause or is followed by those/these/this: a condition, not a recommendation."""
+    return bool(_SHOULD_IN_IF.search(quote or ""))
+
+
+def classify_wrapper(item: dict) -> dict:
+    """Rules-7 verbs plus the if-clause "should" fix: the condition's "should" is masked before classifying."""
+    if should_is_condition(item.get("source_quote") or ""):
+        masked = dict(item, source_quote=re.sub(r"\bshould\b", "ought", item["source_quote"], flags=re.IGNORECASE))
+        out = classify_rules7(masked)
+        out["kind_reasons"] = out["kind_reasons"] + ["a 'should' inside an if-clause was ignored"]
+        return out
+    return classify_rules7(item)
+
+
+def recommendation_flag_v2(item: dict) -> dict | None:
+    """The recommended flag, or None when the kind (under the wrapper) is not recommendation."""
+    return recommendation_flag(item) if classify_wrapper(item)["kind"] == "recommendation" else None
+
+
+PERMISSION_PROMPT_V4 = PERMISSION_PROMPT_V3.replace(
+    "- Test before you answer:",
+    "- Alternatives are not limits: \"A or B\", \"may deviate from\", \"may necessitate\", \"may be done by\" describe options or effects. If the only restriction is a purpose or a reason (starts with \"to\" or \"for\"), answer null.\n- Test before you answer:")
+PERMISSION_PROMPTS["v4"] = PERMISSION_PROMPT_V4

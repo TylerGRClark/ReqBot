@@ -1,0 +1,114 @@
+{
+ "rows": 1418,
+ "rows_that_differ_from_live": 105,
+ "permission_rows": 67,
+ "vanished_in_round1": 12,
+ "vanished_recovered_by_fallback": 8,
+ "fallback_kept_total": 9,
+ "fallback_kept": [
+  {
+   "doc": "afi10-2402",
+   "citation": "3.3.3.4.2 (inferred)",
+   "question": "Is a geometric mean used for calculating risk in this process?"
+  },
+  {
+   "doc": "afi10-2402",
+   "citation": "4.3",
+   "question": "Is participation in CARM Review sessions open to representatives from partner programs and stakeholders beyond just the CARM POCs?"
+  },
+  {
+   "doc": "afi17-203",
+   "citation": "3.4.2.1",
+   "question": "Can the assigned category of an investigation be changed as new information is obtained?"
+  },
+  {
+   "doc": "afi17-203",
+   "citation": "3.8.1",
+   "question": "Is it true that in investigations involving the IC, adversary activity may be allowed to continue when necessary for gaining actionable intelligence or continuing friendly classified operations?"
+  },
+  {
+   "doc": "afman17-2101",
+   "citation": "1.4 (inferred)",
+   "question": "Can AF users requiring access to the specified tools register for an account and request appropriate roles?"
+  },
+  {
+   "doc": "dafman17-1305",
+   "citation": "4.1.1",
+   "question": "Can residential requirements be completed concurrently with foundational requirements?"
+  },
+  {
+   "doc": "dafman17-1305",
+   "citation": "4.1.11",
+   "question": "Can vouchers be requested via the CCC Certification and Training website at https://cwip.cce.af.mil?"
+  },
+  {
+   "doc": "dafman17-1305",
+   "citation": "4.2.2",
+   "question": "Can deployment line remarks be established for each DCWF code and proficiency level of cyberspace qualifications?"
+  },
+  {
+   "doc": "dafman17-1305",
+   "citation": "",
+   "question": "Are you expected to perform cybersecurity tasks as defined in DAFMAN 17-1305, your Position Description, or other applicable documents upon being assigned?"
+  }
+ ],
+ "guard_hits": [
+  {
+   "citation": "3.4.2.1",
+   "doc": "afi17-203",
+   "limit": "to reflect the new data",
+   "why": "purpose",
+   "hand_grade_round1": "weak"
+  },
+  {
+   "citation": "3.4.4.2",
+   "doc": "afi17-203",
+   "limit": "for additional guidance",
+   "why": "purpose",
+   "hand_grade_round1": "wrong"
+  },
+  {
+   "citation": "1.1.6",
+   "doc": "dafman17-1305",
+   "limit": "to reflect specific mission directives and budget constraints",
+   "why": "purpose",
+   "hand_grade_round1": "weak"
+  },
+  {
+   "citation": "1.2.2",
+   "doc": "dafman17-1305",
+   "limit": "to manually update their training record with the date of completion on the certificate",
+   "why": "purpose",
+   "hand_grade_round1": "wrong"
+  },
+  {
+   "citation": "6.3.1",
+   "doc": "dafman17-1305",
+   "limit": "periodically",
+   "why": "adverb",
+   "hand_grade_round1": "weak"
+  }
+ ],
+ "weak_or_wrong_graded_round1": 8,
+ "good_graded_round1": 28,
+ "wrapper_kind_moves": [
+  "afi10-2402 3.3.2: recommendation -> unknown",
+  "afi17-203 3.4.4.3: recommendation -> unknown",
+  "dafman17-1305 2.15.18: permission -> duty_imperative",
+  "dafman17-1305 2.20.6: permission -> duty_imperative",
+  "dafman17-1305 2.21: permission -> duty_imperative"
+ ],
+ "ifclause_rows": [
+  "afi10-2402 3.3.2",
+  "afi17-203 3.4.4.2",
+  "afi17-203 3.4.4.3"
+ ],
+ "recommendation_flag_moves": [
+  "afi10-2402 3.3.2",
+  "afi17-203 3.4.4.3"
+ ],
+ "new_question_counts": {
+  "question": 69,
+  "none": 36
+ }
+}

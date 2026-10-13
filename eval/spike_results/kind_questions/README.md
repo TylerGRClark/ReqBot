@@ -47,3 +47,9 @@ Final per row: v3 answer for the 18 rows of round 3, otherwise v2.
 ## Limits
 
 Single run per prompt, no noise floor. Hand grades are by the agent that wrote the prompt. C1-C4 measure form only. The 3 rules-7 rows were still run through the model in round 1 (their answers are not used).
+
+## Round 2 (after #339 merged; rebased on origin/main)
+
+Pre-registration: `ROUND2_PREREGISTRATION.md`. Changes: (1) fallback keeps the existing question when the permission rule gives none and it is grounded, has no duty words and does not open with Do/Does/Did; (2) deterministic purpose / bare-adverb guard on the reported limit (plus prompt v4 on 16 rows); (3) if-clause "should" fix in the wrapper. Run: `pick_round4.py`, `run_experiment.py <scratch> perm 4 v4 outputs/round4_ids.json`, `round2_final.py <scratch>`, `make_report2.py`. Round-1 report kept as `report_round1.md`.
+
+Results: 9 of the 13 vanished questions return (8 fallback, 1 new model question), 4 stay gone; 6 of 8 weak/wrong round-1 questions caught or fixed (5 guard, 1 prompt), 0 of 28 good rejected (first draft rejected 1: "only"); only afi10-2402 3.3.2 and afi17-203 3.4.4.3 move under the if-clause fix; 16 model calls, 1 prompt round. 59 rows differ from the live question or flag, 0 dropped (see report.md).
