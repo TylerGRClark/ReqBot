@@ -69,3 +69,14 @@ def test_should_in_if_clause_is_not_a_recommendation_but_a_real_should_is():
     assert kq.should_is_condition("assess the mission impact should those vulnerabilities be exploited")
     real = item("If it is determined the report is unclassified the author should mark the report.")
     assert kq.recommendation_flag_v2(real) is not None
+
+
+def test_round3_checks_catch_dropped_qualifier_pronoun_future_and_generic_limit():
+    import round3_checks as r3
+    q42 = "DAF Civilian and military personnel may temporarily perform cyberspace position duties while working toward meeting qualification requirements under direct supervision."
+    assert "temporarily" in r3.missing_qualifiers("When DAF civilian and military personnel perform duties, are they supervised?", q42)
+    assert r3.missing_qualifiers("When DAF civilian and military personnel temporarily perform duties while working toward qualification, are they supervised?", q42) == []
+    assert r3.rejection("When they are requested to present a certificate, is it by the unit?", "They may be requested to present a certificate by the unit.", None)
+    assert r3.rejection("When reporting formats are updated, is it per the CWMB?", "Reporting formats may be updated in a future revision of this manual.", None) == "about a future event"
+    assert r3.rejection("When waivers are obtained, were they per the manual?", "Waivers may be obtained pursuant to applicable provisions.", "pursuant to applicable provisions and procedures as outlined in this manual")
+    assert r3.rejection("When this is waived to a SECRET level, was a memorandum sent through the office?", "(T-1) In addition: This may be waived to a SECRET level with a memorandum sent through the office.", "with a memorandum") is None

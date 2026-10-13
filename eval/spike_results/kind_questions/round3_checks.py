@@ -88,6 +88,8 @@ def rejection(question, quote: str, limit) -> str | None:
         return "decision belongs to another party"
     if limit and _GENERIC_LIMIT.match(limit.strip()):
         return "limit only points at 'applicable provisions' (always yes)"
+    if limit_in_scope(question, limit):
+        return "circular: the limit is repeated in the scope clause"
     miss = missing_qualifiers(question, quote)
     if miss:
         return "question drops a qualifier: " + ", ".join(miss)
@@ -115,10 +117,12 @@ _DESCRIPTIVE_MODAL = re.compile(r"\b(?:may|can)\s+(?:also\s+)?(?:necessitate|inc
 
 def fallback_after_rejection(old_question, item: dict, why_null: str | None, rejected_by_check: bool) -> tuple[bool, str]:
     """Round-3 fallback: fallback_keeps_v2, plus today's question when a check rejected the new one and the row's modal is descriptive (may necessitate ...)."""
+    q = (old_question or "").strip()
+    if re.search(r"\bmay\b", q, re.IGNORECASE):
+        return False, "existing question restates the 'may' inside the question (awkward; not kept)"
     keep, reason = fallback_keeps_v2(old_question, item, why_null)
     if keep:
         return keep, reason
-    q = (old_question or "").strip()
     if (q and rejected_by_check and _DESCRIPTIVE_MODAL.search(item.get("source_quote") or "") and not re.search(r"\bmust\b|\bshall\b|\brequired\b", q, re.IGNORECASE)
             and not kq.aq.unverified_terms(q, kq.aq.row_material(item))):
         return True, "today's question kept: the sentence's modal only describes an effect (may necessitate ...), and a check rejected the new question"
@@ -151,3 +155,16 @@ Surrounding text (context only):
 
 Answer as JSON: {{"grant": "<what is permitted, copied>", "limit": "<the limit, copied, or null>", "question": "<the question or null>", "why_null": "<reason or null>"}}."""
 kq.PERMISSION_PROMPTS["v5"] = PERMISSION_PROMPT_V5
+PERMISSION_PROMPT_V6 = PERMISSION_PROMPT_V5.replace(
+    "Never write must, shall, required or \"does the unit\".",
+    "Keep the scope and the limit in separate halves: never repeat the limit's words in the part before the comma, and never write \"is the condition met\". If the limit is \"when X allows\", ask \"does X allow it?\" (or \"did X allow it?\").\nNever write must, shall, required or \"does the unit\".")
+kq.PERMISSION_PROMPTS["v6"] = PERMISSION_PROMPT_V6
+
+
+def limit_in_scope(question: str, limit) -> bool:
+    """True when the limit's words are repeated in the scope clause (the part before the first comma), the circular form 'When X includes Y when applicable ..., is it applicable?'."""
+    if not question or not limit or "," not in question:
+        return False
+    head = question.split(",", 1)[0].lower()
+    lim = " ".join(re.sub(r"\s+", " ", limit.lower()).split()[:6])
+    return len(lim.split()) >= 3 and lim in head or "is the condition met" in question.lower()
