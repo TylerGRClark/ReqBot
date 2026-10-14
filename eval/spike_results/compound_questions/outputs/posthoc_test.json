@@ -1,0 +1,126 @@
+{
+ "passing_splits": 80,
+ "added_hedge": [
+  {
+   "id": "CHK-33d8a810c501c2fb",
+   "citation": "2.2.1",
+   "added": [
+    "as required"
+   ]
+  },
+  {
+   "id": "CHK-f7b95ad7648e6829",
+   "citation": "2.2.12.3",
+   "added": [
+    "as required"
+   ]
+  },
+  {
+   "id": "MISS-a2784d8f6ed4147a",
+   "citation": "6.2",
+   "added": [
+    "as required"
+   ]
+  },
+  {
+   "id": "CHK-04c40ff10365270a",
+   "citation": "2.5.1",
+   "added": [
+    "as appropriate"
+   ]
+  },
+  {
+   "id": "CHK-8a18ba21a827252a",
+   "citation": "3.1.1.3.2.2",
+   "added": [
+    "as appropriate"
+   ]
+  },
+  {
+   "id": "CHK-b874b6f2473d121e",
+   "citation": "2.8.3.1",
+   "added": [
+    "when applicable"
+   ]
+  },
+  {
+   "id": "MISS-97c381e2b2b4979a",
+   "citation": "3.10.2",
+   "added": [
+    "as appropriate"
+   ]
+  },
+  {
+   "id": "CHK-1e6075d2ca017e23",
+   "citation": "3.9 (inferred)",
+   "added": [
+    "as required"
+   ]
+  },
+  {
+   "id": "CHK-187c30fedd67a631",
+   "citation": "2.4 (inferred)",
+   "added": [
+    "as appropriate"
+   ]
+  },
+  {
+   "id": "CHK-26c1ee4732f20d7c",
+   "citation": "2.2 (inferred)",
+   "added": [
+    "as required"
+   ]
+  },
+  {
+   "id": "CHK-5627fce2b372dd44",
+   "citation": "2.4 (inferred)",
+   "added": [
+    "as appropriate"
+   ]
+  }
+ ],
+ "broken_lead": [
+  {
+   "id": "CHK-5863f6744297f519",
+   "citation": "2.2.16.4",
+   "lead": "Does the unit establish memorandums of agreement with user agencies in accordance with CJCSI 3280.01D to ensure?"
+  },
+  {
+   "id": "CHK-c8fe76b230e2dbe4",
+   "citation": "Front matter",
+   "lead": "Are all records created as a result of processes prescribed in this publication maintained and disposed of according to?"
+  },
+  {
+   "id": "CHK-404f54619c04aeee",
+   "citation": "1.2 (inferred)",
+   "lead": "Are all PPS used throughout planned, newly developed, acquired, and existing DODIN limited to only those required for?"
+  }
+ ],
+ "no_gain": [
+  "CHK-077e5793822b647c",
+  "CHK-0be82bda372078ac",
+  "CHK-2c6d8167a1475dcd",
+  "CHK-33d8a810c501c2fb",
+  "CHK-f7b30f6658593daa",
+  "MISS-1c4d5ef85e6e4e68",
+  "CHK-04c40ff10365270a",
+  "CHK-0f0fa53c595fa6ec",
+  "CHK-107f32a29f5844b9",
+  "CHK-55150de475ff882f",
+  "CHK-b993e506700a84e8",
+  "CHK-c5e310c4a8b94dd2",
+  "CHK-35fdc817c53c44c7",
+  "CHK-c1e0a32089dd17c3",
+  "CHK-e4e0ded731e7657c",
+  "CHK-194969ec2d3ff6b4",
+  "CHK-38b1eed6c2e451d6",
+  "CHK-3adb94540d9e3e41",
+  "CHK-6cf1e4788fbd584a",
+  "CHK-cf01d4b62efe25e3",
+  "CHK-5627fce2b372dd44",
+  "CHK-ad9660d5ea4dad44",
+  "CHK-c0df790f5bc5ee02",
+  "CHK-c3e5cfb26a313d75",
+  "CHK-e015ec381225d97b"
+ ]
+}

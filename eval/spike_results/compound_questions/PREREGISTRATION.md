@@ -103,3 +103,12 @@ Check changes made during tuning (after seeing round 1; all are loosening of dem
 
 Known over-strictness left in on purpose: "within" used for a place rather than a time limit fails check 1 when the split says "in"; a synonym outside a word family fails;
 check 6 counts a dropped trailing purpose clause as a dropped item (usually it is one).
+
+## Result of the single TEST run (appended after the run; nothing above was changed)
+
+197 TEST candidates (5 documents), 197 model calls, frozen prompt v2. Model said keep for 67; proposed a split for 130; 80 passed all 7 checks (61.5%, target 80%: NOT met);
+50 fell back (shape 26, actor 11, pronouns 9, coverage 3, terms 3, qualifiers 2, modality 1; 47 failed exactly one check). Rows dropped: 0 (target met).
+Longest piece, all candidates: median 28 to 24, 90th percentile 38.4 to 36.0; changed rows: median 28 to 19, 90th percentile 37.2 to 30.0.
+Faithfulness and ease were NOT graded: the blind review sheet is `outputs/review_sheet_test.md`. Exploratory (not registered) looks in `posthoc.py`: of the 80 passing splits,
+25 have a longest piece over 80% of today's question, 11 add an unsourced "as appropriate / as required / when applicable", 3 have a lead that ends mid-sentence;
+44 are free of all three. Full table in `report.md`.

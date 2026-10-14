@@ -1,0 +1,73 @@
+{
+ "passing_splits": 65,
+ "added_hedge": [
+  {
+   "id": "CHK-25ab98771cb4328c",
+   "citation": "2.21.8",
+   "added": [
+    "as appropriate"
+   ]
+  },
+  {
+   "id": "MISS-5470ef430c84b16c",
+   "citation": "2.12.6.20",
+   "added": [
+    "as appropriate"
+   ]
+  },
+  {
+   "id": "CHK-60eb3cb45d49accf",
+   "citation": "2.5.5.2",
+   "added": [
+    "as appropriate"
+   ]
+  },
+  {
+   "id": "MISS-bd26202f4133e76e",
+   "citation": "2.5.3.3",
+   "added": [
+    "as appropriate"
+   ]
+  },
+  {
+   "id": "CHK-3ae35b57d37cef0d",
+   "citation": "2.15.11",
+   "added": [
+    "as required"
+   ]
+  },
+  {
+   "id": "CHK-4b67c429429da615",
+   "citation": "4.4.5.3",
+   "added": [
+    "when required"
+   ]
+  },
+  {
+   "id": "MISS-b3f779f445326cba",
+   "citation": "1.2.1",
+   "added": [
+    "as appropriate"
+   ]
+  }
+ ],
+ "broken_lead": [],
+ "no_gain": [
+  "CHK-637b3ec7f6a4abcb",
+  "CHK-730948ef1d0de0c0",
+  "CHK-bae935da38b8bc05",
+  "CHK-be773d3b36a97521",
+  "CHK-feb7377332779040",
+  "MISS-5470ef430c84b16c",
+  "CHK-128e552db266d82a",
+  "CHK-261b8d0d04fc5797",
+  "CHK-a110ac9bd785a650",
+  "CHK-ba5c1d68390527a0",
+  "MISS-ecf7715dc6d0d339",
+  "CHK-01de2716d93e4c50",
+  "CHK-02fcdfd5f464816e",
+  "CHK-2ae00643b0384401",
+  "CHK-45fe1d2bf0d8cfb2",
+  "MISS-b3f779f445326cba"
+ ]
+}
