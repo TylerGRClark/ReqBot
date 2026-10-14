@@ -212,7 +212,7 @@
   "reason": "series",
   "words": 20,
   "eligible": false,
-  "gate": "gate word: when",
+  "gate": "gate word: requested, when",
   "pool_size": 158
  },
  {
@@ -302,7 +302,7 @@
   "reason": "series",
   "words": 27,
   "eligible": false,
-  "gate": "3 'and' (need exactly 1)",
+  "gate": "gate word: requested",
   "pool_size": 158
  },
  {
@@ -338,7 +338,7 @@
   "reason": "series",
   "words": 28,
   "eligible": false,
-  "gate": "3 'and' (need exactly 1)",
+  "gate": "gate word: requested",
   "pool_size": 158
  },
  {
@@ -347,7 +347,7 @@
   "reason": "series",
   "words": 27,
   "eligible": false,
-  "gate": "gate word: or",
+  "gate": "gate word: or, specified",
   "pool_size": 158
  },
  {
@@ -356,7 +356,7 @@
   "reason": "series",
   "words": 29,
   "eligible": false,
-  "gate": "3 'and' (need exactly 1)",
+  "gate": "gate word: requested",
   "pool_size": 158
  },
  {
@@ -401,7 +401,7 @@
   "reason": "series",
   "words": 25,
   "eligible": false,
-  "gate": "gate word: when",
+  "gate": "gate word: requested, when",
   "pool_size": 158
  },
  {
@@ -446,7 +446,7 @@
   "reason": "series",
   "words": 22,
   "eligible": false,
-  "gate": "gate word: or, when",
+  "gate": "gate word: or, requested, when",
   "pool_size": 158
  },
  {
@@ -590,7 +590,7 @@
   "reason": "series",
   "words": 22,
   "eligible": false,
-  "gate": "gate word: when",
+  "gate": "gate word: tasked, when",
   "pool_size": 158
  },
  {
@@ -635,7 +635,7 @@
   "reason": "series",
   "words": 27,
   "eligible": false,
-  "gate": "gate word: as appropriate, when",
+  "gate": "gate word: as appropriate, requested, when",
   "pool_size": 158
  },
  {
@@ -734,7 +734,7 @@
   "reason": "series",
   "words": 28,
   "eligible": false,
-  "gate": "2 'and' (need exactly 1)",
+  "gate": "gate word: requested",
   "pool_size": 158
  },
  {
@@ -851,7 +851,7 @@
   "reason": "long",
   "words": 33,
   "eligible": false,
-  "gate": "gate word: as well as",
+  "gate": "gate word: requested",
   "pool_size": 158
  },
  {
@@ -958,8 +958,8 @@
   "id": "CHK-b744956ae622461f",
   "reason": "series",
   "words": 23,
-  "eligible": true,
-  "gate": "",
+  "eligible": false,
+  "gate": "gate word: requested",
   "pool_size": 158
  },
  {
@@ -1247,7 +1247,7 @@
   "reason": "series",
   "words": 20,
   "eligible": false,
-  "gate": "gate word: when",
+  "gate": "gate word: requested, when",
   "pool_size": 158
  },
  {
@@ -1418,7 +1418,7 @@
   "reason": "series",
   "words": 28,
   "eligible": false,
-  "gate": "gate word: when",
+  "gate": "gate word: requested, when",
   "pool_size": 158
  },
  {
@@ -1508,7 +1508,7 @@
   "reason": "long",
   "words": 36,
   "eligible": false,
-  "gate": "gate word: as appropriate, upon",
+  "gate": "gate word: as appropriate, tasked, upon",
   "pool_size": 57
  },
  {
@@ -1562,7 +1562,7 @@
   "reason": "series",
   "words": 29,
   "eligible": false,
-  "gate": "gate word: within",
+  "gate": "gate word: requested, specified, within",
   "pool_size": 57
  },
  {
@@ -1787,7 +1787,7 @@
   "reason": "series",
   "words": 22,
   "eligible": false,
-  "gate": "gate word: or",
+  "gate": "gate word: as directed, or",
   "pool_size": 57
  },
  {
@@ -1850,7 +1850,7 @@
   "reason": "series",
   "words": 30,
   "eligible": false,
-  "gate": "gate word: if",
+  "gate": "gate word: if, tasked",
   "pool_size": 57
  },
  {
@@ -1894,8 +1894,8 @@
   "id": "MISS-2edd848fa3bec1c4",
   "reason": "series",
   "words": 25,
-  "eligible": true,
-  "gate": "",
+  "eligible": false,
+  "gate": "gate word: as directed",
   "pool_size": 57
  },
  {
@@ -2147,7 +2147,7 @@
   "reason": "long",
   "words": 36,
   "eligible": false,
-  "gate": "gate word: not, or, when",
+  "gate": "gate word: not, or, specified, when",
   "pool_size": 150
  },
  {
@@ -2237,7 +2237,7 @@
   "reason": "series",
   "words": 24,
   "eligible": false,
-  "gate": "2 'and' (need exactly 1)",
+  "gate": "gate word: as specified",
   "pool_size": 150
  },
  {
@@ -2417,7 +2417,7 @@
   "reason": "series",
   "words": 28,
   "eligible": false,
-  "gate": "gate word: or",
+  "gate": "gate word: as directed, or",
   "pool_size": 150
  },
  {
@@ -2543,7 +2543,7 @@
   "reason": "long",
   "words": 39,
   "eligible": false,
-  "gate": "4 'and' (need exactly 1)",
+  "gate": "gate word: requested",
   "pool_size": 150
  },
  {
@@ -2552,7 +2552,7 @@
   "reason": "series",
   "words": 28,
   "eligible": false,
-  "gate": "gate word: or, when",
+  "gate": "gate word: or, tasked, when",
   "pool_size": 150
  },
  {
@@ -2777,7 +2777,7 @@
   "reason": "series",
   "words": 28,
   "eligible": false,
-  "gate": "gate word: or, when",
+  "gate": "gate word: or, requested, when",
   "pool_size": 150
  },
  {
@@ -3164,7 +3164,7 @@
   "reason": "series",
   "words": 23,
   "eligible": false,
-  "gate": "gate word: including, not",
+  "gate": "gate word: specified",
   "pool_size": 150
  },
  {

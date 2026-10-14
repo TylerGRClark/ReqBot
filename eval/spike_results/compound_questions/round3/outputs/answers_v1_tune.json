@@ -1,0 +1,62 @@
+{
+ "CHK-053decd0bf676125": {
+  "prompt_id": "0f357bffdfaba95a",
+  "raw": "{\"decision\": \"keep\", \"kind\": null, \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-730948ef1d0de0c0": {
+  "prompt_id": "0f357bffdfaba95a",
+  "raw": "{\"decision\": \"keep\", \"kind\": null, \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-a11d210f9c7406d5": {
+  "prompt_id": "0f357bffdfaba95a",
+  "raw": "{\"decision\": \"keep\", \"kind\": null, \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-ae752b8d969e003b": {
+  "prompt_id": "0f357bffdfaba95a",
+  "raw": "{\"decision\": \"keep\", \"kind\": null, \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-b744956ae622461f": {
+  "prompt_id": "0f357bffdfaba95a",
+  "raw": "{\"decision\": \"split\", \"kind\": \"objects\", \"lead\": \"Does the HAF CARM Program office conduct CARM Reviews with all of the following as requested?\", \"parts\": [\"The MAJCOM/DRU?\", \"The FOA?\", \"The Component to the Combatant Command CARM programs?\"]}",
+  "error": null
+ },
+ "CHK-b76f7d56b189d616": {
+  "prompt_id": "0f357bffdfaba95a",
+  "raw": "{\"decision\": \"keep\", \"kind\": null, \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "MISS-681df466c2cbc87e": {
+  "prompt_id": "0f357bffdfaba95a",
+  "raw": "{\"decision\": \"split\", \"kind\": \"objects\", \"lead\": \"Does the content include all of the following?\", \"parts\": [\"Database navigation tutorials?\", \"The FAQs?\", \"A link to the DoD websharing tool for live instruction?\"]}",
+  "error": null
+ },
+ "MISS-c104b3c4c6ad6af6": {
+  "prompt_id": "0f357bffdfaba95a",
+  "raw": "{\"decision\": \"keep\", \"kind\": null, \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "MISS-cd37068918208025": {
+  "prompt_id": "0f357bffdfaba95a",
+  "raw": "{\"decision\": \"split\", \"kind\": \"objects\", \"lead\": \"Does each COA recommendation include all of the following?\", \"parts\": [\"A summary of the suggested action?\", \"Expected risk reduction effectiveness?\", \"Estimates of time/investment needed to implement the action?\"]}",
+  "error": null
+ },
+ "MISS-2edd848fa3bec1c4": {
+  "prompt_id": "0f357bffdfaba95a",
+  "raw": "{\"decision\": \"keep\", \"kind\": null, \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-01de2716d93e4c50": {
+  "prompt_id": "0f357bffdfaba95a",
+  "raw": "{\"decision\": \"split\", \"kind\": \"objects\", \"lead\": \"Does the WCO/DCO serve as the focal point/enforcement for the Wing/Delta's implementation of all of the following?\", \"parts\": [\"DoDI 8140.02?\", \"DoDM 8140.03?\", \"This manual?\"]}",
+  "error": null
+ },
+ "CHK-9b36f6a1f7c847ce": {
+  "prompt_id": "0f357bffdfaba95a",
+  "raw": "{\"decision\": \"split\", \"kind\": \"objects\", \"lead\": \"Does the unit update cybersecurity awareness training records for all of the following?\", \"parts\": [\"Civilian personnel?\", \"Military personnel?\", \"Foreign military personnel?\", \"Contractor personnel?\"]}",
+  "error": null
+ }
+}

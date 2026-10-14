@@ -60,4 +60,20 @@ All candidates of the three smaller documents are used (no sample), so the numbe
 
 ## Freeze
 
-(to be filled in before the FRESH run)
+Frozen 2026-10-14 after two TUNE rounds, before any FRESH call. **Prompt v2, id `c26881680f6d1d6b`** (model qwen2.5:14b, temperature 0.1), with `narrow.py` (gate and checks) as committed with
+this freeze. No edit to the prompt, gate, checks or candidate selector is allowed before the FRESH run; the FRESH set is run once.
+
+TUNE record (all 365 candidates of the three TUNE documents, gate applied; only a handful pass the gate, so tuning evidence is thin and I say so):
+
+| | v1 | v2 (frozen) |
+|---|---|---|
+| candidates passing the gate (sent to the model) | 12 | 10 |
+| model says keep | 7 | 6 |
+| splits proposed | 5 | 4 |
+| splits passing all checks | 4 (80%) | 4 (100%) |
+| hedge words in raw model output | 0 | 0 |
+
+Changes made during tuning (after seeing round 1): (1) the gate gained `requested, tasked, as directed, directed, as specified, specified, as determined, determined, as designated, as defined,
+if any` (a split of "... as requested" passed every check but "as requested" is a condition); this removed 2 rows from the sent set. (2) Prompt v2 changes only the lead rule (words before the
+list go before "all of the following", words after it go after) and adds one worked example with words after the list, because one v1 lead dropped "for continued network access"
+(caught by check (c)). All v1 and v2 answers are in `outputs/`. With n this small, "100%" on the TUNE set is not evidence of a 90% pass rate; the FRESH run is the test.

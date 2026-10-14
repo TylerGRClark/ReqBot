@@ -51,8 +51,20 @@ Question: {question}
 
 Answer as JSON."""
 
-# V2 is written after reading the TUNE failures of V1 (see ROUND3_PREREGISTRATION.md); until then it is the same text.
-VERSIONS = {"v1": V1}
+# V2: written after reading the TUNE results of V1 (one row dropped "for continued network access" from the lead). Only the lead rule and one example change.
+V2 = V1.replace(
+    """- "lead": "Does <the question's actor> <the question's main verb, or: do> all of the following<anything in the question that covers the whole list, such as 'in accordance with X'>?"  The lead must be a whole question.""",
+    """- "lead": "Does <the question's actor> <the question's main verb, or: do> <the words that come before the list> all of the following <the words that come after the list>?"  Nothing the question says may be left out: """
+    """every word before the list goes before "all of the following", every word after the list goes after it. The lead must be a whole question.""").replace(
+    """Example 3 (keep)""",
+    """Example 2b (objects, words after the list)
+Requirement: The clerk will send the notice to the owner, the tenant, and the agent for the file.
+Question: Does the clerk send the notice to the owner, the tenant, and the agent for the file?
+Answer: {{"decision": "split", "kind": "objects", "lead": "Does the clerk send the notice to all of the following for the file?", "parts": ["The owner?", "The tenant?", "The agent?"]}}
+
+Example 3 (keep)""")
+
+VERSIONS = {"v1": V1, "v2": V2}
 
 
 def build(version: str, item: dict, question: str) -> str:

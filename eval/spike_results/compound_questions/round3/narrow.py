@@ -14,7 +14,8 @@ HERE_NOTE = "see ROUND3_PREREGISTRATION.md"
 _GATE = re.compile(
     r"\b(?:may|might|can|cannot|could|should|if|unless|only|solely|at least|within|until|till|no later than|not later than|except|when|whenever|whereas|upon|once|prior to|before|after|"
     r"or|and/or|not|never|no|none|without|prohibited|forbidden|as appropriate|as required|as necessary|as needed|as applicable|when applicable|annually|quarterly|monthly|weekly|"
-    r"daily|immediately|promptly|minimum|maximum|up to|such as|including|e\.g|i\.e|for example|to include|in addition|also|as well as|both|either|neither|than|but|unlike|while)\b",
+    r"daily|immediately|promptly|minimum|maximum|up to|such as|including|e\.g|i\.e|for example|to include|in addition|also|as well as|both|either|neither|than|but|unlike|while|"
+    r"requested|tasked|as directed|directed|as specified|specified|as determined|determined|as designated|as defined|if any)\b",  # last line added in tune round 1: "as requested" is a condition
     re.IGNORECASE)
 _TIME = re.compile(r"\b(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|twelve|thirty|sixty|ninety)\s*\(?\d*\)?\s*(?:calendar\s+|business\s+|working\s+)?(?:minutes?|hours?|days?|weeks?|months?|years?)\b", re.IGNORECASE)
 _AUX_OPEN = re.compile(r"^(?:does|do)\b", re.IGNORECASE)
