@@ -36,7 +36,7 @@ def main_verb_gate(item: dict) -> tuple[bool, str]:
     region = re.split(r"[:;]", region)[-1]
     if "," in region and _INTRO_START.match(region.strip()):
         region = region.rsplit(",", 1)[-1]
-    if kq._third_person_command(region.strip() or quote) and len(region.split()) <= 1 and not re.match(r"^\W*(?:the|a|an|this|these|those|it)\b", quote, re.IGNORECASE):
+    if kq._third_person_command(region.strip() or quote) and len(region.split()) >= 2 and not re.match(r"^\W*(?:the|a|an|this|these|those|it)\b", quote, re.IGNORECASE):
         return False, "the sentence opens with a command verb: its main verb is a duty"
     if _NEGATED.search(region) or _NEGATED.search(sentence):
         return False, "prohibition or negated clause"
@@ -67,7 +67,9 @@ def may_to_duty(question: str, quote: str) -> str | None:
         return None
     tail = quote[modal.end():]
     tail = re.split(r"[.;:]|\b(?:if|when|unless|with|through|via|only|for|to allow|in order)\b", tail)[0]
-    verbs = [w for w in re.findall(r"[A-Za-z]{5,}", tail) if w.lower() not in {"also", "which", "their", "other", "being", "within", "include", "including"}]
+    m = re.match(r"\s*(?:also\s+)?(?:need\s+to\s+)?(?:be(?:en|ing)?\s+)?([A-Za-z]{4,})", tail, re.IGNORECASE)
+    verbs = ([m.group(1)] if m else []) + [w for w in re.findall(r"\b[A-Za-z]{4,}ed\b", tail[:80])]  # the permitted verb, and past participles that follow it
+    verbs = [w for w in verbs if w.lower() not in {"also", "which", "their", "other", "being", "within", "include", "including", "need"}]
     if not verbs:
         return None
     scope, asked = question.split(",", 1)
@@ -86,6 +88,15 @@ def such_dangling(question: str) -> bool:
         if len(question[:m.start()].split()) < 6:
             return True
     return False
+
+
+def subject_dropped5(question: str, quote: str) -> bool:
+    """r3.subject_dropped, but the subject is only what follows the last colon or semicolon before the modal (a list lead-in such as "The DoD Component heads:" is not the subject)."""
+    ps = r3.permission_sentence(quote)
+    if not ps:
+        return False
+    region = re.split(r"[:;]", ps[0])[-1]
+    return r3.subject_dropped(question, region + " may")
 
 
 def rejection5(question, item: dict, limit) -> str | None:
@@ -113,7 +124,7 @@ def rejection5(question, item: dict, limit) -> str | None:
     anyq = r4.dropped_for_any(question, quote)
     if anyq:
         return "question drops a scope word: " + ", ".join(anyq)
-    if r3.subject_dropped(question, quote) and not pronoun_source:
+    if subject_dropped5(question, quote) and not pronoun_source:
         return "question drops the trigger or actor of the permission"
     head = r4.head_subject_dropped(question, quote)
     if head and not pronoun_source:
@@ -122,6 +133,9 @@ def rejection5(question, item: dict, limit) -> str | None:
     if duty:
         return duty
     return None
+
+
+_RESTRICTING_TAIL = re.compile(r"\b(?:in accordance with|pursuant to|only|unless|provided|except|per|within|not to exceed|no more than|no later than)\b", re.IGNORECASE)  # a limit that opens with a purpose but also states a restriction
 
 
 def is_capability(live: str | None) -> bool:
@@ -169,7 +183,7 @@ def decide5(item: dict, answer: dict | None, live: str | None) -> dict:
     limit = None if kq.aq.no_question(limit) else limit
     model_gave = bool(q)
     reject = None
-    if q and kq.purpose_not_limit(limit):
+    if q and kq.purpose_not_limit(limit) and not _RESTRICTING_TAIL.search(limit or ""):
         reject = f"limit is only a {kq.purpose_not_limit(limit)}"
     if q and not reject:
         bad = r4.form_failures(q, item)

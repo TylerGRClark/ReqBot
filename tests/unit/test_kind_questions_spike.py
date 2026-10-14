@@ -92,3 +92,24 @@ def test_round4_checks_bare_scope_for_any_and_waiver_template():
     row = {"source_quote": "(T-1) In addition: This may be waived to a SECRET level with a justification memorandum sent through the HAF CARM Program office.", "passage": "2.17.2.1. MAJCOM/DRU personnel must possess a TS / SCI security clearance. >> (T-1) In addition: This may be waived to a SECRET level with a justification memorandum sent through the HAF CARM Program office. <<"}
     q = r4.waiver_template(row)
     assert "must possess a TS / SCI security clearance is waived to a SECRET level" in q and q.endswith("HAF CARM Program office?")
+
+
+def test_round5_gate_additive_policy_and_may_to_duty():
+    import round5_checks as r5
+    ok, _ = r5.main_verb_gate(item("A representative from OIG DoD may attend in a non-voting role only."))
+    assert ok
+    assert not r5.main_verb_gate(item("Because the hypervisor can simulate all of the hardware, it needs to be protected."))[0]
+    assert not r5.main_verb_gate(item("No individual may have access to CUI unless it is determined."))[0]
+    assert not r5.main_verb_gate(item("Takes all necessary actions to secure the network, and may delegate."))[0]
+    assert not r5.main_verb_gate(item("Data may also need to be wiped if an organization provides loaner devices."))[0]
+    assert r5.may_to_duty("If an organization provides loaner devices, is data being wiped?", "Data may also need to be wiped if an organization provides loaner devices.")
+    assert r5.may_to_duty("When waivers are granted, is the duration no more than two years?", "Waivers can be granted a maximum of two (2) years for any specific JMAA.") is None
+    assert not r5.such_dangling("When CUI is released to non-US citizens, is access to such information within their duties?")
+    assert r5.such_dangling("When such allowances are made, are they subject to constraints?")
+    row = item("This may be waived to a SECRET level with a memorandum sent through the office.")
+    live = "Does the unit submit a memorandum through the office to waive the clearance requirement?"
+    ans = {"question": None, "limit": None, "why_null": "no limit"}
+    assert r5.decide5(row, ans, live)["question"] == live  # additive only: no stated limit keeps today's question
+    assert r5.decide5(row, {"question": "When this is waived to a SECRET level, was a memorandum sent through the office?", "limit": "with a memorandum sent through the office", "why_null": None}, None)["action"] in ("added", "kept_live", "none")
+    assert r5.decide5(item("Users can log in."), ans, "Can users log in?")["action"] == "removed_capability"
+    assert r5.document_gate({"permission": 65, "recommendation": 58}, 323)[0] is False

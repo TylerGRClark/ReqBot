@@ -5,6 +5,7 @@ Outputs: outputs/round5_<mode>_rows.json and outputs/round5_<mode>_summary.json.
 """
 import hashlib
 import json
+import re
 import sys
 import time
 from collections import Counter
@@ -40,9 +41,17 @@ def ask(item: dict, url: str, hint: str | None = None) -> dict:
     return {}
 
 
+_MEANS_LIST = re.compile(r"\b(?:via|through|by|using)\s+[^.;]*?,\s*[^.;]*?\bor\b", re.IGNORECASE)
+
+
 def repair_hint(item: dict, d: dict) -> str | None:
     reasons = " ".join(d.get("notes") or [])
     bound = r4.numeric_bound(item.get("source_quote") or "")
+    sentence = (r3.permission_sentence(item.get("source_quote") or "") or ("", item.get("source_quote") or ""))[1]
+    if not d.get("model_gave_question") and re.search(r"\bonly\b(?!\s+(?:when|if))", sentence, re.IGNORECASE) and not re.search(r"\bnot\s+only\b", sentence, re.IGNORECASE):
+        return 'The sentence says "only". That word IS the restriction: ask whether it was done only in the way the sentence names.'
+    if not d.get("model_gave_question") and _MEANS_LIST.search(sentence):
+        return "The sentence names a closed list of permitted means (a, b, or c). That list is the limit: ask whether it was done by one of those means."
     if "model question rejected: question drops" in reasons:
         why = reasons.split("model question rejected: ", 1)[1]
         return f"Your question was rejected because {why}. Write it again keeping that, with every qualifier of the permission."
@@ -51,7 +60,7 @@ def repair_hint(item: dict, d: dict) -> str | None:
     return None
 
 
-def process(rows: list[dict], docs: list[str], max_calls: int, sample_n: int | None, all_rows: list[dict] | None = None) -> tuple[list[dict], dict]:
+def process(rows: list[dict], docs: list[str], max_calls: int, sample_n: int | None, all_rows: list[dict] | None = None, cache: dict | None = None) -> tuple[list[dict], dict]:
     url = config.load().ollama_url
     base = all_rows if all_rows is not None else rows  # the document gate is computed on every row of the document
     kinds = {d: Counter(kq.classify_wrapper(r)["kind"] for r in base if r["_doc"] == d) for d in docs}
@@ -68,7 +77,7 @@ def process(rows: list[dict], docs: list[str], max_calls: int, sample_n: int | N
         not_sampled = set(asked_ids) - keep
         asked_ids = [i for i in asked_ids if i in keep]
     asked = set(asked_ids)
-    out, calls = [], 0
+    out, calls, answers_out = [], 0, {}
     for r in rows:
         live = r.get("audit_question") or None
         k_live, k_new = rk.classify(r), kq.classify_wrapper(r)
@@ -86,15 +95,21 @@ def process(rows: list[dict], docs: list[str], max_calls: int, sample_n: int | N
             elif cid in not_sampled:
                 e.update({"action": "not_sampled", "rule": "gate passed; not asked (call budget; today's question kept)"})
             elif cid in asked and calls < max_calls:
-                ans = ask(r, url)
-                calls += 1
+                cached = (cache or {}).get(cid)
+                if cached is not None:
+                    ans, last_hint = cached["ans"], cached.get("hint")
+                else:
+                    ans, last_hint = ask(r, url), None
+                    calls += 1
                 d = r5.decide5(r, ans, live)
                 hint = repair_hint(r, d)
-                if hint and calls < max_calls:
+                if hint and hint != last_hint and calls < max_calls:
                     ans = ask(r, url, hint)
                     calls += 1
                     d = r5.decide5(r, ans, live)
                     e["retried"] = True
+                    last_hint = hint
+                answers_out[cid] = {"ans": ans, "hint": last_hint}
                 e.update({"final_question": d["question"], "action": d["action"], "rule": d["rule"], "limit": d["limit"], "why_null": d["why_null"], "model_called": True,
                           "model_gave_question": d["model_gave_question"], "model_question_rejected": d["model_question_rejected"], "notes": d["notes"], "model_question_raw": ans.get("question"),
                           "antecedent": r4.antecedent(r)})
@@ -132,6 +147,7 @@ def process(rows: list[dict], docs: list[str], max_calls: int, sample_n: int | N
     summary["violations"] = {"missing_qualifier": [f"{e['doc']} {e['citation']}" for e in out if e["missing_qualifiers"]],
                              "may_to_duty": [f"{e['doc']} {e['citation']}" for e in out if e.get("may_to_duty")], "bare_scope": [f"{e['doc']} {e['citation']}" for e in out if e.get("bare_scope")]}
     summary["removals"] = [{"row": f"{e['doc']} {e['citation']}", "live": e["live_question"], "rule": e["rule"]} for e in out if e["action"] == "removed_capability"]
+    summary["answers"] = answers_out
     return out, summary
 
 
@@ -140,14 +156,18 @@ if __name__ == "__main__":
     if mode == "regress":
         docs = held_out.HELD_OUT
         rows = held_out.load_rows(scratch, docs)
-        out, summary = process(rows, docs, CALL_CAP, None)
+        prev = OUT / "round5_regress_answers.json"
+        cache = json.loads(prev.read_text()) if prev.exists() else None
+        out, summary = process(rows, docs, CALL_CAP, None, None, cache)
     else:
         docs = [FRESH]
         every = held_out.load_rows(scratch, docs)
         rows = [r for r in every if kq.classify_wrapper(r)["kind"] in ("permission", "recommendation", "pointer") or rk.classify(r)["kind"] in ("recommendation", "pointer")]
-        budget = CALL_CAP - json.loads((OUT / "round5_regress_summary.json").read_text())["model_calls"]
+        prev_summary = json.loads((OUT / "round5_regress_summary.json").read_text())
+        budget = CALL_CAP - prev_summary.get("model_calls_cumulative", prev_summary["model_calls"])
         # retries can use extra calls: sample at 80% of the remaining budget
         out, summary = process(rows, docs, budget, int(budget * 0.8), every)
+    (OUT / f"round5_{mode}_answers.json").write_text(json.dumps(summary.pop("answers"), indent=1, ensure_ascii=False))
     (OUT / f"round5_{mode}_rows.json").write_text(json.dumps(out, indent=1, ensure_ascii=False))
     (OUT / f"round5_{mode}_summary.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False))
     print(json.dumps({k: v for k, v in summary.items() if k != "documents"}, indent=1, ensure_ascii=False))
