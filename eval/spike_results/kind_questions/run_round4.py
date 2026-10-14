@@ -25,9 +25,11 @@ OUT = HERE / "outputs"
 CALL_CAP = 150
 
 
-def ask(item: dict, url: str) -> dict:
+def ask(item: dict, url: str, hint: str | None = None) -> dict:
     import requests
     prompt = r4.build_prompt_v7(item)
+    if hint:
+        prompt += "\n\nNote on your previous answer: " + hint
     payload = {"model": aq.MODEL, "prompt": prompt, "stream": False, "format": kq.SCHEMA, "options": {"temperature": 0.1, "num_predict": 300, "num_ctx": aq.NUM_CTX}}
     for _ in range(2):
         try:
@@ -48,9 +50,14 @@ def part_a(afi_rows: list[dict]) -> None:
         ans = ask(item, url)
         live = item.get("audit_question") or None
         d = r4.decide(item, ans, live)
+        retried = None
+        if d["repair_hint"]:
+            retried = {"hint": d["repair_hint"], "first_answer": ans}
+            ans = ask(item, url, d["repair_hint"])
+            d = r4.decide(item, ans, live)
         prev = r3rows.get(item["checklist_item_id"], {})
         out.append({"doc": doc, "citation": cit, "checklist_item_id": item["checklist_item_id"], "source_quote": item["source_quote"], "antecedent": r4.antecedent(item), "live_question": live,
-                    "round3_question": prev.get("final_question"), "model_answer": ans, **d, "coverage_new": r4.coverage(d["question"], item) if d["question"] else None,
+                    "round3_question": prev.get("final_question"), "model_answer": ans, "retry": retried, **d, "coverage_new": r4.coverage(d["question"], item) if d["question"] else None,
                     "coverage_live": r4.coverage(live, item) if live else None})
         print(doc, cit, "|", d["question"] or "NULL", "|", d["rule"], flush=True)
     qs = Counter(o["question"] for o in out if o["question"])
@@ -77,6 +84,13 @@ def part_b(rows: list[dict]) -> None:
             ans = ask(r, url)
             calls += 1
             d = r4.decide(r, ans, live)
+            retried = False
+            if d["repair_hint"] and calls < CALL_CAP:
+                ans = ask(r, url, d["repair_hint"])
+                calls += 1
+                retried = True
+                d = r4.decide(r, ans, live)
+            e["retried"] = retried
             e.update({"final_question": d["question"], "rule": "permission (" + d["rule"] + ")", "limit": d["limit"], "why_null": d["why_null"], "model_called": True,
                       "model_question_rejected": d["model_question_rejected"], "notes": d["notes"], "model_question_raw": ans.get("question"), "antecedent": r4.antecedent(r)})
             if d["question"] and d["question"] != live:

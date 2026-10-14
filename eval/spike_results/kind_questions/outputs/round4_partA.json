@@ -1,0 +1,350 @@
+[
+ {
+  "doc": "afi10-2402",
+  "citation": "2.17.2.1",
+  "checklist_item_id": "CHK-77c82107fd6cacc6",
+  "source_quote": "(T-1) In addition: This may be waived to a SECRET level with a justification memorandum sent through the HAF CARM Program office.",
+  "antecedent": "A copy of the appointment letter will be provided to the HAF CARM Program office. In addition: MAJCOM/DRU CARM program appointed personnel must possess a TS / SCI security clearance.",
+  "live_question": null,
+  "round3_question": "When this is waived to a SECRET level, was a justification memorandum sent through the HAF CARM Program office?",
+  "model_answer": {
+   "grant": "This may be waived to a SECRET level",
+   "limit": "with a justification memorandum sent through the HAF CARM Program office",
+   "question": "When MAJCOM/DRU CARM program appointed personnel are granted a waiver to a SECRET level, was there a justification memorandum sent through the HAF CARM Program office?",
+   "why_null": ""
+  },
+  "retry": null,
+  "question": "When the requirement that MAJCOM/DRU CARM program appointed personnel must possess a TS / SCI security clearance is waived to a SECRET level, was there a justification memorandum sent through the HAF CARM Program office?",
+  "rule": "waiver question built from the sentence before it",
+  "limit": "with a justification memorandum sent through the HAF CARM Program office",
+  "why_null": "",
+  "model_question_rejected": false,
+  "notes": [
+   "built from the sentence before it: the model's question did not name what is waived"
+  ],
+  "repair_hint": null,
+  "coverage_new": 14,
+  "coverage_live": null,
+  "identical_to_another_row": false
+ },
+ {
+  "doc": "afi10-2402",
+  "citation": "2.17.5",
+  "checklist_item_id": "CHK-e200230aa5a89b8d",
+  "source_quote": "This may be waived to a SECRET level with a justification memorandum sent through the HAF CARM Program office.",
+  "antecedent": "Establish POCs in Functional and Special Staff Directorates, as required, to socialize and advance CARM priorities; plus any System Program Office (SPO) / Program Management Office (PMO) program POCs for TCAs. Maintain access to a facility capable of developing, communicating, and maintaining up to and including TS / SCI TCA-related data.",
+  "live_question": null,
+  "round3_question": "When this is waived to a SECRET level, was a justification memorandum sent through the HAF CARM Program office?",
+  "model_answer": {
+   "grant": "This may be waived to a SECRET level",
+   "limit": "with a justification memorandum sent through the HAF CARM Program office",
+   "question": "When a unit waives access to a facility capable of developing, communicating, and maintaining up to and including TS / SCI TCA-related data to a SECRET level, was there a justification memorandum sent through the HAF CARM Program office?",
+   "why_null": "null"
+  },
+  "retry": null,
+  "question": "When a unit waives access to a facility capable of developing, communicating, and maintaining up to and including TS / SCI TCA-related data to a SECRET level, was there a justification memorandum sent through the HAF CARM Program office?",
+  "rule": "new boundary question",
+  "limit": "with a justification memorandum sent through the HAF CARM Program office",
+  "why_null": "null",
+  "model_question_rejected": false,
+  "notes": [],
+  "repair_hint": null,
+  "coverage_new": 16,
+  "coverage_live": null,
+  "identical_to_another_row": false
+ },
+ {
+  "doc": "afi10-2402",
+  "citation": "2.20.2.1",
+  "checklist_item_id": "CHK-77c9d5a5309b7cda",
+  "source_quote": "2) In addition: This may be waived to a SECRET level with a justification memorandum sent through the FOA's HHQ's functional manager.",
+  "antecedent": "A copy of the appointment letter will be provided to the HAF CARM Program office and the FOA's HHQ's functional manager. In addition: FOA CARM appointed personnel (program positions must be coded) will possess a TS / SCI security clearance.",
+  "live_question": null,
+  "round3_question": "When this is waived to a SECRET level, is it done with a justification memorandum sent through the FOA's HHQ's functional manager?",
+  "model_answer": {
+   "grant": "This may be waived to a SECRET level",
+   "limit": "with a justification memorandum sent through the FOA's HHQ's functional manager",
+   "question": "When an FOA CARM appointed personnel is granted a waiver to a SECRET level, was there a justification memorandum sent through the FOA's HHQ's functional manager?",
+   "why_null": ""
+  },
+  "retry": null,
+  "question": "When the requirement that FOA CARM appointed personnel (program positions must be coded) will possess a TS / SCI security clearance is waived to a SECRET level, was there a justification memorandum sent through the FOA's HHQ's functional manager?",
+  "rule": "waiver question built from the sentence before it",
+  "limit": "with a justification memorandum sent through the FOA's HHQ's functional manager",
+  "why_null": "",
+  "model_question_rejected": false,
+  "notes": [
+   "built from the sentence before it: the model's question did not name what is waived"
+  ],
+  "repair_hint": null,
+  "coverage_new": 18,
+  "coverage_live": null,
+  "identical_to_another_row": false
+ },
+ {
+  "doc": "afi10-2402",
+  "citation": "2.20.4",
+  "checklist_item_id": "CHK-e948266b0778fff2",
+  "source_quote": "2) In addition: This may be waived to a SECRET level with a justification memorandum sent through the FOA's HHQ's functional manager.",
+  "antecedent": "Focus CARM activities on DoD mission requirements. Maintain access to a facility capable of developing, communicating, and maintaining up to and including TS / SCI TCA-related data.",
+  "live_question": "Does the unit submit a justification memorandum through the FOA's HHQ's functional manager to waive the requirement to maintain access to a facility capable of TS / SCI TCA-related data down to SECRET level?",
+  "round3_question": "When this is waived to a SECRET level, is it done with a justification memorandum sent through the FOA's HHQ's functional manager?",
+  "model_answer": {
+   "grant": "This may be waived to a SECRET level",
+   "limit": "with a justification memorandum sent through the FOA's HHQ's functional manager",
+   "question": "When an FOA waives access to a facility capable of developing, communicating, and maintaining up to and including TS / SCI TCA-related data to a SECRET level, was there a justification memorandum sent through the FOA's HHQ's functional manager?",
+   "why_null": ""
+  },
+  "retry": null,
+  "question": "When an FOA waives access to a facility capable of developing, communicating, and maintaining up to and including TS / SCI TCA-related data to a SECRET level, was there a justification memorandum sent through the FOA's HHQ's functional manager?",
+  "rule": "new boundary question",
+  "limit": "with a justification memorandum sent through the FOA's HHQ's functional manager",
+  "why_null": "",
+  "model_question_rejected": false,
+  "notes": [],
+  "repair_hint": null,
+  "coverage_new": 18,
+  "coverage_live": 15,
+  "identical_to_another_row": false
+ },
+ {
+  "doc": "dafman17-1305",
+  "citation": "4.4.1.3",
+  "checklist_item_id": "CHK-8f1839f0c89c36e0",
+  "source_quote": "Maintenance of self-funded certifications are recommended but not required, but if the civilian or military member has maintained a self-funded certification and it fulfills the foundational requirements for their new DCWF coded role, a reimbursement can be made subject to end of fiscal year funding allowances.",
+  "antecedent": "",
+  "live_question": null,
+  "round3_question": "If a civilian or military member has maintained a self-funded certification and it fulfills the foundational requirements for their new DCWF coded role, was the reimbursement subject to end of fiscal year funding allowances?",
+  "model_answer": {
+   "grant": "a reimbursement can be made",
+   "limit": "subject to end of fiscal year funding allowances",
+   "question": "When a civilian or military member maintains a self-funded certification and it fulfills the foundational requirements for their new DCWF coded role, is there an end of fiscal year funding allowance?",
+   "why_null": ""
+  },
+  "retry": {
+   "hint": "Your question was rejected because question drops the thing that is permitted: reimbursement. Write it again keeping that, with every qualifier of the permission.",
+   "first_answer": {
+    "grant": "a reimbursement can be made",
+    "limit": "subject to end of fiscal year funding allowances",
+    "question": "When a civilian or military member has maintained a self-funded certification that fulfills the foundational requirements for their new DCWF coded role, is there an end of fiscal year funding allowance?",
+    "why_null": null
+   }
+  },
+  "question": null,
+  "rule": "rejected: question drops the thing that is permitted: reimbursement",
+  "limit": "subject to end of fiscal year funding allowances",
+  "why_null": "",
+  "model_question_rejected": true,
+  "notes": [],
+  "repair_hint": "Your question was rejected because question drops the thing that is permitted: reimbursement. Write it again keeping that, with every qualifier of the permission.",
+  "coverage_new": null,
+  "coverage_live": null,
+  "identical_to_another_row": false
+ },
+ {
+  "doc": "afi10-2402",
+  "citation": "3.3.3.5.1",
+  "checklist_item_id": "CHK-ffa99d96d4d87864",
+  "source_quote": "CCMDs, Services, and Agencies may coordinate with the CJCS to waive periodicity requirements for up to two (2) years if required.",
+  "antecedent": "DoDI 3020.45 states installations with DCAs and select Tier 1 TCAs, as identified by the Chairman of the Joint Chiefs of Staff (CJCS), will be assessed at a minimum every three (3) years, while installations with Tier 1 and Tier 2 TCAs will be assessed at a minimum every five (5) years.",
+  "live_question": null,
+  "round3_question": null,
+  "model_answer": {
+   "grant": "CCMDs, Services, and Agencies may coordinate with the CJCS to waive periodicity requirements for up to two (2) years if required",
+   "limit": "for up to two (2) years",
+   "question": "When CCMDs, Services, and Agencies coordinate with the CJCS to waive periodicity requirements for up to two (2) years if required, is the waiver limited to up to two (2) years?",
+   "why_null": null
+  },
+  "retry": {
+   "hint": "The limit you gave is not a restriction, but the sentence states a numeric bound ('up to two (2) years'). Ask whether that bound was respected.",
+   "first_answer": {
+    "grant": "CCMDs, Services, and Agencies may coordinate with the CJCS to waive periodicity requirements for up to two (2) years if required",
+    "limit": "if required",
+    "question": "When CCMDs, Services, and Agencies coordinate with the CJCS to waive periodicity requirements for up to two (2) years, was it required?",
+    "why_null": ""
+   }
+  },
+  "question": "When CCMDs, Services, and Agencies coordinate with the CJCS to waive periodicity requirements for up to two (2) years if required, is the waiver limited to up to two (2) years?",
+  "rule": "new boundary question",
+  "limit": "for up to two (2) years",
+  "why_null": null,
+  "model_question_rejected": false,
+  "notes": [],
+  "repair_hint": null,
+  "coverage_new": 8,
+  "coverage_live": null,
+  "identical_to_another_row": false
+ },
+ {
+  "doc": "afi10-2402",
+  "citation": "3.3.3.5.1",
+  "checklist_item_id": "CHK-b7c2c77549ad51f1",
+  "source_quote": "Waivers can be granted a maximum of two (2) years for any specific JMAA.",
+  "antecedent": "DoDI 3020.45 states installations with DCAs and select Tier 1 TCAs, as identified by the Chairman of the Joint Chiefs of Staff (CJCS), will be assessed at a minimum every three (3) years, while installations with Tier 1 and Tier 2 TCAs will be assessed at a minimum every five (5) years. CCMDs, Services, and Agencies may coordinate with the CJCS to waive periodicity requirements for up to two (2) years if required.",
+  "live_question": null,
+  "round3_question": "When waivers are granted, is the duration no more than two (2) years?",
+  "model_answer": {
+   "grant": "Waivers can be granted a maximum of two (2) years for any specific JMAA",
+   "limit": "a maximum of two (2) years",
+   "question": "When CCMDs, Services, and Agencies grant waivers for any specific JMAA, is the duration limited to a maximum of two (2) years?",
+   "why_null": ""
+  },
+  "retry": {
+   "hint": "The sentence states a numeric bound ('a maximum of two (2) years'). That is a limit: ask whether it was respected.",
+   "first_answer": {
+    "grant": "Waivers can be granted a maximum of two (2) years for any specific JMAA",
+    "limit": "null",
+    "question": "null",
+    "why_null": "The requirement only describes what may happen and does not specify a restriction that would need to be checked."
+   }
+  },
+  "question": "When CCMDs, Services, and Agencies grant waivers for any specific JMAA, is the duration limited to a maximum of two (2) years?",
+  "rule": "new boundary question",
+  "limit": "a maximum of two (2) years",
+  "why_null": "",
+  "model_question_rejected": false,
+  "notes": [],
+  "repair_hint": null,
+  "coverage_new": 8,
+  "coverage_live": null,
+  "identical_to_another_row": false
+ },
+ {
+  "doc": "afi17-203",
+  "citation": "3.8.1",
+  "checklist_item_id": "CHK-ede91b1e7bc73edb",
+  "source_quote": "In such cases, adversary activity may be allowed to continue in order for friendly forces to gain actionable intelligence or allow for the continuation of friendly classified operations.",
+  "antecedent": "An incident/event investigation involving the IC may deviate from 'typical' cyber incident handling processes depending upon the nature and sensitivity of the operation.",
+  "live_question": "Is it true that in investigations involving the IC, adversary activity may be allowed to continue when necessary for gaining actionable intelligence or continuing friendly classified operations?",
+  "round3_question": null,
+  "model_answer": {
+   "grant": "adversary activity may be allowed to continue",
+   "limit": "in order for friendly forces to gain actionable intelligence or allow for the continuation of friendly classified operations",
+   "question": "When adversary activity is allowed to continue in order for friendly forces to gain actionable intelligence or allow for the continuation of friendly classified operations, did the conditions stated meet the limit?",
+   "why_null": null
+  },
+  "retry": null,
+  "question": null,
+  "rule": "rejected: the sentence opens with a pronoun and the question does not name what it refers to",
+  "limit": "in order for friendly forces to gain actionable intelligence or allow for the continuation of friendly classified operations",
+  "why_null": null,
+  "model_question_rejected": true,
+  "notes": [],
+  "repair_hint": null,
+  "coverage_new": null,
+  "coverage_live": 11,
+  "identical_to_another_row": false
+ },
+ {
+  "doc": "dafman17-1305",
+  "citation": "4.1.12",
+  "checklist_item_id": "CHK-e61de0ec02faf36a",
+  "source_quote": "Such allowances are subject to end of fiscal year budgetary constraints and may be on first-come basis after all DAF primary positions are served.",
+  "antecedent": "CCC will pay for one exam voucher at the specified AFSC, SFSC, or DCWF requirement when the member does not already have a certification or have training or education that satisfies the foundational requirement for their primary assigned position. CCC will pay for additional exam vouchers from the DAF Preferred List when an individual is assigned additional DCWF codes that imposes additional requirements.",
+  "live_question": "Are exam vouchers subject to end of fiscal year budgetary constraints and may be provided on a first-come basis after all DAF primary positions are served?",
+  "round3_question": null,
+  "model_answer": {
+   "grant": "Such allowances are subject to end of fiscal year budgetary constraints and may be on first-come basis after all DAF primary positions are served",
+   "limit": "end of fiscal year budgetary constraints, first-come basis",
+   "question": "When CCC pays for exam vouchers on a first-come basis after all DAF primary positions are served, were the payments made subject to end of fiscal year budgetary constraints?",
+   "why_null": "null"
+  },
+  "retry": null,
+  "question": "When CCC pays for exam vouchers on a first-come basis after all DAF primary positions are served, were the payments made subject to end of fiscal year budgetary constraints?",
+  "rule": "new boundary question",
+  "limit": "end of fiscal year budgetary constraints, first-come basis",
+  "why_null": "null",
+  "model_question_rejected": false,
+  "notes": [],
+  "repair_hint": null,
+  "coverage_new": 11,
+  "coverage_live": 11,
+  "identical_to_another_row": false
+ },
+ {
+  "doc": "dafman17-1305",
+  "citation": "1.2.2",
+  "checklist_item_id": "CHK-980c59f9b9ed3d32",
+  "source_quote": "Users without network access can take the course at the DoD Cyber Exchange Public portal and present their certificate of completion to their unit training manager to manually update their training record with the date of completion on the certificate.",
+  "antecedent": "Course updates normally occur about October of each year.",
+  "live_question": "Do unit training managers manually update users' training records with the date of completion from their certificates for those without network access?",
+  "round3_question": null,
+  "model_answer": {
+   "grant": "Users without network access can take the course at the DoD Cyber Exchange Public portal and present their certificate of completion to their unit training manager to manually update their training record with the date of completion on the certificate",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes or predicts what users without network access can do, and there is no restriction stated."
+  },
+  "retry": null,
+  "question": "Do unit training managers manually update users' training records with the date of completion from their certificates for those without network access?",
+  "rule": "no stated limit; today's question kept (existing question kept: the 'may' only describes, so the question turns no grant into a duty)",
+  "limit": null,
+  "why_null": "The requirement only describes or predicts what users without network access can do, and there is no restriction stated.",
+  "model_question_rejected": false,
+  "notes": [],
+  "repair_hint": null,
+  "coverage_new": 11,
+  "coverage_live": 11,
+  "identical_to_another_row": false
+ },
+ {
+  "doc": "dafman17-1305",
+  "citation": "3.2.2",
+  "checklist_item_id": "CHK-67171f0931de766c",
+  "source_quote": "In some circumstances, actual experience performing in the role may serve as a conditional alternative; 2) an optional foundational qualification based on experience; 3) a residential qualification that is based on demonstration of capability, which always includes a specific On-the-Job qualification and may include any environmental or organizational specific requirements; and 4) continuous professional development of a minimum of 20 hours per year (or vendor certification maintenance minimums, whichever is greater).",
+  "antecedent": "Each cyberspace work role has in its qualification matrix as many as four areas to identify the options available to achieve qualifications associated with each role. These areas are: 1) Foundational Qualifications composing of education, training, or certification.",
+  "live_question": "Does the unit include continuous professional development of a minimum of 20 hours per year in the qualification matrix for each cyberspace work role?",
+  "round3_question": null,
+  "model_answer": {
+   "grant": "In some circumstances, actual experience performing in the role may serve as a conditional alternative",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes or predicts what may happen and does not state a specific restriction beyond the general statement."
+  },
+  "retry": {
+   "hint": "The sentence states a numeric bound ('a minimum of 20 hours'). That is a limit: ask whether it was respected.",
+   "first_answer": {
+    "grant": "In some circumstances, actual experience performing in the role may serve as a conditional alternative",
+    "limit": "null",
+    "question": "null",
+    "why_null": "The requirement only describes or predicts and does not state a restriction that would limit its use."
+   }
+  },
+  "question": null,
+  "rule": "no stated limit",
+  "limit": null,
+  "why_null": "The requirement only describes or predicts what may happen and does not state a specific restriction beyond the general statement.",
+  "model_question_rejected": false,
+  "notes": [],
+  "repair_hint": "The sentence states a numeric bound ('a minimum of 20 hours'). That is a limit: ask whether it was respected.",
+  "coverage_new": null,
+  "coverage_live": 9,
+  "identical_to_another_row": false
+ },
+ {
+  "doc": "dafman17-1305",
+  "citation": "4.2.1",
+  "checklist_item_id": "CHK-ebab34b29c409867",
+  "source_quote": "DAF Civilian and military personnel may temporarily perform cyberspace position duties while working toward meeting qualification requirements under the direct observation and supervision of a qualified individual.",
+  "antecedent": "",
+  "live_question": null,
+  "round3_question": "When DAF civilian and military personnel temporarily perform cyberspace position duties while working toward meeting qualification requirements, was there direct observation and supervision by a qualified individual?",
+  "model_answer": {
+   "grant": "DAF Civilian and military personnel may temporarily perform cyberspace position duties while working toward meeting qualification requirements under the direct observation and supervision of a qualified individual",
+   "limit": "under the direct observation and supervision of a qualified individual",
+   "question": "When DAF civilian or military personnel temporarily perform cyberspace position duties while working toward meeting qualification requirements, are they under the direct observation and supervision of a qualified individual?",
+   "why_null": ""
+  },
+  "retry": null,
+  "question": "When DAF civilian or military personnel temporarily perform cyberspace position duties while working toward meeting qualification requirements, are they under the direct observation and supervision of a qualified individual?",
+  "rule": "new boundary question",
+  "limit": "under the direct observation and supervision of a qualified individual",
+  "why_null": "",
+  "model_question_rejected": false,
+  "notes": [],
+  "repair_hint": null,
+  "coverage_new": 19,
+  "coverage_live": null,
+  "identical_to_another_row": false
+ }
+]

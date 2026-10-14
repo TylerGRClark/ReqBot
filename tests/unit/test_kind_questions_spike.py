@@ -80,3 +80,15 @@ def test_round3_checks_catch_dropped_qualifier_pronoun_future_and_generic_limit(
     assert r3.rejection("When reporting formats are updated, is it per the CWMB?", "Reporting formats may be updated in a future revision of this manual.", None) == "about a future event"
     assert r3.rejection("When waivers are obtained, were they per the manual?", "Waivers may be obtained pursuant to applicable provisions.", "pursuant to applicable provisions and procedures as outlined in this manual")
     assert r3.rejection("When this is waived to a SECRET level, was a memorandum sent through the office?", "(T-1) In addition: This may be waived to a SECRET level with a memorandum sent through the office.", "with a memorandum") is None
+
+
+def test_round4_checks_bare_scope_for_any_and_waiver_template():
+    import round4_checks as r4
+    assert r4.bare_pronoun_scope("When this is waived to a SECRET level, was a memorandum sent?")
+    assert not r4.bare_pronoun_scope("When the requirement is waived, was a memorandum sent?")
+    assert r4.dropped_for_any("When waivers are granted, is the duration no more than two years?", "Waivers can be granted a maximum of two (2) years for any specific JMAA.") == ["JMAA"]
+    assert r4.numeric_bound("Waivers can be granted a maximum of two (2) years for any specific JMAA.")
+    assert r4.head_subject_dropped("If a member kept a certification, was it subject to allowances?", "A reimbursement can be made subject to funding allowances.") == ["reimbursement"]
+    row = {"source_quote": "(T-1) In addition: This may be waived to a SECRET level with a justification memorandum sent through the HAF CARM Program office.", "passage": "2.17.2.1. MAJCOM/DRU personnel must possess a TS / SCI security clearance. >> (T-1) In addition: This may be waived to a SECRET level with a justification memorandum sent through the HAF CARM Program office. <<"}
+    q = r4.waiver_template(row)
+    assert "must possess a TS / SCI security clearance is waived to a SECRET level" in q and q.endswith("HAF CARM Program office?")

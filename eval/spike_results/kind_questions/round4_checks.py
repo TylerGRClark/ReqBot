@@ -84,8 +84,7 @@ def rejection(question, item: dict, limit) -> str | None:
         return "decision belongs to another party"
     if limit and r3._GENERIC_LIMIT.match(limit.strip()):
         return "limit only points at 'applicable provisions' (always yes)"
-    if r3.limit_in_scope(question, limit):
-        return "circular: the limit is repeated in the scope clause"
+    # a question that restates its source (limit repeated in the scope clause) is not rejected: Tyler's rule, a restatement is not a defect by itself; it is only noted in decide()
     miss = r3.missing_qualifiers(question, quote)
     if miss:
         return "question drops a qualifier: " + ", ".join(miss)
@@ -94,7 +93,66 @@ def rejection(question, item: dict, limit) -> str | None:
         return "question drops a scope word: " + ", ".join(anyq)
     if r3.subject_dropped(question, quote) and not pronoun_source:
         return "question drops the trigger or actor of the permission"
+    head = head_subject_dropped(question, quote)
+    if head and not pronoun_source:
+        return "question drops the thing that is permitted: " + ", ".join(head)
     return None
+
+
+def head_subject_dropped(question: str, quote: str) -> list[str]:
+    """The last words before the modal ("a reimbursement can be made ...") name the thing that is permitted; none of its content words in the question means the question lost it."""
+    ps = r3.permission_sentence(quote)
+    if not ps:
+        return []
+    tail = ps[0].split()[-3:]
+    cw = [w for w in re.findall(r"[A-Za-z][A-Za-z/'-]{4,}", " ".join(tail)) if w.lower() not in r3._SUBJECT_STOP]
+    if not cw:
+        return []
+    qstems = {r3._stem(w) for w in r3._words(question)}
+    return [] if any(r3._stem(w) in qstems for w in cw) else cw
+
+
+_BOUND = re.compile(r"\b(?:a\s+)?(?:maximum|minimum)\s+of\s+[\w()\s]{1,30}?(?:years?|months?|days?|hours?|weeks?)\b|\b(?:up\s+to|no\s+more\s+than|at\s+most|at\s+least|not\s+to\s+exceed|no\s+longer\s+than)\s+[\w()\s]{1,30}?(?:years?|months?|days?|hours?|weeks?)\b", re.IGNORECASE)
+
+
+def numeric_bound(quote: str) -> str | None:
+    """A stated numeric bound ("up to two (2) years", "a maximum of two (2) years") in the permission's sentence: that is a limit even if the model said there is none."""
+    ps = r3.permission_sentence(quote)
+    m = _BOUND.search(ps[1] if ps else quote or "")
+    return m.group(0).strip() if m else None
+
+
+_WAIVER = re.compile(r"^\W*(?:\([\w-]+\)\s*)?(?:\d+\)\s*)?(?:In addition:\s*)?(?:This|It)\s+(?:may|can)\s+be\s+waived(?P<scope>[^,;]*?)\s+(?:with|by|through|via)\s+(?P<limit>.+?)\.?\s*$", re.IGNORECASE | re.DOTALL)
+
+
+def _last_sentence_of_antecedent(item: dict) -> str:
+    ante = antecedent(item)
+    sents = [s for s in _SENT.split(ante) if s.strip()]
+    s = sents[-1] if sents else ""
+    s = re.sub(r"^(?:In addition:\s*)", "", s.strip(), flags=re.IGNORECASE).rstrip(". ")
+    return s[:1].lower() + s[1:] if s and not (len(s) > 1 and s[1].isupper()) else s
+
+
+def waiver_template(item: dict) -> str | None:
+    """Deterministic question for a "This may be waived to X with Y" row: it quotes the sentence before it, so it always names what is waived. None when the pattern does not fit."""
+    m = _WAIVER.match(item.get("source_quote") or "")
+    what = _last_sentence_of_antecedent(item)
+    if not m or not what:
+        return None
+    scope, limit = m.group("scope").strip(), m.group("limit").strip().rstrip(".")
+    connector = re.search(r"\b(with|by|through|via)\b", item["source_quote"][m.start("scope") + len(m.group("scope")):], re.IGNORECASE)
+    lead = "was there" if connector and connector.group(1).lower() == "with" else "was it done " + (connector.group(1).lower() if connector else "by")
+    return f"When the requirement that {what} is waived{(' ' + scope) if scope else ''}, {lead} {limit}?"
+
+
+def antecedent_named(question: str, item: dict) -> float:
+    """Share of the content words (5+ letters) of the sentence just before the requirement that the question carries."""
+    s = _last_sentence_of_antecedent(item)
+    words = {r3._stem(w) for w in re.findall(r"[A-Za-z][A-Za-z/'-]{4,}", s) if w.lower() not in r3._SUBJECT_STOP}
+    if not words:
+        return 1.0
+    qstems = {r3._stem(w) for w in r3._words(question)}
+    return len(words & qstems) / len(words)
 
 
 def coverage(question: str, item: dict) -> int:
@@ -108,7 +166,13 @@ def coverage(question: str, item: dict) -> int:
 
 def form_failures(question: str, item: dict) -> list[str]:
     """Round-1 automatic checks that reject a question (C5, the verbatim-limit check, only reports)."""
-    return [f for f in kq.check_question(question, item, None) if f in ("C1_not_grounded", "C2_placeholder", "C3_not_yes_no", "C4_turns_may_into_duty")]
+    fails = [f for f in kq.check_question(question, item, None) if f in ("C1_not_grounded", "C2_placeholder", "C3_not_yes_no", "C4_turns_may_into_duty")]
+    if "C4_turns_may_into_duty" in fails:  # a duty word that the source itself uses ("if required", the quoted "must possess") is the source's, not the question's
+        source = (item.get("source_quote") or "") + " " + antecedent(item)
+        own = {m.group(0).lower() for m in kq._DUTY_WORDS.finditer(question)}
+        if all(re.search(r"\b" + re.escape(w.split()[-1]) + r"\b", source, re.IGNORECASE) for w in own) and not re.search(r"does\s+the\s+unit|do\s+the\s+unit", question, re.IGNORECASE):
+            fails.remove("C4_turns_may_into_duty")
+    return fails
 
 
 PERMISSION_PROMPT_V7 = """You help an auditor check whether a unit stays within a permission that a regulation gives it.
@@ -147,7 +211,10 @@ def decide(item: dict, answer: dict | None, live: str | None) -> dict:
     q, limit, why_null = answer.get("question"), answer.get("limit"), answer.get("why_null")
     q = None if (q is None or kq.aq.no_question(q)) else q.strip()
     limit = None if kq.aq.no_question(limit) else limit
-    notes, rule, rejected_by_check = [], ("new boundary question" if q else "no stated limit"), False
+    notes, rule, rejected_by_check, hint = [], ("new boundary question" if q else "no stated limit"), False, None
+    bound = numeric_bound(item.get("source_quote") or "")
+    if not q and bound:
+        hint = f"The sentence states a numeric bound ({bound!r}). That is a limit: ask whether it was respected."
     if q and kq.purpose_not_limit(limit):
         q, rule, rejected_by_check = None, f"rejected: limit is only a {kq.purpose_not_limit(limit)}", True
     if q:
@@ -158,7 +225,19 @@ def decide(item: dict, answer: dict | None, live: str | None) -> dict:
         why = rejection(q, item, limit)
         if why:
             q, rule, rejected_by_check = None, "rejected: " + why, True
+            if re.match(r"question drops", why):
+                hint = f"Your question was rejected because {why}. Write it again keeping that, with every qualifier of the permission."
+            if q is None and bound and not hint:
+                hint = f"The sentence states a numeric bound ({bound!r}). That is a limit: ask whether it was respected."
+    if not q and kq.purpose_not_limit(limit) and bound and not hint:
+        hint = f"The limit you gave is not a restriction, but the sentence states a numeric bound ({bound!r}). Ask whether that bound was respected."
     model_rejected = rejected_by_check
+    if q and r3.limit_in_scope(q, limit):
+        notes.append("restates its source: the limit's words are repeated in the scope clause (not rejected)")
+    tpl = waiver_template(item)
+    if tpl and (q is None or antecedent_named(q, item) < 0.6) and not form_failures(tpl, item):
+        notes.append("built from the sentence before it: the model's question did not name what is waived" if q else "built from the sentence before it")
+        q, rule, hint = tpl, "waiver question built from the sentence before it", None
     if q and live:
         ok_live, _ = kq.fallback_keeps(live, item)
         if ok_live and coverage(live, item) > coverage(q, item):
@@ -170,4 +249,4 @@ def decide(item: dict, answer: dict | None, live: str | None) -> dict:
         keep, reason = r3.fallback_after_rejection(live, item, why_null, rejected_by_check)
         if keep:
             q, rule = live, rule + "; today's question kept (" + reason + ")"
-    return {"question": q, "rule": rule, "limit": limit, "why_null": why_null, "model_question_rejected": model_rejected, "notes": notes}
+    return {"question": q, "rule": rule, "limit": limit, "why_null": why_null, "model_question_rejected": model_rejected, "notes": notes, "repair_hint": hint}
