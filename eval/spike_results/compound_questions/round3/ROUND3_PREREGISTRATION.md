@@ -77,3 +77,11 @@ Changes made during tuning (after seeing round 1): (1) the gate gained `requeste
 if any` (a split of "... as requested" passed every check but "as requested" is a condition); this removed 2 rows from the sent set. (2) Prompt v2 changes only the lead rule (words before the
 list go before "all of the following", words after it go after) and adds one worked example with words after the list, because one v1 lead dropped "for continued network access"
 (caught by check (c)). All v1 and v2 answers are in `outputs/`. With n this small, "100%" on the TUNE set is not evidence of a 90% pass rate; the FRESH run is the test.
+
+## Result of the single FRESH run (appended after the run; nothing above was changed)
+
+Fresh documents: CJCSI 6510.02G, DODI 5200.01, DODI 5200.44 (168 candidates). dafi36-2903 could not be used: its checklist has no draft audit questions (0 of 2,132 rows), so there is no
+today's question to split. Gate: 167 candidates kept without a model call, 1 sent (DODI 5200.44), model said keep. Splits proposed 0; passing 0; rows dropped 0; hedge words 0; Rule 1
+violations 0. Target 2 (90% of proposed splits pass) is therefore NOT MEASURABLE, not met. Keep rate 100%; split share of all candidates 0%. Review sheet is empty by construction.
+First reasons for refusal on the fresh candidates: or 31, two "and" 25, including / to include 20, not Does/Do 13, three or more "and" 12, in addition 9, specified 8.
+The same gate passes 13 of 378 candidates on the five round 2 test documents (no model call made there). Next step is a decision for Tyler (widen the gate, stop, or build parts by rule).
