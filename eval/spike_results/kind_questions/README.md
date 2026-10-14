@@ -61,3 +61,7 @@ Pre-registration: `ROUND3_PREREGISTRATION.md`. Checks in `round3_checks.py` (qua
 ## Round 4 (part A fixes on the six AFIs; part B held-out test on seven documents)
 
 Pre-registration and freeze commit: `ROUND4_PREREGISTRATION.md`. Code: `round4_checks.py` (antecedent-aware prompt v7, bare-pronoun scope, for-any scope, head subject, numeric bound, waiver template, `decide()`), `run_round4.py`, `held_out.py`, `part_a.py`, `make_report4.py`. Outputs: `outputs/round4_partA.json`, `round4_partB_rows.json`, `round4_partB_summary.json`. Part B: 1,181 rows, 0 dropped, 102 model calls, 13 of 94 model questions rejected by the checks (14%), 0 qualifier violations. No self-grades; blind reviewer to grade. Earlier reports: `report_round1.md`, `report_round3.md`.
+
+## Round 5 (additive-only policy; main-verb gate; document gate; fresh document dafi36-2903)
+
+Pre-registration and freeze commit: `ROUND5_PREREGISTRATION.md`. Code: `round5_checks.py`, `run_round5.py`, `make_report5.py`. Outputs: `outputs/round5_regress_*.json` (the seven earlier documents, no longer a clean test), `outputs/round5_fresh_*.json` (dafi36-2903, run once with frozen rules; 92 of 311 gate-passing permission rows asked). Calls: 35 regression + 97 fresh = 132 (cap 150). Findings, honestly: additive-only works as designed; pointer rule suppresses real duties on the fresh document (target not met); check rejection rate rose to 42% on the fresh document; the fresh document had no live questions, so replace/keep paths were untested there. Earlier report: `report_round4.md`.

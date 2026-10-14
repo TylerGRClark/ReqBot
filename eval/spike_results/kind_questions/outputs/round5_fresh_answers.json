@@ -1,0 +1,830 @@
+{
+ "CHK-3b49d268332e955e": {
+  "ans": {
+   "grant": "Female Airmen may wear conservatively styled cosmetics",
+   "limit": "conservatively styled",
+   "question": "When Female Airmen wear cosmetics, are they conservatively styled?",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-a06fbc2355b4562e": {
+  "ans": {
+   "grant": "Commanders may authorize the coat to be tucked in for duty (e.g., Security Forces Airmen) if necessary",
+   "limit": "if necessary",
+   "question": "When commanders authorize the coat to be tucked in for duty (e.g., Security Forces Airmen), was it done if necessary?",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-8766016b3bbd0821": {
+  "ans": {
+   "grant": "General officers may wear the duty identifier that is representative of the organization's mission they are leading",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes what general officers may do without specifying any restriction on how this permission is exercised."
+  },
+  "hint": null
+ },
+ "CHK-91abc3f574000ca1": {
+  "ans": {
+   "grant": "maintainers and flight surgeons may wear the same T-shirts as the flying unit they support",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes what is permitted without specifying a restriction that would need to be checked."
+  },
+  "hint": null
+ },
+ "CHK-4fa87d4c3cd730ff": {
+  "ans": {
+   "grant": "Use of a shoulder strap is authorized on either shoulder, or the strap may cross the body",
+   "limit": "so long as it does not interfere with rendering the proper salute",
+   "question": "When a unit uses a shoulder strap on either shoulder, or the strap crosses the body, does it not interfere with rendering the proper salute?",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-2f6912e8f2a77cae": {
+  "ans": {
+   "grant": "Airmen may wear either a sling style backpack or two-strap backpacks",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-98e26e4bad22a42a": {
+  "ans": {
+   "grant": "Commanders may authorize wear of black combat boots in some situations",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes a permission without specifying any restriction that would need to be checked."
+  },
+  "hint": null
+ },
+ "CHK-6fe4bdab824a4e24": {
+  "ans": {
+   "grant": "Commanders may authorize members of supporting units to wear the same-colored T-shirts",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No specific restriction is stated beyond the permission itself."
+  },
+  "hint": null
+ },
+ "CHK-f14aaefa505cb7cb": {
+  "ans": {
+   "grant": "Wing or squadron commanders may approve display of organizational emblems, as officially and currently approved, not to exceed 5-inches in diameter, in cloth or silk screen on morale undershirts",
+   "limit": "as officially and currently approved, not to exceed 5-inches in diameter, in cloth or silk screen",
+   "question": "When wing or squadron commanders approve the display of organizational emblems on morale undershirts as officially and currently approved, not to exceed 5-inches in diameter, in cloth or silk screen, are these conditions met?",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-2e9a5b4ce965d653": {
+  "ans": {
+   "grant": "The morale T-Shirt may also display the organizational emblem on the back of the undershirt in a larger diameter as authorized by commanders",
+   "limit": "as authorized by commanders",
+   "question": "When an organizational emblem is displayed on the back of the morale T-shirt in a larger diameter, was it authorized by commanders?",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-c57f828e914552b6": {
+  "ans": {
+   "grant": "Officers may wear the rank insignia of the next higher rank",
+   "limit": "if frocked to that rank",
+   "question": "When an officer wears the rank insignia of the next higher rank, if frocked to that rank, was the officer frocked to that rank?",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-39c7d5c4e98066bc": {
+  "ans": {
+   "grant": "commercial vendors may be used",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes what is permitted without specifying a restriction."
+  },
+  "hint": null
+ },
+ "CHK-133166f63cc0cdcd": {
+  "ans": {
+   "grant": "Brief displays of affection, such as a modest kiss or embrace",
+   "limit": "in situations where physical contact is commonly accepted etiquette such as weddings, graduations, promotions, or retirement ceremonies",
+   "question": "When Airmen engage in brief displays of affection, such as a modest kiss or embrace, in situations where physical contact is commonly accepted etiquette such as weddings, graduations, promotions, or retirement ceremonies, was the limit met?",
+   "why_null": null
+  },
+  "hint": "Your question was rejected because question drops the trigger or actor of the permission. Write it again keeping that, with every qualifier of the permission."
+ },
+ "CHK-b75e67080e067ca1": {
+  "ans": {
+   "grant": "One or two braids or a single ponytail or equivalent may be worn down the member's back with length not extending below a horizontal line running between the top of each sleeve inseam at the under arm through the shoulder blades",
+   "limit": "length not extending below a horizontal line running between the top of each sleeve inseam at the under arm through the shoulder blades",
+   "question": "When a member wears one or two braids or a single ponytail or equivalent down the back, does the length not extend below a horizontal line running between the top of each sleeve inseam at the under arm through the shoulder blades?",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-43aae6763aff0cca": {
+  "ans": {
+   "grant": "Hand, arm, leg, neck, and ring tattoos can be exposed and visible while wearing any uniform combination(s).",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes what is permitted without specifying a restriction or condition that needs to be met."
+  },
+  "hint": null
+ },
+ "CHK-ba5c275183186de9": {
+  "ans": {
+   "grant": "General officers may wear the 'wing and star' design, silver belt buckle",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement does not specify any restriction on this permission."
+  },
+  "hint": null
+ },
+ "CHK-e6031305273fe6eb": {
+  "ans": {
+   "grant": "cuffs may remain visible or be folded inward twice",
+   "limit": "When sleeves are not rolled up",
+   "question": "When cuffs remain visible or are folded inward twice, is the condition that sleeves are not rolled up met?",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-242c8838e1ef0879": {
+  "ans": {
+   "grant": "An OCP Velcro® sleeve pen/pencil holder may be worn on either sleeve",
+   "limit": "but will not impede the proper wear of required patches and/or duty badges",
+   "question": "When an OCP Velcro® sleeve pen/pencil holder is worn on either sleeve, does it not impede the proper wear of required patches and/or duty badges?",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-1fd297b124754852": {
+  "ans": {
+   "grant": "A maximum of four occupational, qualification and/or skill badges may be worn centered above the USAF tape using spice brown embroidery on the OCP background",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated in the requirement."
+  },
+  "hint": null
+ },
+ "CHK-be64f5f419d300bc": {
+  "ans": {
+   "grant": "Graduated Commander's pin may be worn on a small Velcro patch on top of the left sleeve either centered horizontally and vertically on the flag-sized pocket flap, or (if no pocket flap) centered horizontally and 1/2-inch from the top of the Velcro area, depending on uniform configuration",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-df42904ac42bc50e": {
+  "ans": {
+   "grant": "Sister service and joint organization badges/patches can be worn in their current color configuration",
+   "limit": "will not be converted to the spice brown color criteria",
+   "question": "When Airmen assigned, attached, detailed, or activated in support of sister service units or joint organizations wear sister service's or joint organization's organizational badges/patches in their current color configuration, are they not converted to the spice brown color criteria?",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-5cdca1a9cb74912a": {
+  "ans": {
+   "grant": "Patches may be worn in-lieu of the HHQ patch",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes what is permitted and does not include a specific restriction."
+  },
+  "hint": null
+ },
+ "CHK-a9693638d8448b95": {
+  "ans": {
+   "grant": "OCP patrol cap or beret may extend outside when placed in the OCP trouser cargo pocket",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-f1b79dd6f23af9ed": {
+  "ans": {
+   "grant": "Females are authorized to pull their bun or ponytail/equivalent through the back of the tactical cap",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only grants authorization without specifying any restriction or condition."
+  },
+  "hint": null
+ },
+ "CHK-2e8c01f0e22d5f56": {
+  "ans": {
+   "grant": "Airmen may purchase and wear a long or short sleeve breastfeeding T-shirt with their utility uniform",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated in the requirement."
+  },
+  "hint": null
+ },
+ "CHK-09ef4bf678d99ae6": {
+  "ans": {
+   "grant": "All outer garments (except Leather A-2 Flying Jacket) without name, insignia, AF symbol, accoutrements etc. may be worn with civilian attire",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No specific restriction is stated in the requirement."
+  },
+  "hint": null
+ },
+ "CHK-c93ef078950619f5": {
+  "ans": {
+   "grant": "Enlisted Airmen may wear either 3 1/2-inch or 4-inch chevron rank centered on the outer arm halfway between the shoulder seam and elbow when bent at a 90-degree angle",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated in the requirement."
+  },
+  "hint": null
+ },
+ "CHK-add005264b63fe19": {
+  "ans": {
+   "grant": "Can only be worn with the formal dress, mess dress, Class A, semi-formal dress, and Class B uniforms",
+   "limit": "with the formal dress, mess dress, Class A, semi-formal dress, and Class B uniforms",
+   "question": "When a topcoat or all-weather coat is worn with the formal dress, mess dress, Class A, semi-formal dress, and Class B uniforms, was it worn only in those specified uniform types?",
+   "why_null": ""
+  },
+  "hint": "The sentence says \"only\". That word IS the restriction: ask whether it was done only in the way the sentence names."
+ },
+ "CHK-e6f52206d2ce9442": {
+  "ans": {
+   "grant": "can be worn over the pullover and cardigan sweaters",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-e472cf225cd33e9f": {
+  "ans": {
+   "grant": "A coyote brown fleece liner may be worn under the OCP jacket",
+   "limit": "however, the fleece liner will not be visible",
+   "question": "When a member wears a coyote brown fleece liner under the OCP jacket, is the fleece liner not visible?",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-1bc4519e4f1a1d36": {
+  "ans": {
+   "grant": "Airmen may sew-on or use Velcro® backing for nametape, USAF tape, and rank",
+   "limit": "but will not mix sewn-on and Velcro® tapes or rank",
+   "question": "When Airmen sew-on or use Velcro® backing for nametape, USAF tape, and rank, do they not mix sewn-on and Velcro® tapes or rank?",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-deb007c060d0c29d": {
+  "ans": {
+   "grant": "Women may wear the men's flight cap",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-bf605b804e706bfd": {
+  "ans": {
+   "grant": "may be worn with the PTG",
+   "limit": "When permitted",
+   "question": "null",
+   "why_null": "The requirement only describes a condition under which something may be done, and there is no specific restriction stated beyond 'when permitted'."
+  },
+  "hint": null
+ },
+ "CHK-22a66e597f9462d3": {
+  "ans": {
+   "grant": "may be worn with the OCP uniform or PTG",
+   "limit": "When permitted",
+   "question": "null",
+   "why_null": "The requirement only states a condition under which something may be done, but does not specify any restriction on how it is done. The phrase 'when permitted' is merely a conditional clause and does not provide a specific limit or approval process."
+  },
+  "hint": null
+ },
+ "CHK-93f3bff39d437261": {
+  "ans": {
+   "grant": "The Air Force Honor Guard may wear a black ball cap with 5/8-inch tall USAF HONOR GUARD silver letters centered on the front of the cap",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated in the requirement."
+  },
+  "hint": null
+ },
+ "CHK-646fb4725b66a2df": {
+  "ans": {
+   "grant": "One handheld electronic device may be attached to a belt/waistband on either side or clipped to a purse",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-8c40e019b282d351": {
+  "ans": {
+   "grant": "Handheld electronic devices not worn on the belt/waistband or clipped to a purse can be any color",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-1274ef0621041112": {
+  "ans": {
+   "grant": "Cold weather accessories may be worn without wearing authorized outer garments",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No specific restriction is stated beyond the condition of being outdoors for functional items."
+  },
+  "hint": null
+ },
+ "CHK-c14640a57ef45ee2": {
+  "ans": {
+   "grant": "Coyote brown or black gloves may be worn with OCP uniform",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes what is permitted without any stated restriction."
+  },
+  "hint": null
+ },
+ "CHK-1ad329dc103d65ca": {
+  "ans": {
+   "grant": "Only black gloves may be worn with the service dress uniform and all approved outer garments worn with the dress uniforms",
+   "limit": "Only black gloves",
+   "question": "When a unit wears black gloves with the service dress uniform and all approved outer garments worn with the dress uniforms, were only black gloves worn?",
+   "why_null": ""
+  },
+  "hint": "The sentence says \"only\". That word IS the restriction: ask whether it was done only in the way the sentence names."
+ },
+ "CHK-6493f1656ececd68": {
+  "ans": {
+   "grant": "Airmen may wear taps on their shoes to preserve the heels",
+   "limit": "as long as the taps do not change the intended appearance of the shoes",
+   "question": "When Airmen wear taps on their shoes to preserve the heels, do the taps not change the intended appearance of the shoes?",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-d9272f0a50f7e490": {
+  "ans": {
+   "grant": "May wear with the Class A and Class B uniforms",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes what may be done without specifying a restriction that limits how it is done."
+  },
+  "hint": null
+ },
+ "CHK-d786a7712110694b": {
+  "ans": {
+   "grant": "They may be high-gloss or patent finish",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-c0579869d258a31b": {
+  "ans": {
+   "grant": "They may be high-gloss or patent finish",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-a588a5d0b60df668": {
+  "ans": {
+   "grant": "This exception may be applied where industrial products or processes cause irreparable damage to the coyote brown combat boots",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes a condition under which an exception applies and does not specify any restriction on how it is applied."
+  },
+  "hint": null
+ },
+ "CHK-7a7907d2faa49d71": {
+  "ans": {
+   "grant": "Squadron Commanders may authorize the wear of the morale undershirt with all PTG on Fridays",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No specific restriction is stated for this permission."
+  },
+  "hint": null
+ },
+ "CHK-d6d95f9af365f7f4": {
+  "ans": {
+   "grant": "Short and long sleeved form fitting undershirts, (i.e., spandex, Lycra® or elastic material) to include those with a mock neck may be worn and visible (at neck only) under the PTG sweatshirt",
+   "limit": "only at neck only",
+   "question": "When short and long sleeved form fitting undershirts, (i.e., spandex, Lycra® or elastic material) to include those with a mock neck are worn and visible under the PTG sweatshirt, is it done only at neck only?",
+   "why_null": null
+  },
+  "hint": "The sentence says \"only\". That word IS the restriction: ask whether it was done only in the way the sentence names."
+ },
+ "CHK-19edcd3834ab0143": {
+  "ans": {
+   "grant": "Installation commanders may authorize wear of an optional solid black, white, or dark blue baseball/sport cap and/or sweatband with the Air Force symbol or U.S. Air Force printed/embroidered on the front during organized PT",
+   "limit": "during organized PT",
+   "question": "When installation commanders authorize wear of an optional solid black, white, or dark blue baseball/sport cap and/or sweatband with the Air Force symbol or U.S. Air Force printed/embroidered on the front, is it during organized PT?",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-b6ed2ac58cea768c": {
+  "ans": {
+   "grant": "Cold weather accessories may be worn outdoors",
+   "limit": "only",
+   "question": "When cold weather accessories are worn outdoors, were they worn only outdoors?",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-3fa4dd13f1382b3a": {
+  "ans": {
+   "grant": "HAF staff personnel may wear the FDU/DFDU configured as directed by the Deputy Chief of Staff (DCS) or equivalent",
+   "limit": "configured as directed by the Deputy Chief of Staff (DCS) or equivalent",
+   "question": "When HAF staff personnel wear the FDU/DFDU, was it configured as directed by the Deputy Chief of Staff (DCS) or equivalent?",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-42b782ca9d8aaf00": {
+  "ans": {
+   "grant": "The flight cap may be stored in either lower leg pocket",
+   "limit": "without that pocket being fully zipped",
+   "question": "When the flight cap is stored in either lower leg pocket, is it true that without that pocket being fully zipped?",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-24949bfe04af658d": {
+  "ans": {
+   "grant": "Members may add an inside pocket",
+   "limit": "at their expense, when it does not detract from the external appearance",
+   "question": "When members add an inside pocket at their expense, when it does not detract from the external appearance, is there any condition that needs to be met?",
+   "why_null": "The requirement states a clear permission with conditions but no additional restriction beyond those conditions."
+  },
+  "hint": null
+ },
+ "CHK-06c05d743d17efc9": {
+  "ans": {
+   "grant": "Generals (4 Star), regardless of their Air Force Specialty Code are authorized to wear the Leather A-2 Flying Jacket",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement does not include a restriction on the authorization for Generals to wear the Leather A-2 Flying Jacket."
+  },
+  "hint": null
+ },
+ "CHK-2733692dbdfe9a6f": {
+  "ans": {
+   "grant": "Airmen issued Sage Green commercial Safe-to-Fly outerwear (e.g., Massif or other Cold Weather Aviation System (CWAS) outerwear) may wear these items with the FDU",
+   "limit": "without restriction",
+   "question": "null",
+   "why_null": "The permission is without any stated limit or condition."
+  },
+  "hint": null
+ },
+ "CHK-3060030a3266a5f4": {
+  "ans": {
+   "grant": "Jacket may be worn without the pants; however, the pants will not be worn without the jacket",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement does not specify a restriction on wearing the jacket without the pants or vice versa."
+  },
+  "hint": null
+ },
+ "CHK-ac478a7a89412163": {
+  "ans": {
+   "grant": "The flight cap, OCP patrol cap or tactical cap may be worn with the FDU as described in paragraphs 5.1.10 and 7.2.4 of this instruction regardless of patch configuration",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated beyond the permission itself."
+  },
+  "hint": null
+ },
+ "CHK-6d76d9fafa8f01f0": {
+  "ans": {
+   "grant": "A maximum of two patches may be worn",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-0043f0e579c89f0b": {
+  "ans": {
+   "grant": "Wing Commanders may authorize the wear of morale patches on Fridays or during special events",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No specific restriction is stated beyond the conditions under which authorization can be given."
+  },
+  "hint": null
+ },
+ "CHK-88202912c6c6fce4": {
+  "ans": {
+   "grant": "An OCP Velcro® sleeve pen/pencil holder may be worn on either sleeve",
+   "limit": "will not impede the proper wear of required patches and/or duty badges",
+   "question": "When an OCP Velcro® sleeve pen/pencil holder is worn on either sleeve, does it not impede the proper wear of required patches and/or duty badges?",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-680c1104276a98cf": {
+  "ans": {
+   "grant": "Commander's Insignia may be worn for officers in the rank of Colonel (O-6) and below when currently in command",
+   "limit": "as authorized by AFMAN 36-2100, Military Utilization and Classification",
+   "question": "When an officer wears Commander's Insignia for officers in the rank of Colonel (O-6) and below when currently in command, is it as authorized by AFMAN 36-2100, Military Utilization and Classification?",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-1407863fee741e95": {
+  "ans": {
+   "grant": "Airmen performing flight duties in a deployed environment may remove all or some patches",
+   "limit": "in accordance with mission directives",
+   "question": "When Airmen performing flight duties in a deployed environment remove all or some patches, is it in accordance with mission directives?",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-5d8d9c5feaa6abb2": {
+  "ans": {
+   "grant": "Deployed Airmen, or Airmen as authorized by MAJCOM may wear the OCP boonie (campaign/floppy) hat",
+   "limit": "when theater conditions dictate",
+   "question": "When Deployed Airmen, or Airmen as authorized by MAJCOM wear the OCP boonie (campaign/floppy) hat when theater conditions dictate, is there compliance with theater conditions?",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-28ef61be64a9caf6": {
+  "ans": {
+   "grant": "commanders may authorize the wear of the fleece jackets inside the ground shelters",
+   "limit": "Remote Pilot Aircraft designated units",
+   "question": "When commanders authorize the wear of the fleece jackets inside the ground shelters at Remote Pilot Aircraft designated units, is this authorized?",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-044d826a7795cf8b": {
+  "ans": {
+   "grant": "Jacket may be worn without the pants",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes what may be done and does not include a specific restriction that would limit this permission."
+  },
+  "hint": null
+ },
+ "CHK-0fd8964748d8f33a": {
+  "ans": {
+   "grant": "Belt may extend past buckle",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-27f62ce15952f253": {
+  "ans": {
+   "grant": "A single knife with clip may be secured inside a trouser pocket with the clip exposed",
+   "limit": "provided no more than the clip is exposed and the knife is a subdued or matte color",
+   "question": "When a single knife with clip is secured inside a trouser pocket with the clip exposed, provided no more than the clip is exposed and the knife is a subdued or matte color, was the limit met?",
+   "why_null": null
+  },
+  "hint": "Your question was rejected because question drops a qualifier: provided. Write it again keeping that, with every qualifier of the permission."
+ },
+ "CHK-1580a87e36182f8c": {
+  "ans": {
+   "grant": "Airmen may wear a dark blue jacket with a removable fleece liner and a small 'USAF' logo on the wearer's upper left chest",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-fee304ff8ae2e3c6": {
+  "ans": {
+   "grant": "Earmuffs may wrap around either the top or rear of the head",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-0d894ea6e6620095": {
+  "ans": {
+   "grant": "Commanders may designate wear of the Blue Beret at all times when in garrison with all authorized uniforms",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No specific restriction is stated beyond the permission itself."
+  },
+  "hint": null
+ },
+ "CHK-5782829387c9baec": {
+  "ans": {
+   "grant": "May also wear with khakis as a casual uniform on certain support missions",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-94daec6d452429cd": {
+  "ans": {
+   "grant": "Airmen may embroider first name on left side",
+   "limit": "",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-64d1e97e65f043a0": {
+  "ans": {
+   "grant": "The shirt may have a left breast pocket",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-f329bfdfd474779b": {
+  "ans": {
+   "grant": "The shirt can be worn tucked in or left out",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-65d938bdda488ed2": {
+  "ans": {
+   "grant": "Airman may wear a lab coat or smock as designated by the Medical Treatment Facility Commander",
+   "limit": "as designated by the Medical Treatment Facility Commander",
+   "question": "When an airman wears a lab coat or smock, was it designated by the Medical Treatment Facility Commander?",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-406a7be00f5f6b60": {
+  "ans": {
+   "grant": "Campaign (Air Commando) hat, with one edge rolled",
+   "limit": "may only be worn while at heritage events with a specified time and place designated by the commander",
+   "question": "When Special Operations Units wear the Campaign (Air Commando) hat, with one edge rolled, is it worn only while at heritage events with a specified time and place designated by the commander?",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-9241d14cf30031e1": {
+  "ans": {
+   "grant": "Airmen may continue to wear their beret while performing special duty assignments and DSD assignments outside of their primary AFSC",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No specific restriction is stated in the requirement."
+  },
+  "hint": null
+ },
+ "CHK-e81458e2cfc5622d": {
+  "ans": {
+   "grant": "The wing and star patch may be worn by individuals not assigned to a MAJCOM",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-4017eccc12006f47": {
+  "ans": {
+   "grant": "Commanders of Airmen in these AFSCs may authorize wear of dark blue shorts in lieu of the Operational Camouflage Pattern (OCP) trousers",
+   "limit": "in industrial areas, such as the flight line, hangars, warehouses, or dock areas outside of climate-controlled environments and when the ambient high temperature is forecast to meet or exceed 80 degrees Fahrenheit",
+   "question": "When Commanders of Airmen in these AFSCs authorize wear of dark blue shorts in lieu of OCP trousers in industrial areas, such as the flight line, hangars, warehouses, or dock areas outside of climate-controlled environments and when the ambient high temperature is forecast to meet or exceed 80 degrees Fahrenheit, are they authorized to do so?",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-a95c96dc69a3d17d": {
+  "ans": {
+   "grant": "Duty identifiers, as applicable may be worn on the left sleeve",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes what may be done without specifying a restriction that limits how it is done."
+  },
+  "hint": null
+ },
+ "CHK-12087e838c8b716c": {
+  "ans": {
+   "grant": "An accommodated Airman may wear a turban (or underturban or patka, as appropriate) made of a subdued material in a color that closely resembles the headgear for an assigned uniform.",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement only describes what is permitted without specifying any restriction."
+  },
+  "hint": null
+ },
+ "CHK-e9badac9271f5ebf": {
+  "ans": {
+   "grant": "Airmen and Guardians wearing an OCP uniform are authorized to wear a turban or under-turban in a camouflage pattern matching the uniform",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-1b139f0d3f3e24b9": {
+  "ans": {
+   "grant": "May be worn in uniform by honoree during military ceremonies, including but not limited to re-enlistments, retirements, special award ceremonies, promotions, and for attendees during community outreach events",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated beyond the scope of when it may be worn."
+  },
+  "hint": null
+ },
+ "CHK-ad2b8101541fe8e4": {
+  "ans": {
+   "grant": "The command insignia pin may be worn by all eligible commissioned officers in the rank of Colonel (O-6) and below",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-d3b1c40b0871021d": {
+  "ans": {
+   "grant": "The command insignia pin may be worn by all eligible commissioned officers in the rank of Colonel (O-6) and below",
+   "limit": "",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-3e6bc1797d42820a": {
+  "ans": {
+   "grant": "Airmen issued a next of kin lapel button are authorized to wear the button on all Air Force dress uniform coats",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement does not specify any restriction or condition beyond stating what is permitted."
+  },
+  "hint": null
+ },
+ "CHK-a89697a3f11359fd": {
+  "ans": {
+   "grant": "The lapel of the service coat may cover a portion of the ribbons",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-c5b9c1f33ceb9cf0": {
+  "ans": {
+   "grant": "Retirees may wear the authorized uniform prescribed at the date of member's retirement or any of the uniforms authorized for current active duty personnel, including the dress uniforms",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-16f21ad3feef7d8e": {
+  "ans": {
+   "grant": "May wear the uniform at patriotic parades on national holidays, other military parades, or ceremonies in which any active or Reserve U.S. Military unit is taking part",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-f05a2a8fdce11bf8": {
+  "ans": {
+   "grant": "Honorably discharged Air Force personnel (including service with an air component of the Army before the Air Force was established) may wear the authorized uniform prescribed at the date of member's discharge or any of the uniforms authorized for current active duty personnel, including the dress uniforms",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-06a46cd5fd788206": {
+  "ans": {
+   "grant": "May wear full-size or miniature medals on civilian suits or equivalent dresses",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-e3d74c41db2fe963": {
+  "ans": {
+   "grant": "May wear the uniform at patriotic parades on national holidays, other military parades, or ceremonies in which any active or Reserve U.S. Military unit is taking part",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-2a4448b1a2e8783f": {
+  "ans": {
+   "grant": "MAJCOMs may supplement this publication",
+   "limit": "null",
+   "question": "null",
+   "why_null": "No specific restriction is stated."
+  },
+  "hint": null
+ }
+}
