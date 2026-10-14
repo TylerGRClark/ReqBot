@@ -280,3 +280,12 @@ def test_a_question_opening_with_a_modal_is_checked_for_an_actor_from_the_surrou
     item = _item(1, "Provide SMEs when requested.", applies_to="", passage="The HAF CARM Program will meet. >> Provide SMEs when requested. <<")
     assert AQ.passage_only_terms("Can the HAF CARM Program provide SMEs when requested?", item) == ["HAF", "CARM", "Program"]
     assert AQ.passage_only_terms("Will the HAF CARM Program provide SMEs when requested?", item) == ["HAF", "CARM", "Program"]
+
+
+def test_a_statement_of_what_the_document_leaves_untouched_gets_no_question():
+    # DODI 8551.01 1.1: the model asked "Does this issuance alter or override ...?", the opposite of the source
+    item = _item(1, "This issuance: Does not alter or override existing Director of National Intelligence authorities and policies regarding the protection of sensitive compartmented information.")
+    assert AQ.skipped_because(item) == ["document_states_its_own_effect"]
+    assert AQ.skipped_because(_item(1, "This Instruction does not apply to AF Intelligence Community systems.")) == ["document_states_its_own_effect"]
+    for text in ("Units shall not alter the baseline.", "The unit does not share keys.", "Do not release the report.", "This list does not include every weapon system."):
+        assert AQ.skipped_because(_item(1, text)) == [], text

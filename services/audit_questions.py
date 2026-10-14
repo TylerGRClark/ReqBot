@@ -46,6 +46,10 @@ Answer as JSON: {{"question": "<the question>"}} or {{"question": null}}."""
 PROHIBITION = re.compile(
     r"\b(?:shall|must|should|will|may|can|could|would)\s+not\b(?!\s+(?:limited|only|necessarily))|\bcannot\b|\bnever\b|\bprohibited\b|\bforbidden\b"
     r"|\b(?:is|are)\s+not\s+(?:authorized|permitted|allowed|appropriate|acceptable|permissible|waivable|to)\b|(?:^\W*|(?<=[.!?])\s+)(?:\d+\)\s*)?(?:\([\w-]+\)\s*)?(?:do|does)\s+not\b", re.IGNORECASE)
+# "This issuance: Does not alter or override existing ... authorities": the document says what it leaves untouched. It is not a duty of the unit, and the model turned it into "Does this issuance alter or override ...?"
+# (an inverted question), so the row stays and the question is withheld (found in DODI 8551.01 1.1 by the compound-question review, 2026-10-15).
+DOCUMENT_STATES_ITS_OWN_EFFECT = re.compile(
+    r"^\W*(?:\([\w-]+\)\s*)?(?:This|The)\s+(?:\w+\s+){0,2}?(?:issuance|instruction|publication|directive|manual|policy|memorandum|document)\b[^.?!:]{0,60}?:?\s*(?:does|do|will|shall)\s+not\b", re.IGNORECASE)
 PROHIBITION_RULE = "- This requirement forbids something. Ask whether it is avoided (\"Does the unit avoid ...?\"); do not ask whether it happens.\n"
 SCHEMA = {"type": "object", "properties": {"question": {"type": ["string", "null"]}}, "required": ["question"]}
 _TERM = re.compile(r"\b(?:\d[\w./-]*|[A-Z]{2,}[\w/&-]*|[A-Z][A-Za-z]*[a-z][A-Z][A-Za-z]*|[A-Z][a-z]+(?![A-Za-z])(?:\s+[A-Z][a-z]+(?![A-Za-z]))*)")  # a number, an acronym, a mixed-case name (StoreFront, FedRAMP, DoD), or capitalized whole words
@@ -110,7 +114,10 @@ def build_prompt(item: dict) -> str:
 
 
 def skipped_because(item: dict) -> list[str]:
-    return sorted(SKIP_FLAGS & set(item.get("item_flags") or []))
+    reasons = set(SKIP_FLAGS & set(item.get("item_flags") or []))
+    if DOCUMENT_STATES_ITS_OWN_EFFECT.search(item.get("source_quote") or ""):
+        reasons.add("document_states_its_own_effect")
+    return sorted(reasons)
 
 
 def input_hash(prompt: str, model: str) -> str:
