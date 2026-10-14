@@ -1,0 +1,3563 @@
+{
+ "summary": {
+  "candidates": 120,
+  "keep": 30,
+  "split_proposed": 90,
+  "model_errors": 0,
+  "split_passed_all_checks": 29,
+  "split_pass_rate": 0.322,
+  "fallback_rows": 61,
+  "fallback_by_check": {
+   "actor": 14,
+   "coverage": 29,
+   "modality": 2,
+   "pronouns": 24,
+   "qualifiers": 20,
+   "shape": 4
+  },
+  "only_one_check_failed": 34,
+  "rows_out": 120,
+  "rows_dropped": 0,
+  "all_candidates_longest_piece_median_before": 28.0,
+  "all_candidates_longest_piece_median_after": 25.0,
+  "all_candidates_longest_piece_p90_before": 37.2,
+  "all_candidates_longest_piece_p90_after": 36.0,
+  "changed_rows_median_before": 28,
+  "changed_rows_median_after": 14,
+  "changed_rows_p90_before": 39.6,
+  "changed_rows_p90_after": 19.0
+ },
+ "rows": [
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-053decd0bf676125",
+   "citation": "2.12.6.23",
+   "reason": "series",
+   "source_quote": "Work with AF functional area leads to foster relationships with local government, civil agencies, and the private sector to address issues with high-interest TCAs.",
+   "today": "Does the HAF CARM program office work with AF functional area leads to foster relationships with local government, civil agencies, and the private sector to address issues with high-interest TCAs?",
+   "decision": "split",
+   "lead": "Does the HAF CARM program office work with AF functional area leads?",
+   "parts": [
+    "Do they foster relationships with local government?",
+    "Do they foster relationships with civil agencies?",
+    "Do they foster relationships with the private sector?",
+    "Do they address issues with high-interest TCAs?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Do they address...' has a pronoun as its subject",
+     "'Do they foster...' has a pronoun as its subject",
+     "'they' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 30,
+   "longest_after": 30
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-0a55a924b4ea661d",
+   "citation": "1.2.2",
+   "reason": "series",
+   "source_quote": "To establish and implement a risk management program for systems and assets critical to the execution of AF missions.",
+   "today": "Does the unit establish and implement a risk management program for systems and assets critical to the execution of AF missions?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 21,
+   "longest_after": 21
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-0b18b2de8579359e",
+   "citation": "3.4.1",
+   "reason": "series",
+   "source_quote": "Per paragraphs 2.17.27 and 2.20.17, RRPs will be developed to document the criticality data, threats, hazards, and vulnerabilities to TCAs identified during an assessment; as well as provide possible risk reduction COAs developed by assessment team SMEs, installation POCs, MAJCOM/DRUs, or FOAs.",
+   "today": "Are RRPs developed to document criticality data, threats, hazards, and vulnerabilities to TCAs identified during an assessment, along with possible risk reduction COAs?",
+   "decision": "split",
+   "lead": "Are RRPs developed?",
+   "parts": [
+    "Do RRPs document criticality data?",
+    "Do RRPs document threats, hazards, and vulnerabilities to TCAs?",
+    "Do RRPs include possible risk reduction COAs?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'vulnerabilities to TCAs identified during an assessment'"
+    ],
+    "actor": [
+     "actor changed: today 'rrps developed to', lead 'rrps developed?'"
+    ]
+   },
+   "failed": [
+    "coverage",
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 23,
+   "longest_after": 23
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-136bdfa1258f203c",
+   "citation": "2.17.15",
+   "reason": "long",
+   "source_quote": "Enter and validate their discovered/identified critical systems' and assets' BEIs in the AF CARM system of record for AF programmatic and PPBE efforts to remediate or create redundant capabilities.",
+   "today": "Does MAJCOM/DRUs enter and validate their discovered/identified critical systems' and assets' BEIs in the AF CARM system of record for AF programmatic and PPBE efforts to remediate or create redundant capabilities?",
+   "decision": "split",
+   "lead": "Do MAJCOM/DRUs enter and validate their discovered/identified critical systems' and assets' BEIs?",
+   "parts": [
+    "Are the BEIs of critical systems entered in the AF CARM system?",
+    "Are the BEIs of identified assets validated in the AF CARM system?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'PPBE efforts to remediate'",
+     "item not covered: 'create redundant capabilities?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 31,
+   "longest_after": 31
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-144b713f9cd4e425",
+   "citation": "A2.3",
+   "reason": "long",
+   "source_quote": "If further analysis by CARM POCs and the CARM WG determines that the degradation or removal of a TA will cause mission degradation or failure, (as determined by the MET/MEF's standards and conditions), then the asset must be nominated for TCA validation.",
+   "today": "If further analysis by CARM POCs and the CARM WG determines that the degradation or removal of a TA will cause mission degradation or failure, is the asset nominated for TCA validation?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 32,
+   "longest_after": 32
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-25ab98771cb4328c",
+   "citation": "2.21.8",
+   "reason": "long",
+   "source_quote": "Collaborate with MA TCA stakeholders and resourcing functions to integrate CARM program guidance and requirements in the development and publication of installation plans and annual military construction (MILCON); and sustainment, restoration, and modernization (SRM) prioritization lists via the Installation Facilities Board.",
+   "today": "Does the unit collaborate with MA TCA stakeholders and resourcing functions to integrate CARM program guidance and requirements in the development and publication of installation plans and annual military construction (MILCON) and sustainment, restoration, and modernization (SRM) prioritization lists via the Installation Facilities Board?",
+   "decision": "split",
+   "lead": "Does the unit collaborate with MA TCA stakeholders and resourcing functions?",
+   "parts": [
+    "Is CARM program guidance integrated in installation plans and annual MILCON development and publication?",
+    "Is CARM program guidance integrated in SRM prioritization lists via the Installation Facilities Board?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'requirements in the development'",
+     "item not covered: 'annual military construction (MILCON)'",
+     "item not covered: 'sustainment'",
+     "item not covered: 'restoration'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 44,
+   "longest_after": 44
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-28a62aa7488dd297",
+   "citation": "2.17.13.1",
+   "reason": "long",
+   "source_quote": "Establish and manage a CARM WG or incorporate the requirement into an equivalent, existing MAJCOM/DRU WG (e.g. Threat, EM, or Integrated Defense (ID)) to: Provide METs / MEFs identified by the CCMDs to each respective subordinate organization.",
+   "today": "Does MAJCOM/DRUs establish and manage a CARM WG or incorporate the requirement into an equivalent, existing MAJCOM/DRU WG to provide METs / MEFs identified by the CCMDs to each respective subordinate organization?",
+   "decision": "split",
+   "lead": "Does MAJCOM/DRUs establish and manage a CARM WG or incorporate the requirement?",
+   "parts": [
+    "Is a CARM WG established and managed?",
+    "Is the requirement incorporated into an equivalent, existing MAJCOM/DRU WG?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'each' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'existing MAJCOM/DRU WG to provide METs / MEFs identified by the CCMDs to each respective subordinate organization?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers",
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 32,
+   "longest_after": 32
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-2d0cdf21e09c93ed",
+   "citation": "2.21.3",
+   "reason": "long",
+   "source_quote": "Establish and manage a CARM WG or incorporate the requirement into an equivalent, existing Center/Wing or Installation WG (e.g. Threat, EM, or ID WG) to facilitate cross-functional dialogue on TCA identification, availability, and reliability, as well as to support consequence management and COOP planning.",
+   "today": "Does the unit establish and manage a CARM WG or incorporate the requirement into an equivalent, existing Center/Wing or Installation WG to facilitate cross-functional dialogue on TCA identification, availability, and reliability, as well as to support consequence management and COOP planning?",
+   "decision": "split",
+   "lead": "Does the unit establish and manage a CARM WG or incorporate it into an existing WG?",
+   "parts": [
+    "Is a CARM WG established and managed?",
+    "Is the requirement incorporated into an equivalent, existing Center/Wing or Installation WG?",
+    "Does this facilitate cross-functional dialogue on TCA identification, availability, and reliability?",
+    "Does this support consequence management and COOP planning?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Does this facilitate...' has a pronoun as its subject",
+     "'Does this support...' has a pronoun as its subject",
+     "'it' added",
+     "'this' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 41,
+   "longest_after": 41
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-4072c6d7ce6d7a86",
+   "citation": "2.15.1",
+   "reason": "series",
+   "source_quote": "Advise the HAF CARM Program through the assessment and analysis of program structure, operations, and resource allocations as requested.",
+   "today": "Does the Director, Air Force Studies, Analyses, and Assessments (AF/9) advise the HAF CARM Program through assessment and analysis of program structure, operations, and resource allocations as requested?",
+   "decision": "split",
+   "lead": "Does AF/9 advise the HAF CARM Program?",
+   "parts": [
+    "Is the advice based on assessments?",
+    "Is the advice based on analyses?",
+    "Are program structure, operations, and resource allocations assessed and analyzed?",
+    "Is advising done as requested?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'Does the Director'",
+     "item not covered: 'Air Force Studies'"
+    ],
+    "actor": [
+     "actor changed: today 'the director, air', lead 'af/9 advise the haf carm program?'"
+    ]
+   },
+   "failed": [
+    "coverage",
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 28,
+   "longest_after": 28
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-4a532f6da67b2e9b",
+   "citation": "1.2.4",
+   "reason": "series",
+   "source_quote": "Create a comprehensive and coordinated enterprise-wide approach to identify, assess, analyze, and manage risk for AF Tier 1 and Tier 2 TCAs.",
+   "today": "Does the unit create a comprehensive and coordinated enterprise-wide approach to identify, assess, analyze, and manage risk for AF Tier 1 and Tier 2 TCAs?",
+   "decision": "split",
+   "lead": "Does the unit create an approach?",
+   "parts": [
+    "Is the approach comprehensive?",
+    "Is the approach coordinated enterprise-wide?",
+    "Does it identify risks for AF Tier 1 and Tier 2 TCAs?",
+    "Does it assess risks for AF Tier 1 and Tier 2 TCAs?",
+    "Does it analyze risks for AF Tier 1 and Tier 2 TCAs?",
+    "Does it manage risks for AF Tier 1 and Tier 2 TCAs?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [
+     "6 parts (need 2 to 5)"
+    ],
+    "pronouns": [
+     "'Does it analyze...' has a pronoun as its subject",
+     "'Does it assess...' has a pronoun as its subject",
+     "'Does it identify...' has a pronoun as its subject",
+     "'Does it manage...' has a pronoun as its subject",
+     "'it' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "shape",
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 25,
+   "longest_after": 25
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-4e16a6c99d0ff4ac",
+   "citation": "2.12.6.1",
+   "reason": "series",
+   "source_quote": "Establish a HAF CARM program office, which: Develops and maintains a CARM primary and alternate point of contact (POC) appointed by memorandum.",
+   "today": "Does the HAF CARM program office develop and maintain a CARM primary and alternate point of contact appointed by memorandum?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 20,
+   "longest_after": 20
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-4ff0b8fe39ed846c",
+   "citation": "3.3.3.3.4",
+   "reason": "long",
+   "source_quote": "The PSS is a site visit by the assessment team to obtain additional insight to installation layout and local assessment partners, address pending issues or concerns, and prepare the assessment recipient for the AFMAA vulnerability assessment.",
+   "today": "Does the MAA team conduct a PSS site visit to obtain additional insight into installation layout and local assessment partners, address pending issues, and prepare the recipient for the AFMAA vulnerability assessment?",
+   "decision": "split",
+   "lead": "Does the MAA team conduct a PSS site visit?",
+   "parts": [
+    "Is additional insight obtained on installation layout?",
+    "Is additional insight obtained on local assessment partners?",
+    "Are pending issues addressed?",
+    "Is the recipient prepared for the AFMAA vulnerability assessment?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 32,
+   "longest_after": 9
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-637b3ec7f6a4abcb",
+   "citation": "3.5.1",
+   "reason": "series",
+   "source_quote": "The HAF CARM Program will collaborate with HAF/A4 MA to advocate on behalf of the MAJCOM/DRUs and FOAs (as appropriate) for remediation or mitigation actions in chartered executive forums and processes.",
+   "today": "Does the HAF CARM Program collaborate with HAF/A4 MA to advocate for remediation or mitigation actions on behalf of MAJCOM/DRUs and FOAs in chartered executive forums and processes?",
+   "decision": "split",
+   "lead": "Does the HAF CARM Program collaborate with HAF/A4 MA?",
+   "parts": [
+    "Does the HAF CARM Program advocate for remediation or mitigation actions on behalf of MAJCOM/DRUs in chartered executive forums and processes?",
+    "Does the HAF CARM Program advocate for remediation or mitigation actions on behalf of FOAs (as appropriate) in chartered executive forums and processes?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 28,
+   "longest_after": 23
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-730948ef1d0de0c0",
+   "citation": "2.13.4",
+   "reason": "series",
+   "source_quote": "Synchronize/de-conflict HHQ MA assessments supporting AT requirements in DoDI 2000.16 V1, DoD Antiterrorism Standards, with CARM requirements outlined in DoDI 3020.45.",
+   "today": "Does the Deputy Chief of Staff for Logistics, Civil Engineering, and Force Protection synchronize/de-conflict HHQ MA assessments supporting AT requirements with CARM requirements?",
+   "decision": "split",
+   "lead": "Does the Deputy Chief of Staff for Logistics, Civil Engineering, and Force Protection handle HHQ MA assessments?",
+   "parts": [
+    "Are HHQ MA assessments synchronized with DoDI 2000.16 V1 requirements?",
+    "Are HHQ MA assessments de-conflicted with CARM requirements from DoDI 3020.45?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 23,
+   "longest_after": 17
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-77489ef28613c890",
+   "citation": "2.21.5",
+   "reason": "series",
+   "source_quote": "Assist in the development of risk remediation or mitigation COAs for identified vulnerabilities and risks to TCAs and infrastructure as required by the MAJCOM/DRU CARM POC.",
+   "today": "Does the unit assist in the development of risk remediation or mitigation COAs for identified vulnerabilities and risks to TCAs and infrastructure as required by the MAJCOM/DRU CARM POC?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 29,
+   "longest_after": 29
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-82b79fbd44e6622f",
+   "citation": "2.12.6.26",
+   "reason": "series",
+   "source_quote": "Develop and implement a CARM program long-term strategy for outreach, education, and training to meet CARM Program goals and objectives.",
+   "today": "Does the HAF CARM program office develop and implement a CARM program long-term strategy for outreach, education, and training to meet CARM Program goals and objectives?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 26,
+   "longest_after": 26
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-8347dbc54ac14b7e",
+   "citation": "Front matter",
+   "reason": "series",
+   "source_quote": "Refer recommended changes and questions about this publication to the OPR using the AF Form 847, Recommendation for Change of Publication; route AF Form 847 from the field through the appropriate functional chain of command.",
+   "today": "Do those who recommend changes or have questions about this publication use AF Form 847 to refer them to the OPR and route it through the appropriate chain of command?",
+   "decision": "split",
+   "lead": "Do those who recommend changes or have questions about this publication use AF Form 847?",
+   "parts": [
+    "Is AF Form 847 used for recommended changes?",
+    "Is AF Form 847 used for questions about the publication?",
+    "Is AF Form 847 routed through the appropriate chain of command?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Do those who...' has a pronoun as its subject"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 30,
+   "longest_after": 30
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-87806a88b8f651c9",
+   "citation": "2.21.9",
+   "reason": "long",
+   "source_quote": "Manage and coordinate Center/Wing participation in the AF CAIP process by helping to identify, nominate, and validate Tier 1 and Tier 2 TCAs supporting assigned missions.",
+   "today": "Does the Air Force Critical Asset Owning Center/Wing manage and coordinate participation in the AF CAIP process by helping to identify, nominate, and validate Tier 1 and Tier 2 TCAs supporting assigned missions?",
+   "decision": "split",
+   "lead": "Does the Air Force Critical Asset Owning Center/Wing manage and coordinate participation in the AF CAIP process?",
+   "parts": [
+    "Do they help identify Tier 1 and Tier 2 TCAs?",
+    "Do they nominate Tier 1 and Tier 2 TCAs?",
+    "Do they validate Tier 1 and Tier 2 TCAs?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Do they help...' has a pronoun as its subject",
+     "'Do they nominate...' has a pronoun as its subject",
+     "'Do they validate...' has a pronoun as its subject",
+     "'they' added"
+    ],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'Tier 2 TCAs supporting assigned missions?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "pronouns",
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 33,
+   "longest_after": 33
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-8b0a054e2e37e30d",
+   "citation": "2.13.3",
+   "reason": "long",
+   "source_quote": "Ensure CARM Program requirements are coordinated with HAF CE and IMSC engineering leads and considered in the installation planning process for the MA survivability, resiliency, and redundancy of all TCAs during facility construction and installation capitalization efforts that affect, house, or support these identified TCAs as outlined in DoDI 3020.45.",
+   "today": "Does the Deputy Chief of Staff for Logistics, Civil Engineering, and Force Protection ensure that CARM Program requirements are coordinated with HAF CE and IMSC engineering leads and considered in the installation planning process as required?",
+   "decision": "split",
+   "lead": "Does the Deputy Chief of Staff for Logistics, Civil Engineering, and Force Protection ensure coordination?",
+   "parts": [
+    "Are CARM Program requirements coordinated with HAF CE engineering leads?",
+    "Are CARM Program requirements coordinated with IMSC engineering leads?",
+    "Are CARM Program requirements considered in installation planning process?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'as required' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers"
+   ],
+   "final": "today",
+   "today_words": 36,
+   "longest_after": 36
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-950ef45efdf2081c",
+   "citation": "3.8.1",
+   "reason": "series",
+   "source_quote": "This data is required to document a system or asset in the AF CARM system of record and other CCMD established databases.",
+   "today": "Does the unit document a system or asset in the AF CARM system of record and other CCMD established databases?",
+   "decision": "split",
+   "lead": "Does the unit document a system or asset?",
+   "parts": [
+    "Is it documented in the AF CARM system of record?",
+    "Is it documented in other CCMD established databases?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Is it documented...' has a pronoun as its subject",
+     "'it' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 20,
+   "longest_after": 20
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-9ae6503278155506",
+   "citation": "2.13.6",
+   "reason": "long",
+   "source_quote": "Partner with AF/A3 to ensure that CARM Tier 1 and Tier 2 TCAs are made available to DoD MA programs and to synchronize CARM-related assessment, mitigation, and remediation efforts.",
+   "today": "Does the Deputy Chief of Staff for Logistics, Civil Engineering, and Force Protection (AF/A4) partner with AF/A3 to ensure that CARM Tier 1 and Tier 2 TCAs are made available to DoD MA programs and synchronize CARM-related assessment, mitigation, and remediation efforts?",
+   "decision": "split",
+   "lead": "Does the Deputy Chief of Staff for Logistics, Civil Engineering, and Force Protection (AF/A4) partner with AF/A3?",
+   "parts": [
+    "Are CARM Tier 1 and Tier 2 TCAs made available to DoD MA programs?",
+    "Is synchronization of CARM-related assessment efforts done?",
+    "Is synchronization of CARM-related mitigation efforts done?",
+    "Is synchronization of CARM-related remediation efforts done?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 42,
+   "longest_after": 17
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-b7a47727d3e9749e",
+   "citation": "3.5.3",
+   "reason": "long",
+   "source_quote": "MAJCOM/DRUs and FOAs (as appropriate) will identify funding requirements to implement risk response actions through the PPBE process and inform the HAF CARM Program of any unfunded risk reduction requirements identified in finalized RRPs.",
+   "today": "Does MAJCOM/DRUs and FOAs identify funding requirements to implement risk response actions through the PPBE process and inform the HAF CARM Program of any unfunded risk reduction requirements identified in finalized RRPs?",
+   "decision": "split",
+   "lead": "Do MAJCOM/DRUs and FOAs identify funding requirements?",
+   "parts": [
+    "Is funding identified for implementing risk response actions through the PPBE process?",
+    "Are unfunded risk reduction requirements communicated to the HAF CARM Program from finalized RRPs?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'any' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers"
+   ],
+   "final": "today",
+   "today_words": 32,
+   "longest_after": 32
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-bae935da38b8bc05",
+   "citation": "2.12.6.15",
+   "reason": "series",
+   "source_quote": "Coordinate and integrate CARM policies, guidance, plans, and orders with other AF risk management and MA programs.",
+   "today": "Does the HAF CARM program office coordinate and integrate CARM policies, guidance, plans, and orders with other AF risk management and MA programs?",
+   "decision": "split",
+   "lead": "Does the HAF CARM program office coordinate and integrate CARM?",
+   "parts": [
+    "Are CARM policies coordinated and integrated with other AF risk management and MA programs?",
+    "Is guidance for CARM coordinated and integrated with other AF risk management and MA programs?",
+    "Are plans for CARM coordinated and integrated with other AF risk management and MA programs?",
+    "Are orders for CARM coordinated and integrated with other AF risk management and MA programs?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 23,
+   "longest_after": 15
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-bb9c039ab7f1c169",
+   "citation": "2.20.8.2",
+   "reason": "long",
+   "source_quote": "Establish and manage a CARM WG or incorporate the requirement into an equivalent, existing organizational WG (e.g. Threat or EM WG) (T-2) as appropriate to: Develop strategies for remediating or mitigating vulnerabilities and risks to TCAs and infrastructures to inform the FOA's HHQs functional manager, HAF CARM Program office, and HAF CARM WG.",
+   "today": "Does the Threat or EM WG develop strategies for remediating or mitigating vulnerabilities and risks to TCAs and infrastructures to inform the FOA's HHQs functional manager, HAF CARM Program office, and HAF CARM WG?",
+   "decision": "split",
+   "lead": "Does the Threat or EM WG develop strategies for remediating or mitigating vulnerabilities?",
+   "parts": [
+    "Do the strategies inform the FOA's HHQs functional manager?",
+    "Do the strategies inform the HAF CARM Program office?",
+    "Do the strategies inform the HAF CARM WG?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'risks to TCAs'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 34,
+   "longest_after": 34
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-be773d3b36a97521",
+   "citation": "2.7.2.2",
+   "reason": "series",
+   "source_quote": "Ensure the Air Force Office of Special Investigations (AFOSI), in coordination with the HAF CARM Program office, provides policy and oversight regarding intelligence, threat and counterintelligence (CI) support provided by AFOSI to the CARM Program, and more specifically will: Assign servicing AFOSI unit-specific roles and responsibilities for the identification, tracking, and dissemination of threat information to all AF commands owning or operating Tier 1 TCAs.",
+   "today": "Does the servicing AFOSI unit assign specific roles and responsibilities for the identification, tracking, and dissemination of threat information to all AF commands owning or operating Tier 1 TCAs?",
+   "decision": "split",
+   "lead": "Does the servicing AFOSI unit assign roles and responsibilities?",
+   "parts": [
+    "Are specific roles assigned for identifying threat information?",
+    "Are specific roles assigned for tracking threat information?",
+    "Are specific roles assigned for disseminating threat information?",
+    "Is this assignment given to all AF commands owning or operating Tier 1 TCAs?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Is this assignment...' has a pronoun as its subject",
+     "'this' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 29,
+   "longest_after": 29
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-beca061eae057aec",
+   "citation": "2.1.1",
+   "reason": "long",
+   "source_quote": "Serve as the primary AF stakeholder in determining the acceptable level of risk to all CARM program systems and assets which are presented to the SECDEF.",
+   "today": "Does the Secretary of the Air Force serve as the primary AF stakeholder in determining the acceptable level of risk to all CARM program systems and assets which are presented to the SECDEF?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 33,
+   "longest_after": 33
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-c1a90b748d3c6692",
+   "citation": "3.3.3",
+   "reason": "series",
+   "source_quote": "JMAAs identify potential risks to mission execution through risks to critical systems and assets based on the combination of likely threats or hazards with identified vulnerabilities.",
+   "today": "Do JMAAs identify potential risks to mission execution through risks to critical systems and assets based on the combination of likely threats or hazards with identified vulnerabilities?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 27,
+   "longest_after": 27
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-c2241bf47b0a17c2",
+   "citation": "2.3.2",
+   "reason": "series",
+   "source_quote": "Incorporate CARM remediation and mitigation plans as appropriate, into industrial preparedness, contracting, services acquisition, science and technology (S&T), and life cycle management policies, procedures, and planning.",
+   "today": "Does SAF/AQ incorporate CARM remediation and mitigation plans into industrial preparedness, contracting, services acquisition, S&T, and life cycle management policies, procedures, and planning as appropriate?",
+   "decision": "split",
+   "lead": "Does SAF/AQ incorporate CARM remediation and mitigation plans?",
+   "parts": [
+    "Is it incorporated into industrial preparedness policies, procedures, and planning?",
+    "Is it incorporated into contracting policies, procedures, and planning?",
+    "Is it incorporated into services acquisition policies, procedures, and planning?",
+    "Is it incorporated into S&T policies, procedures, and planning?",
+    "Is it incorporated into life cycle management policies, procedures, and planning?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'as appropriate' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Is it incorporated...' has a pronoun as its subject",
+     "'it' added"
+    ],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'planning as appropriate?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers",
+    "pronouns",
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 25,
+   "longest_after": 25
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-c4d265e96792e241",
+   "citation": "2.20.4",
+   "reason": "series",
+   "source_quote": "2) In addition: Maintain access to a facility capable of developing, communicating, and maintaining up to and including TS / SCI TCA-related data.",
+   "today": "Does the FOA maintain access to a facility capable of developing, communicating, and maintaining up to and including TS / SCI TCA-related data?",
+   "decision": "split",
+   "lead": "Does the FOA maintain access to a facility?",
+   "parts": [
+    "Is the facility capable of developing TS / SCI TCA-related data?",
+    "Is the facility capable of communicating TS / SCI TCA-related data?",
+    "Is the facility capable of maintaining TS / SCI TCA-related data?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'up to' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers"
+   ],
+   "final": "today",
+   "today_words": 23,
+   "longest_after": 23
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-d0c17f136932e8d2",
+   "citation": "1.2.3",
+   "reason": "series",
+   "source_quote": "To define responsibilities, procedures, and standards so commanders can identify, validate, and prioritize TCAs and assess and manage risk to these TCAs in all threats/hazards environment.",
+   "today": "Do commanders define responsibilities, procedures, and standards to identify, validate, and prioritize TCAs and assess and manage risk to these TCAs in all threats/hazards environment?",
+   "decision": "split",
+   "lead": "Do commanders define responsibilities, procedures, and standards?",
+   "parts": [
+    "Can commanders identify, validate, and prioritize TCAs?",
+    "Can commanders assess and manage risk to TCAs in all threats/hazards environment?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 25,
+   "longest_after": 12
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-d5e01d5710f02c71",
+   "citation": "2.21.13",
+   "reason": "series",
+   "source_quote": "Brief installation senior leaders on the CARM program and their involvement as it pertains to TCAs and those critical assets formerly known as Supporting Infrastructure Critical Assets (SICA) that are now included under the TCA category.",
+   "today": "Do Air Force Critical Asset Owning Centers and Wings brief installation senior leaders on the CARM program and their involvement regarding TCAs and SICA assets now included under TCA category?",
+   "decision": "split",
+   "lead": "Do Air Force Critical Asset Owning Centers and Wings brief installation senior leaders?",
+   "parts": [
+    "Is the CARM program covered in the briefing?",
+    "Are their roles regarding TCAs discussed?",
+    "Are SICA assets now included under TCA category mentioned?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 30,
+   "longest_after": 13
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-e1213526c5ac5c3c",
+   "citation": "3.5.4",
+   "reason": "long",
+   "source_quote": "For large scale remediation or mitigation efforts, the HAF CARM Program will advocate through the AF corporate process for funding and assist MAJCOM/DRUs and FOAs (as appropriate) in coordinating the inclusion of the identified measures in future asset investment planning.",
+   "today": "Does the HAF CARM Program advocate through the AF corporate process for funding and assist MAJCOM/DRUs and FOAs in coordinating the inclusion of identified measures in future asset investment planning for large scale remediation or mitigation efforts?",
+   "decision": "split",
+   "lead": "Does the HAF CARM Program advocate for funding?",
+   "parts": [
+    "Does the HAF CARM Program assist MAJCOM/DRUs and FOAs in coordinating measures?",
+    "Is advocacy done through the AF corporate process?",
+    "Are identified measures included in future asset investment planning?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'mitigation efforts?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 37,
+   "longest_after": 37
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-e89b426371a7b7b4",
+   "citation": "2.17.12.2",
+   "reason": "series",
+   "source_quote": "Establish and manage a CARM WG or incorporate the requirement into an equivalent, existing MAJCOM/DRU WG (e.g. Threat, EM, or Integrated Defense (ID)) to: Develop strategies for remediating or mitigating identified vulnerabilities and risks to assessed TCAs and infrastructures to inform the HAF CARM Program office and HAF CARM WG.",
+   "today": "Does the Threat, EM, or Integrated Defense (ID) WG develop strategies for remediating or mitigating identified vulnerabilities and risks to inform the HAF CARM Program office and HAF CARM WG?",
+   "decision": "split",
+   "lead": "Does the Threat, EM, or ID WG manage a CARM requirement?",
+   "parts": [
+    "Does the WG develop strategies for remediating identified vulnerabilities?",
+    "Does the WG develop strategies for mitigating identified risks?",
+    "Do the strategies inform the HAF CARM Program office and HAF CARM WG?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 30,
+   "longest_after": 13
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-e948266b0778fff2",
+   "citation": "2.20.4",
+   "reason": "long",
+   "source_quote": "2) In addition: This may be waived to a SECRET level with a justification memorandum sent through the FOA's HHQ's functional manager.",
+   "today": "Does the unit submit a justification memorandum through the FOA's HHQ's functional manager to waive the requirement to maintain access to a facility capable of TS / SCI TCA-related data down to SECRET level?",
+   "decision": "split",
+   "lead": "Does the unit submit a waiver request?",
+   "parts": [
+    "Is there a justification memorandum submitted through the FOA's HHQ's functional manager?",
+    "Does this memorandum waive the requirement to maintain access to a facility capable of TS / SCI TCA-related data down to SECRET level?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Does this memorandum...' has a pronoun as its subject",
+     "'this' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 34,
+   "longest_after": 34
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-f272b2609d8f1a0c",
+   "citation": "2.17.22",
+   "reason": "series",
+   "source_quote": "Attend and participate in the MAJCOM/DRU Threat, EM, and ID WGs and provide CARM Program-related data when requested.",
+   "today": "Does MAJCOM/DRUs attend and participate in the MAJCOM/DRU Threat, EM, and ID WGs and provide CARM Program-related data when requested?",
+   "decision": "split",
+   "lead": "Do MAJCOM/DRUs attend and participate in the WGs?",
+   "parts": [
+    "Do MAJCOM/DRUs attend the Threat WG?",
+    "Do MAJCOM/DRUs attend the EM WG?",
+    "Do MAJCOM/DRUs attend the ID WG?",
+    "Do MAJCOM/DRUs provide CARM Program-related data when requested?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 20,
+   "longest_after": 8
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-f9c6a76bb1596661",
+   "citation": "3.7.1",
+   "reason": "series",
+   "source_quote": "CARM programs shall classify information regarding CARM activities, systems, or assets in accordance with DoDM 3020.45 V3, or as required by the system/asset or capability owner security classification guides.",
+   "today": "Does the CARM program classify information regarding CARM activities, systems, or assets in accordance with DoDM 3020.45 V3 or as required by the system/asset or capability owner security classification guides?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 30,
+   "longest_after": 30
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "CHK-feb7377332779040",
+   "citation": "3.2.8.3",
+   "reason": "series",
+   "source_quote": "The system is designed to serve as a common entry point for the MAJCOM/DRUs and FOAs (as appropriate) and is one-way web shared with CCMDs, JS/J33, and ASD (HD&GS) databases and representatives as appropriate.",
+   "today": "Is the system designed to serve as a common entry point for MAJCOM/DRUs and FOAs and one-way web shared with CCMDs, JS/J33, and ASD (HD&GS) databases and representatives as appropriate?",
+   "decision": "split",
+   "lead": "Is the system designed to serve as a common entry point?",
+   "parts": [
+    "Does it serve as an entry point for MAJCOM/DRUs and FOAs?",
+    "Is it one-way web shared with CCMDs, JS/J33, and ASD (HD&GS) databases and representatives?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'as appropriate' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Does it serve...' has a pronoun as its subject",
+     "'Is it one-way...' has a pronoun as its subject",
+     "'it' added"
+    ],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'representatives as appropriate?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers",
+    "pronouns",
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 30,
+   "longest_after": 30
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "MISS-5470ef430c84b16c",
+   "citation": "2.12.6.20",
+   "reason": "series",
+   "source_quote": "This coordination should occur during the facility planning phase and continue through the construction, military construction, and installation capitalization efforts that affect, house, or support identified medical TCAs.",
+   "today": "Does the HAF CARM program office coordinate CARM priorities and best practices during the facility planning phase and through construction efforts that affect identified medical TCAs?",
+   "decision": "split",
+   "lead": "Does the HAF CARM program office coordinate CARM?",
+   "parts": [
+    "Is coordination done during the facility planning phase?",
+    "Does coordination continue through construction efforts affecting identified medical TCAs?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 26,
+   "longest_after": 10
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "MISS-90bbcd60e5ef5090",
+   "citation": "2.17.1",
+   "reason": "series",
+   "source_quote": "Establish a CARM program office within the Headquarters organization for the purpose of identifying, assessing, analyzing, and managing mission risk to AF TCAs.",
+   "today": "Does MAJCOM/DRUs have a CARM program office established within the Headquarters organization for identifying, assessing, analyzing, and managing mission risk to AF TCAs?",
+   "decision": "split",
+   "lead": "Does MAJCOM/DRUs establish a CARM program office?",
+   "parts": [
+    "Is there a CARM program office within the Headquarters organization?",
+    "Does the office identify mission risk to AF TCAs?",
+    "Does the office assess mission risk to AF TCAs?",
+    "Does the office analyze mission risk to AF TCAs?",
+    "Does the office manage mission risk to AF TCAs?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": [
+     "actor changed: today 'majcom/drus have a', lead 'majcom/drus establish a carm program office?'"
+    ]
+   },
+   "failed": [
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 23,
+   "longest_after": 23
+  },
+  {
+   "doc": "afi10-2402",
+   "id": "MISS-f467a1e85de27479",
+   "citation": "2.11.3",
+   "reason": "series",
+   "source_quote": "Provide an ISR representative to the CARM WG when requested to brief intelligence issues pertaining to TCAs.",
+   "today": "Does the Deputy Chief of Staff, Intelligence, Surveillance, and Reconnaissance (AF/A2) provide an ISR representative to the CARM WG when requested to brief intelligence issues pertaining to TCAs?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 28,
+   "longest_after": 28
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-04d6c682d9ec8cb2",
+   "citation": "A2.1.5",
+   "reason": "series",
+   "source_quote": "CSCS provides 24/7 network operations and management functions and enables key enterprise services within Air Force unclassified and classified networks.",
+   "today": "Does CSCS provide 24/7 network operations and management functions and enable key enterprise services within Air Force unclassified and classified networks?",
+   "decision": "split",
+   "lead": "Does CSCS provide network functions?",
+   "parts": [
+    "Does CSCS provide 24/7 network operations and management functions?",
+    "Do these functions enable key enterprise services in Air Force unclassified networks?",
+    "Do these functions enable key enterprise services in Air Force classified networks?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'within' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Do these functions...' has a pronoun as its subject",
+     "'these' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": [
+     "actor changed: today 'cscs provide 24/7', lead 'cscs provide network functions?'"
+    ]
+   },
+   "failed": [
+    "qualifiers",
+    "pronouns",
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 21,
+   "longest_after": 21
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-087b3a1cea1032ca",
+   "citation": "3.4.4.3",
+   "reason": "series",
+   "source_quote": "Based on the incident category, nature, and impact of the incident, determine if the computer forensics process should be initiated per CJCSM 6510.01B (T-2).",
+   "today": "Does the unit determine if the computer forensics process should be initiated based on the incident category, nature, and impact of the incident per CJCSM 6510.01B?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 26,
+   "longest_after": 26
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-128e552db266d82a",
+   "citation": "3.7.1.4",
+   "reason": "series",
+   "source_quote": "Implement proactive and reactive defensive and protective measures to prevent similar incidents from occurring in the future.",
+   "today": "Does the unit implement proactive and reactive defensive and protective measures to prevent similar incidents from occurring in the future?",
+   "decision": "split",
+   "lead": "Does the unit implement defensive and protective measures?",
+   "parts": [
+    "Are proactive defensive and protective measures implemented?",
+    "Are reactive defensive and protective measures implemented?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'protective measures to prevent similar incidents from occurring in the future?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 20,
+   "longest_after": 20
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-12f4587310efee81",
+   "citation": "3.7.2.1",
+   "reason": "series",
+   "source_quote": "If applicable, implement additional containment actions to regain control of or isolate the system and prevent further malicious activity.",
+   "today": "Does the unit implement additional containment actions if applicable to regain control of or isolate the system and prevent further malicious activity?",
+   "decision": "split",
+   "lead": "Does the unit implement additional containment actions if applicable?",
+   "parts": [
+    "Are additional containment actions implemented if applicable?",
+    "Do these actions aim to regain control of the system?",
+    "Do these actions aim to isolate the system?",
+    "Do these actions prevent further malicious activity?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Do these actions...' has a pronoun as its subject",
+     "'these' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 22,
+   "longest_after": 22
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-261b8d0d04fc5797",
+   "citation": "3.4.3.2",
+   "reason": "series",
+   "source_quote": "Ensure all appropriate DoD organizations, to include assigned Authorizing Officials (AO) and their staffs, are notified through technical and operational reporting channels.",
+   "today": "Are all appropriate DoD organizations, including assigned Authorizing Officials and their staffs, notified through technical and operational reporting channels when necessary?",
+   "decision": "split",
+   "lead": "Are all appropriate DoD organizations notified?",
+   "parts": [
+    "Are assigned Authorizing Officials notified?",
+    "Are their staffs notified?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'when' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'notified through technical'",
+     "item not covered: 'operational reporting channels when necessary?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers",
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 21,
+   "longest_after": 21
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-35b1bd2d85bb208f",
+   "citation": "3.7.2.3 (inferred)",
+   "reason": "series",
+   "source_quote": "The 624 OC should coordinate with MAJCOMs, Air National Guard (ANG), and numbered air force/warfighting headquarters to review and adjust blocking thresholds as needed.",
+   "today": "Does the 624 OC coordinate with MAJCOMs, Air National Guard (ANG), and numbered air force/warfighting headquarters to review and adjust blocking thresholds as needed?",
+   "decision": "split",
+   "lead": "Does the 624 OC coordinate with others?",
+   "parts": [
+    "Does the 624 OC coordinate with MAJCOMs?",
+    "Does the 624 OC coordinate with ANG?",
+    "Does the 624 OC coordinate with numbered air force/warfighting headquarters?",
+    "Do they review and adjust blocking thresholds as needed?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Do they review...' has a pronoun as its subject",
+     "'they' added"
+    ],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'Air National Guard (ANG)'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "pronouns",
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 24,
+   "longest_after": 24
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-3b8e46ae92743374",
+   "citation": "A2.1.6",
+   "reason": "series",
+   "source_quote": "CVA/Hunter executes vulnerability, compliance, defense and non-technical assessments, best practice reviews, penetration testing and Hunter missions on AF and DoD networks & systems.",
+   "today": "Does CVA/Hunter execute vulnerability, compliance, defense and non-technical assessments, best practice reviews, penetration testing and Hunter missions on AF and DoD networks & systems?",
+   "decision": "split",
+   "lead": "Does CVA/Hunter execute assessments and reviews?",
+   "parts": [
+    "Do they execute vulnerability, compliance, defense and non-technical assessments?",
+    "Do they conduct best practice reviews?",
+    "Do they perform penetration testing?",
+    "Do they carry out Hunter missions on AF and DoD networks & systems?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Do they carry...' has a pronoun as its subject",
+     "'Do they conduct...' has a pronoun as its subject",
+     "'Do they execute...' has a pronoun as its subject",
+     "'Do they perform...' has a pronoun as its subject",
+     "'they' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": [
+     "actor changed: today 'cva/hunter execute vulnerability,', lead 'cva/hunter execute assessments and reviews?'"
+    ]
+   },
+   "failed": [
+    "pronouns",
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 24,
+   "longest_after": 24
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-44cb9366f2e1e2e9",
+   "citation": "3.3 (inferred)",
+   "reason": "long",
+   "source_quote": "Depending upon the identifying source and method used to detect the activity, all affected parties and tasked units gather/report preliminary information and coordinate reporting and response actions among themselves and with other organizations as appropriate.",
+   "today": "Do all affected parties and tasked units gather/report preliminary information and coordinate reporting and response actions among themselves and with other organizations as appropriate depending upon the identifying source and method used to detect the activity?",
+   "decision": "split",
+   "lead": "Do all affected parties and tasked units gather/report preliminary information?",
+   "parts": [
+    "Is preliminary information gathered/reported based on the identifying source?",
+    "Is preliminary information gathered/reported based on the detection method?",
+    "Do all affected parties coordinate reporting actions among themselves?",
+    "Do all affected parties coordinate response actions with other organizations as appropriate?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'upon' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'method used to detect the activity?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers",
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 36,
+   "longest_after": 36
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-4bbd23ca2d6d6017",
+   "citation": "4.4",
+   "reason": "series",
+   "source_quote": "The sponsoring MAJCOM Staff element will establish the ROEs and SOPs for the exercise participants and will ensure the ROEs and SOPs address the issue of managing real world and exercise events and incidents.",
+   "today": "Does the sponsoring MAJCOM Staff element establish ROEs and SOPs for the exercise participants and ensure these documents address managing real world and exercise events and incidents?",
+   "decision": "split",
+   "lead": "Does the sponsoring MAJCOM Staff element establish ROEs and SOPs?",
+   "parts": [
+    "Are ROEs established for exercise participants?",
+    "Are SOPs established for exercise participants?",
+    "Do these documents address managing real world events and incidents?",
+    "Do these documents address managing exercise events and incidents?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Do these documents...' has a pronoun as its subject"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 27,
+   "longest_after": 27
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-4e010940bc7194ff",
+   "citation": "4.3",
+   "reason": "series",
+   "source_quote": "The sponsoring command will establish the ROEs and SOPs for the exercise participants and will ensure the ROEs and SOPs address the issue of managing real world and exercise events and incidents.",
+   "today": "Does the sponsoring command establish ROEs and SOPs for exercise participants that address managing real world and exercise events and incidents?",
+   "decision": "split",
+   "lead": "Does the sponsoring command establish ROEs and SOPs for exercise participants?",
+   "parts": [
+    "Are ROEs established for exercise participants?",
+    "Are SOPs established for exercise participants?",
+    "Do the ROEs address managing real world and exercise events and incidents?",
+    "Do the SOPs address managing real world and exercise events and incidents?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 21,
+   "longest_after": 12
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-502a529e534dbaf4",
+   "citation": "1.1.3",
+   "reason": "long",
+   "source_quote": "This Instruction also applies to incidents involving systems which are not directly connected to or part of an AF network, e.g., supervisory control and data acquisition (SCADA) systems or information systems that are an integral part of a weapon system and may connect to the DoDIN indirectly through the use of removable media or a wireless connection.",
+   "today": "Does this Instruction apply to incidents involving systems which are not directly connected to or part of an AF network, such as SCADA systems or information systems integral to weapon systems and may connect indirectly through removable media or wireless connection?",
+   "decision": "split",
+   "lead": "Does this Instruction apply to incidents involving systems?",
+   "parts": [
+    "Are the systems not directly connected to or part of an AF network?",
+    "Do SCADA systems fall under this Instruction?",
+    "Do information systems integral to weapon systems fall under this Instruction?",
+    "Can these systems connect indirectly through removable media or wireless connection?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Can these systems...' has a pronoun as its subject",
+     "'Does this Instruction...' has a pronoun as its subject",
+     "'these' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 41,
+   "longest_after": 41
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-60eb3cb45d49accf",
+   "citation": "2.5.5.2",
+   "reason": "series",
+   "source_quote": "CFPs: Provide the servicing ACCC/MCCC (if applicable), CSCS units, ACD units, and 624 OC all necessary information and data (i.e., system and anti-virus logs) requested to assist with incident/event investigations within the timelines specified.",
+   "today": "Does the CFP provide all necessary information and data requested by the servicing ACCC/MCCC, CSCS units, ACD units, and 624 OC to assist with incident/event investigations within specified timelines?",
+   "decision": "split",
+   "lead": "Does the CFP provide necessary information for incident/event investigations?",
+   "parts": [
+    "Is all necessary information provided to the servicing ACCC/MCCC?",
+    "Is all necessary information provided to CSCS units?",
+    "Is all necessary information provided to ACD units?",
+    "Is all necessary information provided to 624 OC?",
+    "Are the timelines specified followed?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'within' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers"
+   ],
+   "final": "today",
+   "today_words": 29,
+   "longest_after": 29
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-624a83b7c61a92ee",
+   "citation": "3.1",
+   "reason": "series",
+   "source_quote": "Units operating the ACD and AFINC weapon systems monitor and record suspicious and unauthorized network and information systems access and activity on AF networks.",
+   "today": "Do units operating the ACD and AFINC weapon systems monitor and record suspicious and unauthorized network and information systems access and activity on AF networks?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 25,
+   "longest_after": 25
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-63c38c693d0223de",
+   "citation": "3.5.2.1.2",
+   "reason": "series",
+   "source_quote": "The commander and supporting CNDSP will coordinate with LE/CI when initial investigation indicates the possibility of criminal or hostile intelligence activity (T-2).",
+   "today": "Does the commander and supporting CNDSP coordinate with LE/CI when initial investigation indicates the possibility of criminal or hostile intelligence activity?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 21,
+   "longest_after": 21
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-652393c359d27a25",
+   "citation": "2.5.5",
+   "reason": "series",
+   "source_quote": "CFPs implement Cyber Tasking Orders (CTOs) and messages received from the 624 OC and/or the AFSPC Command Center.",
+   "today": "Does the CFP implement Cyber Tasking Orders (CTOs) and messages received from the 624 OC and/or the AFSPC Command Center?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 20,
+   "longest_after": 20
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-6a18c64371c827e8",
+   "citation": "3.6.1.2",
+   "reason": "series",
+   "source_quote": "Characterize and communicate the potential impact of the incident. This includes identifying and sanitizing any compromised AF data.",
+   "today": "Does the unit characterize and communicate the potential impact of the incident, including identifying and sanitizing any compromised AF data?",
+   "decision": "split",
+   "lead": "Does the unit characterize and communicate the potential impact of the incident?",
+   "parts": [
+    "Is the potential impact characterized?",
+    "Is the potential impact communicated?",
+    "Are any compromised AF data identified?",
+    "Are any compromised AF data sanitized?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'including identifying'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 20,
+   "longest_after": 20
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-762b83c1486ec628",
+   "citation": "2.5.1.1.2",
+   "reason": "long",
+   "source_quote": "24 AF/CC, when acting as AFCYBER/CC or when executing missions delegated by AFSPC/CC: Exercises specific compliance enforcement and directive authority to task the NOSs in response to network events that involve multiple MAJCOMs, affect the preponderance of the AF network, or are time-critical to assure network availability and security.",
+   "today": "Does 24 AF/CC exercise specific compliance enforcement and directive authority to task the NOSs in response to network events that involve multiple MAJCOMs, affect the preponderance of the AF network, or are time-critical to assure network availability and security?",
+   "decision": "split",
+   "lead": "Does 24 AF/CC exercise specific compliance enforcement and directive authority?",
+   "parts": [
+    "Is this done in response to events involving multiple MAJCOMs?",
+    "Is it done for events affecting the preponderance of the AF network?",
+    "Is it done for time-critical events to assure network availability and security?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Is it done...' has a pronoun as its subject",
+     "'Is this done...' has a pronoun as its subject",
+     "'it' added",
+     "'this' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 39,
+   "longest_after": 39
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-778e0539e2d20d2e",
+   "citation": "1.3.2",
+   "reason": "series",
+   "source_quote": "Tier Two provides C/S/As DCO and DoDIN Operations direction and support and responds to direction from Tier One.",
+   "today": "Does Tier Two provide DCO and DoDIN Operations direction and support to C/S/As and respond to direction from Tier One?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 20,
+   "longest_after": 20
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-78b666f18de69125",
+   "citation": "2.5.5.2",
+   "reason": "long",
+   "source_quote": "CFPs: If unable to provide the necessary information/data or meet the specified timelines due to technical limitations or other factors, provide a detailed explanation (along with a get well date, if applicable) to the 624 OC, CSCS units, ACD units, other tasked/participating units, and ACCC/MCCC (if applicable), for tracking, COA modification, and trending purposes.",
+   "today": "If unable to provide necessary information/data or meet specified timelines due to technical limitations, does the CFP provide a detailed explanation including a get well date (if applicable) to the 624 OC, CSCS units, ACD units, other tasked/participating units, and ACCC/MCCC for tracking purposes?",
+   "decision": "split",
+   "lead": "Does the CFP provide a detailed explanation when unable to meet requirements?",
+   "parts": [
+    "Is a detailed explanation provided if technical limitations prevent providing necessary information/data or meeting timelines?",
+    "If applicable, is a get well date included in the explanation?",
+    "Is the detailed explanation sent to the 624 OC for tracking purposes?",
+    "Is the detailed explanation sent to CSCS units for tracking purposes?",
+    "Is the detailed explanation sent to ACD units for tracking purposes?",
+    "Is the detailed explanation sent to other tasked/participating units for tracking purposes?",
+    "If applicable, is the detailed explanation sent to ACCC/MCCC for tracking purposes?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [
+     "7 parts (need 2 to 5)",
+     "part 2 is a question but not yes/no",
+     "part 7 is a question but not yes/no"
+    ],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "shape"
+   ],
+   "final": "today",
+   "today_words": 44,
+   "longest_after": 44
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-798238e5f07b1435",
+   "citation": "1.2.3",
+   "reason": "long",
+   "source_quote": "In addition to the procedures specified in this Instruction, incidents which may involve the compromise of PII will also be reported according to the guidelines in paragraph 1.1.2.4 of AFI 33-332, The Air Force Privacy and Civil Liberties Program, and Appendix A, Table 1, of Office of the Secretary of Defense (OSD) Memorandum OSD 06227-09, Safeguarding Against and Responding to the Breach of Personally Identifiable Information.",
+   "today": "Does the unit report incidents which may involve the compromise of PII according to the guidelines in paragraph 1.1.2.4 of AFI 33-332 and Appendix A, Table 1, of OSD Memorandum OSD 06227-09?",
+   "decision": "split",
+   "lead": "Does the unit report incidents which may involve PII?",
+   "parts": [
+    "Is reporting done according to paragraph 1.1.2.4 of AFI 33-332?",
+    "Is reporting done according to Appendix A, Table 1, of OSD Memorandum OSD 06227-09?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 32,
+   "longest_after": 14
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-7adbb787a3343687",
+   "citation": "Table 3.1",
+   "reason": "series",
+   "source_quote": "Upon detection or notification of an incident, contact the 624 OC for assessment of the incident and assignment of an Incident Report Identifier (IRID) (upon validation).",
+   "today": "Upon detection or notification of an incident, does the CST/CSL contact the 624 OC for assessment of the incident and assignment of an IRID?",
+   "decision": "split",
+   "lead": "Does the CST/CSL contact the 624 OC upon detection or notification of an incident?",
+   "parts": [
+    "Is the incident assessed by the 624 OC?",
+    "Is an IRID assigned upon validation?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 24,
+   "longest_after": 14
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-7e9e92ab6cbcbe20",
+   "citation": "2.5.1.1.4",
+   "reason": "long",
+   "source_quote": "24 AF/CC, when acting as AFCYBER/CC or when executing missions delegated by AFSPC/CC: Establishes requirements and direction for AF Attack, Sensing and Warning under responsibilities for the National Security Incident Program.",
+   "today": "Does 24 AF/CC establish requirements and direction for AF Attack, Sensing and Warning under responsibilities for the National Security Incident Program when acting as AFCYBER/CC or executing missions delegated by AFSPC/CC?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 31,
+   "longest_after": 31
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-8e55098372ca524e",
+   "citation": "3.5.2.1.3",
+   "reason": "series",
+   "source_quote": "Carefully decide on containment actions that may affect the ability to acquire and preserve data about the incident.",
+   "today": "Do network technicians and incident handling personnel carefully decide on containment actions that may affect the ability to acquire and preserve data about the incident?",
+   "decision": "split",
+   "lead": "Do network technicians and incident handling personnel decide on containment actions?",
+   "parts": [
+    "Is the decision made carefully?",
+    "Does it affect the ability to acquire data?",
+    "Does it affect the ability to preserve data?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Does it affect...' has a pronoun as its subject",
+     "'it' added"
+    ],
+    "modality": [
+     "permission / recommendation word of today's question is gone"
+    ],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns",
+    "modality"
+   ],
+   "final": "today",
+   "today_words": 25,
+   "longest_after": 25
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-92ad912efe3ed26e",
+   "citation": "2.3.1",
+   "reason": "long",
+   "source_quote": "The AFOSI: It is also the sole AF agency responsible for conducting liaison with federal, state, local and foreign nation law enforcement, counterintelligence, and security agencies for matters falling within the AFOSI mission.",
+   "today": "Is the AFOSI the sole Air Force agency responsible for conducting liaison with federal, state, local and foreign nation law enforcement, counterintelligence, and security agencies for matters falling within the AFOSI mission?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 32,
+   "longest_after": 32
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-9d8b303c25c4bea9",
+   "citation": "3.7.2.4",
+   "reason": "series",
+   "source_quote": "Local commanders, with the assistance of the supporting communications element, will determine the adequacy of final restoration or decommissioning actions, and are responsible for ensuring the actions are completed (T-2).",
+   "today": "Do local commanders, with the assistance of the supporting communications element, determine the adequacy of final restoration or decommissioning actions and ensure these actions are completed?",
+   "decision": "split",
+   "lead": "Do local commanders handle final restoration or decommissioning actions?",
+   "parts": [
+    "Do local commanders determine the adequacy of final restoration or decommissioning actions with assistance?",
+    "Do local commanders ensure that final restoration or decommissioning actions are completed?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'with the assistance of the supporting communications element'"
+    ],
+    "actor": [
+     "actor changed: today 'local commanders, with', lead 'local commanders handle final restoration or'"
+    ]
+   },
+   "failed": [
+    "coverage",
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 26,
+   "longest_after": 26
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-9ef2ed63c49e3a36",
+   "citation": "2.3.1",
+   "reason": "series",
+   "source_quote": "The AFOSI: Is the sole AF entity with responsibility for conducting felony criminal investigations and counterintelligence activities in and through cyberspace.",
+   "today": "Is the AFOSI the sole Air Force entity responsible for conducting felony criminal investigations and counterintelligence activities in and through cyberspace?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 21,
+   "longest_after": 21
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-a110ac9bd785a650",
+   "citation": "3.6.2.5",
+   "reason": "series",
+   "source_quote": "Determine within one hour if the event or incident meets AF Operational Reporting (OPREP-3) and/or USSTRATCOM or USCYBERCOM Commander's Critical Information Requirements (CCIR) reporting requirements.",
+   "today": "Did the unit determine within one hour if the event or incident meets AF Operational Reporting (OPREP-3) and/or USSTRATCOM or USCYBERCOM Commander's Critical Information Requirements (CCIR) reporting requirements?",
+   "decision": "split",
+   "lead": "Did the unit determine within one hour?",
+   "parts": [
+    "Does the event meet AF Operational Reporting (OPREP-3)?",
+    "Does the event meet USSTRATCOM Commander's Critical Information Requirements (CCIR)?",
+    "Does the event meet USCYBERCOM Commander's Critical Information Requirements (CCIR)?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'if' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers"
+   ],
+   "final": "today",
+   "today_words": 28,
+   "longest_after": 28
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-aedca5ef426d473e",
+   "citation": "3.5.1.4",
+   "reason": "series",
+   "source_quote": "Maintain and update the incident report and communicate updates through the appropriate technical and operational command channels.",
+   "today": "Does the unit maintain and update the incident report and communicate updates through the appropriate technical and operational command channels?",
+   "decision": "split",
+   "lead": "Does the unit handle the incident report?",
+   "parts": [
+    "Is the incident report maintained?",
+    "Is the incident report updated?",
+    "Are updates communicated through the appropriate technical command channels?",
+    "Are updates communicated through the appropriate operational command channels?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": [
+     "actor changed: today 'the unit maintain', lead 'the unit handle the incident report?'"
+    ]
+   },
+   "failed": [
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 20,
+   "longest_after": 20
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-b71b28994609fb42",
+   "citation": "3.3.2.1",
+   "reason": "series",
+   "source_quote": "Ensure all suspicious activity is detected and reported so that further analysis can take place to determine if it is a reportable event or incident.",
+   "today": "Is all suspicious activity detected and reported so that further analysis can take place to determine if it is a reportable event or incident?",
+   "decision": "split",
+   "lead": "Is suspicious activity handled properly?",
+   "parts": [
+    "Is all suspicious activity detected?",
+    "Is all suspicious activity reported?",
+    "Does further analysis take place to determine if it is a reportable event or incident?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [
+     "permission / recommendation word of today's question is gone"
+    ],
+    "coverage": [],
+    "actor": [
+     "actor changed: today 'all suspicious activity', lead 'suspicious activity handled properly?'"
+    ]
+   },
+   "failed": [
+    "modality",
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 24,
+   "longest_after": 24
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-ba5c1d68390527a0",
+   "citation": "3.4.2.2",
+   "reason": "series",
+   "source_quote": "In order to support incident investigation, CSCS units and other applicable units will retain proxy server, firewall and Domain Name Server audit logs for a minimum of one year in accordance with the AF Records Disposition Schedule, Series 33, Table 25, Rule 8.00 (T 33-25 R 8), unless a longer retention period is specified in other guidance (T-2).",
+   "today": "Do CSCS units and other applicable units retain proxy server, firewall and Domain Name Server audit logs for a minimum of one year?",
+   "decision": "split",
+   "lead": "Do CSCS units and other applicable units retain audit logs?",
+   "parts": [
+    "Are proxy server audit logs retained for at least one year?",
+    "Are firewall audit logs retained for at least one year?",
+    "Are Domain Name Server audit logs retained for at least one year?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 23,
+   "longest_after": 12
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-c0d13f0fbe0fa474",
+   "citation": "2.5.1.1.6",
+   "reason": "long",
+   "source_quote": "24 AF/CC, when acting as AFCYBER/CC or when executing missions delegated by AFSPC/CC: In his/her role as AF component commander (AFCYBER/CC) to USCYBERCOM, 24 AF/CC ensures AF forces perform the mission and tasks assigned by USCYBERCOM to include the reporting and coordination of network events and incidents.",
+   "today": "Does 24 AF/CC ensure that AF forces perform the mission and tasks assigned by USCYBERCOM, including reporting and coordination of network events and incidents, when acting as AFCYBER/CC or executing missions delegated by AFSPC/CC?",
+   "decision": "split",
+   "lead": "Does 24 AF/CC ensure AF forces perform assigned tasks?",
+   "parts": [
+    "Do AF forces perform the mission and tasks assigned by USCYBERCOM?",
+    "Does 24 AF/CC report network events and incidents?",
+    "Does 24 AF/CC coordinate network events and incidents?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'when' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'including reporting'",
+     "item not covered: 'when acting as AFCYBER/CC'",
+     "item not covered: 'executing missions delegated by AFSPC/CC?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers",
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 34,
+   "longest_after": 34
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-cfb202bdb4edf59e",
+   "citation": "2.5.1",
+   "reason": "long",
+   "source_quote": "In accordance with AFI 17-201, Command and Control for Cyberspace Operations, the Commander, AF Space Command (AFSPC/CC) is responsible for the overall command and control, security and defense of the AF Information Network (AFIN), and for the command, control, implementation, security, operation, maintenance, sustainment, configuration, and defense of the AF Network (AFNET)/AF Network-Secure (AFNET-S).",
+   "today": "Is the Commander, AF Space Command (AFSPC/CC), responsible for the overall command and control, security and defense of the AF Information Network (AFIN) and for the command, control, implementation, security, operation, maintenance, sustainment, configuration, and defense of the AF Network (AFNET)/AF Network-Secure (AFNET-S)?",
+   "decision": "split",
+   "lead": "Is the Commander, AF Space Command (AFSPC/CC), responsible for the networks?",
+   "parts": [
+    "Is the Commander responsible for the overall command and control, security and defense of the AF Information Network (AFIN)?",
+    "Is the Commander responsible for the command, control, implementation, security, operation, maintenance, sustainment, configuration, and defense of the AF Network (AFNET)/AF Network-Secure (AFNET-S)?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 43,
+   "longest_after": 23
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-eab587fa6355e63b",
+   "citation": "4.2",
+   "reason": "series",
+   "source_quote": "The senior Air Force representative from each participating organization will ensure the ROEs and SOPs address the issue of managing real world and exercise events and incidents.",
+   "today": "Does the senior Air Force representative from each participating organization ensure that the ROEs and SOPs address the issue of managing real world and exercise events and incidents?",
+   "decision": "split",
+   "lead": "Does the senior Air Force representative ensure the ROEs and SOPs?",
+   "parts": [
+    "Do the ROEs address managing real world and exercise events?",
+    "Do the SOPs address managing real world and exercise events?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'each' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'incidents?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers",
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 28,
+   "longest_after": 28
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-efa82b52f0552758",
+   "citation": "2.5.4.2",
+   "reason": "series",
+   "source_quote": "MCCCs: Coordinate DCO and DoDIN Operations COA planning and execution with the appropriate I-NOSC, the 624 OC and applicable 24 AF-designated units as appropriate.",
+   "today": "Does the MCCC coordinate DCO and DoDIN Operations COA planning and execution with the appropriate I-NOSC, the 624 OC and applicable 24 AF-designated units as appropriate?",
+   "decision": "split",
+   "lead": "Does the MCCC coordinate DCO and DoDIN Operations COA planning and execution?",
+   "parts": [
+    "Is coordination with the appropriate I-NOSC done?",
+    "Is coordination with the 624 OC done?",
+    "Is coordination with applicable 24 AF-designated units as appropriate done?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 26,
+   "longest_after": 12
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-f58e1375c7b81b1c",
+   "citation": "2.5.1.1.8",
+   "reason": "series",
+   "source_quote": "Air Force Cyber Defense (ACD) performs continuous operations to prevent, detect and respond to intrusions and attacks against Air Force networks.",
+   "today": "Does Air Force Cyber Defense perform continuous operations to prevent, detect and respond to intrusions and attacks against Air Force networks?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 21,
+   "longest_after": 21
+  },
+  {
+   "doc": "afi17-203",
+   "id": "CHK-f8986f2a42dc1f25",
+   "citation": "2.5.5",
+   "reason": "series",
+   "source_quote": "CFPs: Execute the operational direction of the 624 OC and CSCS units for DCO and DoDIN Operations COA development and execution.",
+   "today": "Does the CFP execute the operational direction of the 624 OC and CSCS units for DCO and DoDIN Operations COA development and execution?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 23,
+   "longest_after": 23
+  },
+  {
+   "doc": "afi17-203",
+   "id": "MISS-74e0fcb4bef0a56e",
+   "citation": "3.7.1.4",
+   "reason": "long",
+   "source_quote": "Coordinate with the appropriate AFSPC Weapon System Team Leads to ensure that lessons learned can be used to improve existing capabilities or justify the development of new ones.",
+   "today": "Does the unit coordinate with the appropriate AFSPC Weapon System Team Leads to ensure that lessons learned can be used to improve existing capabilities or justify the development of new ones?",
+   "decision": "split",
+   "lead": "Does the unit coordinate with the appropriate AFSPC Weapon System Team Leads?",
+   "parts": [
+    "Can lessons learned be used to improve existing capabilities?",
+    "Can lessons learned justify the development of new ones?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 31,
+   "longest_after": 12
+  },
+  {
+   "doc": "afi17-203",
+   "id": "MISS-a7da48daa4c27f9d",
+   "citation": "3.7.1.5",
+   "reason": "series",
+   "source_quote": "Collaborate with LE or IC partners to identify investigative or intelligence equities which may need to be considered before certain containment measures are taken.",
+   "today": "Does the unit collaborate with LE or IC partners to identify investigative or intelligence equities which may need to be considered before certain containment measures are taken?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 27,
+   "longest_after": 27
+  },
+  {
+   "doc": "afi17-203",
+   "id": "MISS-bd26202f4133e76e",
+   "citation": "2.5.3.3",
+   "reason": "long",
+   "source_quote": "Coordinate with and inform the 624 OC, MCCC, CFP, and appropriate weapon system units on all corrective actions associated with the investigation and mitigation of events and incidents.",
+   "today": "Does the I-NOSC coordinate with and inform the 624 OC, MCCC, CFP, and appropriate weapon system units on all corrective actions associated with the investigation and mitigation of events and incidents?",
+   "decision": "split",
+   "lead": "Does the I-NOSC coordinate and inform on corrective actions?",
+   "parts": [
+    "Is the 624 OC informed?",
+    "Is the MCCC informed?",
+    "Is the CFP informed?",
+    "Are appropriate weapon system units informed?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'all' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'mitigation of events'",
+     "item not covered: 'incidents?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers",
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 31,
+   "longest_after": 31
+  },
+  {
+   "doc": "afi17-203",
+   "id": "MISS-ecf7715dc6d0d339",
+   "citation": "3.7",
+   "reason": "long",
+   "source_quote": "The local CFP, with the assistance of the mission owner, the servicing MCCC/ACCC and applicable CSCS units, will develop a Plan of Action and Milestones (POA&M) detailing the required actions and responsible offices/individuals to guide system restoration and prevention of similar incidents in the future (T-2).",
+   "today": "Does the local CFP, with assistance from the mission owner, servicing MCCC/ACCC, and applicable CSCS units, develop a Plan of Action and Milestones (POA&M) to guide system restoration and prevention of similar incidents?",
+   "decision": "split",
+   "lead": "Does the local CFP develop a POA&M?",
+   "parts": [
+    "Is the mission owner assisted in developing the POA&M?",
+    "Is the servicing MCCC/ACCC assisted in developing the POA&M?",
+    "Are applicable CSCS units involved in developing the POA&M?",
+    "Does the POA&M guide system restoration and prevention of similar incidents?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'develop a Plan of Action'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 33,
+   "longest_after": 33
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-01de2716d93e4c50",
+   "citation": "2.14.6",
+   "reason": "series",
+   "source_quote": "Serve as focal point/enforcement for the Wing/Delta's implementation of DoDI 8140.02, DoDM 8140.03, and this manual.",
+   "today": "Does the WCO/DCO serve as the focal point/enforcement for the Wing/Delta's implementation of DoDI 8140.02, DoDM 8140.03, and this manual?",
+   "decision": "split",
+   "lead": "Does the WCO/DCO serve as focal point/enforcement for Wing/Delta's implementation?",
+   "parts": [
+    "Is DoDI 8140.02 covered?",
+    "Is DoDM 8140.03 covered?",
+    "Is this manual covered?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Is this manual...' has a pronoun as its subject"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 20,
+   "longest_after": 20
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-02fcdfd5f464816e",
+   "citation": "4.1.8",
+   "reason": "series",
+   "source_quote": "This manual considers the DoD Enterprise and DAF's ongoing transition and paradigm shift from DoDD 8570 series policies to DoDD 8140 series policies and addresses this paradigm shift as follows: All civilian, military, or contractor personnel who are currently filling cyber workforce positions as of the date of this publication have until 15 Feb 2026 to meet Foundational Qualifications.",
+   "today": "Does the unit ensure that all civilian, military, or contractor personnel currently filling cyber workforce positions have until 15 Feb 2026 to meet Foundational Qualifications?",
+   "decision": "split",
+   "lead": "Does the unit ensure all personnel in cyber workforce positions have time?",
+   "parts": [
+    "Do civilian, military, or contractor personnel currently filling cyber roles have until 15 Feb 2026 to meet Foundational Qualifications?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [
+     "1 parts (need 2 to 5)"
+    ],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "shape"
+   ],
+   "final": "today",
+   "today_words": 25,
+   "longest_after": 25
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-07b27a1d20ac9283",
+   "citation": "2.4.3",
+   "reason": "series",
+   "source_quote": "As Program Element Monitor (PEM), work with SAF/CN to provide programming, sustainment, and budget guidance to FLDCOMs and PMOs for cyberspace workforce management and improvement programs to include certification exam and maintenance fee costs, and computer-based training.",
+   "today": "Does the Program Element Monitor work with SAF/CN to provide programming, sustainment, and budget guidance to FLDCOMs and PMOs for cyberspace workforce management and improvement programs?",
+   "decision": "split",
+   "lead": "Does the Program Element Monitor work with SAF/CN?",
+   "parts": [
+    "Is programming guidance provided to FLDCOMs and PMOs?",
+    "Is sustainment guidance provided to FLDCOMs and PMOs?",
+    "Is budget guidance provided to FLDCOMs and PMOs?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'PMOs for cyberspace workforce management'",
+     "item not covered: 'improvement programs?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 26,
+   "longest_after": 26
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-0a53789b19d8a7a7",
+   "citation": "2.15.12",
+   "reason": "long",
+   "source_quote": "Ensure contractor cybersecurity requirements are evaluated for position sensitivity using the Office of Personnel Management Position Designation Tool, available at https://www.opm.gov/suitability/suitability-executive-agent/position-designation-tool as required by 5 C.F.R. § 1400.",
+   "today": "Do PMs, System Managers, PMOs, Test Agencies, and all Units ensure that contractor cybersecurity requirements are evaluated for position sensitivity using the OPM Position Designation Tool as required by 5 C.F.R. § 1400?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 33,
+   "longest_after": 33
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-0bf5ee4944825079",
+   "citation": "2.2.17",
+   "reason": "long",
+   "source_quote": "Ensure career-field specific requirements are coordinated with the respective career field manager for integration into Career Field Training and Education Plan, Specialty Training Standard, or Course Training Standard as appropriate.",
+   "today": "Does the DAF Chief Information Officer ensure that career-field specific requirements are coordinated with the respective career field manager for integration into Career Field Training and Education Plan, Specialty Training Standard, or Course Training Standard as appropriate?",
+   "decision": "split",
+   "lead": "Does the DAF Chief Information Officer ensure coordination of career-field specific requirements?",
+   "parts": [
+    "Are career-field specific requirements coordinated with the respective career field manager?",
+    "Is integration into Career Field Training and Education Plan ensured?",
+    "Is integration into Specialty Training Standard ensured?",
+    "Is integration into Course Training Standard ensured?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'as appropriate' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers"
+   ],
+   "final": "today",
+   "today_words": 37,
+   "longest_after": 37
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-1cbb4677c843c04b",
+   "citation": "2.15.14",
+   "reason": "series",
+   "source_quote": "Coordinate with the Contracting Officer to ensure security background investigation and clearance requirements (when appropriate) are incorporated into the contract and associated SOW or PWS (T-1).",
+   "today": "Does the unit coordinate with the Contracting Officer to ensure security background investigation and clearance requirements are incorporated into the contract and associated SOW or PWS when appropriate?",
+   "decision": "split",
+   "lead": "Does the unit coordinate with the Contracting Officer?",
+   "parts": [
+    "Are security background investigation and clearance requirements incorporated into the contract when appropriate?",
+    "Are security background investigation and clearance requirements incorporated into the associated SOW or PWS when appropriate?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 28,
+   "longest_after": 16
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-1cfc1aee588ebdc6",
+   "citation": "2.12.1",
+   "reason": "long",
+   "source_quote": "Upon the request of the appropriate DAF Career Field Manager, update the appropriate AF Enlisted Classification Directory (AFECD) or AF Officer Classification Directory (AFOCD) with SEIs to track the military cybersecurity workforce roles and proficiency levels.",
+   "today": "Does the Air Force Personnel Center update the appropriate AF Enlisted Classification Directory (AFECD) or AF Officer Classification Directory (AFOCD) with SEIs to track the military cybersecurity workforce roles and proficiency levels upon the request of the appropriate DAF Career Field Manager?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 42,
+   "longest_after": 42
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-25a7d67a66dd90b8",
+   "citation": "2.3.5",
+   "reason": "series",
+   "source_quote": "Participate as member on various DoD cyberspace workforce forums and groups.",
+   "today": "Does the Deputy Chief of Staff for Intelligence, Surveillance, Reconnaissance and Cyber Effects Operations (AF/A2/6) participate as a member on various DoD cyberspace workforce forums and groups?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 27,
+   "longest_after": 27
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-25b0c10c18356269",
+   "citation": "2.9.1",
+   "reason": "long",
+   "source_quote": "Provide oversight over the cyberspace workforce within their respective commands, agencies, and units, ensuring the cyberspace workforce is identified, trained, qualified, tracked and managed in accordance with DoD and DAF Cyberspace Workforce Management Program directives and policies (e.g., DoDD 8140.01, DoDI 8140.02, DoDM 8140.03 and this manual).",
+   "today": "Does the unit provide oversight over the cyberspace workforce within its command, ensuring the workforce is identified, trained, qualified, tracked and managed in accordance with DoD and DAF Cyberspace Workforce Management Program directives and policies?",
+   "decision": "split",
+   "lead": "Does the unit provide oversight over the cyberspace workforce?",
+   "parts": [
+    "Is the cyberspace workforce identified within the command?",
+    "Is the workforce trained in accordance with DoD and DAF Cyberspace Workforce Management Program directives and policies?",
+    "Is the workforce qualified in accordance with DoD and DAF Cyberspace Workforce Management Program directives and policies?",
+    "Is the workforce tracked in accordance with DoD and DAF Cyberspace Workforce Management Program directives and policies?",
+    "Is the workforce managed in accordance with DoD and DAF Cyberspace Workforce Management Program directives and policies?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 35,
+   "longest_after": 17
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-2ae00643b0384401",
+   "citation": "2.15.1",
+   "reason": "series",
+   "source_quote": "Identify, track, and manage all cyberspace workforce positions according to guidance as issued by the appropriate career field manager and this manual.",
+   "today": "Does the unit identify, track, and manage all cyberspace workforce positions according to guidance issued by the appropriate career field manager and this manual?",
+   "decision": "split",
+   "lead": "Does the unit manage cyberspace workforce positions?",
+   "parts": [
+    "Does the unit identify all cyberspace workforce positions?",
+    "Does the unit track all cyberspace workforce positions?",
+    "Is management done according to guidance issued by the appropriate career field manager and this manual?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": [
+     "actor changed: today 'the unit identify,', lead 'the unit manage cyberspace workforce positions?'"
+    ]
+   },
+   "failed": [
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 24,
+   "longest_after": 24
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-2b21ba9a385dd2be",
+   "citation": "2.19",
+   "reason": "series",
+   "source_quote": "Review all manpower positions, duty descriptions, and contract requirements to determine if cyberspace tasks are required of that position (T-0).",
+   "today": "Do supervisors review all manpower positions, duty descriptions, and contract requirements to determine if cyberspace tasks are required of those positions?",
+   "decision": "split",
+   "lead": "Do supervisors review all manpower positions?",
+   "parts": [
+    "Are all manpower positions reviewed?",
+    "Are all duty descriptions reviewed?",
+    "Are all contract requirements reviewed?",
+    "Is it determined if cyberspace tasks are required of those positions?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Is it determined...' has a pronoun as its subject",
+     "'it' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 21,
+   "longest_after": 21
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-30fc90d488088d8a",
+   "citation": "Figure A2.3",
+   "reason": "long",
+   "source_quote": "I understand, acknowledge and consent to the following: Communications using, or data stored on, this Information System are not private; are subject to routine monitoring, interception and search; and may be disclosed or used for any U.S. Governmentauthorized purpose.",
+   "today": "Do users understand, acknowledge, and consent to the fact that communications using, or data stored on, this Information System are not private; are subject to routine monitoring, interception and search; and may be disclosed or used for any U.S. Government-authorized purpose?",
+   "decision": "split",
+   "lead": "Do users understand the terms of using this Information System?",
+   "parts": [
+    "Do users understand communications on this system are not private?",
+    "Do users acknowledge routine monitoring and interception of data?",
+    "Do users consent to possible disclosure for U.S. Government-authorized purposes?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'any' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'data stored on'",
+     "item not covered: 'search'"
+    ],
+    "actor": [
+     "actor changed: today 'users understand, acknowledge,', lead 'users understand the terms of using'"
+    ]
+   },
+   "failed": [
+    "qualifiers",
+    "coverage",
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 41,
+   "longest_after": 41
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-35e15a340ce2b048",
+   "citation": "2.17.6",
+   "reason": "series",
+   "source_quote": "Ensure recording and tracking of cyberspace requirements of all foreign nationals and contractors per paragraph 1.3 of this manual.",
+   "today": "Do the ISSMs ensure recording and tracking of cyberspace requirements of all foreign nationals and contractors as specified in paragraph 1.3 of this manual?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 24,
+   "longest_after": 24
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-3ae35b57d37cef0d",
+   "citation": "2.15.11",
+   "reason": "long",
+   "source_quote": "Subsequent to identification of the requirement, and prior to issuance of a contract solicitation that requires a contractor to be provided cybersecurity requirements, the PM shall provide the Contracting Officer with an itemized list of required deliverables in the format specified by the contracting officer, information required under DFARS subpart 239.71, and any additional information required for the acquisition.",
+   "today": "Did the PM provide the Contracting Officer with an itemized list of required deliverables, information under DFARS subpart 239.71, and any additional acquisition information prior to issuing a contract solicitation requiring cybersecurity requirements from a contractor?",
+   "decision": "split",
+   "lead": "Did the PM provide the Contracting Officer with required information before issuing a contract solicitation?",
+   "parts": [
+    "Was an itemized list of required deliverables provided to the Contracting Officer?",
+    "Was information under DFARS subpart 239.71 provided to the Contracting Officer?",
+    "Was any additional acquisition information provided to the Contracting Officer?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 36,
+   "longest_after": 15
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-3b405e58cc816486",
+   "citation": "4.1.17",
+   "reason": "series",
+   "source_quote": "Cyberspace coding is based upon serving in an identified Cyber role and not as a function of rank, position of prestige, or appointment.",
+   "today": "Is cyberspace coding assigned based on serving in an identified Cyber role rather than rank, position of prestige, or appointment?",
+   "decision": "split",
+   "lead": "Is cyberspace coding assigned based on serving in a Cyber role?",
+   "parts": [
+    "Is cyberspace coding not assigned by rank?",
+    "Is cyberspace coding not assigned by position of prestige?",
+    "Is cyberspace coding not assigned by appointment?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 20,
+   "longest_after": 11
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-44d9700a2a55895c",
+   "citation": "3.1.3",
+   "reason": "series",
+   "source_quote": "DAF anticipates the workforce elements and/or alignment of the DCWF to be reviewed and updated annually under the authority of the CWMB and will be available on the DoD Cyber Exchange website, the authoritative source for published updates located at https://www.cyber.mil.",
+   "today": "Is the workforce elements and/or alignment of the DCWF reviewed and updated annually under the authority of the CWMB and made available on the DoD Cyber Exchange website?",
+   "decision": "split",
+   "lead": "Is the workforce elements and/or alignment of the DCWF reviewed and updated annually?",
+   "parts": [
+    "Is it reviewed and updated under the authority of the CWMB?",
+    "Is it made available on the DoD Cyber Exchange website?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Is it made...' has a pronoun as its subject",
+     "'Is it reviewed...' has a pronoun as its subject",
+     "'it' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 28,
+   "longest_after": 28
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-45fe1d2bf0d8cfb2",
+   "citation": "4.3.2.10",
+   "reason": "series",
+   "source_quote": "The PM will ensure the exemption determination memo includes the following items: The PMO or functional system owner will maintain the exemption memo and forward a copy of the signed memo to the DAF CISO for the affected Systems.",
+   "today": "Does the PMO or functional system owner maintain the exemption memo and forward a copy of the signed memo to the DAF CISO for the affected Systems?",
+   "decision": "split",
+   "lead": "Does the PMO or functional system owner handle the exemption memo?",
+   "parts": [
+    "Does the PMO or functional system owner maintain the exemption memo?",
+    "Is a copy of the signed memo forwarded to the DAF CISO for the affected Systems?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 27,
+   "longest_after": 16
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-4b67c429429da615",
+   "citation": "4.4.5.3",
+   "reason": "long",
+   "source_quote": "Commanders shall begin AFSC or SFSC disqualification actions in accordance with AFMAN 36-2100, Military Utilization and Classification after second test failure where a certification is indicated to meet foundational qualification for matriculation into an AFSC or SFSC and it has not been met within the time period prescribed (T-1).",
+   "today": "Do commanders begin AFSC or SFSC disqualification actions in accordance with AFMAN 36-2100 after a second test failure where a certification is indicated and it has not been met within the prescribed time period?",
+   "decision": "split",
+   "lead": "Do commanders begin disqualification actions?",
+   "parts": [
+    "Is AFSC or SFSC disqualification started in accordance with AFMAN 36-2100?",
+    "Does disqualification start after second test failure?",
+    "Has the certification not been met within prescribed time period?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'where' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": [
+     "actor changed: today 'commanders begin afsc', lead 'commanders begin disqualification actions?'"
+    ]
+   },
+   "failed": [
+    "qualifiers",
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 34,
+   "longest_after": 34
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-63e1753f026210c5",
+   "citation": "2.2.13",
+   "reason": "long",
+   "source_quote": "Identify total manpower required to perform cyberspace work roles in authoritative manpower and personnel systems in accordance with the Federal Cyber Workforce Assessment Act of 2015.",
+   "today": "Does the DAF Chief Information Officer identify total manpower required to perform cyberspace work roles in authoritative manpower and personnel systems in accordance with the Federal Cyber Workforce Assessment Act of 2015?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 32,
+   "longest_after": 32
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-6663f5540e201056",
+   "citation": "2.15.9",
+   "reason": "series",
+   "source_quote": "Conduct an annual validation of civilian and military cybersecurity workforce positions on the UMD and the data in personnel databases or systems (e.g., DCPDS for civilians to be replaced by DCHRMS, and Military Personnel Data System for military) (T-1).",
+   "today": "Does the unit conduct an annual validation of civilian and military cybersecurity workforce positions on the UMD and the data in personnel databases or systems?",
+   "decision": "split",
+   "lead": "Does the unit conduct an annual validation?",
+   "parts": [
+    "Is the validation conducted annually for civilian cybersecurity workforce positions on the UMD?",
+    "Is the validation conducted annually for military cybersecurity workforce positions on the UMD?",
+    "Is the data in personnel databases or systems validated annually?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 25,
+   "longest_after": 13
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-7a10436b417d1af4",
+   "citation": "2.9.6.2",
+   "reason": "long",
+   "source_quote": "The representative shall coordinate with cyber leaders at their organizational level and subordinate level Supervisors, Program Offices, Contracting Officers, Authorizing Officials, and all personnel to ensure workforce qualification data is maintained and updated and metrics are submitted as requested.",
+   "today": "Does the representative coordinate with cyber leaders at their organizational level and subordinate level Supervisors, Program Offices, Contracting Officers, Authorizing Officials, and all personnel to ensure workforce qualification data is maintained and updated and metrics are submitted as requested?",
+   "decision": "split",
+   "lead": "Does the representative coordinate with cyber leaders?",
+   "parts": [
+    "Do they coordinate with organizational level cyber leaders?",
+    "Do they coordinate with subordinate level Supervisors, Program Offices, Contracting Officers, and Authorizing Officials?",
+    "Is workforce qualification data maintained and updated?",
+    "Are metrics submitted as requested?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'all' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Do they coordinate...' has a pronoun as its subject",
+     "'they' added"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers",
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 39,
+   "longest_after": 39
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-8522846878ef7e51",
+   "citation": "Figure A2.3",
+   "reason": "series",
+   "source_quote": "I understand, acknowledge and consent to the following: I will protect the administrative or root account(s), passwords, and other authenticator(s) to the highest level of data or resource it secures.",
+   "today": "Do you protect the administrative or root account(s), passwords, and other authenticators to the highest level of data or resource they secure?",
+   "decision": "split",
+   "lead": "Do you protect the administrative or root accounts?",
+   "parts": [
+    "Are the administrative or root accounts protected to the highest level?",
+    "Are the passwords protected to the highest level?",
+    "Are other authenticators protected to the highest level?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'resource they secure?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 22,
+   "longest_after": 22
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-917a4da03a560a78",
+   "citation": "2.8.3",
+   "reason": "long",
+   "source_quote": "Provide guidance to ensure that the personnel section and supervisor over civilians will ensure the SCPD, CPD, or PRD and appropriate civilian personnel databases or systems reflect accurately the cyberspace workforce requirements.",
+   "today": "Does the DAF Cyber Career Field Manager provide guidance to ensure that the personnel section and supervisor over civilians will ensure the SCPD, CPD, or PRD and appropriate civilian personnel databases or systems reflect accurately the cyberspace workforce requirements?",
+   "decision": "split",
+   "lead": "Does the DAF Cyber Career Field Manager provide guidance?",
+   "parts": [
+    "Is guidance provided to ensure the SCPD reflects accurately the cyberspace workforce requirements?",
+    "Is guidance provided to ensure the CPD reflects accurately the cyberspace workforce requirements?",
+    "Is guidance provided to ensure the PRD reflects accurately the cyberspace workforce requirements?",
+    "Is guidance provided to ensure appropriate civilian personnel databases or systems reflect accurately the cyberspace workforce requirements?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 39,
+   "longest_after": 17
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-9cc29e56da5967b6",
+   "citation": "4.4.2",
+   "reason": "series",
+   "source_quote": "CCC will not pay for any re-testing required after an initial exam failure or decertification for civilian or military personnel, except where re-testing was conducted at initial skills training (IST) or schoolhouses.",
+   "today": "Does CCC avoid paying for re-testing required after an initial exam failure or decertification for civilian or military personnel, except where re-testing was conducted at IST or schoolhouses?",
+   "decision": "split",
+   "lead": "Does CCC avoid paying for re-testing?",
+   "parts": [
+    "Is there no payment for re-testing after an initial exam failure?",
+    "Is there no payment for re-testing after decertification?",
+    "Is there payment for re-testing conducted at IST or schoolhouses?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "'where' dropped",
+     "'except' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'decertification for civilian'",
+     "item not covered: 'military personnel'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "qualifiers",
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 28,
+   "longest_after": 28
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-9ffd31514872e8ba",
+   "citation": "2.15.13",
+   "reason": "long",
+   "source_quote": "Coordinate with the supporting Personnel Security Management Office or equivalent for submission of national security background investigations when contractor roles are identified as sensitive positions without a requirement for access to classified information (T-1).",
+   "today": "Does the unit coordinate with the supporting Personnel Security Management Office or equivalent for submission of national security background investigations when contractor roles are identified as sensitive positions without a requirement for access to classified information?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 36,
+   "longest_after": 36
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-a2a76a3f0691e196",
+   "citation": "4.4.5.2",
+   "reason": "long",
+   "source_quote": "If the military member is not incumbent to the position the commander shall meet with both the supervisor and military member to reassess whether the individual possesses the necessary skills to perform in the cyberspace position.",
+   "today": "Does the commander meet with both the supervisor and military member to reassess whether the individual possesses the necessary skills to perform in the cyberspace position when the military member is not incumbent to the position?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 36,
+   "longest_after": 36
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-acc679743f53a464",
+   "citation": "2.10.4",
+   "reason": "series",
+   "source_quote": "Air Combat Command shall: Provide online training materials via AF e-Learning website, the Air Force Portal, or MyLearning as appropriate.",
+   "today": "Does Air Combat Command provide online training materials via AF e-Learning website, the Air Force Portal, or MyLearning as appropriate?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 20,
+   "longest_after": 20
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-ae5a0eefaabca4b3",
+   "citation": "2.2.2",
+   "reason": "series",
+   "source_quote": "Interpret DoD policy, guidance, and directives and promulgate DAF cyberspace workforce directives, policies, and requirements.",
+   "today": "Does the DAF Chief Information Officer interpret DoD policy, guidance, and directives and promulgate DAF cyberspace workforce directives, policies, and requirements?",
+   "decision": "split",
+   "lead": "Does the DAF Chief Information Officer handle DoD policy?",
+   "parts": [
+    "Does the DAF Chief Information Officer interpret DoD policy?",
+    "Does the DAF Chief Information Officer promulgate DAF cyberspace workforce directives, policies, and requirements?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'guidance'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 21,
+   "longest_after": 21
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-b1f23c780d8a10c5",
+   "citation": "Front matter",
+   "reason": "series",
+   "source_quote": "Submit requests for waivers through the chain of command to the appropriate Tier waiver approval authority, or alternately, to the publication OPR for non-tiered compliance items.",
+   "today": "Does the unit submit requests for waivers through the chain of command to the appropriate Tier waiver approval authority, or alternately, to the publication OPR for non-tiered compliance items?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 29,
+   "longest_after": 29
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-b8ffe0ff03f5938a",
+   "citation": "2.16.4",
+   "reason": "long",
+   "source_quote": "Contracting Officers shall: Immediately notify contractor company to stop any contractor employee from performing cyberspace work on a government contract if that contractor employee is not foundationally qualified, does not meet annual training or continuing education requirements or does not meet residential requirements as specified in the SOW or PWS (T-0).",
+   "today": "Did the Contracting Officers immediately notify the contractor company to stop a contractor employee from performing cyberspace work on a government contract when the employee was not foundationally qualified, did not meet annual training or continuing education requirements, or did not meet residential requirements as specified in the SOW or PWS?",
+   "decision": "split",
+   "lead": "Did the Contracting Officers immediately notify the contractor company?",
+   "parts": [
+    "Was notification given when an employee was not foundationally qualified?",
+    "Was notification given when an employee did not meet annual training or continuing education requirements?",
+    "Was notification given when an employee did not meet residential requirements as specified in the SOW or PWS?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 51,
+   "longest_after": 18
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-bb1d57f4a44e18f3",
+   "citation": "2.20",
+   "reason": "series",
+   "source_quote": "Become and remain qualified in their assigned cyberspace position as defined in Chapters 3 and 4 of this document (T-0).",
+   "today": "Has the individual become and remained qualified in their assigned cyberspace position as defined in Chapters 3 and 4 of this document?",
+   "decision": "split",
+   "lead": "Is the individual qualified in their assigned cyberspace position?",
+   "parts": [
+    "Has the individual become qualified in their assigned cyberspace position?",
+    "Has the individual remained qualified in their assigned cyberspace position?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [
+     "number '3' dropped",
+     "number '4' dropped"
+    ],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: '4 of this document?'"
+    ],
+    "actor": [
+     "actor changed: today 'the individual become', lead 'the individual qualified in their assigned'"
+    ]
+   },
+   "failed": [
+    "qualifiers",
+    "coverage",
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 22,
+   "longest_after": 22
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-c3379828a9ce5b51",
+   "citation": "1.1.4",
+   "reason": "series",
+   "source_quote": "Cyberspace work comprises tasks executed by personnel assigned to workforce elements, which include Information Technology (IT), Cybersecurity, Cyberspace effects, Intelligence workforce (cyberspace), Cyberspace enablers, Software Engineering, and AI/Data.",
+   "today": "Are tasks executed by personnel assigned to workforce elements such as IT, Cybersecurity, Cyberspace effects, Intelligence workforce (cyberspace), Cyberspace enablers, Software Engineering, and AI/Data considered cyberspace work?",
+   "decision": "split",
+   "lead": "Are tasks executed by personnel assigned to workforce elements considered cyberspace work?",
+   "parts": [
+    "Is IT included in the workforce elements for cyberspace work?",
+    "Is Cybersecurity included in the workforce elements for cyberspace work?",
+    "Are Cyberspace effects included in the workforce elements for cyberspace work?",
+    "Is Intelligence workforce (cyberspace) included in the workforce elements for cyberspace work?",
+    "Are Cyberspace enablers included in the workforce elements for cyberspace work?",
+    "Is Software Engineering included in the workforce elements for cyberspace work?",
+    "Is AI/Data included in the workforce elements for cyberspace work?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [
+     "7 parts (need 2 to 5)"
+    ],
+    "pronouns": [
+     "'Is IT included...' has a pronoun as its subject"
+    ],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [
+    "shape",
+    "pronouns"
+   ],
+   "final": "today",
+   "today_words": 27,
+   "longest_after": 27
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-c3541806cd174004",
+   "citation": "2.11.1",
+   "reason": "series",
+   "source_quote": "Provide and sustain availability and support of cybersecurity user awareness training for all DAF users with the SAF/CN provided curriculum.",
+   "today": "Does the Air Education and Training Command provide and sustain availability and support of cybersecurity user awareness training for all DAF users with the SAF/CN provided curriculum?",
+   "decision": "keep",
+   "lead": null,
+   "parts": [],
+   "error": null,
+   "checks": {},
+   "failed": [],
+   "final": "today",
+   "today_words": 27,
+   "longest_after": 27
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-c6bfac4b0a63de81",
+   "citation": "1.1.2",
+   "reason": "series",
+   "source_quote": "The DAF maintains a Total Force management posture to qualify and enable authorized cyberspace government employed civilian, military, and foreign national personnel to perform cyberspace roles and responsibilities.",
+   "today": "Does the DAF maintain a Total Force management posture to qualify and enable authorized cyberspace government employed civilian, military, and foreign national personnel to perform cyberspace roles and responsibilities?",
+   "decision": "split",
+   "lead": "Does the DAF maintain a Total Force management posture?",
+   "parts": [
+    "Does it qualify authorized cyberspace government employed civilian personnel?",
+    "Does it enable authorized cyberspace government employed military personnel?",
+    "Does it enable authorized foreign national personnel?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [
+     "'Does it enable...' has a pronoun as its subject",
+     "'Does it qualify...' has a pronoun as its subject",
+     "'it' added"
+    ],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'responsibilities?'"
+    ],
+    "actor": []
+   },
+   "failed": [
+    "pronouns",
+    "coverage"
+   ],
+   "final": "today",
+   "today_words": 29,
+   "longest_after": 29
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-d6fe83fb8a948e68",
+   "citation": "2.19.10",
+   "reason": "long",
+   "source_quote": "Approve certification exam requests only for eligible civilian and military personnel in coded cyberspace workforce positions who have more than one (1) year before a confirmed retirement or separation date (T-1).",
+   "today": "Do supervisors approve certification exam requests only for eligible civilian and military personnel in coded cyberspace workforce positions who have more than one year before a confirmed retirement or separation date?",
+   "decision": "split",
+   "lead": "Do supervisors approve certification exam requests?",
+   "parts": [
+    "Are the requests only for eligible civilian personnel?",
+    "Are the requests only for eligible military personnel?",
+    "Are the personnel in coded cyberspace workforce positions?",
+    "Do the personnel have more than one year before a confirmed retirement or separation date?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 31,
+   "longest_after": 15
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-e32a238e757a5507",
+   "citation": "2.19.7",
+   "reason": "long",
+   "source_quote": "Request the appropriate personnel section to extract reports from manpower and personnel databases or systems (e.g., MilPDS and DCPDS/DCHRMS) and to identify cyberspace workforce requirements and alignment with personnel for DAF compliance reporting.",
+   "today": "Does the supervisor request the appropriate personnel section to extract reports from manpower and personnel databases or systems such as MilPDS and DCPDS/DCHRMS to identify cyberspace workforce requirements for DAF compliance reporting?",
+   "decision": "split",
+   "lead": "Does the supervisor request the appropriate personnel section?",
+   "parts": [
+    "Is a request made to extract reports from manpower and personnel databases or systems such as MilPDS and DCPDS/DCHRMS?",
+    "Are cyberspace workforce requirements identified for DAF compliance reporting?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 32,
+   "longest_after": 19
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-e702260ad5cd221a",
+   "citation": "Figure A2.3",
+   "reason": "long",
+   "source_quote": "I will immediately report any indication of computer network intrusion, unexplained degradation or interruption of network services, or the actual or possible compromise of data or file access controls to the appropriate security representatives.",
+   "today": "Do you immediately report any indication of computer network intrusion, unexplained degradation or interruption of network services, or the actual or possible compromise of data or file access controls to the appropriate security representatives?",
+   "decision": "split",
+   "lead": "Do you report indications?",
+   "parts": [
+    "Is any indication of computer network intrusion reported immediately?",
+    "Is unexplained degradation or interruption of network services reported immediately?",
+    "Is actual or possible compromise of data or file access controls reported immediately?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'file access controls to the appropriate security representatives?'"
+    ],
+    "actor": [
+     "actor changed: today 'you immediately report', lead 'you report indications?'"
+    ]
+   },
+   "failed": [
+    "coverage",
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 34,
+   "longest_after": 34
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "CHK-f604424ebb42aba8",
+   "citation": "4.4.3",
+   "reason": "series",
+   "source_quote": "Privileged access shall be removed for any personnel who does not have or maintain qualifications in active and good standing after the transition date.",
+   "today": "Is privileged access removed for personnel who do not have or maintain qualifications in active and good standing after the transition date?",
+   "decision": "split",
+   "lead": "Is privileged access handled properly?",
+   "parts": [
+    "Is privileged access removed for personnel without qualifications?",
+    "Is privileged access removed for personnel with inactive qualifications?",
+    "Is privileged access removed for personnel with disqualified qualifications?",
+    "Is removal after the transition date ensured?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [
+     "item not covered: 'maintain qualifications in active'"
+    ],
+    "actor": [
+     "actor changed: today 'privileged access removed', lead 'privileged access handled properly?'"
+    ]
+   },
+   "failed": [
+    "coverage",
+    "actor"
+   ],
+   "final": "today",
+   "today_words": 22,
+   "longest_after": 22
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "MISS-b3f779f445326cba",
+   "citation": "1.2.1",
+   "reason": "series",
+   "source_quote": "All users will complete refresher training to maintain network or system access as new versions are published and made available via SAF/CN approved means (T-1), which includes 1) the AF learning management system, MyLearning https://lms-jets.cce.af.mil/moodle/); 2) the DoD Cyber Exchange NIPR (Non-classified or Non-secure Internet Protocol Router) portal: https://www.cyber.mil; or 3) using any other method that SAF/CN designates.",
+   "today": "Do all users complete refresher training to maintain network or system access when new versions are published and made available via SAF/CN approved means?",
+   "decision": "split",
+   "lead": "Do all users complete refresher training?",
+   "parts": [
+    "Is the training completed when new versions are published?",
+    "Is the training made available via SAF/CN approved means?",
+    "Is the AF learning management system used for training?",
+    "Is the DoD Cyber Exchange NIPR portal used for training?",
+    "Are other methods designated by SAF/CN used for training?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 24,
+   "longest_after": 10
+  },
+  {
+   "doc": "dafman17-1305",
+   "id": "MISS-fc30f1fe137097bc",
+   "citation": "4.3.2.12",
+   "reason": "series",
+   "source_quote": "The PMOs and units must maintain and track validation memos locally and forward a copy of the signed validation letter to the DAF CISO via SAF/CN.",
+   "today": "Do the PMOs and units maintain and track validation memos locally and forward a copy of the signed validation letter to the DAF CISO via SAF/CN?",
+   "decision": "split",
+   "lead": "Do the PMOs and units handle validation memos?",
+   "parts": [
+    "Do the PMOs and units maintain and track validation memos locally?",
+    "Do the PMOs and units forward a copy of the signed validation letter to the DAF CISO via SAF/CN?"
+   ],
+   "error": null,
+   "checks": {
+    "qualifiers": [],
+    "terms": [],
+    "shape": [],
+    "pronouns": [],
+    "modality": [],
+    "coverage": [],
+    "actor": []
+   },
+   "failed": [],
+   "final": "split",
+   "today_words": 26,
+   "longest_after": 19
+  }
+ ]
+}

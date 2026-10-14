@@ -1,0 +1,602 @@
+{
+ "CHK-053decd0bf676125": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the HAF CARM program office work with AF functional area leads?\", \"parts\": [\"Do they foster relationships with local government?\", \"Do they foster relationships with civil agencies?\", \"Do they foster relationships with the private sector?\", \"Do they address issues with high-interest TCAs?\"]}",
+  "error": null
+ },
+ "CHK-0a55a924b4ea661d": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-0b18b2de8579359e": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Are RRPs developed?\", \"parts\": [\"Do RRPs document criticality data?\", \"Do RRPs document threats, hazards, and vulnerabilities to TCAs?\", \"Do RRPs include possible risk reduction COAs?\"]}",
+  "error": null
+ },
+ "CHK-136bdfa1258f203c": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do MAJCOM/DRUs enter and validate their discovered/identified critical systems' and assets' BEIs?\", \"parts\": [\"Are the BEIs of critical systems entered in the AF CARM system?\", \"Are the BEIs of identified assets validated in the AF CARM system?\"]}",
+  "error": null
+ },
+ "CHK-144b713f9cd4e425": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-25ab98771cb4328c": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit collaborate with MA TCA stakeholders and resourcing functions?\", \"parts\": [\"Is CARM program guidance integrated in installation plans and annual MILCON development and publication?\", \"Is CARM program guidance integrated in SRM prioritization lists via the Installation Facilities Board?\"]}",
+  "error": null
+ },
+ "CHK-28a62aa7488dd297": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does MAJCOM/DRUs establish and manage a CARM WG or incorporate the requirement?\", \"parts\": [\"Is a CARM WG established and managed?\", \"Is the requirement incorporated into an equivalent, existing MAJCOM/DRU WG?\"]}",
+  "error": null
+ },
+ "CHK-2d0cdf21e09c93ed": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit establish and manage a CARM WG or incorporate it into an existing WG?\", \"parts\": [\"Is a CARM WG established and managed?\", \"Is the requirement incorporated into an equivalent, existing Center/Wing or Installation WG?\", \"Does this facilitate cross-functional dialogue on TCA identification, availability, and reliability?\", \"Does this support consequence management and COOP planning?\"]}",
+  "error": null
+ },
+ "CHK-4072c6d7ce6d7a86": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does AF/9 advise the HAF CARM Program?\", \"parts\": [\"Is the advice based on assessments?\", \"Is the advice based on analyses?\", \"Are program structure, operations, and resource allocations assessed and analyzed?\", \"Is advising done as requested?\"]}",
+  "error": null
+ },
+ "CHK-4a532f6da67b2e9b": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit create an approach?\", \"parts\": [\"Is the approach comprehensive?\", \"Is the approach coordinated enterprise-wide?\", \"Does it identify risks for AF Tier 1 and Tier 2 TCAs?\", \"Does it assess risks for AF Tier 1 and Tier 2 TCAs?\", \"Does it analyze risks for AF Tier 1 and Tier 2 TCAs?\", \"Does it manage risks for AF Tier 1 and Tier 2 TCAs?\"]}",
+  "error": null
+ },
+ "CHK-4e16a6c99d0ff4ac": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-4ff0b8fe39ed846c": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the MAA team conduct a PSS site visit?\", \"parts\": [\"Is additional insight obtained on installation layout?\", \"Is additional insight obtained on local assessment partners?\", \"Are pending issues addressed?\", \"Is the recipient prepared for the AFMAA vulnerability assessment?\"]}",
+  "error": null
+ },
+ "CHK-637b3ec7f6a4abcb": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the HAF CARM Program collaborate with HAF/A4 MA?\", \"parts\": [\"Does the HAF CARM Program advocate for remediation or mitigation actions on behalf of MAJCOM/DRUs in chartered executive forums and processes?\", \"Does the HAF CARM Program advocate for remediation or mitigation actions on behalf of FOAs (as appropriate) in chartered executive forums and processes?\"]}",
+  "error": null
+ },
+ "CHK-730948ef1d0de0c0": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Deputy Chief of Staff for Logistics, Civil Engineering, and Force Protection handle HHQ MA assessments?\", \"parts\": [\"Are HHQ MA assessments synchronized with DoDI 2000.16 V1 requirements?\", \"Are HHQ MA assessments de-conflicted with CARM requirements from DoDI 3020.45?\"]}",
+  "error": null
+ },
+ "CHK-77489ef28613c890": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-82b79fbd44e6622f": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-8347dbc54ac14b7e": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do those who recommend changes or have questions about this publication use AF Form 847?\", \"parts\": [\"Is AF Form 847 used for recommended changes?\", \"Is AF Form 847 used for questions about the publication?\", \"Is AF Form 847 routed through the appropriate chain of command?\"]}",
+  "error": null
+ },
+ "CHK-87806a88b8f651c9": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Air Force Critical Asset Owning Center/Wing manage and coordinate participation in the AF CAIP process?\", \"parts\": [\"Do they help identify Tier 1 and Tier 2 TCAs?\", \"Do they nominate Tier 1 and Tier 2 TCAs?\", \"Do they validate Tier 1 and Tier 2 TCAs?\"]}",
+  "error": null
+ },
+ "CHK-8b0a054e2e37e30d": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the Deputy Chief of Staff for Logistics, Civil Engineering, and Force Protection ensure coordination?\",\n  \"parts\": [\n    \"Are CARM Program requirements coordinated with HAF CE engineering leads?\",\n    \"Are CARM Program requirements coordinated with IMSC engineering leads?\",\n    \"Are CARM Program requirements considered in installation planning process?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-950ef45efdf2081c": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit document a system or asset?\", \"parts\": [\"Is it documented in the AF CARM system of record?\", \"Is it documented in other CCMD established databases?\"]}",
+  "error": null
+ },
+ "CHK-9ae6503278155506": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Deputy Chief of Staff for Logistics, Civil Engineering, and Force Protection (AF/A4) partner with AF/A3?\", \"parts\": [\"Are CARM Tier 1 and Tier 2 TCAs made available to DoD MA programs?\", \"Is synchronization of CARM-related assessment efforts done?\", \"Is synchronization of CARM-related mitigation efforts done?\", \"Is synchronization of CARM-related remediation efforts done?\"]}",
+  "error": null
+ },
+ "CHK-b7a47727d3e9749e": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do MAJCOM/DRUs and FOAs identify funding requirements?\", \"parts\": [\"Is funding identified for implementing risk response actions through the PPBE process?\", \"Are unfunded risk reduction requirements communicated to the HAF CARM Program from finalized RRPs?\"]}",
+  "error": null
+ },
+ "CHK-bae935da38b8bc05": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the HAF CARM program office coordinate and integrate CARM?\",\n  \"parts\": [\n    \"Are CARM policies coordinated and integrated with other AF risk management and MA programs?\",\n    \"Is guidance for CARM coordinated and integrated with other AF risk management and MA programs?\",\n    \"Are plans for CARM coordinated and integrated with other AF risk management and MA programs?\",\n    \"Are orders for CARM coordinated and integrated with other AF risk management and MA programs?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-bb9c039ab7f1c169": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Threat or EM WG develop strategies for remediating or mitigating vulnerabilities?\", \"parts\": [\"Do the strategies inform the FOA's HHQs functional manager?\", \"Do the strategies inform the HAF CARM Program office?\", \"Do the strategies inform the HAF CARM WG?\"]}",
+  "error": null
+ },
+ "CHK-be773d3b36a97521": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the servicing AFOSI unit assign roles and responsibilities?\", \"parts\": [\"Are specific roles assigned for identifying threat information?\", \"Are specific roles assigned for tracking threat information?\", \"Are specific roles assigned for disseminating threat information?\", \"Is this assignment given to all AF commands owning or operating Tier 1 TCAs?\"]}",
+  "error": null
+ },
+ "CHK-beca061eae057aec": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-c1a90b748d3c6692": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-c2241bf47b0a17c2": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does SAF/AQ incorporate CARM remediation and mitigation plans?\", \"parts\": [\"Is it incorporated into industrial preparedness policies, procedures, and planning?\", \"Is it incorporated into contracting policies, procedures, and planning?\", \"Is it incorporated into services acquisition policies, procedures, and planning?\", \"Is it incorporated into S&T policies, procedures, and planning?\", \"Is it incorporated into life cycle management policies, procedures, and planning?\"]}",
+  "error": null
+ },
+ "CHK-c4d265e96792e241": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the FOA maintain access to a facility?\",\n  \"parts\": [\"Is the facility capable of developing TS / SCI TCA-related data?\", \"Is the facility capable of communicating TS / SCI TCA-related data?\", \"Is the facility capable of maintaining TS / SCI TCA-related data?\"]\n}",
+  "error": null
+ },
+ "CHK-d0c17f136932e8d2": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do commanders define responsibilities, procedures, and standards?\", \"parts\": [\"Can commanders identify, validate, and prioritize TCAs?\", \"Can commanders assess and manage risk to TCAs in all threats/hazards environment?\"]}",
+  "error": null
+ },
+ "CHK-d5e01d5710f02c71": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do Air Force Critical Asset Owning Centers and Wings brief installation senior leaders?\", \"parts\": [\"Is the CARM program covered in the briefing?\", \"Are their roles regarding TCAs discussed?\", \"Are SICA assets now included under TCA category mentioned?\"]}",
+  "error": null
+ },
+ "CHK-e1213526c5ac5c3c": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the HAF CARM Program advocate for funding?\", \"parts\": [\"Does the HAF CARM Program assist MAJCOM/DRUs and FOAs in coordinating measures?\", \"Is advocacy done through the AF corporate process?\", \"Are identified measures included in future asset investment planning?\"]}",
+  "error": null
+ },
+ "CHK-e89b426371a7b7b4": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Threat, EM, or ID WG manage a CARM requirement?\", \"parts\": [\"Does the WG develop strategies for remediating identified vulnerabilities?\", \"Does the WG develop strategies for mitigating identified risks?\", \"Do the strategies inform the HAF CARM Program office and HAF CARM WG?\"]}",
+  "error": null
+ },
+ "CHK-e948266b0778fff2": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit submit a waiver request?\", \"parts\": [\"Is there a justification memorandum submitted through the FOA's HHQ's functional manager?\", \"Does this memorandum waive the requirement to maintain access to a facility capable of TS / SCI TCA-related data down to SECRET level?\"]}",
+  "error": null
+ },
+ "CHK-f272b2609d8f1a0c": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do MAJCOM/DRUs attend and participate in the WGs?\", \"parts\": [\"Do MAJCOM/DRUs attend the Threat WG?\", \"Do MAJCOM/DRUs attend the EM WG?\", \"Do MAJCOM/DRUs attend the ID WG?\", \"Do MAJCOM/DRUs provide CARM Program-related data when requested?\"]}",
+  "error": null
+ },
+ "CHK-f9c6a76bb1596661": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-feb7377332779040": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Is the system designed to serve as a common entry point?\",\n  \"parts\": [\n    \"Does it serve as an entry point for MAJCOM/DRUs and FOAs?\",\n    \"Is it one-way web shared with CCMDs, JS/J33, and ASD (HD&GS) databases and representatives?\"\n  ]\n}",
+  "error": null
+ },
+ "MISS-5470ef430c84b16c": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the HAF CARM program office coordinate CARM?\", \"parts\": [\"Is coordination done during the facility planning phase?\", \"Does coordination continue through construction efforts affecting identified medical TCAs?\"]}",
+  "error": null
+ },
+ "MISS-90bbcd60e5ef5090": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does MAJCOM/DRUs establish a CARM program office?\",\n  \"parts\": [\n    \"Is there a CARM program office within the Headquarters organization?\",\n    \"Does the office identify mission risk to AF TCAs?\",\n    \"Does the office assess mission risk to AF TCAs?\",\n    \"Does the office analyze mission risk to AF TCAs?\",\n    \"Does the office manage mission risk to AF TCAs?\"\n  ]\n}",
+  "error": null
+ },
+ "MISS-f467a1e85de27479": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-04d6c682d9ec8cb2": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does CSCS provide network functions?\", \"parts\": [\"Does CSCS provide 24/7 network operations and management functions?\", \"Do these functions enable key enterprise services in Air Force unclassified networks?\", \"Do these functions enable key enterprise services in Air Force classified networks?\"]}",
+  "error": null
+ },
+ "CHK-087b3a1cea1032ca": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-128e552db266d82a": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit implement defensive and protective measures?\", \"parts\": [\"Are proactive defensive and protective measures implemented?\", \"Are reactive defensive and protective measures implemented?\"]}",
+  "error": null
+ },
+ "CHK-12f4587310efee81": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit implement additional containment actions if applicable?\", \"parts\": [\"Are additional containment actions implemented if applicable?\", \"Do these actions aim to regain control of the system?\", \"Do these actions aim to isolate the system?\", \"Do these actions prevent further malicious activity?\"]}",
+  "error": null
+ },
+ "CHK-261b8d0d04fc5797": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Are all appropriate DoD organizations notified?\", \"parts\": [\"Are assigned Authorizing Officials notified?\", \"Are their staffs notified?\"]}",
+  "error": null
+ },
+ "CHK-35b1bd2d85bb208f": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the 624 OC coordinate with others?\", \"parts\": [\"Does the 624 OC coordinate with MAJCOMs?\", \"Does the 624 OC coordinate with ANG?\", \"Does the 624 OC coordinate with numbered air force/warfighting headquarters?\", \"Do they review and adjust blocking thresholds as needed?\"]}",
+  "error": null
+ },
+ "CHK-3b8e46ae92743374": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does CVA/Hunter execute assessments and reviews?\", \"parts\": [\"Do they execute vulnerability, compliance, defense and non-technical assessments?\", \"Do they conduct best practice reviews?\", \"Do they perform penetration testing?\", \"Do they carry out Hunter missions on AF and DoD networks & systems?\"]}",
+  "error": null
+ },
+ "CHK-44cb9366f2e1e2e9": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do all affected parties and tasked units gather/report preliminary information?\", \"parts\": [\"Is preliminary information gathered/reported based on the identifying source?\", \"Is preliminary information gathered/reported based on the detection method?\", \"Do all affected parties coordinate reporting actions among themselves?\", \"Do all affected parties coordinate response actions with other organizations as appropriate?\"]}",
+  "error": null
+ },
+ "CHK-4bbd23ca2d6d6017": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the sponsoring MAJCOM Staff element establish ROEs and SOPs?\", \"parts\": [\"Are ROEs established for exercise participants?\", \"Are SOPs established for exercise participants?\", \"Do these documents address managing real world events and incidents?\", \"Do these documents address managing exercise events and incidents?\"]}",
+  "error": null
+ },
+ "CHK-4e010940bc7194ff": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the sponsoring command establish ROEs and SOPs for exercise participants?\",\n  \"parts\": [\n    \"Are ROEs established for exercise participants?\",\n    \"Are SOPs established for exercise participants?\",\n    \"Do the ROEs address managing real world and exercise events and incidents?\",\n    \"Do the SOPs address managing real world and exercise events and incidents?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-502a529e534dbaf4": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does this Instruction apply to incidents involving systems?\", \"parts\": [\"Are the systems not directly connected to or part of an AF network?\", \"Do SCADA systems fall under this Instruction?\", \"Do information systems integral to weapon systems fall under this Instruction?\", \"Can these systems connect indirectly through removable media or wireless connection?\"]}",
+  "error": null
+ },
+ "CHK-60eb3cb45d49accf": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the CFP provide necessary information for incident/event investigations?\", \"parts\": [\"Is all necessary information provided to the servicing ACCC/MCCC?\", \"Is all necessary information provided to CSCS units?\", \"Is all necessary information provided to ACD units?\", \"Is all necessary information provided to 624 OC?\", \"Are the timelines specified followed?\"]}",
+  "error": null
+ },
+ "CHK-624a83b7c61a92ee": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-63c38c693d0223de": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-652393c359d27a25": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-6a18c64371c827e8": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit characterize and communicate the potential impact of the incident?\", \"parts\": [\"Is the potential impact characterized?\", \"Is the potential impact communicated?\", \"Are any compromised AF data identified?\", \"Are any compromised AF data sanitized?\"]}",
+  "error": null
+ },
+ "CHK-762b83c1486ec628": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does 24 AF/CC exercise specific compliance enforcement and directive authority?\", \"parts\": [\"Is this done in response to events involving multiple MAJCOMs?\", \"Is it done for events affecting the preponderance of the AF network?\", \"Is it done for time-critical events to assure network availability and security?\"]}",
+  "error": null
+ },
+ "CHK-778e0539e2d20d2e": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-78b666f18de69125": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the CFP provide a detailed explanation when unable to meet requirements?\",\n  \"parts\": [\n    \"Is a detailed explanation provided if technical limitations prevent providing necessary information/data or meeting timelines?\",\n    \"If applicable, is a get well date included in the explanation?\",\n    \"Is the detailed explanation sent to the 624 OC for tracking purposes?\",\n    \"Is the detailed explanation sent to CSCS units for tracking purposes?\",\n    \"Is the detailed explanation sent to ACD units for tracking purposes?\",\n    \"Is the detailed explanation sent to other tasked/participating units for tracking purposes?\",\n    \"If applicable, is the detailed explanation sent to ACCC/MCCC for tracking purposes?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-798238e5f07b1435": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit report incidents which may involve PII?\", \"parts\": [\"Is reporting done according to paragraph 1.1.2.4 of AFI 33-332?\", \"Is reporting done according to Appendix A, Table 1, of OSD Memorandum OSD 06227-09?\"]}",
+  "error": null
+ },
+ "CHK-7adbb787a3343687": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the CST/CSL contact the 624 OC upon detection or notification of an incident?\", \"parts\": [\"Is the incident assessed by the 624 OC?\", \"Is an IRID assigned upon validation?\"]}",
+  "error": null
+ },
+ "CHK-7e9e92ab6cbcbe20": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-8e55098372ca524e": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do network technicians and incident handling personnel decide on containment actions?\", \"parts\": [\"Is the decision made carefully?\", \"Does it affect the ability to acquire data?\", \"Does it affect the ability to preserve data?\"]}",
+  "error": null
+ },
+ "CHK-92ad912efe3ed26e": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-9d8b303c25c4bea9": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do local commanders handle final restoration or decommissioning actions?\", \"parts\": [\"Do local commanders determine the adequacy of final restoration or decommissioning actions with assistance?\", \"Do local commanders ensure that final restoration or decommissioning actions are completed?\"]}",
+  "error": null
+ },
+ "CHK-9ef2ed63c49e3a36": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-a110ac9bd785a650": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Did the unit determine within one hour?\", \"parts\": [\"Does the event meet AF Operational Reporting (OPREP-3)?\", \"Does the event meet USSTRATCOM Commander's Critical Information Requirements (CCIR)?\", \"Does the event meet USCYBERCOM Commander's Critical Information Requirements (CCIR)?\"]}",
+  "error": null
+ },
+ "CHK-aedca5ef426d473e": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit handle the incident report?\", \"parts\": [\"Is the incident report maintained?\", \"Is the incident report updated?\", \"Are updates communicated through the appropriate technical command channels?\", \"Are updates communicated through the appropriate operational command channels?\"]}",
+  "error": null
+ },
+ "CHK-b71b28994609fb42": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Is suspicious activity handled properly?\", \"parts\": [\"Is all suspicious activity detected?\", \"Is all suspicious activity reported?\", \"Does further analysis take place to determine if it is a reportable event or incident?\"]}",
+  "error": null
+ },
+ "CHK-ba5c1d68390527a0": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do CSCS units and other applicable units retain audit logs?\", \"parts\": [\"Are proxy server audit logs retained for at least one year?\", \"Are firewall audit logs retained for at least one year?\", \"Are Domain Name Server audit logs retained for at least one year?\"]}",
+  "error": null
+ },
+ "CHK-c0d13f0fbe0fa474": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does 24 AF/CC ensure AF forces perform assigned tasks?\", \"parts\": [\"Do AF forces perform the mission and tasks assigned by USCYBERCOM?\", \"Does 24 AF/CC report network events and incidents?\", \"Does 24 AF/CC coordinate network events and incidents?\"]}",
+  "error": null
+ },
+ "CHK-cfb202bdb4edf59e": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Is the Commander, AF Space Command (AFSPC/CC), responsible for the networks?\", \"parts\": [\"Is the Commander responsible for the overall command and control, security and defense of the AF Information Network (AFIN)?\", \"Is the Commander responsible for the command, control, implementation, security, operation, maintenance, sustainment, configuration, and defense of the AF Network (AFNET)/AF Network-Secure (AFNET-S)?\"]}",
+  "error": null
+ },
+ "CHK-eab587fa6355e63b": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the senior Air Force representative ensure the ROEs and SOPs?\", \"parts\": [\"Do the ROEs address managing real world and exercise events?\", \"Do the SOPs address managing real world and exercise events?\"]}",
+  "error": null
+ },
+ "CHK-efa82b52f0552758": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the MCCC coordinate DCO and DoDIN Operations COA planning and execution?\", \"parts\": [\"Is coordination with the appropriate I-NOSC done?\", \"Is coordination with the 624 OC done?\", \"Is coordination with applicable 24 AF-designated units as appropriate done?\"]}",
+  "error": null
+ },
+ "CHK-f58e1375c7b81b1c": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-f8986f2a42dc1f25": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "MISS-74e0fcb4bef0a56e": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit coordinate with the appropriate AFSPC Weapon System Team Leads?\", \"parts\": [\"Can lessons learned be used to improve existing capabilities?\", \"Can lessons learned justify the development of new ones?\"]}",
+  "error": null
+ },
+ "MISS-a7da48daa4c27f9d": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "MISS-bd26202f4133e76e": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the I-NOSC coordinate and inform on corrective actions?\", \"parts\": [\"Is the 624 OC informed?\", \"Is the MCCC informed?\", \"Is the CFP informed?\", \"Are appropriate weapon system units informed?\"]}",
+  "error": null
+ },
+ "MISS-ecf7715dc6d0d339": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the local CFP develop a POA&M?\", \"parts\": [\"Is the mission owner assisted in developing the POA&M?\", \"Is the servicing MCCC/ACCC assisted in developing the POA&M?\", \"Are applicable CSCS units involved in developing the POA&M?\", \"Does the POA&M guide system restoration and prevention of similar incidents?\"]}",
+  "error": null
+ },
+ "CHK-01de2716d93e4c50": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the WCO/DCO serve as focal point/enforcement for Wing/Delta's implementation?\", \"parts\": [\"Is DoDI 8140.02 covered?\", \"Is DoDM 8140.03 covered?\", \"Is this manual covered?\"]}",
+  "error": null
+ },
+ "CHK-02fcdfd5f464816e": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit ensure all personnel in cyber workforce positions have time?\", \"parts\": [\"Do civilian, military, or contractor personnel currently filling cyber roles have until 15 Feb 2026 to meet Foundational Qualifications?\"]}",
+  "error": null
+ },
+ "CHK-07b27a1d20ac9283": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Program Element Monitor work with SAF/CN?\", \"parts\": [\"Is programming guidance provided to FLDCOMs and PMOs?\", \"Is sustainment guidance provided to FLDCOMs and PMOs?\", \"Is budget guidance provided to FLDCOMs and PMOs?\"]}",
+  "error": null
+ },
+ "CHK-0a53789b19d8a7a7": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-0bf5ee4944825079": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the DAF Chief Information Officer ensure coordination of career-field specific requirements?\", \"parts\": [\"Are career-field specific requirements coordinated with the respective career field manager?\", \"Is integration into Career Field Training and Education Plan ensured?\", \"Is integration into Specialty Training Standard ensured?\", \"Is integration into Course Training Standard ensured?\"]}",
+  "error": null
+ },
+ "CHK-1cbb4677c843c04b": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit coordinate with the Contracting Officer?\", \"parts\": [\"Are security background investigation and clearance requirements incorporated into the contract when appropriate?\", \"Are security background investigation and clearance requirements incorporated into the associated SOW or PWS when appropriate?\"]}",
+  "error": null
+ },
+ "CHK-1cfc1aee588ebdc6": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-25a7d67a66dd90b8": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-25b0c10c18356269": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit provide oversight over the cyberspace workforce?\", \"parts\": [\"Is the cyberspace workforce identified within the command?\", \"Is the workforce trained in accordance with DoD and DAF Cyberspace Workforce Management Program directives and policies?\", \"Is the workforce qualified in accordance with DoD and DAF Cyberspace Workforce Management Program directives and policies?\", \"Is the workforce tracked in accordance with DoD and DAF Cyberspace Workforce Management Program directives and policies?\", \"Is the workforce managed in accordance with DoD and DAF Cyberspace Workforce Management Program directives and policies?\"]}",
+  "error": null
+ },
+ "CHK-2ae00643b0384401": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit manage cyberspace workforce positions?\", \"parts\": [\"Does the unit identify all cyberspace workforce positions?\", \"Does the unit track all cyberspace workforce positions?\", \"Is management done according to guidance issued by the appropriate career field manager and this manual?\"]}",
+  "error": null
+ },
+ "CHK-2b21ba9a385dd2be": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do supervisors review all manpower positions?\", \"parts\": [\"Are all manpower positions reviewed?\", \"Are all duty descriptions reviewed?\", \"Are all contract requirements reviewed?\", \"Is it determined if cyberspace tasks are required of those positions?\"]}",
+  "error": null
+ },
+ "CHK-30fc90d488088d8a": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do users understand the terms of using this Information System?\", \"parts\": [\"Do users understand communications on this system are not private?\", \"Do users acknowledge routine monitoring and interception of data?\", \"Do users consent to possible disclosure for U.S. Government-authorized purposes?\"]}",
+  "error": null
+ },
+ "CHK-35e15a340ce2b048": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-3ae35b57d37cef0d": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Did the PM provide the Contracting Officer with required information before issuing a contract solicitation?\",\n  \"parts\": [\n    \"Was an itemized list of required deliverables provided to the Contracting Officer?\",\n    \"Was information under DFARS subpart 239.71 provided to the Contracting Officer?\",\n    \"Was any additional acquisition information provided to the Contracting Officer?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-3b405e58cc816486": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Is cyberspace coding assigned based on serving in a Cyber role?\", \"parts\": [\"Is cyberspace coding not assigned by rank?\", \"Is cyberspace coding not assigned by position of prestige?\", \"Is cyberspace coding not assigned by appointment?\"]}",
+  "error": null
+ },
+ "CHK-44d9700a2a55895c": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Is the workforce elements and/or alignment of the DCWF reviewed and updated annually?\", \"parts\": [\"Is it reviewed and updated under the authority of the CWMB?\", \"Is it made available on the DoD Cyber Exchange website?\"]}",
+  "error": null
+ },
+ "CHK-45fe1d2bf0d8cfb2": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the PMO or functional system owner handle the exemption memo?\", \"parts\": [\"Does the PMO or functional system owner maintain the exemption memo?\", \"Is a copy of the signed memo forwarded to the DAF CISO for the affected Systems?\"]}",
+  "error": null
+ },
+ "CHK-4b67c429429da615": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do commanders begin disqualification actions?\", \"parts\": [\"Is AFSC or SFSC disqualification started in accordance with AFMAN 36-2100?\", \"Does disqualification start after second test failure?\", \"Has the certification not been met within prescribed time period?\"]}",
+  "error": null
+ },
+ "CHK-63e1753f026210c5": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-6663f5540e201056": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit conduct an annual validation?\",\n  \"parts\": [\n    \"Is the validation conducted annually for civilian cybersecurity workforce positions on the UMD?\",\n    \"Is the validation conducted annually for military cybersecurity workforce positions on the UMD?\",\n    \"Is the data in personnel databases or systems validated annually?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-7a10436b417d1af4": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the representative coordinate with cyber leaders?\",\n  \"parts\": [\n    \"Do they coordinate with organizational level cyber leaders?\",\n    \"Do they coordinate with subordinate level Supervisors, Program Offices, Contracting Officers, and Authorizing Officials?\",\n    \"Is workforce qualification data maintained and updated?\",\n    \"Are metrics submitted as requested?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-8522846878ef7e51": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do you protect the administrative or root accounts?\", \"parts\": [\"Are the administrative or root accounts protected to the highest level?\", \"Are the passwords protected to the highest level?\", \"Are other authenticators protected to the highest level?\"]}",
+  "error": null
+ },
+ "CHK-917a4da03a560a78": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the DAF Cyber Career Field Manager provide guidance?\", \"parts\": [\"Is guidance provided to ensure the SCPD reflects accurately the cyberspace workforce requirements?\", \"Is guidance provided to ensure the CPD reflects accurately the cyberspace workforce requirements?\", \"Is guidance provided to ensure the PRD reflects accurately the cyberspace workforce requirements?\", \"Is guidance provided to ensure appropriate civilian personnel databases or systems reflect accurately the cyberspace workforce requirements?\"]}",
+  "error": null
+ },
+ "CHK-9cc29e56da5967b6": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does CCC avoid paying for re-testing?\", \"parts\": [\"Is there no payment for re-testing after an initial exam failure?\", \"Is there no payment for re-testing after decertification?\", \"Is there payment for re-testing conducted at IST or schoolhouses?\"]}",
+  "error": null
+ },
+ "CHK-9ffd31514872e8ba": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-a2a76a3f0691e196": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-acc679743f53a464": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-ae5a0eefaabca4b3": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the DAF Chief Information Officer handle DoD policy?\", \"parts\": [\"Does the DAF Chief Information Officer interpret DoD policy?\", \"Does the DAF Chief Information Officer promulgate DAF cyberspace workforce directives, policies, and requirements?\"]}",
+  "error": null
+ },
+ "CHK-b1f23c780d8a10c5": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-b8ffe0ff03f5938a": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Did the Contracting Officers immediately notify the contractor company?\",\n  \"parts\": [\n    \"Was notification given when an employee was not foundationally qualified?\",\n    \"Was notification given when an employee did not meet annual training or continuing education requirements?\",\n    \"Was notification given when an employee did not meet residential requirements as specified in the SOW or PWS?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-bb1d57f4a44e18f3": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Is the individual qualified in their assigned cyberspace position?\", \"parts\": [\"Has the individual become qualified in their assigned cyberspace position?\", \"Has the individual remained qualified in their assigned cyberspace position?\"]}",
+  "error": null
+ },
+ "CHK-c3379828a9ce5b51": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Are tasks executed by personnel assigned to workforce elements considered cyberspace work?\", \"parts\": [\"Is IT included in the workforce elements for cyberspace work?\", \"Is Cybersecurity included in the workforce elements for cyberspace work?\", \"Are Cyberspace effects included in the workforce elements for cyberspace work?\", \"Is Intelligence workforce (cyberspace) included in the workforce elements for cyberspace work?\", \"Are Cyberspace enablers included in the workforce elements for cyberspace work?\", \"Is Software Engineering included in the workforce elements for cyberspace work?\", \"Is AI/Data included in the workforce elements for cyberspace work?\"]}",
+  "error": null
+ },
+ "CHK-c3541806cd174004": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-c6bfac4b0a63de81": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the DAF maintain a Total Force management posture?\", \"parts\": [\"Does it qualify authorized cyberspace government employed civilian personnel?\", \"Does it enable authorized cyberspace government employed military personnel?\", \"Does it enable authorized foreign national personnel?\"]}",
+  "error": null
+ },
+ "CHK-d6fe83fb8a948e68": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do supervisors approve certification exam requests?\", \"parts\": [\"Are the requests only for eligible civilian personnel?\", \"Are the requests only for eligible military personnel?\", \"Are the personnel in coded cyberspace workforce positions?\", \"Do the personnel have more than one year before a confirmed retirement or separation date?\"]}",
+  "error": null
+ },
+ "CHK-e32a238e757a5507": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the supervisor request the appropriate personnel section?\", \"parts\": [\"Is a request made to extract reports from manpower and personnel databases or systems such as MilPDS and DCPDS/DCHRMS?\", \"Are cyberspace workforce requirements identified for DAF compliance reporting?\"]}",
+  "error": null
+ },
+ "CHK-e702260ad5cd221a": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do you report indications?\", \"parts\": [\"Is any indication of computer network intrusion reported immediately?\", \"Is unexplained degradation or interruption of network services reported immediately?\", \"Is actual or possible compromise of data or file access controls reported immediately?\"]}",
+  "error": null
+ },
+ "CHK-f604424ebb42aba8": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Is privileged access handled properly?\", \"parts\": [\"Is privileged access removed for personnel without qualifications?\", \"Is privileged access removed for personnel with inactive qualifications?\", \"Is privileged access removed for personnel with disqualified qualifications?\", \"Is removal after the transition date ensured?\"]}",
+  "error": null
+ },
+ "MISS-b3f779f445326cba": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Do all users complete refresher training?\",\n  \"parts\": [\n    \"Is the training completed when new versions are published?\",\n    \"Is the training made available via SAF/CN approved means?\",\n    \"Is the AF learning management system used for training?\",\n    \"Is the DoD Cyber Exchange NIPR portal used for training?\",\n    \"Are other methods designated by SAF/CN used for training?\"\n  ]\n}",
+  "error": null
+ },
+ "MISS-fc30f1fe137097bc": {
+  "prompt_id": "8f788afd15e2d0f6",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Do the PMOs and units handle validation memos?\",\n  \"parts\": [\"Do the PMOs and units maintain and track validation memos locally?\", \"Do the PMOs and units forward a copy of the signed validation letter to the DAF CISO via SAF/CN?\"]\n}",
+  "error": null
+ }
+}

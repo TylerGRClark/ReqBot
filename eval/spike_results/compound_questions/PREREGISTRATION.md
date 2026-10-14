@@ -76,4 +76,30 @@ equal or round 2 is worse, v1 is the one frozen.
 
 ## Freeze
 
-(to be filled in before the TEST run)
+Frozen 2026-10-14 after two TUNE rounds, before any TEST call. **Prompt v2, id `5b796513781e2fd4`** (model qwen2.5:14b, temperature 0.1, schema as in `prompts.py`), with the checks
+as they stand in `checks.py` at this commit. No further edit to the prompt, the checks, the candidate rule or the sample is allowed before the TEST run. The TEST set is run once.
+
+### What happened in tuning (TUNE set, 120 rows, 90 / 87 proposed splits; mechanical checks only, not graded for faithfulness)
+
+| | v1 | v2 (frozen) |
+|---|---|---|
+| model says keep | 30 | 33 |
+| splits proposed | 90 | 87 |
+| splits passing all 7 checks (checks as frozen) | 38 (42%) | 65 (75%) |
+| fallbacks by check (a row can fail several) | coverage 26, pronouns 20, qualifiers 20, shape 4, actor 3, modality 2 | pronouns 11, shape 6, coverage 2, qualifiers 2, modality 2, actor 1 |
+| passing splits whose longest piece is still over 80% of today's question | 1 | 16 |
+
+Round 1 (v1) failed 20 splits on pronouns (the model wrote "they / it / this") and 20 on dropped qualifiers ("as appropriate", "within", "if", "up to"), 26 on dropped items.
+v2 changed only the prompt text: lead = today's opening cut before the list ("... do all of the following"); name the subject in every part; keep a closing "as appropriate" /
+"when requested" on every part it covers; keep may / should; max 5 parts, group extras.
+
+Check changes made during tuning (after seeing round 1; all are loosening of demonstrated false failures, or one added flag; listed so a reader can discount them):
+- shape: an "If applicable, is ...?" opener counts as yes/no; a short noun-phrase check written with a question mark counts (a who/what/how question does not).
+- pronouns: "Does this publication ...?" is fine when today's question has the same two words; "IT" (Information Technology) is not the pronoun "it" when today's question says IT.
+- coverage: "including / include / along" are not content words; a long title that the split replaces by its parenthetical acronym (AF/9) is not "dropped".
+- actor: compares the names and acronyms of the subject (and the parenthetical acronym), not three raw words that included the verb.
+- NOT a fallback reason: "gain" flag (longest piece more than 80% of today's question). Added after seeing the TUNE data, so it is reported, not enforced. When it is
+  enforced the v2 TUNE pass rate falls from 75% to 56%.
+
+Known over-strictness left in on purpose: "within" used for a place rather than a time limit fails check 1 when the split says "in"; a synonym outside a word family fails;
+check 6 counts a dropped trailing purpose clause as a dropped item (usually it is one).

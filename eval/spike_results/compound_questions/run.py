@@ -175,6 +175,7 @@ def summarize(rows: list[dict]) -> dict:
         "model_errors": sum(r["decision"] == "error" for r in rows),
         "split_passed_all_checks": len(passed),
         "split_pass_rate": round(len(passed) / len(splits), 3) if splits else None,
+        "passed_but_longest_piece_over_80pct_of_today": sum(bool(r["checks"].get("gain")) for r in passed),
         "fallback_rows": len(splits) - len(passed),
         "fallback_by_check": dict(sorted(reasons.items())),
         "only_one_check_failed": sum(len(r["failed"]) == 1 for r in splits if r["failed"]),

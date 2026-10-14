@@ -88,7 +88,16 @@ def check_terms(today: str, item: dict, pieces: list[str]) -> list[str]:
 
 
 # ---- check 3: shape ---------------------------------------------------------------------------------------------------------------------------------------------------------------
-_AUX = re.compile(r"^(?:does|do|did|is|are|was|were|has|have|had|can|could|will|would|shall|should|must|may|might)\b", re.IGNORECASE)
+_AUXW = "(?:does|do|did|is|are|was|were|has|have|had|can|could|will|would|shall|should|must|may|might)"
+_AUX = re.compile(r"^" + _AUXW + r"\b", re.IGNORECASE)
+_COND_OPENER = re.compile(r"^(?:if|when|whenever|unless|upon|where|once|after|before)\b[^?]*,\s*" + _AUXW + r"\b", re.IGNORECASE)  # "If applicable, is a date included?" (added in round 2)
+
+
+_WH = re.compile(r"^(?:what|who|whom|whose|which|how|why|when|where)\b", re.IGNORECASE)
+
+
+def _is_yes_no(text: str) -> bool:
+    return bool(_AUX.match(text) or _COND_OPENER.match(text))
 
 
 def check_shape(lead: str, parts: list[str]) -> list[str]:
@@ -96,7 +105,7 @@ def check_shape(lead: str, parts: list[str]) -> list[str]:
     problems = []
     if not (MIN_PARTS <= len(parts) <= MAX_PARTS):
         problems.append(f"{len(parts)} parts (need {MIN_PARTS} to {MAX_PARTS})")
-    if not (lead or "").strip().endswith("?") or not _AUX.match(lead.strip()):
+    if not (lead or "").strip().endswith("?") or not _is_yes_no(lead.strip()):
         problems.append("lead is not a yes/no question")
     for i, p in enumerate(parts):
         p = (p or "").strip()
@@ -104,12 +113,12 @@ def check_shape(lead: str, parts: list[str]) -> list[str]:
         if not p:
             problems.append(f"part {i + 1} is empty")
         elif p.endswith("?"):
-            if not _AUX.match(p):
+            if not _is_yes_no(p) and _WH.match(p):  # round 2: a short noun-phrase check written with a question mark ("Budget guidance to PMOs?") is allowed under a yes/no lead; a who/what/how question is not
                 problems.append(f"part {i + 1} is a question but not yes/no")
             if n > PART_MAX_WORDS:
                 problems.append(f"part {i + 1} has {n} words")
         else:
-            if _AUX.match(p) or n > NOUN_PHRASE_MAX_WORDS or p.endswith("."):
+            if _is_yes_no(p) or n > NOUN_PHRASE_MAX_WORDS or p.endswith("."):
                 problems.append(f"part {i + 1} is neither a yes/no question nor a short noun phrase")
     return problems
 
@@ -124,7 +133,10 @@ def check_pronouns(today: str, pieces: list[str]) -> list[str]:
     in_today = {m.group(0).lower() for m in _PRONOUN.finditer(today or "")}
     problems = []
     for p in pieces:
-        if _SUBJECT_PRONOUN.match(p.strip()):
+        sm = _SUBJECT_PRONOUN.match(p.strip())
+        pair = " ".join(re.sub(r"\W", "", w) for w in p.strip().lower().split()[1:3])
+        acronym_it = bool(sm) and sm.group(0).split()[-1] == "IT" and re.search(r"\bIT\b", today or "") is not None  # IT = Information Technology when today's question says so
+        if sm and not acronym_it and pair not in re.sub(r"[^\w ]", "", _norm(today)):  # "Does this publication ...?" is fine when today's question says "this publication" (round 2)
             problems.append(f"'{' '.join(p.split()[:3])}...' has a pronoun as its subject")
         for m in _PRONOUN.finditer(p):
             w = m.group(0).lower()
@@ -160,7 +172,7 @@ def check_modality(today: str, item: dict, pieces: list[str]) -> list[str]:
 
 # ---- check 6: item coverage -------------------------------------------------------------------------------------------------------------------------------------------------------
 _STOP = frozenset("""that this with from have does they them their there these those which what when where while will shall must should would could been being were such also than then into upon
-each every other only more most some both under over unit ensure ensures about between through during within without whether does""".split())
+each every other only more most some both under over unit ensure ensures about between through during within without whether does including include includes along""".split())
 _SEG = re.compile(r",|;|:|\band/or\b|\band\b|\bor\b|\bthen\b", re.IGNORECASE)
 
 
@@ -173,9 +185,27 @@ def items_of(question: str) -> list[str]:
     return [s.strip() for s in _SEG.split(question or "") if _stems(s)]
 
 
+def _drop_defined_names(today: str, split_text: str) -> str:
+    """Round 2: remove "Long Title (ACR)" from today's question when the split uses the acronym ACR (the split may say AF/9 for "the Director, Air Force Studies ... (AF/9)")."""
+    for m in re.finditer(r"\(([A-Z][\w/&.-]{1,})\)", today):
+        if re.search(r"(?<![\w/])" + re.escape(m.group(1)) + r"(?![\w/])", split_text):
+            words = today[:m.start()].split()
+            cut = 0
+            for w in reversed(words[-14:]):
+                if w[:1].isupper() or w.lower().strip(",") in {"of", "and", "for", "the", "&"}:
+                    cut += 1
+                else:
+                    break
+            if cut:
+                today = " ".join(words[:len(words) - cut]) + " " + today[m.end():]
+                break
+    return today
+
+
 def check_coverage(today: str, pieces: list[str]) -> list[str]:
     """(6) the parts together cover every item of today's list: each comma / and / or segment of today's question has more than half of its content stems in the split."""
     have = _stems(" ".join(pieces))
+    today = _drop_defined_names(today, " ".join(pieces))
     problems = []
     for seg in items_of(today):
         stems = _stems(seg)
@@ -186,18 +216,40 @@ def check_coverage(today: str, pieces: list[str]) -> list[str]:
 
 # ---- check 7 (added by this experiment): the lead keeps today's actor ---------------------------------------------------------------------------------------------------------------
 def check_actor(today: str, lead: str) -> list[str]:
-    """(7) the lead keeps the actor / scope: the first three words after today's opening auxiliary appear, in order, at the start of the lead's own subject."""
+    """(7) the lead keeps the actor / scope: the names and acronyms in the first four words after today's opening auxiliary (or, when there are none, the first two words
+    without 'the') appear in the lead; an acronym that today's question gives in parentheses for the actor counts (round 2: the first version compared three raw words,
+    which included the verb)."""
     m = _AUX.match((today or "").strip())
     n = _AUX.match((lead or "").strip())
     if not m or not n:
         return []
-    want = (today.strip()[m.end():]).split()[:3]
-    got = " ".join((lead.strip()[n.end():]).split()[:6]).lower()
-    want_s = " ".join(want).lower()
-    return [] if want_s in got or all(re.sub(r"\W", "", w.lower()) in re.sub(r"\W", "", got) for w in want) else [f"actor changed: today '{want_s}', lead '{got}'"]
+    words = (today.strip()[m.end():]).split()[:4]
+    want = [re.sub(r"[^\w/&.-]", "", w) for w in words if w[:1].isupper() or re.search(r"[A-Z]{2}", w)]
+    if not want:
+        want = [re.sub(r"[^\w/&.-]", "", w) for w in words[:2] if w.lower().strip(",") not in {"the", "a", "an"}]
+    got = _norm(lead.strip()[n.end():])
+    missing = [w for w in want if w and w.lower() not in got]
+    if missing:
+        paren = {a.lower() for a in re.findall(r"\(([A-Z][\w/&.-]+)\)", today[:200])}
+        if any(a in got for a in paren):
+            return []
+        return [f"actor changed: today '{' '.join(words)}', lead lacks {', '.join(missing)}"]
+    return []
 
 
-NAMES = ["qualifiers", "terms", "shape", "pronouns", "modality", "coverage", "actor"]
+# ---- gain flag (added at the end of tuning; REPORTED, NOT a fallback reason, because it was not pre-registered) --------------------------------------------------------------------
+GAIN_SHARE = 0.8
+
+
+def check_gain(today: str, lead: str, parts: list[str]) -> list[str]:
+    """Flag: the longest piece (lead or part) is more than 80% of today's question (for example a lead that repeats the whole question). Reported beside the checks; it does not
+    cause a fallback, because the pre-registration fixed the fallback checks before the tuning data was seen."""
+    longest = max(len(p.split()) for p in [lead] + list(parts))
+    n = len((today or "").split())
+    return [] if longest <= GAIN_SHARE * n else [f"longest piece {longest} words vs today's {n}"]
+
+
+NAMES = ["qualifiers", "terms", "shape", "pronouns", "modality", "coverage", "actor"]  # the fallback checks; "gain" is a flag only
 
 
 def evaluate(today: str, item: dict, lead: str, parts: list[str]) -> dict[str, list[str]]:
@@ -210,6 +262,7 @@ def evaluate(today: str, item: dict, lead: str, parts: list[str]) -> dict[str, l
         "modality": check_modality(today, item, pieces),
         "coverage": check_coverage(today, pieces),
         "actor": check_actor(today, lead),
+        "gain": check_gain(today, lead, parts),
     }
 
 

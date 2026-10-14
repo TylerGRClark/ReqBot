@@ -87,3 +87,28 @@ def test_coverage_catches_dropped_item():
 def test_actor_kept():
     assert checks.check_actor("Does the HAF CARM program office update the roster annually?", "Does the HAF CARM program office keep the roster current?") == []
     assert checks.check_actor("Does the HAF CARM program office update the roster annually?", "Does the unit keep the roster current?")
+
+
+def test_round2_fixes():
+    # an if-opener is still a yes/no part
+    assert checks.check_shape("Does X act?", ["If applicable, is a date included?", "Is B done?"]) == []
+    # a demonstrative that today's question already uses with the same noun is fine; a new one is not
+    assert checks.check_pronouns("Does this publication apply to X?", ["Does this publication apply to X?"]) == []
+    assert checks.check_pronouns("Does X use the memo?", ["Does this memorandum waive it?"])
+    # an acronym given in parentheses for the actor replaces the long title
+    today = "Does the Director, Air Force Studies, Analyses, and Assessments (AF/9) advise the program as requested?"
+    assert checks.check_actor(today, "Does AF/9 advise the program?") == []
+    assert checks.check_coverage(today, ["Does AF/9 advise the program?", "Is advice given as requested?"]) == []
+    assert checks.check_actor("Does the HAF CARM office act?", "Does the unit act?")
+
+
+def test_final_tuning_fixes():
+    # a noun-phrase check written with a question mark is allowed; a who/what question is not
+    assert checks.check_shape("Does X provide all of the following?", ["Programming guidance to PMOs?", "Budget guidance to PMOs?"]) == []
+    assert checks.check_shape("Does X provide all of the following?", ["What guidance is given?", "Budget guidance to PMOs?"])
+    # IT = Information Technology is not the pronoun it
+    assert checks.check_pronouns("Is IT a workforce element?", ["Is IT considered a workforce element?"]) == []
+    assert checks.check_pronouns("Is X a workforce element?", ["Is it considered a workforce element?"])
+    # a lead as long as today's question is not a gain
+    assert checks.check_gain("one two three four five six seven eight nine ten", "one two three four five six seven eight nine ten?", ["a b"])
+    assert checks.check_gain("one two three four five six seven eight nine ten", "one two three?", ["a b"]) == []
