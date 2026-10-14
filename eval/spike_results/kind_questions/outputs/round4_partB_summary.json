@@ -1,0 +1,130 @@
+{
+ "rows": 1181,
+ "rows_dropped": 0,
+ "model_calls": 102,
+ "per_doc": {
+  "CJCSI 6510.02G": {
+   "rows": 118,
+   "kinds": {
+    "recommendation": 2,
+    "permission": 3
+   },
+   "model_calls": 3,
+   "new_boundary_questions": 1,
+   "null_after": 2,
+   "todays_question_kept": 0,
+   "model_questions_rejected_by_checks": 0,
+   "model_gave_question": 3,
+   "pointer_suppressed": 0,
+   "pointer_kept": 0,
+   "recommended_labels": 2,
+   "rows_differ_from_live": 3
+  },
+  "DODI 5200.01": {
+   "rows": 75,
+   "kinds": {
+    "permission": 1
+   },
+   "model_calls": 1,
+   "new_boundary_questions": 0,
+   "null_after": 1,
+   "todays_question_kept": 0,
+   "model_questions_rejected_by_checks": 0,
+   "model_gave_question": 1,
+   "pointer_suppressed": 0,
+   "pointer_kept": 0,
+   "recommended_labels": 0,
+   "rows_differ_from_live": 0
+  },
+  "DODI 5200.44": {
+   "rows": 107,
+   "kinds": {
+    "permission": 4
+   },
+   "model_calls": 4,
+   "new_boundary_questions": 2,
+   "null_after": 2,
+   "todays_question_kept": 0,
+   "model_questions_rejected_by_checks": 1,
+   "model_gave_question": 4,
+   "pointer_suppressed": 0,
+   "pointer_kept": 0,
+   "recommended_labels": 0,
+   "rows_differ_from_live": 4
+  },
+  "DODI 5200.48": {
+   "rows": 295,
+   "kinds": {
+    "permission": 20,
+    "recommendation": 3,
+    "pointer": 1
+   },
+   "model_calls": 20,
+   "new_boundary_questions": 6,
+   "null_after": 9,
+   "todays_question_kept": 5,
+   "model_questions_rejected_by_checks": 9,
+   "model_gave_question": 20,
+   "pointer_suppressed": 1,
+   "pointer_kept": 0,
+   "recommended_labels": 3,
+   "rows_differ_from_live": 14
+  },
+  "DODI 8410.03": {
+   "rows": 177,
+   "kinds": {
+    "pointer": 1,
+    "permission": 1,
+    "recommendation": 5
+   },
+   "model_calls": 1,
+   "new_boundary_questions": 0,
+   "null_after": 1,
+   "todays_question_kept": 0,
+   "model_questions_rejected_by_checks": 0,
+   "model_gave_question": 0,
+   "pointer_suppressed": 1,
+   "pointer_kept": 0,
+   "recommended_labels": 5,
+   "rows_differ_from_live": 6
+  },
+  "DODI 8551.01": {
+   "rows": 86,
+   "kinds": {
+    "permission": 2
+   },
+   "model_calls": 2,
+   "new_boundary_questions": 0,
+   "null_after": 1,
+   "todays_question_kept": 1,
+   "model_questions_rejected_by_checks": 1,
+   "model_gave_question": 2,
+   "pointer_suppressed": 0,
+   "pointer_kept": 0,
+   "recommended_labels": 0,
+   "rows_differ_from_live": 0
+  },
+  "NIST.SP.800-125": {
+   "rows": 323,
+   "kinds": {
+    "permission": 65,
+    "recommendation": 58
+   },
+   "model_calls": 65,
+   "new_boundary_questions": 4,
+   "null_after": 51,
+   "todays_question_kept": 10,
+   "model_questions_rejected_by_checks": 2,
+   "model_gave_question": 64,
+   "pointer_suppressed": 0,
+   "pointer_kept": 0,
+   "recommended_labels": 58,
+   "rows_differ_from_live": 72
+  }
+ },
+ "check_rejection_rate": {
+  "model_questions": 94,
+  "rejected": 13
+ },
+ "new_questions_missing_qualifier": []
+}
