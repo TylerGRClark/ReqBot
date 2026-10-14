@@ -38,3 +38,9 @@ Criteria (B), fixed now:
 ## Limits stated in advance
 
 The checks were written after reading AFI outputs, so part A numbers are in-sample. Part B is the held-out test, but I wrote the rules and I can read the rows, so any statement about quality there waits for the blind reviewer. The checklist rows for the held-out documents come from the live index as of 2026-10-14.
+
+## Freeze (committed before any part B model call)
+
+Frozen code and prompt: commit `ad1089a7c6272c9bf2ff885bb44c016ed9e7b5a2` (round4_checks.py, round3_checks.py, kind_questions.py, run_round4.py). Part A used prompt v7 plus a repair retry (one feedback line appended when a check rejects the question for dropping a qualifier, scope word or head subject, or when the model says there is no limit although the sentence states a numeric bound); the retry design was added after a first pass over the part A rows, so part A took two passes over the same 12 rows (24 calls with retries, stated). Also changed after the first pass and before the freeze: a deterministic waiver template, a head-subject check, a circular-question note instead of rejection (Tyler: a restatement is not a defect), and C4 ignoring duty words the source itself uses. Nothing changes between this commit and the end of part B.
+
+Part A result in brief: the four waiver questions are four different questions naming the waived requirement and the right office (two are templated from the sentence before them); 2.20.4 covers 18 source words versus today's 15; 3.3.3.5.1 both rows keep their scope (JMAA kept); 4.4.1.3 is no question (the model kept dropping "reimbursement"; A3 not met); 3.8.1 and 3.2.2 not drafted; 1.2.2 keeps today's question; 4.1.12 and 4.2.1 drafted as proposals.
