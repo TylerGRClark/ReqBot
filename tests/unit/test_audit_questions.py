@@ -287,5 +287,7 @@ def test_a_statement_of_what_the_document_leaves_untouched_gets_no_question():
     item = _item(1, "This issuance: Does not alter or override existing Director of National Intelligence authorities and policies regarding the protection of sensitive compartmented information.")
     assert AQ.skipped_because(item) == ["document_states_its_own_effect"]
     assert AQ.skipped_because(_item(1, "This Instruction does not apply to AF Intelligence Community systems.")) == ["document_states_its_own_effect"]
-    for text in ("Units shall not alter the baseline.", "The unit does not share keys.", "Do not release the report.", "This list does not include every weapon system."):
+    for text in ("Units shall not alter the baseline.", "The unit does not share keys.", "Do not release the report.", "This list does not include every weapon system.",
+                 "The policy on mobile devices shall not be violated by users.", "The manual for each unit shall not be altered without approval.",
+                 "The issuance of waivers by commanders must not exceed one year."):  # the document noun must be the whole subject (Codex P2 on this PR)
         assert AQ.skipped_because(_item(1, text)) == [], text

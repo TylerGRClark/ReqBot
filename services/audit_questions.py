@@ -49,7 +49,7 @@ PROHIBITION = re.compile(
 # "This issuance: Does not alter or override existing ... authorities": the document says what it leaves untouched. It is not a duty of the unit, and the model turned it into "Does this issuance alter or override ...?"
 # (an inverted question), so the row stays and the question is withheld (found in DODI 8551.01 1.1 by the compound-question review, 2026-10-15).
 DOCUMENT_STATES_ITS_OWN_EFFECT = re.compile(
-    r"^\W*(?:\([\w-]+\)\s*)?(?:This|The)\s+(?:\w+\s+){0,2}?(?:issuance|instruction|publication|directive|manual|policy|memorandum|document)\b[^.?!:]{0,60}?:?\s*(?:does|do|will|shall)\s+not\b", re.IGNORECASE)
+    r"^\W*(?:\([\w-]+\)\s*)?(?:This|The)\s+(?:\w+\s+){0,2}?(?:issuance|instruction|publication|directive|manual|policy|memorandum|document)\s*:?\s*(?:also\s+)?(?:does|do|will)\s+not\b", re.IGNORECASE)
 PROHIBITION_RULE = "- This requirement forbids something. Ask whether it is avoided (\"Does the unit avoid ...?\"); do not ask whether it happens.\n"
 SCHEMA = {"type": "object", "properties": {"question": {"type": ["string", "null"]}}, "required": ["question"]}
 _TERM = re.compile(r"\b(?:\d[\w./-]*|[A-Z]{2,}[\w/&-]*|[A-Z][A-Za-z]*[a-z][A-Z][A-Za-z]*|[A-Z][a-z]+(?![A-Za-z])(?:\s+[A-Z][a-z]+(?![A-Za-z]))*)")  # a number, an acronym, a mixed-case name (StoreFront, FedRAMP, DoD), or capitalized whole words
