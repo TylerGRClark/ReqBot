@@ -32,6 +32,12 @@ Generation 2.2 s per record (about 2.7 hours for the 4,462 live records); 25 to 
 
 The dry run found and fixed one filter flaw: a sentence-initial "Which" or "Where" counted as a capitalised term and rejected good questions; the first word is now lower-cased before the check (unit-tested).
 
+## Results
+
+- Round 1 (15 miss queries, all records): `report_v1.md`. Rule not met (+6.7 points of 15 needed).
+- Round 2 (232 queries, gated arms; rule in `PREREGISTRATION_V2.md`): `report_v2.md`, `result_v2.json`, run by `run_hype_v2.py`. 45% of records gated in (2,020 of 4,462; 1,978 with the 60-character floor). Arms B, C, C2: recall@5 0.272 / 0.267 / 0.267 against A 0.267; no arm meets the rule. Decision: do not build; recorded and stopped.
+- Scratch collections are left in place: `grc_hype_spike_20261013_173015` (B), `grc_hype_spike_v2_C_20261014_115527`, `grc_hype_spike_v2_C2_20261014_115527`. Delete with the Qdrant API when no longer needed (only these names).
+
 ## Limits
 
 See PREREGISTRATION.md. In short: 15 miss queries (one is 6.7 points); queries were written by an agent that had read the target records; gold labels are partly stale after the re-ingest, so labels are restricted to live ids; a single run, no repeats.

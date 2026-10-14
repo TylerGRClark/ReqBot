@@ -139,3 +139,48 @@ def decide(a_miss_recall5: float, b_miss_recall5: float, a_gold_p5: float, b_gol
         "fall_limit_met": fall_ok,
         "verdict": "BUILD" if rise_ok and fall_ok else "DO NOT BUILD",
     }
+
+
+# ---------------------------------------------------------------- round 2 (PREREGISTRATION_V2.md)
+
+def normalise(text: str) -> str:
+    """Lower-case, keep letters and digits, collapse whitespace: the comparison form for anchor quotes."""
+    return " ".join(re.sub(r"[^a-z0-9]+", " ", (text or "").lower()).split())
+
+
+def target_hit(result: dict, requirement_ids: list[str], anchor_norm: str) -> bool:
+    """A retrieved record is the target if its requirement_id is listed, or any of its own text fields contains the anchor quote."""
+    if result.get("requirement_id") in set(requirement_ids):
+        return True
+    if not anchor_norm:
+        return False
+    return any(anchor_norm in normalise(result.get(k) or "") for k in ("source_quote", "explained_text", "parent_stem"))
+
+
+def gated_ids(checklists: list[dict]) -> set[str]:
+    """requirement_ids that belong to a checklist row with a non-empty draft audit question."""
+    out = set()
+    for doc in checklists:
+        for item in doc.get("items", []):
+            if (item.get("audit_question") or "").strip():
+                out.update(item.get("requirement_ids") or [])
+    return out
+
+
+def gate_c(payload: dict, gate: set[str], min_chars: int = 0) -> bool:
+    return payload.get("requirement_id") in gate and len(record_text(payload)) >= min_chars
+
+
+def paired_bootstrap(diffs: list[float], resamples: int = 10000, seed: int = 20261014) -> tuple[float, float, float]:
+    """(mean, lower, upper) of the mean of paired differences, 95% percentile interval, deterministic."""
+    import random
+    rng, n = random.Random(seed), len(diffs)
+    means = sorted(sum(diffs[rng.randrange(n)] for _ in range(n)) / n for _ in range(resamples))
+    return sum(diffs) / n, means[int(0.025 * resamples)], means[int(0.975 * resamples) - 1]
+
+
+def decide_v2(rise_points: float, ci_lower: float, gold_fall_points: float, nonhard_rise_points: float) -> dict:
+    """The round-2 rule of PREREGISTRATION_V2.md. Inputs in points (interval bound in points too)."""
+    checks = {"rise_at_least_5": rise_points >= 5, "interval_lower_above_0": ci_lower > 0,
+              "gold_fall_at_most_2": gold_fall_points <= 2, "gain_not_only_from_hard_rows": nonhard_rise_points > 0}
+    return {**checks, "verdict": "BUILD" if all(checks.values()) else "DO NOT BUILD"}
