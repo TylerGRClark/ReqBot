@@ -1250,6 +1250,53 @@ def cmd_kinds(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_bundle(args: argparse.Namespace) -> int:
+    """List the checklist bundles, or build one workbook (a tab per publication) from a bundle or a list of documents."""
+    from pipeline import bundle_export
+    from services import bundles
+
+    table = bundles.load_bundles()
+    if args.list or not (args.name or args.docs):
+        for name, b in sorted(table.items()):
+            print(f"{name}: {b['label'] or name} ({len(b['documents'])} publications)")
+        if not table:
+            print("No bundles defined.")
+        return 0
+    if args.name:
+        try:
+            bundle = bundles.resolve(args.name, add=args.add, remove=args.remove, bundles=table)
+        except KeyError:
+            log.error("No bundle named %r. Known: %s", args.name, ", ".join(sorted(table)) or "(none)")
+            return 1
+    else:
+        bundle = {"label": "Checklist bundle", "note": "", "documents": [{"doc": d, "title": ""} for d in args.docs]}
+    if args.save:
+        try:
+            path = bundles.save_user_bundle(args.save, bundle.get("label") or args.save, [d["doc"] for d in bundle["documents"]], note=bundle.get("note", ""))
+        except (ValueError, OSError) as e:
+            log.error("%s", e)
+            return 1
+        print(f"Bundle {args.save!r} saved to: {path}")
+    if not args.output:
+        return 0
+    processed_dir = _cfg.processed_dir_path()
+    if not processed_dir.exists():
+        log.error("Processed documents directory not found: %s", processed_dir)
+        return 1
+    data, summary = bundle_export.build_bundle_workbook(processed_dir, bundle, args.profile)
+    try:
+        Path(args.output).expanduser().write_bytes(data)
+    except OSError as e:
+        log.error("Could not write to file: %s", e)
+        return 1
+    loaded = [r for r in summary if r["loaded"]]
+    print(f"Workbook written to: {args.output} ({len(loaded)} of {len(summary)} publications loaded, {sum(r['rows'] for r in loaded)} rows)")
+    for r in summary:
+        if not r["loaded"]:
+            print(f"  not loaded: {r['doc']}")
+    return 0
+
+
 def cmd_checklist(args: argparse.Namespace) -> int:
     """Generate an audit checklist from validated requirements for a document."""
     from services import checklist_service
@@ -2105,6 +2152,17 @@ def main() -> None:
         help="Domain profile name (default: cybersecurity)",
     )
 
+    # bundle
+    p_bundle = subparsers.add_parser("bundle", help="One workbook with a tab per publication, from a named bundle (a starter you can edit) or a list of documents")
+    p_bundle.add_argument("--list", action="store_true", help="List the known bundles")
+    p_bundle.add_argument("--name", type=str, default=None, help="Bundle name (see --list)")
+    p_bundle.add_argument("--docs", nargs="+", default=None, help="Document keys, instead of a named bundle")
+    p_bundle.add_argument("--add", nargs="+", default=None, help="Document keys to add to the named bundle")
+    p_bundle.add_argument("--remove", nargs="+", default=None, help="Document keys to leave out of the named bundle")
+    p_bundle.add_argument("--save", type=str, default=None, help="Save the resulting list under this name in your own bundles file")
+    p_bundle.add_argument("--output", type=str, default=None, help="Write the workbook to FILE (.xlsx)")
+    p_bundle.add_argument("--profile", type=str, default="cybersecurity", help="Domain profile name (default: cybersecurity)")
+
     # kinds
     p_kinds = subparsers.add_parser(
         "kinds",
@@ -2243,6 +2301,7 @@ def main() -> None:
         "ask": cmd_ask,
         "batch": cmd_batch,
         "checklist": cmd_checklist,
+        "bundle": cmd_bundle,
         "kinds": cmd_kinds,
         "questions": cmd_questions,
         "docs": cmd_docs,
