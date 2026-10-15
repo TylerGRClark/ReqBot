@@ -137,7 +137,7 @@ def test_an_applicability_sentence_in_the_front_matter_is_applicability_and_keep
 
 
 def test_the_rules_version_names_the_current_rule_set():
-    assert RK.RULES_VERSION == "kind-rules-6"
+    assert RK.RULES_VERSION == "kind-rules-7"
 
 
 def test_a_row_whose_kind_comes_from_its_position_also_keeps_what_its_words_say():
@@ -219,3 +219,32 @@ def test_a_command_in_the_front_matter_is_a_duty_not_cover_page_text():
         r = RK.classify(_item(quote, citation="Front matter"))
         assert r["kind"] == "duty_imperative" and "front_matter" in r["kind_tags"], quote
     assert RK.classify(_item("This publication applies to the Air Force.", citation="Front matter"))["kind"] == "applicability"
+
+
+def test_a_role_then_colon_then_a_third_person_verb_is_a_duty_with_an_actor():
+    assert _kind("The ISSO: Completes and maintains required cybersecurity certification IAW AFMAN 17-1303.") == "duty_with_actor"
+    assert _kind("The USD(I&S): Identifies ICT supply chain risks.") == "duty_with_actor"
+    assert _kind("The USD(A&S): Establishes policy and develops implementing guidance.") == "duty_with_actor"
+
+
+def test_a_condition_lead_after_the_colon_or_before_the_actor_is_skipped():
+    assert _kind("The USD(R&E): In coordination with the DoD CIO, oversees and provides guidance on IT.") == "duty_with_actor"
+    assert _kind("In addition to the responsibilities in Paragraph 2.4., the Commander, United States Cyber Command: Develops, coordinates, and approves plans.") == "duty_with_actor"
+
+
+def test_a_noun_after_the_colon_is_not_a_command():
+    assert _kind("The reviewer: Reports of incidents are filed with the office.") != "duty_with_actor"
+    assert _kind("Note: Provides background only.") != "duty_with_actor"
+
+
+def test_follow_contact_inspect_and_solicit_open_a_command_but_rank_is_still_a_noun():
+    assert _kind("Follow the guidance in NIST SP 800-30, Rev. 1, Guide for Conducting Risk Assessments.") == "duty_imperative"
+    assert _kind("Contact the Unit CSS to provision the new account.") == "duty_imperative"
+    assert _kind("Inspect and log network traffic for unauthorized and malicious actions.") == "duty_imperative"
+    assert _kind("As needed, solicit cyber support community field unit assistance for product validation.") == "duty_imperative"
+    assert _kind("Rank is mandatory for enlisted personnel and optional for officers.") != "duty_imperative"
+
+
+def test_a_modal_in_the_actor_or_the_document_as_actor_is_not_a_duty_of_a_role():
+    assert _kind("As a minimum these processes, procedures and tools should: Be standardized across similar operations.") == "recommendation"
+    assert _kind("In accordance with the authority in DoDD 5143.01, this instruction: Establishes policy and assigns responsibilities.") != "duty_with_actor"
