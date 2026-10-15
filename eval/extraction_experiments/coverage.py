@@ -1,7 +1,7 @@
 """Blind coverage check: does a document's checklist hold what a human checklist asks?
 
 Three steps, and the model-judging step is done by two separate blind labelers outside this file (agreement between two copies of one model is not correctness):
-  1. `packets`: write theirs.txt (T01..), pool.txt (Q001.., shuffled, arm names removed) and key.json for one document.
+  1. `packets`: write theirs.txt (T01..) and pool.txt (Q001.., shuffled, no arm names) for one document.
   2. each labeler writes a JSON list [{"id": "T01", "verdict": "yes|partial|no", "pool_ids": [...]}].
   3. `score`: combine two labelers' files into counts, the disagreements and the misses.
 
@@ -28,16 +28,24 @@ def build_packets(records: list[dict], publication: str, questions: list[str], s
     }
 
 
-def combine(a: list[dict], b: list[dict]) -> dict:
-    """Per hand-written item: both labelers' verdicts, whether they agree, and the strict (both say yes) and lenient (neither says no) readings."""
+def combine(a: list[dict], b: list[dict], expected: int | None = None) -> dict:
+    """Per hand-written item: both labelers' verdicts, whether they agree, and the strict (both say yes) and lenient (neither says no) readings.
+
+    Raises ValueError when the two labelers did not rate the same items (an omitted item must not shrink the denominator) or, with `expected`, when fewer were rated."""
     by_a, by_b = {r["id"]: r for r in a}, {r["id"]: r for r in b}
-    ids = sorted(set(by_a) & set(by_b))
+    if len(by_a) != len(a) or len(by_b) != len(b):
+        raise ValueError("a labeler gave the same item twice")
+    if set(by_a) != set(by_b):
+        raise ValueError(f"the labelers did not rate the same items: only A has {sorted(set(by_a) - set(by_b))}, only B has {sorted(set(by_b) - set(by_a))}")
+    ids = sorted(by_a)
     rows = []
     for i in ids:
         va, vb = by_a[i]["verdict"], by_b[i]["verdict"]
         if va not in VERDICTS or vb not in VERDICTS:
             raise ValueError(f"{i}: verdicts must be one of {VERDICTS}, got {va!r} and {vb!r}")
         rows.append({"id": i, "a": va, "b": vb, "agree": va == vb})
+    if expected is not None and len(rows) != expected:
+        raise ValueError(f"expected {expected} rated items, got {len(rows)}")
     both = Counter((r["a"], r["b"]) if r["a"] <= r["b"] else (r["b"], r["a"]) for r in rows)
     return {
         "items": len(rows),
@@ -61,6 +69,7 @@ def main(argv=None) -> int:
     s = sub.add_parser("score")
     s.add_argument("--a", required=True)
     s.add_argument("--b", required=True)
+    s.add_argument("--expected", type=int, default=None, help="How many items should have been rated (the count in theirs.txt)")
     args = ap.parse_args(argv)
     if args.cmd == "packets":
         records = json.loads(Path(args.records).expanduser().read_text(encoding="utf-8"))
@@ -72,8 +81,8 @@ def main(argv=None) -> int:
         (out / "pool.txt").write_text("\n".join(f"{q['id']}: {q['text']}" for q in packets["pool"]), encoding="utf-8")
         print(f"{len(packets['theirs'])} hand-written items, {len(packets['pool'])} pool questions written to {out}")
         return 0
-    result = combine(json.loads(Path(args.a).read_text(encoding="utf-8")), json.loads(Path(args.b).read_text(encoding="utf-8")))
-    print(json.dumps({k: v for k, v in result.items() if k != "rows"}, indent=1))
+    result = combine(json.loads(Path(args.a).read_text(encoding="utf-8")), json.loads(Path(args.b).read_text(encoding="utf-8")), args.expected)
+    print(json.dumps(result, indent=1))
     return 0
 
 

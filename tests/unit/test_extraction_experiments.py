@@ -74,3 +74,14 @@ def test_scoring_counts_strict_lenient_and_misses():
 def test_scoring_rejects_a_verdict_it_does_not_know():
     with pytest.raises(ValueError):
         coverage.combine([{"id": "T01", "verdict": "maybe"}], [{"id": "T01", "verdict": "yes"}])
+
+
+def test_scoring_refuses_label_sets_that_do_not_cover_the_same_items():
+    a = [{"id": "T01", "verdict": "yes"}, {"id": "T02", "verdict": "no"}]
+    b = [{"id": "T01", "verdict": "yes"}]
+    with pytest.raises(ValueError, match="same items"):
+        coverage.combine(a, b)
+    with pytest.raises(ValueError, match="expected 3"):
+        coverage.combine(a, a, expected=3)
+    with pytest.raises(ValueError, match="twice"):
+        coverage.combine(a + [{"id": "T01", "verdict": "no"}], a)
