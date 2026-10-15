@@ -289,8 +289,10 @@ def _xlsx_values(item: dict) -> dict:
     }
 
 
-def to_xlsx(checklist: dict) -> bytes:
+def to_xlsx(checklist: dict, *, workbook=None, sheet_title: str = "Checklist") -> bytes | None:
     """Return the checklist items as an Excel workbook (XLSX) in bytes.
+
+    With `workbook`, the sheet is added to that workbook under `sheet_title` instead and nothing is returned (used to put several documents in one workbook).
 
     Layout (rows): 1 the document's name, 2 a line of facts (profile, when, how many items, how many are flagged, how many possible missed), 3 the column groups (Ask, Record,
     Context, Locate, Trace), each in its own color, 4 the column headers in the lighter shade of the group's color, then one row per item, then the possible-missed block.
@@ -324,13 +326,18 @@ def to_xlsx(checklist: dict) -> bytes:
     missed = checklist.get("possible_missed", [])
     title = _xlsx_title(checklist)
 
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Checklist"
+    if workbook is None:
+        wb = Workbook()
+        ws = wb.active
+        ws.title = sheet_title
+    else:
+        wb = workbook
+        ws = wb.create_sheet(sheet_title)
     ws.sheet_view.showGridLines = False
     ws.sheet_properties.tabColor = "047857"
-    wb.properties.title = f"Audit checklist: {title}"
-    wb.properties.creator = "ReqBot"
+    if workbook is None:
+        wb.properties.title = f"Audit checklist: {title}"
+        wb.properties.creator = "ReqBot"
 
     # Rows 1 and 2: which document this is, and the facts about the sheet
     ws.cell(row=1, column=1, value=_csv_safe(f"Audit checklist: {title}")).font = Font(name=face, size=16, bold=True, color=ink)
@@ -486,6 +493,8 @@ def to_xlsx(checklist: dict) -> bytes:
     ws.oddFooter.right.text = "Page &P of &N"
     ws.oddFooter.right.size = 8
 
+    if workbook is not None:
+        return None
     buf = io.BytesIO()
     wb.save(buf)
     return buf.getvalue()
