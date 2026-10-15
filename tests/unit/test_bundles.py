@@ -90,3 +90,22 @@ def test_tab_titles_are_unique_short_and_safe():
     b = bundle_export._tab_title("dodi 5200.48", used)
     c = bundle_export._tab_title("x" * 50 + "/[y]", used)
     assert a == "DODI 5200.48" and b == "dodi 5200.48_2" and len(c) <= 31 and not any(ch in c for ch in "[]:*?/\\")
+
+
+def test_an_unknown_profile_is_an_error_not_a_list_of_unloaded_publications(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        bundle_export.build_bundle_workbook(tmp_path, {"label": "L", "documents": [{"doc": "doc-a", "title": "A"}]}, profile="no-such-profile")
+
+
+def test_a_label_note_or_title_that_looks_like_a_formula_is_written_as_text(tmp_path, monkeypatch):
+    def fake_generate(processed_dir, key, profile):
+        raise FileNotFoundError(key)
+
+    monkeypatch.setattr(bundle_export.checklist_service, "generate", fake_generate)
+    bundle = {"label": "=HYPERLINK(\"http://evil.example\")", "note": "+cmd|' /C calc'!A0", "documents": [{"doc": "doc-a", "title": "@SUM(1+1)"}]}
+    data, _ = bundle_export.build_bundle_workbook(tmp_path, bundle)
+    path = tmp_path / "f.xlsx"
+    path.write_bytes(data)
+    ws = openpyxl.load_workbook(path)["Contents"]
+    for cell in (ws["A1"], ws["A2"], ws["B5"]):
+        assert not str(cell.value).startswith(("=", "+", "-", "@")), cell.value

@@ -3,6 +3,7 @@ import io
 import re
 from pathlib import Path
 
+from core.profiles import load_profile
 from pipeline import checklist_export
 from services import checklist_service
 
@@ -21,10 +22,13 @@ def _tab_title(key: str, used: set) -> str:
 
 
 def build_bundle_workbook(processed_dir: Path, bundle: dict, profile: str = "cybersecurity") -> tuple[bytes, list[dict]]:
-    """Returns (xlsx bytes, one summary dict per listed publication: doc, title, tab, rows, with_question, loaded)."""
+    """Returns (xlsx bytes, one summary dict per listed publication: doc, title, tab, rows, with_question, loaded).
+
+    An unknown profile raises (FileNotFoundError or ValueError) instead of showing every publication as "not loaded"."""
     from openpyxl import Workbook
     from openpyxl.styles import Alignment, Font, PatternFill
 
+    load_profile(profile)
     wb = Workbook()
     contents = wb.active
     contents.title = "Contents"
@@ -47,9 +51,9 @@ def build_bundle_workbook(processed_dir: Path, bundle: dict, profile: str = "cyb
         summary.append(rec)
 
     contents.sheet_view.showGridLines = False
-    contents.cell(row=1, column=1, value=bundle.get("label") or "Checklist bundle").font = Font(name="Calibri", size=16, bold=True)
+    contents.cell(row=1, column=1, value=checklist_export._csv_safe(bundle.get("label") or "Checklist bundle")).font = Font(name="Calibri", size=16, bold=True)
     note = bundle.get("note") or "A starting list. Add or remove publications to match the unit's real programs."
-    contents.cell(row=2, column=1, value=note).font = Font(name="Calibri", size=10, color="4B5563")
+    contents.cell(row=2, column=1, value=checklist_export._csv_safe(note)).font = Font(name="Calibri", size=10, color="4B5563")
     headers = ["Tab", "Publication", "Rows", "With a draft question", "In this workbook"]
     for col, h in enumerate(headers, start=1):
         cell = contents.cell(row=4, column=col, value=h)
@@ -63,7 +67,7 @@ def build_bundle_workbook(processed_dir: Path, bundle: dict, profile: str = "cyb
     for letter, width in zip("ABCDE", (18, 70, 8, 22, 18)):
         contents.column_dimensions[letter].width = width
     contents.freeze_panes = "A5"
-    wb.properties.title = bundle.get("label") or "Checklist bundle"
+    wb.properties.title = str(bundle.get("label") or "Checklist bundle")[:200]
     wb.properties.creator = "ReqBot"
     buf = io.BytesIO()
     wb.save(buf)
