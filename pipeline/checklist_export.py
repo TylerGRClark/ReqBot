@@ -12,6 +12,7 @@ import math
 from datetime import datetime
 
 from core.display import citation_label
+from services.tier_tag import tier_of
 
 # CSV column order: locate → ask → record → verify → trace
 _CSV_COLUMNS = [
@@ -34,6 +35,7 @@ _CSV_COLUMNS = [
     "checklist_item_id",
     "requirement_ids",
     "domain_tags",
+    "tier",
 ]
 
 
@@ -112,6 +114,7 @@ def _csv_row(item: dict) -> dict:
         "checklist_item_id": item.get("checklist_item_id", ""),
         "requirement_ids": _join(item.get("requirement_ids") or [], ", "),
         "domain_tags": _join(item.get("domain_tags") or [], ", "),
+        "tier": tier_of(item),
     }
     return {k: _csv_safe(v) for k, v in raw.items()}
 
@@ -146,6 +149,9 @@ def _md_item(item: dict, index: int) -> str:
     source_ref = _ref(item)
     if source_ref:
         lines.append(f"**Source Ref:** {source_ref}  ")
+    tier = tier_of(item)
+    if tier:
+        lines.append(f"**Tier:** {tier}  ")
     tags = _join(item.get("domain_tags") or [], ", ")
     if tags:
         lines.append(f"**Domain Tags:** {tags}  ")
@@ -215,6 +221,7 @@ _XLSX_COLUMNS = [
     ("Check",                  "item_flags",        22, True,  "Record"),
     ("Passage (click to read all)", "passage",      56, True,  "Context"),
     ("Ref",                    "ref",               14, False, "Locate"),
+    ("Tier",                   "tier",               7, False, "Locate"),
     ("Pages",                  "page_refs",          8, False, "Locate"),
     ("Item ID",                "checklist_item_id", 11, False, "Trace"),
     ("Req IDs",                "requirement_ids",   11, False, "Trace"),
@@ -281,6 +288,7 @@ def _xlsx_values(item: dict) -> dict:
         "item_flags": _csv_safe(_join(list(item.get("item_flags") or []) + _attention_reasons(item), "; ")),
         "passage": _csv_safe(item.get("passage") or ""),
         "ref": _csv_safe(_ref(item)),
+        "tier": tier_of(item),
         "page_refs": _csv_safe(_join(item.get("page_refs") or [], ", ")),
         "checklist_item_id": _csv_safe(item.get("checklist_item_id") or ""),
         "requirement_ids": _csv_safe(_join(item.get("requirement_ids") or [], ", ")),

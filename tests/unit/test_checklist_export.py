@@ -373,7 +373,7 @@ def test_to_xlsx_sheet_name():
 def test_to_xlsx_group_headers_in_row_3():
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    group_values = [ws.cell(row=3, column=c).value for c in range(1, 14)]  # rows 1 and 2 are the document's name and the facts about the sheet
+    group_values = [ws.cell(row=3, column=c).value for c in range(1, 15)]  # rows 1 and 2 are the document's name and the facts about the sheet
     assert [g for g in group_values if g] == ["Ask", "Record", "Context", "Locate", "Trace"]
 
 
@@ -384,14 +384,14 @@ def test_to_xlsx_column_order():
         "Requirement", "Audit Question (draft)",
         "Status", "Notes", "Check",
         "Passage (click to read all)",
-        "Ref", "Pages",
+        "Ref", "Tier", "Pages",
         "Item ID", "Req IDs", "Conf.", "Tags",
     ]
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    actual = [ws.cell(row=4, column=c).value for c in range(1, 14)]
+    actual = [ws.cell(row=4, column=c).value for c in range(1, 15)]
     assert actual == expected_headers
-    assert ws.max_column == 13
+    assert ws.max_column == 14
 
 
 def test_to_xlsx_leaves_section_applies_to_parent_and_reasons_off_the_sheet_but_not_off_the_other_exports():
@@ -420,14 +420,14 @@ def test_to_xlsx_auto_filter_covers_data_rows():
     # ENVELOPE has 2 items → 4 title and header rows + 2 data rows = max_row 6; the filter starts at the column headers (row 4) and must end at row 6
     wb = _load_xlsx(to_xlsx(ENVELOPE))
     ws = wb["Checklist"]
-    assert ws.auto_filter.ref == "A4:M6", f"expected the filter on A4:M6, got {ws.auto_filter.ref}"
+    assert ws.auto_filter.ref == "A4:N6", f"expected the filter on A4:N6, got {ws.auto_filter.ref}"
 
 
 def test_to_xlsx_auto_filter_empty_checklist_is_the_header_row_alone():
     wb = _load_xlsx(to_xlsx(EMPTY_ENVELOPE))
     ws = wb["Checklist"]
     assert ws.auto_filter.ref is not None
-    assert ws.auto_filter.ref == "A4:M4", f"expected the filter on the header row alone, got {ws.auto_filter.ref}"
+    assert ws.auto_filter.ref == "A4:N4", f"expected the filter on the header row alone, got {ws.auto_filter.ref}"
 
 
 def test_to_xlsx_status_data_validation_exists():
@@ -601,7 +601,7 @@ def test_a_document_name_that_looks_like_a_formula_is_not_one():
 
 def test_each_column_group_has_its_own_color_and_the_headers_carry_the_lighter_shade():
     ws = _sheet(ENVELOPE)
-    bands = {ws.cell(row=3, column=c).value: ws.cell(row=3, column=c).fill.fgColor.rgb for c in (1, 4, 7, 8, 10)}
+    bands = {ws.cell(row=3, column=c).value: ws.cell(row=3, column=c).fill.fgColor.rgb for c in (1, 4, 7, 8, 11)}
     assert list(bands) == ["Ask", "Record", "Context", "Locate", "Trace"]
     assert len(set(bands.values())) == 5
     assert ws.cell(row=3, column=1).font.color.rgb.endswith("FFFFFF")
@@ -741,3 +741,16 @@ def test_a_missing_source_ref_is_not_a_reason_to_mark_a_row_that_has_a_citation_
     assert ws.cell(row=6, column=_col(ws, "Check")).value == "missing-source-ref"
     assert "1 of them flagged" in ws["A2"].value
 
+
+
+def test_the_tier_reaches_the_xlsx_column_and_the_markdown_line():
+    env = {**EMPTY_ENVELOPE, "items": [
+        {"source_quote": "Do A. (T-1)", "passage": "", "checklist_item_id": "CHK-1", "requirement_ids": ["R1"], "item_flags": []},
+        {"source_quote": "Do B.", "passage": ">> Do B. << (T-0).", "checklist_item_id": "CHK-2", "requirement_ids": ["R2"], "item_flags": []},
+        {"source_quote": "Do C.", "passage": ">> Do C. <<", "checklist_item_id": "CHK-3", "requirement_ids": ["R3"], "item_flags": []},
+    ]}
+    ws = _sheet(env)
+    col = _col(ws, "Tier")
+    assert [ws.cell(row=r, column=col).value for r in (5, 6, 7)] == ["T-1", "T-0", None]
+    md = to_markdown(env)
+    assert md.count("**Tier:** T-1") == 1 and md.count("**Tier:** T-0") == 1 and md.count("**Tier:**") == 2
