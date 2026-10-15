@@ -35,3 +35,16 @@ If both N and O qualify, N wins only if its rating beats O's. If neither qualifi
 
 ## Limits stated up front
 Same-family labelers (agreement is not correctness; Tyler's sample is the check). 250 rows in 5 documents. Adopting means a prompt change and regeneration of every document's questions (a separate approval).
+
+## Result (ran 2026-10-15; 250 rows, 0 model errors; written after reading the outputs)
+
+By code: invented actor C 52 / N 0 / O 37; rows with no question C 29 / N 14 / O 24; passive opening C 38 / N 225 / O 42; rows changed against C: N 215, O 114 (noise floor, C against C2: 26); unverified-terms rows C 2 / N 3 / O 2.
+
+Blind rating (two Opus labelers, changed rows only, order randomized):
+| Arm | Changed rows | Both agree | Better | Same | Worse | Better minus worse |
+|---|---|---|---|---|---|---|
+| N (no fallback, impersonal) | 215 | 181 | 27% | 39% | 34% | -7 points |
+| O ("the organization") | 114 | 102 | 21% | 73% | 7% | +14 points |
+
+Against the registered rules: **N fails rule 1** (worse 34%, limit 10%). Its failure is the passive voice: it drops actors the source names (SAF/FM, the LHC Financial Analyst) and adds questions for permissions and descriptions. **O meets rules 1 to 3** (rule 4 applies to N only). Of O's 114 changed rows, only 35 differ by the swapped word alone; the rest are model variation that the swap set off, so the gain is not mainly about the word. O still invents an actor on 37 rows (15%), against 52.
+Labelers are the same model family; the 15-row sheet in `~/reqbot-work/checklists/question_wording_which_is_better.xlsx` is the owner check. Nothing is wired in.
