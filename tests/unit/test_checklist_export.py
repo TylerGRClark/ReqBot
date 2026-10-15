@@ -741,3 +741,16 @@ def test_a_missing_source_ref_is_not_a_reason_to_mark_a_row_that_has_a_citation_
     assert ws.cell(row=6, column=_col(ws, "Check")).value == "missing-source-ref"
     assert "1 of them flagged" in ws["A2"].value
 
+
+
+def test_the_tier_reaches_the_xlsx_column_and_the_markdown_line():
+    env = {**EMPTY_ENVELOPE, "items": [
+        {"source_quote": "Do A. (T-1)", "passage": "", "checklist_item_id": "CHK-1", "requirement_ids": ["R1"], "item_flags": []},
+        {"source_quote": "Do B.", "passage": ">> Do B. << (T-0).", "checklist_item_id": "CHK-2", "requirement_ids": ["R2"], "item_flags": []},
+        {"source_quote": "Do C.", "passage": ">> Do C. <<", "checklist_item_id": "CHK-3", "requirement_ids": ["R3"], "item_flags": []},
+    ]}
+    ws = _sheet(env)
+    col = _col(ws, "Tier")
+    assert [ws.cell(row=r, column=col).value for r in (5, 6, 7)] == ["T-1", "T-0", None]
+    md = to_markdown(env)
+    assert md.count("**Tier:** T-1") == 1 and md.count("**Tier:** T-0") == 1 and md.count("**Tier:**") == 2
