@@ -48,3 +48,6 @@ Blind rating (two Opus labelers, changed rows only, order randomized):
 
 Against the registered rules: **N fails rule 1** (worse 34%, limit 10%). Its failure is the passive voice: it drops actors the source names (SAF/FM, the LHC Financial Analyst) and adds questions for permissions and descriptions. **O meets rules 1 to 3** (rule 4 applies to N only). Of O's 114 changed rows, only 35 differ by the swapped word alone; the rest are model variation that the swap set off, so the gain is not mainly about the word. O still invents an actor on 37 rows (15%), against 52.
 Labelers are the same model family; the 15-row sheet in `~/reqbot-work/checklists/question_wording_which_is_better.xlsx` is the owner check. Nothing is wired in.
+
+## Owner check (2026-10-15)
+Tyler rated 14 of 15 blind A/B rows: the current prompt preferred on 5, "the organization" on 1, same on 8 (one row skipped). This reverses the model raters' +14 points for O: **O is not adopted, the prompt stays as it is.** His notes: where the source names no actor an impersonal question is fine ("Are waivers submitted?"); one O question named positions the source does not. Model-rater agreement over-credited the change.
