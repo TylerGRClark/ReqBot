@@ -388,3 +388,23 @@ def test_the_score_prompt_carries_the_row_and_the_worked_examples_and_a_score_mu
     prompt = AQ.score_prompt(_item(1, _UNKNOWN, parent_text="Tiers"))
     assert _UNKNOWN in prompt and "OPR is A1S." in prompt and prompt.count("-> score") == 6
     assert AQ.parse_score('{"score": 7}') == 7 and AQ.parse_score('{"score": 11}') is None and AQ.parse_score('{"score": true}') is None and AQ.parse_score("nope") is None
+
+
+def test_a_failed_or_unreadable_score_is_retried_once_before_the_row_falls_back_to_its_question(tmp_path):
+    answers = iter([OSError("timeout"), '{"score": 2}'])
+
+    def flaky(prompt):
+        a = next(answers)
+        if isinstance(a, Exception):
+            raise a
+        return a
+
+    AQ.draft_questions([_item(1, _UNKNOWN)], tmp_path / "a.jsonl", call=lambda p: '{"question": "x"}', score_call=flaky)
+    assert AQ.load(tmp_path / "a.jsonl")["CL-1"]["skipped_because"] == ["low_requirement_score"]
+    bad = iter(["not json", '{"score": 9}'])
+    AQ.draft_questions([_item(2, _UNKNOWN)], tmp_path / "b.jsonl", call=lambda p: '{"question": "Does Tier Two respond?"}', score_call=lambda p: next(bad))
+    assert AQ.load(tmp_path / "b.jsonl")["CL-2"]["requirement_score"] == 9
+    calls = []
+    AQ.draft_questions([_item(3, _UNKNOWN)], tmp_path / "c.jsonl", call=lambda p: '{"question": "Does Tier Two respond?"}', score_call=lambda p: calls.append(p) or "nope")
+    saved = AQ.load(tmp_path / "c.jsonl")["CL-3"]
+    assert len(calls) == 2 and saved["question"] and "requirement_score" not in saved

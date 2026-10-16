@@ -213,13 +213,15 @@ def ollama_score_call(prompt: str, model: str, ollama_url: str, timeout: int = 1
 
 
 def ask_score(item: dict, score_call) -> int | None:
-    """The model's 0 to 10 score for the row, or None when it cannot be had (an unreachable server or an answer that is not a score): the row then gets its question as before."""
+    """The model's 0 to 10 score for the row, or None when it cannot be had after one retry (an unreachable server, a timeout or an answer that is not a score): the row then gets its
+    question as before. One bad answer is not a judgement that the row is not a requirement."""
     prompt = score_prompt(item)
     for _ in range(2):
         try:
-            return parse_score(score_call(prompt))
+            if (score := parse_score(score_call(prompt))) is not None:
+                return score
         except OSError:
-            return None
+            continue
     return None
 
 
