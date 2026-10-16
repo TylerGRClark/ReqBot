@@ -295,3 +295,12 @@ def test_new_opening_commands_and_the_nouns_that_look_like_them():
 def test_wear_of_and_limit_of_are_nouns():
     assert _kind("Wear of the shield with the Mess Dress Uniform is optional.") != "duty_imperative"
     assert _kind("Use of the matrices and due care is mandatory to assure the integrity of the workforce.") == "duty_imperative"
+
+
+def test_review_findings_on_kind_rules_8_a_qualified_negation_a_noun_phrase_and_a_plural_noun_subject():
+    assert _kind("The policy does not necessarily require annual training.") == "unknown"
+    assert _kind("The audit lists only authorized users.") == "unknown"
+    assert _kind("This mandate expired in 2024.") == "unknown"
+    assert _kind("Issues include weak passwords and unsupported systems.") == "unknown"
+    assert _kind("Issues guidance on supply chain risk to the Components.") == "duty_imperative"
+    assert _kind("DoD policy mandates that all components encrypt backups.") == "duty_with_actor"

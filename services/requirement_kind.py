@@ -49,8 +49,8 @@ _MODAL_SOON = re.compile(r"^(?:\S+\s+){0,3}?(?<!that )(?<!who )(?<!which )(?:sha
 _ACTOR_COLON = re.compile(r"^(?P<actor>[A-Z][^:;.]{1,70}?):\s+(?P<rest>\S.*)$", re.DOTALL)
 _DOCUMENT_AS_ACTOR = re.compile(r"\b(?:this|the)\s+(?:\w+\s+){0,2}?(?:issuance|instruction|publication|directive|manual|policy|memorandum|document|pamphlet)\s*$", re.IGNORECASE)
 _CONTACT_AS_NOUN = re.compile(r"^\W*(?:\([\w-]+\)\s*)?(?:contact\s*(?::|(?:information|info|details|numbers?|lists?|persons?|points?|e-?mail|phone)\b)|wear\s+(?:criteria|guidance|standards?)\b)", re.IGNORECASE)  # a label or a noun phrase
-_NEGATED_OR_HYPOTHETICAL = re.compile(r"\b(?:not|never|no|could|would|might|may|can|cannot)\s+$", re.IGNORECASE)  # "do not require", "could result in"
-_IMPLIED_DUTY = re.compile(r"\b(?:require\b|mandates?\b|needs\s+to\b|only\s+(?:authorized|permitted|issued|allowed)\b|is\s+the\s+only\s+authority\b)", re.IGNORECASE)  # "require" (plural) and not "requires" or "need to": measured 23 of 28 against 19 of 31 and 4 of 8
+_NEGATED_OR_HYPOTHETICAL = re.compile(r"\b(?:not|never|no|could|would|might|may|can|cannot)\b[^.;:]{0,30}$", re.IGNORECASE)  # "do not require", "could result in"
+_IMPLIED_DUTY = re.compile(r"\b(?:require\b|mandates\b|needs\s+to\b|(?:is|are|be)\s+only\s+(?:authorized|permitted|issued|allowed)\b|is\s+the\s+only\s+authority\b)", re.IGNORECASE)  # plural "require", not "requires" or "need to" (measured 23 of 28 real against 19 of 31 and 4 of 8); "only authorized" only as a predicate
 _NOT_AN_ACTOR = frozenset({"in addition", "note", "notes", "example", "examples", "exception", "exceptions", "reminder", "caution", "warning", "purpose", "rationale", "for example",
                            "scope", "applicability", "summary", "background", "definition", "definitions", "overview", "introduction", "general", "objective", "objectives", "description", "policy", "contact"})
 _RESPONSIBILITY = re.compile(r"\b(?:retain|retains|have|has|assume|assumes|bear|bears)\s+(?:\S+\s+){0,4}?responsibilit(?:y|ies)\b|\bresponsibilit(?:y|ies)\b[^.:;]{0,80}?\b(?:are|is|include)\s*:", re.IGNORECASE)
@@ -131,7 +131,7 @@ def _third_person_command(text: str):
         bases.append(word[:-3] + "y")
     rest = m.group(2).lstrip()
     if not any(b in _COMMAND_VERBS or b in _THIRD_PERSON_EXTRA for b in bases) or re.match(r"of\b", rest, re.IGNORECASE) or _MODAL_SOON.match(rest) \
-            or re.match(r"(?:is|are|was|were|be|been|has|have|had|does|do|did|will|shall|must|should|may|can|cannot)\b", rest, re.IGNORECASE):
+            or re.match(r"(?:is|are|was|were|be|been|has|have|had|does|do|did|will|shall|must|should|may|can|cannot|include|includes|consist|consists|mean|means|involve|involves|remain|remains|occur|occurs|exist|exists|appear|appears)\b", rest, re.IGNORECASE):
         return None  # "Reports shall be filed ..." and "Reports are due ..." have a noun for a subject
     return m.group(1)
 
