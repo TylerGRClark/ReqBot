@@ -63,3 +63,12 @@ Scores are close to two-state: thresholds 3 to 7 behave the same (88% real kept,
 | 2 | 0.4% | about 694 |
 | 3 to 7 | 1.7% to 1.8% | about 450 to 480 |
 The real rows it misses at 7 are mostly borderline: recommendations and advice ("Consider using introspection capabilities ..."), uniform-fit statements ("The cap sits squarely on the head."), and role sentences without a modal.
+
+## Round 3: improve the strict setting (registered 2026-10-16 before any round-3 output)
+The owner prefers the strict setting and accepts losing about 2% of real questions for a decluttered list, because the rows themselves stay (only the draft question is withheld),
+and asked for a couple more prompt trials. Tuning rows: round 1 (228) + the round-2 fresh set (290 agreed) = 518 labeled rows. A third fresh set (300 random `unknown` rows, two blind
+labelers) is drawn and labeled now and not looked at until the end.
+- **S3:** a revised definition that says what S2 missed: advice and recommendations that tell the reader what to do ("should", "consider", "it is recommended"), standards for how something is done, worn or kept, responsibilities of roles ("it is every Airman's responsibility ..."), and conditions on what is authorized. Same six examples as S2.
+- **S4:** S3's definition + 12 worked examples (the six from S2 plus six from the tuning rows: three real rows of the missed kinds, three hard not-real rows).
+- Selection: on the tuning rows minus the worked examples, pick the variant and threshold with the most noise dropped among those keeping at least 92% of real; ties go to S2 (fewer changes).
+- Confirmation: the chosen variant and threshold, frozen, run once on the third fresh set. Adopt if real kept is at least 90% and noise dropped at least 70%; otherwise the strict setting is S2 at 7 as measured (87% / 79%).
