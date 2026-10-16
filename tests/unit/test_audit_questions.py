@@ -285,22 +285,24 @@ def test_a_question_opening_with_a_modal_is_checked_for_an_actor_from_the_surrou
 def test_a_statement_of_what_the_document_leaves_untouched_gets_no_question():
     # DODI 8551.01 1.1: the model asked "Does this issuance alter or override ...?", the opposite of the source
     item = _item(1, "This issuance: Does not alter or override existing Director of National Intelligence authorities and policies regarding the protection of sensitive compartmented information.")
-    assert AQ.skipped_because(item) == ["document_states_its_own_effect"]
-    assert AQ.skipped_because(_item(1, "This Instruction does not apply to AF Intelligence Community systems.")) == ["document_states_its_own_effect"]
+    assert "document_states_its_own_effect" in AQ.skipped_because(item)
+    assert "document_states_its_own_effect" in AQ.skipped_because(_item(1, "This Instruction does not apply to AF Intelligence Community systems."))
     for text in ("Units shall not alter the baseline.", "The unit does not share keys.", "Do not release the report.", "This list does not include every weapon system.",
                  "The policy on mobile devices shall not be violated by users.", "The manual for each unit shall not be altered without approval.",
                  "The issuance of waivers by commanders must not exceed one year."):  # the document noun must be the whole subject (Codex P2 on this PR)
         assert AQ.skipped_because(_item(1, text)) == [], text
 
 
-def test_the_kind_gate_is_off_unless_asked_for(monkeypatch):
-    monkeypatch.delenv("REQBOT_QUESTION_GATE", raising=False)
+def test_the_kind_gate_is_on_unless_turned_off(monkeypatch):
     item = _item(1, "Compliance with this publication is mandatory.", citation="Front matter")
+    monkeypatch.delenv("REQBOT_QUESTION_GATE", raising=False)
+    assert AQ.skipped_because(item) == ["kind:cover_page_text"]
+    monkeypatch.setenv("REQBOT_QUESTION_GATE", "off")
     assert AQ.skipped_because(item) == []
 
 
 def test_the_kind_gate_withholds_rows_the_kind_rules_call_not_a_duty(monkeypatch):
-    monkeypatch.setenv("REQBOT_QUESTION_GATE", "on")
+    monkeypatch.delenv("REQBOT_QUESTION_GATE", raising=False)
     front = _item(1, "Compliance with this publication is mandatory.", citation="Front matter")
     assert AQ.skipped_because(front) == ["kind:cover_page_text"]
     duty = _item(2, "The commander will appoint a records manager.")
@@ -335,3 +337,54 @@ def test_a_duty_in_a_figure_or_front_matter_is_not_withheld_because_of_where_it_
     assert AQ.skipped_because(front_duty) == []
     figure_text = _item(3, "Asset Owner Name: ______", citation="Figure A3.1")
     assert AQ.skipped_because(figure_text) == ["kind:form_template_text"]
+
+
+_UNKNOWN = "Tier Two provides direction and support and responds to direction from Tier One."  # no wording cue: the kind rules leave it `unknown`
+
+
+def _score(n):
+    return lambda prompt: json.dumps({"score": n})
+
+
+def test_an_unknown_row_with_a_low_score_gets_no_question_and_no_question_call(tmp_path):
+    calls = []
+    counts = AQ.draft_questions([_item(1, _UNKNOWN)], tmp_path / "q.jsonl", call=lambda p: calls.append(p) or '{"question": "Does Tier Two respond?"}', score_call=_score(3))
+    saved = AQ.load(tmp_path / "q.jsonl")["CL-1"]
+    assert calls == [] and saved["question"] is None and saved["skipped_because"] == ["low_requirement_score"] and saved["requirement_score"] == 3
+    assert counts["low_requirement_score"] == 1 and counts["second_opinion_calls"] == 1 and counts["questions"] == 0
+
+
+def test_an_unknown_row_with_a_high_score_gets_its_question_and_keeps_the_score(tmp_path):
+    counts = AQ.draft_questions([_item(1, _UNKNOWN)], tmp_path / "q.jsonl", call=lambda p: '{"question": "Does Tier Two respond to Tier One?"}', score_call=_score(7))
+    saved = AQ.load(tmp_path / "q.jsonl")["CL-1"]
+    assert saved["question"].startswith("Does Tier Two") and saved["requirement_score"] == 7 and saved["skipped_because"] == [] and counts["questions"] == 1
+
+
+def test_a_known_kind_is_not_scored_and_a_run_without_a_score_call_scores_nothing(tmp_path):
+    scored = []
+    items = [_item(1, "The commander will appoint a records manager."), _item(2, _UNKNOWN)]
+    AQ.draft_questions(items[:1], tmp_path / "a.jsonl", call=lambda p: '{"question": "Does the commander appoint a records manager?"}', score_call=lambda p: scored.append(p) or _score(9)(p))
+    assert scored == []
+    counts = AQ.draft_questions(items[1:], tmp_path / "b.jsonl", call=lambda p: '{"question": "Does Tier Two respond?"}')
+    assert counts["second_opinion_calls"] == 0 and AQ.load(tmp_path / "b.jsonl")["CL-2"]["question"]
+
+
+def test_the_score_is_reused_on_the_next_run_and_a_model_failure_does_not_withhold_a_question(tmp_path):
+    path = tmp_path / "q.jsonl"
+    AQ.draft_questions([_item(1, _UNKNOWN)], path, call=lambda p: '{"question": "x"}', score_call=_score(2))
+    calls = []
+    counts = AQ.draft_questions([_item(1, _UNKNOWN)], path, call=lambda p: '{"question": "x"}', score_call=lambda p: calls.append(p) or _score(9)(p))
+    assert calls == [] and counts["low_requirement_score"] == 1 and counts["second_opinion_calls"] == 0
+
+    def down(prompt):
+        raise OSError("Ollama unreachable")
+
+    AQ.draft_questions([_item(2, _UNKNOWN)], tmp_path / "r.jsonl", call=lambda p: '{"question": "Does Tier Two respond?"}', score_call=down)
+    saved = AQ.load(tmp_path / "r.jsonl")["CL-2"]
+    assert saved["question"] and "requirement_score" not in saved
+
+
+def test_the_score_prompt_carries_the_row_and_the_worked_examples_and_a_score_must_be_0_to_10():
+    prompt = AQ.score_prompt(_item(1, _UNKNOWN, parent_text="Tiers"))
+    assert _UNKNOWN in prompt and "OPR is A1S." in prompt and prompt.count("-> score") == 6
+    assert AQ.parse_score('{"score": 7}') == 7 and AQ.parse_score('{"score": 11}') is None and AQ.parse_score('{"score": true}') is None and AQ.parse_score("nope") is None
