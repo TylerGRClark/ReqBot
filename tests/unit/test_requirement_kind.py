@@ -248,3 +248,15 @@ def test_follow_contact_inspect_and_solicit_open_a_command_but_rank_is_still_a_n
 def test_a_modal_in_the_actor_or_the_document_as_actor_is_not_a_duty_of_a_role():
     assert _kind("As a minimum these processes, procedures and tools should: Be standardized across similar operations.") == "recommendation"
     assert _kind("In accordance with the authority in DoDD 5143.01, this instruction: Establishes policy and assigns responsibilities.") != "duty_with_actor"
+
+
+def test_contact_as_a_noun_or_a_label_is_not_a_command():
+    assert _kind("Contact information for assistance is listed below.") != "duty_imperative"
+    assert _kind("Contact: John Doe", citation="Front matter") == "cover_page_text"
+    assert _kind("Contact the Unit CSS to provision the new account.") == "duty_imperative"
+
+
+def test_a_procedural_label_before_a_colon_is_not_a_party_with_a_duty():
+    for label in ("Scope", "Applicability", "Summary", "Background", "Definitions", "Overview"):
+        assert _kind(f"{label}: Includes all Department personnel.") != "duty_with_actor", label
+    assert _kind("The ISSO: Includes all documentation in the package.") == "duty_with_actor"
