@@ -47,7 +47,9 @@ _ADVERB = re.compile(r"^[a-z]+ly\s+", re.IGNORECASE)
 _MODAL_SOON = re.compile(r"^(?:\S+\s+){0,3}?(?<!that )(?<!who )(?<!which )(?:shall|must|will)\b", re.IGNORECASE)  # "Design authorities shall ...": the first word is a noun; "units that will deploy" is not
 _ACTOR_COLON = re.compile(r"^(?P<actor>[A-Z][^:;.]{1,70}?):\s+(?P<rest>\S.*)$", re.DOTALL)
 _DOCUMENT_AS_ACTOR = re.compile(r"\b(?:this|the)\s+(?:\w+\s+){0,2}?(?:issuance|instruction|publication|directive|manual|policy|memorandum|document|pamphlet)\s*$", re.IGNORECASE)
-_NOT_AN_ACTOR = frozenset({"in addition", "note", "notes", "example", "examples", "exception", "exceptions", "reminder", "caution", "warning", "purpose", "rationale", "for example"})
+_CONTACT_AS_NOUN = re.compile(r"^\W*(?:\([\w-]+\)\s*)?contact\s*(?::|(?:information|info|details|numbers?|lists?|persons?|points?|e-?mail|phone)\b)", re.IGNORECASE)  # a label or a noun phrase
+_NOT_AN_ACTOR = frozenset({"in addition", "note", "notes", "example", "examples", "exception", "exceptions", "reminder", "caution", "warning", "purpose", "rationale", "for example",
+                           "scope", "applicability", "summary", "background", "definition", "definitions", "overview", "introduction", "general", "objective", "objectives", "description", "policy", "contact"})
 _RESPONSIBILITY = re.compile(r"\b(?:retain|retains|have|has|assume|assumes|bear|bears)\s+(?:\S+\s+){0,4}?responsibilit(?:y|ies)\b|\bresponsibilit(?:y|ies)\b[^.:;]{0,80}?\b(?:are|is|include)\s*:", re.IGNORECASE)
 
 
@@ -96,6 +98,8 @@ def _command(text: str):
     rest = m.group(2).lstrip()
     if re.match(r"of\b", rest, re.IGNORECASE) or _MODAL_SOON.match(rest):
         return None
+    if m.group(2).lstrip(" ").startswith(":") or re.match(r"(?:information|info|details|numbers?|lists?|persons?|points?|e-?mail|phone)\b", rest, re.IGNORECASE):
+        return None  # "Contact: John Doe" is a label and "Contact information for assistance ..." a noun phrase, not a command
     return m.group(1)
 
 
@@ -211,7 +215,7 @@ def classify(item: dict, *, use_position: bool = True) -> dict:
         decide("recommendation", "says what should happen", m)
     elif m := first_permission(text):
         decide("permission", "says what may be done", m)
-    elif "no_stated_actor" in flags or checklist_audit._is_verb(checklist_audit._first_word(text), _COMMAND_VERBS):
+    elif ("no_stated_actor" in flags or checklist_audit._is_verb(checklist_audit._first_word(text), _COMMAND_VERBS)) and not _CONTACT_AS_NOUN.match(_opening(text)):
         decide("duty_imperative", "opens with a command and names no actor")
     else:
         decide("unknown", "no wording cue")
