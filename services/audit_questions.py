@@ -17,6 +17,8 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from services import requirement_kind
+
 log = logging.getLogger(__name__)
 
 MODEL = "qwen2.5:14b"
@@ -113,10 +115,27 @@ def build_prompt(item: dict) -> str:
     return template.format(applies=item.get("applies_to") or "(none)", parent=parent or "(none)", quote=item.get("source_quote") or "", passage=(item.get("passage") or "")[:1500])
 
 
+# Kinds (services/requirement_kind.py) whose rows state no duty an auditor can check. A switch, off by default: REQBOT_QUESTION_GATE=on (these kinds) or a comma list of kinds.
+# Measured on a 228-row blind sample (2026-10-16): this set withholds 8 of 31 questions written for non-requirements and 1 of 153 for real ones; adding `unknown` would withhold 27 and 17.
+GATE_KINDS_DEFAULT = frozenset({"cover_page_text", "form_template_text", "pointer", "applicability", "definition_or_description", "permission", "exemption"})
+
+
+def gate_kinds() -> frozenset:
+    raw = os.environ.get("REQBOT_QUESTION_GATE", "").strip().lower()
+    if raw in ("", "0", "off", "false", "no"):
+        return frozenset()
+    if raw in ("1", "on", "true", "yes", "default"):
+        return GATE_KINDS_DEFAULT
+    return frozenset(k.strip() for k in raw.split(",") if k.strip())
+
+
 def skipped_because(item: dict) -> list[str]:
     reasons = set(SKIP_FLAGS & set(item.get("item_flags") or []))
     if DOCUMENT_STATES_ITS_OWN_EFFECT.search(item.get("source_quote") or ""):
         reasons.add("document_states_its_own_effect")
+    if gated := gate_kinds():
+        if (kind := requirement_kind.classify(item)["kind"]) in gated:
+            reasons.add(f"kind:{kind}")
     return sorted(reasons)
 
 

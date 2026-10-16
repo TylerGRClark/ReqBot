@@ -291,3 +291,37 @@ def test_a_statement_of_what_the_document_leaves_untouched_gets_no_question():
                  "The policy on mobile devices shall not be violated by users.", "The manual for each unit shall not be altered without approval.",
                  "The issuance of waivers by commanders must not exceed one year."):  # the document noun must be the whole subject (Codex P2 on this PR)
         assert AQ.skipped_because(_item(1, text)) == [], text
+
+
+def test_the_kind_gate_is_off_unless_asked_for(monkeypatch):
+    monkeypatch.delenv("REQBOT_QUESTION_GATE", raising=False)
+    item = _item(1, "Compliance with this publication is mandatory.", citation="Front matter")
+    assert AQ.skipped_because(item) == []
+
+
+def test_the_kind_gate_withholds_rows_the_kind_rules_call_not_a_duty(monkeypatch):
+    monkeypatch.setenv("REQBOT_QUESTION_GATE", "on")
+    front = _item(1, "Compliance with this publication is mandatory.", citation="Front matter")
+    assert AQ.skipped_because(front) == ["kind:cover_page_text"]
+    duty = _item(2, "The commander will appoint a records manager.")
+    assert AQ.skipped_because(duty) == []
+    unknown = _item(3, "The method is used extensively in the acquisition of new weapons systems.")
+    assert AQ.skipped_because(unknown) == []  # `unknown` is not in the default set: it holds real duties too
+
+
+def test_the_kind_gate_takes_a_comma_list_of_kinds_and_can_be_turned_off(monkeypatch):
+    unknown = _item(3, "The method is used extensively in the acquisition of new weapons systems.")
+    monkeypatch.setenv("REQBOT_QUESTION_GATE", "unknown, pointer")
+    assert AQ.skipped_because(unknown) == ["kind:unknown"]
+    monkeypatch.setenv("REQBOT_QUESTION_GATE", "off")
+    assert AQ.skipped_because(unknown) == []
+
+
+def test_a_gated_row_gets_no_question_and_is_not_sent_to_the_model(monkeypatch, tmp_path):
+    monkeypatch.setenv("REQBOT_QUESTION_GATE", "on")
+    calls = []
+    items = [_item(1, "Compliance with this publication is mandatory.", citation="Front matter"), _item(2, "The commander will appoint a records manager.")]
+    counts = AQ.draft_questions(items, tmp_path / "q.jsonl", call=lambda prompt: calls.append(prompt) or '{"question": "Does the commander appoint a records manager?"}')
+    saved = AQ.load(tmp_path / "q.jsonl")
+    assert len(calls) == 1 and saved["CL-1"]["question"] is None and saved["CL-1"]["skipped_because"] == ["kind:cover_page_text"]
+    assert saved["CL-2"]["question"].startswith("Does the commander") and counts["skipped_by_code"] == 1
