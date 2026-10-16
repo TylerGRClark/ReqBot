@@ -325,3 +325,13 @@ def test_a_gated_row_gets_no_question_and_is_not_sent_to_the_model(monkeypatch, 
     saved = AQ.load(tmp_path / "q.jsonl")
     assert len(calls) == 1 and saved["CL-1"]["question"] is None and saved["CL-1"]["skipped_because"] == ["kind:cover_page_text"]
     assert saved["CL-2"]["question"].startswith("Does the commander") and counts["skipped_by_code"] == 1
+
+
+def test_a_duty_in_a_figure_or_front_matter_is_not_withheld_because_of_where_it_sits(monkeypatch):
+    monkeypatch.setenv("REQBOT_QUESTION_GATE", "on")
+    figure_duty = _item(1, "Provide the name of the asset owner.", citation="Figure A3.1")
+    assert AQ.skipped_because(figure_duty) == []
+    front_duty = _item(2, "The commander will appoint a records manager.", citation="Front matter")
+    assert AQ.skipped_because(front_duty) == []
+    figure_text = _item(3, "Asset Owner Name: ______", citation="Figure A3.1")
+    assert AQ.skipped_because(figure_text) == ["kind:form_template_text"]

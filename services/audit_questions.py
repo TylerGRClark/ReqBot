@@ -134,7 +134,11 @@ def skipped_because(item: dict) -> list[str]:
     if DOCUMENT_STATES_ITS_OWN_EFFECT.search(item.get("source_quote") or ""):
         reasons.add("document_states_its_own_effect")
     if gated := gate_kinds():
-        if (kind := requirement_kind.classify(item)["kind"]) in gated:
+        result = requirement_kind.classify(item)
+        kind = result["kind"]
+        if kind in requirement_kind.POSITION_KINDS and result.get("kind_by_wording") not in (None, "unknown"):
+            kind = result["kind_by_wording"]  # a duty in a figure, front matter or table is still a duty: eligibility follows the wording (docs/PIPELINE_REDESIGN_PLAN.md)
+        if kind in gated:
             reasons.add(f"kind:{kind}")
     return sorted(reasons)
 
