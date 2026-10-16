@@ -51,3 +51,15 @@ The owner prefers no toggle (always on), so the next test is what an always-on v
 - **Workload:** every row the current rules call `unknown` in the 22 library documents, scored once; wall-clock time recorded per document (the time an always-on step would add to question writing).
 - **Fresh labeled set:** 300 of those rows drawn at random (seeded, in proportion to how many `unknown` rows each document has), excluding the 228 already used, labeled by two blind Opus labelers; rows they disagree on are left out of the score and counted.
 - **Adopt rules:** on the fresh set, real kept at least 90%, noise dropped at least 60%; reported with 95% Wilson intervals; added time reported per 1,000 `unknown` rows and as a share of the existing question-writing time.
+
+## Round 2 result (ran 2026-10-16; written after reading the scores and labels)
+**Time.** Scoring all 1,903 `unknown` rows of the 22 documents took 841 s (14.0 min, 0.44 s per row, 0 errors). The existing question writer takes about 0.8 s per row it writes (DAFPAM 90-803: 895 rows in 713 s). At threshold 7, 986 of the 1,903 rows (52%) would skip the question call, which saves about 789 s: the step is roughly time-neutral (+52 s on about 6,600 s of question writing, under 1%), as long as it runs before the question is written.
+**Accuracy on the fresh set** (300 random `unknown` rows in proportion to the library; two labelers agreed on 290: 145 real, 145 not), frozen prompt, examples and threshold 7:
+real kept 126 of 145 (87%, 95% 80% to 91%); noise dropped 115 of 145 (79%, 95% 72% to 85%). **This misses the registered rule of 90% real kept** (point estimate; the interval reaches 91%). Pooled with round 1 (dev excluded): 168 of 191 real kept (88%).
+Scores are close to two-state: thresholds 3 to 7 behave the same (88% real kept, 76% to 79% noise dropped). Threshold 2 keeps 97% of real and drops 54% of noise. Chosen after seeing this set, so it needs a third fresh set before it is trusted.
+**What it means for the whole checklist** (library estimate: about 952 of the 1,903 `unknown` rows are real, which is 13.5% of all real rows; the earlier "7%" came from a stratified sample):
+| Threshold | Real questions lost (share of all real) | Noise left in the whole checklist (of about 1,206 now) |
+|---|---|---|
+| 2 | 0.4% | about 694 |
+| 3 to 7 | 1.7% to 1.8% | about 450 to 480 |
+The real rows it misses at 7 are mostly borderline: recommendations and advice ("Consider using introspection capabilities ..."), uniform-fit statements ("The cap sits squarely on the head."), and role sentences without a modal.
