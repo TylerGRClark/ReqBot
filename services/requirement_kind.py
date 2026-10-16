@@ -11,7 +11,7 @@ from pathlib import Path
 
 from services import checklist_audit
 
-RULES_VERSION = "kind-rules-6"
+RULES_VERSION = "kind-rules-7"
 KINDS = (
     "duty_with_actor", "duty_imperative", "recommendation", "permission", "prohibition", "exemption", "definition_or_description", "applicability", "pointer", "table_row",
     "form_template_text", "cover_page_text", "unknown",
@@ -38,6 +38,7 @@ _COMMAND_VERBS = checklist_audit.IMPERATIVE_VERBS | frozenset({
     "adhere", "appoint", "are", "assist", "be", "brief", "categorize", "characterize", "charter", "collect", "configure", "confirm", "consolidate", "create", "decide", "define", "deliver", "deploy", "design", "engage",
     "enter", "facilitate", "focus", "foster", "fulfill", "incorporate", "include", "inform", "interpret", "is", "isolate", "leverage", "link", "optimize", "pay", "publish", "receive",
     "reconcile", "reduce", "register", "resolve", "serve", "set", "share", "sign", "synchronize", "take", "terminate", "transfer", "understand", "utilize", "work", "act",
+    "contact", "follow", "inspect", "solicit",  # kind-rules-7: opening commands seen on rows left `unknown` in a 228-row sample
 })
 _TIER_MARK = re.compile(r"^\W*(?:\(\s*[A-Za-z]-\d\s*\)\s*)+")
 _IN_ADDITION = re.compile(r"^(?:\d+\)\s*)?In addition:\s*", re.IGNORECASE)
@@ -45,7 +46,10 @@ _CONDITION_LEAD = re.compile(r"^(?:as|if|when|where|once|upon|in|for|under|durin
 _ADVERB = re.compile(r"^[a-z]+ly\s+", re.IGNORECASE)
 _MODAL_SOON = re.compile(r"^(?:\S+\s+){0,3}?(?<!that )(?<!who )(?<!which )(?:shall|must|will)\b", re.IGNORECASE)  # "Design authorities shall ...": the first word is a noun; "units that will deploy" is not
 _ACTOR_COLON = re.compile(r"^(?P<actor>[A-Z][^:;.]{1,70}?):\s+(?P<rest>\S.*)$", re.DOTALL)
-_NOT_AN_ACTOR = frozenset({"in addition", "note", "notes", "example", "examples", "exception", "exceptions", "reminder", "caution", "warning", "purpose", "rationale", "for example"})
+_DOCUMENT_AS_ACTOR = re.compile(r"\b(?:this|the)\s+(?:\w+\s+){0,2}?(?:issuance|instruction|publication|directive|manual|policy|memorandum|document|pamphlet)\s*$", re.IGNORECASE)
+_CONTACT_AS_NOUN = re.compile(r"^\W*(?:\([\w-]+\)\s*)?contact\s*(?::|(?:information|info|details|numbers?|lists?|persons?|points?|e-?mail|phone)\b)", re.IGNORECASE)  # a label or a noun phrase
+_NOT_AN_ACTOR = frozenset({"in addition", "note", "notes", "example", "examples", "exception", "exceptions", "reminder", "caution", "warning", "purpose", "rationale", "for example",
+                           "scope", "applicability", "summary", "background", "definition", "definitions", "overview", "introduction", "general", "objective", "objectives", "description", "policy", "contact"})
 _RESPONSIBILITY = re.compile(r"\b(?:retain|retains|have|has|assume|assumes|bear|bears)\s+(?:\S+\s+){0,4}?responsibilit(?:y|ies)\b|\bresponsibilit(?:y|ies)\b[^.:;]{0,80}?\b(?:are|is|include)\s*:", re.IGNORECASE)
 
 
@@ -94,6 +98,28 @@ def _command(text: str):
     rest = m.group(2).lstrip()
     if re.match(r"of\b", rest, re.IGNORECASE) or _MODAL_SOON.match(rest):
         return None
+    if m.group(2).lstrip(" ").startswith(":") or re.match(r"(?:information|info|details|numbers?|lists?|persons?|points?|e-?mail|phone)\b", rest, re.IGNORECASE):
+        return None  # "Contact: John Doe" is a label and "Contact information for assistance ..." a noun phrase, not a command
+    return m.group(1)
+
+
+def _third_person_command(text: str):
+    """The verb that opens `text` in its third-person form ("Completes", "Develops", "Identifies"), or None. Only used after "Actor:", where a duty list reads "The ISSO: Completes ...";
+    a condition lead ("In coordination with the DoD CIO, establishes ...") is skipped. "Reports of ..." is a noun."""
+    probe = _ADVERB.sub("", text, count=1)
+    if lead := _CONDITION_LEAD.match(probe):
+        probe = probe[lead.end():]
+    m = re.match(r"([A-Za-z][A-Za-z-]*)\b(.*)", probe, re.DOTALL)
+    if not m:
+        return None
+    word = m.group(1).lower()
+    bases = [word[:-1]] if word.endswith("s") else []
+    if word.endswith("es"):
+        bases.append(word[:-2])
+    if word.endswith("ies"):
+        bases.append(word[:-3] + "y")
+    if not any(b in _COMMAND_VERBS for b in bases) or re.match(r"of\b", m.group(2).lstrip(), re.IGNORECASE):
+        return None
     return m.group(1)
 
 
@@ -109,10 +135,16 @@ def leading_command(quote: str):
 
 def named_actor_then_command(quote: str):
     """("The I-NOSCs", "Report") for "The I-NOSCs: Report suspected events ...": a noun phrase, a colon, a command."""
-    m = _ACTOR_COLON.match(_opening(quote))
+    text = _opening(quote)
+    m = _ACTOR_COLON.match(text)
+    if (not m or len(m.group("actor").split()) > 8) and (lead := _CONDITION_LEAD.match(text)):  # "In addition to the responsibilities in Paragraph 2.4., the Commander: Develops ..."
+        after = text[lead.end():]
+        m = _ACTOR_COLON.match(after[:1].upper() + after[1:]) or m  # "the Commander, ...:" opens in lower case after the lead
     if not m or m.group("actor").strip().lower() in _NOT_AN_ACTOR or len(m.group("actor").split()) > 8 or _STRONG.search(m.group("actor")):
         return None
-    verb = _command(m.group("rest"))
+    if _SHOULD.search(m.group("actor")) or first_permission(m.group("actor")) or _DOCUMENT_AS_ACTOR.search(m.group("actor")):
+        return None  # "these processes should: Be standardized" is a recommendation; "this instruction: Establishes policy" is the document describing itself
+    verb = _command(m.group("rest")) or _third_person_command(m.group("rest"))
     return (m.group("actor").strip(), verb) if verb else None
 
 
@@ -183,7 +215,7 @@ def classify(item: dict, *, use_position: bool = True) -> dict:
         decide("recommendation", "says what should happen", m)
     elif m := first_permission(text):
         decide("permission", "says what may be done", m)
-    elif "no_stated_actor" in flags or checklist_audit._is_verb(checklist_audit._first_word(text), _COMMAND_VERBS):
+    elif ("no_stated_actor" in flags or checklist_audit._is_verb(checklist_audit._first_word(text), _COMMAND_VERBS)) and not _CONTACT_AS_NOUN.match(_opening(text)):
         decide("duty_imperative", "opens with a command and names no actor")
     else:
         decide("unknown", "no wording cue")
