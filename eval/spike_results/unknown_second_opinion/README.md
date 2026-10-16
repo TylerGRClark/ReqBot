@@ -39,7 +39,7 @@ Held-out rows (139: 46 real, 93 not), threshold chosen on the 83 dev rows that a
 | S1 (score, no examples) | 6 | 37 of 46 (80%) | 79 of 93 (85%) |
 | **S2 (score + 6 dev examples)** | 7 | **42 of 46 (91%)** | **71 of 93 (76%)** |
 
-Against the adopt rules: S1 fails rule 1 (80%, needs 90%). **S2 meets all three**: keeps 91% of real, drops 76% of noise (W drops 38%, the floor was 60%); none of the held-out rows reuses a worked example's opening.
+Against the adopt rules: S1 fails rule 1 (80%, needs 90%). **S2 meets all three**: keeps 91% of real, drops 76% of noise (W drops 38%, the floor was 60%); one held-out row (a not-a-requirement) opens exactly like a worked example; without it the held-out result is 42 of 46 real kept and 70 of 92 noise dropped, so rule 3 does not change the verdict.
 Intervals are wide (95% Wilson): real kept 42 of 46 is 79% to 97%; noise dropped 71 of 93 is 66% to 84%. On dev, S2 at 7 kept 23 of 24 real.
 Reading: the model separates real from noise in this bucket much better than the existing writer's null answer (which drops 38%), and it is the worked examples, not the scoring alone, that hold recall.
 For scale: `unknown` real rows are about 7% of all real rows, so keeping 91% of them costs about 0.6% of all real questions, inside the owner's 1%.
