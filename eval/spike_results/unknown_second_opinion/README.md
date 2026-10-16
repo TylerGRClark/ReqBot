@@ -44,3 +44,10 @@ Intervals are wide (95% Wilson): real kept 42 of 46 is 79% to 97%; noise dropped
 Reading: the model separates real from noise in this bucket much better than the existing writer's null answer (which drops 38%), and it is the worked examples, not the scoring alone, that hold recall.
 For scale: `unknown` real rows are about 7% of all real rows, so keeping 91% of them costs about 0.6% of all real questions, inside the owner's 1%.
 Not decided: building it (a second model call per `unknown` row at question time, default-off), which needs the owner's go.
+
+## Round 2: a bigger real set, and the time it adds (registered 2026-10-16 before any round-2 output)
+The owner prefers no toggle (always on), so the next test is what an always-on version would do on the real workload.
+- **Frozen:** prompt S2, the same six worked examples (`outputs/example_ids.json`), threshold 7, model and settings. Nothing is tuned again.
+- **Workload:** every row the current rules call `unknown` in the 22 library documents, scored once; wall-clock time recorded per document (the time an always-on step would add to question writing).
+- **Fresh labeled set:** 300 of those rows drawn at random (seeded, in proportion to how many `unknown` rows each document has), excluding the 228 already used, labeled by two blind Opus labelers; rows they disagree on are left out of the score and counted.
+- **Adopt rules:** on the fresh set, real kept at least 90%, noise dropped at least 60%; reported with 95% Wilson intervals; added time reported per 1,000 `unknown` rows and as a share of the existing question-writing time.
