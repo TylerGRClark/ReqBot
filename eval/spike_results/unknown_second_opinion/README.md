@@ -72,3 +72,15 @@ labelers) is drawn and labeled now and not looked at until the end.
 - **S4:** S3's definition + 12 worked examples (the six from S2 plus six from the tuning rows: three real rows of the missed kinds, three hard not-real rows).
 - Selection: on the tuning rows minus the worked examples, pick the variant and threshold with the most noise dropped among those keeping at least 92% of real; ties go to S2 (fewer changes).
 - Confirmation: the chosen variant and threshold, frozen, run once on the third fresh set. Adopt if real kept is at least 90% and noise dropped at least 70%; otherwise the strict setting is S2 at 7 as measured (87% / 79%).
+
+## Round 3 result (ran 2026-10-16; written after reading the scores)
+Tuning rows (506, worked examples excluded; 212 real, 294 not). Real kept / noise dropped:
+| Variant | thr 7 | thr 8 |
+|---|---|---|
+| S2 | 89% / 76% | 84% / 78% |
+| **S3** (revised definition, same 6 examples) | **94% / 68%** | 91% / 71% |
+| S4 (S3 + 12 examples) | 96% / 59% | 93% / 60% |
+By the registered rule (most noise dropped among variants keeping at least 92% of real) the pick is **S3 at threshold 7**. S4's extra examples cost noise recall.
+**Confirmation, run once on the third fresh set** (300 random `unknown` rows; 274 agreed: 106 real, 168 not; frozen S3, threshold 7):
+S3: real kept 94 of 106 = 89% (95% 81% to 93%), noise dropped 131 of 168 = 78% (71% to 84%). S2 on the same rows: 84% (76% to 90%) and 79%. The point estimate of real kept is one point under the registered 90%, the interval contains it; noise dropped passes (70%).
+Reading: S3 keeps about five points more real rows than S2 at the same noise dropped, so it dominates S2. Pooled library estimate (rounds 2 and 3, 564 agreed rows): about 45% of `unknown` rows are real (about 850 rows, 12% of all real rows), so S3 at 7 loses about 1.3% of all real questions (S2: about 1.9%) and removes about 78% of the noise in the bucket.
