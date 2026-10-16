@@ -115,16 +115,16 @@ def build_prompt(item: dict) -> str:
     return template.format(applies=item.get("applies_to") or "(none)", parent=parent or "(none)", quote=item.get("source_quote") or "", passage=(item.get("passage") or "")[:1500])
 
 
-# Kinds (services/requirement_kind.py) whose rows state no duty an auditor can check. A switch, off by default: REQBOT_QUESTION_GATE=on (these kinds) or a comma list of kinds.
-# Measured on a 228-row blind sample (2026-10-16): this set withholds 8 of 31 questions written for non-requirements and 1 of 153 for real ones; adding `unknown` would withhold 27 and 17.
+# Kinds (services/requirement_kind.py) whose rows state no duty an auditor can check: no question is drafted for them (the row stays on the checklist). Always on; REQBOT_QUESTION_GATE=off
+# turns it off for debugging and a comma list of kinds replaces the set. Measured on a 228-row blind sample (2026-10-16): withholds 7 of 31 questions written for non-requirements and 1 of 153 for real ones.
 GATE_KINDS_DEFAULT = frozenset({"cover_page_text", "form_template_text", "pointer", "applicability", "definition_or_description", "permission", "exemption"})
 
 
 def gate_kinds() -> frozenset:
     raw = os.environ.get("REQBOT_QUESTION_GATE", "").strip().lower()
-    if raw in ("", "0", "off", "false", "no"):
+    if raw in ("0", "off", "false", "no"):
         return frozenset()
-    if raw in ("1", "on", "true", "yes", "default"):
+    if raw in ("", "1", "on", "true", "yes", "default"):
         return GATE_KINDS_DEFAULT
     return frozenset(k.strip() for k in raw.split(",") if k.strip())
 
@@ -141,6 +141,88 @@ def skipped_because(item: dict) -> list[str]:
         if kind in gated:
             reasons.add(f"kind:{kind}")
     return sorted(reasons)
+
+
+# A second opinion for rows the kind rules cannot place (`unknown`, about a quarter of all rows, about 45% of them real requirements): the local model scores how clearly the row is a
+# requirement an auditor could check, and a row scoring below the threshold gets no draft question (the row stays on the checklist). Run before the question is written, so a row that
+# is skipped also saves its question call: over the library it is about time-neutral. Measured in eval/spike_results/unknown_second_opinion/README.md (prompt S3, threshold 7): on a
+# third fresh set of 274 blind-labeled rows it kept 89% of the real ones and dropped 78% of the noise; the worked examples are quotes from public regulations.
+SECOND_OPINION_THRESHOLD = 7
+LOW_SCORE_REASON = "low_requirement_score"
+SCORE_SCHEMA = {"type": "object", "properties": {"score": {"type": "integer"}}, "required": ["score"]}
+SCORE_DEFINITION = """A row is a requirement when it tells an organization or person what to do, what not to do, what they are limited to, what must be in place, or what is authorized only under
+stated conditions, so that an auditor could check it. These all count: "must", "will" and "shall" duties; "should" duties; advice and recommendations that tell the reader what to do
+("consider ...", "it is recommended that ..."); standards for how something is done, worn, kept or reported ("the cap sits squarely on the head"); responsibilities of a named role
+("it is every Airman's responsibility to ..."); and limits or conditions ("only authorized when ..."). It is NOT a requirement when it is a description of how things are or of what a tool
+or method is like, a definition, background, purpose or scope statement, a summary of changes, a heading or title, a list of names, form or template text, a permission with no limit,
+a statement of what the document itself does, or a cut-off fragment."""
+SCORE_EXAMPLES = (
+    ("System ISSMs validate the approved exemptions against the whitelist according to the current data loss prevention exemption TASKORD, verifying the removed devices/user accounts.", 9),
+    ("Consistently apply effective RM concepts and methods to operations, activities and tasks.", 9),
+    ("If a duty badge is being worn on the wearer's right, move the missile or excellence-in-competition badges to the wearer's left, 1/2-inch below the bottom row of medals.", 9),
+    ("This issuance: Does not alter or override existing Director of National Intelligence authorities and policies regarding the protection of sensitive compartmented information and special acc", 1),
+    ("The AN/USQ-225 is operationalized via nomenclated Configuration Elements that reside on or within the host platforms and facilities employed to execute nuclear command and control and operations (e.g., fixed and mobile c", 1),
+    ("OPR is A1S.", 1),
+)
+SCORE_PROMPT = """You help an auditor decide which sentences of a regulation belong on an audit checklist.
+
+{definition}
+
+Examples:
+{examples}
+
+Applies to: {applies}
+Parent paragraph: {parent}
+Sentence to judge: {quote}
+Passage (the sentence is marked >> <<):
+{passage}
+
+Score from 0 to 10 how clearly the marked sentence is a requirement an auditor could check (0 = clearly not, 10 = clearly yes).
+Answer as JSON: {{"score": <integer>}}"""
+
+
+def wants_second_opinion(item: dict) -> bool:
+    return requirement_kind.classify(item)["kind"] == "unknown"
+
+
+def score_prompt(item: dict) -> str:
+    examples = "\n".join(f'- "{quote[:220]}" -> score {score}' for quote, score in SCORE_EXAMPLES)
+    parent = (item.get("parent_text") or "").strip() or "(none)"
+    return SCORE_PROMPT.format(definition=SCORE_DEFINITION, examples=examples, applies=item.get("applies_to") or "(none)", parent=parent[:400], quote=item.get("source_quote") or "",
+                               passage=(item.get("passage") or "")[:1200])
+
+
+def score_hash(prompt: str, model: str) -> str:
+    return hashlib.sha256(f"{model}\n{json.dumps(SCORE_SCHEMA, sort_keys=True)}\n{prompt}".encode("utf-8")).hexdigest()[:16]
+
+
+def parse_score(text) -> int | None:
+    try:
+        value = json.loads(text)["score"]
+    except (ValueError, KeyError, TypeError):
+        return None
+    return value if isinstance(value, int) and not isinstance(value, bool) and 0 <= value <= 10 else None
+
+
+def ollama_score_call(prompt: str, model: str, ollama_url: str, timeout: int = 120) -> str:
+    import requests
+    payload = {"model": model, "prompt": prompt, "stream": False, "format": SCORE_SCHEMA, "options": {"temperature": 0.1, "num_predict": 20, "num_ctx": NUM_CTX}}
+    resp = requests.post(f"{ollama_url.rstrip('/')}/api/generate", json=payload, timeout=timeout)
+    resp.raise_for_status()
+    return resp.json()["response"]
+
+
+def ask_score(item: dict, score_call) -> int | None:
+    """The model's 0 to 10 score for the row, or None when it cannot be had after one retry (an unreachable server, a timeout or an answer that is not a score): the row then gets its
+    question as before. One bad answer is not a judgement that the row is not a requirement."""
+    prompt = score_prompt(item)
+    for _ in range(2):
+        try:
+            if (score := parse_score(score_call(prompt))) is not None:
+                return score
+        except OSError:
+            continue
+    return None
 
 
 def input_hash(prompt: str, model: str) -> str:
@@ -205,17 +287,21 @@ def write(path: Path, records: dict[str, dict]) -> None:
     os.replace(tmp, path)
 
 
-def draft_questions(items: list[dict], path: Path, *, model: str = MODEL, ollama_url: str = "", call=None, progress=None, on_row=None) -> dict:
+def draft_questions(items: list[dict], path: Path, *, model: str = MODEL, ollama_url: str = "", call=None, score_call=None, progress=None, on_row=None) -> dict:
     """Write or refresh the sidecar for `items` (checklist items). `call(prompt) -> text` replaces the Ollama call in tests. Returns counts.
     A record whose input is unchanged is kept; a row whose answer cannot be parsed after one retry is recorded with `error` and is retried on the next run.
-    `on_row(done, total)` is called after every row (the job runner's progress: row i of N)."""
+    `on_row(done, total)` is called after every row (the job runner's progress: row i of N).
+    Rows the kind rules call `unknown` get a second opinion first (`score_call(prompt) -> text`, the local model by default; a test that passes only `call` runs without it): a row scoring
+    below SECOND_OPINION_THRESHOLD is recorded without a question and with `skipped_because: ["low_requirement_score"]`."""
     if call is None and not ollama_url:
         raise ValueError("ollama_url is required when no call function is given")
+    if call is None and score_call is None:
+        score_call = lambda prompt: ollama_score_call(prompt, model, ollama_url)  # noqa: E731
     call = call or (lambda prompt: ollama_call(prompt, model, ollama_url))
     existing = load(path)
     records: dict[str, dict] = dict(existing)  # rows not in this run (another profile, an interrupted run) keep their records; apply() checks each against its row
     consecutive_failures = 0
-    counts = {"rows": 0, "questions": 0, "no_question": 0, "skipped_by_code": 0, "reused": 0, "errors": 0, "with_unverified_terms": 0}
+    counts = {"rows": 0, "questions": 0, "no_question": 0, "skipped_by_code": 0, "reused": 0, "errors": 0, "with_unverified_terms": 0, "second_opinion_calls": 0, "low_requirement_score": 0}
     total_rows = sum(1 for it in items if (it.get("source_quote") or "").strip())
     for item in items:
         if not (item.get("source_quote") or "").strip():
@@ -226,8 +312,24 @@ def draft_questions(items: list[dict], path: Path, *, model: str = MODEL, ollama
         h = input_hash(prompt, model)
         skipped = skipped_because(item)
         old = existing.get(item_id)
-        if old and old.get("input_hash") == h and not old.get("error") and old.get("skipped_because", []) == skipped:
+        score, h2 = None, None
+        if score_call is not None and not skipped and wants_second_opinion(item):
+            sp = score_prompt(item)
+            h2 = score_hash(sp, model)
+            if old and old.get("score_hash") == h2 and old.get("requirement_score") is not None:
+                score = old["requirement_score"]
+            else:
+                counts["second_opinion_calls"] += 1
+                score = ask_score(item, score_call)
+                h2 = h2 if score is not None else None
+        if score is not None and score < SECOND_OPINION_THRESHOLD:
+            records[item_id] = {"checklist_item_id": item_id, "question": None, "skipped_because": [LOW_SCORE_REASON], "unverified_terms": [], "model": model, "input_hash": h,
+                                "requirement_score": score, "score_hash": h2}
+            counts["low_requirement_score"] += 1
+        elif old and old.get("input_hash") == h and not old.get("error") and old.get("skipped_because", []) == skipped:
             old["unverified_terms"] = unverified_terms(old["question"], row_material(item)) if old.get("question") else []  # cheap and deterministic: rule changes reach reused questions too
+            if score is not None:
+                old["requirement_score"], old["score_hash"] = score, h2
             records[item_id] = old
             counts["reused"] += 1
         elif skipped:
@@ -245,7 +347,8 @@ def draft_questions(items: list[dict], path: Path, *, model: str = MODEL, ollama
                     break
             unver = unverified_terms(question, row_material(item)) if question else []
             records[item_id] = {"checklist_item_id": item_id, "question": question, "skipped_because": [], "unverified_terms": unver, "model": model, "input_hash": h,
-                                "generated_at": datetime.now(timezone.utc).isoformat(), **({"error": error} if error else {})}
+                                "generated_at": datetime.now(timezone.utc).isoformat(), **({"error": error} if error else {}),
+                                **({"requirement_score": score, "score_hash": h2} if score is not None else {})}
         rec = records[item_id]
         consecutive_failures = consecutive_failures + 1 if str(rec.get("error", "")).startswith("model call failed") else 0
         if consecutive_failures >= MAX_CONSECUTIVE_FAILURES:
