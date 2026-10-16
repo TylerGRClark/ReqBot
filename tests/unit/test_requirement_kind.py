@@ -137,7 +137,7 @@ def test_an_applicability_sentence_in_the_front_matter_is_applicability_and_keep
 
 
 def test_the_rules_version_names_the_current_rule_set():
-    assert RK.RULES_VERSION == "kind-rules-7"
+    assert RK.RULES_VERSION == "kind-rules-8"
 
 
 def test_a_row_whose_kind_comes_from_its_position_also_keeps_what_its_words_say():
@@ -260,3 +260,38 @@ def test_a_procedural_label_before_a_colon_is_not_a_party_with_a_duty():
     for label in ("Scope", "Applicability", "Summary", "Background", "Definitions", "Overview"):
         assert _kind(f"{label}: Includes all Department personnel.") != "duty_with_actor", label
     assert _kind("The ISSO: Includes all documentation in the package.") == "duty_with_actor"
+
+
+def test_a_role_duty_written_without_its_subject_is_a_duty():
+    assert _kind("Initiates exceptions, deviations, or waivers to cybersecurity requirements.") == "duty_imperative"
+    assert _kind("In coordination with the DoD CIO, USD(A&S), and USD(R&E), provides guidance on implementing uniform standards.") == "duty_imperative"
+    assert _kind("Represents the cybersecurity interests in the Air Force Risk Executive Function.") == "duty_imperative"
+
+
+def test_a_long_lead_then_a_colon_then_a_third_person_verb_is_a_duty_with_an_actor():
+    q = "Under the authority, direction, and control, and acting on the behalf of the DoD Chief Information Officer, the DoD CISO: Provides oversight and guidance."
+    assert _kind(q) == "duty_with_actor"
+    assert _kind("Scope: Provides an overview of the topics.") != "duty_with_actor"
+
+
+def test_require_and_only_authorized_state_a_duty_but_requires_and_a_hedge_do_not():
+    assert _kind("Wireless capabilities in areas where classified information is discussed require compliance with the DoD manual.") == "duty_with_actor"
+    assert _kind("The AF Enterprise AO is the only authority permitted to grant an ATC to the AFIN.") == "duty_with_actor"
+    assert _kind("These telephones are only authorized to process publicly available information.") == "duty_with_actor"
+    assert _kind("Full proficiency requires experience.") == "unknown"
+    assert _kind("The host APO and UAPO do not require DPAS access or training.") != "duty_with_actor"
+    assert _kind("A system of which the loss could require significant recovery effort.") == "unknown"
+
+
+def test_new_opening_commands_and_the_nouns_that_look_like_them():
+    assert _kind("Avoid wireless telephone transmission of CUI when other options are available.") == "duty_imperative"
+    assert _kind("Dispose of unclassified computing systems and hard drives according to the manual.") == "duty_imperative"
+    assert _kind("Mitigate network traffic risk with tools that perform packet inspection.") == "duty_imperative"
+    assert _kind("Wear criteria depends on the type of device the decoration represents.") != "duty_imperative"
+    assert _kind("Reports shall be filed within five days.") == "duty_with_actor"
+    assert _kind("Process evaluations should be systematic.") == "recommendation"
+
+
+def test_wear_of_and_limit_of_are_nouns():
+    assert _kind("Wear of the shield with the Mess Dress Uniform is optional.") != "duty_imperative"
+    assert _kind("Use of the matrices and due care is mandatory to assure the integrity of the workforce.") == "duty_imperative"

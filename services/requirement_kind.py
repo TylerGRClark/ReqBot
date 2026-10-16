@@ -11,7 +11,7 @@ from pathlib import Path
 
 from services import checklist_audit
 
-RULES_VERSION = "kind-rules-7"
+RULES_VERSION = "kind-rules-8"
 KINDS = (
     "duty_with_actor", "duty_imperative", "recommendation", "permission", "prohibition", "exemption", "definition_or_description", "applicability", "pointer", "table_row",
     "form_template_text", "cover_page_text", "unknown",
@@ -39,6 +39,7 @@ _COMMAND_VERBS = checklist_audit.IMPERATIVE_VERBS | frozenset({
     "enter", "facilitate", "focus", "foster", "fulfill", "incorporate", "include", "inform", "interpret", "is", "isolate", "leverage", "link", "optimize", "pay", "publish", "receive",
     "reconcile", "reduce", "register", "resolve", "serve", "set", "share", "sign", "synchronize", "take", "terminate", "transfer", "understand", "utilize", "work", "act",
     "contact", "follow", "inspect", "solicit",  # kind-rules-7: opening commands seen on rows left `unknown` in a 228-row sample
+    "avoid", "consult", "dispose", "exercise", "limit", "pull", "present", "mitigate", "wear", "generate", "decertify",  # kind-rules-8
 })
 _TIER_MARK = re.compile(r"^\W*(?:\(\s*[A-Za-z]-\d\s*\)\s*)+")
 _IN_ADDITION = re.compile(r"^(?:\d+\)\s*)?In addition:\s*", re.IGNORECASE)
@@ -47,7 +48,9 @@ _ADVERB = re.compile(r"^[a-z]+ly\s+", re.IGNORECASE)
 _MODAL_SOON = re.compile(r"^(?:\S+\s+){0,3}?(?<!that )(?<!who )(?<!which )(?:shall|must|will)\b", re.IGNORECASE)  # "Design authorities shall ...": the first word is a noun; "units that will deploy" is not
 _ACTOR_COLON = re.compile(r"^(?P<actor>[A-Z][^:;.]{1,70}?):\s+(?P<rest>\S.*)$", re.DOTALL)
 _DOCUMENT_AS_ACTOR = re.compile(r"\b(?:this|the)\s+(?:\w+\s+){0,2}?(?:issuance|instruction|publication|directive|manual|policy|memorandum|document|pamphlet)\s*$", re.IGNORECASE)
-_CONTACT_AS_NOUN = re.compile(r"^\W*(?:\([\w-]+\)\s*)?contact\s*(?::|(?:information|info|details|numbers?|lists?|persons?|points?|e-?mail|phone)\b)", re.IGNORECASE)  # a label or a noun phrase
+_CONTACT_AS_NOUN = re.compile(r"^\W*(?:\([\w-]+\)\s*)?(?:contact\s*(?::|(?:information|info|details|numbers?|lists?|persons?|points?|e-?mail|phone)\b)|wear\s+(?:criteria|guidance|standards?)\b)", re.IGNORECASE)  # a label or a noun phrase
+_NEGATED_OR_HYPOTHETICAL = re.compile(r"\b(?:not|never|no|could|would|might|may|can|cannot)\s+$", re.IGNORECASE)  # "do not require", "could result in"
+_IMPLIED_DUTY = re.compile(r"\b(?:require\b|mandates?\b|needs\s+to\b|only\s+(?:authorized|permitted|issued|allowed)\b|is\s+the\s+only\s+authority\b)", re.IGNORECASE)  # "require" (plural) and not "requires" or "need to": measured 23 of 28 against 19 of 31 and 4 of 8
 _NOT_AN_ACTOR = frozenset({"in addition", "note", "notes", "example", "examples", "exception", "exceptions", "reminder", "caution", "warning", "purpose", "rationale", "for example",
                            "scope", "applicability", "summary", "background", "definition", "definitions", "overview", "introduction", "general", "objective", "objectives", "description", "policy", "contact"})
 _RESPONSIBILITY = re.compile(r"\b(?:retain|retains|have|has|assume|assumes|bear|bears)\s+(?:\S+\s+){0,4}?responsibilit(?:y|ies)\b|\bresponsibilit(?:y|ies)\b[^.:;]{0,80}?\b(?:are|is|include)\s*:", re.IGNORECASE)
@@ -96,11 +99,19 @@ def _command(text: str):
     if not m or m.group(1).lower() not in _COMMAND_VERBS:
         return None
     rest = m.group(2).lstrip()
-    if re.match(r"of\b", rest, re.IGNORECASE) or _MODAL_SOON.match(rest):
+    if (re.match(r"of\b", rest, re.IGNORECASE) and m.group(1).lower() != "dispose") or _MODAL_SOON.match(rest):
         return None
+    if m.group(1).lower() == "wear" and re.match(r"(?:criteria|guidance|standards?)\b", rest, re.IGNORECASE):
+        return None  # "Wear criteria depends on ...": a noun phrase
     if m.group(2).lstrip(" ").startswith(":") or re.match(r"(?:information|info|details|numbers?|lists?|persons?|points?|e-?mail|phone)\b", rest, re.IGNORECASE):
         return None  # "Contact: John Doe" is a label and "Contact information for assistance ..." a noun phrase, not a command
     return m.group(1)
+
+
+_THIRD_PERSON_EXTRA = frozenset({  # verbs that open a role's duty in a responsibilities list ("Initiates exceptions ...", "Represents the cybersecurity interests ...")
+    "address", "administer", "advise", "advocate", "authorize", "certify", "determine", "evaluate", "execute", "grant", "initiate", "integrate", "perform", "recommend", "represent",
+    "review", "verify", "oversee", "approve", "disapprove", "direct", "issue", "notify", "provide", "establish", "develop", "coordinate", "conduct", "maintain", "manage", "monitor", "operate",
+})
 
 
 def _third_person_command(text: str):
@@ -118,9 +129,47 @@ def _third_person_command(text: str):
         bases.append(word[:-2])
     if word.endswith("ies"):
         bases.append(word[:-3] + "y")
-    if not any(b in _COMMAND_VERBS for b in bases) or re.match(r"of\b", m.group(2).lstrip(), re.IGNORECASE):
-        return None
+    rest = m.group(2).lstrip()
+    if not any(b in _COMMAND_VERBS or b in _THIRD_PERSON_EXTRA for b in bases) or re.match(r"of\b", rest, re.IGNORECASE) or _MODAL_SOON.match(rest) \
+            or re.match(r"(?:is|are|was|were|be|been|has|have|had|does|do|did|will|shall|must|should|may|can|cannot)\b", rest, re.IGNORECASE):
+        return None  # "Reports shall be filed ..." and "Reports are due ..." have a noun for a subject
     return m.group(1)
+
+
+_LEAD_PHRASE = re.compile(r"^(?:in coordination with|in addition to|at a minimum|as required|as directed|as necessary|as appropriate|under the authority|when required|if required|in accordance with)\b", re.IGNORECASE)
+
+
+def opens_with_third_person_duty(quote: str):
+    """The third-person verb of "Initiates exceptions ..." or "In coordination with the DoD CIO, USD(A&S), and USD(R&E), provides guidance ...": a role's duty written without its subject,
+    as a list item under the role's heading. The lead is skipped only when it is one of the known lead-in phrases."""
+    text = _ADVERB.sub("", _opening(quote), count=1)
+    if verb := _third_person_command(text):
+        return verb
+    if _LEAD_PHRASE.match(text):
+        head = text[:400]
+        for m in re.finditer(r",\s+(?:and\s+)?(?:as [^,;:]{3,60},\s+)?([a-z]+)\b", head):
+            if verb := _third_person_command(head[m.start(1):]):
+                return verb
+    return None
+
+
+_LAST_COLON = re.compile(r"^(?P<lead>[^:]{3,400}?):\s+(?P<rest>[A-Z]\S.*)$", re.DOTALL)
+
+
+def lead_then_third_person_duty(quote: str):
+    """("As the senior security official ..., the Director", "Provides") for a long lead, one colon, then a third-person verb that opens a duty ("Under the authority ..., the DoD CISO: Provides oversight").
+    The lead must be a role phrase, not a label, a list lead-in or a sentence with its own modal."""
+    text = _opening(quote)
+    m = _LAST_COLON.match(text)
+    if not m:
+        return None
+    lead = m.group("lead").strip()
+    if lead.lower() in _NOT_AN_ACTOR or _STRONG.search(lead) or _SHOULD.search(lead) or first_permission(lead) or _DOCUMENT_AS_ACTOR.search(lead):
+        return None
+    if not re.search(r"\b(?:the|a|an|[A-Z]{2,}|[A-Z]\w+)\b[^:]*$", lead) or lead.endswith((" include", " includes", " following", " as follows")):
+        return None
+    verb = _third_person_command(m.group("rest"))
+    return (lead, verb) if verb else None
 
 
 def leading_command(quote: str):
@@ -215,8 +264,15 @@ def classify(item: dict, *, use_position: bool = True) -> dict:
         decide("recommendation", "says what should happen", m)
     elif m := first_permission(text):
         decide("permission", "says what may be done", m)
-    elif ("no_stated_actor" in flags or checklist_audit._is_verb(checklist_audit._first_word(text), _COMMAND_VERBS)) and not _CONTACT_AS_NOUN.match(_opening(text)):
+    elif ("no_stated_actor" in flags or checklist_audit._is_verb(checklist_audit._first_word(text), _COMMAND_VERBS)) and not _CONTACT_AS_NOUN.match(_opening(text)) \
+            and not re.match(r"\W*(?:wear|limit|present|exercise|pull|avoid|consult|generate|mitigate|decertify)\s+of\b", _opening(text), re.IGNORECASE):
         decide("duty_imperative", "opens with a command and names no actor")
+    elif verb := opens_with_third_person_duty(text):  # kind-rules-8: only rows that would otherwise be `unknown`, so no other kind changes
+        decide("duty_imperative", f"opens with a third-person verb and no subject ({verb})")
+    elif pair := lead_then_third_person_duty(text):
+        decide("duty_with_actor", f"names its actor in a long lead ({pair[0][:60]}), then a third-person verb ({pair[1]})")
+    elif (m := _IMPLIED_DUTY.search(text)) and not _NEGATED_OR_HYPOTHETICAL.search(text[max(0, m.start() - 24):m.start()]):
+        decide("duty_with_actor", "says what is required or limited", m)
     else:
         decide("unknown", "no wording cue")
 
