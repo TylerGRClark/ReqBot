@@ -42,3 +42,16 @@ the existing chunks (`section_ref_path`, `section_title_path`), so no new Doclin
 - **Arm S (single):** one run per control, with the family chapter in context and only that control to judge (40 controls drawn by baseline category, seeded). Run only if B shows the rubric tracks NIST's labels.
 - **Measures:** rank correlation (Spearman) of the score with the baseline tier (in the Low baseline, Moderate only, High only, none) and with the priority code; the share rated critical and major; repeat stability (Spearman between the two B runs).
 - **Pass bar:** B correlates with the baseline tier at 0.4 or more on every family pooled, its repeat stability is at least 0.8, and it rates no more than 20% of controls critical or major. S must beat B by 0.05 or more in correlation or in stability to justify its cost.
+
+## Phase 2, arm B result (ran 2026-10-17; first launch failed because I put the rubric file one folder from where the reviewers were told to read; all 16 refused to score without it, and the relaunch used the same prompts)
+140 controls in 8 families, scored twice by blind Opus runs that read each whole family:
+| Measure | Result | Registered bar |
+|---|---|---|
+| Repeat stability (Spearman, run 1 against run 2) | **0.96** (identical score in both runs on 90% of controls) | at least 0.8: met |
+| Correlation with NIST baseline tier (in the Low baseline, Moderate only, High only, none) | **0.37 / 0.38** (runs 1 and 2; 0.38 averaged) | at least 0.4: **narrowly missed** |
+| Correlation with the NIST priority code (P1 highest) | 0.51 / 0.51 | no bar set |
+| Share scored major or critical (4 or 5) | 20% and 19% | at most 20%: met |
+Score distribution (run 1): 1: 11%, 2: 33%, 3: 36%, 4: 19%, 5: 1% (critical is rare, as hoped).
+Mean score by NIST tier: in the Low baseline 2.9, Moderate only 2.9, High only 2.6 (5 controls), in no baseline 2.04: the rubric separates "in some NIST baseline" from "in none" but not Low from Moderate. The highest-scored controls are the ones that read as fundamental (SC-7 boundary protection, AC-3 access enforcement, IA-2 identification and authentication, SI-2 flaw remediation, AC-2 account management, AC-17 remote access, CM-6 configuration settings).
+Caveats: NIST's labels are not criticality (the priority code is an implementation order, and 122 of 224 coded controls are P1), the model may remember the baselines from training, and the High-only group is five controls.
+Reading: batch scoring is steady and tracks NIST's own ordering moderately. Arm S (one control at a time, chapter in context) will be run on a 30-control sample to see whether it adds accuracy; with stability already at 0.96 the question is accuracy only.
