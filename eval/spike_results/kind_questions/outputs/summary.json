@@ -1,0 +1,53 @@
+{
+ "permission_rows_after_rules7": 67,
+ "rounds": {
+  "1": {
+   "rows_run": 67,
+   "questions": 36,
+   "nulls": 31,
+   "fail_C1_to_C4": 3,
+   "fail_C5": 0,
+   "fail_any": 3,
+   "by_check": {
+    "C4_turns_may_into_duty": 2,
+    "C1_not_grounded": 1
+   }
+  },
+  "2": {
+   "rows_run": 67,
+   "questions": 36,
+   "nulls": 31,
+   "fail_C1_to_C4": 0,
+   "fail_C5": 1,
+   "fail_any": 1,
+   "by_check": {
+    "C5_limit_not_verbatim": 1
+   }
+  },
+  "3": {
+   "rows_run": 18,
+   "questions": 18,
+   "nulls": 0,
+   "fail_C1_to_C4": 0,
+   "fail_C5": 1,
+   "fail_any": 1,
+   "by_check": {
+    "C5_limit_not_verbatim": 1
+   }
+  }
+ },
+ "final_questions": 36,
+ "final_nulls": 31,
+ "final_fail_C1_to_C4": 0,
+ "final_fail_any": 1,
+ "final_hand_grades": {
+  "good": 28,
+  "null_ok": 27,
+  "null_missed": 4,
+  "weak": 6,
+  "wrong": 2
+ },
+ "final_weak_limit_guard_flags": 9,
+ "guard_flags_that_are_hand_weak_or_wrong": 5,
+ "hand_weak_or_wrong_total": 8
+}

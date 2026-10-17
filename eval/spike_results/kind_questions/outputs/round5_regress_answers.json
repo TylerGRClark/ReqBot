@@ -1,0 +1,201 @@
+{
+ "CHK-bd25f319f1f6731f": {
+  "ans": {
+   "question": "null",
+   "limit": null,
+   "why_null": "No restriction is stated."
+  },
+  "hint": null
+ },
+ "CHK-88a253b98899afd6": {
+  "ans": {
+   "question": "null",
+   "limit": null,
+   "why_null": "The requirement only describes a capability and does not impose any restriction or condition."
+  },
+  "hint": null
+ },
+ "CHK-e12fc6673daef456": {
+  "ans": {
+   "question": "When POs, in conjunction with their AOs and Service Principals/CIO, petition the MC4EB through the Joint Staff J-6 for key extension for systems that require continued operations of an NSA cryptographic product beyond the product's published LYOU, is the petition submitted through the Joint Staff J-6?",
+   "limit": "through the Joint Staff J-6, for key extension for systems that require continued operations of an NSA cryptographic product beyond the product's published LYOU",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-9012b42e71bb7770": {
+  "ans": {
+   "question": "null",
+   "limit": null,
+   "why_null": "The requirement only describes or predicts where policies can be obtained, and does not include a restriction that would limit how this action is taken."
+  },
+  "hint": null
+ },
+ "CHK-3b23f069b14e9d38": {
+  "ans": {
+   "question": "When the Secretaries of the Military Departments delegate this responsibility no lower than the service acquisition executive for the department concerned, is it in accordance with Section 3252(c) of Title 10, U.S.C. and DFARS Part 239.7303(b)?",
+   "limit": "In accordance with Section 3252(c) of Title 10, U.S.C. and DFARS Part 239.7303(b)",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-1fb5059aeb4e0739": {
+  "ans": {
+   "grant": "may independently conduct operational and technical observations and assessments",
+   "limit": "In coordination with the Director, National Security Agency",
+   "question": "When the Commander, USCYBERCOM conducts operational and technical observations and assessments in support of the use of the authority in Section 3252 of Title 10, U.S.C., is it done in coordination with the Director, National Security Agency?",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-5087ba90e619c6a6": {
+  "ans": {
+   "question": "When the Director, DCSA administers the DoD CUI Program for contractually established CUI requirements for contractors in classified contracts, is it in accordance with the May 17, 2018 Under Secretary of Defense for Intelligence Memorandum?",
+   "limit": "in accordance with the May 17, 2018 Under Secretary of Defense for Intelligence Memorandum",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-56eec278d2ee6a81": {
+  "ans": {
+   "question": "When the application of 'Releasable to' ('REL TO') is applied, was it applied only to information properly categorized as CUI with an export control or licensing requirement with a foreign disclosure agreement in place?",
+   "limit": "to information properly categorized as CUI with an export control or licensing requirement with a foreign disclosure agreement in place",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-c06d1ba6ffdf03ff": {
+  "ans": {
+   "question": "When DoD operational CUI (not related to intelligence) is marked as REL TO, is it done when warranted and consistent with relevant law, regulation, or government-wide policy or DoD policy?",
+   "limit": "when warranted and consistent with relevant law, regulation, or government-wide policy or DoD policy",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-534d868710e7e283": {
+  "ans": {
+   "grant": "DoD CUI may be disseminated to DoD personnel",
+   "limit": "to conduct official DoD and U.S. Government business in accordance with a law, regulation, or government-wide policy",
+   "question": "When DoD CUI is disseminated to DoD personnel to conduct official DoD and U.S. Government business, is it done in accordance with a law, regulation, or government-wide policy?",
+   "why_null": ""
+  },
+  "hint": "Your question was rejected because question drops the trigger or actor of the permission. Write it again keeping that, with every qualifier of the permission."
+ },
+ "CHK-ae4e4cd11a5d93f1": {
+  "ans": {
+   "grant": "CUI information may be disseminated within the DoD Components and between DoD Component officials and DoD contractors, consultants, and grantees to conduct official business for the DoD",
+   "limit": "provided dissemination is consistent with controls imposed by a distribution statement or limited dissemination controls (LDC)",
+   "question": "When CUI information is disseminated within the DoD Components and between DoD Component officials and DoD contractors, consultants, and grantees to conduct official business for the DoD, provided dissemination is consistent with controls imposed by a distribution statement or limited dissemination controls (LDC), was the dissemination consistent with those controls?",
+   "why_null": ""
+  },
+  "hint": "Your question was rejected because question drops a qualifier: provided. Write it again keeping that, with every qualifier of the permission."
+ },
+ "CHK-7d7bc329e5e38d85": {
+  "ans": {
+   "grant": "CUI designated information may be disseminated to a foreign recipient in order to conduct official business for the DoD",
+   "limit": "provided the dissemination has been approved by a disclosure authority in accordance with Paragraph 3.4.c. and the CUI is appropriately marked as releasable to the intended foreign recipient",
+   "question": "When CUI designated information is disseminated to a foreign recipient in order to conduct official business for the DoD, provided the dissemination has been approved by a disclosure authority in accordance with Paragraph 3.4.c., was it appropriately marked as releasable to the intended foreign recipient?",
+   "why_null": ""
+  },
+  "hint": "Your question was rejected because question drops the trigger or actor of the permission. Write it again keeping that, with every qualifier of the permission."
+ },
+ "CHK-592f56879479b330": {
+  "ans": {
+   "question": "When CUI not controlled as NOFORN is released or disclosed to non-U.S. citizens employed by the DoD, is access to such information within the scope of their assigned duties?",
+   "limit": "Access to such information is within the scope of their assigned duties",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-3c8d5365c3e37232": {
+  "ans": {
+   "question": "When CUI not controlled as NOFORN is released or disclosed to non-U.S. citizens employed by the DoD, does access to such information help accomplish a lawful and authorized DoD mission or purpose and would it not be detrimental to the interests of the DoD or the U.S. Government?",
+   "limit": "Access to such information would help accomplish a lawful and authorized DoD mission or purpose and would not be detrimental to the interests of the DoD or the U.S. Government.",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-f3ceca88769fdb88": {
+  "ans": {
+   "question": "When CUI not controlled as NOFORN is released or disclosed to non-U.S. citizens employed by the DoD, are there no contract restrictions prohibiting access to such information?",
+   "limit": "There are no contract restrictions prohibiting access to such information.",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-696fb54078508bb3": {
+  "ans": {
+   "question": "When CUI not controlled as NOFORN is released or disclosed to non-U.S. citizens employed by the DoD, is it in accordance with DoDIs 8500.01 and 5200.02 and export control regulations, as applicable?",
+   "limit": "if: Access to such information is in accordance with DoDIs 8500.01 and 5200.02 and export control regulations, as applicable",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-35ad163025acac79": {
+  "ans": {
+   "question": "null",
+   "limit": null,
+   "why_null": "The requirement only describes a potential action by the USG without specifying a restriction that limits how or when it can be done."
+  },
+  "hint": null
+ },
+ "CHK-0afb0128b3843afa": {
+  "ans": {
+   "grant": "By using this IS (which includes any device attached to this IS), you consent to the following conditions: -Communications using, or data stored on, this IS are not private, are subject to routine monitoring, interception, and search, and may be disclosed or used for any USG-authorized purpose.",
+   "limit": "null",
+   "question": "null",
+   "why_null": "The requirement describes a consent condition rather than a permission with a specific limit. It does not specify a restriction beyond the general statement of routine monitoring and use by the USG."
+  },
+  "hint": "The sentence names a closed list of permitted means (a, b, or c). That list is the limit: ask whether it was done by one of those means."
+ },
+ "CHK-7f3bc9ce50a91448": {
+  "ans": {
+   "grant": "CUI information and material may be transmitted",
+   "limit": "via first class mail, parcel post, or, bulk shipments",
+   "question": "When CUI information and material are transmitted via first class mail, parcel post, or, bulk shipments, is the transmission done only by one of those means?",
+   "why_null": null
+  },
+  "hint": "The sentence names a closed list of permitted means (a, b, or c). That list is the limit: ask whether it was done by one of those means."
+ },
+ "CHK-c6fee908b9d84c1e": {
+  "ans": {
+   "question": "When CUI information is transmitted electronically when practical, are the transmissions via approved secure communications systems or systems utilizing other protective measures?",
+   "limit": "via approved secure communications systems or systems utilizing other protective measures",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-e56c960f952686f3": {
+  "ans": {
+   "question": "When agencies place limits on disseminating CUI for a lawful government purpose, are they only using the dissemination controls listed in Table 2 or methods authorized by a specific law, regulation, or government-wide policy?",
+   "limit": "only using the dissemination controls listed in Table 2 or methods authorized by a specific law, regulation, or government-wide policy",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-0bf7affa1937bb83": {
+  "ans": {
+   "question": "When record and non-record CUI documents are destroyed by means approved for destroying classified information or by any other means making it unreadable, indecipherable, and unrecoverable the original information such as those identified in NIST SP 800-88, is the destruction in accordance with Section 2002.14 of Title 32, CFR?",
+   "limit": "in accordance with Section 2002.14 of Title 32, CFR",
+   "why_null": ""
+  },
+  "hint": null
+ },
+ "CHK-c1a4110daf4ab9e6": {
+  "ans": {
+   "question": "When the representative delegates to a DoD military officer in the grade of O-5 or a DoD civilian employee in the grade of GS-14 with at least a Secret security clearance, is it necessary?",
+   "limit": "If necessary",
+   "why_null": null
+  },
+  "hint": null
+ },
+ "CHK-a11e1ae5df7e5f5d": {
+  "ans": {
+   "grant": "A representative from OIG DoD may attend",
+   "limit": "in a non-voting role only",
+   "question": "When A representative from OIG DoD attends, is it done in a non-voting role only?",
+   "why_null": ""
+  },
+  "hint": "The sentence says \"only\". That word IS the restriction: ask whether it was done only in the way the sentence names."
+ }
+}

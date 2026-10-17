@@ -1,0 +1,17 @@
+[
+ {
+  "doc": "afi10-2402",
+  "citation": "3.6.2",
+  "checklist_item_id": "CHK-6de3aaf3d06b94c2",
+  "source_quote": "Membership may also include private sector partners when applicable and security protocols allow.",
+  "round": 6,
+  "prompt": "v6",
+  "before_question": null,
+  "grant": "Membership may also include private sector partners",
+  "limit": "when applicable and security protocols allow",
+  "question": "When membership includes private sector partners when applicable, did security protocols allow it?",
+  "why_null": "",
+  "failures": [],
+  "error": null
+ }
+]

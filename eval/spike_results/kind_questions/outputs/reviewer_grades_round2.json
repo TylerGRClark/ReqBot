@@ -1,0 +1,67 @@
+{
+ "CHK-44f89dead3c60b47": {
+  "grade": "wrong",
+  "doc": "afi10-2402",
+  "citation": "3.3.3.5.2"
+ },
+ "CHK-6de3aaf3d06b94c2": {
+  "grade": "weak",
+  "doc": "afi10-2402",
+  "citation": "3.6.2"
+ },
+ "CHK-2e42e3e0dea13440": {
+  "grade": "weak",
+  "doc": "afi17-203",
+  "citation": "3.8"
+ },
+ "CHK-c0c2f85c54c71974": {
+  "grade": "weak",
+  "doc": "afi17-203",
+  "citation": "3.8"
+ },
+ "CHK-aa33ca62dce2b668": {
+  "grade": "weak",
+  "doc": "dafman17-1305",
+  "citation": "1.2.3"
+ },
+ "CHK-7fa61d43cb0a0c97": {
+  "grade": "weak",
+  "doc": "dafman17-1305",
+  "citation": "1.2.4"
+ },
+ "CHK-e61de0ec02faf36a": {
+  "grade": "wrong",
+  "doc": "dafman17-1305",
+  "citation": "4.1.12"
+ },
+ "CHK-3840eca1331dddf9": {
+  "grade": "weak",
+  "doc": "dafman17-1305",
+  "citation": "4.1.15"
+ },
+ "CHK-b5b560d778dcbf7b": {
+  "grade": "weak",
+  "doc": "dafman17-1305",
+  "citation": "4.1.19 (inferred)"
+ },
+ "CHK-ebab34b29c409867": {
+  "grade": "wrong",
+  "doc": "dafman17-1305",
+  "citation": "4.2.1"
+ },
+ "CHK-72e397eb3c794ff6": {
+  "grade": "weak",
+  "doc": "dafman17-1305",
+  "citation": "4.4.1.2"
+ },
+ "CHK-8f1839f0c89c36e0": {
+  "grade": "weak",
+  "doc": "dafman17-1305",
+  "citation": "4.4.1.3"
+ },
+ "CHK-e293bb346a23675b": {
+  "grade": "weak",
+  "doc": "dafman17-1305",
+  "citation": "6.2.1"
+ }
+}

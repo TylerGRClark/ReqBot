@@ -1,0 +1,56 @@
+{
+ "permission_rows": 67,
+ "wrong_end_states": {
+  "afi10-2402 3.3.3.5.2": "today's question",
+  "dafman17-1305 4.1.12": "null",
+  "dafman17-1305 4.2.1": "rewritten"
+ },
+ "weak_end_states": {
+  "afi10-2402 3.6.2 (Membership may also inclu)": "rewritten",
+  "afi17-203 3.8 (An incident/event investi)": "null",
+  "afi17-203 3.8 (In such cases, informatio)": "null",
+  "dafman17-1305 1.2.3 (User network access may b)": "today's question",
+  "dafman17-1305 1.2.4 (They may be requested to )": "null",
+  "dafman17-1305 4.1.15 (Civilian personnel can up)": "null",
+  "dafman17-1305 4.1.19 (inferred) (An individual's cyberspac)": "null",
+  "dafman17-1305 4.4.1.2 (Waivers may be obtained p)": "null",
+  "dafman17-1305 4.4.1.3 (Maintenance of self-funde)": "rewritten",
+  "dafman17-1305 6.2.1 (Reporting formats may be )": "null"
+ },
+ "weak_counts": {
+  "rewritten": 2,
+  "null": 7,
+  "today's question": 1
+ },
+ "good_rows_changed": [
+  {
+   "row": "afi10-2402 3.3.3.3.4",
+   "round2": null,
+   "final": "Does the PSS include presentations by local leadership and Team Chief, a windshield tour of the installation, and mission briefs and asset tours for each asset being assessed?"
+  }
+ ],
+ "all_rows_changed_from_round2": [
+  "afi10-2402 3.3.3.3.4",
+  "afi10-2402 3.3.3.5.2",
+  "afi10-2402 3.6.2",
+  "afi17-203 3.8",
+  "afi17-203 3.8",
+  "afi17-203 3.8.1",
+  "dafman17-1305 1.2.3",
+  "dafman17-1305 1.2.4",
+  "dafman17-1305 4.1.12",
+  "dafman17-1305 4.1.15",
+  "dafman17-1305 4.1.19 (inferred)",
+  "dafman17-1305 4.2.1",
+  "dafman17-1305 4.4.1.2",
+  "dafman17-1305 4.4.1.3",
+  "dafman17-1305 6.2.1"
+ ],
+ "restored_today": [
+  "afi10-2402 3.3.3.3.4",
+  "afi10-2402 3.3.3.5.2",
+  "dafman17-1305 1.2.3"
+ ],
+ "final_new_questions": 21,
+ "final_none": 35
+}
