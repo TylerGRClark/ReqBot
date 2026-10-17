@@ -51,3 +51,8 @@ Labelers are the same model family; the 15-row sheet in `~/reqbot-work/checklist
 
 ## Owner check (2026-10-15)
 Tyler rated 14 of 15 blind A/B rows: the current prompt preferred on 5, "the organization" on 1, same on 8 (one row skipped). This reverses the model raters' +14 points for O: **O is not adopted, the prompt stays as it is.** His notes: where the source names no actor an impersonal question is fine ("Are waivers submitted?"); one O question named positions the source does not. Model-rater agreement over-credited the change.
+
+## Review notes (Codex on #344, 2026-10-17): two deviations from the registered method
+The scripts and numbers are the record of what was run and are not changed. Two statements above do not match what was done:
+- **Noise-floor rows were not excluded from the blind ratings.** The README says changed rows exclude those that also changed between the two control runs (C against C2). The rating packets were built from every row where the arm differed from C, so some rated rows are within the noise floor (26 of 250 rows differ between C and C2). The verdicts do not rest on this: N failed the registered worse-at-most-10% rule by a wide margin (34% worse), and the owner's own 14-row check preferred the current wording.
+- **The invented-actor counts (C 52, N 0, O 37) are over all 250 sampled rows,** among rows where the question opens "Does/Do the unit/organization" and none of the quote, the Applies-to line and the parent text contains the word; they were not recomputed over a separate eligible set.
