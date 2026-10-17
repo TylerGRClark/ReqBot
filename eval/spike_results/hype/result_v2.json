@@ -1,0 +1,481 @@
+{
+  "queries": 232,
+  "gold_queries": 22,
+  "hard_rows": 35,
+  "other_rows": 197,
+  "sealed_rows": 46,
+  "collections": {
+    "C": "grc_hype_spike_v2_C_20261014_115527",
+    "C2": "grc_hype_spike_v2_C2_20261014_115527"
+  },
+  "counts": {
+    "C": {
+      "base": 4462,
+      "questions": 5931
+    },
+    "C2": {
+      "base": 4462,
+      "questions": 5805
+    }
+  },
+  "arms": {
+    "A": {
+      "recall@5": 0.2672,
+      "recall@10": 0.3147,
+      "mrr": 0.1928,
+      "gold_precision@5": 0.2,
+      "rise_points": 0.0,
+      "ci95_points": [
+        0.0,
+        0.0
+      ],
+      "split": {
+        "hard_rows_rise_points": 0.0,
+        "other_rows_rise_points": 0.0
+      },
+      "sealed": {
+        "recall@5": 0.3478,
+        "A_recall@5": 0.3478
+      },
+      "newly_found": [],
+      "newly_lost": [],
+      "per_document": {
+        "CJCSI 6510.02G": {
+          "n": 12,
+          "recall@5": 0.417,
+          "A": 0.417
+        },
+        "DODI 5200.01": {
+          "n": 12,
+          "recall@5": 0.583,
+          "A": 0.583
+        },
+        "DODI 5200.44": {
+          "n": 12,
+          "recall@5": 0.25,
+          "A": 0.25
+        },
+        "DODI 5200.48": {
+          "n": 22,
+          "recall@5": 0.273,
+          "A": 0.273
+        },
+        "DODI 8410.03": {
+          "n": 12,
+          "recall@5": 0.417,
+          "A": 0.417
+        },
+        "DODI 8551.01": {
+          "n": 12,
+          "recall@5": 0.25,
+          "A": 0.25
+        },
+        "NIST.SP.800-125": {
+          "n": 22,
+          "recall@5": 0.227,
+          "A": 0.227
+        },
+        "afi10-2402": {
+          "n": 22,
+          "recall@5": 0.182,
+          "A": 0.182
+        },
+        "afi13-550": {
+          "n": 12,
+          "recall@5": 0.25,
+          "A": 0.25
+        },
+        "afi17-203": {
+          "n": 18,
+          "recall@5": 0.111,
+          "A": 0.111
+        },
+        "afman17-2101": {
+          "n": 18,
+          "recall@5": 0.389,
+          "A": 0.389
+        },
+        "afpd_17-1": {
+          "n": 12,
+          "recall@5": 0.5,
+          "A": 0.5
+        },
+        "dafi36-2903": {
+          "n": 24,
+          "recall@5": 0.125,
+          "A": 0.125
+        },
+        "dafman17-1305": {
+          "n": 22,
+          "recall@5": 0.136,
+          "A": 0.136
+        }
+      },
+      "gold_fall_points": 0.0
+    },
+    "B": {
+      "recall@5": 0.2716,
+      "recall@10": 0.3405,
+      "mrr": 0.1965,
+      "gold_precision@5": 0.2182,
+      "rise_points": 0.43,
+      "ci95_points": [
+        -3.45,
+        3.88
+      ],
+      "split": {
+        "hard_rows_rise_points": 2.86,
+        "other_rows_rise_points": 0.0
+      },
+      "sealed": {
+        "recall@5": 0.3261,
+        "A_recall@5": 0.3478
+      },
+      "newly_found": [
+        "Q030",
+        "Q044",
+        "Q046",
+        "Q071",
+        "Q098",
+        "Q101",
+        "Q107",
+        "Q126",
+        "Q186",
+        "Q189"
+      ],
+      "newly_lost": [
+        "Q024",
+        "Q055",
+        "Q062",
+        "Q136",
+        "Q168",
+        "Q200",
+        "Q208",
+        "Q210",
+        "Q220"
+      ],
+      "per_document": {
+        "CJCSI 6510.02G": {
+          "n": 12,
+          "recall@5": 0.333,
+          "A": 0.417
+        },
+        "DODI 5200.01": {
+          "n": 12,
+          "recall@5": 0.5,
+          "A": 0.583
+        },
+        "DODI 5200.44": {
+          "n": 12,
+          "recall@5": 0.417,
+          "A": 0.25
+        },
+        "DODI 5200.48": {
+          "n": 22,
+          "recall@5": 0.364,
+          "A": 0.273
+        },
+        "DODI 8410.03": {
+          "n": 12,
+          "recall@5": 0.333,
+          "A": 0.417
+        },
+        "DODI 8551.01": {
+          "n": 12,
+          "recall@5": 0.333,
+          "A": 0.25
+        },
+        "NIST.SP.800-125": {
+          "n": 22,
+          "recall@5": 0.227,
+          "A": 0.227
+        },
+        "afi10-2402": {
+          "n": 22,
+          "recall@5": 0.227,
+          "A": 0.182
+        },
+        "afi13-550": {
+          "n": 12,
+          "recall@5": 0.167,
+          "A": 0.25
+        },
+        "afi17-203": {
+          "n": 18,
+          "recall@5": 0.111,
+          "A": 0.111
+        },
+        "afman17-2101": {
+          "n": 18,
+          "recall@5": 0.333,
+          "A": 0.389
+        },
+        "afpd_17-1": {
+          "n": 12,
+          "recall@5": 0.5,
+          "A": 0.5
+        },
+        "dafi36-2903": {
+          "n": 24,
+          "recall@5": 0.167,
+          "A": 0.125
+        },
+        "dafman17-1305": {
+          "n": 22,
+          "recall@5": 0.091,
+          "A": 0.136
+        }
+      },
+      "gold_fall_points": -1.82,
+      "rule": {
+        "rise_at_least_5": false,
+        "interval_lower_above_0": false,
+        "gold_fall_at_most_2": true,
+        "gain_not_only_from_hard_rows": false,
+        "verdict": "DO NOT BUILD"
+      }
+    },
+    "C": {
+      "recall@5": 0.2672,
+      "recall@10": 0.3319,
+      "mrr": 0.1909,
+      "gold_precision@5": 0.2182,
+      "rise_points": 0.0,
+      "ci95_points": [
+        -3.88,
+        3.45
+      ],
+      "split": {
+        "hard_rows_rise_points": 2.86,
+        "other_rows_rise_points": -0.51
+      },
+      "sealed": {
+        "recall@5": 0.3478,
+        "A_recall@5": 0.3478
+      },
+      "newly_found": [
+        "Q030",
+        "Q044",
+        "Q046",
+        "Q071",
+        "Q101",
+        "Q107",
+        "Q126",
+        "Q186",
+        "Q189"
+      ],
+      "newly_lost": [
+        "Q024",
+        "Q062",
+        "Q136",
+        "Q151",
+        "Q168",
+        "Q200",
+        "Q208",
+        "Q210",
+        "Q220"
+      ],
+      "per_document": {
+        "CJCSI 6510.02G": {
+          "n": 12,
+          "recall@5": 0.333,
+          "A": 0.417
+        },
+        "DODI 5200.01": {
+          "n": 12,
+          "recall@5": 0.5,
+          "A": 0.583
+        },
+        "DODI 5200.44": {
+          "n": 12,
+          "recall@5": 0.417,
+          "A": 0.25
+        },
+        "DODI 5200.48": {
+          "n": 22,
+          "recall@5": 0.318,
+          "A": 0.273
+        },
+        "DODI 8410.03": {
+          "n": 12,
+          "recall@5": 0.333,
+          "A": 0.417
+        },
+        "DODI 8551.01": {
+          "n": 12,
+          "recall@5": 0.333,
+          "A": 0.25
+        },
+        "NIST.SP.800-125": {
+          "n": 22,
+          "recall@5": 0.273,
+          "A": 0.227
+        },
+        "afi10-2402": {
+          "n": 22,
+          "recall@5": 0.227,
+          "A": 0.182
+        },
+        "afi13-550": {
+          "n": 12,
+          "recall@5": 0.167,
+          "A": 0.25
+        },
+        "afi17-203": {
+          "n": 18,
+          "recall@5": 0.111,
+          "A": 0.111
+        },
+        "afman17-2101": {
+          "n": 18,
+          "recall@5": 0.333,
+          "A": 0.389
+        },
+        "afpd_17-1": {
+          "n": 12,
+          "recall@5": 0.5,
+          "A": 0.5
+        },
+        "dafi36-2903": {
+          "n": 24,
+          "recall@5": 0.125,
+          "A": 0.125
+        },
+        "dafman17-1305": {
+          "n": 22,
+          "recall@5": 0.091,
+          "A": 0.136
+        }
+      },
+      "gold_fall_points": -1.82,
+      "rule": {
+        "rise_at_least_5": false,
+        "interval_lower_above_0": false,
+        "gold_fall_at_most_2": true,
+        "gain_not_only_from_hard_rows": false,
+        "verdict": "DO NOT BUILD"
+      }
+    },
+    "C2": {
+      "recall@5": 0.2672,
+      "recall@10": 0.3319,
+      "mrr": 0.1892,
+      "gold_precision@5": 0.2091,
+      "rise_points": 0.0,
+      "ci95_points": [
+        -3.88,
+        3.45
+      ],
+      "split": {
+        "hard_rows_rise_points": 2.86,
+        "other_rows_rise_points": -0.51
+      },
+      "sealed": {
+        "recall@5": 0.3478,
+        "A_recall@5": 0.3478
+      },
+      "newly_found": [
+        "Q030",
+        "Q044",
+        "Q046",
+        "Q071",
+        "Q101",
+        "Q107",
+        "Q126",
+        "Q186",
+        "Q189"
+      ],
+      "newly_lost": [
+        "Q024",
+        "Q062",
+        "Q136",
+        "Q151",
+        "Q168",
+        "Q200",
+        "Q208",
+        "Q210",
+        "Q220"
+      ],
+      "per_document": {
+        "CJCSI 6510.02G": {
+          "n": 12,
+          "recall@5": 0.333,
+          "A": 0.417
+        },
+        "DODI 5200.01": {
+          "n": 12,
+          "recall@5": 0.5,
+          "A": 0.583
+        },
+        "DODI 5200.44": {
+          "n": 12,
+          "recall@5": 0.417,
+          "A": 0.25
+        },
+        "DODI 5200.48": {
+          "n": 22,
+          "recall@5": 0.318,
+          "A": 0.273
+        },
+        "DODI 8410.03": {
+          "n": 12,
+          "recall@5": 0.333,
+          "A": 0.417
+        },
+        "DODI 8551.01": {
+          "n": 12,
+          "recall@5": 0.333,
+          "A": 0.25
+        },
+        "NIST.SP.800-125": {
+          "n": 22,
+          "recall@5": 0.273,
+          "A": 0.227
+        },
+        "afi10-2402": {
+          "n": 22,
+          "recall@5": 0.227,
+          "A": 0.182
+        },
+        "afi13-550": {
+          "n": 12,
+          "recall@5": 0.167,
+          "A": 0.25
+        },
+        "afi17-203": {
+          "n": 18,
+          "recall@5": 0.111,
+          "A": 0.111
+        },
+        "afman17-2101": {
+          "n": 18,
+          "recall@5": 0.333,
+          "A": 0.389
+        },
+        "afpd_17-1": {
+          "n": 12,
+          "recall@5": 0.5,
+          "A": 0.5
+        },
+        "dafi36-2903": {
+          "n": 24,
+          "recall@5": 0.125,
+          "A": 0.125
+        },
+        "dafman17-1305": {
+          "n": 22,
+          "recall@5": 0.091,
+          "A": 0.136
+        }
+      },
+      "gold_fall_points": -0.91,
+      "rule": {
+        "rise_at_least_5": false,
+        "interval_lower_above_0": false,
+        "gold_fall_at_most_2": true,
+        "gain_not_only_from_hard_rows": false,
+        "verdict": "DO NOT BUILD"
+      }
+    }
+  }
+}

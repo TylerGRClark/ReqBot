@@ -1,0 +1,13 @@
+{
+  "registered": "2026-10-13",
+  "source": "reqbot-agent-docs overnight-experiments_2026-10-13.md section 4; docs/TODO_future_improvements.txt item 3",
+  "question": "Do index-side generated questions (HyPE) find requirements that meaning-queries currently miss?",
+  "metric_miss_set": "mean recall@5 over the queries in miss_queries.jsonl",
+  "metric_gold_set": "mean precision@5 over the live-labelled queries of eval/gold_retrieval_queries.jsonl (labels restricted to requirement ids that exist in the live collection; queries with none left, and zero-truth queries, are not scored)",
+  "build_if": {
+    "miss_set_recall_at_5_rise_points_at_least": 15,
+    "gold_precision_at_5_fall_points_at_most": 2
+  },
+  "otherwise": "record the numbers and stop; do not build",
+  "points_are": "percentage points (mean metric x 100), arm B minus arm A, same queries, same cached query rewrite and HyDE text in both arms"
+}

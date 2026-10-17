@@ -1,0 +1,24 @@
+{
+  "scratch_collection": "grc_hype_spike_20261013_173015",
+  "records_with_questions": 4427,
+  "records_generated": 4462,
+  "questions_kept": 13095,
+  "questions_rejected": 217,
+  "miss_queries": 15,
+  "gold_queries": 22,
+  "A": {
+    "miss_recall@5": 0.4667,
+    "gold_precision@5": 0.2
+  },
+  "B": {
+    "miss_recall@5": 0.5333,
+    "gold_precision@5": 0.2182
+  },
+  "decision": {
+    "miss_recall_at_5_rise_points": 6.67,
+    "gold_precision_at_5_fall_points": -1.82,
+    "rise_requirement_met": false,
+    "fall_limit_met": true,
+    "verdict": "DO NOT BUILD"
+  }
+}
