@@ -108,6 +108,11 @@ def ollama_digit_probs(prompt: str, model: str, ollama_url: str, timeout: int = 
     return probs
 
 
+def withheld_ids(questions_path: Path) -> set[str]:
+    """Rows the questions job decided carry no checkable duty (the model answered null, or the row scored low as a requirement): a "look first" flag on them would contradict that."""
+    return {i for i, rec in audit_questions.load(questions_path).items() if not rec.get("question") and not rec.get("error")}
+
+
 def load(path: Path) -> dict[str, dict]:
     out: dict[str, dict] = {}
     try:
@@ -130,8 +135,8 @@ def write(path: Path, records: dict[str, dict]) -> None:
     os.replace(tmp, path)
 
 
-def score_rows(items: list[dict], path: Path, *, model: str = audit_questions.MODEL, ollama_url: str = "", call=None, on_row=None, progress=None, document: str = "") -> dict:
-    """Write or refresh the sidecar for `items` (checklist items). `call(prompt) -> {digit: probability}` replaces the Ollama call in tests. `document` names the publication in the prompt's context line. Returns counts.
+def score_rows(items: list[dict], path: Path, *, model: str = audit_questions.MODEL, ollama_url: str = "", call=None, on_row=None, progress=None, document: str = "", skip_ids: frozenset | set = frozenset()) -> dict:
+    """Write or refresh the sidecar for `items` (checklist items). `call(prompt) -> {digit: probability}` replaces the Ollama call in tests. `document` names the publication in the prompt's context line; `skip_ids` are rows the questions job withheld a question from (see `withheld_ids`). Returns counts.
     A record whose input (row text, wording, model) is unchanged is kept. Rows the questions job withholds a question from (fragments, definitions, no passage) get no score.
     A server that cannot be reached 5 times in a row, or that returns no token probabilities, stops the run (`aborted` / `unavailable`); rows already written are kept."""
     if call is None and not ollama_url:
@@ -147,7 +152,7 @@ def score_rows(items: list[dict], path: Path, *, model: str = audit_questions.MO
             continue
         item_id = item["checklist_item_id"]
         counts["rows"] += 1
-        if audit_questions.skipped_because(item):
+        if item_id in skip_ids or audit_questions.skipped_because(item):
             records.pop(item_id, None)
             counts["skipped_by_code"] += 1
         else:
@@ -190,14 +195,14 @@ def score_rows(items: list[dict], path: Path, *, model: str = audit_questions.MO
     return counts
 
 
-def apply(items: list[dict], path: Path, share: float | None = None) -> int:
+def apply(items: list[dict], path: Path, share: float | None = None, skip_ids: frozenset | set = frozenset()) -> int:
     """Put `criticality_score` (1 to 5, one decimal) on checklist items from the sidecar, and `criticality_flag` on the top share of the scored rows; returns how many rows are flagged.
     A record written from a different row text or model is stale and ignored. Rows without a record are left as they are, so with no sidecar nothing changes."""
     records = load(path)
     scored = []
     for item in items:
         rec = records.get(item["checklist_item_id"])
-        if not rec or rec.get("score") is None or audit_questions.skipped_because(item):
+        if not rec or rec.get("score") is None or item["checklist_item_id"] in skip_ids or audit_questions.skipped_because(item):
             continue
         if rec.get("input_hash") != input_hash(item, rec.get("model", audit_questions.MODEL), rec.get("context", CONTEXT)):
             continue

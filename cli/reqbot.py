@@ -1231,7 +1231,7 @@ def cmd_questions(args: argparse.Namespace) -> int:
     elif not getattr(args, "no_criticality", False):
         # second job, its own model call per row: a rough "look first" score (docs/CRITICALITY_FLAG_PLAN.md). A model service without token probabilities leaves the column blank
         crit = criticality.score_rows(
-            checklist["items"], criticality.sidecar_path(checklist_service.requirements_path(processed_dir, args.doc)), model=args.model, ollama_url=args.ollama_url, document=args.doc,
+            checklist["items"], criticality.sidecar_path(checklist_service.requirements_path(processed_dir, args.doc)), model=args.model, ollama_url=args.ollama_url, document=args.doc, skip_ids=criticality.withheld_ids(path),
             progress=lambda c: log.info("criticality so far: %s", c), on_row=lambda done, total: _progress.emit("criticality", done, total),
         )
         print(f"Rough criticality for {args.doc}: {crit}", file=sys.stderr if _progress.enabled() else sys.stdout)

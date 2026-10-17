@@ -183,3 +183,16 @@ def test_ollama_reply_with_malformed_token_entries_raises_unavailable(monkeypatc
     monkeypatch.setattr("requests.post", lambda *a, **k: R())
     with pytest.raises(CR.ProbabilitiesUnavailable):
         CR.ollama_digit_probs("p", "m", "http://x")
+
+
+def test_rows_the_questions_job_withheld_get_no_score_and_no_flag(tmp_path):
+    from services import audit_questions as AQ
+    items = [_item(1, "Alpha duty."), _item(2, "Beta permission."), _item(3, "Gamma duty.")]
+    AQ.draft_questions(items, tmp_path / "q.jsonl", call=lambda p: json.dumps({"question": None if "Beta" in p else "Do they do it?"}))
+    withheld = CR.withheld_ids(tmp_path / "q.jsonl")
+    assert withheld == {"CL-2"}
+    counts = CR.score_rows(items, tmp_path / "c.jsonl", call=lambda p: {4: 1.0}, skip_ids=withheld)
+    assert counts["scored"] == 2 and set(CR.load(tmp_path / "c.jsonl")) == {"CL-1", "CL-3"}
+    CR.score_rows(items, tmp_path / "c2.jsonl", call=lambda p: {4: 1.0})  # scored before the questions result was known
+    CR.apply(items, tmp_path / "c2.jsonl", skip_ids=withheld)
+    assert "criticality_score" not in items[1] and "criticality_score" in items[0]
