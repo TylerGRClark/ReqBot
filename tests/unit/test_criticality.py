@@ -174,3 +174,12 @@ def test_a_row_where_one_wording_fails_is_not_stored_as_a_partial_mean_and_is_re
     assert counts["scored"] == 0 and counts["errors"] == 1 and CR.load(path) == {}
     counts = CR.score_rows([_item(1, "Alpha duty.")], path, call=lambda p: {4: 1.0})
     assert counts["scored"] == 1 and CR.load(path)["CL-1"]["scores"] == [4.0, 4.0, 4.0]
+
+
+def test_ollama_reply_with_malformed_token_entries_raises_unavailable(monkeypatch):
+    class R:
+        def raise_for_status(self): pass
+        def json(self): return {"logprobs": [{"top_logprobs": [{"token": "4"}, "junk"]}]}
+    monkeypatch.setattr("requests.post", lambda *a, **k: R())
+    with pytest.raises(CR.ProbabilitiesUnavailable):
+        CR.ollama_digit_probs("p", "m", "http://x")

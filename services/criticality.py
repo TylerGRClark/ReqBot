@@ -98,10 +98,13 @@ def ollama_digit_probs(prompt: str, model: str, ollama_url: str, timeout: int = 
     except (KeyError, IndexError, TypeError, ValueError) as e:
         raise ProbabilitiesUnavailable("the model service returned no token probabilities") from e
     probs: dict[int, float] = {}
-    for tok in top:
-        text = str(tok.get("token", "")).strip()
-        if len(text) == 1 and text in "12345":
-            probs[int(text)] = probs.get(int(text), 0.0) + math.exp(tok["logprob"])
+    try:
+        for tok in top:
+            text = str(tok.get("token", "")).strip()
+            if len(text) == 1 and text in "12345":
+                probs[int(text)] = probs.get(int(text), 0.0) + math.exp(tok["logprob"])
+    except (KeyError, TypeError, AttributeError, ValueError, OverflowError) as e:  # a token entry that is not {"token", "logprob"}: the reply is not usable
+        raise ProbabilitiesUnavailable("the model service returned token probabilities in an unexpected shape") from e
     return probs
 
 
