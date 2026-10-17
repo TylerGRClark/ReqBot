@@ -159,3 +159,18 @@ def test_the_document_name_goes_into_the_prompt_and_a_record_with_another_contex
     assert CR.apply(items, tmp_path / "c.jsonl") == 1  # the record keeps its own context, so it still matches
     counts = CR.score_rows(items, tmp_path / "c.jsonl", call=lambda p: {3: 1.0}, document="AFI 99-999")
     assert counts["reused"] == 0 and counts["scored"] == 1
+
+
+def test_a_row_where_one_wording_fails_is_not_stored_as_a_partial_mean_and_is_retried(tmp_path):
+    calls = []
+
+    def flaky(prompt):
+        calls.append(prompt)
+        if len(calls) == 3:
+            raise OSError("timed out")
+        return {4: 1.0}
+    path = tmp_path / "c.jsonl"
+    counts = CR.score_rows([_item(1, "Alpha duty.")], path, call=flaky)
+    assert counts["scored"] == 0 and counts["errors"] == 1 and CR.load(path) == {}
+    counts = CR.score_rows([_item(1, "Alpha duty.")], path, call=lambda p: {4: 1.0})
+    assert counts["scored"] == 1 and CR.load(path)["CL-1"]["scores"] == [4.0, 4.0, 4.0]

@@ -166,7 +166,7 @@ def score_rows(items: list[dict], path: Path, *, model: str = audit_questions.MO
                     break
                 except OSError as e:
                     error = f"model call failed: {e}"
-                if scores:
+                if not error and len(scores) == len(WORDINGS):  # a mean over fewer wordings is never stored: it would be reused as if complete
                     records[item_id] = {"checklist_item_id": item_id, "score": sum(scores) / len(scores), "scores": [round(s, 4) for s in scores], "model": model, "context": context, "input_hash": h,
                                         "generated_at": datetime.now(timezone.utc).isoformat()}
                     counts["scored"] += 1
