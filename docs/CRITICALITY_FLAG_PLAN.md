@@ -21,6 +21,11 @@ Plain prompt (the FIPS 199 impact scale mapped to 1 to 5, no examples, no extra 
 
 Limits to state on the label: the judges agree with each other more (0.86 on Air Force) than either model agrees with them; the "important" sets are small (8 rows on Air Force); the 8B is a coarse filter; tuning the 8B prompt on NIST did not carry over to Air Force text, so the prompt stays plain. The score ranks rows **within a document**; it is not an absolute severity.
 
+## 2b. Owner decisions on display (2026-10-17)
+
+- No high/medium/low bands. The flag ("look first", top quarter per document) is shown with the rounded 1 to 5 number beside it; the number is always stored and may be hidden later.
+- The score stays a separate column from the compliance tier (T-0 to T-3). On 1,066 tier-marked rows the two were nearly unrelated (rank agreement -0.13; T-0 rows were in the top quarter 42% of the time, T-1 only 16%), so they are different signals. No combined filter in the first version.
+
 ## 3. Design
 
 - **Same job, second call.** `reqbot questions` (and the queued job it already has) gains a second pass per eligible row. Both write beside the document's requirements: questions to `*_audit_questions.jsonl` as today, scores to a new sidecar `*_criticality.jsonl` (the same pattern: keyed by row, with an input hash so a changed row or model recomputes it). No change to the requirements records, no re-extraction, no Qdrant change.
