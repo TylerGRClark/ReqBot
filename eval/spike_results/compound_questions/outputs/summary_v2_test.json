@@ -1,0 +1,30 @@
+{
+ "candidates": 197,
+ "keep": 67,
+ "split_proposed": 130,
+ "model_errors": 0,
+ "split_passed_all_checks": 80,
+ "split_pass_rate": 0.615,
+ "passed_but_longest_piece_over_80pct_of_today": 25,
+ "fallback_rows": 50,
+ "fallback_by_check": {
+  "actor": 11,
+  "coverage": 3,
+  "modality": 1,
+  "pronouns": 9,
+  "qualifiers": 2,
+  "shape": 26,
+  "terms": 3
+ },
+ "only_one_check_failed": 47,
+ "rows_out": 197,
+ "rows_dropped": 0,
+ "all_candidates_longest_piece_median_before": 28,
+ "all_candidates_longest_piece_median_after": 24,
+ "all_candidates_longest_piece_p90_before": 38.4,
+ "all_candidates_longest_piece_p90_after": 36.0,
+ "changed_rows_median_before": 28.0,
+ "changed_rows_median_after": 19.0,
+ "changed_rows_p90_before": 37.2,
+ "changed_rows_p90_after": 30.0
+}

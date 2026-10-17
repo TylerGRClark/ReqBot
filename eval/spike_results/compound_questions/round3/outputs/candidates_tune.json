@@ -1,0 +1,3287 @@
+[
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-000c66f30ace4320",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-01b9f5fd50697bd4",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-04ccc210cb2d3710",
+  "reason": "long",
+  "words": 56,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-0517264faefa5cf9",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-053decd0bf676125",
+  "reason": "series",
+  "words": 30,
+  "eligible": true,
+  "gate": "",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-055f3ed80103e4f3",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-0a55a924b4ea661d",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-0b18b2de8579359e",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-0c72dee870c5860f",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-0edda7154fc7e3ba",
+  "reason": "long",
+  "words": 48,
+  "eligible": false,
+  "gate": "gate word: and/or, as needed, or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-1154d6784c9e9eca",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-136bdfa1258f203c",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-144b713f9cd4e425",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-17766add667982dc",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-1af2a465d3090ec2",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "gate word: when",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-1bc3de94b9fc2722",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: as appropriate",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-1bd918142a42465e",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-1cee2b19642542ac",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-1df5db5886e8059d",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: as needed",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-1fcba16988933e82",
+  "reason": "long",
+  "words": 38,
+  "eligible": false,
+  "gate": "gate word: as appropriate",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-2585295f16fc6e0e",
+  "reason": "long",
+  "words": 37,
+  "eligible": false,
+  "gate": "gate word: as required",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-25ab98771cb4328c",
+  "reason": "long",
+  "words": 44,
+  "eligible": false,
+  "gate": "6 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-25de18d3d079c3fc",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-26e23f739cf8a58d",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "gate word: requested, when",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-28a62aa7488dd297",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-2a20724a4da66ec5",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-2a22738916ca7c23",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: as appropriate",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-2a2746502933a55b",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: upon",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-2aa820b8588c6449",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-2c4a56c9f13c3331",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "brackets or semicolons",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-2cf0f11f742b1b1c",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: may",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-2d0cdf21e09c93ed",
+  "reason": "long",
+  "words": 41,
+  "eligible": false,
+  "gate": "gate word: as well as, or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-33d20285079b53e6",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "0 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-35d77f39b40fb99f",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: requested",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-3983fa6aeb711377",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-3bae06d093183c50",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-3df4e7405a0eab54",
+  "reason": "long",
+  "words": 68,
+  "eligible": false,
+  "gate": "4 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-4072c6d7ce6d7a86",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: requested",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-432f63d1ff117db9",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: or, specified",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-4369337b8a536442",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: requested",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-43eb7a123be20617",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-44fcca9ff05319c5",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-47583d1bc31fd010",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-4831c7d57d577f1c",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-48bb28ff7980a3c0",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: requested, when",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-495dbb4a464144b6",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-49fd51b2daa1d6a5",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-4a532f6da67b2e9b",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-4b422c3f5b77e4e9",
+  "reason": "long",
+  "words": 37,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-4c66b6a26c1ab279",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: or, requested, when",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-4d4087c58b571cc2",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "0 commas (need 2 to 4)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-4e16a6c99d0ff4ac",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-4ff0b8fe39ed846c",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-53d6d1bb2590b573",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-56a84e1638edb1e0",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-58a38fad55aa6214",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-591b7907f5d6b67b",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: as needed",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-61579c1a426f1a52",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "gate word: as required",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-6255723f49927a98",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-628ca54699f2c4ee",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-637b3ec7f6a4abcb",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-638ba8a58ac602eb",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "gate word: as needed, within",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-66caebd69f6f83a6",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: could",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-68601159c0f363b1",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "gate word: annually",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-689caa8b6d5e1d3c",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-68a4ef2977237015",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: tasked, when",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-6ae71d0dfe4d20d9",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-6d7eb9474de89026",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-72705645dbdccc8d",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-730948ef1d0de0c0",
+  "reason": "series",
+  "words": 23,
+  "eligible": true,
+  "gate": "",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-73eccb4194a054c4",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: as appropriate, requested, when",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-77489ef28613c890",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: as required, or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-77e6678e793e2f68",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-7a90201a43342ae8",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-7d60edc994c9b9c8",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-7e6ece16e4dd8d6b",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: as required",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-8117f3ea34c946c7",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "gate word: as required, or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-821770ad4067fa77",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "0 commas (need 2 to 4)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-82b79fbd44e6622f",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-8347dbc54ac14b7e",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-839c17856af90ad7",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: as appropriate, to include",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-846405b92c8e6541",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: requested",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-8586997716860bb3",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-87806a88b8f651c9",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-89e5387d62533382",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-8b0a054e2e37e30d",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "gate word: as required",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-8d9c1351c857a9bf",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-91c0651a2fbb9cd2",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-94d90440b4ea8663",
+  "reason": "long",
+  "words": 41,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-950ef45efdf2081c",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-987bc25f4c8e875f",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-9ae6503278155506",
+  "reason": "long",
+  "words": 42,
+  "eligible": false,
+  "gate": "4 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-a11d210f9c7406d5",
+  "reason": "series",
+  "words": 22,
+  "eligible": true,
+  "gate": "",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-a2e1a7568e47af24",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: or, prior to",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-a48ffb8ebe6c4850",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "gate word: requested",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-a5641a2b5bbcf48a",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-a57970c0ee1cb90b",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-a7d9ede250cf193a",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-a8ea27ef67ddbfe9",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-ade4ca99c7ad2fe5",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-ae752b8d969e003b",
+  "reason": "series",
+  "words": 21,
+  "eligible": true,
+  "gate": "",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-b0a9ca76869fff23",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: as required",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-b14429ee72a78a90",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-b1ada9de5028bff3",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "4 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-b1cb47235a00bd1b",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: including, up to",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-b1fc262c1db4e2bf",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-b744956ae622461f",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: requested",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-b76f7d56b189d616",
+  "reason": "series",
+  "words": 29,
+  "eligible": true,
+  "gate": "",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-b7a47727d3e9749e",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: as appropriate",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-bae935da38b8bc05",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-baf9593512afb4b7",
+  "reason": "long",
+  "words": 43,
+  "eligible": false,
+  "gate": "gate word: to include",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-bb11e88736564276",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-bb9c039ab7f1c169",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-be773d3b36a97521",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-beca061eae057aec",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "0 commas (need 2 to 4)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-c1a90b748d3c6692",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-c2241bf47b0a17c2",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: as appropriate",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-c4c160d27a22e243",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-c4d265e96792e241",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: including, up to",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-c681f835e2f428bb",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-cb06c7bc53f57ec1",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-ccdc0545d0737fe2",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-d0c17f136932e8d2",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: can",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-d1a3409beb99a968",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: as needed, while",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-d5262ae44bf53606",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-d5e01d5710f02c71",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-d78d2e95f1af4492",
+  "reason": "long",
+  "words": 45,
+  "eligible": false,
+  "gate": "gate word: may, or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-dd3d5db175f02652",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-e0abf7ddfb6061cf",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-e0e431c49f67a369",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-e1213526c5ac5c3c",
+  "reason": "long",
+  "words": 37,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-e1b1a8d4d3fa7122",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-e45f64f251f911b0",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: as appropriate, to include",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-e52d3eec1a44e431",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "0 commas (need 2 to 4)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-e72ca62fd5003a43",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-e89b426371a7b7b4",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-e948266b0778fff2",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: in addition, may",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-f1662471ec8eeaa9",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: annually",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-f272b2609d8f1a0c",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "gate word: requested, when",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-f35b36e8d4dd4a57",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: and/or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-f6c3079ea6100338",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-f9889ebcee5b6613",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "gate word: within",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-f9c6a76bb1596661",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: as required, or",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-fb11eefa511a9a28",
+  "reason": "long",
+  "words": 41,
+  "eligible": false,
+  "gate": "gate word: but, not, or, to include",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-feb7377332779040",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-212409ba7d0d56b8",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-2716f46eaab91b7b",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "brackets or semicolons",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-51e5951e98a374ee",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "gate word: or, upon",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-5470ef430c84b16c",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "gate word: or, should",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-681df466c2cbc87e",
+  "reason": "series",
+  "words": 20,
+  "eligible": true,
+  "gate": "",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-8055d57499b955cf",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-90bbcd60e5ef5090",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: within",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-c104b3c4c6ad6af6",
+  "reason": "series",
+  "words": 23,
+  "eligible": true,
+  "gate": "",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-cd37068918208025",
+  "reason": "series",
+  "words": 24,
+  "eligible": true,
+  "gate": "",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-db48386463efca21",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "0 commas (need 2 to 4)",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-de399dfd851f51cc",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: or, when",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-ed6db2bcccae56ee",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-f467a1e85de27479",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: requested, when",
+  "pool_size": 158
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-04d6c682d9ec8cb2",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "gate word: within",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-087b3a1cea1032ca",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "gate word: if, should",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-128e552db266d82a",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-12f4587310efee81",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: if, or",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-261b8d0d04fc5797",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-35b1bd2d85bb208f",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "gate word: as needed",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-35edb66b1eccdd3b",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "gate word: within",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-3b8e46ae92743374",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-3fad55f2631d6f58",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "gate word: or, when",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-44cb9366f2e1e2e9",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "gate word: as appropriate, tasked, upon",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-4781efc01aca73ed",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: as appropriate",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-4bbd23ca2d6d6017",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "4 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-4e010940bc7194ff",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-502a529e534dbaf4",
+  "reason": "long",
+  "words": 41,
+  "eligible": false,
+  "gate": "gate word: may, not, or, such as",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-51035981fc544b5f",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-60eb3cb45d49accf",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: requested, specified, within",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-624a83b7c61a92ee",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "5 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-63c38c693d0223de",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "gate word: or, when",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-6501b582c501a9e4",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-652393c359d27a25",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "gate word: and/or",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-6a18c64371c827e8",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-6a3bd27f820eb887",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: and/or, when",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-6ef6dcde9bedae79",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: and/or, or",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-762b83c1486ec628",
+  "reason": "long",
+  "words": 39,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-778e0539e2d20d2e",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-78b666f18de69125",
+  "reason": "long",
+  "words": 44,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-798238e5f07b1435",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: may",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-7adbb787a3343687",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-7afc331f9d6718a1",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: or, when",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-7e9e92ab6cbcbe20",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "gate word: or, when",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-8e55098372ca524e",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: may",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-92ad912efe3ed26e",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-9900972e35429b81",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "gate word: or, such as, when",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-9d8b303c25c4bea9",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-9ef2ed63c49e3a36",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-a110ac9bd785a650",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-aedca5ef426d473e",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-b71b28994609fb42",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-ba5c1d68390527a0",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: minimum, one year",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-c0d13f0fbe0fa474",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: including, or, when",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-c9555f90602dcf72",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: as directed, or",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-cfb202bdb4edf59e",
+  "reason": "long",
+  "words": 43,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-cfbc759595779507",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-de5e671cb1baacf7",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "gate word: if",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-df648702289d4233",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: or, upon",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-eab587fa6355e63b",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-efa82b52f0552758",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "gate word: as appropriate",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-f525753e14fab6a0",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: if, tasked",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-f58e1375c7b81b1c",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-f8986f2a42dc1f25",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-fb74efd4c3cb6658",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: if",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-fdd8e92c2e832fda",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "MISS-2edd848fa3bec1c4",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: as directed",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "MISS-74e0fcb4bef0a56e",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "gate word: can, or",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "MISS-a7da48daa4c27f9d",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: before, may, or",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "MISS-bd26202f4133e76e",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "4 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "MISS-ecf7715dc6d0d339",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 57
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-01de2716d93e4c50",
+  "reason": "series",
+  "words": 20,
+  "eligible": true,
+  "gate": "",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-02fcdfd5f464816e",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: or, until",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-0335690b5b0b71f6",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-05ec12e3bea32eff",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: before",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-07b27a1d20ac9283",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "gate word: to include",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-0876d24f08a00732",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-0a53789b19d8a7a7",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "gate word: as required",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-0bf5ee4944825079",
+  "reason": "long",
+  "words": 37,
+  "eligible": false,
+  "gate": "gate word: as appropriate, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-0f531148f3f5a8a0",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "gate word: before, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-16472a342b5ffd44",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: to include",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-18121c020522f69c",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-187427ffca8fc34d",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-1a1dcd412e49bf6f",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-1af7a3036cf324cd",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "4 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-1c714bf0b1ad825e",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: e.g",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-1cbb4677c843c04b",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: or, when",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-1cfc1aee588ebdc6",
+  "reason": "long",
+  "words": 42,
+  "eligible": false,
+  "gate": "gate word: or, upon",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-2425fa9145f2a904",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-24d6a9a22aaf6605",
+  "reason": "long",
+  "words": 47,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-25a7d67a66dd90b8",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-25b0c10c18356269",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "gate word: within",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-2a3703733103e457",
+  "reason": "long",
+  "words": 62,
+  "eligible": false,
+  "gate": "gate word: and/or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-2ae00643b0384401",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-2aec8be1e5a2fe28",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "gate word: not, or, specified, when",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-2b21ba9a385dd2be",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "gate word: if",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-2d3dfcdefe8cc279",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-2dcf3b66c3b014c7",
+  "reason": "long",
+  "words": 61,
+  "eligible": false,
+  "gate": "9 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-2edbbeeb90c727ff",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-30fc90d488088d8a",
+  "reason": "long",
+  "words": 41,
+  "eligible": false,
+  "gate": "gate word: may, not, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-32938d3fd0ccb3a9",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: or, within, 90 days",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-33f3a359fe0f4dfe",
+  "reason": "long",
+  "words": 43,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-353b591cab710d16",
+  "reason": "long",
+  "words": 62,
+  "eligible": false,
+  "gate": "8 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-35dabee2e97be905",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-35e15a340ce2b048",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "gate word: as specified",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-371cd470f7f19795",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-37516c9f0729f555",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: i.e",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-3876f39f63242990",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-3ae35b57d37cef0d",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-3b405e58cc816486",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-3b525e84a47de743",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: or, within",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-3c46cd723b632488",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "gate word: or, prior to, unless, upon",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-407f2bd9ab9503d4",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "gate word: both, or, than",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-41cd190262c36947",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: and/or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-435b6ff1aab12599",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-43f1f430657eff99",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "gate word: minimum",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-44d9700a2a55895c",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-4579bd54392db1fd",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-4596578620662ed7",
+  "reason": "long",
+  "words": 43,
+  "eligible": false,
+  "gate": "6 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-45fe1d2bf0d8cfb2",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-485c07a47260f22f",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-48619a40efa434d8",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: or, within",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-4b67c429429da615",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: after, not, or, within",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-4e2bdc3f93a5682c",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-539b12dcf1c87166",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: as directed, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-53af9eaf8b02d639",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-595c5a457ea22fe7",
+  "reason": "long",
+  "words": 41,
+  "eligible": false,
+  "gate": "4 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-59ac3b7c0286ba48",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-6018cec751b060a6",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-620e86e17bc7f2d5",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-63c526164563eb21",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: minimum, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-63e1753f026210c5",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "0 commas (need 2 to 4)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-65ed1a5884990fb0",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: such as",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-6663f5540e201056",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-6dbbc9fe8d2df279",
+  "reason": "long",
+  "words": 37,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-6de97f36cf52dba4",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-71f0ad2d29636042",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: as appropriate",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-75f2792d62ae7665",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-7a10436b417d1af4",
+  "reason": "long",
+  "words": 39,
+  "eligible": false,
+  "gate": "gate word: requested",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-7b666dac572c086c",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: or, tasked, when",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-7d103b68593afcde",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-804893ed58e19c39",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-822b17cdafa983d9",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: such as",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-848f1cbec09c48e6",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: may, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-8522846878ef7e51",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-87f9dca3acdc9fef",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-895b88c9361b5066",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-8bceba242ef0bccf",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-8cf3560e9036ddef",
+  "reason": "long",
+  "words": 38,
+  "eligible": false,
+  "gate": "gate word: within",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-8fa629bb4842695d",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-917a4da03a560a78",
+  "reason": "long",
+  "words": 39,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-929c688860642846",
+  "reason": "long",
+  "words": 50,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-937270a511b9e048",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: not, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-963465ed628ab99b",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-986d5485ac5fe6ca",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "brackets or semicolons",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-989a8c86489b235f",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: within",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-9b36f6a1f7c847ce",
+  "reason": "series",
+  "words": 20,
+  "eligible": true,
+  "gate": "",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-9cbeabf1042c5f16",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "gate word: within",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-9cc29e56da5967b6",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: after, except, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-9d0da361f52335f9",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "gate word: upon",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-9db3d5d4b5b97298",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "gate word: or, while",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-9e6b6f17e107f7dc",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-9ffd31514872e8ba",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "gate word: or, when, without",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-a0228a4b10ca71ca",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: before, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-a114d485927ec59e",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: or, requested, when",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-a13e59a48a4cc736",
+  "reason": "long",
+  "words": 44,
+  "eligible": false,
+  "gate": "5 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-a2a76a3f0691e196",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "gate word: both, not, when",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-a5e40fbca9eaf31b",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "gate word: as required, but, not",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-acc679743f53a464",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "gate word: as appropriate, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-ae5a0eefaabca4b3",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-aec599f8d3f6b064",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "1 commas (need 2 to 4)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-af2303b7bb0dbdf4",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "gate word: not, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-b1f23c780d8a10c5",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-b3bb09314f67649a",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: not, when",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-b3e0595951fc8960",
+  "reason": "long",
+  "words": 56,
+  "eligible": false,
+  "gate": "6 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-b6d1a35dfe6d1ca0",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "0 commas (need 2 to 4)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-b8181cefaacaca31",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-b8ffe0ff03f5938a",
+  "reason": "long",
+  "words": 51,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-ba67fe97db0b2c5c",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-baebc060eaf9c482",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-bb1d57f4a44e18f3",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-bda283c03421e253",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-be4ab10516d780c9",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-c16b34f7c2b3e50e",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: or, within, one year",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-c3379828a9ce5b51",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-c3541806cd174004",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-c6bfac4b0a63de81",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-c9661726443a41c1",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-cb25534870855cbd",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-cd220d3454464146",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "gate word: i.e",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-cd9fdc4e537c0d8f",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-ce57809ce14f88c3",
+  "reason": "long",
+  "words": 48,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-cf1e1f30aa123ffe",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-d2ec9904de3fc022",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: as required, at least",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-d39d81fadbf08de6",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: not",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-d48fffd55dbf83e6",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-d66bf4eab1013b6a",
+  "reason": "long",
+  "words": 37,
+  "eligible": false,
+  "gate": "gate word: to include",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-d6fe83fb8a948e68",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "gate word: before, only, or, than",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-d74c0a7e910d9840",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-dee6f0ed7feb3095",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-e000b93df4268a96",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: as applicable, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-e2e99251a1281050",
+  "reason": "long",
+  "words": 43,
+  "eligible": false,
+  "gate": "gate word: and/or, as appropriate",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-e32a238e757a5507",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: or, such as",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-e449613ff45b7930",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "gate word: annually, not, than",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-e5b5b853e7f0fdd9",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-e695f19f75f5e359",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-e702260ad5cd221a",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: immediately, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-ea24b8203a8fca0c",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: specified",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-ea28989f2d80fa24",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-f319c94cd32f6107",
+  "reason": "long",
+  "words": 38,
+  "eligible": false,
+  "gate": "gate word: not, or, when, within",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-f604424ebb42aba8",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-f6cbc65c7f208629",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: only, or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-f962a097a1ab9a15",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-f983cc5ae2a62151",
+  "reason": "long",
+  "words": 46,
+  "eligible": false,
+  "gate": "gate word: no, or, until",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-fc9cc3ea4387f19b",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-fcb3008d27d6a38d",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "MISS-1d72615539dceecd",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "MISS-b3f779f445326cba",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "gate word: or, when",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "MISS-e7749bf26da2015c",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "MISS-fadff16a71a3342a",
+  "reason": "long",
+  "words": 43,
+  "eligible": false,
+  "gate": "gate word: or, prior to",
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "MISS-fc30f1fe137097bc",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 150
+ }
+]

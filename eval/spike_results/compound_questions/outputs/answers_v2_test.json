@@ -1,0 +1,987 @@
+{
+ "CHK-01b96d885d73f590": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does AF/A10 do all of the following?\",\n  \"parts\": [\"Conduct periodic comprehensive NC3 assessments?\", \"Provide such assessments to the SecAF, as directed by law?\", \"Provide such assessments to the CSAF, as directed by law?\", \"Provide such assessments to other organizations as directed by law?\"]\n}",
+  "error": null
+ },
+ "CHK-02c529b52b7ba4d0": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-0731bef6f0abbd2b": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does Air Force Space Command (AFSPC) do all of the following?\",\n  \"parts\": [\n    \"Does AFSPC identify AF NC3-related facility requirements at its installations, including EMP protection?\",\n    \"Does AFSPC identify AF NC3-related facility requirements at its installations, including sustainment?\",\n    \"Does AFSPC identify AF NC3-related facility requirements at its installations, including maintenance?\",\n    \"Does AFSPC coordinate mitigation resourcing with AFIMSC?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-077e5793822b647c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Do AF PEOs coordinate requested or planned AN/USQ-225 host platform, constituent, or external dependency configuration baseline changes with AFGSC and AFNWC/NCAFPEO NC3 prior to implementation?\",\n  \"parts\": [\n    \"Are requested or planned AN/USQ-225 host platform configuration baseline changes coordinated with AFGSC and AFNWC/NCAFPEO NC3 prior to implementation?\",\n    \"Are requested or planned AN/USQ-225 constituent configuration baseline changes coordinated with AFGSC and AFNWC/NCAFPEO NC3 prior to implementation?\",\n    \"Are requested or planned AN/USQ-225 external dependency configuration baseline changes coordinated with AFGSC and AFNWC/NCAFPEO NC3 prior to implementation?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-0be82bda372078ac": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does AFNC3C establish standardized procedures to review, validate, certify, prioritize, and implement modification proposals to the AN/USQ-225 IAW AFI 63-101 / 20-101?\",\n  \"parts\": [\n    \"Are standardized procedures established to review modification proposals to the AN/USQ-225 IAW AFI 63-101 / 20-101?\",\n    \"Are standardized procedures established to validate modification proposals to the AN/USQ-225 IAW AFI 63-101 / 20-101?\",\n    \"Are standardized procedures established to certify modification proposals to the AN/USQ-225 IAW AFI 63-101 / 20-101?\",\n    \"Are standardized procedures established to prioritize modification proposals to the AN/USQ-225 IAW AFI 63-101 / 20-101?\",\n    \"Are standardized procedures established to implement modification proposals to the AN/USQ-225 IAW AFI 63-101 / 20-101?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-1bca0fb7804bc14e": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"keep\",\n  \"lead\": null,\n  \"parts\": []\n}",
+  "error": null
+ },
+ "CHK-1f65e6aec799d577": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does AF/A5/8 integrate AF NC3 into all of the following?\",\n  \"parts\": [\n    \"Is AF NC3 integrated into Air Force long-range strategic planning?\",\n    \"Is AF NC3 integrated into resource allocation planning?\",\n    \"Are AF NC3 considerations included in AF Program Objective Memorandum builds?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-2400dc7f8d7e0785": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does AFMC do all of the following?\",\n  \"parts\": [\n    \"Does AFMC identify AF NC3-related facility requirements at its installations, including EMP protection?\",\n    \"Does AFMC include sustainment and maintenance in identifying AF NC3-related facility requirements at its installations?\",\n    \"Does AFMC coordinate mitigation resourcing with AFIMSC?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-2c6d8167a1475dcd": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does AF/A10 monitor all of the following regarding the health and status of the AF NC3 mission area with support from MAJCOMs, HAF functionals, and others as required?\",\n  \"parts\": [\n    \"Are consolidated assessments monitored, with support from MAJCOMs, HAF functionals, and others as required?\",\n    \"Are exercises monitored, with support from MAJCOMs, HAF functionals, and others as required?\",\n    \"Is reporting monitored, with support from MAJCOMs, HAF functionals, and others as required?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-2d67017e7b6f3c2d": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-2ff4e4be33df14f9": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-33d8a810c501c2fb": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the Deputy Chief of Staff for Strategic Deterrence and Nuclear Integration lead HAF efforts in assessing AF NC3 programs, policies, and capabilities to ensure proper budgeting, development, acquisition, support, and maintenance of assigned systems?\",\n  \"parts\": [\n    \"Is the Service properly budgeted for assigned AF NC3 systems and Air Force elements of the NMCS?\",\n    \"Are AF NC3 programs developed as required?\",\n    \"Are AF NC3 systems acquired as required?\",\n    \"Does the Service provide necessary support for assigned AF NC3 systems?\",\n    \"Does the Service maintain assigned AF NC3 systems?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-3abce9e484b36d8d": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-3b5f96319f13ae6b": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit engage with PEOs, Services, CCMDs, and agencies with NC3 related programs not aligned to the AFPEO NC3 who act as architects for their NC3 related systems in coordination with AFNWC?\", \"parts\": [\"Does the unit engage with PEOs with NC3 related programs not aligned to the AFPEO NC3 who act as architects for their NC3 related systems in coordination with AFNWC?\", \"Does the unit engage with Services with NC3 related programs not aligned to the AFPEO NC3 who act as architects for their NC3 related systems in coordination with AFNWC?\", \"Does the unit engage with CCMDs with NC3 related programs not aligned to the AFPEO NC3 who act as architects for their NC3 related systems in coordination with AFNWC?\", \"Does the unit engage with agencies with NC3 related programs not aligned to the AFPEO NC3 who act as architects for their NC3 related systems in coordination with AFNWC?\"]}",
+  "error": null
+ },
+ "CHK-4277403a9e8d409f": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does SAF/CIO A6 provide NC3 architecture integration and planning support to improve all of the following as components of the NLCC?\",\n  \"parts\": [\n    \"Is design integrity improved, as a component of the NLCC?\",\n    \"Is survivability improved, as a component of the NLCC?\",\n    \"Is endurability improved, as a component of the NLCC?\",\n    \"Is interoperability improved, as a component of the NLCC?\",\n    \"Is compatibility improved, as a component of the NLCC?\",\n    \"Is security improved, as a component of the NLCC?\",\n    \"Is performance improved, as a component of the NLCC?\",\n    \"Is reliability improved, as a component of the NLCC?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-4f04c003d3e05bfa": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does AETC do all of the following?\",\n  \"parts\": [\n    \"Does AETC identify funding for AF NC3-related education and training requirements?\",\n    \"Does AETC identify manning for AF NC3-related education and training requirements?\",\n    \"Does AETC coordinate their inclusion in the AF NC3 funding requirements list with AFGSC?\",\n    \"Does AETC coordinate their inclusion in the AF NC3 funding requirements list with the appropriate Lead Command/Lead Agent?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-518ea7fa545073e0": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Deputy Chief of Staff for Manpower, Personnel, and Services (AF/A1) provide guidance for policies and practices affecting AF NLCC/NC3 human capital management, recruitment, accession, development, promotion, compensation, recognition, and work force planning?\", \"parts\": [\"Is guidance provided for policies and practices affecting AF NLCC/NC3 human capital management?\", \"Is guidance provided for policies and practices affecting recruitment?\", \"Is guidance provided for policies and practices affecting accession?\", \"Is guidance provided for policies and practices affecting development?\", \"Is guidance provided for policies and practices affecting promotion?\", \"Is guidance provided for policies and practices affecting compensation?\", \"Is guidance provided for policies and practices affecting recognition?\", \"Is guidance provided for policies and practices affecting work force planning?\"]}",
+  "error": null
+ },
+ "CHK-5863f6744297f519": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit establish memorandums of agreement with user agencies in accordance with CJCSI 3280.01D to ensure?\",\n  \"parts\": [\"Is accurate assignment of responsibility ensured?\", \"Is accurate assignment of accountability ensured?\", \"Is accurate assignment of resources ensured?\"]\n}",
+  "error": null
+ },
+ "CHK-721267e148d5393b": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does AFNWC/NC coordinate with other PEOs and MAJCOM facility owners or agency facility owners to do all of the following?\", \"parts\": [\"Do they integrate AN/USQ-225 constituent systems with external sensors, as required?\", \"Do they integrate AN/USQ-225 constituent systems with platforms, as required?\", \"Do they integrate AN/USQ-225 constituent systems with facilities, as required?\", \"Do they integrate AN/USQ-225 constituent systems with other critical dependencies, as required?\"]}",
+  "error": null
+ },
+ "CHK-76a0f7924b6ebc3e": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-88ee69ad3720e3de": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-932f30a05c92b2b4": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the DoD Chief Information Officer chair all of the following IAW DoDI S-5100.92 to elevate issues through the Council's governance structure?\", \"parts\": [\"The NLCC Executive Management Board?\", \"The Senior Steering Group?\", \"Numerous working groups?\"]}",
+  "error": null
+ },
+ "CHK-9635b5ab3ceafa4f": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Deputy Chief of Staff for Strategic Deterrence and Nuclear Integration (AF/A10) do all of the following, IAW HAF MD 1-60?\", \"parts\": [\"Is AF/A10 acting as the primary interface to the OSD, IAW HAF MD 1-60?\", \"Is AF/A10 acting as the primary interface to the JS, IAW HAF MD 1-60?\", \"Is AF/A10 serving as the HAF accountable officer responsible to the Secretary of the Air Force (SecAF) for the AF NLCC/NC3 mission area, IAW HAF MD 1-60?\", \"Is AF/A10 serving as the HAF accountable officer responsible to the CSAF for the AF NLCC/NC3 mission area, IAW HAF MD 1-60?\"]}",
+  "error": null
+ },
+ "CHK-9b7065e63bb3c994": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does AFNC3C coordinate with other MAJCOMs to do all of the following?\",\n  \"parts\": [\n    \"Do they organize AF NC3 systems that are external to AFGSC, as appropriate?\",\n    \"Do they train AF NC3 systems that are external to AFGSC, as appropriate?\",\n    \"Do they equip AF NC3 systems that are external to AFGSC, as appropriate?\",\n    \"Do they organize AF NC3 systems that are external to the AN/USQ-225, as appropriate?\",\n    \"Do they train AF NC3 systems that are external to the AN/USQ-225, as appropriate?\",\n    \"Do they equip AF NC3 systems that are external to the AN/USQ-225, as appropriate?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-a00b047c85bf190d": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does AMC do all of the following?\",\n  \"parts\": [\n    \"Does AMC identify AF NC3-related facility requirements at its installations, including EMP protection?\",\n    \"Does AMC include sustainment in identifying AF NC3-related facility requirements at its installations?\",\n    \"Does AMC include maintenance in identifying AF NC3-related facility requirements at its installations?\",\n    \"Does AMC coordinate mitigation resourcing with AFIMSC?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-b1b49ba487d48d82": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit do all of the following?\",\n  \"parts\": [\n    \"Does the unit develop and mature an AN/USQ-225 health dashboard?\",\n    \"Does the unit identify root causes?\",\n    \"Does the unit identify corrective measures?\",\n    \"Does the unit track performance improvements through issue resolution?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-b91a17ff3e564a15": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-c5b762efdd94bf2c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-ca44f742a30c95df": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-d92fb1135493491a": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does AETC do all of the following?\",\n  \"parts\": [\n    \"Does AETC identify AF NC3-related facility requirements at its installations, including EMP protection?\",\n    \"Does AETC identify AF NC3-related facility requirements at its installations, including sustainment?\",\n    \"Does AETC identify AF NC3-related facility requirements at its installations, including maintenance?\",\n    \"Does AETC coordinate mitigation resourcing with AFIMSC?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-ebc1542b459fe0b4": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit develop all of the following training programs?\",\n  \"parts\": [\n    \"Is a training program on EMP effects developed for AF NC3 systems and supporting architecture, installations, and personnel?\",\n    \"Is a training program on mitigation developed for AF NC3 systems and supporting architecture, installations, and personnel?\",\n    \"Is a training program on recovery of system operations developed for AF NC3 systems and supporting architecture, installations, and personnel?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-ef2c53749c9a44ec": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-f300c00695334bcf": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does AFMC do all of the following?\",\n  \"parts\": [\n    \"Does AFMC identify AF NC3-related funding requirements within AFMC?\",\n    \"Does AFMC coordinate their inclusion in the AF NC3 funding requirements list with AFGSC, as appropriate?\",\n    \"Does AFMC coordinate their inclusion in the AF NC3 funding requirements list with the appropriate Lead Command/Lead Agent, as appropriate?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-f4da3d561b843cc7": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does SAF/AQ do all of the following?\",\n  \"parts\": [\"Does SAF/AQ monitor the execution status of AF NC3 acquisition programs?\", \"Does SAF/AQ identify program budget disconnects?\", \"Does SAF/AQ coordinate investment programming and reprogramming actions?\"]\n}",
+  "error": null
+ },
+ "CHK-f7b30f6658593daa": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Do MAJCOMs, ANG, FOAs, DRUs, and their subordinate units develop all of the following in accordance with the CSAF directed Strategic Planning and Programming Process to support AF NC3 operations?\",\n  \"parts\": [\n    \"Are plans developed in accordance with the CSAF directed Strategic Planning and Programming Process to support AF NC3 operations?\",\n    \"Is guidance developed in accordance with the CSAF directed Strategic Planning and Programming Process to support AF NC3 operations?\",\n    \"Are procedures developed in accordance with the CSAF directed Strategic Planning and Programming Process to support AF NC3 operations?\",\n    \"Is training developed in accordance with the CSAF directed Strategic Planning and Programming Process to support AF NC3 operations?\",\n    \"Are budgets developed in accordance with the CSAF directed Strategic Planning and Programming Process to support AF NC3 operations?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-f7b95ad7648e6829": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does AFNC3C do all of the following for the AN/USQ-225?\", \"parts\": [\"Does AFNC3C develop and analyze metrics to support health assessment, as required?\", \"Does AFNC3C develop and analyze metrics to support life cycle management processes, as required?\", \"Does AFNC3C develop and analyze metrics to support risk management processes, as required?\", \"Does AFNC3C provide life cycle sustainment oversight, as required?\", \"Does AFNC3C provide resource management oversight, as required?\"]}",
+  "error": null
+ },
+ "MISS-1c4d5ef85e6e4e68": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit do all of the following in accordance with DoDI 5200.01 and other specified regulations?\", \"parts\": [\"Does the unit safeguard NC3 classified and unclassified controlled nuclear information, in accordance with DoDI 5200.01 and other specified regulations?\", \"Does the unit protect NC3 classified and unclassified controlled nuclear information, in accordance with DoDI 5200.01 and other specified regulations?\", \"Does the unit mark NC3 classified and unclassified controlled nuclear information, in accordance with DoDI 5200.01 and other specified regulations?\"]}",
+  "error": null
+ },
+ "MISS-664735d2177e726e": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "MISS-a2784d8f6ed4147a": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the AF establish a resource-informed process to manage resilience, as required?\", \"parts\": [\"Is the process established to manage resilience against EMP threats, in accordance with governing DoD and CJCS directives and Military Standard documents?\", \"Is the process established to manage resilience against cyberspace threats, in accordance with governing DoD and CJCS directives and Military Standard documents?\"]}",
+  "error": null
+ },
+ "MISS-a3f9c1ab54a703ae": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does AF/A10 coordinate all of the following?\",\n  \"parts\": [\n    \"AF responses to OSD and JS direction to develop EMP mitigation plans for AF NC3 nodes and facilities?\",\n    \"AF responses to OSD and JS direction to develop cybersecurity strategies and plans for AF NC3 systems?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-04c40ff10365270a": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the AF Installation ensure that AF main operating bases (MOBs) have a DISN presence as stated in CJCSI 6211.02 and provide requisite site support for DISN equipment located on bases, posts, camps, and stations, as appropriate?\", \"parts\": [\"Is there a DISN presence at each AF main operating base (MOB), as stated in CJCSI 6211.02, as appropriate?\", \"Does the AF Installation provide requisite site support for DISN equipment located on bases, posts, camps, and stations, as appropriate?\"]}",
+  "error": null
+ },
+ "CHK-059656e2d36da595": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"keep\",\n  \"lead\": null,\n  \"parts\": []\n}",
+  "error": null
+ },
+ "CHK-0ee2f114da8ecbd1": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the AF LHC Flight coordinate with DISA, DITCO, GSA, commercial vendors, and users to resolve all of the following?\",\n  \"parts\": [\n    \"Are management issues resolved, as appropriate?\",\n    \"Are acquisition issues resolved, as appropriate?\",\n    \"Are technical issues resolved, as appropriate?\",\n    \"Is coordination done for LHC systems, as appropriate?\",\n    \"Is coordination done for circuits, as appropriate?\",\n    \"Is coordination done for equipment, as appropriate?\",\n    \"Is coordination done for services, as appropriate?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-0f0fa53c595fa6ec": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit avoid connecting the CISP in a way that does not comply with applicable STIGs, SRGs, and other DoD cyber security policies when such compliance would not adversely affect the mission need for the CISP?\",\n  \"parts\": [\n    \"Is the CISP connection compliant with applicable STIGs when compliance would not adversely affect the mission need for the CISP?\",\n    \"Is the CISP connection compliant with SRGs when compliance would not adversely affect the mission need for the CISP?\",\n    \"Is the CISP connection compliant with other DoD cyber security policies when compliance would not adversely affect the mission need for the CISP?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-107f32a29f5844b9": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do the units obtain access to Networx/EIS vendor on-line systems for commercial long distance usage and billing data by contacting the AF EIS Program Administrator at AF LHC Flight, 38 CYRS/SCC?\", \"parts\": [\"Do the units contact the AF EIS Program Administrator at AF LHC Flight, 38 CYRS/SCC?\", \"Do the units obtain access to Networx/EIS vendor on-line systems for commercial long distance usage and billing data?\"]}",
+  "error": null
+ },
+ "CHK-157ff68153fd1843": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do the AF LHC Financial Analysts do all of the following?\", \"parts\": [\"Do the AF LHC Financial Analysts establish a line of accounting and funding for all new PDCs with an AF Form 406, MORD?\", \"Do the AF LHC Financial Analysts ensure that all new PDCs are loaded by DITCO in the billing system?\"]}",
+  "error": null
+ },
+ "CHK-1864ae64eb4589df": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Do all CMO's not part of the MAJCOM CMO's consolidation effort do all of the following?\",\n  \"parts\": [\"Do all such CMO's register in DISA StoreFront provisioning tool for their respective organizations?\", \"Do all such CMO's obtain appropriate role assignments in AF TCOSS for their respective organizations?\"]\n}",
+  "error": null
+ },
+ "CHK-19c031c5b6838330": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the Functional LHC Circuit Management Office establish a trend analysis program on all circuits and trunks for which they are the CCO or servicing activity, and those terminating at their station in accordance with DISAC 310-70-1 and DISAC 310-130-2?\",\n  \"parts\": [\n    \"Is a trend analysis program established on all circuits and trunks for which the Functional LHC Circuit Management Office is the CCO or servicing activity, in accordance with DISAC 310-70-1 and DISAC 310-130-2?\",\n    \"Is a trend analysis program established on all circuits and trunks terminating at their station, in accordance with DISAC 310-70-1 and DISAC 310-130-2?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-2812a396d6bd984a": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do TCF's and PTF's establish and maintain all of the following?\", \"parts\": [\"Are site specific systems diagrams established and maintained?\", \"Do the diagrams depict signal flow through the facility?\", \"Are the diagrams readily available in the operations area?\"]}",
+  "error": null
+ },
+ "CHK-2f20868c276fde7e": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the AF LHC portion of DISN costs support both Regular Air Force, Guard, Reserve and COCOM utilization of all of the following?\",\n  \"parts\": [\n    \"Do DISN IS Transport Services get supported by the AF LHC portion of DISN costs for Regular Air Force, Guard, Reserve and COCOM utilization?\",\n    \"Do IP Voice/Video/Data network services get supported by the AF LHC portion of DISN costs for Regular Air Force, Guard, Reserve and COCOM utilization?\",\n    \"Are DISA overhead costs associated with Network Operations supported by the AF LHC portion of DISN costs for Regular Air Force, Guard, Reserve and COCOM utilization?\",\n    \"Are DISA overhead costs associated with Network Management supported by the AF LHC portion of DISN costs for Regular Air Force, Guard, Reserve and COCOM utilization?\",\n    \"Are DISA overhead costs associated with Cyber Security supported by the AF LHC portion of DISN costs for Regular Air Force, Guard, Reserve and COCOM utilization?\",\n    \"Are DISA overhead costs associated with Information Assurance supported by the AF LHC portion of DISN costs for Regular Air Force, Guard, Reserve and COCOM utilization?\",\n    \"Are DISA overhead costs associated with Network Support Services supported by the AF LHC portion of DISN costs for Regular Air Force, Guard, Reserve and COCOM utilization?\",\n    \"Are DISA overhead costs associated with Operational Support Systems supported by the AF LHC portion of DISN costs for Regular Air Force, Guard, Reserve and COCOM utilization?\",\n    \"Are DISA overhead costs associated with DISA Gateway Infrastructure supported by the AF LHC portion of DISN costs for Regular Air Force, Guard, Reserve and COCOM utilization?\",\n    \"Are DISA overhead costs associated with DISA Satellite Standard Tactical Entry Points (STEP Sites) supported by the AF LHC portion of DISN costs for Regular Air Force, Guard, Reserve and COCOM utilization?\",\n    \"Are DISA overhead costs associated with DOD Internet Access Points supported by the AF LHC portion of DISN costs for Regular Air Force, Guard, Reserve and COCOM utilization?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-35a0c5db613ca975": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-39da23e7ae7136a8": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Do all CMO's do all of the following for Service Requests in DISA StoreFront for long-haul circuits, services, and equipment submitted by subordinate organizations?\",\n  \"parts\": [\n    \"Do all CMO's prepare Service Requests?\",\n    \"Do all CMO's review Service Requests?\",\n    \"Do all CMO's validate Service Requests?\",\n    \"Do all CMO's approve or reject Service Requests?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-41aa57738db9cc58": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-49391e65ee74dc47": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-4b9174c30c5acfbd": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do all CMO's assist and guide subordinate organizations on LHC management, as appropriate?\", \"parts\": [\"Is assistance provided for user account registration in DISA StoreFront, as appropriate?\", \"Is guidance given for user account registration in AF TCOSS, as appropriate?\"]}",
+  "error": null
+ },
+ "CHK-4c66c73f2327b654": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the Functional LHC Circuit Management Office track all of the following within its area of responsibility?\",\n  \"parts\": [\n    \"Are facility outages tracked, within its area of responsibility?\",\n    \"Are link outages tracked, within its area of responsibility?\",\n    \"Are trunk outages tracked, within its area of responsibility?\",\n    \"Are circuit outages tracked, within its area of responsibility?\",\n    \"Are channel outages tracked, within its area of responsibility?\",\n    \"Is equipment outage tracking performed, within its area of responsibility?\",\n    \"Are HAZCONs tracked, within its area of responsibility?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-4e14e061db5f9f88": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Are devices using the CISP all of the following?\",\n  \"parts\": [\"Is each device physically or logically separated from the AFIN network?\", \"Does each device comply with applicable STIG and SRG?\", \"Do devices comply with other DoD cyber security policies?\"]\n}",
+  "error": null
+ },
+ "CHK-52a876e4e52f62b3": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-54f1b3f9506a790c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the NSC do all of the following?\", \"parts\": [\"Does the NSC support DISA?\", \"Do the NSC accomplish their roles and responsibilities identified within CJCSI 6211.02?\", \"Do the NSC accomplish their roles and responsibilities identified within DISAC 310-55-9?\", \"Do the NSC accomplish their roles and responsibilities identified within DISAC 310-70-1?\"]}",
+  "error": null
+ },
+ "CHK-55150de475ff882f": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit implement procedures to safeguard all DISA-owned DISN equipment assigned to the installation against the following?\",\n  \"parts\": [\n    \"Is the equipment safeguarded against loss?\",\n    \"Is the equipment safeguarded against damage?\",\n    \"Is the equipment safeguarded against destruction?\",\n    \"Is the equipment safeguarded against misuse?\",\n    \"Is the equipment safeguarded against pilferage?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-55977a00d5cef044": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the AF Long Haul Communications Flight do all of the following?\",\n  \"parts\": [\n    \"Does the AF Long Haul Communications Flight develop the TCOSS integrated TCATS tool to assist AF communication offices in aligning with DOD/DISA policy for managing their LHC responsibilities?\",\n    \"Does the AF Long Haul Communications Flight release the TCOSS integrated TCATS tool to assist AF communication offices in aligning with DOD/DISA policy for managing their LHC responsibilities?\",\n    \"Does the AF Long Haul Communications Flight manage the TCOSS integrated TCATS tool to assist AF communication offices in aligning with DOD/DISA policy for managing their LHC responsibilities?\",\n    \"Does the AF Long Haul Communications Flight sustain the TCOSS integrated TCATS tool to assist AF communication offices in aligning with DOD/DISA policy for managing their LHC responsibilities?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-5b26a72a46337da6": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Are AETC and USAFA operated education and training academic networks exempt from the DODIN Waiver process if they do not?\", \"parts\": [\"Process sensitive information?\", \"Store sensitive information?\", \"Transmit sensitive information?\"]}",
+  "error": null
+ },
+ "CHK-5ef5b002bdea8f7c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the authorized Cyber Security Service Provider (CSSP) or other monitoring solution appropriate for the mission monitor the CISP used for controlled unclassified information (CUI), in accordance with?\",\n  \"parts\": [\"STIGs, as required?\", \"SRGs, as required?\", \"Other DoD cyber security policies, as required?\"]\n}",
+  "error": null
+ },
+ "CHK-607eaf181f849561": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-85c0665a68d73278": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the AF Long Haul Communications Flight manage and sustain the TCOSS repository for all of the following?\",\n  \"parts\": [\n    \"Are all current and historical AF/Army provisioning documents managed and sustained in the TCOSS repository?\",\n    \"Is financial management and tracking of all AF/Army requirements managed and sustained in the TCOSS repository?\",\n    \"Is tracking of all commercially leased AF EMSS and Inmarsat services managed and sustained in the TCOSS repository?\",\n    \"Is Networx/Enterprise Infrastructure Solutions commercially leased long distance voice services tracked in the TCOSS repository?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-8a18ba21a827252a": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit perform annual reviews to determine if the CISP is still needed and for compliance, as appropriate?\",\n  \"parts\": [\n    \"Is the CISP's need determined annually, as appropriate?\",\n    \"Are security controls reviewed annually for compliance, as appropriate?\",\n    \"Is the authorization to operate (ATO) reviewed annually for compliance, as appropriate?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-9d6371bfb8d4bff7": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Functional LHC Circuit Management Office (CMO) coordinate and schedule power outages with all of the following?\", \"parts\": [\"Does the CMO coordinate and schedule power outages with DISA?\", \"Does the CMO coordinate and schedule power outages with Major Commands?\", \"Does the CMO coordinate and schedule power outages with Cyber Operations Flight/690 Network Support Squadron?\", \"Does the CMO coordinate and schedule power outages with affected AF customers that will impact communication facilities, rooms, racks, and equipment?\"]}",
+  "error": null
+ },
+ "CHK-a5afa17a41a31738": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-a98f51933353a601": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Assistant Secretary for Acquisition (SAF/AQ) coordinate with SAF/CIO A6 and the Deputy Under Secretary of Air Force, Management (SAF/MG) to do all of the following?\", \"parts\": [\"Is guidance developed to ensure bandwidth efficiency of systems that impact the AFIN infrastructure?\", \"Are processes published to ensure bandwidth efficiency of systems that impact the AFIN infrastructure?\"]}",
+  "error": null
+ },
+ "CHK-b504fc44b2386a19": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Is the AF's fair share of DISN cost directed by DOD-Comptroller and released in Program Budget Decision action and paid through the Defense Working Capital Fund?\", \"parts\": [\"Is the AF's fair share of DISN cost directed by DOD-Comptroller?\", \"Is the AF's fair share of DISN cost released in Program Budget Decision action?\", \"Is the AF's fair share of DISN cost paid through the Defense Working Capital Fund?\"]}",
+  "error": null
+ },
+ "CHK-b874b6f2473d121e": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the Functional LHC Circuit Management Office (CMO) ensure base LHC management in accordance with all of the following?\",\n  \"parts\": [\n    \"Are DOD Directives and Instructions followed, when applicable?\",\n    \"Are DISA Circulars (DISACs) adhered to, when applicable?\",\n    \"Are DISA Notices followed, when applicable?\",\n    \"Are AF policies followed, when applicable?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-b993e506700a84e8": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit do all of the following?\",\n  \"parts\": [\n    \"Does the unit validate AF Top Secret/Sensitive Compartmented Information (TS/SCI) TS/SCI IP DATA and NSANet requirements and network connections?\",\n    \"Does the unit approve AF Top Secret/Sensitive Compartmented Information (TS/SCI) TS/SCI IP DATA and NSANet requirements and network connections?\",\n    \"Does the unit transmit AF Top Secret/Sensitive Compartmented Information (TS/SCI) TS/SCI IP DATA and NSANet requirements and network connections?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-bada03528638777b": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-c5e310c4a8b94dd2": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the AF Long Haul Communications Flight serve as the AF Top Registration Authorized Official in DISA StoreFront for all of the following?\", \"parts\": [\"Is the Registration Official role approved by the AF Long Haul Communications Flight?\", \"Is the LAFO role approved by the AF Long Haul Communications Flight?\", \"Is the Routing List Official role approved by the AF Long Haul Communications Flight?\"]}",
+  "error": null
+ },
+ "CHK-dbc570f10e6287ba": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do Major Commands, Management Headquarters (MHQ), and AF level Organizations ensure that all subordinate organization(s) contractor DISN SBU IP DATA connection(s) align with the guidance in the DISA DISN Connection Process Guide (CPG)?\", \"parts\": [\"Do Major Commands, Management Headquarters (MHQ), and AF level Organizations ensure that all subordinate organization(s) contractor DISN SECRET IP DATA connection(s) align with the guidance in the DISA DISN Connection Process Guide (CPG)?\"]}",
+  "error": null
+ },
+ "CHK-ec5fc5aedefe5237": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-ee8a27c76f11bfa4": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-f26bcff604bc7aca": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the AF LHC Flight do all of the following?\", \"parts\": [\"Does the AF LHC Flight identify problems?\", \"Does the AF LHC Flight facilitate solutions?\", \"Does the AF LHC Flight request changes and improvements to the AF, DISA, and DOD long-haul process?\"]}",
+  "error": null
+ },
+ "CHK-f865571c0b37dc21": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"keep\",\n  \"lead\": null,\n  \"parts\": []\n}",
+  "error": null
+ },
+ "MISS-319d52e818308332": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-0c16244ff7ebbd7d": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-15069aaa040d6e3e": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-16c405f24037945f": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does AFSPC provide oversight and guidance for all of the following in conjunction with the National Security Agency?\",\n  \"parts\": [\n    \"Is AF COMSEC overseen and guided, in conjunction with the National Security Agency?\",\n    \"Is AF Cryptologic Modernization overseen and guided, in conjunction with the National Security Agency?\",\n    \"Is the development of cryptologic solutions within the Air Force overseen and guided, in conjunction with the National Security Agency?\",\n    \"Is the fielding of cryptologic solutions within the Air Force overseen and guided, in conjunction with the National Security Agency?\",\n    \"Is the sustainment of cryptologic solutions within the Air Force overseen and guided, in conjunction with the National Security Agency?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-28541c4f8da430cc": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-2c557eb692c7cf6c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"keep\",\n  \"lead\": null,\n  \"parts\": []\n}",
+  "error": null
+ },
+ "CHK-33a91685fcde044b": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-35fdc817c53c44c7": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the Air Force Materiel Command conduct all of the following?\",\n  \"parts\": [\n    \"Does the Air Force Materiel Command conduct technological research to acquire, perform developmental testing of, field and sustain current and future cyberspace capabilities?\",\n    \"Does the Air Force Materiel Command conduct materiel development activities to acquire, perform developmental testing of, field and sustain current and future cyberspace capabilities?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-40ce7e5a5ba1a48c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Senior Security Official and Security Program Executive ensure all of the following?\", \"parts\": [\"Are Personnel security programs aligned with and support cyberspace policy and execution?\", \"Are Information security programs aligned with and support cyberspace policy and execution?\", \"Are Industrial security programs aligned with and support cyberspace policy and execution?\", \"Are Insider Threat security programs aligned with and support cyberspace policy and execution?\"]}",
+  "error": null
+ },
+ "CHK-45507eb233717dd5": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit deliver cyberspace capabilities to support all of the following, as defined by DoD?\", \"parts\": [\"Does the unit deliver cyberspace capabilities to support Warfighting (WMA)?\", \"Does the unit deliver cyberspace capabilities to support Business (BMA)?\", \"Does the unit deliver cyberspace capabilities to support Information Environment (IEMA)?\", \"Does the unit deliver cyberspace capabilities to support Defense Intelligence (DIMA)?\"]}",
+  "error": null
+ },
+ "CHK-47ea372a5a8de300": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-482996fa0d2d1b10": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does SAF/CIO A6 do all of the following, as appropriate?\", \"parts\": [\"Review and approve the Cybersecurity Strategy for acquisitions of systems containing IT prior to milestone decisions or contract award for all acquisitions subject to DoDI 5000.02?\", \"Forward the Cybersecurity Strategy to the DoD CIO for review and approval for ACAT ID, IAM, and IAC programs?\", \"Conduct the review in coordination with SAF/AA for SAP systems?\", \"Conduct the review in coordination with AF/A10 for nuclear systems?\"]}",
+  "error": null
+ },
+ "CHK-48daa630a25e120b": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-4927a3c22397a206": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-51752aa9f62259e6": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Assistant Secretary of the Air Force for Acquisition ensure that AF acquisition and sustainment programs appropriately implement cyberspace and warfighting integration requirements, including all of the following?\", \"parts\": [\"Is interoperability implemented in AF acquisition and sustainment programs appropriately?\", \"Are application designs reused in AF acquisition and sustainment programs appropriately?\", \"Is IT promoted as common services in AF acquisition and sustainment programs appropriately?\", \"Is the AF common computing environment adopted in AF acquisition and sustainment programs appropriately?\"]}",
+  "error": null
+ },
+ "CHK-53fc126f59f6317f": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit do all of the following?\", \"parts\": [\"Develop cyberspace capabilities to execute, enhance and support Joint, Coalition, and AF core missions?\", \"Rapidly develop and implement innovative solutions?\", \"Leverage commercial products/services when appropriate to deliver AF capabilities in a Disconnected, Intermittent, Low-Bandwidth environment?\"]}",
+  "error": null
+ },
+ "CHK-56294499f58c5522": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit do all of the following?\",\n  \"parts\": [\"Does the unit establish performance measures for cyberspace investments?\", \"Does the unit track performance measures for cyberspace programs?\", \"Does the unit establish performance measures for cyberspace acquisitions?\", \"Does the unit track performance measures for cyberspace acquisitions?\", \"Do the performance measures ensure compliance with validated requirements?\"]\n}",
+  "error": null
+ },
+ "CHK-5c89b9f21b511fc4": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit do all of the following?\", \"parts\": [\"Does the unit charter AF cyberspace governance and Warfighting Integration forums?\", \"Does the unit appoint representatives to external forums in coordination with CFLs?\"]}",
+  "error": null
+ },
+ "CHK-65a6caf1f8c8e8c5": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-6e6784e9743d88d8": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-718857ab2ca37ddf": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit do all of the following?\",\n  \"parts\": [\n    \"Does the unit design all AF IT, including PIT and NSS, for interoperability and supportability?\",\n    \"Does the unit develop all AF IT, including PIT and NSS, for interoperability and supportability?\",\n    \"Does the unit incorporate all AF IT, including PIT and NSS, for interoperability and supportability?\",\n    \"Does the unit test all AF IT, including PIT and NSS, for interoperability and supportability?\",\n    \"Does the unit evaluate all AF IT, including PIT and NSS, for interoperability and supportability?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-78aaee48c947469d": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Is the acquisition program office Program Manager responsible for cybersecurity of the weapon system, including IT interfaces and embedded computer hardware and software?\",\n  \"parts\": [\n    \"Has the Program Manager allocated sufficient resources to cybersecurity?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-7c4d3d482cc43edc": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-858586fb5295eea0": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-aa6f92016a3d7093": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit optimize all of the following consistent with national, DoD, Joint and AF policy?\",\n  \"parts\": [\n    \"Is the planning optimized for cyberspace investments, consistent with national, DoD, Joint and AF policy?\",\n    \"Is the programming optimized for cyberspace investments, consistent with national, DoD, Joint and AF policy?\",\n    \"Is the budgeting optimized for cyberspace investments, consistent with national, DoD, Joint and AF policy?\",\n    \"Is the execution optimized for cyberspace investments, consistent with national, DoD, Joint and AF policy?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-b2a8ba636976a85c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Assistant Secretary of the Air Force for Acquisition work with SAF/CIO A6 to do all of the following?\", \"parts\": [\"Are AF cyber acquisition programs ensured consistent with the Information Dominance Flight Plan, developed by SAF/CIO A6?\", \"Are AF cyber acquisition programs ensured consistent with the AF Enterprise Architecture, developed by SAF/CIO A6?\"]}",
+  "error": null
+ },
+ "CHK-b47d80e2ba86e301": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does AFSPC do all of the following?\",\n  \"parts\": [\"Does AFSPC develop and maintain the AF Operational Baseline?\", \"Is the AF Operational Baseline synchronized with the Target Baseline developed by SAF/CIO A6?\", \"Is the AF Operational Baseline synchronized with the Implementation Baseline developed by SAF/CIO A6?\"]\n}",
+  "error": null
+ },
+ "CHK-c19480306a897597": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit do all of the following?\",\n  \"parts\": [\n    \"Does the unit maintain enterprise architectures for its areas of responsibility, including mission-unique IS solution architectures?\",\n    \"Does the unit integrate its architectural data using AF-directed repositories?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-c1e0a32089dd17c3": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit do all of the following when operating under conditions of diminished or denied NSS, mission critical IT and data availability?\",\n  \"parts\": [\"Does the unit develop contingency plans for mission assurance?\", \"Does the unit exercise contingency plans for mission assurance?\"]\n}",
+  "error": null
+ },
+ "CHK-c8fe76b230e2dbe4": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Are all records created as a result of processes prescribed in this publication maintained and disposed of according to?\", \"parts\": [\"Is each record maintained in accordance with AFMAN 33-363?\", \"Is each record disposed of in accordance with the RDS in AFRIMS?\"]}",
+  "error": null
+ },
+ "CHK-cc7702e5477d6c3c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the Air Force, Director of Test and Evaluation (AF/TE), do all of the following throughout program lifecycle?\",\n  \"parts\": [\n    \"Does AF/TE provide guidance of all AF T&E activities, including integration of cyber test?\",\n    \"Does AF/TE provide direction of all AF T&E activities, including integration of cyber test?\",\n    \"Does AF/TE provide oversight of all AF T&E activities, including integration of cyber test?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-d82352b880647c1c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-e4e0ded731e7657c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Deputy Chief of Staff for Strategic Plans and Requirements (A5/8) collaborate with all of the following to support future AF cyberspace capabilities development through concept development and experimentation?\", \"parts\": [\"Cyberspace Superiority CFL?\", \"MAJCOMs?\", \"other Services?\", \"the defense S&T community?\"]}",
+  "error": null
+ },
+ "CHK-e9911024e86e9edd": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit do all of the following in coordination with appropriate governance forums?\",\n  \"parts\": [\"Does the unit oversee the target baseline (TB)?\", \"Does the unit establish the target baseline (TB)?\", \"Does the unit integrate the target baseline (TB)?\", \"Does the unit maintain the target baseline (TB)?\", \"Does the unit oversee the implementation baseline (IB)?\", \"Does the unit establish the implementation baseline (IB)?\", \"Does the unit integrate the implementation baseline (IB)?\", \"Does the unit maintain the implementation baseline (IB)?\"]\n}",
+  "error": null
+ },
+ "CHK-ea3ef494d8a189c1": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Has the Air Force, Director of Test and Evaluation (AF/TE) done all of the following?\",\n  \"parts\": [\n    \"Did the Air Force, Director of Test and Evaluation (AF/TE) develop a comprehensive test strategy that includes cyber testing?\",\n    \"Did the Air Force, Director of Test and Evaluation (AF/TE) implement a comprehensive test strategy that includes cyber testing?\",\n    \"Did the Air Force, Director of Test and Evaluation (AF/TE) institute T&E policy consistent with AF and DoD policies?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-f2c12677d8d240c4": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does SAF/CIO A6 ensure all of the following?\", \"parts\": [\"Is the AF Information Network operationally resilient?\", \"Is the AF Information Network reliable?\", \"Is the AF Information Network interoperable?\", \"Is the AF Information Network secure?\", \"Do these measures meet the needs of AF core missions and responsibilities for Joint and Coalition Operations?\"]}",
+  "error": null
+ },
+ "CHK-f7a24b4943d7c7e4": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-fd63ed7d56d51b08": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "MISS-97c381e2b2b4979a": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Director of Business Transformation and Deputy Chief Management Officer (SAF/MG) coordinate all of the following?\", \"parts\": [\"Is the development of business enterprise architecture coordinated?\", \"Is the capture of business processes included, as appropriate?\", \"Is the supporting AF DBS captured, as appropriate?\"]}",
+  "error": null
+ },
+ "MISS-9ad8d6c8eaa1427e": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit do all of the following?\", \"parts\": [\"Does the unit plan cyberspace investments for assigned service core functions based on the AF Strategic Master Plan and IDFP?\", \"Does the unit program cyberspace investments for assigned service core functions based on the IEMA Roadmap?\", \"Does the unit plan and program cyberspace investments for assigned service core functions based on other IDFP-aligned roadmaps?\"]}",
+  "error": null
+ },
+ "MISS-a537ac50fa75bb73": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Director of Business Transformation and Deputy Chief Management Officer (SAF/MG) do all of the following?\", \"parts\": [\"Does the Director coordinate and facilitate the cross-functional review of AF Defense Business Systems (DBS)?\", \"Does the Director support the USecAF as the business systems Pre-Certification Authority through the Enterprise Senior Working Group?\"]}",
+  "error": null
+ },
+ "CHK-04ab4b10943ced29": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-1429a5f0eec18be4": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-14862e35e906a8ff": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-15067caec1290e7f": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the unit ensure that materials containing CUI are decontrolled and handled appropriately, if no longer requiring safeguarding?\",\n  \"parts\": [\"Are materials containing CUI decontrolled when they no longer require safeguarding?\", \"Are permanent record materials retained after being decontrolled?\", \"Are non-permanent record materials destroyed according to Section 4 and ISOO Notice 2019-03 after being decontrolled?\"]\n}",
+  "error": null
+ },
+ "CHK-16d2b164f9224b77": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Are CUI documents and materials being formally reviewed in accordance with Paragraphs 4.5.a. and 4.5.b. before approved disposition authorities are applied?\",\n  \"parts\": [\n    \"Is each CUI document formally reviewed in accordance with Paragraph 4.5.a., before approved disposition authorities are applied?\",\n    \"Is each CUI material formally reviewed in accordance with Paragraph 4.5.b., before approved disposition authorities are applied?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-194969ec2d3ff6b4": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Are banners, footers, and portion markings only marked 'Unclassified' or '(U)' for unclassified information, in accordance with the June 4, 2019 ISOO letter?\", \"parts\": [\"Are banners only marked 'Unclassified' or '(U)' for unclassified information, in accordance with the June 4, 2019 ISOO letter?\", \"Are footers only marked 'Unclassified' or '(U)' for unclassified information, in accordance with the June 4, 2019 ISOO letter?\", \"Are portion markings only marked 'Unclassified' or '(U)' for unclassified information, in accordance with the June 4, 2019 ISOO letter?\"]}",
+  "error": null
+ },
+ "CHK-1e6075d2ca017e23": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Do the DoD Components' CSAOs and CPMs have established procedures to ensure prompt and appropriate management action is taken in cases of CUI misuse?\",\n  \"parts\": [\n    \"Are procedures established for UD of CUI, as required?\",\n    \"Are procedures established for improper CUI designation and marking, as required?\",\n    \"Are procedures established for violation of this issuance, as required?\",\n    \"Are procedures established for incidents potentially placing CUI at risk of UD, as required?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-298eb0674f1f3182": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-30b6af8167c2fd92": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-38b1eed6c2e451d6": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Is reporting or accounting for UD of CUI done in accordance with Paragraph 3.5.a(4), and is the appropriate Military Department Counterintelligence Organization notified of all incidents?\",\n  \"parts\": [\"Is reporting or accounting for UD of CUI done in accordance with Paragraph 3.5.a(4)?\", \"Is the appropriate Military Department Counterintelligence Organization notified of all incidents?\"]\n}",
+  "error": null
+ },
+ "CHK-3929d7751431546a": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the USD(R&E) oversee and ensure that DoD CUI guidelines and requirements for sharing, marking, safeguarding, storage, dissemination, decontrol, destruction, and records management of all research, development, test, and evaluation information are properly executed for all DoD owned records?\",\n  \"parts\": [\n    \"Are the guidelines and requirements for sharing properly executed for all DoD owned records?\",\n    \"Are the guidelines and requirements for marking properly executed for all DoD owned records?\",\n    \"Are the guidelines and requirements for safeguarding properly executed for all DoD owned records?\",\n    \"Are the guidelines and requirements for storage properly executed for all DoD owned records?\",\n    \"Are the guidelines and requirements for dissemination properly executed for all DoD owned records?\",\n    \"Are the guidelines and requirements for decontrol properly executed for all DoD owned records?\",\n    \"Are the guidelines and requirements for destruction properly executed for all DoD owned records?\",\n    \"Are the guidelines and requirements for records management properly executed for all DoD owned records?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-3adb94540d9e3e41": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Has OSD AND DOD COMPONENT HEADS designated in writing a DoD Component senior agency official (CSAO) at the Senior Executive Service level or equivalent to do all of the following?\", \"parts\": [\"Is the CSAO designated to implement their CUI Program?\", \"Is the CSAO designated to perform the duties in Paragraph 3.5?\"]}",
+  "error": null
+ },
+ "CHK-3c8d5365c3e37232": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit do all of the following?\", \"parts\": [\"Does the unit avoid releasing CUI not controlled as NOFORN to non-U.S. citizens employed by the DoD when access would be detrimental to the interests of the DoD or the U.S. Government?\", \"Does the unit release or disclose CUI not controlled as NOFORN to non-U.S. citizens employed by the DoD if access would help accomplish a lawful and authorized DoD mission or purpose?\"]}",
+  "error": null
+ },
+ "CHK-43e773a3bd42966e": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Is non-DoD IS processing, storing, or transmitting CUI safeguarded in accordance with all of the following?\", \"parts\": [\"Are contractual requirements identified for the particular CUI contained in the contract followed?\", \"Is DoDI 8582.01 followed?\", \"Is Section 252.204-7012 of the DFARS or their subsequent revisions followed?\"]}",
+  "error": null
+ },
+ "CHK-5087ba90e619c6a6": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-5c2ad82011277266": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-6391a614da53ff91": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Are all classified documents, including legacy documents, reviewed for CUI and properly marked upon changes in their classification level?\",\n  \"parts\": [\n    \"Are classified documents reviewed for CUI upon changes in their classification level?\",\n    \"Are legacy documents reviewed for CUI upon changes in their classification level?\",\n    \"Are classified documents properly marked upon changes in their classification level, particularly if they are to be completely declassified?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-655d4f68026044bc": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-698de9a107926684": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Are export-controlled CUI transfers to foreign persons being conducted in accordance with all of the following?\",\n  \"parts\": [\n    \"Is the Arms Export Control Act followed for these transfers?\",\n    \"Are International Traffic in Arms Regulations adhered to for these transfers?\",\n    \"Is the Export Control Reform Act observed for these transfers?\",\n    \"Are Export Administration Regulations complied with for these transfers?\",\n    \"Is DoDI 2040.02 followed for these transfers?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-6cf1e4788fbd584a": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the CUI designation indicator on documents contain, at minimum, the name of the DoD Component determining that the information is CUI unless letterhead or another standard indicator of origination is used?\", \"parts\": [\"Is the name of the DoD Component determining that the information is CUI included in the CUI designation indicator?\", \"If letterhead or another standard indicator of origination is used, is the line omitted?\"]}",
+  "error": null
+ },
+ "CHK-7d7bc329e5e38d85": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Has a disclosure authority done all of the following?\", \"parts\": [\"Have they approved the dissemination of CUI designated information to a foreign recipient for conducting official DoD business?\", \"Is the CUI appropriately marked as releasable to the intended foreign recipient?\"]}",
+  "error": null
+ },
+ "CHK-80e338d6ef2588ae": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the USD(R&E) establish all of the following, as appropriate?\",\n  \"parts\": [\n    \"A standard process to identify CTI, as appropriate?\",\n    \"Guidelines for sharing and marking CTI, as appropriate?\",\n    \"Guidelines for safeguarding and storing CTI, as appropriate?\",\n    \"Guidelines for disseminating and decontrolling CTI, as appropriate?\",\n    \"Guidelines for destroying CTI, as appropriate?\",\n    \"CTI records management requirements contained in contracts, as appropriate?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-8a460a507fa8d257": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the CPM do all of the following?\",\n  \"parts\": [\n    \"Does the CPM report misuse, mishandling, or UD of CUI to the Unauthorized Disclosure Program Management Office?\",\n    \"Does the CPM notify the appropriate Military Department Counterintelligence Organization of all incidents?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-93c9e40928e946f2": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-a0734eeca4af2235": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-ae3cc7df8bf7e87a": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-ae4e4cd11a5d93f1": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-b8cc1e4b55b6979c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"keep\",\n  \"lead\": null,\n  \"parts\": []\n}",
+  "error": null
+ },
+ "CHK-c3aee7c58136fcc8": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Director, DCSA, establish and maintain a process to do all of the following as required?\", \"parts\": [\"Is the DoD CIO notified of threats related to CUI for further dissemination as required?\", \"Is USD(R&E) notified of threats related to CUI for further dissemination as required?\", \"Is USD(A&S) notified of threats related to CUI for further dissemination as required?\"]}",
+  "error": null
+ },
+ "CHK-cee7a867623d76ca": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"keep\",\n  \"lead\": null,\n  \"parts\": []\n}",
+  "error": null
+ },
+ "CHK-cf01d4b62efe25e3": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit implement safeguarding measures for CUI as identified by the CUI EA in Part 2002.14 of Title 32, CFR and any associated law, regulation, or government-wide policy?\", \"parts\": [\"Are safeguarding measures implemented for CUI as identified by the CUI EA in Part 2002.14 of Title 32, CFR?\", \"Are safeguarding measures implemented for CUI based on any associated law?\", \"Are safeguarding measures implemented for CUI based on any associated regulation?\", \"Are safeguarding measures implemented for CUI based on any government-wide policy?\"]}",
+  "error": null
+ },
+ "CHK-d78e59b515fc3ee6": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-dcdcf41c0d57e319": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Must senior leaders do all of the following?\", \"parts\": [\"Do senior leaders consider and take appropriate administrative, legal, or other corrective or disciplinary action to address CUI misuse commensurate with the appropriate law, regulation, or government-wide policy?\", \"Do senior leaders consider and take appropriate administrative, legal, or other corrective or disciplinary action to address UD commensurate with the appropriate law, regulation, or government-wide policy?\"]}",
+  "error": null
+ },
+ "CHK-ddd4430becfdc7cd": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-df82a53a1d7252b7": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do DoD personnel do all of the following, as required by Part 2002 of Title 32, CFR?\", \"parts\": [\"Do DoD personnel follow their governance criteria for when the application of dissemination controls is allowed, as required?\", \"Do DoD personnel follow their governance criteria for who can apply dissemination controls and markings, as required?\"]}",
+  "error": null
+ },
+ "CHK-e248ea3d21b0e735": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-ea3f40a1a806c68f": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-f82fbe51802c5a3b": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"DoD information systems processing, storing, or transmitting CUI categorized at the 'moderate' confidentiality impact level do all of the following?\", \"parts\": [\"Follow the guidance in DoDIs 8500.01?\", \"Follow the guidance in DoDIs 8510.01?\"]}",
+  "error": null
+ },
+ "CHK-fd9257ee826d7050": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the unit implement CUI requiring distribution statements in accordance with DODI 5230.24 or the LDC identified in related laws, regulations, or government-wide policies, but not qualifying as classified information under E.O. 13526 or Chapter 14 of Title 42, U.S.C.?\", \"parts\": [\"Is CUI requiring distribution statements implemented in accordance with DODI 5230.24, but not qualifying as classified information under E.O. 13526 or Chapter 14 of Title 42, U.S.C.?\", \"Is CUI requiring distribution statements implemented in accordance with the LDC identified in related laws, regulations, or government-wide policies, but not qualifying as classified information under E.O. 13526 or Chapter 14 of Title 42, U.S.C.?\"]}",
+  "error": null
+ },
+ "MISS-bd8bdc8fde8a03e1": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Are documents and materials containing CUI that constitute permanently valuable government records maintained and disposed of in accordance with the NARAapproved record disposition schedules applicable to each DoD Component, as required by DoDI 5015.02?\", \"parts\": [\"Are documents and materials containing CUI that are permanently valuable government records maintained in accordance with the NARAapproved record disposition schedules applicable to each DoD Component, as required by DoDI 5015.02?\", \"Are documents and materials containing CUI that are permanently valuable government records disposed of in accordance with the NARAapproved record disposition schedules applicable to each DoD Component, as required by DoDI 5015.02?\"]}",
+  "error": null
+ },
+ "CHK-08f01c32572ad712": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-14e018ce1617bb38": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the RMF KS provide all of the following, in accordance with Paragraph 3.3?\",\n  \"parts\": [\n    \"Is data storage and retrieval provided by the RMF KS?\",\n    \"Is pooling of relevant information from appropriate DoD Component RMF repositories provided?\",\n    \"Is automated assessment and compliance verification provided?\",\n    \"Is summary reporting provided?\",\n    \"Are similar capabilities that support the discovery and analysis methodology provided?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-187c30fedd67a631": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the DOD COMPONENT HEAD track their respective Component's PPSM program on both networks, as appropriate?\", \"parts\": [\"Is the tracking done on the classified network in the Classified PPSM registry at https://pnp.cert.smil.mil/pnp, as appropriate?\", \"Is the tracking done on the unclassified system in the PPSM registry at https://pnp.cert.mil/pnp, as appropriate?\"]}",
+  "error": null
+ },
+ "CHK-1ea3e78d05bf2dcd": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the DIRECTOR, DISA establish and maintain the PPSM Registry capability used to declare all PPS for DoD Components?\", \"parts\": [\"Is the PPSM Registry capability made available to DoD mission partners linked to DODIN for their desired use?\"]}",
+  "error": null
+ },
+ "CHK-224c5d1a5323a9f7": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the DIRECTOR, DISA maintain all of the following consistent with security controls and assessment procedures used by the DoD?\",\n  \"parts\": [\n    \"Are control correlation identifiers maintained, consistent with security controls and assessment procedures used by the DoD?\",\n    \"Are security requirements guides maintained, consistent with security controls and assessment procedures used by the DoD?\",\n    \"Are STIGs developed by DISA maintained, consistent with security controls and assessment procedures used by the DoD?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-26c1ee4732f20d7c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the PPSM CCB chairperson establish and manage the unclassified RMF KS website at https://rmfks.osd.mil/ to provide a forum for the DoD cybersecurity community?\", \"parts\": [\"Is the unclassified RMF KS website established, as required?\", \"Is the unclassified RMF KS website managed, as required?\", \"Does the forum allow posting and sharing of practical solutions with other DoD community members, as required?\", \"Does the forum allow posting and sharing of documents with mission partners, as required?\"]}",
+  "error": null
+ },
+ "CHK-35fa5cece26b2a02": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-3a9061d2199e1a61": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Do all PPS used throughout planned, newly developed, acquired, and existing DODIN (whether used internal or external to the enclave); DoD information technology; organic cloud computing; and managed data services meet the requirements in Paragraph 3.2?\",\n  \"parts\": [\n    \"Do all PPS used throughout planned DODIN meet the requirements in Paragraph 3.2?\",\n    \"Do all newly developed PPS used throughout DODIN meet the requirements in Paragraph 3.2?\",\n    \"Do all acquired PPS used throughout DODIN meet the requirements in Paragraph 3.2?\",\n    \"Do all existing PPS used throughout DODIN meet the requirements in Paragraph 3.2?\",\n    \"Do all PPS used internal to the enclave meet the requirements in Paragraph 3.2?\",\n    \"Do all PPS used external to the enclave meet the requirements in Paragraph 3.2?\",\n    \"Does DoD information technology meet the requirements in Paragraph 3.2?\",\n    \"Is organic cloud computing meeting the requirements in Paragraph 3.2?\",\n    \"Are managed data services meeting the requirements in Paragraph 3.2?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-3b4fa6aad254f58c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Are DoD Component Technical Advisory Group or PPSM CCB decisions that do not meet the required concurrence level elevated, as per the DSAWG Charter?\", \"parts\": [\"Are such decisions elevated to the DSAWG, as per the DSAWG Charter?\", \"Are such decisions elevated to the DoD Information Security Risk Management Committee, as per the DSAWG Charter?\"]}",
+  "error": null
+ },
+ "CHK-404f54619c04aeee": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Are all PPS used throughout planned, newly developed, acquired, and existing DODIN limited to only those required for?\",\n  \"parts\": [\"Official business?\", \"Quality of life issues authorized by the competent authority?\"]\n}",
+  "error": null
+ },
+ "CHK-5627fce2b372dd44": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the DOD COMPONENT HEADS oversee usage of PPS not listed on the CAL for DoD Component systems operating on RT&E information networks if using PPS remains solely in the RT&E information network and does not traverse the DODIN?\", \"parts\": [\"Do the DOD COMPONENT HEADS oversee usage of PPS not listed on the CAL, as appropriate?\", \"Does using PPS remain solely in the RT&E information network, as appropriate?\", \"Does using PPS not traverse the DODIN, as appropriate?\"]}",
+  "error": null
+ },
+ "CHK-58772a09769c120e": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the PPSM program implement a discovery and analysis methodology that supports all of the following?\",\n  \"parts\": [\n    \"Does the methodology support information security configurations?\",\n    \"Does the methodology support vulnerability management?\",\n    \"Does the methodology support PPS interoperability used in DoD systems across machine interfaces?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-68deac86cdb88dd2": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Is PPSM-related configuration management established to do all of the following?\", \"parts\": [\"Does it support near real-time C2 of the DODIN?\", \"Does it support near real-time C2 of the JIE?\", \"Does it support continuous monitoring?\", \"Does it support discovery?\", \"Does it support analysis?\"]}",
+  "error": null
+ },
+ "CHK-6dcda47e451bd595": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-70896117d251634e": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Component Head oversee their respective Component's PPSM program to do all of the following?\", \"parts\": [\"Does the Component Head assess it for vulnerabilities?\", \"Is an internal vulnerability assessment report documented in accordance with PPSM component local service assessment process?\", \"Is the report provided by the system owner for internal PPS?\"]}",
+  "error": null
+ },
+ "CHK-7769adb3563a5bd3": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the Commander, United States Cyber Command, do all of the following to implement this issuance?\",\n  \"parts\": [\n    \"Does the Commander develop PPSM operational policies to implement this issuance?\",\n    \"Does the Commander coordinate PPSM operational policies to implement this issuance?\",\n    \"Does the Commander distribute PPSM operational policies to implement this issuance?\",\n    \"Does the Commander develop PPSM operational doctrine to implement this issuance?\",\n    \"Does the Commander coordinate PPSM operational doctrine to implement this issuance?\",\n    \"Does the Commander distribute PPSM operational doctrine to implement this issuance?\",\n    \"Does the Commander develop PPSM operational procedures to implement this issuance?\",\n    \"Does the Commander coordinate PPSM operational procedures to implement this issuance?\",\n    \"Does the Commander distribute PPSM operational procedures to implement this issuance?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-8000643c4176338a": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the DOD CISO provide oversight and guidance to the Director, Defense Information Systems Agency (DISA), in accordance with Paragraph 2.2.b responsibilities?\",\n  \"parts\": [\n    \"Is the PPSM CCB Charter developed under oversight and guidance?\",\n    \"Is the PPSM CCB Charter reviewed under oversight and guidance?\",\n    \"Is the PPSM CCB Charter approved under oversight and guidance?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-82621cb4ebb03175": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Is the representative designated by the DoD Component heads a DoD military officer in the grade of O-6 or a DoD civilian employee in the grade of General Schedule (GS)-15 and have at least a Secret security clearance?\", \"parts\": [\"Is the representative a DoD military officer in the grade of O-6?\", \"Is the representative a DoD civilian employee in the grade of GS-15?\", \"Does the representative have at least a Secret security clearance?\"]}",
+  "error": null
+ },
+ "CHK-86c6f14a4e7a0bf4": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-8eba7db1deaee3db": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does the Director, DISA ensure that all of the following?\",\n  \"parts\": [\n    \"Are DoD information technology assigned an assurance category and documented in the CAL?\",\n    \"Is cloud computing assigned an assurance category and documented in the CAL?\",\n    \"Are managed data services assigned an assurance category and documented in the CAL?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-8f4cdbff2a817ee1": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Is the PPS implemented in accordance with all of the following?\", \"parts\": [\"Is the PPS implemented in accordance with established PPSM Configuration Control Board (CCB) policy?\", \"Is the PPS implemented in accordance with established PPSM Configuration Control Board (CCB) procedures and standards?\", \"Is the PPS implemented in accordance with DoD policy?\"]}",
+  "error": null
+ },
+ "CHK-9d0e242537647b29": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-a1a65fc0c4f8fbbb": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does this issuance do all of the following?\", \"parts\": [\"Does it alter or override existing Director of National Intelligence authorities and policies regarding the protection of sensitive compartmented information in accordance with Executive Order 12333 and other applicable laws and regulations?\", \"Does it alter or override existing Director of National Intelligence authorities and policies regarding special access programs for intelligence in accordance with Executive Order 12331 and other applicable laws and regulations?\"]}",
+  "error": null
+ },
+ "CHK-ac6d17c5efbc0222": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does this issuance apply to all of the following?\", \"parts\": [\"OSD?\", \"the Military Departments (including the Coast Guard at all times)?\", \"the Office of the Chairman of the Joint Chiefs of Staff (CJCS) and the Joint Staff?\", \"the Combatant Commands?\", \"the Office of Inspector General of the Department of Defense (OIG DoD)?\", \"the Defense Agencies?\", \"the DoD Field Activities?\", \"all other organizational entities within the DoD?\"]}",
+  "error": null
+ },
+ "CHK-ad9660d5ea4dad44": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the DOD COMPONENT HEAD implement standards established by the PPSM CCB and in accordance with all of the following?\", \"parts\": [\"Are the standards implemented in accordance with DoDI 8500.01?\", \"Are the standards implemented in accordance with CJCSI 6510.01F?\", \"Are the standards implemented in accordance with CJCSI 6211.02D?\"]}",
+  "error": null
+ },
+ "CHK-ae9cd9f664b42f7c": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-b1762c2d1dfc44c6": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the Commander, United States Cyber Command do all of the following when required?\", \"parts\": [\"Blocks all externally visible PPS not correctly implemented or enabled in accordance with this issuance?\", \"Disconnects connections to, on, or through the DODIN transport?\"]}",
+  "error": null
+ },
+ "CHK-b9cf8668e0ca8630": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-c0df790f5bc5ee02": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Are all PPS used throughout planned, newly developed, acquired, and existing DODIN declared, including their underlying PPS, in the PPSM Registry?\",\n  \"parts\": [\n    \"Are all PPS used throughout planned DODIN declared, including their underlying PPS, in the PPSM Registry?\",\n    \"Are all PPS used throughout newly developed DODIN declared, including their underlying PPS, in the PPSM Registry?\",\n    \"Are all PPS used throughout acquired DODIN declared, including their underlying PPS, in the PPSM Registry?\",\n    \"Are all PPS used throughout existing DODIN declared, including their underlying PPS, in the PPSM Registry?\"\n  ]\n}",
+  "error": null
+ },
+ "CHK-c1a4110daf4ab9e6": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-c3e5cfb26a313d75": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the RMF KS provide unclassified electronic, web-based, and machine-to-machine authoritative sources for existing PPSM policies and procedures to systematically apply the principles and methods of implementation PPSM CCB developed and distributed for DoD systems?\", \"parts\": [\"Do the unclassified electronic sources exist for existing PPSM policies and procedures?\", \"Do the web-based sources exist for existing PPSM policies and procedures?\", \"Do the machine-to-machine sources exist for existing PPSM policies and procedures?\"]}",
+  "error": null
+ },
+ "CHK-c5c750664539eb81": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\n  \"decision\": \"split\",\n  \"lead\": \"Does discovery support all of the following concerning the PPS being used in DoD systems?\",\n  \"parts\": [\"Does discovery support detecting relevant data and network traffic?\", \"Does discovery support capturing relevant data and network traffic?\", \"Does discovery support monitoring relevant data and network traffic?\"]\n}",
+  "error": null
+ },
+ "CHK-d3b411dce5d7cfe4": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-e015ec381225d97b": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the DOD COMPONENT HEADS verify PPS before authorization, incorporation, or connection to systems or technology in accordance with DoDI 8510.01?\", \"parts\": [\"Is PPS verified before authorization, in accordance with DoDI 8510.01?\", \"Is PPS verified before incorporation, in accordance with DoDI 8510.01?\", \"Is PPS verified before connection to systems or technology, in accordance with DoDI 8510.01?\"]}",
+  "error": null
+ },
+ "CHK-f0217ddaf9ba57ef": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"keep\", \"lead\": null, \"parts\": []}",
+  "error": null
+ },
+ "CHK-f3f4c8a2ec475d5b": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Does the CJCS do all of the following in accordance with this issuance?\", \"parts\": [\"Does the CJCS develop PPSM policies, doctrine, and procedures for joint and combined operations?\", \"Does the CJCS coordinate PPSM policies, doctrine, and procedures for joint and combined operations?\", \"Does the CJCS distribute PPSM policies, doctrine, and procedures for joint and combined operations?\"]}",
+  "error": null
+ },
+ "CHK-fcaeefaff785260b": {
+  "prompt_id": "5b796513781e2fd4",
+  "raw": "{\"decision\": \"split\", \"lead\": \"Do the DOD Component heads designate in writing to the PPSM CCB chairperson all of the following?\", \"parts\": [\"A primary voting member to support PPSM CCB meetings?\", \"One or more alternative voting members to support PPSM CCB meetings?\"]}",
+  "error": null
+ }
+}

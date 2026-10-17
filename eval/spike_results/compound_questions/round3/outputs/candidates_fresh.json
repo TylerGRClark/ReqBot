@@ -1,0 +1,1514 @@
+[
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-00917d17c971dd62",
+  "reason": "long",
+  "words": 39,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-082f0cb6bd2d99e7",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-110ce92a7c455796",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-1206673ae54d0adf",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-13e17eb90a80fd3a",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-17eb7a5ad61dfed7",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-1a40ec4316e0a5c9",
+  "reason": "long",
+  "words": 44,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-1d4fbb64e90d752a",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-1f28a5f135e8ce8b",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: or, within",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-1fb06c4ce25a7b05",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: to include",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-237302f670615dfd",
+  "reason": "long",
+  "words": 37,
+  "eligible": false,
+  "gate": "gate word: and/or, or, within",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-273e555bf2cdbd76",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-33e3cfdedd26aa26",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-3411c6c15d3199bb",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-4076302efb68c1fd",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: as appropriate",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-41b209c2216f8efc",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-4db45e5d2a16d9c8",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-5a66b19ed26561f8",
+  "reason": "long",
+  "words": 40,
+  "eligible": false,
+  "gate": "gate word: and/or, but, could, no later than",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-65ad9119ebb819d0",
+  "reason": "long",
+  "words": 37,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-672550bd5638828b",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-6adb97723559d60a",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-6e86382b7903092d",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "gate word: to include",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-6f71da068939123e",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-700d15d283d11345",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-78dd05690bc76cf2",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-81dfaacc03b7f897",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-8375200078c2a9a0",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-886147074c8f42b4",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-8bbf35b7e9307608",
+  "reason": "long",
+  "words": 38,
+  "eligible": false,
+  "gate": "gate word: as required, not, or",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-8f94c39f9324fb78",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "gate word: when",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-9f6b396912f32a6c",
+  "reason": "long",
+  "words": 40,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-a190452a89fdda5c",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-a47faddb060e8f99",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "gate word: as required",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-a54a09533afa4cb6",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: and/or, only",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-ad7b8691ea44c4bf",
+  "reason": "long",
+  "words": 42,
+  "eligible": false,
+  "gate": "gate word: and/or, not later than, or, prior to",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-b06a43cf943f5006",
+  "reason": "long",
+  "words": 40,
+  "eligible": false,
+  "gate": "gate word: annually, or",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-b16ecb61d21d9e80",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-b236f5cb10e88e92",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: or, when",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-b76465bfc6b6d472",
+  "reason": "long",
+  "words": 39,
+  "eligible": false,
+  "gate": "gate word: as well as",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-b9be710fabccc25e",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-c398baba552edc1b",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-db7ed78c254b06ff",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: or, specified",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-e0ba3e5bbb17922d",
+  "reason": "long",
+  "words": 43,
+  "eligible": false,
+  "gate": "gate word: as required, including, or",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-e3a1a4a328b4debb",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "CHK-fdd12036d78cfd4a",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 46
+ },
+ {
+  "doc": "CJCSI 6510.02G",
+  "id": "MISS-a2b0d610606b5aec",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: and/or, to include",
+  "pool_size": 46
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-097e4d1fd2372b50",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-0f764699488d9edd",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-0fd40a889a201704",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: minimum",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-0fd812c058f986d1",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: as necessary, in addition",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-113d64ebd5fbca50",
+  "reason": "long",
+  "words": 49,
+  "eligible": false,
+  "gate": "gate word: except",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-15f0365fe378f502",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "4 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-22e1566e7f233b4c",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: or, within",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-239426f0557c8519",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "4 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-2dae86332c9b3b0b",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-2deb813094d35d66",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: when",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-30d0106a47b68437",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-373b7af955c77994",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "gate word: when",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-39241f0eb6666627",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-46e680e9ecf12f47",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-485ac1765373489c",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "gate word: in addition",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-50e54b6e7c8e6295",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-50f10810ab831bb6",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: to include",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-58f77f40311ca747",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-5a2ead2eeb590ccd",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: as required, directed, or",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-5d121b7ed0b9ac27",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "gate word: to include",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-67cdf2f99ad82986",
+  "reason": "long",
+  "words": 39,
+  "eligible": false,
+  "gate": "gate word: not, or, when",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-6f83bdf6061d60be",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-6f9763928a226291",
+  "reason": "long",
+  "words": 37,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-7ae801f83c743fe1",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: within",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-7d371095dc0d0590",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-8d9065d4b5373ec8",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-8f7dd4b14d414bfb",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-9ec5de93dac4cf97",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-a553ed5bf3315e8c",
+  "reason": "long",
+  "words": 63,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-a7d470590070fbdd",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-a9a7671b0d058cbc",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: as defined, in addition",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-ada92d142064cf40",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "gate word: minimum",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-af649e7e567aad99",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-bd33a42afc6807d3",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-bfb99f8da94ee8be",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: within",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-ce72d97770fe8090",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "gate word: before",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-cfb0d2ccecaedcea",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-d3987f44617fe826",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "4 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-de9960e5528a4f3b",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-e6e892602e3f6f53",
+  "reason": "long",
+  "words": 38,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-ea23b91ada8293cc",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-f07d8832375a489b",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-f80f44d4792edb66",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-fa066b84fecebf8c",
+  "reason": "long",
+  "words": 40,
+  "eligible": false,
+  "gate": "gate word: determined, within",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-fad0e0a061abc379",
+  "reason": "long",
+  "words": 41,
+  "eligible": false,
+  "gate": "4 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "CHK-fb0067217285b343",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.01",
+  "id": "MISS-c866d31b697fe9c9",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "0 'and' (need exactly 1)",
+  "pool_size": 47
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-043537b9ffb53c5d",
+  "reason": "long",
+  "words": 52,
+  "eligible": false,
+  "gate": "gate word: within",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-06480064fe785c3e",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "gate word: in addition, to include",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-08a66fa053a394c5",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-09a14454bdb6d85a",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: as appropriate, may, or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-09e30d8f6835851d",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-0be0ec3b698b2472",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-12292bb03de1e60c",
+  "reason": "long",
+  "words": 62,
+  "eligible": false,
+  "gate": "9 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-149dada10ad5564f",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-1831c5e279cb2bfb",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-1d459813992fb1f0",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "gate word: when",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-1fba2318f6ba8a78",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "4 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-25ad26e17f1bed6b",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-288e3e4b0bb09abb",
+  "reason": "long",
+  "words": 52,
+  "eligible": false,
+  "gate": "gate word: in addition",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-30717cc49c8403e0",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "gate word: in addition",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-352402a351914443",
+  "reason": "long",
+  "words": 45,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-35b55a43ca600aef",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "gate word: specified",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-390543c1fa22980a",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-3b828da6ba5b8bd6",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-43a6b5fa76af5c3d",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: specified",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-46d42fa585940572",
+  "reason": "series",
+  "words": 30,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-481bd946bec9df45",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: specified",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-4eb32eb3847333e8",
+  "reason": "long",
+  "words": 37,
+  "eligible": false,
+  "gate": "gate word: requested",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-4ef9645f87ab30b5",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-5157978153c34bef",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: in addition",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-53c4b248d7112cc9",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-55be95e2b5ad1e7d",
+  "reason": "series",
+  "words": 20,
+  "eligible": false,
+  "gate": "gate word: when",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-55dd9a6e14eb403e",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: in addition",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-5adc83d549cfe60f",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "gate word: in addition",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-5e6b42fbde2ff1fc",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-6156f02a33ee044a",
+  "reason": "long",
+  "words": 37,
+  "eligible": false,
+  "gate": "gate word: only, or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-6242414176ee2688",
+  "reason": "long",
+  "words": 37,
+  "eligible": false,
+  "gate": "gate word: specified",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-62e8f3dd6494bfc8",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: before, or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-636949f2c082e1ac",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-6cfd056e11fbd2e4",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: specified",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-6f2bc125539a7574",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "not an active Does/Do question",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-7724131cde6c40e4",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: specified",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-78de3930cb937b4b",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: as appropriate",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-7d81a66750b037db",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: specified",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-7df86ce3bf676052",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-7e3901dc4e4e08c3",
+  "reason": "long",
+  "words": 50,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-7ededbb1ecb6bf1e",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-85f7b2c56d619ff9",
+  "reason": "long",
+  "words": 40,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-89bf6921513740d8",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-914b5bfbc1cd58fb",
+  "reason": "series",
+  "words": 28,
+  "eligible": false,
+  "gate": "gate word: specified, when",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-95a0eb2c8b2abe6a",
+  "reason": "long",
+  "words": 31,
+  "eligible": false,
+  "gate": "5 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-96151e91cd3e28d8",
+  "reason": "long",
+  "words": 40,
+  "eligible": false,
+  "gate": "gate word: within",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-96d783dbcf0a0c4f",
+  "reason": "series",
+  "words": 21,
+  "eligible": false,
+  "gate": "gate word: as required, specified",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-9fdc9f2727420113",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-a3d6f338c7148389",
+  "reason": "series",
+  "words": 23,
+  "eligible": false,
+  "gate": "gate word: or, specified, within",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-a4fd20a3a140acbd",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "gate word: including, to include",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-a635898df2d8eee2",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-ab0273e475814922",
+  "reason": "series",
+  "words": 22,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-abc2e447bf51eaba",
+  "reason": "series",
+  "words": 27,
+  "eligible": true,
+  "gate": "",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-b02f5bbf5a0d7f74",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-b0b57f2a050bb1dd",
+  "reason": "series",
+  "words": 27,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-b9ce2fe40b819a77",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: when",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-beb12d8ff29f2ebc",
+  "reason": "long",
+  "words": 41,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-c1ae3323f74aeaab",
+  "reason": "long",
+  "words": 42,
+  "eligible": false,
+  "gate": "gate word: to include",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-c827a1651212b53c",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-d3e99637ed4656c3",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-d4935c6fc5651768",
+  "reason": "long",
+  "words": 37,
+  "eligible": false,
+  "gate": "gate word: including, or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-d784a551025dd267",
+  "reason": "long",
+  "words": 41,
+  "eligible": false,
+  "gate": "gate word: including, or, within",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-d8846def81bf553a",
+  "reason": "long",
+  "words": 32,
+  "eligible": false,
+  "gate": "gate word: within",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-db12b856fb6fe15a",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-dc8ada1c67b73f8a",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "gate word: only, or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-e4fed39c83540ac1",
+  "reason": "long",
+  "words": 34,
+  "eligible": false,
+  "gate": "gate word: including",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-e87d83b65f62f5f5",
+  "reason": "long",
+  "words": 33,
+  "eligible": false,
+  "gate": "3 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-e8b4bf10ef2bb5ad",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "gate word: also, including, may, or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-ed7735d186a3d824",
+  "reason": "long",
+  "words": 36,
+  "eligible": false,
+  "gate": "gate word: also",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-efd7c5a5aff8f6d9",
+  "reason": "series",
+  "words": 24,
+  "eligible": false,
+  "gate": "2 'and' (need exactly 1)",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-f2eb6e22c8e38c3e",
+  "reason": "series",
+  "words": 25,
+  "eligible": false,
+  "gate": "gate word: including, or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-f4311e0d97d41c28",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "gate word: no",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-f455a706ab1f044e",
+  "reason": "series",
+  "words": 26,
+  "eligible": false,
+  "gate": "gate word: in addition",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-f7bef4a944e2efd8",
+  "reason": "long",
+  "words": 35,
+  "eligible": false,
+  "gate": "gate word: or",
+  "pool_size": 75
+ },
+ {
+  "doc": "DODI 5200.44",
+  "id": "CHK-ffa93c92c4d45081",
+  "reason": "series",
+  "words": 29,
+  "eligible": false,
+  "gate": "gate word: in addition",
+  "pool_size": 75
+ }
+]

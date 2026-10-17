@@ -1,0 +1,842 @@
+[
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-053decd0bf676125",
+  "reason": "series",
+  "words": 30,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-0a55a924b4ea661d",
+  "reason": "series",
+  "words": 21,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-0b18b2de8579359e",
+  "reason": "series",
+  "words": 23,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-136bdfa1258f203c",
+  "reason": "long",
+  "words": 31,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-144b713f9cd4e425",
+  "reason": "long",
+  "words": 32,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-25ab98771cb4328c",
+  "reason": "long",
+  "words": 44,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-28a62aa7488dd297",
+  "reason": "long",
+  "words": 32,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-2d0cdf21e09c93ed",
+  "reason": "long",
+  "words": 41,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-4072c6d7ce6d7a86",
+  "reason": "series",
+  "words": 28,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-4a532f6da67b2e9b",
+  "reason": "series",
+  "words": 25,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-4e16a6c99d0ff4ac",
+  "reason": "series",
+  "words": 20,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-4ff0b8fe39ed846c",
+  "reason": "long",
+  "words": 32,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-637b3ec7f6a4abcb",
+  "reason": "series",
+  "words": 28,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-730948ef1d0de0c0",
+  "reason": "series",
+  "words": 23,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-77489ef28613c890",
+  "reason": "series",
+  "words": 29,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-82b79fbd44e6622f",
+  "reason": "series",
+  "words": 26,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-8347dbc54ac14b7e",
+  "reason": "series",
+  "words": 30,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-87806a88b8f651c9",
+  "reason": "long",
+  "words": 33,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-8b0a054e2e37e30d",
+  "reason": "long",
+  "words": 36,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-950ef45efdf2081c",
+  "reason": "series",
+  "words": 20,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-9ae6503278155506",
+  "reason": "long",
+  "words": 42,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-b7a47727d3e9749e",
+  "reason": "long",
+  "words": 32,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-bae935da38b8bc05",
+  "reason": "series",
+  "words": 23,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-bb9c039ab7f1c169",
+  "reason": "long",
+  "words": 34,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-be773d3b36a97521",
+  "reason": "series",
+  "words": 29,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-beca061eae057aec",
+  "reason": "long",
+  "words": 33,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-c1a90b748d3c6692",
+  "reason": "series",
+  "words": 27,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-c2241bf47b0a17c2",
+  "reason": "series",
+  "words": 25,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-c4d265e96792e241",
+  "reason": "series",
+  "words": 23,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-d0c17f136932e8d2",
+  "reason": "series",
+  "words": 25,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-d5e01d5710f02c71",
+  "reason": "series",
+  "words": 30,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-e1213526c5ac5c3c",
+  "reason": "long",
+  "words": 37,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-e89b426371a7b7b4",
+  "reason": "series",
+  "words": 30,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-e948266b0778fff2",
+  "reason": "long",
+  "words": 34,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-f272b2609d8f1a0c",
+  "reason": "series",
+  "words": 20,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-f9c6a76bb1596661",
+  "reason": "series",
+  "words": 30,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "CHK-feb7377332779040",
+  "reason": "series",
+  "words": 30,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-5470ef430c84b16c",
+  "reason": "series",
+  "words": 26,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-90bbcd60e5ef5090",
+  "reason": "series",
+  "words": 23,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi10-2402",
+  "id": "MISS-f467a1e85de27479",
+  "reason": "series",
+  "words": 28,
+  "pool_size": 158
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-04d6c682d9ec8cb2",
+  "reason": "series",
+  "words": 21,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-087b3a1cea1032ca",
+  "reason": "series",
+  "words": 26,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-128e552db266d82a",
+  "reason": "series",
+  "words": 20,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-12f4587310efee81",
+  "reason": "series",
+  "words": 22,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-261b8d0d04fc5797",
+  "reason": "series",
+  "words": 21,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-35b1bd2d85bb208f",
+  "reason": "series",
+  "words": 24,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-3b8e46ae92743374",
+  "reason": "series",
+  "words": 24,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-44cb9366f2e1e2e9",
+  "reason": "long",
+  "words": 36,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-4bbd23ca2d6d6017",
+  "reason": "series",
+  "words": 27,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-4e010940bc7194ff",
+  "reason": "series",
+  "words": 21,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-502a529e534dbaf4",
+  "reason": "long",
+  "words": 41,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-60eb3cb45d49accf",
+  "reason": "series",
+  "words": 29,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-624a83b7c61a92ee",
+  "reason": "series",
+  "words": 25,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-63c38c693d0223de",
+  "reason": "series",
+  "words": 21,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-652393c359d27a25",
+  "reason": "series",
+  "words": 20,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-6a18c64371c827e8",
+  "reason": "series",
+  "words": 20,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-762b83c1486ec628",
+  "reason": "long",
+  "words": 39,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-778e0539e2d20d2e",
+  "reason": "series",
+  "words": 20,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-78b666f18de69125",
+  "reason": "long",
+  "words": 44,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-798238e5f07b1435",
+  "reason": "long",
+  "words": 32,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-7adbb787a3343687",
+  "reason": "series",
+  "words": 24,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-7e9e92ab6cbcbe20",
+  "reason": "long",
+  "words": 31,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-8e55098372ca524e",
+  "reason": "series",
+  "words": 25,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-92ad912efe3ed26e",
+  "reason": "long",
+  "words": 32,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-9d8b303c25c4bea9",
+  "reason": "series",
+  "words": 26,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-9ef2ed63c49e3a36",
+  "reason": "series",
+  "words": 21,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-a110ac9bd785a650",
+  "reason": "series",
+  "words": 28,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-aedca5ef426d473e",
+  "reason": "series",
+  "words": 20,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-b71b28994609fb42",
+  "reason": "series",
+  "words": 24,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-ba5c1d68390527a0",
+  "reason": "series",
+  "words": 23,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-c0d13f0fbe0fa474",
+  "reason": "long",
+  "words": 34,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-cfb202bdb4edf59e",
+  "reason": "long",
+  "words": 43,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-eab587fa6355e63b",
+  "reason": "series",
+  "words": 28,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-efa82b52f0552758",
+  "reason": "series",
+  "words": 26,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-f58e1375c7b81b1c",
+  "reason": "series",
+  "words": 21,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "CHK-f8986f2a42dc1f25",
+  "reason": "series",
+  "words": 23,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "MISS-74e0fcb4bef0a56e",
+  "reason": "long",
+  "words": 31,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "MISS-a7da48daa4c27f9d",
+  "reason": "series",
+  "words": 27,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "MISS-bd26202f4133e76e",
+  "reason": "long",
+  "words": 31,
+  "pool_size": 57
+ },
+ {
+  "doc": "afi17-203",
+  "id": "MISS-ecf7715dc6d0d339",
+  "reason": "long",
+  "words": 33,
+  "pool_size": 57
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-01de2716d93e4c50",
+  "reason": "series",
+  "words": 20,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-02fcdfd5f464816e",
+  "reason": "series",
+  "words": 25,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-07b27a1d20ac9283",
+  "reason": "series",
+  "words": 26,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-0a53789b19d8a7a7",
+  "reason": "long",
+  "words": 33,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-0bf5ee4944825079",
+  "reason": "long",
+  "words": 37,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-1cbb4677c843c04b",
+  "reason": "series",
+  "words": 28,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-1cfc1aee588ebdc6",
+  "reason": "long",
+  "words": 42,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-25a7d67a66dd90b8",
+  "reason": "series",
+  "words": 27,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-25b0c10c18356269",
+  "reason": "long",
+  "words": 35,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-2ae00643b0384401",
+  "reason": "series",
+  "words": 24,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-2b21ba9a385dd2be",
+  "reason": "series",
+  "words": 21,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-30fc90d488088d8a",
+  "reason": "long",
+  "words": 41,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-35e15a340ce2b048",
+  "reason": "series",
+  "words": 24,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-3ae35b57d37cef0d",
+  "reason": "long",
+  "words": 36,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-3b405e58cc816486",
+  "reason": "series",
+  "words": 20,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-44d9700a2a55895c",
+  "reason": "series",
+  "words": 28,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-45fe1d2bf0d8cfb2",
+  "reason": "series",
+  "words": 27,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-4b67c429429da615",
+  "reason": "long",
+  "words": 34,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-63e1753f026210c5",
+  "reason": "long",
+  "words": 32,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-6663f5540e201056",
+  "reason": "series",
+  "words": 25,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-7a10436b417d1af4",
+  "reason": "long",
+  "words": 39,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-8522846878ef7e51",
+  "reason": "series",
+  "words": 22,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-917a4da03a560a78",
+  "reason": "long",
+  "words": 39,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-9cc29e56da5967b6",
+  "reason": "series",
+  "words": 28,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-9ffd31514872e8ba",
+  "reason": "long",
+  "words": 36,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-a2a76a3f0691e196",
+  "reason": "long",
+  "words": 36,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-acc679743f53a464",
+  "reason": "series",
+  "words": 20,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-ae5a0eefaabca4b3",
+  "reason": "series",
+  "words": 21,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-b1f23c780d8a10c5",
+  "reason": "series",
+  "words": 29,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-b8ffe0ff03f5938a",
+  "reason": "long",
+  "words": 51,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-bb1d57f4a44e18f3",
+  "reason": "series",
+  "words": 22,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-c3379828a9ce5b51",
+  "reason": "series",
+  "words": 27,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-c3541806cd174004",
+  "reason": "series",
+  "words": 27,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-c6bfac4b0a63de81",
+  "reason": "series",
+  "words": 29,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-d6fe83fb8a948e68",
+  "reason": "long",
+  "words": 31,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-e32a238e757a5507",
+  "reason": "long",
+  "words": 32,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-e702260ad5cd221a",
+  "reason": "long",
+  "words": 34,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "CHK-f604424ebb42aba8",
+  "reason": "series",
+  "words": 22,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "MISS-b3f779f445326cba",
+  "reason": "series",
+  "words": 24,
+  "pool_size": 150
+ },
+ {
+  "doc": "dafman17-1305",
+  "id": "MISS-fc30f1fe137097bc",
+  "reason": "series",
+  "words": 26,
+  "pool_size": 150
+ }
+]
