@@ -14,6 +14,8 @@ from datetime import datetime
 from core.display import citation_label
 from services.tier_tag import tier_of
 
+_CRITICALITY_CSV_COLUMNS = ["criticality_score", "criticality_flag"]  # appended only when the checklist carries rough criticality scores
+
 # CSV column order: locate → ask → record → verify → trace
 _CSV_COLUMNS = [
     "source_ref",
@@ -122,10 +124,12 @@ def _csv_row(item: dict) -> dict:
 def to_csv(checklist: dict) -> str:
     """Return the checklist items as a CSV string (UTF-8, Excel-friendly)."""
     buf = io.StringIO()
-    writer = csv.DictWriter(buf, fieldnames=_CSV_COLUMNS, lineterminator="\r\n")
+    rows = checklist.get("items", []) + checklist.get("possible_missed", [])
+    extra = _CRITICALITY_CSV_COLUMNS if any("criticality_score" in i for i in rows) else []  # without scores the file is exactly what it was
+    writer = csv.DictWriter(buf, fieldnames=_CSV_COLUMNS + extra, lineterminator="\r\n")
     writer.writeheader()
-    for item in checklist.get("items", []) + checklist.get("possible_missed", []):
-        writer.writerow(_csv_row(item))
+    for item in rows:
+        writer.writerow({**_csv_row(item), **({"criticality_score": item.get("criticality_score", ""), "criticality_flag": "look first" if item.get("criticality_flag") else ""} if extra else {})})
     return buf.getvalue()
 
 
@@ -152,6 +156,8 @@ def _md_item(item: dict, index: int) -> str:
     tier = tier_of(item)
     if tier:
         lines.append(f"**Tier:** {tier}  ")
+    if "criticality_score" in item:
+        lines.append(f"**Rough criticality:** {_criticality_text(item)}  ")
     tags = _join(item.get("domain_tags") or [], ", ")
     if tags:
         lines.append(f"**Domain Tags:** {tags}  ")
@@ -276,12 +282,30 @@ def _when(stamp: object) -> str:
     return parsed.strftime("%Y-%m-%d %H:%M") + suffix
 
 
+def _criticality_text(item: dict) -> str:
+    """"look first, 4.1" for a flagged row, "3.2" for a scored row that is not; empty when the row has no score."""
+    if "criticality_score" not in item:
+        return ""
+    return f"look first, {item['criticality_score']}" if item.get("criticality_flag") else str(item["criticality_score"])
+
+
+def _xlsx_columns(items: list[dict]) -> list[tuple]:
+    """The sheet's columns; the rough-criticality column follows the audit question only when some row has a score, so a checklist without scores is laid out as before."""
+    if not any("criticality_score" in i for i in items):
+        return _XLSX_COLUMNS
+    cols = list(_XLSX_COLUMNS)
+    at = next(n for n, c in enumerate(cols) if c[1] == "audit_question") + 1
+    cols.insert(at, ("Priority (rough)", "criticality", 12, False, "Ask"))
+    return cols
+
+
 def _xlsx_values(item: dict) -> dict:
     """One item's cell values by column key; text cells are guarded against being read as formulas."""
     return {
         "attention": "!" if _needs_attention(item) else "",
         "source_quote": _csv_safe(item.get("source_quote") or ""),
         "audit_question": _csv_safe(item.get("audit_question") or ""),
+        "criticality": _criticality_text(item),
         "status": _csv_safe(item.get("status") or ""),
         "assessor_notes": _csv_safe(item.get("assessor_notes") or ""),
         # the tool's hints, then the specific review reasons: the Reasons column is not on the sheet, so a row marked "!" for a reason alone still says why
@@ -324,13 +348,14 @@ def to_xlsx(checklist: dict, *, workbook=None, sheet_title: str = "Checklist") -
     box = Border(left=hairline, right=hairline, top=hairline, bottom=hairline)
     marker_fill = PatternFill("solid", fgColor="FDE68A")
 
-    keys = [c[1] for c in _XLSX_COLUMNS]
-    col_of = {key: n for n, key in enumerate(keys, start=1)}
-    widths = {c[1]: c[2] for c in _XLSX_COLUMNS}
-    status_col, conf_col = col_of["status"], col_of["confidence"]
-    last_col = len(_XLSX_COLUMNS)
-
     items_all = checklist.get("items", [])
+    columns = _xlsx_columns(items_all)
+    keys = [c[1] for c in columns]
+    col_of = {key: n for n, key in enumerate(keys, start=1)}
+    widths = {c[1]: c[2] for c in columns}
+    status_col, conf_col = col_of["status"], col_of["confidence"]
+    last_col = len(columns)
+
     missed = checklist.get("possible_missed", [])
     title = _xlsx_title(checklist)
 
@@ -367,7 +392,7 @@ def to_xlsx(checklist: dict, *, workbook=None, sheet_title: str = "Checklist") -
 
     # Row 3: the column groups, each band in its own color (a group is a run of neighbouring columns)
     spans: list[tuple[str, int, int]] = []
-    for n, (_h, _k, _w, _wrap, group) in enumerate(_XLSX_COLUMNS, start=1):
+    for n, (_h, _k, _w, _wrap, group) in enumerate(columns, start=1):
         if spans and spans[-1][0] == group:
             spans[-1] = (group, spans[-1][1], n)
         else:
@@ -384,7 +409,7 @@ def to_xlsx(checklist: dict, *, workbook=None, sheet_title: str = "Checklist") -
     ws.row_dimensions[_XLSX_GROUP_ROW].height = 18
 
     # Row 4: the column headers, in the lighter shade of their group's color
-    for col_idx, (header, _key, _w, _wrap, group) in enumerate(_XLSX_COLUMNS, start=1):
+    for col_idx, (header, _key, _w, _wrap, group) in enumerate(columns, start=1):
         band, tint = _XLSX_GROUP_COLORS[group]
         cell = ws.cell(row=_XLSX_HEADER_ROW, column=col_idx, value=header)
         cell.font = Font(name=face, size=10, bold=True, color=ink)
@@ -405,7 +430,7 @@ def to_xlsx(checklist: dict, *, workbook=None, sheet_title: str = "Checklist") -
     ws.add_data_validation(dv)
 
     # Column widths
-    for col_idx, (_h, _k, width, _wrap, _g) in enumerate(_XLSX_COLUMNS, start=1):
+    for col_idx, (_h, _k, width, _wrap, _g) in enumerate(columns, start=1):
         ws.column_dimensions[get_column_letter(col_idx)].width = width
 
     # Tags and confidence are no longer assigned by the pipeline: hide those two columns (kept, so a reader of an older run still has them) unless some row has a value
@@ -418,7 +443,7 @@ def to_xlsx(checklist: dict, *, workbook=None, sheet_title: str = "Checklist") -
         values = _xlsx_values(item)
 
         row_num = ws.max_row + 1
-        for col_idx, (_h, key, _w, wrap, _g) in enumerate(_XLSX_COLUMNS, start=1):
+        for col_idx, (_h, key, _w, wrap, _g) in enumerate(columns, start=1):
             cell = ws.cell(row=row_num, column=col_idx, value=values[key])
             if key in _SMALL_KEYS:
                 cell.font = Font(name=face, size=8, color="6B7280")

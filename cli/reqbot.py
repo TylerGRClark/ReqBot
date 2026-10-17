@@ -1209,7 +1209,7 @@ def cmd_evidence(args: argparse.Namespace) -> int:
 def cmd_questions(args: argparse.Namespace) -> int:
     """Write draft audit questions for a document's checklist rows to a sidecar file (WP-46.6); `reqbot checklist` shows them."""
     from pipeline import progress as _progress
-    from services import audit_questions, checklist_service
+    from services import audit_questions, checklist_service, criticality
 
     if getattr(args, "progress_json", False):
         _progress.enable()
@@ -1228,6 +1228,14 @@ def cmd_questions(args: argparse.Namespace) -> int:
     print(f"Draft audit questions for {args.doc}: {counts}\nWritten to: {path}", file=sys.stderr if _progress.enabled() else sys.stdout)
     if counts.get("aborted"):
         log.error("Stopped: the model could not be reached %d times in a row (%s). Rows already written were kept.", audit_questions.MAX_CONSECUTIVE_FAILURES, args.ollama_url)
+    elif not getattr(args, "no_criticality", False):
+        # second job, its own model call per row: a rough "look first" score (docs/CRITICALITY_FLAG_PLAN.md). A model service without token probabilities leaves the column blank
+        crit = criticality.score_rows(
+            checklist["items"], criticality.sidecar_path(checklist_service.requirements_path(processed_dir, args.doc)), model=args.model, ollama_url=args.ollama_url, document=args.doc, skip_ids=criticality.withheld_ids(path),
+            progress=lambda c: log.info("criticality so far: %s", c), on_row=lambda done, total: _progress.emit("criticality", done, total),
+        )
+        print(f"Rough criticality for {args.doc}: {crit}", file=sys.stderr if _progress.enabled() else sys.stdout)
+        counts["errors"] += crit["errors"]
     if not counts["errors"]:
         _progress.emit("done")
     return 1 if counts["errors"] else 0
@@ -2180,6 +2188,7 @@ def main() -> None:
     p_questions.add_argument("--profile", type=str, default="cybersecurity", help="Domain profile name (default: cybersecurity)")
     p_questions.add_argument("--model", type=str, default="qwen2.5:14b", help="Ollama model that writes the questions (default: qwen2.5:14b)")
     p_questions.add_argument("--ollama-url", type=str, default=_cfg.ollama_url, dest="ollama_url")
+    p_questions.add_argument("--no-criticality", action="store_true", dest="no_criticality", help="Skip the rough criticality score (a second model call per row) that is written beside the questions")
     p_questions.add_argument("--progress-json", action="store_true", dest="progress_json", help="Print one JSON progress line per row on stdout (used by the job runner)")
 
     # trace

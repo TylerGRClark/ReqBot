@@ -225,6 +225,8 @@ reqbot checklist --doc policy --format xlsx --output checklist.xlsx   # the Audi
 
 Writes one draft yes/no audit question per checklist row to `<doc>_audit_questions.jsonl` beside the document's requirements, using the local Ollama model (default `qwen2.5:14b`; `--model`, `--ollama-url`). Rows that look like fragments, definitions or descriptions get no question. A question that mentions a number, acronym or name not found in the row's own text is kept and marked in the row's notes. Questions are drafts for the auditor to check; rerunning reuses unchanged rows and retries failed ones. Building a checklist never calls a model.
 
+The same command then adds a rough criticality flag, a second model call per row (skip it with `--no-criticality`), written to `<doc>_criticality.jsonl`. The score is the model's own probability-weighted 1 to 5 reading of how serious a miss would be, averaged over three wordings; the top quarter of the document's rows (`REQBOT_CRITICALITY_FLAG_SHARE` changes the share) are marked "look first" in a separate checklist column ("Priority (rough)" in the spreadsheet, `criticality_score` and `criticality_flag` in CSV and JSON), next to but apart from the compliance tier. It is a rough filter for where to look first, not a severity rating: it ranks rows within one document and a small model is coarser than a large one. It needs a model service that returns token probabilities (Ollama does); otherwise the column stays blank. Checklists made before any scores exist are unchanged. Plan and evidence: [CRITICALITY_FLAG_PLAN.md](CRITICALITY_FLAG_PLAN.md).
+
 ## kinds
 
 ```bash
