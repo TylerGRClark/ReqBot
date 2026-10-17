@@ -28,18 +28,18 @@ Limits to state on the label: the judges agree with each other more (0.86 on Air
 
 ## 3. Design
 
-- **Same job, second call.** `reqbot questions` (and the queued job it already has) gains a second pass per eligible row. Both write beside the document's requirements: questions to `*_audit_questions.jsonl` as today, scores to a new sidecar `*_criticality.jsonl` (the same pattern: keyed by row, with an input hash so a changed row or model recomputes it). No change to the requirements records, no re-extraction, no Qdrant change.
+- **Same job, second call.** `reqbot questions` (and the queued job it already has) gains a second pass per eligible row. Both write beside the document's requirements: questions to `*_audit_questions.jsonl` as today, scores to a new sidecar `*_criticality.jsonl` (the same pattern: keyed by row, with an input hash so a changed row or model recomputes it). The new sidecar is added to the list of per-document files, so removing or moving a document handles it like the questions file. No change to the requirements records, no re-extraction, no Qdrant change.
 - **The call.** One request per row to `/api/chat` with `logprobs` and `top_logprobs`, one generated token, temperature 0. Score = expected value of the digits 1 to 5 over the returned probabilities. The prompt is the plain scale plus the row's quote and parent passage as context. The three wordings are three requests; the stored score is their mean, so a row costs three tiny calls (each generates one token).
 - **The flag.** Per document, rank rows by score; the top quarter get "look first" and the rest are unflagged. The stored number is also shown, rounded, as "rough criticality (model)". The cut is 25% by default and is a setting.
 - **Fallbacks.** If the model service does not return probabilities (not Ollama, or an old version), the column stays blank for that document and the job log says why. It never invents a score. Rows skipped by the questions rules (fragments, definitions, headings) are also skipped here.
 - **Checklist.** One new column, plain header, with the label "rough filter" and a one-line note. Sorting and filtering by it is optional extra.
-- **Existing 0 to 10 "second opinion" score** (`wants_second_opinion`, `ask_score`) is a different job: it decides whether an unclear row is a real requirement. It is not replaced and shares no code path; the plan keeps the names distinct.
+- **Existing 0 to 10 "second opinion" score** (`wants_second_opinion`, `ask_score`) is a different job: it decides whether an unclear row is a real requirement. It is not replaced and shares no code path; the plan keeps the names distinct. That job runs inside the questions pass for unclear rows only; the criticality pass runs after it, once per eligible row, so a run of the questions job can make up to four calls for a row (a second opinion for unclear rows, the question, and three one-token score reads). Rows the questions job withholds a question from (the model answered null, or the second opinion scored them low) get no score and no flag.
 
 ## 4. Gates before merge (all registered here, before any code is run)
 
 1. The product code, run on the three frozen sets above with the same model settings, reproduces the experiment numbers within 0.03 (rank agreement) and 1 row (important rows found). The experiment scripts stay the reference.
 2. With the toggle off, nothing changes: the checklist and sidecars are byte-for-byte as before.
-3. Missing probabilities, a dead server and a changed model all degrade to a blank column with a logged reason (unit tests with a stubbed call).
+3. Missing probabilities and a dead server degrade to a blank column with a logged reason; a stored score written for another model or for changed row text is ignored until the job is run again (unit tests with a stubbed call).
 4. No real hostnames or addresses in tracked files; docs updated (configuration, architecture, checklist).
 
 ## 5. Stop and ask before building
