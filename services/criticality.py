@@ -22,7 +22,8 @@ from services import audit_questions
 log = logging.getLogger(__name__)
 
 NUM_CTX = audit_questions.NUM_CTX  # the same context size as the questions job, so the model is not reloaded between the two jobs
-FLAG_SHARE = 0.25
+# Bands by rank within one document (the ranking is what the evidence supports, not the raw number): the top quarter is "look first" and is split into Critical and High
+BANDS = (("Critical", 0.05), ("High", 0.25), ("Medium", 0.60), ("Low", 1.0))  # (label, cumulative share of the scored rows)
 MAX_QUOTE_CHARS = 1500
 MAX_CONSECUTIVE_FAILURES = audit_questions.MAX_CONSECUTIVE_FAILURES
 CONTEXT = "requirement from a regulation or policy document"  # used when no document name is given; a named document ("requirement from the publication AFI 17-203") scored closer to the frontier judges
@@ -55,14 +56,6 @@ def sidecar_path(requirements_path: Path) -> Path:
     """`<doc>_criticality.jsonl` beside `<doc>_requirements_*.jsonl`."""
     name = re.sub(r"_requirements_(?:normalized|enriched|gated)\.jsonl$", "", requirements_path.name)
     return requirements_path.with_name(f"{name}_criticality.jsonl")
-
-
-def flag_share() -> float:
-    try:
-        value = float(os.environ.get("REQBOT_CRITICALITY_FLAG_SHARE", "") or FLAG_SHARE)
-    except ValueError:
-        return FLAG_SHARE
-    return value if 0 < value < 1 else FLAG_SHARE
 
 
 def context_for(document: str = "") -> str:
@@ -195,9 +188,10 @@ def score_rows(items: list[dict], path: Path, *, model: str = audit_questions.MO
     return counts
 
 
-def apply(items: list[dict], path: Path, share: float | None = None, skip_ids: frozenset | set = frozenset()) -> int:
-    """Put `criticality_score` (1 to 5, one decimal) on checklist items from the sidecar, and `criticality_flag` on the top share of the scored rows; returns how many rows are flagged.
-    A record written from a different row text or model is stale and ignored. Rows without a record are left as they are, so with no sidecar nothing changes."""
+def apply(items: list[dict], path: Path, skip_ids: frozenset | set = frozenset()) -> int:
+    """Put `criticality` (Critical, High, Medium or Low, by the row's rank among the document's scored rows) on checklist items from the sidecar; returns how many rows are scored.
+    The 1 to 5 number stays in the sidecar and is never shown. A record written from a different row text, model or document name is stale and ignored. Rows without a record are left as
+    they are, so with no sidecar nothing changes."""
     records = load(path)
     scored = []
     for item in items:
@@ -206,12 +200,8 @@ def apply(items: list[dict], path: Path, share: float | None = None, skip_ids: f
             continue
         if rec.get("input_hash") != input_hash(item, rec.get("model", audit_questions.MODEL), rec.get("context", CONTEXT)):
             continue
-        item["criticality_score"] = round(rec["score"], 1)
         scored.append((-rec["score"], item["checklist_item_id"], item))
-    if not scored:
-        return 0
     scored.sort(key=lambda t: (t[0], t[1]))
-    n = max(1, round(len(scored) * (share or flag_share())))
-    for _s, _id, item in scored[:n]:
-        item["criticality_flag"] = True
-    return n
+    for rank, (_s, _id, item) in enumerate(scored, start=1):
+        item["criticality"] = next(label for label, upto in BANDS if rank <= max(1, round(len(scored) * upto)))
+    return len(scored)

@@ -14,7 +14,7 @@ from datetime import datetime
 from core.display import citation_label
 from services.tier_tag import tier_of
 
-_CRITICALITY_CSV_COLUMNS = ["criticality_score", "criticality_flag"]  # appended only when the checklist carries rough criticality scores
+_CRITICALITY_CSV_COLUMNS = ["criticality"]  # appended only when the checklist carries rough criticality bands
 
 # CSV column order: locate → ask → record → verify → trace
 _CSV_COLUMNS = [
@@ -125,11 +125,11 @@ def to_csv(checklist: dict) -> str:
     """Return the checklist items as a CSV string (UTF-8, Excel-friendly)."""
     buf = io.StringIO()
     rows = checklist.get("items", []) + checklist.get("possible_missed", [])
-    extra = _CRITICALITY_CSV_COLUMNS if any("criticality_score" in i for i in rows) else []  # without scores the file is exactly what it was
+    extra = _CRITICALITY_CSV_COLUMNS if any("criticality" in i for i in rows) else []  # without scores the file is exactly what it was
     writer = csv.DictWriter(buf, fieldnames=_CSV_COLUMNS + extra, lineterminator="\r\n")
     writer.writeheader()
     for item in rows:
-        writer.writerow({**_csv_row(item), **({"criticality_score": item.get("criticality_score", ""), "criticality_flag": "look first" if item.get("criticality_flag") else ""} if extra else {})})
+        writer.writerow({**_csv_row(item), **({"criticality": item.get("criticality", "")} if extra else {})})
     return buf.getvalue()
 
 
@@ -156,8 +156,8 @@ def _md_item(item: dict, index: int) -> str:
     tier = tier_of(item)
     if tier:
         lines.append(f"**Tier:** {tier}  ")
-    if "criticality_score" in item:
-        lines.append(f"**Rough criticality:** {_criticality_text(item)}  ")
+    if item.get("criticality"):
+        lines.append(f"**Rough criticality:** {item['criticality']}  ")
     tags = _join(item.get("domain_tags") or [], ", ")
     if tags:
         lines.append(f"**Domain Tags:** {tags}  ")
@@ -282,20 +282,13 @@ def _when(stamp: object) -> str:
     return parsed.strftime("%Y-%m-%d %H:%M") + suffix
 
 
-def _criticality_text(item: dict) -> str:
-    """"look first, 4.1" for a flagged row, "3.2" for a scored row that is not; empty when the row has no score."""
-    if "criticality_score" not in item:
-        return ""
-    return f"look first, {item['criticality_score']}" if item.get("criticality_flag") else str(item["criticality_score"])
-
-
 def _xlsx_columns(items: list[dict]) -> list[tuple]:
-    """The sheet's columns; the rough-criticality column follows the audit question only when some row has a score, so a checklist without scores is laid out as before."""
-    if not any("criticality_score" in i for i in items):
+    """The sheet's columns; the rough-criticality column (Critical, High, Medium or Low) follows the audit question only when some row has a score, so a checklist without scores is laid out as before."""
+    if not any("criticality" in i for i in items):
         return _XLSX_COLUMNS
     cols = list(_XLSX_COLUMNS)
     at = next(n for n, c in enumerate(cols) if c[1] == "audit_question") + 1
-    cols.insert(at, ("Priority (rough)", "criticality", 12, False, "Ask"))
+    cols.insert(at, ("Criticality (rough)", "criticality", 12, False, "Ask"))
     return cols
 
 
@@ -305,7 +298,7 @@ def _xlsx_values(item: dict) -> dict:
         "attention": "!" if _needs_attention(item) else "",
         "source_quote": _csv_safe(item.get("source_quote") or ""),
         "audit_question": _csv_safe(item.get("audit_question") or ""),
-        "criticality": _criticality_text(item),
+        "criticality": item.get("criticality", ""),
         "status": _csv_safe(item.get("status") or ""),
         "assessor_notes": _csv_safe(item.get("assessor_notes") or ""),
         # the tool's hints, then the specific review reasons: the Reasons column is not on the sheet, so a row marked "!" for a reason alone still says why

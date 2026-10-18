@@ -80,28 +80,29 @@ def test_an_unreachable_server_stops_after_five_failures_in_a_row_and_keeps_earl
     assert set(CR.load(tmp_path / "c.jsonl")) == {"CL-0"}
 
 
-def test_the_top_quarter_is_flagged_and_every_scored_row_gets_its_number(tmp_path):
-    items = [_item(i, f"Duty number {i}.") for i in range(8)]
-    table = {f"Duty number {i}.": {1: 1.0 - i / 8, 5: i / 8} for i in range(8)}
+def test_rows_get_a_band_by_rank_and_no_number(tmp_path):
+    items = [_item(i, f"Duty number {i}.") for i in range(20)]
+    table = {f"Duty number {i}.": {1: 1.0 - i / 20, 5: i / 20} for i in range(20)}
     CR.score_rows(items, tmp_path / "c.jsonl", call=_call(table))
-    assert CR.apply(items, tmp_path / "c.jsonl") == 2
-    assert [i["checklist_item_id"] for i in items if i.get("criticality_flag")] == ["CL-6", "CL-7"]
-    assert all("criticality_score" in i for i in items) and items[7]["criticality_score"] > items[0]["criticality_score"]
+    assert CR.apply(items, tmp_path / "c.jsonl") == 20
+    bands = [i["criticality"] for i in sorted(items, key=lambda i: -int(i["checklist_item_id"][3:]))]
+    assert bands == ["Critical"] + ["High"] * 4 + ["Medium"] * 7 + ["Low"] * 8
+    assert not any("criticality_score" in i or "criticality_flag" in i for i in items)
+
+
+def test_a_single_scored_row_is_critical_not_empty(tmp_path):
+    items = [_item(1, "Alpha duty.")]
+    CR.score_rows(items, tmp_path / "c.jsonl", call=lambda p: {3: 1.0})
+    CR.apply(items, tmp_path / "c.jsonl")
+    assert items[0]["criticality"] == "Critical"
 
 
 def test_with_no_sidecar_or_a_stale_record_nothing_is_added(tmp_path):
     items = [_item(1, "Alpha duty.")]
-    assert CR.apply(items, tmp_path / "missing.jsonl") == 0 and "criticality_score" not in items[0]
+    assert CR.apply(items, tmp_path / "missing.jsonl") == 0 and "criticality" not in items[0]
     CR.score_rows(items, tmp_path / "c.jsonl", call=lambda p: {5: 1.0})
     changed = [_item(1, "Alpha duty changed.")]
-    assert CR.apply(changed, tmp_path / "c.jsonl") == 0 and "criticality_score" not in changed[0]
-
-
-def test_the_flag_share_can_be_set_and_a_bad_value_falls_back(monkeypatch):
-    monkeypatch.setenv("REQBOT_CRITICALITY_FLAG_SHARE", "0.5")
-    assert CR.flag_share() == 0.5
-    monkeypatch.setenv("REQBOT_CRITICALITY_FLAG_SHARE", "banana")
-    assert CR.flag_share() == CR.FLAG_SHARE
+    assert CR.apply(changed, tmp_path / "c.jsonl") == 0 and "criticality" not in changed[0]
 
 
 def test_ollama_reply_without_probabilities_raises_unavailable(monkeypatch):
@@ -135,20 +136,19 @@ def test_exports_without_scores_have_no_criticality_column():
     env = _env([_item(1)])
     assert "criticality" not in to_csv(env)
     ws = openpyxl.load_workbook(io.BytesIO(to_xlsx(env))).active
-    assert "Priority (rough)" not in [ws.cell(row=4, column=c).value for c in range(1, ws.max_column + 1)]
+    assert "Criticality (rough)" not in [ws.cell(row=4, column=c).value for c in range(1, ws.max_column + 1)]
     assert "Rough criticality" not in to_markdown(env)
 
 
-def test_exports_with_scores_show_the_flag_and_the_number():
-    env = _env([_item(1, criticality_score=4.2, criticality_flag=True), _item(2, "Second duty.", criticality_score=2.1)])
+def test_exports_with_bands_show_the_word_and_no_number():
+    env = _env([_item(1, criticality="Critical"), _item(2, "Second duty.", criticality="Low")])
     rows = list(csv.DictReader(io.StringIO(to_csv(env))))
-    assert (rows[0]["criticality_score"], rows[0]["criticality_flag"], rows[1]["criticality_flag"]) == ("4.2", "look first", "")
+    assert (rows[0]["criticality"], rows[1]["criticality"]) == ("Critical", "Low")
     ws = openpyxl.load_workbook(io.BytesIO(to_xlsx(env))).active
     headers = [ws.cell(row=4, column=c).value for c in range(1, ws.max_column + 1)]
-    col = headers.index("Priority (rough)") + 1
-    assert headers[col - 2] == "Audit Question (draft)" and ws.cell(row=5, column=col).value == "look first, 4.2" and ws.cell(row=6, column=col).value == "2.1"
-    assert "**Rough criticality:** look first, 4.2" in to_markdown(env)
-    assert json.loads(json.dumps(env))["items"][0]["criticality_flag"] is True
+    col = headers.index("Criticality (rough)") + 1
+    assert headers[col - 2] == "Audit Question (draft)" and ws.cell(row=5, column=col).value == "Critical" and ws.cell(row=6, column=col).value == "Low"
+    assert "**Rough criticality:** Critical" in to_markdown(env)
 
 
 def test_the_document_name_goes_into_the_prompt_and_a_record_with_another_context_is_stale(tmp_path):
@@ -195,4 +195,4 @@ def test_rows_the_questions_job_withheld_get_no_score_and_no_flag(tmp_path):
     assert counts["scored"] == 2 and set(CR.load(tmp_path / "c.jsonl")) == {"CL-1", "CL-3"}
     CR.score_rows(items, tmp_path / "c2.jsonl", call=lambda p: {4: 1.0})  # scored before the questions result was known
     CR.apply(items, tmp_path / "c2.jsonl", skip_ids=withheld)
-    assert "criticality_score" not in items[1] and "criticality_score" in items[0]
+    assert "criticality" not in items[1] and "criticality" in items[0]
