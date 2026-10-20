@@ -7,7 +7,7 @@
 - A third job beside draft audit questions and the criticality flag: one toggle in the enhancement settings, **off by default**, its own model call per row.
 - **Optional model setting** ("cleanup model"), empty by default so first-time setup gains no new required field. Empty means the main model, the same fallback pattern as the extraction and enrichment models. Help text says a larger model removes about twice as much.
 - **Phase 1: double flag.** The row keeps its Critical / High / Medium / Low rating and also carries the junk flag, so we can see how often a row is both. **Phase 2 (tracked, see section 5):** once the overlap is near zero, make the two mutually exclusive.
-- Display: the existing Priority column carries the flag (for example "High · junk") so one filter covers both. The stored rating is never overwritten.
+- Display: the existing criticality column (xlsx header "Criticality (rough)", CSV `criticality`; the owner calls it Priority) carries the flag as a suffix, for example "High · junk", so one filter covers both. The stored rating is never overwritten. **Migration:** none. The column keeps its name and position; a row without the flag shows exactly the value it shows today, so nothing changes for existing sheets or for anyone filtering on Critical/High/Medium/Low; the suffix appears only after a cleanup pass has run, and only on flagged rows. A row the criticality job did not rate but cleanup flagged shows "junk" alone. Sheets are rebuilt from the sidecars, so no stored data is converted.
 - One locked wording, no user-editable prompt.
 
 ## 2. Evidence (so the label is honest)
@@ -24,7 +24,7 @@ Limits to state: one labeler family; 12 documents; a stricter wording helped onl
 
 ## 3. Design
 - `services/cleanup.py`: the locked prompt, one request per eligible row to `/api/chat` (temperature 0, 4 tokens, thinking off where the model supports it), "NO" means flag, anything else keeps the row. Sidecar `<doc>_cleanup.jsonl` keyed by row with an input hash (row text, passage, model, prompt version) so changes recompute it. Added to the per-document artifact list.
-- Runs inside `reqbot questions` as a third pass, after criticality, only when enabled. Rows the questions job withheld are skipped as for criticality. Failures degrade to no flag and a logged reason; five consecutive connection failures stop the pass.
+- Runs inside `reqbot questions` as a third pass, after criticality, only when enabled. **It judges every row after Step D, including rows the questions job withheld a question from** (those are where the junk is most likely, and the tested population included them); it does not use the criticality rank, so withheld rows may carry the junk flag with no rating. Rows with no chunk text to show the model are left unflagged. Failures degrade to no flag and a logged reason; five consecutive connection failures stop the pass.
 - The model sees the row's quote and its chunk text, as in the tests.
 - Checklist: the Priority cell and CSV/Markdown carry "junk"; no model call at build time.
 
