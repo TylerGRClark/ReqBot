@@ -203,12 +203,16 @@ do not report a suite that never collected as a passing run.
 ### Optional local pre-push review
 
 `python3 .github/scripts/local_review.py` asks the local Ollama model (the
-`synthesis_model` and `ollama_url` from ReqBot's config) to review the branch's
-tracked changes against `origin/main` before pushing. It is advisory: it always
+`default_model` and `ollama_url` from ReqBot's config) to review the branch's
+tracked changes against `origin/main` before pushing. It uses the same
+instructions, answer format and inputs as the Gemini CI reviewer (the diff, the
+architecture brief and the full changed files). Measured on 108 past reviewed
+commits it found about 7% of what Codex later found, in about 16 seconds a
+review: a cheap smoke check, not a replacement for Codex or Gemini. It is advisory: it always
 exits 0, a clean result is not approval, and it does not replace CI, Codex or
 Gemini on the pushed candidate. It costs no API quota and sends nothing off the
 local network. Run it after the deterministic checks above. Data files such as
 `*.jsonl` are excluded; a diff over about 32 KB is refused rather than
-truncated (pass paths to review a part). New files must be known to git
+truncated; changed files beyond 60 KB are left out and the run says so (pass paths to review a part). New files must be known to git
 (`git add -N <file>`); untracked files are never read. Do not run it while a
 long extraction is using the same Ollama GPU.
