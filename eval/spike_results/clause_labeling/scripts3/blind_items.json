@@ -1,0 +1,835 @@
+[
+ {
+  "id": "R001",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.4. Authorization.",
+  "paragraph": "5.4.4.1.4.  If an individual violates the information system terms of use, commanders should consider suspending access pending re-accomplishment of Cyber Awareness Challenge training.  Violations identified by the AFNET Mission Assurance Center result in automatic account suspension.  Additional restrictions on reinstatements for classified information systems are determined locally and should follow the guidelines of DoD 8570.01-M.\n5.4.4.2.  DD Form 2875, System Authorization Access Request (SAAR), is completed and digitally signed by the user. The Government sponsor verifies the justification and need for access and digitally signs the form before routing to the Security Manager. The Security Manager  performs  a  security  clearance  and  background  investigation  verification  and\ndigitally signs the form before routing for account creation, in accordance with DoDM 5200.02_AFMAN 16-1405 and AFMAN17-1301.",
+  "candidate": "Violations identified by the AFNET Mission Assurance Center result in automatic account suspension."
+ },
+ {
+  "id": "R002",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.7. Virtual Smart Card (VSC).",
+  "paragraph": "- 4.7.2.2.  A DPC shall be issued following verification of the applicant's identity using the PIV authentication key on their existing PIV card by demonstrating possession and control of the related PIV card via the PKI-AUTH authentication mechanism, in accordance with FIPS 201-2, Personal Identity Verification (PIV) for Federal Employees and Contractors . (T-0).\n- 4.7.2.3.  A DPC cannot be used for network logon without the explicit approval of the AF Enterprise AO and the AF CISO. (T-3).\n- 4.8. NIPRNET Enterprise Alternate Token System (NEATS). Implemented  by  the  DISA. NEATS Alternate TAs will be appointed at every base. (T-3). They will receive token stock, set up a workstation, and issue NEATS tokens to local administrators, Very Important Persons (VIP), group or role sponsors, and end subscribers. (T-3).",
+  "candidate": "NEATS Alternate TAs will be appointed at every base. (T-3). "
+ },
+ {
+  "id": "R003",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AUDIT CHECKLIST",
+  "paragraph": "pki/_layouts/15/start.aspx#/SitePages/AF%20Public%20Key%20Infrastructure%20Sys tem%20Program%20Office.aspx/html/lra_trg.cfm under the Help Registration Authority.\n- 9.2.3.1.  Items  are  arranged  in  four  sections:  General  LRA  responsibilities;  physical controls; system administrator responsibilities and ISSO responsibilities.\n- 9.2.3.2.  A  completed  LRA  self-assessment  checklist  signed  by  the  LRA's  commander may serve as the LRAs annual or periodic audit requirement.\n- 9.2.4.  RAs/LRAs will maintain a file of requirement validation documentation for organizational account certificates, as appropriate. (T-3).\nLauren Knausenberger, SES, USAF DAF Chief Information Officer",
+  "candidate": "A  completed  LRA  self-assessment  checklist  signed  by  the  LRA's  commander may serve as the LRAs annual or periodic audit requirement."
+ },
+ {
+  "id": "R004",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "6.3. Type of certificates.",
+  "paragraph": "6.3.1.  NPE.  Provide the capability to set up secure communications between relying parties and devices, prevent the connection of unauthorized devices to the Department's networks, and secure existing connections between network devices.\n6.3.1.1.  All private AF Web servers must be issued a DoD X.509 PKI Server certificate. (T-3). 6.3.1.2 A server certificate must be reissued when the fully qualified domain name for the server changes or after three years. (T-3).",
+  "candidate": "Provide the capability to set up secure communications between relying parties and devices, prevent the connection of unauthorized devices to the Department's networks, and secure existing connections between network devices."
+ },
+ {
+  "id": "R005",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "COMPLIANCE WITH THIS PUBLICATION IS MANDATORY",
+  "paragraph": " Department of the Air Force (DAF), Air Force Reserve (AFR), Air National Guard (ANG), and those with contractual obligation to comply with DAF publications, regardless of Air Force  specialty  code,  who  develop,  acquire,  deliver,  use,  operate,  or  manage  ICAM  for  DAF organizations. Ensure all records generated as a result of processes prescribed in this publication adhere  to  AFI  33-322, Records  Management  and  Information  Governance  Program ,  and  are disposed in accordance with the Air Force records disposition schedule located in the Air Force Records Information Management System. Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change  of  Publication ;  route  AF  Forms  847  from  the  field  through  the appropriate  functional  chain  of  command.  This  DAFMAN  may  be  supplemented  but  all supplements  to  this  publication  must  be  routed  to  SAF/CN,  Cybersecurity  Division,  for coordination prior to certification and approval. (T-3). The authorities to waive wing or unit level requirements in this publication are identified with a Tier ('T-0, T-1, T-2, T-3') number following the compliance statement. See DAFI 33-360, Publications and Forms Management , in accordance with DAFI 33-360_DAFGM2020-01, Attachment 3, paragraph 6.5.6.3.5, for a description of the authorities associated with the Tier numbers. Submit requests for waivers through",
+  "candidate": "Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change  of  Publication ;  route  AF  Forms  847  from  the  field  through  the appropriate  functional  chain  of  command. "
+ },
+ {
+  "id": "R006",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.7. Virtual Smart Card (VSC).",
+  "paragraph": "- 4.10.1.  Appointed by the RBAA. Go to https://intelshare.intelink.gov/sites/usafpki/ReferenceDocs/CI-09-03-002_Role-Based_Certificate_Request_Procedures_v1.3.0.pdf ; open the Standard Operating Procedure, then go to Appendix A for the appointment letter template.\n- 4.10.2.  Appoints  a  new  sponsor  before  departing  the  command,  or  the  certificate  will  be marked as compromised and revoked. (T-3).\n- 4.10.3.  Manages certificates in accordance with CNSSI 1300 and NSS PKI DoD RPS.\n- 4.10.4.  Keeps a list of applicable personnel up to date and sends updated copies to the LRA. Go to https://intelshare.intelink.gov/sites/usaf-pki/ReferenceDocs/CI-09-03-002_Role-\nBased_Certificate_Request_Procedures_v1.3.0.pdf ; open the Standard Operating Procedure, then go to Appendix C to obtain the list of applicable personnel template.",
+  "candidate": "Go to https://intelshare.intelink.gov/sites/usafpki/ReferenceDocs/CI-09-03-002_Role-Based_Certificate_Request_Procedures_v1.3.0.pdf ; open the Standard Operating Procedure, then go to Appendix A for the appointment letter template."
+ },
+ {
+  "id": "R007",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "IDENTITY MANAGEMENT",
+  "paragraph": "3.1. Introduction. Identity management is the combination of technical systems, policies, and processes to create, define, govern, and synchronize the ownership, utilization, and safeguarding of digital identities. The primary goal of identity management is to establish a trustworthy process of  assigning  attributes  to  a  digital  identity  and  to  connect  that  identity  to  a  person  or  NPE  in accordance with NIST SP 800-63-3, Digital Identity Guidelines and DoD policies .\n3.1.1.  Identity Assurance Level (IAL) refers to the identity proofing process ( see paragraph 3.3 ).\n3.1.2.  Authenticator  Assurance  Level  (AAL)  refers  to  the  authentication  process  that addresses how an individual can securely authenticate to a CSP to access a digital service or set of digital services.\n- 3.1.3.  Federation  Assurance  Level  refers  to  the  strength  of  an  assertion  in  a  federated environment used to communicate authentication and attribute information (if applicable) to an RP.\n- 3.2. Identity. Identity  is  the  set  of  attributes  defining  an  individual  within  a  given  context  or environment.  The identity associated with an individual or an NPE is used in establishing trust and gaining access to physical or logical cyber resources.",
+  "candidate": "The primary goal of identity management is to establish a trustworthy process of assigning attributes to a digital identity and to connect that identity to a person or NPE in accordance with NIST SP 800-63-3, Digital Identity Guidelines and DoD policies."
+ },
+ {
+  "id": "R008",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "6.3. Type of certificates.",
+  "paragraph": "- 6.3.2.  DoD. These certificates are required for external facing AF server and domains and are issued by the AF RA.\n- 6.3.3.  DAF. These certificates are allowed for internal facing AF server (e.g., web servers, domain name servers), issued by the AF LTMA Sub-CA on NIPRNET.\n- 6.3.4.  Mobile code signing certificate. Code signing and mobile code certificates are specially formatted certificates used for digitally signing executable program code in any number of languages or formats. The code signing certificate binds the identity attributes of the owning organization and the hash of the executable code to the credential to provide assurance that the code has not been altered during distribution.\n- 6.3.4.1.  Code signing attribute authority (CSAA) is authorized to appoint individuals to receive and use code-signing certificates.",
+  "candidate": "These certificates are required for external facing AF server and domains and are issued by the AF RA."
+ },
+ {
+  "id": "R009",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "INTRODUCTION",
+  "paragraph": "- 1.3.3.  The  DAF  relies  on  two-factor  authentication  (2FA),  a  digital  identity  bound  to  a credential  used  for  authentication  to  a  relying  party  (RP).    Relying  parties  are  system\napplication owners that support one or multiple credentials, including PKI certificates, security assertion markup language, and other claims-based identifiers.\n1.3.4.  The  DAF  follows  defined  sensitivity  levels  to  determine  appropriate  authentication methods, in accordance with National Institute of Standards and Technology (NIST) Special Publication (SP) 800-63, Digital Identity Series , and DoD Instruction (DoDI) 8520.03, Identity Authentication for Information Systems .\n- 1.3.5.  More restrictive federal, DoD, or DAF guidance take precedence over this publication, (e.g.,  DoDI  8520.02, Public  Key  Infrastructure  (PKI)  and  Public  Key  (PK)  Enabling, and DoDI 8520.03).",
+  "candidate": "The DAF follows defined sensitivity levels to determine appropriate authentication methods, in accordance with National Institute of Standards and Technology (NIST) Special Publication (SP) 800-63, Digital Identity Series , and DoD Instruction (DoDI) 8520.03, Identity Authentication for Information Systems ."
+ },
+ {
+  "id": "R010",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.4. Authorization.",
+  "paragraph": "5.4.3.2.  Tier 2 includes subscribers who can access more than the local system but have restrictions and are generally responsible for upgrading, installing, or repairing systems. Tier 2 privileged subscribers include most AFNET  administrators  who  have  an administrator account and subscribers who have the responsibility to secure information systems.\n5.4.3.3.  Tier  3  includes  individuals  who  have  access  rights  across  most  areas  of  the infrastructure. Members of this group often have full administrative control of domains within  the  enterprise.  Tier  3  privileged  subscribers  include  domain  administrators, enterprise administrators, and network administrators.\n5.4.4.  Required  Documentation.    The  DAF  is  moving  toward  an  automated  account provisioning process.  The process uses attributes managed by the enterprise attribute manager, and authorization is enforced through the service provider.  It remains the service provider's or relying party's responsibility for which attributes ensure proper authorization occurs.",
+  "candidate": "The process uses attributes managed by the enterprise attribute manager, and authorization is enforced through the service provider."
+ },
+ {
+  "id": "R011",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "8.1. PKI/PKE",
+  "paragraph": "8.1.12.1.1.  US DoD X.509 Certificate Policy defines the creation and management of X.509 public key certificates for use in applications requiring communication between networked  computer-based  systems  including  email,  transmission  of  data,  digital signature, and authentication of infrastructure components.  Assurance level credential strengths include Level C for Medium Assurance, Level D for Medium Hardware, and Level E for PIV-Authentication  in accordance with DoDI 8520.02. (T-0).\n- 8.1.12.1.2.  Specifications  for  Medium  Assurance  credential  strength  for  NPEs, software, and hardware are provided in US DoD X.509 Certificate Policy. (T-0).\n8.1.12.2.  Classified information and information systems.",
+  "candidate": "Assurance level credential strengths include Level C for Medium Assurance, Level D for Medium Hardware, and Level E for PIV-Authentication  in accordance with DoDI 8520.02. (T-0)."
+ },
+ {
+  "id": "R012",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.4. Authorization.",
+  "paragraph": "5.4.3.  Privileged. Authorized (and, therefore, trusted) to perform functions on an unclassified and classified IS based on the assigned duties and the Automated Information System positioncertified, in accordance with DoDM 5200.02_AFMAN16-1405, Air Force Personnel Security Program ,  DoD  8570.01-M,  and  AFMAN  17-1303.    Privileged  subscribers  are  required  to authenticate with a hardware-based PKI credential or via IFS method ( see paragraph 4.2 ). (T3). Privileged subscribers are separated into a tier system, in accordance with DoDD 5205.16, The DoD Insider Threat Program.\n5.4.3.1.  Tier  1  is  the  lowest  level  of  privileged  access  and  network  rights.  Includes subscribers who service and maintain single endpoint devices; cannot access or modify networks; can install software; can modify network settings; and enable or disable services on individual computers.  Tier 1 privileged subscribers include local-system administrators and client support team members.",
+  "candidate": "Includes subscribers who service and maintain single endpoint devices; cannot access or modify networks; can install software; can modify network settings; and enable or disable services on individual computers."
+ },
+ {
+  "id": "R013",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.9.7.  Researches  alternative  authenticator  form  factors,  including  how  to  accomplish credentialing and identity binding. Provides integration guidance to application and system owners and assists program offices in defining attributes needed for authorization decisions.\n- 2.9.8.  Provides ICAM helpdesk and field support to the DAF and supported CCMDs.\n- 2.9.9.  Integrates AFDS  and  provides  attribute exchange  services between  designated authoritative attribute data sources, DoD, and DAF credential service providers (CSPs), as required.\n- 2.9.10.  In  coordination  with  lead  command  and  SAF/CN,  plans  and  budgets  the  activities supporting the fielding and sustainment of identity assurance programs.\n2.10. Information System Owner (ISO) Official  is  responsible  for  the  overall  procurement, development, integration, modification, operation, and maintenance of  DAF IT, in accordance with AFI 17-101, Air Force Manual (AFMAN) 17-1301, Computer Security (COMPUSEC) , and DoDI 8500.01, Cybersecurity .",
+  "candidate": "Provides ICAM helpdesk and field support to the DAF and supported CCMDs."
+ },
+ {
+  "id": "R014",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.3. Credential Life Cycle.",
+  "paragraph": "4.5. CAC token management. DAF ISs and subscribers shall only rely on certificates issued by a DoD or AF PKI (e.g., LTMA, Internal Basic Assurance (IBA)) that are approved for use. (T-3). Relying  parties  will  authenticate  approved  external  PKI  certificates  using  either  a  direct  trust mechanism or using a cross-certification mechanism. (T-3). All external PKI certificates presented from  an  approved  external  PKI  must  be  validated  via  either  download  of  the  PKI  certificate revocation  list  associated  with  the  external  PKI  or  use  of  an  online  certificate  status  protocol (OCSP) query. (T-3). The DoD maintains a repository for posting CA certificates and policy object identifiers for approved external PKIs, in accordance with DoDI 8520.02. (T-3).",
+  "candidate": "The DoD maintains a repository for posting CA certificates and policy object identifiers for approved external PKIs, in accordance with DoDI 8520.02. (T-3)."
+ },
+ {
+  "id": "R015",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "6.8. Certificate management on Mobile Technology.",
+  "paragraph": "- 6.8.4.4.  In the event of device loss, theft or compromise, subscriber shall follow all current incident/loss processes and inform their LRA or TA to revoke all the derived credentials. (T-3).\n- 6.8.4.5.  Purebred.  A  key  management  interface  for  DoD  PKI  to  distribute  device  and derived subscriber credentials over the air to CMD.  More information can be found at https://iase.disa.mil/pki-pke/Pages/purebred.aspx .\n- 6.8.4.5.1.  Securely  issues  approved  CMD  DoD  PKI  device  certificates  and  allows DoD PKI subscribers to request and receive subscriber credentials onto their CMDs.\n- 6.8.4.5.2.  Purebred Agent. Purebred Agent performs the necessary steps to establish cryptographic keys that can be used to authenticate the device and encrypt configuration data for use by the device.\n- 6.8.5.  CMD. PKI credential storage and use on classified CMDs is not authorized.",
+  "candidate": "Purebred Agent performs the necessary steps to establish cryptographic keys that can be used to authenticate the device and encrypt configuration data for use by the device."
+ },
+ {
+  "id": "R016",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.16.5.  Ensures all Secret Internet Protocol Router Network (SIPRNET) networks use the NSS Root CA and are current with all PKI security patches and configuration settings, in accordance with DoD RA-LRA CPS.\n- 2.16.6.  Both the CA and RA are Certificate Management Authorities (CMAs). This policy uses the term CMA when a function may be assigned to either a CA or a RA, or when a requirement applies to both CAs  and  RAs.  The  division of subscriber registration responsibilities between the CA and RA may vary among implementation of this certificate policy. This division of responsibilities are described in the CA's CPS.\n- 2.17. AF PKI Registration Authority (RA) .  RAs are individuals authorized by the CMA to collect, verify, and submit information provided by potential subscribers, which is entered into public key certificates. AF RAs are appointed by SAF/CNZ.",
+  "candidate": "RAs are individuals authorized by the CMA to collect, verify, and submit information provided by potential subscribers, which is entered into public key certificates. "
+ },
+ {
+  "id": "R017",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.19. Trusted Agent (TA) and Alternate TA. Perform face-to-face subscriber authentication of PKI sponsors for NPEs and code signing certificates on behalf of the LRA.\n- 2.19.1.  Appointed by the commander or designee at the request of the LRA, in accordance with DoD PKI RA/LRA CPS and the NSS PKI DoD RPS. The template for the TA designation letter and information on the TA role and responsibilities is found at https://intelshare.intelink.gov/sites/usaf-\n- pki/_layouts/15/start.aspx#/SitePages/Help%20and%20Training%20for%20Trusted% 20Agents.aspx .",
+  "candidate": "- 2.19. Trusted Agent (TA) and Alternate TA. Perform face-to-face subscriber authentication of PKI sponsors for NPEs and code signing certificates on behalf of the LRA."
+ },
+ {
+  "id": "R018",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.3. Credential Life Cycle.",
+  "paragraph": "- 4.3.1.  Credential creation. User credentials will be created by the authorized issuing agency (e.g., DEERS, AF RA) based on specific use cases and access needs. (T-0). The credential binds the logical identity with a physical identity through use of registration. Depending on the IAL/AAL level, registration might require face-to-face verification of the individual's identity using  a  government  issued  identification,  such  as  the  CAC,  where  a  user  presents  this information to the VO at the DEERS/RAPIDS workstation. Finally, the credential is issued to the user.\n- 4.3.2.  Credential  maintenance.  Credential  maintenance  is  required  for  the  duration  of  the credential, until it is terminated. (T-0). Maintenance of the credential may include reissuance, updates to identity information, or replacement due to compromise.",
+  "candidate": "Depending on the IAL/AAL level, registration might require face-to-face verification of the individual's identity using  a  government  issued  identification,  such  as  the  CAC,  where  a  user  presents  this information to the VO at the DEERS/RAPIDS workstation. "
+ },
+ {
+  "id": "R019",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "8.1. PKI/PKE",
+  "paragraph": "- 8.1.8.2.  Specifications and  instructions  for  the  issuance  of  certificates  issued  to  named individuals,  roles,  systems,  or  devices  that  are  part  of  NSS  SECRET-high  systems  are provided in NSS PKI DoD Registration Practice Statement (RPS). (T-0).\n- 8.1.9.  Air Force Internal. Less than medium assurance (LTMA) and internal basic assurance (IBA) certificates.  These  certificates  are  used  to  sign  the  subordinate  CAs  operated  in  the AFNET  and  at  DAF-supported  CCMDs,  in  turn,  and  issue  device  identity  certificates  to internally  facing  NPEs  within  the  AFIN  in  accordance  with  IBA  X.509  Certificate  Policy Internal LTMA X.509 Certificate Policy. (T-3).\n- 8.1.10.  DoD PKI Interoperability Root. DAF ISs and subscribers, by policy, are only supposed to trust certificates issued by a DoD and/or AF PKI. (T-0).",
+  "candidate": "Specifications and instructions for the issuance of certificates issued to named individuals, roles, systems, or devices that are part of NSS SECRET-high systems are provided in NSS PKI DoD Registration Practice Statement (RPS)."
+ },
+ {
+  "id": "R020",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.3. Credential Life Cycle.",
+  "paragraph": "- 4.6.4.7.2.  GOs and SES personnel who PCS with tokens should notify the losing base LRA.  The losing base LRA then:\n- 4.6.4.7.2.1.  Changes the site code for the SIPRNET token in TMS.\n- 4.6.4.7.2.2.  Notifies the gaining base LRA of the transfer through a digitally signed email.\n- 4.6.4.7.3.  Base communications unit updates their section of the base out-processing checklist to ensure that all individuals have contacted their unit's CSS to terminate their SIPRNET account and have turned in their SIPRNET token to the base LRA prior to signing off the individual's Base Out-processing Checklist. (T-3).\n- 4.6.4.7.3.1.  Upon receipt, LRAs shall reformat the token and store it with other issuance card stock to be reissued. (T-3).",
+  "candidate": "GOs and SES personnel who PCS with tokens should notify the losing base LRA. "
+ },
+ {
+  "id": "R021",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "SUMMARY OF CHANGES",
+  "paragraph": "- (ADD) 8.1.17. All DAF information systems that have been upgraded or are upgrading to support RSA-3072 (or RSA-4096) and SHA-384 must continue to maintain backward compatibility with DoD's and DAF's current RSA-2048/SHA-256 PKI credentials. If a DAF system is regularly accessed by federal or industry partners as part of its mission, the system owner is strongly encouraged to work with those partners to coordinate algorithm upgrade plans so as to limit interoperability difficulties.  If a system owner cannot ascertain from a vendor whether a product is at least RSA-3072 (4096 is preferred) and SHA-384 compatible, then the system owner should contact the AF PKI SPO Helpdesk at afpki.helpdesk@us.af.mil. The AF PKI SPO is the DAF representative at the Test and Evaluation Working Group (TEWG) and the SIPRNet Token Evaluation Working Group (STEWG) and coordinates testing of vendor products to determine compatibility with RSA-4096 and SHA-384 on the NIPRNet and SIPRNet.",
+  "candidate": "If a DAF system is regularly accessed by federal or industry partners as part of its mission, the system owner is strongly encouraged to work with those partners to coordinate algorithm upgrade plans so as to limit interoperability difficulties. "
+ },
+ {
+  "id": "R022",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.7. Virtual Smart Card (VSC).",
+  "paragraph": "- 4.8.3.  The NEATS Alternate TA shall be assigned permissions to register and issue NEATS tokens for administrator and personal user accounts. (T-3).\n- 4.9. Role Based Attribute Authority (RBAA ). The commander or director of the organization no lower than Division Chief in the grade of Lieutenant Colonel (O-5), or in small detachments, the  Unit/Organizational  Commander.  He  or  she  is  responsible  for  requesting  a  group  or  role certificate.\n- 4.9.1.  Appoints  the  PKI  sponsor  to  receive  either  group  or  role  certificate.    Go  to: https://intelshare.intelink.gov/sites/usaf-pki/ReferenceDocs/CI-09-03-002_Role-Based_Certificate_Request_Procedures_v1.3.0.pdf ; open the standard operating procedure, then go to Appendix A for the appointment letter template.\n- 4.9.2.  Validates the need for a certificate and then requests the certificate.",
+  "candidate": "Go  to: https://intelshare.intelink.gov/sites/usaf-pki/ReferenceDocs/CI-09-03-002_Role-Based_Certificate_Request_Procedures_v1.3.0.pdf ; open the standard operating procedure, then go to Appendix A for the appointment letter template."
+ },
+ {
+  "id": "R023",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "8.1. PKI/PKE",
+  "paragraph": "- 8.1.7.3.  US DoD X.509 Certificate Policy defines the creation and management of X.509 public key certificates for use in applications requiring communication between networked computer-based  systems  including  email,  transmission  of  data,  digital  signature,  and authentication of infrastructure components.  Assurance level credential strengths include Level C for Medium Assurance, Level D for Medium Hardware, and Level E for Personal Identity Verification (PIV)-A in accordance with DoDI 8520.02. (T-0).\n- 8.1.7.4.  Specifications for Medium Assurance credential strength for NPEs, software, and hardware are provided in US DoD X.509 Certificate Policy. (T-0).\n- 8.1.8.  Classified information and information systems.\n- 8.1.8.1.  Establish instructions for the implementation of PKI for SECRET-high collateral classified networks in accordance with CNSSI 1300. (T-0).",
+  "candidate": "Assurance level credential strengths include Level C for Medium Assurance, Level D for Medium Hardware, and Level E for Personal Identity Verification (PIV)-A in accordance with DoDI 8520.02. (T-0)."
+ },
+ {
+  "id": "R024",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.5.3.  Password management.",
+  "paragraph": "- 5.5.5.1.  Actions that threaten or damage DAF ISs can result in immediate suspension of access to unclassified and classified ISs.\n- 5.5.5.2.  If  an  individual's  clearance  is  suspended,  denied,  or  revoked,  immediately suspend access to classified information systems. (T-3). Commanders review circumstances surrounding the suspension, denial, or revocation to determine if continued access  to  unclassified  systems  is  warranted  and  if  revocation  of  the  hardware  token  is required.  Commanders may provide recommendations regarding user access to the ISO.\n- 5.5.6.  Subscriber account. Also known as user accounts, require basic access to unclassified and classified ISs based on the assigned duties.  A subscriber account is established for a single named individual based on his or her identity and access needs.  AFNET accounts are created through  an  automated  method  by  AFDS  based  on  information  obtained  by  DMDC. Applications generate the accounts in an automated method when possible. (T-3).",
+  "candidate": "Applications generate the accounts in an automated method when possible. (T-3)."
+ },
+ {
+  "id": "R025",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.18.1.2.  LRAs normally reside at the base communications unit or communications focal point  but  can  be  located  anywhere,  as  long  as  they  have  SIPRNET  and  Non-classified Internet Protocol Router Network (NIPRNET) connectivity.\n- 2.18.1.3.  Bases  and  sites  need  a  minimum  of  two  LRAs.  Bases  can  request  additional LRAs;  however,  AF  RAs  have  final  approval,  based  on  number  of  SIPRNET  users, SIPRNET token issuance, LRA usage, and justification from the base.\n- 2.18.2.  Trained in accordance with https://intelshare.intelink.gov/sites/usafpki/_layouts/15/start.aspx#/SitePages/Help%20and%20Training%20for%20Local%20 Registration%20Authorities.aspx .\n- 2.18.3.  Upon  completion  of  the  training  course,  military  and  civil  service  personnel  are eligible to be awarded the Special Experience Identifier 044.",
+  "candidate": "Bases can request additional LRAs;"
+ },
+ {
+  "id": "R026",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.7. Virtual Smart Card (VSC).",
+  "paragraph": "- 4.7.2.2.  A DPC shall be issued following verification of the applicant's identity using the PIV authentication key on their existing PIV card by demonstrating possession and control of the related PIV card via the PKI-AUTH authentication mechanism, in accordance with FIPS 201-2, Personal Identity Verification (PIV) for Federal Employees and Contractors . (T-0).\n- 4.7.2.3.  A DPC cannot be used for network logon without the explicit approval of the AF Enterprise AO and the AF CISO. (T-3).\n- 4.8. NIPRNET Enterprise Alternate Token System (NEATS). Implemented  by  the  DISA. NEATS Alternate TAs will be appointed at every base. (T-3). They will receive token stock, set up a workstation, and issue NEATS tokens to local administrators, Very Important Persons (VIP), group or role sponsors, and end subscribers. (T-3).",
+  "candidate": "They will receive token stock, set up a workstation, and issue NEATS tokens to local administrators, Very Important Persons (VIP), group or role sponsors, and end subscribers. (T-3)."
+ },
+ {
+  "id": "R027",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.9.7.  Researches  alternative  authenticator  form  factors,  including  how  to  accomplish credentialing and identity binding. Provides integration guidance to application and system owners and assists program offices in defining attributes needed for authorization decisions.\n- 2.9.8.  Provides ICAM helpdesk and field support to the DAF and supported CCMDs.\n- 2.9.9.  Integrates AFDS  and  provides  attribute exchange  services between  designated authoritative attribute data sources, DoD, and DAF credential service providers (CSPs), as required.\n- 2.9.10.  In  coordination  with  lead  command  and  SAF/CN,  plans  and  budgets  the  activities supporting the fielding and sustainment of identity assurance programs.\n2.10. Information System Owner (ISO) Official  is  responsible  for  the  overall  procurement, development, integration, modification, operation, and maintenance of  DAF IT, in accordance with AFI 17-101, Air Force Manual (AFMAN) 17-1301, Computer Security (COMPUSEC) , and DoDI 8500.01, Cybersecurity .",
+  "candidate": "Provides integration guidance to application and system owners and assists program offices in defining attributes needed for authorization decisions."
+ },
+ {
+  "id": "R028",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "- 7.1.1.  Enterprise  IDD  (unclassified  or  classified):    Retrieves  data  from  multiple,  disparate USAF and DoD data sources to create a single consolidated digital identity record.\n- 7.1.1.1.  Provides a common repository known as authoritative attribute store of role-based identity data for warfighters that can be used by systems, applications, and devices. This simplifies  the  management  of  core  identity  data  elements  about  warfighters  within individual systems by giving systems access to near real-time data about their subscribers. This capability is designed to be used in strategic and tactical environments.\n- 7.1.1.2.  No  other  identity  attribute  source  (local  store)  will  be  established  in  the  DAF without coordinating with ACC HQ CCC/CYX ICAM, AFLCMC, and SAF/CN. (T-3).\n- 7.1.2.  Account  provisioning  and  user  self  service  (unclassified  or  classified):    Provides administrators  and  warfighters  an  automated  business  process  to  manage  accounts  across multiple systems based on authoritative identity records.",
+  "candidate": "Provides a common repository known as authoritative attribute store of role-based identity data for warfighters that can be used by systems, applications, and devices."
+ },
+ {
+  "id": "R029",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "SUMMARY OF CHANGES",
+  "paragraph": "- (ADD) 8.1.17. All DAF information systems that have been upgraded or are upgrading to support RSA-3072 (or RSA-4096) and SHA-384 must continue to maintain backward compatibility with DoD's and DAF's current RSA-2048/SHA-256 PKI credentials. If a DAF system is regularly accessed by federal or industry partners as part of its mission, the system owner is strongly encouraged to work with those partners to coordinate algorithm upgrade plans so as to limit interoperability difficulties.  If a system owner cannot ascertain from a vendor whether a product is at least RSA-3072 (4096 is preferred) and SHA-384 compatible, then the system owner should contact the AF PKI SPO Helpdesk at afpki.helpdesk@us.af.mil. The AF PKI SPO is the DAF representative at the Test and Evaluation Working Group (TEWG) and the SIPRNet Token Evaluation Working Group (STEWG) and coordinates testing of vendor products to determine compatibility with RSA-4096 and SHA-384 on the NIPRNet and SIPRNet.",
+  "candidate": "The AF PKI SPO is the DAF representative at the Test and Evaluation Working Group (TEWG) and the SIPRNet Token Evaluation Working Group (STEWG) and coordinates testing of vendor products to determine compatibility with RSA-4096 and SHA-384 on the NIPRNet and SIPRNet."
+ },
+ {
+  "id": "R030",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.3. Credential Life Cycle.",
+  "paragraph": "4.5. CAC token management. DAF ISs and subscribers shall only rely on certificates issued by a DoD or AF PKI (e.g., LTMA, Internal Basic Assurance (IBA)) that are approved for use. (T-3). Relying  parties  will  authenticate  approved  external  PKI  certificates  using  either  a  direct  trust mechanism or using a cross-certification mechanism. (T-3). All external PKI certificates presented from  an  approved  external  PKI  must  be  validated  via  either  download  of  the  PKI  certificate revocation  list  associated  with  the  external  PKI  or  use  of  an  online  certificate  status  protocol (OCSP) query. (T-3). The DoD maintains a repository for posting CA certificates and policy object identifiers for approved external PKIs, in accordance with DoDI 8520.02. (T-3).",
+  "candidate": "All external PKI certificates presented from  an  approved  external  PKI  must  be  validated  via  either  download  of  the  PKI  certificate revocation  list  associated  with  the  external  PKI  or  use  of  an  online  certificate  status  protocol (OCSP) query. (T-3). "
+ },
+ {
+  "id": "R031",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AUDIT CHECKLIST",
+  "paragraph": "- 9.2.1.  RAs/LRAs must attach a risk assessment to all audit submissions. (T-3).\n- 9.2.2.  All RAs and LRAs will be audited periodically in accordance with DoD RA/LRA CPS. (T-3).\n- 9.2.2.1.  RAs will audit the LRAs' audit results and checklists annually. (T-3).\n- 9.2.2.2.  RAs will provide updates to the AF CISO every 6 months. (T-3).\n- 9.2.2.3.  DoD PKI PMO has the responsibility to audit the RAs. (T-3).\n- 9.2.3.  LRA self-assessment audit checklists are located on the AF PKI LRA Training website: https://intelshare.intelink.gov/sites/usaf&  Training/Local",
+  "candidate": "RAs will provide updates to the AF CISO every 6 months. (T-3)."
+ },
+ {
+  "id": "R032",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.5.3.  Renders AFIN connection decisions in the form of an approval to connect for non-AF systems and for AF systems falling under another AO.\n- 2.5.4.  Responds  to  urgent  or  emergency  requests  to  connect  to  the  AFIN.  This  can  be delegated to an Enterprise AO designee.\n- 2.6. 16th  Air  Force  (16AF). 16  AF  is  responsible  for  implementing  ICAM  guidance  and technologies for DAF ISs.\n- 2.7. 688th Cyber Wing /690th Cyber Operations Group. This organization serves as the AFIN helpdesk.\n- 2.8. Cyberspace Capabilities Center (CCC). CCC is the ACC/A6 executive agent. On behalf of ACC/A6, CCC:\n- 2.8.1.  Provides clarification of ICAM policy and guidance for the USAF.\n- 2.8.2.  Gathers identity management and credential management requirements for ICAM to SAF/CN and all  Major  Commands  (MAJCOMs)/Field  Operating  Agencies  (FOAs)/Direct reporting units (DRUs).",
+  "candidate": "This organization serves as the AFIN helpdesk."
+ },
+ {
+  "id": "R033",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "6.8. Certificate management on Mobile Technology.",
+  "paragraph": "- 6.8.5.1.  The DoD Mobile Policy STIG prohibits the use of personally owned or contractor owned CMDs to access DoD information or connect to DoD networks.\n- 6.8.5.2.  Device management  is  governed  by  local  organizations  to  meet  mission requirements.\n- 6.8.5.3.  The use of software certificates on CMDs must be approved by the applicable AO and documented in the system Assessment and Authorization package in accordance with the DISA Mobile Policy Security Requirements Guide (SRG). (T-0).\n- 6.8.5.4.  For  CMDs  that  are  certified  in  accordance  with  the  National  Information Assurance  Partnership  (NIAP)  Protection  Profile  Mobile  Device  Fundamentals  V3.1, derived credentials are permitted to be stored in the CMD's native keystore.  Consult the NIAP Product Compliant List at https://www.niap-ccevs.org/Product/ for  a  listing  of certified devices.",
+  "candidate": "Consult the NIAP Product Compliant List at https://www.niap-ccevs.org/Product/ for  a  listing  of certified devices."
+ },
+ {
+  "id": "R034",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.4. Authorization.",
+  "paragraph": "5.4.1.  Authorized User. An authorized user is any appropriately cleared individual required to access a DoD IS to carry out or assist in a lawful and authorized governmental function. The DCSA  Position  Designation  Tool  may  be  used  to  determine  the  position  sensitivity  and corresponding  investigative  requirement  in  accordance  with  DoDI  1400.25V731, DoD Civilian Personnel Management System:  Suitability and Fitness Adjudication For Civilian Employees . Configure authorized user account creation and administration, consult Executive Order  (EO)  13488, Granting  Reciprocity  on  Excepted  Service  and  Federal  Contractor Employee  Fitness and Reinvestigating Individuals in Positions of Public Trust, for investigation requirements. (T-0).\n- 5.4.2.  Non-Privileged. Also known as subscribers requiring basic access to unclassified and classified IS based on the assigned duties.  Non-privileged subscribers authenticate with an authenticator  that  meets  the  proper  AAL/IAL  combo,  depending  on  the  information  being accessed.",
+  "candidate": "The DCSA  Position  Designation  Tool  may  be  used  to  determine  the  position  sensitivity  and corresponding  investigative  requirement  in  accordance  with  DoDI  1400.25V731, DoD Civilian Personnel Management System:  Suitability and Fitness Adjudication For Civilian Employees . "
+ },
+ {
+  "id": "R035",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "IDENTITY MANAGEMENT",
+  "paragraph": "- 3.4. Attributes. An attribute is any distinctive feature, characteristic, or property of an object that can be identified or isolated quantitatively or qualitatively by either human or automated means. AFDS provides authoritative identity and attribute management for DAF person entities through an end-to-end life-cycle process that includes generation, provision, maintenance, and termination of individual digital identity records.\n- 3.4.1.  Attributes  are  unique  identifiers  for  individuals  (e.g.,  Electronic  Data  Interchange Personal  Identifier  (EDIPI),  Federal  Agency  Smart  Credential  Number  (FASCN),  email address, biometrics). Attributes for NPEs (e.g., UID, email address) are provided by its service provider.\n- 3.4.2.  Non-unique identifiers or attributes assigned, gathered, and managed can be used to further  support  authorization  and  access  control  decisions  (e.g.,  Air  Force  Specialty  Code, Office, base).",
+  "candidate": "Attributes are unique identifiers for individuals (e.g., Electronic Data Interchange Personal Identifier (EDIPI), Federal Agency Smart Credential Number (FASCN), email address, biometrics)."
+ },
+ {
+  "id": "R036",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.4. Authorization.",
+  "paragraph": "5.4.3.  Privileged. Authorized (and, therefore, trusted) to perform functions on an unclassified and classified IS based on the assigned duties and the Automated Information System positioncertified, in accordance with DoDM 5200.02_AFMAN16-1405, Air Force Personnel Security Program ,  DoD  8570.01-M,  and  AFMAN  17-1303.    Privileged  subscribers  are  required  to authenticate with a hardware-based PKI credential or via IFS method ( see paragraph 4.2 ). (T3). Privileged subscribers are separated into a tier system, in accordance with DoDD 5205.16, The DoD Insider Threat Program.\n5.4.3.1.  Tier  1  is  the  lowest  level  of  privileged  access  and  network  rights.  Includes subscribers who service and maintain single endpoint devices; cannot access or modify networks; can install software; can modify network settings; and enable or disable services on individual computers.  Tier 1 privileged subscribers include local-system administrators and client support team members.",
+  "candidate": "Privileged subscribers are separated into a tier system, in accordance with DoDD 5205.16, The DoD Insider Threat Program."
+ },
+ {
+  "id": "R037",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.5.3.  Password management.",
+  "paragraph": "5.6.1.  Creation.  For  subscriber  accounts,  AFDS  enables  discovery  of  new  identities  from DMDC, DAF Human resource systems and other authoritative sources. The identity may be augmented  with  data  from  additional  authoritative  sources  and  an  account  created  in  a subscriber management system. AFDS establishes new account upon CAC issue via a data driven process initiated by DMDC.  Group, Executive Support Staff, Role, Admin Service and Organizational mailbox accounts follow the established procedures and document requirements in the previous sections. These accounts are only activated once all documents are completed and signed by the user, sponsor and supervisor and sent to ACC HQ CCC/CYX ICAM for processing.",
+  "candidate": "For subscriber accounts, AFDS enables discovery of new identities from DMDC, DAF Human resource systems and other authoritative sources."
+ },
+ {
+  "id": "R038",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AUDIT CHECKLIST",
+  "paragraph": "9.1. Auditing. Auditing associate's identity data with events for monitoring, saving activity to audit logs for automated and human review. This ensures that behaviors involving the access and utilization of resources comply with established guidance. It also provides for the capability to set thresholds for system alerts when activity falls outside accepted norms. Such activity can then be investigated to determine the nature of the behavior and apply the proper remediation. Monitoring data  or  their  detected  patterns  can  also  be  used  to  reconstruct  activity  profiles  to  facilitate performance and forensic investigations. The event data contained in audit logs, along with the logs themselves, must be protected from unauthorized access, modification, or deletion. (T-3).\n9.2. Compliance Audits. The purpose of a compliance audit is to verify that the audited party has in place a system to assure the quality of the services that it provides and that it complies with all the requirements of the Certificate Policy and its CPS. NIPRNET and SIPRNET RAs and LRAs will be audited annually. (T-3).",
+  "candidate": "Monitoring data  or  their  detected  patterns  can  also  be  used  to  reconstruct  activity  profiles  to  facilitate performance and forensic investigations."
+ },
+ {
+  "id": "R039",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "ACCESS MANAGEMENT",
+  "paragraph": "16-107, Military Personnel  Exchange  Program , DoDD  5230.25, Withholding of Unclassified  Technical  Data  from  Public  Disclosure, DoDD  5230.11, Disclosure  of Classified Military Information to Foreign Governments and International Organizations , and DoDD 5230.20, Visits and Assignments of Foreign Nationals . (T-0).\n- 5.3.5.2.  Pursuant to applicable host-nation agreements, FN or LN privileged subscribers are certified to access the baseline computing environment. If privileged access is required to an IS, restrict FN or LN subscriber access to Information Assurance Technical I/II level positions and only under the immediate supervision of a United States (US) citizen. (T-3). Furthermore, document access in the IS security assessment package in accordance with AFMAN 17-1301.\n- 5.3.5.3.  Sanitize  or  configure  classified  ISs  to  restrict  access  by  FNs  or  LNs  to  only classified information authorized for disclosure to the FNs or LNs government or coalition, as necessary to fulfill the terms of their assignments in accordance with applicable host MAJCOM foreign disclosure officer requirements.",
+  "candidate": "Furthermore, document access in the IS security assessment package in accordance with AFMAN 17-1301."
+ },
+ {
+  "id": "R040",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "7.2. Operational  Use  of  Identity  Attributes. When  performing  actions  that  require  the gathering,  usage,  or  presentation  of  digital  identity  data,  the  system  will  use  the  associated attributes from the AFDS digital identity store. (T-3). Systems that require disconnected operations or  other  forms  of  limited  connectivity  situations  may  maintain  a  local  copy  of  the  associated attributes of the AFDS digital identity. These systems will not act as a secondary proxy or redeliver the AFDS identity data attributes to other systems. (T-3). First, the system must perform routine periodic updates of the identity record by pulling data from AFDS on a recurring basis of no less frequently that weekly. (T-3). Second, the system must use the real time data available from AFDS to the greatest extent possible, as dictated by mission needs. (T-3). DAF systems and\norganizations will use AFDS IDD (DAF attribute store) service to populate directories with DAF enterprise attributes. (T-3).",
+  "candidate": "DAF systems and\norganizations will use AFDS IDD (DAF attribute store) service to populate directories with DAF enterprise attributes. (T-3)."
+ },
+ {
+  "id": "R041",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "- 7.1.1.  Enterprise  IDD  (unclassified  or  classified):    Retrieves  data  from  multiple,  disparate USAF and DoD data sources to create a single consolidated digital identity record.\n- 7.1.1.1.  Provides a common repository known as authoritative attribute store of role-based identity data for warfighters that can be used by systems, applications, and devices. This simplifies  the  management  of  core  identity  data  elements  about  warfighters  within individual systems by giving systems access to near real-time data about their subscribers. This capability is designed to be used in strategic and tactical environments.\n- 7.1.1.2.  No  other  identity  attribute  source  (local  store)  will  be  established  in  the  DAF without coordinating with ACC HQ CCC/CYX ICAM, AFLCMC, and SAF/CN. (T-3).\n- 7.1.2.  Account  provisioning  and  user  self  service  (unclassified  or  classified):    Provides administrators  and  warfighters  an  automated  business  process  to  manage  accounts  across multiple systems based on authoritative identity records.",
+  "candidate": "This capability is designed to be used in strategic and tactical environments."
+ },
+ {
+  "id": "R042",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.11.1.6.  Retains account access requests according to instructions on the form for Air Force information systems.\n- 2.12. Information System Security Manager (ISSM). Appointed and performs all duties and responsibilities in accordance with AFI 17-101, for DAF IT.\n- 2.12.1.  Primary cybersecurity technical advisor to the AO for the DAF IT.\n- 2.12.2.  Duties  are  outlined  in  accordance  with  AFI  17-101,  AFMAN  17-1301,  and  DoDI 8500.01.\n- 2.12.3.  Initially validates requests for role-based and group accounts.\n- 2.12.4.  Collects  PKI  requirements  affecting  the  base  enclave  (e.g.,  common  access  card (CAC) removal behavior, screen-lock exemption) from Commanders support staff (CSS) and all FOAs and DRUs.\n- 2.12.5.  Updates Information Technology Investment Portfolio Suite (ITIPS) with PKI status and submits waiver requests as needed.",
+  "candidate": "Initially validates requests for role-based and group accounts."
+ },
+ {
+  "id": "R043",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "IDENTITY MANAGEMENT",
+  "paragraph": "- 3.4. Attributes. An attribute is any distinctive feature, characteristic, or property of an object that can be identified or isolated quantitatively or qualitatively by either human or automated means. AFDS provides authoritative identity and attribute management for DAF person entities through an end-to-end life-cycle process that includes generation, provision, maintenance, and termination of individual digital identity records.\n- 3.4.1.  Attributes  are  unique  identifiers  for  individuals  (e.g.,  Electronic  Data  Interchange Personal  Identifier  (EDIPI),  Federal  Agency  Smart  Credential  Number  (FASCN),  email address, biometrics). Attributes for NPEs (e.g., UID, email address) are provided by its service provider.\n- 3.4.2.  Non-unique identifiers or attributes assigned, gathered, and managed can be used to further  support  authorization  and  access  control  decisions  (e.g.,  Air  Force  Specialty  Code, Office, base).",
+  "candidate": "AFDS provides authoritative identity and attribute management for DAF person entities through an end-to-end life-cycle process that includes generation, provision, maintenance, and termination of individual digital identity records."
+ },
+ {
+  "id": "R044",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.3. Credential Life Cycle.",
+  "paragraph": "- 4.6.4.7.3.2.  Contractors  contact  their  unit's  CSS  to  terminate  their  SIPRNET account and turn in their SIPRNET tokens to the base LRA at the end of the contract period of performance. (T-3).\n- 4.6.4.8.  Any subscriber can retain his or her SIPRNET token during a move, while they reside on the same station or base. SIPRNET tokens are required to be turned in when leaving a station or base.\n- 4.6.4.9.  Exception or exemption validated circumstances, where a SIPRNET token cannot be used, refer to SIPRNET smart card logon below.",
+  "candidate": "Contractors  contact  their  unit's  CSS  to  terminate  their  SIPRNET account and turn in their SIPRNET tokens to the base LRA at the end of the contract period of performance. (T-3)."
+ },
+ {
+  "id": "R045",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.11.1.6.  Retains account access requests according to instructions on the form for Air Force information systems.\n- 2.12. Information System Security Manager (ISSM). Appointed and performs all duties and responsibilities in accordance with AFI 17-101, for DAF IT.\n- 2.12.1.  Primary cybersecurity technical advisor to the AO for the DAF IT.\n- 2.12.2.  Duties  are  outlined  in  accordance  with  AFI  17-101,  AFMAN  17-1301,  and  DoDI 8500.01.\n- 2.12.3.  Initially validates requests for role-based and group accounts.\n- 2.12.4.  Collects  PKI  requirements  affecting  the  base  enclave  (e.g.,  common  access  card (CAC) removal behavior, screen-lock exemption) from Commanders support staff (CSS) and all FOAs and DRUs.\n- 2.12.5.  Updates Information Technology Investment Portfolio Suite (ITIPS) with PKI status and submits waiver requests as needed.",
+  "candidate": "Updates Information Technology Investment Portfolio Suite (ITIPS) with PKI status and submits waiver requests as needed."
+ },
+ {
+  "id": "R046",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.18.1.2.  LRAs normally reside at the base communications unit or communications focal point  but  can  be  located  anywhere,  as  long  as  they  have  SIPRNET  and  Non-classified Internet Protocol Router Network (NIPRNET) connectivity.\n- 2.18.1.3.  Bases  and  sites  need  a  minimum  of  two  LRAs.  Bases  can  request  additional LRAs;  however,  AF  RAs  have  final  approval,  based  on  number  of  SIPRNET  users, SIPRNET token issuance, LRA usage, and justification from the base.\n- 2.18.2.  Trained in accordance with https://intelshare.intelink.gov/sites/usafpki/_layouts/15/start.aspx#/SitePages/Help%20and%20Training%20for%20Local%20 Registration%20Authorities.aspx .\n- 2.18.3.  Upon  completion  of  the  training  course,  military  and  civil  service  personnel  are eligible to be awarded the Special Experience Identifier 044.",
+  "candidate": "Bases  and  sites  need  a  minimum  of  two  LRAs. "
+ },
+ {
+  "id": "R047",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "- 7.1.3.1.  Supports geographically disparate exchange sites and is a key enabler for email communications for the warfighter.\n- 7.1.3.2.  Conducts daily synchronization of several million contacts across DoD, MAJCOMs, CCMDs, and DRUs.\n- 7.1.3.3.  DAF organizations will use AFDS Exchange Contact Information Synchronization service to populate all Global Address Lists. (T-3).\n- 7.1.4.  Requirements Process.  ACC HQ CCC/CYX ICAM serves as Lead Command Support and Requirement Lead (RL) for AFDS program. Primary duties include capturing, evaluating, validating, and prioritizing customer requirements.  To receive any of the identity management services offered by AFDS, review the AFDS requirements process and workflow at the AFDS Requirements website.\n- 7.1.4.1.  To  help  the  customer  shape  the  requirement  for  submission,  visit  AFDS  Safe Download  website https://epi.afds.af.mil/Onboarding webpage  and  review/download the pertinent documents.",
+  "candidate": "Conducts daily synchronization of several million contacts across DoD, MAJCOMs, CCMDs, and DRUs."
+ },
+ {
+  "id": "R048",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "CREDENTIAL MANAGEMENT",
+  "paragraph": "4.1. Introduction. Credential  management is the set of practices that an organization uses to issue, track, update, and revoke credentials for identities. A Personal Identity Verification (PIV) credential  contains  a  picture,  the  issuing  agency  logo,  and  cryptographic  key  pairs  used  for authentication. Authentication to DAF ISs is performed through a DoD-approved method within DoD and in accordance with NIST standards.\n- 4.1.1.  Identity information must be used to ensure strong identification and authentication and eliminate  anonymity. (T-0). DAF  ISs  will  use  only  DoD-approved  and  DAF  identity credentials to authenticate entities requesting access to or within DAF  information environments. (T-0). All information in electronic format will be given an appropriate level of confidentiality, integrity, and availability reflecting the importance of information sharing and protection. (T-0).",
+  "candidate": "Authentication to DAF ISs is performed through a DoD-approved method within DoD and in accordance with NIST standards."
+ },
+ {
+  "id": "R049",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "8.1. PKI/PKE",
+  "paragraph": "8.1.10.5.  Certificates, by themselves, provide an identity.  That identity is gained from an identity manager and can also be leveraged to obtain additional attributes from the identity manager.\n8.1.11.  Identity manager for attributes (e.g., certificates issued by the DoD PKI, AF PKI, or by a DoD-approved PKI for authentication, digital signature, or encryption).  DAF non-DoD mission partners use certificates issued by the DoD ECA program or a DoD-approved PKI. DoD ECA PKI and External PKI certificates are not used in the DoD and DAF classified domains in accordance with DoDI 8520.02. (T-0). Access management uses those attributes provided in making an authorization decision.\n8.1.12.  ICAM Certificate Policy Authority.\n8.1.12.1.  Unclassified information and information systems.",
+  "candidate": "Certificates, by themselves, provide an identity."
+ },
+ {
+  "id": "R050",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.12.6.  Accepts  or  rejects  Plan  of  Action  and  Milestones  through  the  Change  Control Requirements Board to be included into the RMF package.\n- 2.13. Wing Cybersecurity Office (WCO). Provides ICAM policy and technical subject matter expertise for IT under the control of the base communications squadron or flight, including IT for tenant units (e.g., FOAs, DRUs, other service units), unless formal agreements exist. Note: For bases with more than one wing, the designated host wing will provide this function. For Joint Bases, the AF is responsible for all AF-owned IT and infrastructure.",
+  "candidate": "For Joint Bases, the AF is responsible for all AF-owned IT and infrastructure."
+ },
+ {
+  "id": "R051",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.11.1.6.  Retains account access requests according to instructions on the form for Air Force information systems.\n- 2.12. Information System Security Manager (ISSM). Appointed and performs all duties and responsibilities in accordance with AFI 17-101, for DAF IT.\n- 2.12.1.  Primary cybersecurity technical advisor to the AO for the DAF IT.\n- 2.12.2.  Duties  are  outlined  in  accordance  with  AFI  17-101,  AFMAN  17-1301,  and  DoDI 8500.01.\n- 2.12.3.  Initially validates requests for role-based and group accounts.\n- 2.12.4.  Collects  PKI  requirements  affecting  the  base  enclave  (e.g.,  common  access  card (CAC) removal behavior, screen-lock exemption) from Commanders support staff (CSS) and all FOAs and DRUs.\n- 2.12.5.  Updates Information Technology Investment Portfolio Suite (ITIPS) with PKI status and submits waiver requests as needed.",
+  "candidate": "Collects  PKI  requirements  affecting  the  base  enclave  (e.g.,  common  access  card (CAC) removal behavior, screen-lock exemption) from Commanders support staff (CSS) and all FOAs and DRUs."
+ },
+ {
+  "id": "R052",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.4. Authorization.",
+  "paragraph": "5.4.4.1.4.  If an individual violates the information system terms of use, commanders should consider suspending access pending re-accomplishment of Cyber Awareness Challenge training.  Violations identified by the AFNET Mission Assurance Center result in automatic account suspension.  Additional restrictions on reinstatements for classified information systems are determined locally and should follow the guidelines of DoD 8570.01-M.\n5.4.4.2.  DD Form 2875, System Authorization Access Request (SAAR), is completed and digitally signed by the user. The Government sponsor verifies the justification and need for access and digitally signs the form before routing to the Security Manager. The Security Manager  performs  a  security  clearance  and  background  investigation  verification  and\ndigitally signs the form before routing for account creation, in accordance with DoDM 5200.02_AFMAN 16-1405 and AFMAN17-1301.",
+  "candidate": "DD Form 2875, System Authorization Access Request (SAAR), is completed and digitally signed by the user."
+ },
+ {
+  "id": "R053",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.5.3.  Password management.",
+  "paragraph": "5.5.11.3.  Encryption certificates for organizational email mailboxes, to include portable electronic devices (PEDs), must have a designated sponsor appointed in writing using the template available on the AF PKI SPO website. (T-3). Go to: https://intelshare.intelink.gov/sites/usaf-pki/ReferenceDocs/ browse  for  CI-09-03-002_Role-Based_Certificate_Request_Procedures_v1.3.0.pdf and open it; once the Standard  Operating  Procedure  is  open,  go  to  Appendix  A  for  the  appointment  letter template. The AF RA or LRA, as appropriate, will maintain a file of requirement validation documentation. (T-3). For organizational email mailboxes on PEDs, follow the appropriate DoD STIG. For additional guidance, consult the DoD PKI Registration Authority/Local Registration  Authority  Certification  Practice  Statement (RA/LRA  CPS)  which  can  be found under the Resources/Policy tab of the AF PKI System Program Office website at ( https://intelshare.intelink.gov/sites/usaf- pki/_layouts/15/start.aspx#/SitePages/AF%20Public%20Key%20Infrastructure%2 0System%20Program%20Office.aspx ).",
+  "candidate": "Go to: https://intelshare.intelink.gov/sites/usaf-pki/ReferenceDocs/ browse  for  CI-09-03-002_Role-Based_Certificate_Request_Procedures_v1.3.0.pdf and open it; once the Standard  Operating  Procedure  is  open,  go  to  Appendix  A  for  the  appointment  letter template. "
+ },
+ {
+  "id": "R054",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "CREDENTIAL MANAGEMENT",
+  "paragraph": "- 4.2.1.  Strength.  The strength of a credential is the measure of its ability to resist unauthorized use. The required strength a credential must have varies according to the classification of the system to be accessed (unclassified or classified), in accordance with NIST SP 800-63-3 and DoDI 8520.03. (T-0).\n- 4.2.2.  Assurance Levels specify the strength of the binding between the public key and the individual whose subject name is cited in the certificate, the mechanisms used to control the use of the private key, and the security provided by the PKI itself.\n- 4.2.2.1.  DoD PKI certificates are at the medium assurance level, as defined by NIST SP 800-63. (T-0) .  This  is  a  portable  certificate  and  can  be  used  on  any  computer with the required utilities and drivers installed .\n- 4.2.2.2.  Hardware-based  certificates  are  stored  on  a  Federal  Information  Processing Standard (FIPS) 140-2 Level 2 or higher cryptographic device (e.g. smart token, universal serial bus (USB) device). (T-0).",
+  "candidate": "The required strength a credential must have varies according to the classification of the system to be accessed (unclassified or classified), in accordance with NIST SP 800-63-3 and DoDI 8520.03."
+ },
+ {
+  "id": "R055",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "ACCESS MANAGEMENT",
+  "paragraph": "- 5.1.2.  Relying  Party  (RP).  An  entity  that  relies  upon  the  subscriber's  authenticator(s)  and credentials, or a verifier's assertion of a claimant's identity, typically to process a transaction or grant access to information or a system. Examples of an RP include websites or applications where a subscriber must be authenticated using digital certificates before granting access. (T0). This  includes the AF Portal where the AF Portal is the RP the subscriber is requesting access using the authentication certificate to validate his or her digital identity. In the case of network logon, the Domain Controller is the RP.\n- 5.1.2.1.  Devices  can  be  both  an  RP  and  a  subscriber  when  in  a  device-to-device communication session.\n- 5.1.2.2.  Applications like Outlook\u2122 or Adobe\u2122 also act as an RP when validating digital signatures of emails and forms to verify the digital certificate is valid in accordance with X.509 Certificate Policy. (T-0).",
+  "candidate": "This includes the AF Portal where the AF Portal is the RP the subscriber is requesting access using the authentication certificate to validate his or her digital identity."
+ },
+ {
+  "id": "R056",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.9.7.  Researches  alternative  authenticator  form  factors,  including  how  to  accomplish credentialing and identity binding. Provides integration guidance to application and system owners and assists program offices in defining attributes needed for authorization decisions.\n- 2.9.8.  Provides ICAM helpdesk and field support to the DAF and supported CCMDs.\n- 2.9.9.  Integrates AFDS  and  provides  attribute exchange  services between  designated authoritative attribute data sources, DoD, and DAF credential service providers (CSPs), as required.\n- 2.9.10.  In  coordination  with  lead  command  and  SAF/CN,  plans  and  budgets  the  activities supporting the fielding and sustainment of identity assurance programs.\n2.10. Information System Owner (ISO) Official  is  responsible  for  the  overall  procurement, development, integration, modification, operation, and maintenance of  DAF IT, in accordance with AFI 17-101, Air Force Manual (AFMAN) 17-1301, Computer Security (COMPUSEC) , and DoDI 8500.01, Cybersecurity .",
+  "candidate": "Researches  alternative  authenticator  form  factors,  including  how  to  accomplish credentialing and identity binding. "
+ },
+ {
+  "id": "R057",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.9.7.  Researches  alternative  authenticator  form  factors,  including  how  to  accomplish credentialing and identity binding. Provides integration guidance to application and system owners and assists program offices in defining attributes needed for authorization decisions.\n- 2.9.8.  Provides ICAM helpdesk and field support to the DAF and supported CCMDs.\n- 2.9.9.  Integrates AFDS  and  provides  attribute exchange  services between  designated authoritative attribute data sources, DoD, and DAF credential service providers (CSPs), as required.\n- 2.9.10.  In  coordination  with  lead  command  and  SAF/CN,  plans  and  budgets  the  activities supporting the fielding and sustainment of identity assurance programs.\n2.10. Information System Owner (ISO) Official  is  responsible  for  the  overall  procurement, development, integration, modification, operation, and maintenance of  DAF IT, in accordance with AFI 17-101, Air Force Manual (AFMAN) 17-1301, Computer Security (COMPUSEC) , and DoDI 8500.01, Cybersecurity .",
+  "candidate": "In  coordination  with  lead  command  and  SAF/CN,  plans  and  budgets  the  activities supporting the fielding and sustainment of identity assurance programs."
+ },
+ {
+  "id": "R058",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "7.1. Air  Force  Directory  Services  (AFDS) .  Provides  authoritative  identity  and  attribute management  for  the  DAF  through  an  end-to-end  life-cycle  process  that  includes  generation, provision, maintenance, and termination of individual digital  identity  records.  AFDS  harvests, standardizes,  aggregates,  and  presents  data  attributes  to  organizations  and  customers  through identity management products and services. AFDS serves as the DAF enterprise-level directory service  and  identity  management  attribute  store.  AFDS  leverages  multiple  authoritative  data sources to enable secure, accurate, and timely identity data attributes that  reduce the need for redundant USAF directory services and security stores core capabilities. These core capabilities include: AF enterprise identity data directory (IDD), account provisioning and user self service, and Exchange contact information synchronization (ECIS). It also provides the Air Force Email for Career (E4C) capability in the form of \"@us.af.mil\" email addresses for all DAF subscribers. The program is the Authoritative Data Source for the E4C address and makes it available to other authoritative data sources, as requested.",
+  "candidate": "AFDS leverages multiple authoritative data sources to enable secure, accurate, and timely identity data attributes that reduce the need for redundant USAF directory services and security stores core capabilities."
+ },
+ {
+  "id": "R059",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.3. Credential Life Cycle.",
+  "paragraph": "- 4.5.4.  Unfunded contract options annotated in the contract as the period of performance are considered in the determination of the length of contract, (e.g., a contractor hired under DoD contract with a base year plus two option years shall be issued a CAC with a 3-year expiration). (T-3). The expiration date of the PKI certificates on the CAC shall match the expiration date on the card. (T-3).\n- 4.5.4.1.  DoD Contractors contact their unit TASS TA prior to making an appointment with their supporting Military Personnel Section to have their information entered or updated in DEERS.",
+  "candidate": "DoD Contractors contact their unit TASS TA prior to making an appointment with their supporting Military Personnel Section to have their information entered or updated in DEERS."
+ },
+ {
+  "id": "R060",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "INTRODUCTION",
+  "paragraph": "- 1.3.1.  DAF IT includes but is not limited to ISs (major applications and enclaves), platform information technology (PIT) and PIT systems, IT services (internal and external), standalone systems, and IT products (software, hardware, and applications), unless specifically exempted. Specific use cases exempted from public key infrastructure (PKI) and two-factor authentication are  listed  in  the  DoD  CIO  Memorandum, Interim  Digital  Authentication  Guidelines  for Unclassified and Secret Classified DoD Networks and Information Systems , and are authorized to  use  DoD  approved  usernames  and  passwords.  These  use  cases  include:  1)  stand-alone networks  and  systems  and  kiosks;    2)  closed  restricted  networks;  3)  platform  information technology (PIT); 4) lab and testing environments;  5) emergency, backup, and local logon accounts; and 6) tactical, deployed, or low bandwidth environments.\n- 1.3.2.  Compliance  is  mandatory  for  all  military,  mission  partners,  civilian,  and  contract employees who develop, acquire, deliver, use, operate, or manage DAF IT.",
+  "candidate": "Compliance  is  mandatory  for  all  military,  mission  partners,  civilian,  and  contract employees who develop, acquire, deliver, use, operate, or manage DAF IT."
+ },
+ {
+  "id": "R061",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "CREDENTIAL MANAGEMENT",
+  "paragraph": "4.1.2.  DAF  ISs  connect  to  the  DoD  Information  Network  (DoDIN)  subnetworks  (e.g., NIPRNET, SIPRNET) in accordance with Chairman of the Joint Chiefs of Staff Instruction (CJCSI) 6211.02D, Defense Information System Network (DISN) Responsibilities . (T-0).\n4.1.3.  An IS subscriber is an individual who has access to standalone systems, specialized or functional ISs, enterprise ISs, and/or mission systems.\n4.2. Credentialing. All  network,  system,  or  application  accounts  that  use  DoD-issued  or approved PKI, multifactor authentication credentials, or Identity Federation Services (IFS) will be implemented as required by  DoD policy. (T-0). DoD-issued  medium-hardware assurance  PKI credentials  meet  the  criteria  for  IAL-3/AAL-3,  in  accordance  with  NIST  SP  800-63-3.    Other credentials will be validated against NIST SP 800-63-3. (T-0).",
+  "candidate": "An IS subscriber is an individual who has access to standalone systems, specialized or functional ISs, enterprise ISs, and/or mission systems."
+ },
+ {
+  "id": "R062",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.4.3.  Working with service managers to evaluate service quality, and if required, develop improvement plans.\n- 2.4.4.  Acting as the single voice to program executive officers for priorities and requirements.\n- 2.5. Authorizing officials (AOs). The AO is the official with the authority to formally assume responsibility for operating a system at an acceptable level of risk, in accordance with AFI 17-101. The Air Force Enterprise AO is the only authority permitted to grant an approval to connect to Air Force information networks. Approval to connect authorities for other DAF appointed AOs are approved  by  SAF/CN,  in  coordination  with  the  Enterprise  AO.  In  addition  to  the  AO responsibilities above, the Enterprise AO:\n- 2.5.1.  Establishes  acceptable  security  controls  and  risk  tolerance  for  connecting  to  the  Air Force information network (AFIN) and provides guidance to implementing organizations to mitigate risks commensurate with established risk tolerance.\n- 2.5.2.  Reviews the security authorization package for all requests to connect to the Air Force Information Network and assesses the impact to enterprise community risk.",
+  "candidate": "Approval to connect authorities for other DAF appointed AOs are approved by SAF/CN, in coordination with the Enterprise AO."
+ },
+ {
+  "id": "R063",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "8.1. PKI/PKE",
+  "paragraph": "- 8.1.1.3.  Classified  content,  the  IACE-SIPRNET (IACE-S) is available on SIPRNET at http://intelshare.intelink.sgov.gov/sites/af_cybersecurity/SitePages/Home.aspx .\n- 8.1.2.  PKI includes a combination of hardware, software, policies, and procedures, as well as the ability to authenticate, protect, digitally sign, and when necessary, encrypt electronic mail (e-mail) and documents.  It also is able to verify identities, digital signatures and encryption mechanisms by using X.509 certificates for public-key cryptography.\n- 8.1.3.  PKE incorporates the use of certificates for people, networks, systems and applications to  provide security services such as authentication, confidentiality, data integrity, and nonrepudiation.  DoD ISs are required to use these certificates to support authentication of identity, access control, information confidentiality, data integrity, and non-repudiation in accordance with DoDI 8520.02 and DoDI 8520.03. (T-0).",
+  "candidate": "DoD ISs are required to use these certificates to support authentication of identity, access control, information confidentiality, data integrity, and non-repudiation in accordance with DoDI 8520.02 and DoDI 8520.03. (T-0)."
+ },
+ {
+  "id": "R064",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.3. Credential Life Cycle.",
+  "paragraph": "- 4.6.4.7.1.  Applies to all personnel with the exception of General Officers (GOs) and Senior Executive Service (SES) personnel.",
+  "candidate": "- 4.6.4.7.1.  Applies to all personnel with the exception of General Officers (GOs) and Senior Executive Service (SES) personnel."
+ },
+ {
+  "id": "R065",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "INTRODUCTION",
+  "paragraph": "1.1. Overview. ICAM is the solution to build trust by aligning all participants to an agreed-upon set  of  policies,  technical  standards  and  best  practices.    DoD  chief  information  officer  (CIO) manages ICAM programs with combatant commanders, services,  and agencies that the  DAF supports  and  implements.    While  identity  management,  credential  management,  and  access management are closely interrelated, it is important to understand each individual ICAM facet. Identity management, access management, and credential management are supported and enabled by a foundation of governance and federation accepting the ICAM information from other entities across organizational boundaries.  Governance is what enables organizations to implement and manage effective ICAM policies and capabilities.  Federation is how organizations are able to accept ICAM information from other organizations, (e.g., services, agencies, mission partners) thereby  enabling  interoperability,  because  no  one  organization  can  operate  in  a  bubble,  as illustrated in Figure 1.1 from the Department of Homeland Security (DHS) ICAM 101 Briefing for Public Safety Officials .",
+  "candidate": "DoD  chief  information  officer  (CIO) manages ICAM programs with combatant commanders, services,  and agencies that the  DAF supports  and  implements. "
+ },
+ {
+  "id": "R066",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "8.1. PKI/PKE",
+  "paragraph": "8.1.10.1.  Situations where subscribers and applications must be able to trust commercial providers  (e.g.,  Microsoft\u2122  operating  systems)  require  trust  in  Verisign  commercial certificates in order to operate. (T-3).\n8.1.10.2.  DoD  mission  partners  shall  use  certificates  issued  by  the  DoD  External Certification Authority (ECA) program or a DoD approved PKI, when interacting with the DoD in unclassified domains. (T-0).\n8.1.10.3.  DoD mission partners shall establish PKI authentication when interacting with the DoD in classified domains in accordance with DoDI 8520.02. (T-0).\n8.1.10.4.  No other PKIs will be established in the DAF without coordinating with ACC HQ CCC/CYX ICAM, AF PKI SPO, and SAF/CN.  Contact the AF PKI SPO Helpdesk at afpki.helpdesk@us.af.mil to  begin  the  process  of  adding  non  preapproved  Certificate Trusts.",
+  "candidate": "Contact the AF PKI SPO Helpdesk at afpki.helpdesk@us.af.mil to  begin  the  process  of  adding  non  preapproved  Certificate Trusts."
+ },
+ {
+  "id": "R067",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "7.1. Air  Force  Directory  Services  (AFDS) .  Provides  authoritative  identity  and  attribute management  for  the  DAF  through  an  end-to-end  life-cycle  process  that  includes  generation, provision, maintenance, and termination of individual digital  identity  records.  AFDS  harvests, standardizes,  aggregates,  and  presents  data  attributes  to  organizations  and  customers  through identity management products and services. AFDS serves as the DAF enterprise-level directory service  and  identity  management  attribute  store.  AFDS  leverages  multiple  authoritative  data sources to enable secure, accurate, and timely identity data attributes that  reduce the need for redundant USAF directory services and security stores core capabilities. These core capabilities include: AF enterprise identity data directory (IDD), account provisioning and user self service, and Exchange contact information synchronization (ECIS). It also provides the Air Force Email for Career (E4C) capability in the form of \"@us.af.mil\" email addresses for all DAF subscribers. The program is the Authoritative Data Source for the E4C address and makes it available to other authoritative data sources, as requested.",
+  "candidate": "These core capabilities include: AF enterprise identity data directory (IDD), account provisioning and user self service, and Exchange contact information synchronization (ECIS)."
+ },
+ {
+  "id": "R068",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.5.3.  Password management.",
+  "paragraph": "- 5.5.7.2.  ALTs  have  unique  identifiers  that  do  not  allow  the  staff  support  personnel  to digitally impersonate the Executive.\n- 5.5.7.3.  Request a group account  via  email  to  ACC  HQ  CCC/CYZ  ICAM  at acc.cyss.cyz.pki@us.af.mil .\n- 5.5.8.  Role Account. A role account is used in control center or similar positions, assigned to the particular position, not to an individual, to fulfil the mission requirements. The mission continues, without interruption, during personnel changes (e.g., shift changes, swap-outs). A role  account  is  issued  to  an  individual  authorized  to  fill  a  specific  organizational  role  or function and does not contain the individual's name.  Role certificates are the credentials which role account users use to authenticate.\n- 5.5.8.1.  One individual accesses the account at a time.  Identity control and monitoring is maintained by the individual in charge through assignment of individuals and tracked with a log.  The mission continues, without interruption, during personnel changes (e.g., shift changes, swap-outs).",
+  "candidate": "Identity control and monitoring is maintained by the individual in charge through assignment of individuals and tracked with a log. "
+ },
+ {
+  "id": "R069",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "- 7.1.2.1.  A single interface is provided to the warfighter to allow automated management of subscribers profiles associated with directory and non-directory enabled applications, including  the  creation,  vetting,  modification,  updating,  and  disabling  or  deletion  of accounts process triggered by changes in authoritative data source records.\n- 7.1.2.2.  User-Self  Service  capability  gives  warfighters  the  ability  to  verify  or  update personal attributes, request publication to the Global Address List publication, and select alternate delivery points for E4C  email  traffic. User  Self Service  is found  at: https://imp.afds.af.mil/default.aspx .\n- 7.1.2.3.  DAF users may use AFDS User Self Service to update and/or verify personal attributes.\n- 7.1.3.  ECIS. Conduct daily synchronization of email Global Address Lists daily for NIPRNET and SIPRNET environments.  This service includes a broader Lightweight Directory Access Protocol directory capability containing over 3.4 million contacts DoD-wide.",
+  "candidate": "DAF users may use AFDS User Self Service to update and/or verify personal attributes."
+ },
+ {
+  "id": "R070",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "7.1. Air  Force  Directory  Services  (AFDS) .  Provides  authoritative  identity  and  attribute management  for  the  DAF  through  an  end-to-end  life-cycle  process  that  includes  generation, provision, maintenance, and termination of individual digital  identity  records.  AFDS  harvests, standardizes,  aggregates,  and  presents  data  attributes  to  organizations  and  customers  through identity management products and services. AFDS serves as the DAF enterprise-level directory service  and  identity  management  attribute  store.  AFDS  leverages  multiple  authoritative  data sources to enable secure, accurate, and timely identity data attributes that  reduce the need for redundant USAF directory services and security stores core capabilities. These core capabilities include: AF enterprise identity data directory (IDD), account provisioning and user self service, and Exchange contact information synchronization (ECIS). It also provides the Air Force Email for Career (E4C) capability in the form of \"@us.af.mil\" email addresses for all DAF subscribers. The program is the Authoritative Data Source for the E4C address and makes it available to other authoritative data sources, as requested.",
+  "candidate": "It also provides the Air Force Email for Career (E4C) capability in the form of \"@us.af.mil\" email addresses for all DAF subscribers."
+ },
+ {
+  "id": "R071",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "- 7.1.4.2.  AFDS Service Catalog. Describes the different services offered by AFDS.\n- 7.1.4.3.  Identity Management (IdM) Form 3215, Requirements Document .  Requirement request form.\n- 7.1.4.4.  IdM 3215 Form Instructions. Helps requester properly fill out IdM 3215 Form.\n- 7.1.4.5.  AFDS External Data Dictionary. Describes data elements available in the AFDS IDD repository.\n- 7.1.5.  AFDS Interface Developers Guide.  Gives a high-level explanation of the process of connecting  to  the  virtual  directory  and  sending  a  query.    Provides  necessary  background information to incorporate the information provided in the virtual directory into an application. Gives a developer the necessary background information to connect to the AFDS web service and incorporate the information returned from the web service into an application.",
+  "candidate": "Describes data elements available in the AFDS IDD repository."
+ },
+ {
+  "id": "R072",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "7.1. Air  Force  Directory  Services  (AFDS) .  Provides  authoritative  identity  and  attribute management  for  the  DAF  through  an  end-to-end  life-cycle  process  that  includes  generation, provision, maintenance, and termination of individual digital  identity  records.  AFDS  harvests, standardizes,  aggregates,  and  presents  data  attributes  to  organizations  and  customers  through identity management products and services. AFDS serves as the DAF enterprise-level directory service  and  identity  management  attribute  store.  AFDS  leverages  multiple  authoritative  data sources to enable secure, accurate, and timely identity data attributes that  reduce the need for redundant USAF directory services and security stores core capabilities. These core capabilities include: AF enterprise identity data directory (IDD), account provisioning and user self service, and Exchange contact information synchronization (ECIS). It also provides the Air Force Email for Career (E4C) capability in the form of \"@us.af.mil\" email addresses for all DAF subscribers. The program is the Authoritative Data Source for the E4C address and makes it available to other authoritative data sources, as requested.",
+  "candidate": "Provides authoritative identity and attribute management for the DAF through an end-to-end life-cycle process that includes generation, provision, maintenance, and termination of individual digital identity records."
+ },
+ {
+  "id": "R073",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "IDENTITY MANAGEMENT",
+  "paragraph": "- 3.2.2.  The primary CSP for a DAF-affiliated person is the DMDC.  The DoD CAC, for those eligible, serves as the authoritative assertion of identity and is used as proof of DoD or DAF affiliation,  in  accordance  with  DoDI  1000.25, DoD  Personnel  Identity  Protection  (PIP) Program , and NIST SP 800-63-3. (T-0). Ineligible CAC individuals (e.g., retirees, dependents) affiliated with DoD or DAF will use the DMDC as the primary CSP. (T-0).\n- 3.2.2.1.  Mission partners, temporary employees, volunteers, and FNs that do not have the DMDC as a primary CSP will use an External Certification Authority (ECA) program to issue  PKI  credentials  to  prove  their  identity  on  the  network,  in  accordance  with  DoDI 8520.02 and Methods and Procedures Technical Order (MPTO) 00-33A-1300 (T-0).\n- 3.2.2.2.  For a list of all attributes, see MPTO 00-33D-2001, AFNET Enterprise Naming Conventions.",
+  "candidate": "Ineligible CAC individuals (e.g., retirees, dependents) affiliated with DoD or DAF will use the DMDC as the primary CSP. (T-0)."
+ },
+ {
+  "id": "R074",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "CERTIFICATE MANAGEMENT",
+  "paragraph": "6.2. Identity  credential  strength  determination .    The  ISO  will  determine  the  'Credential Strength'  used  to  authenticate  to  the  DoD  IS  by  assessing  the  'Sensitivity  Level'  of  the information contained in the DoD IS in accordance with DoDI 8500.01 and DoDI 8520.03. (T-0).",
+  "candidate": "The  ISO  will  determine  the  'Credential Strength'  used  to  authenticate  to  the  DoD  IS  by  assessing  the  'Sensitivity  Level'  of  the information contained in the DoD IS in accordance with DoDI 8500.01 and DoDI 8520.03. (T-0)."
+ },
+ {
+  "id": "R075",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "- 7.1.4.2.  AFDS Service Catalog. Describes the different services offered by AFDS.\n- 7.1.4.3.  Identity Management (IdM) Form 3215, Requirements Document .  Requirement request form.\n- 7.1.4.4.  IdM 3215 Form Instructions. Helps requester properly fill out IdM 3215 Form.\n- 7.1.4.5.  AFDS External Data Dictionary. Describes data elements available in the AFDS IDD repository.\n- 7.1.5.  AFDS Interface Developers Guide.  Gives a high-level explanation of the process of connecting  to  the  virtual  directory  and  sending  a  query.    Provides  necessary  background information to incorporate the information provided in the virtual directory into an application. Gives a developer the necessary background information to connect to the AFDS web service and incorporate the information returned from the web service into an application.",
+  "candidate": "Helps requester properly fill out IdM 3215 Form."
+ },
+ {
+  "id": "R076",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.3. Credential Life Cycle.",
+  "paragraph": "- 4.6.4.7.2.  GOs and SES personnel who PCS with tokens should notify the losing base LRA.  The losing base LRA then:\n- 4.6.4.7.2.1.  Changes the site code for the SIPRNET token in TMS.\n- 4.6.4.7.2.2.  Notifies the gaining base LRA of the transfer through a digitally signed email.\n- 4.6.4.7.3.  Base communications unit updates their section of the base out-processing checklist to ensure that all individuals have contacted their unit's CSS to terminate their SIPRNET account and have turned in their SIPRNET token to the base LRA prior to signing off the individual's Base Out-processing Checklist. (T-3).\n- 4.6.4.7.3.1.  Upon receipt, LRAs shall reformat the token and store it with other issuance card stock to be reissued. (T-3).",
+  "candidate": "Base communications unit updates their section of the base out-processing checklist to ensure that all individuals have contacted their unit's CSS to terminate their SIPRNET account and have turned in their SIPRNET token to the base LRA prior to signing off the individual's Base Out-processing Checklist. (T-3)."
+ },
+ {
+  "id": "R077",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "COMPLIANCE WITH THIS PUBLICATION IS MANDATORY",
+  "paragraph": " Department of the Air Force (DAF), Air Force Reserve (AFR), Air National Guard (ANG), and those with contractual obligation to comply with DAF publications, regardless of Air Force  specialty  code,  who  develop,  acquire,  deliver,  use,  operate,  or  manage  ICAM  for  DAF organizations. Ensure all records generated as a result of processes prescribed in this publication adhere  to  AFI  33-322, Records  Management  and  Information  Governance  Program ,  and  are disposed in accordance with the Air Force records disposition schedule located in the Air Force Records Information Management System. Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change  of  Publication ;  route  AF  Forms  847  from  the  field  through  the appropriate  functional  chain  of  command.  This  DAFMAN  may  be  supplemented  but  all supplements  to  this  publication  must  be  routed  to  SAF/CN,  Cybersecurity  Division,  for coordination prior to certification and approval. (T-3). The authorities to waive wing or unit level requirements in this publication are identified with a Tier ('T-0, T-1, T-2, T-3') number following the compliance statement. See DAFI 33-360, Publications and Forms Management , in accordance with DAFI 33-360_DAFGM2020-01, Attachment 3, paragraph 6.5.6.3.5, for a description of the authorities associated with the Tier numbers. Submit requests for waivers through",
+  "candidate": "Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change  of  Publication ;  route  AF  Forms  847  from  the  field  through  the appropriate  functional  chain  of  command. "
+ },
+ {
+  "id": "R078",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.7. Virtual Smart Card (VSC).",
+  "paragraph": "- 4.10.1.  Appointed by the RBAA. Go to https://intelshare.intelink.gov/sites/usafpki/ReferenceDocs/CI-09-03-002_Role-Based_Certificate_Request_Procedures_v1.3.0.pdf ; open the Standard Operating Procedure, then go to Appendix A for the appointment letter template.\n- 4.10.2.  Appoints  a  new  sponsor  before  departing  the  command,  or  the  certificate  will  be marked as compromised and revoked. (T-3).\n- 4.10.3.  Manages certificates in accordance with CNSSI 1300 and NSS PKI DoD RPS.\n- 4.10.4.  Keeps a list of applicable personnel up to date and sends updated copies to the LRA. Go to https://intelshare.intelink.gov/sites/usaf-pki/ReferenceDocs/CI-09-03-002_Role-\nBased_Certificate_Request_Procedures_v1.3.0.pdf ; open the Standard Operating Procedure, then go to Appendix C to obtain the list of applicable personnel template.",
+  "candidate": "Go to https://intelshare.intelink.gov/sites/usaf-pki/ReferenceDocs/CI-09-03-002_Role-\nBased_Certificate_Request_Procedures_v1.3.0.pdf ; open the Standard Operating Procedure, then go to Appendix C to obtain the list of applicable personnel template."
+ },
+ {
+  "id": "R079",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "7.1. Air  Force  Directory  Services  (AFDS) .  Provides  authoritative  identity  and  attribute management  for  the  DAF  through  an  end-to-end  life-cycle  process  that  includes  generation, provision, maintenance, and termination of individual digital  identity  records.  AFDS  harvests, standardizes,  aggregates,  and  presents  data  attributes  to  organizations  and  customers  through identity management products and services. AFDS serves as the DAF enterprise-level directory service  and  identity  management  attribute  store.  AFDS  leverages  multiple  authoritative  data sources to enable secure, accurate, and timely identity data attributes that  reduce the need for redundant USAF directory services and security stores core capabilities. These core capabilities include: AF enterprise identity data directory (IDD), account provisioning and user self service, and Exchange contact information synchronization (ECIS). It also provides the Air Force Email for Career (E4C) capability in the form of \"@us.af.mil\" email addresses for all DAF subscribers. The program is the Authoritative Data Source for the E4C address and makes it available to other authoritative data sources, as requested.",
+  "candidate": "harvests, standardizes, aggregates, and presents data attributes to organizations and customers through identity management products and services."
+ },
+ {
+  "id": "R080",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.13.1.  Provides ICAM requirements gathering for any users within their enclave.\n- 2.13.2.  Supports base cybersecurity initiatives.\n- 2.13.3.  Reviews, evaluates, and clarifies AF ICAM doctrine, policy, and procedures.\n- 2.13.4.  Develops and coordinates recommendations on implementation of the doctrine, policy, and procedures to the CSS or similar function.\n- 2.14. Commanders Support Staff (CSS). Organizational commander implements and enforces AFNET account management administrative processes and procedures using the guidance within this instruction, in accordance with AFI 17-130.\n- 2.14.1.  Maintains AFIN access documentation.\n- 2.14.2.  Collects PKI subscriber requirements and provides to the ISSM.\n- 2.15. Communications Unit. Any local communications-supporting unit, (e.g., flight, squadron, group, directorate).\n- 2.15.1.  Issues authenticators as needed.",
+  "candidate": "Organizational commander implements and enforces AFNET account management administrative processes and procedures using the guidance within this instruction, in accordance with AFI 17-130."
+ },
+ {
+  "id": "R081",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "ACCESS MANAGEMENT",
+  "paragraph": "5.2. Authentication. The authentication of subscribers and the granting of logical and physical access is  a  combination  of  enterprise-wide  and  local  functions  (e.g.,  DEERS,  global  directory services, or DoD PKI services) in real-time whenever possible in accordance with DoDI 1000.25, DoD 5200.08-R, Physical Security Program ,  DoDI 5200.08, Security of DoD Installations and Resources  and  the  DoD  Physical  Security  Review  Board  (PSRB) ,  DoDI  5200.46, DoD Investigative  and  Adjudicative  Guidance  for  Issuing  the  Common  Access  Card  (CAC) ,  DoDI 8500.01, and DoDI 8520.03. (T-3).",
+  "candidate": "The authentication of subscribers and the granting of logical and physical access is a combination of enterprise-wide and local functions (e.g., DEERS, global directory services, or DoD PKI services) in real-time whenever possible"
+ },
+ {
+  "id": "R082",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "8.1. PKI/PKE",
+  "paragraph": "- 8.1.6.  Identity manager for attributes (e.g., certificates issued by the DoD PKI, AF PKI, or by a  DoD-approved  PKI  for  authentication,  digital  signature,  or  encryption).    DAF  non-DoD mission partners use certificates issued by the DoD ECA program or a DoD-approved PKI. (T-0). DoD ECA PKI and External PKI certificates are not used in the DoD and DAF classified domains in accordance with DoDI 8520.02.\n- 8.1.7.  Access management uses those attributes provided in making an authorization decision.\n- 8.1.7.1.  ICAM Certificate Policy Authority.\n- 8.1.7.2.  Unclassified information and information systems.",
+  "candidate": "Identity manager for attributes (e.g., certificates issued by the DoD PKI, AF PKI, or by a  DoD-approved  PKI  for  authentication,  digital  signature,  or  encryption)."
+ },
+ {
+  "id": "R083",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "COMPLIANCE WITH THIS PUBLICATION IS MANDATORY",
+  "paragraph": " Department of the Air Force (DAF), Air Force Reserve (AFR), Air National Guard (ANG), and those with contractual obligation to comply with DAF publications, regardless of Air Force  specialty  code,  who  develop,  acquire,  deliver,  use,  operate,  or  manage  ICAM  for  DAF organizations. Ensure all records generated as a result of processes prescribed in this publication adhere  to  AFI  33-322, Records  Management  and  Information  Governance  Program ,  and  are disposed in accordance with the Air Force records disposition schedule located in the Air Force Records Information Management System. Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change  of  Publication ;  route  AF  Forms  847  from  the  field  through  the appropriate  functional  chain  of  command.  This  DAFMAN  may  be  supplemented  but  all supplements  to  this  publication  must  be  routed  to  SAF/CN,  Cybersecurity  Division,  for coordination prior to certification and approval. (T-3). The authorities to waive wing or unit level requirements in this publication are identified with a Tier ('T-0, T-1, T-2, T-3') number following the compliance statement. See DAFI 33-360, Publications and Forms Management , in accordance with DAFI 33-360_DAFGM2020-01, Attachment 3, paragraph 6.5.6.3.5, for a description of the authorities associated with the Tier numbers. Submit requests for waivers through",
+  "candidate": "Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change  of  Publication ;  route  AF  Forms  847  from  the  field  through  the appropriate  functional  chain  of  command. "
+ },
+ {
+  "id": "R084",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.3.1.  Serves as the DAF representative at the DoD Identity Protection Management Senior Coordinating Group.\n- 2.3.2.  Performs  all  duties  and  responsibilities  in  accordance  with  Headquarters  Air  Force Mission  Directive  (HAFMD)  1-26, Chief,  Information  Dominance  and  Chief  Information Officer .\n- 2.4. Air Combat Command (ACC) A6 . Designated as the DAF lead command for Cyberspace. Reviews  and  provides  implementation  recommendations  for  cyberspace  doctrine,  policy,  and procedures to SAF/CN. A6O serves as ICAM service owner. Primary duties include:\n- 2.4.1.  Evaluating  requirements  for  alignment  to  Air  Force  strategy  and  mission,  ensuring solutions meet the needs of the user community.\n- 2.4.2.  Advocating for funding and prioritizing resources that support ICAM.",
+  "candidate": "A6O serves as ICAM service owner. "
+ },
+ {
+  "id": "R085",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "ACCESS MANAGEMENT",
+  "paragraph": "- 5.3.5.4.  FNs or LNs requiring system access must use PKI access methods in accordance with DoDI 8520.03 and CJCSI 6510.01F. (T-0). The application and data the FN or LN is accessing must be approved for release to the country of the FN/LN. (T-0). If  a  system cannot accept a PKI  certificate, follow guidance for other approved two-factor authentication capabilities for establishing the identity of the FN and/or LN.\n- 5.3.5.5.  Non-US citizens, who are permanent legal residents, are required to meet the same requirements of any US citizen for access to the unclassified network or system. (T-0).",
+  "candidate": "Non-US citizens, who are permanent legal residents, are required to meet the same requirements of any US citizen for access to the unclassified network or system. (T-0)."
+ },
+ {
+  "id": "R086",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.4. Authorization.",
+  "paragraph": "5.4.4.1.  When required by the ISO for IS access, in accordance with Title 10 United States Code Section 9013, AFI 33-332, and EO 9397, Numbering System for Federal Accounts Relating to Individual Persons , users of all authorized DAF information system devices (to include mobile computing devices) the CSS or ISSO will ensure:\n5.4.4.1.1.  Users  sign  the  standardized  AF  Form  4394, Air  Force  User  Agreement Statement-Notice and Consent Provision, prior to initial access. (T-3).\n5.4.4.1.2.  Users complete Cyber Awareness Challenge training prior to being granted access to an IS. (T-0). Subscribers must re-accomplish Cyber Awareness Challenge training  annually;  organizations  maintain  compliance  in  accordance  with  DoD 8570.01-M. (T-0).\n5.4.4.1.3.  Failure to complete annual Cyber Awareness Challenge training results in immediate suspension of access to unclassified and classified information systems. (T0). Access  can  be  restored  upon  satisfying  the  annual  retraining  requirement,  in accordance with DoD 8570.01-M. (T-0).",
+  "candidate": "Access  can  be  restored  upon  satisfying  the  annual  retraining  requirement, in accordance with DoD 8570.01-M."
+ },
+ {
+  "id": "R087",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "ACCESS MANAGEMENT",
+  "paragraph": "- 5.1.2.  Relying  Party  (RP).  An  entity  that  relies  upon  the  subscriber's  authenticator(s)  and credentials, or a verifier's assertion of a claimant's identity, typically to process a transaction or grant access to information or a system. Examples of an RP include websites or applications where a subscriber must be authenticated using digital certificates before granting access. (T0). This  includes the AF Portal where the AF Portal is the RP the subscriber is requesting access using the authentication certificate to validate his or her digital identity. In the case of network logon, the Domain Controller is the RP.\n- 5.1.2.1.  Devices  can  be  both  an  RP  and  a  subscriber  when  in  a  device-to-device communication session.\n- 5.1.2.2.  Applications like Outlook\u2122 or Adobe\u2122 also act as an RP when validating digital signatures of emails and forms to verify the digital certificate is valid in accordance with X.509 Certificate Policy. (T-0).",
+  "candidate": "Applications like Outlook\u2122 or Adobe\u2122 also act as an RP when validating digital signatures of emails and forms to verify the digital certificate is valid in accordance with X.509 Certificate Policy."
+ },
+ {
+  "id": "R088",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.15.2.  Assists  with  identity  management  (e.g.,  building  information,  phone  number)  and access management (e.g., work hours, office affiliation).\n- 2.16. Certification Authorities (CAs). An entity authorized by the CISO to create, sign, and issue public key certificates to be used within an enterprise.\n- 2.16.1.  Responsible for all aspects of the issuance and management of certificates, to include the  registration  process,  identification  and  authentication,  publication,  revocation,  and  rekeying of certificates.\n- 2.16.2.  When a new CA is established, the CA root certificates are loaded and built into the root chains that must be added to every device trusting the new CA and added to the servers, workstations, and devices of relying parties, in accordance with the DoD Certificate Policy. (T-0) .\n- 2.16.3.  Maintains  and  updates  a  Certificate  Revocation  List  (CRL)  for  certificates  it  has issued.\n- 2.16.4.  Coordinates with AFLCMC to add a new CA into the Certificate Trust List.",
+  "candidate": "When a new CA is established, the CA root certificates are loaded and built into the root chains that must be added to every device trusting the new CA and added to the servers, workstations, and devices of relying parties, in accordance with the DoD Certificate Policy. (T-0) ."
+ },
+ {
+  "id": "R089",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "6.6. Certificate Revocation.",
+  "paragraph": "- 6.6.2.3.  CAs are responsible for indicating the revocation status of the certificates they issue. (T-3). Revocation status information is provided using the OCSP, CRLs, or some other  mechanism  in  accordance  with  Internet  X.509  PKI  Certificate  and  CRL  Profile, Request for Comments (RFC) 5280, DOI 10.17487/RFC5280, https://doi.org/10.17487/RFC5280 .\n- 6.7. Revocation  Repositories. A system  or  collection  of  distributed systems  that  stores certificates and CRLs and serves as a means of distributing these certificates and CRLs to end entities.",
+  "candidate": "Revocation status information is provided using the OCSP, CRLs, or some other  mechanism  in  accordance  with  Internet  X.509  PKI  Certificate  and  CRL  Profile, Request for Comments (RFC) 5280, DOI 10.17487/RFC5280, https://doi.org/10.17487/RFC5280 ."
+ },
+ {
+  "id": "R090",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.5.3.  Password management.",
+  "paragraph": "- 5.7.1.2.  Any new DAF PACS procurements require the use of the DoD CAC (Contactless or Chip+PIN) exclusively in accordance with DTM 09-012, Interim Policy Guidance for DoD Physical Access Control . (T-0).\n- 5.7.2.  Logical Access. Access to an IT network, system, service, or application.  DoD IS or DoD  networks  hosting  information  not  previously  approved  for  public  release  shall authenticate all entities prior to granting access in accordance with DoDD 5230.09, Clearance of DoD Information for Public Release and DoDI 5230.29, Security and Policy Review of DoD Information for Public Release. (T-0).\n- 5.7.2.1.  For network authentication, enable all unclassified networks to use tokens, (AAL2  or  AAL-3),  DoD  PKI  certificate-based  authentication,  and  set  authorized  subscriber accounts to require smart card logon by selecting, 'Smart card is required for Interactive Logon,' in Windows\u2122 AD environments.",
+  "candidate": "DoD IS or DoD  networks  hosting  information  not  previously  approved  for  public  release  shall authenticate all entities prior to granting access in accordance with DoDD 5230.09, Clearance of DoD Information for Public Release and DoDI 5230.29, Security and Policy Review of DoD Information for Public Release. (T-0)."
+ },
+ {
+  "id": "R091",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.3. Credential Life Cycle.",
+  "paragraph": "- 4.3.3.  Credential termination. Credential termination means revoking the credential so that it is no longer used for expressing the logical identity of the user.  Termination may be the result of the credential being lost, potential compromise, changes of employment status, or no longer a need by the individual.\n- 4.4. Types of Tokens. Various types of tokens are used for specific purposes to authenticate on the AFIN.  A hardware token is a portable, user-controlled, physical device used to generate, store, and protect cryptographic information.  They are used to perform encryption and provide 2FA access NIPRNET and SIPRNET, in accordance with DoDI 8520.02.  The CAC is the primary hardware token for authenticating individuals for access to NIPRNET assets and physical access to  DoD facilities, in accordance with DoDI 8520.02, Department of Defense Manual (DoDM) 1000.13V1, DoD Identification  (ID)  Cards:  ID  Card  Life-Cycle, and  AFI  31-101, Integrated Defense (ID) .",
+  "candidate": "Credential termination means revoking the credential so that it is no longer used for expressing the logical identity of the user."
+ },
+ {
+  "id": "R092",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.5.3.  Password management.",
+  "paragraph": "- 5.5.3.1.  Specific procedural information for password management is provided in DoD STIGs and PIN management requirements in accordance with DoD PKI RA/LRA CPS.\n- 5.5.3.2.  USCYBERCOM tasking order password requirements take precedence only if more restrictive than guidance in this publication.\n- 5.5.3.3.  Unauthorized sharing of passwords/PINs is a security incident, in accordance with CJCSI 6510.01F.\n- 5.5.3.4.  In  the  event  of  a  compromised  password/PIN,  the  ISO  and  the  ISSM  ensure procedures are in place to implement immediate password/PIN change activities. (T-3). A compromised PKI PIN warrants probable compromise of the associated certificates.\n- 5.5.4.  Pin management. All NIPRNET and SIPRNET DoD ISs and Directory Service domains and domain-joined computers, per local security policy, are required to be configured for PIN caching, set to 10 minutes. (T-3).",
+  "candidate": "- 5.5.3.2.  USCYBERCOM tasking order password requirements take precedence only if more restrictive than guidance in this publication."
+ },
+ {
+  "id": "R093",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "- 7.1.1.  Enterprise  IDD  (unclassified  or  classified):    Retrieves  data  from  multiple,  disparate USAF and DoD data sources to create a single consolidated digital identity record.\n- 7.1.1.1.  Provides a common repository known as authoritative attribute store of role-based identity data for warfighters that can be used by systems, applications, and devices. This simplifies  the  management  of  core  identity  data  elements  about  warfighters  within individual systems by giving systems access to near real-time data about their subscribers. This capability is designed to be used in strategic and tactical environments.\n- 7.1.1.2.  No  other  identity  attribute  source  (local  store)  will  be  established  in  the  DAF without coordinating with ACC HQ CCC/CYX ICAM, AFLCMC, and SAF/CN. (T-3).\n- 7.1.2.  Account  provisioning  and  user  self  service  (unclassified  or  classified):    Provides administrators  and  warfighters  an  automated  business  process  to  manage  accounts  across multiple systems based on authoritative identity records.",
+  "candidate": "This simplifies the management of core identity data elements about warfighters within individual systems by giving systems access to near real-time data about their subscribers."
+ },
+ {
+  "id": "R094",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "CREDENTIAL MANAGEMENT",
+  "paragraph": "- 4.2.1.  Strength.  The strength of a credential is the measure of its ability to resist unauthorized use. The required strength a credential must have varies according to the classification of the system to be accessed (unclassified or classified), in accordance with NIST SP 800-63-3 and DoDI 8520.03. (T-0).\n- 4.2.2.  Assurance Levels specify the strength of the binding between the public key and the individual whose subject name is cited in the certificate, the mechanisms used to control the use of the private key, and the security provided by the PKI itself.\n- 4.2.2.1.  DoD PKI certificates are at the medium assurance level, as defined by NIST SP 800-63. (T-0) .  This  is  a  portable  certificate  and  can  be  used  on  any  computer with the required utilities and drivers installed .\n- 4.2.2.2.  Hardware-based  certificates  are  stored  on  a  Federal  Information  Processing Standard (FIPS) 140-2 Level 2 or higher cryptographic device (e.g. smart token, universal serial bus (USB) device). (T-0).",
+  "candidate": "DoD PKI certificates are at the medium assurance level, as defined by NIST SP 800-63."
+ },
+ {
+  "id": "R095",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "8.1. PKI/PKE",
+  "paragraph": "- 8.1.12.2.1.  Establishes instructions for the implementation of PKI for SECRET-high collateral classified networks in accordance with CNSSI 1300. (T-0).\n- 8.1.12.2.2.  Specifications  and  instructions  for  the  issuance  of  certificates  issued  to named  individuals,  roles,  systems,  or  devices  that  are  part  of  NSS  SECRET-high systems are provided in NSS PKI DoD Registration Practice Statement (RPS). (T-0).\n- 8.1.13.  Air Force Internal.  LTMA and IBA Certificates. These certificates are used to sign the Subordinate CAs operated in the AFNET and at DAF-supported CCMDs, in turn, and issue device identity certificates to internally-facing NPEs within the AFIN. (T-3).\n- 8.1.13.1.  IBA X.509 Certificate Policy.\n- 8.1.13.2.  Internal LTMA X.509 Certificate Policy.",
+  "candidate": "Establishes instructions for the implementation of PKI for SECRET-high collateral classified networks in accordance with CNSSI 1300. (T-0)."
+ },
+ {
+  "id": "R096",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.11. Information  System  Security  Officer  (ISSO) .  ISSO  is  responsible  for  the  technical implementation of a cybersecurity program. When circumstances warrant, a single individual may fulfill both the Information System Security Manager (ISSM) and the ISSO roles. AFI 17-101, AFMAN 17-1301, and DoDI 8500.01 outline the duties of the ISSO.\n- 2.11.1.  The ISSO (referred to as the 'Information Assurance Officer' on the DD Form 2875, System Authorization Access Request (SAAR) ).\n- 2.11.1.1.  Retains the account request according to instructions outlined on the form for non-AFNET information systems. The organization or the system ISSO retains the account access request according to the instructions on the form for Air Force information systems.",
+  "candidate": "When circumstances warrant, a single individual may fulfill both the Information System Security Manager (ISSM) and the ISSO roles. "
+ },
+ {
+  "id": "R097",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "AIR FORCE DIRECTORY SERVICES",
+  "paragraph": "- 7.1.3.1.  Supports geographically disparate exchange sites and is a key enabler for email communications for the warfighter.\n- 7.1.3.2.  Conducts daily synchronization of several million contacts across DoD, MAJCOMs, CCMDs, and DRUs.\n- 7.1.3.3.  DAF organizations will use AFDS Exchange Contact Information Synchronization service to populate all Global Address Lists. (T-3).\n- 7.1.4.  Requirements Process.  ACC HQ CCC/CYX ICAM serves as Lead Command Support and Requirement Lead (RL) for AFDS program. Primary duties include capturing, evaluating, validating, and prioritizing customer requirements.  To receive any of the identity management services offered by AFDS, review the AFDS requirements process and workflow at the AFDS Requirements website.\n- 7.1.4.1.  To  help  the  customer  shape  the  requirement  for  submission,  visit  AFDS  Safe Download  website https://epi.afds.af.mil/Onboarding webpage  and  review/download the pertinent documents.",
+  "candidate": "ACC HQ CCC/CYX ICAM serves as Lead Command Support and Requirement Lead (RL) for AFDS program. "
+ },
+ {
+  "id": "R098",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "INTRODUCTION",
+  "paragraph": "1.1.1.  Identity management allows an organization to construct a trusted digital identity based on an individual's defining attributes.  It establishes identity using trusted evidence, creates an identity account, provisions the account with required attributes, updates identity account over the life cycle, and de-provisions and deletes identities.\n1.1.2.  Credential  management  allows  an  organization  to  associate  a  digital  identity  with authoritative proof of the claimed identity.  The life cycle establishes a sponsor need, registers subscribers  in  identity  databases,  issues  and  maintains  credentials,  and  revokes  those credentials, adding them to revocation lists.\n1.1.3.  Access management allows an organization to leverage trusted identities (person and non-person  entities)  and  authoritative  credentials  to  ensure  only  permitted  individuals  are granted access to protected resources. This is the set of practices and services for ensuring only those with proper permissions can interact with a given resource.  Access control policies at all levels govern access requirements.  Authentication verifies a claimed identity is genuine based on valid credentials.  Authorization is the decision to grant or deny access to a resource based on policy.\nFigure 1.1.  Definition of Identity, Credential and Access Management.",
+  "candidate": "Access control policies at all levels govern access requirements."
+ },
+ {
+  "id": "R099",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.4. Authorization.",
+  "paragraph": "5.4.1.  Authorized User. An authorized user is any appropriately cleared individual required to access a DoD IS to carry out or assist in a lawful and authorized governmental function. The DCSA  Position  Designation  Tool  may  be  used  to  determine  the  position  sensitivity  and corresponding  investigative  requirement  in  accordance  with  DoDI  1400.25V731, DoD Civilian Personnel Management System:  Suitability and Fitness Adjudication For Civilian Employees . Configure authorized user account creation and administration, consult Executive Order  (EO)  13488, Granting  Reciprocity  on  Excepted  Service  and  Federal  Contractor Employee  Fitness and Reinvestigating Individuals in Positions of Public Trust, for investigation requirements. (T-0).\n- 5.4.2.  Non-Privileged. Also known as subscribers requiring basic access to unclassified and classified IS based on the assigned duties.  Non-privileged subscribers authenticate with an authenticator  that  meets  the  proper  AAL/IAL  combo,  depending  on  the  information  being accessed.",
+  "candidate": "Non-privileged subscribers authenticate with an authenticator  that  meets  the  proper  AAL/IAL  combo,  depending  on  the  information  being accessed."
+ },
+ {
+  "id": "R100",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.4.3.  Working with service managers to evaluate service quality, and if required, develop improvement plans.\n- 2.4.4.  Acting as the single voice to program executive officers for priorities and requirements.\n- 2.5. Authorizing officials (AOs). The AO is the official with the authority to formally assume responsibility for operating a system at an acceptable level of risk, in accordance with AFI 17-101. The Air Force Enterprise AO is the only authority permitted to grant an approval to connect to Air Force information networks. Approval to connect authorities for other DAF appointed AOs are approved  by  SAF/CN,  in  coordination  with  the  Enterprise  AO.  In  addition  to  the  AO responsibilities above, the Enterprise AO:\n- 2.5.1.  Establishes  acceptable  security  controls  and  risk  tolerance  for  connecting  to  the  Air Force information network (AFIN) and provides guidance to implementing organizations to mitigate risks commensurate with established risk tolerance.\n- 2.5.2.  Reviews the security authorization package for all requests to connect to the Air Force Information Network and assesses the impact to enterprise community risk.",
+  "candidate": "The AO is the official with the authority to formally assume responsibility for operating a system at an acceptable level of risk, in accordance with AFI 17-101."
+ },
+ {
+  "id": "R101",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "IDENTITY MANAGEMENT",
+  "paragraph": "- 3.3. Identity Proofing. Identity proofing is the process of an identity being initially established. This includes both the assigning and documenting of unique attributes, and in the cybersecurity context, establishing an electronic identity or account bound to the subscriber's and NPE-unique attributes, in accordance with AFI 36-3026V1 and AFI 36-3026V2 for DoD connected personnel and NIST SP 800-63-3.  Non-unique attributes may also be assigned or gathered at this time but are not part of the identity proofing.  The responsibility for assigning and documenting unique attributes may vary by subscriber or NPE type, but the correct binding of the identity attributes to the account is the ultimate responsibility of the ISO.  The ISO must ensure that procedures are established and followed to correctly bind attributes to accounts, in accordance with NIST SP 80063A, Digital Identity Guidelines, Enrollment and Identity Proofing Requirements. (T-0).",
+  "candidate": "Non-unique attributes may also be assigned or gathered at this time but are not part of the identity proofing. "
+ },
+ {
+  "id": "R102",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.5.3.  Password management.",
+  "paragraph": "- 5.7.3.1.1.  Roles  are  defined  based  on  job  functions,  instead  of  individual  member accounts and groups.\n- 5.7.3.1.2.  Permissions are defined based on job authority and responsibilities within a job function.\n- 5.7.3.1.3.  Operations on an object are invocated based on the permissions.\n- 5.7.3.1.4.  Object is concerned with the subscriber's role and not the subscriber.\n- 5.7.3.2.  Targets different levels of a system or application to provide any degree of access control that is necessary.\n- 5.7.4.  Attribute-Based Access Control (ABAC).\n5.7.4.1.  Logical  access  control  methodology  where  authorization  is  determined  by evaluating attributes associated with the subject, object, requested operations, and, in some cases,  environmental  conditions  against  policy,  rules,  or  relationships  that  describe  the allowable  operations  in  accordance  with  NIST  SP  800-162, Guide  to  Attribute  Based Access Control (ABAC) Definition and Considerations .",
+  "candidate": "Object is concerned with the subscriber's role and not the subscriber."
+ },
+ {
+  "id": "R103",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.16.5.  Ensures all Secret Internet Protocol Router Network (SIPRNET) networks use the NSS Root CA and are current with all PKI security patches and configuration settings, in accordance with DoD RA-LRA CPS.\n- 2.16.6.  Both the CA and RA are Certificate Management Authorities (CMAs). This policy uses the term CMA when a function may be assigned to either a CA or a RA, or when a requirement applies to both CAs  and  RAs.  The  division of subscriber registration responsibilities between the CA and RA may vary among implementation of this certificate policy. This division of responsibilities are described in the CA's CPS.\n- 2.17. AF PKI Registration Authority (RA) .  RAs are individuals authorized by the CMA to collect, verify, and submit information provided by potential subscribers, which is entered into public key certificates. AF RAs are appointed by SAF/CNZ.",
+  "candidate": "AF RAs are appointed by SAF/CNZ."
+ },
+ {
+  "id": "R104",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.11. Information  System  Security  Officer  (ISSO) .  ISSO  is  responsible  for  the  technical implementation of a cybersecurity program. When circumstances warrant, a single individual may fulfill both the Information System Security Manager (ISSM) and the ISSO roles. AFI 17-101, AFMAN 17-1301, and DoDI 8500.01 outline the duties of the ISSO.\n- 2.11.1.  The ISSO (referred to as the 'Information Assurance Officer' on the DD Form 2875, System Authorization Access Request (SAAR) ).\n- 2.11.1.1.  Retains the account request according to instructions outlined on the form for non-AFNET information systems. The organization or the system ISSO retains the account access request according to the instructions on the form for Air Force information systems.",
+  "candidate": "ISSO  is  responsible  for  the  technical implementation of a cybersecurity program. "
+ },
+ {
+  "id": "R105",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.9.4.  In coordination with lead command and SAF/CN, drafts and updates DAF policy on implementation, management, and use of ICAM and PKI, and identifies, documents, reviews, and approves all PKI policy requirements with DoD and PKI leaders.\n- 2.9.5.  In the absence of a program of record designation, serves as the AF ICAM program management office. Supports AF ICAM technical services to DAF systems, which includes consultation with DoD CIO, DoD PKI PMO, National Security Agency, Defense Information Systems  Agency  (DISA),  United  States  Cyber  Command  (USCYBERCOM),  Defense Security/Cybersecurity Authorization Working Group , SAF/CN, MAJCOMs, DRUs, FOAs, and supported CCMDs.\n- 2.9.6.  Provides  technical  assistance  and  guidance  to  subscribers  and  program  managers, ensuring systems are in compliance with ICAM policies, standards and instructions.",
+  "candidate": "In the absence of a program of record designation, serves as the AF ICAM program management office. "
+ },
+ {
+  "id": "R106",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.5. Account Management.",
+  "paragraph": "5.5.1.  Manage  all  subscriber  accounts  using  applicable  system  configuration  management guidance;  follow  Technical  Orders  (TOs)  published  by  DAF  (e.g.,  MPTO  00-33B-5006, MPTO  00-33A-1202  for  AFNET  accounts)  and  the  applicable  DoD  Security  Technical Implementation  Guides  (STIGs)  (e.g.,  enclave,  application  security,  operating  system, database). (T-3).\n- 5.5.2.  Account Provisioning. Logically moving a new subscriber account from the placeholder Organizational Unit (OU) to the requested Base OU in the AFNET.  Enables the new account, and if the CSS requests, provides the account email.\n- 5.5.2.1.  Contact the Unit CSS to provision the new account.\n- 5.5.2.2.  CSS provisions account via IAO Express Tier Zero.",
+  "candidate": "Enables the new account, and if the CSS requests, provides the account email."
+ },
+ {
+  "id": "R107",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.5.3.  Password management.",
+  "paragraph": "- 5.7.3.1.1.  Roles  are  defined  based  on  job  functions,  instead  of  individual  member accounts and groups.\n- 5.7.3.1.2.  Permissions are defined based on job authority and responsibilities within a job function.\n- 5.7.3.1.3.  Operations on an object are invocated based on the permissions.\n- 5.7.3.1.4.  Object is concerned with the subscriber's role and not the subscriber.\n- 5.7.3.2.  Targets different levels of a system or application to provide any degree of access control that is necessary.\n- 5.7.4.  Attribute-Based Access Control (ABAC).\n5.7.4.1.  Logical  access  control  methodology  where  authorization  is  determined  by evaluating attributes associated with the subject, object, requested operations, and, in some cases,  environmental  conditions  against  policy,  rules,  or  relationships  that  describe  the allowable  operations  in  accordance  with  NIST  SP  800-162, Guide  to  Attribute  Based Access Control (ABAC) Definition and Considerations .",
+  "candidate": "Logical access control methodology where authorization is determined by evaluating attributes associated with the subject, object, requested operations, and, in some cases, environmental conditions against policy, rules, or relationships that describe the allowable operations in accordance with NIST SP 800-162, Guide to Attribute Based Access Control (ABAC) Definition and Considerations."
+ },
+ {
+  "id": "R108",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "ACCESS MANAGEMENT",
+  "paragraph": "5.1. Introduction. Access management covers subscribers' authentication and authorization to a relying party, providing verification and ensuring non-repudiation.  DAF authentication will align and comply with the Deputy Secretary of Defense DoD Cybersecurity Discipline Implementation Plan, DoD cybersecurity policies and privilege management initiatives, in accordance with DoDI 8520.03 and NIST SP 800-63B. (T-0).\n5.1.1.  Subscriber.  Subscribers  are  entities  defined  by  their  affiliation  within  the  DoD. Common  affiliations  include:  Uniformed  Service  Members,  DoD  Civilians,  Contractor Employees, Foreign Nationals (FNs), NPEs, and Organizational Roles.\n5.1.1.1.  Entities (e.g., role, person, equipment) must possess an attribute to be bonded and allowed to be identified, verified, and authenticated for access. (T-0). System or device subscribers will use system or device authenticators containing a unique system or device identifier as the subject and are responsible for maintaining and managing access to the activation key, code, or token associated with the authenticator. (T-0).",
+  "candidate": "DAF authentication will align and comply with the Deputy Secretary of Defense DoD Cybersecurity Discipline Implementation Plan, DoD cybersecurity policies and privilege management initiatives, in accordance with DoDI 8520.03 and NIST SP 800-63B. (T-0)."
+ },
+ {
+  "id": "R109",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "COMPLIANCE WITH THIS PUBLICATION IS MANDATORY",
+  "paragraph": "This Department of the Air Force Manual (DAFMAN) implements Air Force Policy Directive  171, Information Dominance Governance and Management and Air Force Instruction (AFI) 17-130, Cybersecurity Program Management . This manual applies to all civilian employees and uniformed members of the Department of the Air Force (DAF), Air Force Reserve (AFR), Air National Guard (ANG), and those with contractual obligation to comply with DAF publications, regardless of Air Force  specialty  code,  who  develop,  acquire,  deliver,  use,  operate,  or  manage  ICAM  for  DAF organizations. Ensure all records generated as a result of processes prescribed in this publication adhere  to  AFI  33-322, Records  Management  and  Information  Governance  Program ,  and  are disposed in accordance with the Air Force records disposition schedule located in the Air Force Records Information Management System. Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change  of  Publication ;  route  AF  Forms  847  from  the  field  through  the appropriate  functional  chain  of  command.  This  DAFMAN  may  be  supplemented  but  all supplements  to  this  publication  must  be  routed  to  SAF/CN,  Cybersecurity  Division,  for coordination prior to certification and approval. (T-3). The authorities to waive wing or unit level requirements in this publication are identified with a Tier ('T-0, T-1, T-2",
+  "candidate": "Ensure all records generated as a result of processes prescribed in this publication adhere  to  AFI  33-322, Records  Management  and  Information  Governance  Program ,  and  are disposed in accordance with the Air Force records disposition schedule located in the Air Force Records Information Management System. "
+ },
+ {
+  "id": "R110",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "CERTIFICATE MANAGEMENT",
+  "paragraph": "6.1. Introduction . The AF ensures its internal PKI CAs and the digital certificates they issue are trustworthy  using  the  trust  governance  method.    It  also  ensures  external  roots  and  associated certificates  can  be  trusted  by  AF  relying  parties.    The  process  of  trusting  a  PKI  involves  the acceptance of its root (also known as a Trust Anchor) certificate and placing it in a trust store.  The enterprise certificate trust governance process exists to manage the baseline and provide a formal means to add and remove roots at the enterprise level.  AF ISs and subscribers shall only rely on certificates  issued  by  a  DoD  and/or  AF  PKI  that  are  approved  for  use. (T-3). Relying  parties authenticate approved external PKI certificates using either a direct trust mechanism or crosscertification mechanism. All external PKI certificates presented from an approved external PKI must be validated via either download of the PKI certificate revocation list associated with the external PKI or use of an on-line certificate status protocol query. (T-3). The DoD maintains a repository for posting CA certificates and policy object identifiers for approved external PKIs.",
+  "candidate": "The AF ensures its internal PKI CAs and the digital certificates they issue are trustworthy  using  the  trust  governance  method. "
+ },
+ {
+  "id": "R111",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.3. Credential Life Cycle.",
+  "paragraph": "- 4.6.4.7.3.2.  Contractors  contact  their  unit's  CSS  to  terminate  their  SIPRNET account and turn in their SIPRNET tokens to the base LRA at the end of the contract period of performance. (T-3).\n- 4.6.4.8.  Any subscriber can retain his or her SIPRNET token during a move, while they reside on the same station or base. SIPRNET tokens are required to be turned in when leaving a station or base.\n- 4.6.4.9.  Exception or exemption validated circumstances, where a SIPRNET token cannot be used, refer to SIPRNET smart card logon below.",
+  "candidate": "Exception or exemption validated circumstances, where a SIPRNET token cannot be used, refer to SIPRNET smart card logon below."
+ },
+ {
+  "id": "R112",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.4. Authorization.",
+  "paragraph": "5.4.4.2.1.  Original  DD  Forms  2875  for  unprivileged  AFNET  accounts  may  be transferred when duty assignments change. The gaining unit may use local methods to update duty information in the Information Assurance Officer (IAO) Express tool and shared drive access requirements.  The losing unit ensures termination of shared drive access prior to user's out-processing. (T-3).\n- 5.4.4.2.2.  Changes to privileged account access requirements require a new account access request. (T-3).\n- 5.4.4.2.2.1.  Re-accomplish  the  account  request  for  AFNET-Secured  Internet Protocol  Network  (SIPRNET)  (AFNET-S)  accounts  when  access  requirements change (e.g., duty position, permanent change of station). (T-3).",
+  "candidate": "The gaining unit may use local methods to update duty information in the Information Assurance Officer (IAO) Express tool and shared drive access requirements. "
+ },
+ {
+  "id": "R113",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.5.3.  Renders AFIN connection decisions in the form of an approval to connect for non-AF systems and for AF systems falling under another AO.\n- 2.5.4.  Responds  to  urgent  or  emergency  requests  to  connect  to  the  AFIN.  This  can  be delegated to an Enterprise AO designee.\n- 2.6. 16th  Air  Force  (16AF). 16  AF  is  responsible  for  implementing  ICAM  guidance  and technologies for DAF ISs.\n- 2.7. 688th Cyber Wing /690th Cyber Operations Group. This organization serves as the AFIN helpdesk.\n- 2.8. Cyberspace Capabilities Center (CCC). CCC is the ACC/A6 executive agent. On behalf of ACC/A6, CCC:\n- 2.8.1.  Provides clarification of ICAM policy and guidance for the USAF.\n- 2.8.2.  Gathers identity management and credential management requirements for ICAM to SAF/CN and all  Major  Commands  (MAJCOMs)/Field  Operating  Agencies  (FOAs)/Direct reporting units (DRUs).",
+  "candidate": "16  AF  is  responsible  for  implementing  ICAM  guidance  and technologies for DAF ISs."
+ },
+ {
+  "id": "R114",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.11. Information  System  Security  Officer  (ISSO) .  ISSO  is  responsible  for  the  technical implementation of a cybersecurity program. When circumstances warrant, a single individual may fulfill both the Information System Security Manager (ISSM) and the ISSO roles. AFI 17-101, AFMAN 17-1301, and DoDI 8500.01 outline the duties of the ISSO.\n- 2.11.1.  The ISSO (referred to as the 'Information Assurance Officer' on the DD Form 2875, System Authorization Access Request (SAAR) ).\n- 2.11.1.1.  Retains the account request according to instructions outlined on the form for non-AFNET information systems. The organization or the system ISSO retains the account access request according to the instructions on the form for Air Force information systems.",
+  "candidate": "The organization or the system ISSO retains the account access request according to the instructions on the form for Air Force information systems."
+ },
+ {
+  "id": "R115",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "4.7. Virtual Smart Card (VSC).",
+  "paragraph": "- 4.7.1.  VSC is a multi-factor technology that emulates the functionality of traditional X.509based  smart  cards.  Smart  card-based  PIV  cards  cannot  be  readily  used  with  most  mobile devices  (e.g.,  smartphones,  tablets);  however,  VSCs  use  derived  PIV  Credentials  (DPCs), which can be used instead to PIV-enable these devices and provide multifactor authentication for mobile device subscribers.\n- 4.7.2.  DPCs are only used on FIPS 140-2, level 2, trusted platform module 1.2 and greater.\n- 4.7.2.1.  A  DPC  is  issued  for  which  the  corresponding  private  key  is  stored  in  a cryptographic module that is an alternative form factor to the PIV Card. (T-3).",
+  "candidate": "VSCs use derived PIV Credentials (DPCs), which can be used instead to PIV-enable these devices and provide multifactor authentication for mobile device subscribers."
+ },
+ {
+  "id": "R116",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "8.1. PKI/PKE",
+  "paragraph": "- DoD in unclassified domains in accordance with  DoD External Certification Authority X.509 Certificate Policy Version 4.4. (T-0).\n- 8.1.5.2.  DoD mission partners shall establish PKI authentication when interacting with the DoD in classified domains in accordance with DoDI 8520.02. (T-0).\n- 8.1.5.3.  No other PKIs will be established in the AF without coordinating with ACC HQ CCC/CYX ICAM, AF PKI SPO, and SAF/CN. (T-3). Contact the AF PKI SPO Helpdesk at afpki.helpdesk@us.af.mil to begin the process of adding non preapproved Certificate Trusts.\n- 8.1.5.4.  Certificates, by themselves, provide an identity.  That identity is gained from an identity manager and can also be leveraged to obtain additional attributes from the identity manager.",
+  "candidate": "Contact the AF PKI SPO Helpdesk at afpki.helpdesk@us.af.mil to begin the process of adding non preapproved Certificate Trusts."
+ },
+ {
+  "id": "R117",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.9. Air Force Life Cycle Management Center (AFLCMC/HNID). Enterprise  IT  &  Cyber Infrastructure Division, Commoditized Infrastructure Branch, Identity Solutions Branch. Acquires,  adapts,  and  evolves  cybersecurity  and  information  assurance  (IA)  capabilities  and systems across the AFIN, providing ICAM solutions as directed by DoD and the DAF; engages with lead command to establish priorities for ICAM requirements.\n- 2.9.1.  In coordination with lead command and SAF/CN, reviews, evaluates, interprets, and incorporates ICAM policy and guidance for the DAF.\n- 2.9.2.  In coordination with lead command and SAF/CN, maintains and enforces the integrity of the identity management process and infrastructure and its use, including PKI.\n- 2.9.3.  In coordination with lead command  and  SAF/CN,  provides ICAM  research, engineering,  and  policy  support,  and  management  of  ICAM  and  PKI  to  SAF/CN,  DAF organizations, AFR, ANG, CCMDs, and DoD PKI (PMO), as directed.",
+  "candidate": "Acquires,  adapts,  and  evolves  cybersecurity  and  information  assurance  (IA)  capabilities  and systems across the AFIN, providing ICAM solutions as directed by DoD and the DAF; engages with lead command to establish priorities for ICAM requirements."
+ },
+ {
+  "id": "R118",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "5.5.3.  Password management.",
+  "paragraph": "- 5.7.3.1.1.  Roles  are  defined  based  on  job  functions,  instead  of  individual  member accounts and groups.\n- 5.7.3.1.2.  Permissions are defined based on job authority and responsibilities within a job function.\n- 5.7.3.1.3.  Operations on an object are invocated based on the permissions.\n- 5.7.3.1.4.  Object is concerned with the subscriber's role and not the subscriber.\n- 5.7.3.2.  Targets different levels of a system or application to provide any degree of access control that is necessary.\n- 5.7.4.  Attribute-Based Access Control (ABAC).\n5.7.4.1.  Logical  access  control  methodology  where  authorization  is  determined  by evaluating attributes associated with the subject, object, requested operations, and, in some cases,  environmental  conditions  against  policy,  rules,  or  relationships  that  describe  the allowable  operations  in  accordance  with  NIST  SP  800-162, Guide  to  Attribute  Based Access Control (ABAC) Definition and Considerations .",
+  "candidate": "Permissions are defined based on job authority and responsibilities within a job function."
+ },
+ {
+  "id": "R119",
+  "document": "DAFMAN 17-1304 (Identity, Credential, and Access Management)",
+  "heading": "2.3. Air Force Chief Technology Officer (SAF/CN CTO).",
+  "paragraph": "- 2.12.6.  Accepts  or  rejects  Plan  of  Action  and  Milestones  through  the  Change  Control Requirements Board to be included into the RMF package.\n- 2.13. Wing Cybersecurity Office (WCO). Provides ICAM policy and technical subject matter expertise for IT under the control of the base communications squadron or flight, including IT for tenant units (e.g., FOAs, DRUs, other service units), unless formal agreements exist. Note: For bases with more than one wing, the designated host wing will provide this function. For Joint Bases, the AF is responsible for all AF-owned IT and infrastructure.",
+  "candidate": "Note: For bases with more than one wing, the designated host wing will provide this function. "
+ }
+]

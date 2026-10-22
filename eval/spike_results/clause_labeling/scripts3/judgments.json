@@ -1,0 +1,597 @@
+[
+ {
+  "id": "R001",
+  "verdict": "NOT_REAL",
+  "why": "describes automatic consequence"
+ },
+ {
+  "id": "R002",
+  "verdict": "REAL",
+  "why": "will be appointed"
+ },
+ {
+  "id": "R003",
+  "verdict": "REAL",
+  "why": "may serve as: permission"
+ },
+ {
+  "id": "R004",
+  "verdict": "NOT_REAL",
+  "why": "purpose of NPE certificate type, not a command"
+ },
+ {
+  "id": "R005",
+  "verdict": "REAL",
+  "why": "refer/route commands"
+ },
+ {
+  "id": "R006",
+  "verdict": "NOT_REAL",
+  "why": "navigation pointer to template"
+ },
+ {
+  "id": "R007",
+  "verdict": "NOT_REAL",
+  "why": "purpose statement"
+ },
+ {
+  "id": "R008",
+  "verdict": "REAL",
+  "why": "certificates are required for external servers"
+ },
+ {
+  "id": "R009",
+  "verdict": "UNSURE",
+  "why": "third-person 'follows' in intro; duty or description"
+ },
+ {
+  "id": "R010",
+  "verdict": "NOT_REAL",
+  "why": "process description"
+ },
+ {
+  "id": "R011",
+  "verdict": "NOT_REAL",
+  "why": "description of assurance levels"
+ },
+ {
+  "id": "R012",
+  "verdict": "NOT_REAL",
+  "why": "definition of Tier 1"
+ },
+ {
+  "id": "R013",
+  "verdict": "REAL",
+  "why": "third-person role duty"
+ },
+ {
+  "id": "R014",
+  "verdict": "UNSURE",
+  "why": "'DoD maintains a repository' with tier tag; fact or duty"
+ },
+ {
+  "id": "R015",
+  "verdict": "NOT_REAL",
+  "why": "system behavior description"
+ },
+ {
+  "id": "R016",
+  "verdict": "NOT_REAL",
+  "why": "definition of RA"
+ },
+ {
+  "id": "R017",
+  "verdict": "PARTIAL",
+  "why": "duty merged with heading text"
+ },
+ {
+  "id": "R018",
+  "verdict": "NOT_REAL",
+  "why": "'might require' description"
+ },
+ {
+  "id": "R019",
+  "verdict": "NOT_REAL",
+  "why": "cross-reference"
+ },
+ {
+  "id": "R020",
+  "verdict": "REAL",
+  "why": "should notify"
+ },
+ {
+  "id": "R021",
+  "verdict": "REAL",
+  "why": "strongly encouraged: recommendation"
+ },
+ {
+  "id": "R022",
+  "verdict": "NOT_REAL",
+  "why": "navigation pointer to template"
+ },
+ {
+  "id": "R023",
+  "verdict": "NOT_REAL",
+  "why": "description of assurance levels"
+ },
+ {
+  "id": "R024",
+  "verdict": "REAL",
+  "why": "third-person duty with tier tag"
+ },
+ {
+  "id": "R025",
+  "verdict": "PARTIAL",
+  "why": "cut at semicolon; qualifier 'AF RAs have final approval' lost"
+ },
+ {
+  "id": "R026",
+  "verdict": "REAL",
+  "why": "will receive/set up/issue"
+ },
+ {
+  "id": "R027",
+  "verdict": "REAL",
+  "why": "third-person role duty"
+ },
+ {
+  "id": "R028",
+  "verdict": "NOT_REAL",
+  "why": "system capability description"
+ },
+ {
+  "id": "R029",
+  "verdict": "REAL",
+  "why": "role + coordinates testing duty"
+ },
+ {
+  "id": "R030",
+  "verdict": "REAL",
+  "why": "must be validated"
+ },
+ {
+  "id": "R031",
+  "verdict": "REAL",
+  "why": "will provide updates"
+ },
+ {
+  "id": "R032",
+  "verdict": "REAL",
+  "why": "serves as helpdesk"
+ },
+ {
+  "id": "R033",
+  "verdict": "UNSURE",
+  "why": "'Consult' imperative but mostly a pointer to a list"
+ },
+ {
+  "id": "R034",
+  "verdict": "REAL",
+  "why": "may be used: permission"
+ },
+ {
+  "id": "R035",
+  "verdict": "NOT_REAL",
+  "why": "definition"
+ },
+ {
+  "id": "R036",
+  "verdict": "NOT_REAL",
+  "why": "description of tier system"
+ },
+ {
+  "id": "R037",
+  "verdict": "NOT_REAL",
+  "why": "system description"
+ },
+ {
+  "id": "R038",
+  "verdict": "NOT_REAL",
+  "why": "background"
+ },
+ {
+  "id": "R039",
+  "verdict": "REAL",
+  "why": "command: document access"
+ },
+ {
+  "id": "R040",
+  "verdict": "REAL",
+  "why": "will use AFDS IDD"
+ },
+ {
+  "id": "R041",
+  "verdict": "NOT_REAL",
+  "why": "description"
+ },
+ {
+  "id": "R042",
+  "verdict": "REAL",
+  "why": "third-person role duty"
+ },
+ {
+  "id": "R043",
+  "verdict": "NOT_REAL",
+  "why": "system description"
+ },
+ {
+  "id": "R044",
+  "verdict": "REAL",
+  "why": "third-person procedural duty with tier"
+ },
+ {
+  "id": "R045",
+  "verdict": "REAL",
+  "why": "third-person role duty"
+ },
+ {
+  "id": "R046",
+  "verdict": "REAL",
+  "why": "need a minimum of two LRAs"
+ },
+ {
+  "id": "R047",
+  "verdict": "NOT_REAL",
+  "why": "service capability description"
+ },
+ {
+  "id": "R048",
+  "verdict": "UNSURE",
+  "why": "passive 'is performed through DoD-approved method'; description or duty"
+ },
+ {
+  "id": "R049",
+  "verdict": "NOT_REAL",
+  "why": "background"
+ },
+ {
+  "id": "R050",
+  "verdict": "REAL",
+  "why": "assigns responsibility"
+ },
+ {
+  "id": "R051",
+  "verdict": "REAL",
+  "why": "third-person role duty"
+ },
+ {
+  "id": "R052",
+  "verdict": "REAL",
+  "why": "procedural passive duty for user"
+ },
+ {
+  "id": "R053",
+  "verdict": "NOT_REAL",
+  "why": "navigation pointer to template"
+ },
+ {
+  "id": "R054",
+  "verdict": "UNSURE",
+  "why": "'must have varies' explanatory but tier-tagged"
+ },
+ {
+  "id": "R055",
+  "verdict": "NOT_REAL",
+  "why": "example/description"
+ },
+ {
+  "id": "R056",
+  "verdict": "REAL",
+  "why": "third-person role duty"
+ },
+ {
+  "id": "R057",
+  "verdict": "REAL",
+  "why": "third-person role duty"
+ },
+ {
+  "id": "R058",
+  "verdict": "NOT_REAL",
+  "why": "system description"
+ },
+ {
+  "id": "R059",
+  "verdict": "REAL",
+  "why": "third-person procedural duty"
+ },
+ {
+  "id": "R060",
+  "verdict": "NOT_REAL",
+  "why": "applicability/scope statement"
+ },
+ {
+  "id": "R061",
+  "verdict": "NOT_REAL",
+  "why": "definition"
+ },
+ {
+  "id": "R062",
+  "verdict": "REAL",
+  "why": "assigns approval authority"
+ },
+ {
+  "id": "R063",
+  "verdict": "REAL",
+  "why": "are required to use"
+ },
+ {
+  "id": "R064",
+  "verdict": "NOT_REAL",
+  "why": "applicability statement"
+ },
+ {
+  "id": "R065",
+  "verdict": "NOT_REAL",
+  "why": "overview background"
+ },
+ {
+  "id": "R066",
+  "verdict": "REAL",
+  "why": "command: contact helpdesk"
+ },
+ {
+  "id": "R067",
+  "verdict": "NOT_REAL",
+  "why": "list of capabilities"
+ },
+ {
+  "id": "R068",
+  "verdict": "REAL",
+  "why": "passive duty: maintained and tracked with log"
+ },
+ {
+  "id": "R069",
+  "verdict": "REAL",
+  "why": "may: permission"
+ },
+ {
+  "id": "R070",
+  "verdict": "NOT_REAL",
+  "why": "system description"
+ },
+ {
+  "id": "R071",
+  "verdict": "NOT_REAL",
+  "why": "document description"
+ },
+ {
+  "id": "R072",
+  "verdict": "NOT_REAL",
+  "why": "system description"
+ },
+ {
+  "id": "R073",
+  "verdict": "REAL",
+  "why": "will use DMDC"
+ },
+ {
+  "id": "R074",
+  "verdict": "REAL",
+  "why": "ISO will determine"
+ },
+ {
+  "id": "R075",
+  "verdict": "NOT_REAL",
+  "why": "document description"
+ },
+ {
+  "id": "R076",
+  "verdict": "REAL",
+  "why": "third-person duty with tier"
+ },
+ {
+  "id": "R077",
+  "verdict": "REAL",
+  "why": "refer/route commands"
+ },
+ {
+  "id": "R078",
+  "verdict": "NOT_REAL",
+  "why": "navigation pointer to template"
+ },
+ {
+  "id": "R079",
+  "verdict": "NOT_REAL",
+  "why": "system description, subject missing"
+ },
+ {
+  "id": "R080",
+  "verdict": "REAL",
+  "why": "commander implements and enforces"
+ },
+ {
+  "id": "R081",
+  "verdict": "UNSURE",
+  "why": "descriptive, truncated, but 'real-time whenever possible' + tier"
+ },
+ {
+  "id": "R082",
+  "verdict": "NOT_REAL",
+  "why": "heading/definition fragment"
+ },
+ {
+  "id": "R083",
+  "verdict": "REAL",
+  "why": "refer/route commands"
+ },
+ {
+  "id": "R084",
+  "verdict": "REAL",
+  "why": "serves as service owner"
+ },
+ {
+  "id": "R085",
+  "verdict": "REAL",
+  "why": "are required to meet"
+ },
+ {
+  "id": "R086",
+  "verdict": "REAL",
+  "why": "permission to restore access"
+ },
+ {
+  "id": "R087",
+  "verdict": "NOT_REAL",
+  "why": "description of RP role"
+ },
+ {
+  "id": "R088",
+  "verdict": "REAL",
+  "why": "must be added to every device"
+ },
+ {
+  "id": "R089",
+  "verdict": "NOT_REAL",
+  "why": "mechanism description"
+ },
+ {
+  "id": "R090",
+  "verdict": "REAL",
+  "why": "shall authenticate"
+ },
+ {
+  "id": "R091",
+  "verdict": "NOT_REAL",
+  "why": "definition"
+ },
+ {
+  "id": "R092",
+  "verdict": "NOT_REAL",
+  "why": "precedence rule, no actor duty"
+ },
+ {
+  "id": "R093",
+  "verdict": "NOT_REAL",
+  "why": "benefit description"
+ },
+ {
+  "id": "R094",
+  "verdict": "NOT_REAL",
+  "why": "statement of fact"
+ },
+ {
+  "id": "R095",
+  "verdict": "UNSURE",
+  "why": "'Establishes instructions' subject is a policy, not an actor"
+ },
+ {
+  "id": "R096",
+  "verdict": "REAL",
+  "why": "may fulfill both roles: permission"
+ },
+ {
+  "id": "R097",
+  "verdict": "REAL",
+  "why": "serves as lead"
+ },
+ {
+  "id": "R098",
+  "verdict": "NOT_REAL",
+  "why": "background"
+ },
+ {
+  "id": "R099",
+  "verdict": "REAL",
+  "why": "third-person duty: authenticate with proper AAL/IAL"
+ },
+ {
+  "id": "R100",
+  "verdict": "NOT_REAL",
+  "why": "definition of AO"
+ },
+ {
+  "id": "R101",
+  "verdict": "UNSURE",
+  "why": "'may' reads as possibility, not permission"
+ },
+ {
+  "id": "R102",
+  "verdict": "NOT_REAL",
+  "why": "RBAC description"
+ },
+ {
+  "id": "R103",
+  "verdict": "REAL",
+  "why": "appointment authority"
+ },
+ {
+  "id": "R104",
+  "verdict": "REAL",
+  "why": "responsibility assignment"
+ },
+ {
+  "id": "R105",
+  "verdict": "REAL",
+  "why": "serves as PMO"
+ },
+ {
+  "id": "R106",
+  "verdict": "NOT_REAL",
+  "why": "part of definition of provisioning"
+ },
+ {
+  "id": "R107",
+  "verdict": "NOT_REAL",
+  "why": "definition of ABAC"
+ },
+ {
+  "id": "R108",
+  "verdict": "REAL",
+  "why": "will align and comply"
+ },
+ {
+  "id": "R109",
+  "verdict": "REAL",
+  "why": "Ensure records adhere"
+ },
+ {
+  "id": "R110",
+  "verdict": "UNSURE",
+  "why": "'AF ensures' in intro; duty or description"
+ },
+ {
+  "id": "R111",
+  "verdict": "NOT_REAL",
+  "why": "cross-reference"
+ },
+ {
+  "id": "R112",
+  "verdict": "REAL",
+  "why": "may: permission"
+ },
+ {
+  "id": "R113",
+  "verdict": "REAL",
+  "why": "responsibility assignment"
+ },
+ {
+  "id": "R114",
+  "verdict": "REAL",
+  "why": "retains request: duty"
+ },
+ {
+  "id": "R115",
+  "verdict": "NOT_REAL",
+  "why": "technology description"
+ },
+ {
+  "id": "R116",
+  "verdict": "REAL",
+  "why": "command: contact helpdesk"
+ },
+ {
+  "id": "R117",
+  "verdict": "REAL",
+  "why": "third-person role duties"
+ },
+ {
+  "id": "R118",
+  "verdict": "NOT_REAL",
+  "why": "RBAC description"
+ },
+ {
+  "id": "R119",
+  "verdict": "REAL",
+  "why": "host wing will provide"
+ }
+]
