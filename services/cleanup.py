@@ -82,8 +82,8 @@ def input_hash(prompt: str, model: str) -> str:
 
 
 def is_junk(answer) -> bool:
-    """Only a clear NO flags the row; anything else (YES, an empty or odd reply) keeps it."""
-    return str(answer or "").strip().upper().startswith("NO")
+    """Only the word NO flags the row; anything else (YES, NOT SURE, an empty or odd reply) keeps it."""
+    return re.match(r"\W*NO\b(?!['\u2019])", str(answer or "").strip().upper()) is not None  # the word NO, not NOT SURE / NONE / NOTHING
 
 
 def ollama_call(prompt: str, model: str, ollama_url: str, timeout: int = 300) -> str:

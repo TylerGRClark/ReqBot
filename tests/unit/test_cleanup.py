@@ -16,7 +16,7 @@ def test_sidecar_name_follows_the_requirements_file(tmp_path):
 
 
 def test_only_a_clear_no_flags_the_row():
-    assert [CL.is_junk(a) for a in ("NO", " no.", "No", "YES", "", None, "Maybe", "NOT SURE")] == [True, True, True, False, False, False, False, True]
+    assert [CL.is_junk(a) for a in ("NO", " no.", "No", "YES", "", None, "Maybe", "NOT SURE", "NONE", "Nothing", "No, it is not")] == [True, True, True, False, False, False, False, False, False, False, True]
 
 
 def test_prompt_carries_passage_and_quote_and_none_without_passage():
