@@ -1,0 +1,13 @@
+You are labeling clauses taken from a policy or standards document. For EACH clause below, decide whether it is a requirement, using the context shown with it.
+
+A requirement tells someone to do something, not to do something, or that they may or should do something, in a way an auditor could check. Labels:
+- DUTY: an obligation or responsibility. Passive or impersonal wording counts too ("X will be classified per Y", "controls should be put in place", "X is recommended", "personnel need to ..."). Counts: "shall", "must", "will" statements; "should" statements; commands ("Identify the root cause."); and third-person duties with no modal verb ("The office coordinates with DISA to resolve issues." "Serves as the lead for X.").
+- PROHIBITION: says not to do something ("shall not", "must not", "do not", "is prohibited").
+- PERMISSION: says someone may do something ("may", "is authorized to", "is permitted to").
+- NOT_REQUIREMENT: does not ask or allow anything. Headings and titles, definitions, background or explanation of how something works, statements of purpose or scope, what something is or where it is located, statements of fact or description that give no instruction ("X is a core function of Y", "Data is collected by spot observations"), bare cross-references, effective dates, names and signature blocks, notices, step or section titles and figure captions ("Step 3 - Develop Controls", "Figure 6.3. Actions by Leaders"), a lead-in line ending in a colon with no content of its own, table headers.
+- UNSURE: you cannot tell.
+
+Answer ONLY with a JSON list, one entry per clause, like:
+[{"id": 1, "label": "DUTY"}, {"id": 2, "label": "NOT_REQUIREMENT"}]
+
+{CLAUSES}

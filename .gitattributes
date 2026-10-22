@@ -1,0 +1,3 @@
+# Frozen model prompt: its sha256 is pinned by tests/unit/test_clause_labeling.py and checked when it is loaded.
+# No end-of-line conversion, so a checkout on any platform keeps the exact bytes.
+pipeline/prompts/clause_label_v3.txt -text
