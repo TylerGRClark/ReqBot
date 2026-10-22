@@ -116,7 +116,7 @@ def test_answer_that_overflows_the_window_is_incomplete_even_when_prompt_fits(re
     # Ollama shifts the window mid-answer and still reports "stop"; only the sum shows it.
     with_diff(review, monkeypatch)
     monkeypatch.setattr(
-        review, "chat", lambda *a: answer(prompt_eval_count=15_000, eval_count=1_384),
+        review, "chat", lambda *a: answer(prompt_eval_count=31_000, eval_count=1_800),
     )
     assert review.main([]) == 0
     out = capsys.readouterr().out
@@ -186,3 +186,47 @@ def test_diff_skips_data_files_and_never_reads_untracked_files(review, monkeypat
     diff, changed = review.collect_diff("main", [])
     assert changed == {"a.py"}
     assert "a = 2" in diff and "k" not in diff and "private draft" not in diff
+
+
+def test_uses_the_ci_reviewers_instructions_and_answer_format(review):
+    gemini = importlib.import_module("gemini_review")
+    assert review.SYSTEM is gemini.SYSTEM_INSTRUCTION
+    assert review.REVIEW_SCHEMA is gemini.REVIEW_SCHEMA
+
+
+def test_message_carries_brief_diff_and_changed_files_like_the_ci_reviewer(review):
+    messages = review.build_messages("DIFF", "BRIEF", [{"path": "x.py", "text": "x = 1\n"}])
+    assert messages[0] == {"role": "system", "content": review.SYSTEM}
+    payload = json.loads(messages[1]["content"])
+    assert payload == {"approved_architecture": "BRIEF", "diff": "DIFF",
+                       "surrounding_files": [{"path": "x.py", "text": "x = 1\n"}]}
+
+
+def test_context_reads_changed_files_within_budget_and_skips_binary_and_missing(review, monkeypatch, tmp_path):
+    (tmp_path / "a.py").write_text("a = 1\n")
+    (tmp_path / "big.py").write_text("b" * 100)
+    (tmp_path / "bin.dat").write_bytes(b"\0\1")
+    monkeypatch.setattr(review, "_ROOT", tmp_path)
+    monkeypatch.setattr(review, "MAX_CONTEXT_BYTES", 50)
+    files, omitted = review.collect_context({"a.py", "big.py", "bin.dat", "gone.py"})
+    assert [f["path"] for f in files] == ["a.py"]
+    assert omitted == ["big.py", "bin.dat"]
+
+
+def test_omitted_context_makes_the_review_incomplete(review, monkeypatch, capsys):
+    with_diff(review, monkeypatch)
+    monkeypatch.setattr(review, "collect_context", lambda changed: ([], ["x.py"]))
+    monkeypatch.setattr(review, "chat", lambda *a: answer())
+    assert review.main([]) == 0
+    out = capsys.readouterr().out
+    assert "incomplete" in out and "surrounding source omitted" in out
+
+
+def test_default_model_is_the_configs_default_model_not_the_synthesis_model(monkeypatch):
+    spec = importlib.util.spec_from_file_location("local_review_fresh", SCRIPT)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    from core import config
+
+    cfg = config.load()
+    assert module.reqbot_defaults()[1] == cfg.default_model
