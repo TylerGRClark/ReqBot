@@ -26,7 +26,7 @@ TRASH = ".trash"
 # the files a run writes for one document, as `<key>_<suffix>`; only these are ever moved out of a folder shared with other documents
 ARTIFACT_SUFFIXES = (
     "ancestry.json", "chunks.jsonl", "extracted_requirements.jsonl", "raw_responses.jsonl", "parse_failures.jsonl", "normalization_failures.jsonl",
-    "requirements_normalized.jsonl", "requirements_enriched.jsonl", "requirements_gated.jsonl", "final_output.json", "stats.json", "audit_questions.jsonl", "criticality.jsonl", "kinds.jsonl",
+    "requirements_normalized.jsonl", "requirements_enriched.jsonl", "requirements_gated.jsonl", "final_output.json", "stats.json", "audit_questions.jsonl", "criticality.jsonl", "cleanup.jsonl", "kinds.jsonl",
 )
 
 

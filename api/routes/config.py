@@ -16,7 +16,7 @@ router = APIRouter()
 # null-safe handling in core.config.load() (e.g. ollama_url is indexed
 # straight out of the parsed dict with no `or`/default fallback), so an
 # explicit null there would write a broken value into config.json.
-_NULLABLE_FIELDS = frozenset({"extraction_model", "enrichment_model", "rewrite_model"})
+_NULLABLE_FIELDS = frozenset({"extraction_model", "enrichment_model", "rewrite_model", "cleanup_model"})
 
 
 class ConfigUpdateRequest(BaseModel):
@@ -37,6 +37,7 @@ class ConfigUpdateRequest(BaseModel):
     extraction_model: Optional[str] = None
     enrichment_model: Optional[str] = None
     rewrite_model: Optional[str] = None
+    cleanup_model: Optional[str] = None
     synthesis_model: Optional[str] = None
     embedding_model: Optional[str] = None
     top_k: Optional[int] = Field(default=None, ge=1, le=100)
