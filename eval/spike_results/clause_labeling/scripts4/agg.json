@@ -1,0 +1,238 @@
+{
+ "L35": {
+  "mean": {
+   "CNSSI_No1253": {
+    "n": 10,
+    "units": 80,
+    "recall": 1.0,
+    "recall_s": 1.0,
+    "precision": 0.5773420479302832,
+    "skip": 0.0,
+    "flagged": 17.333333333333332,
+    "work": 173.33333333333334,
+    "unreach": 0.0,
+    "unreach_s": 0.0
+   },
+   "DODI 5200.01": {
+    "n": 62,
+    "units": 80,
+    "recall": 0.978494623655914,
+    "recall_s": 0.978494623655914,
+    "precision": 0.9479166666666666,
+    "skip": 0.017543859649122806,
+    "flagged": 64,
+    "work": 103.2258064516129,
+    "unreach": 0.0,
+    "unreach_s": 0.0
+   },
+   "NIST.SP.800-125": {
+    "n": 21,
+    "units": 80,
+    "recall": 0.9365079365079365,
+    "recall_s": 0.9365079365079365,
+    "precision": 0.8249654934437542,
+    "skip": 0.06666666666666667,
+    "flagged": 22.666666666666668,
+    "work": 107.93650793650794,
+    "unreach": 0.0,
+    "unreach_s": 0.0
+   },
+   "afi13-550": {
+    "n": 69,
+    "units": 80,
+    "recall": 1.0,
+    "recall_s": 1.0,
+    "precision": 0.9498229659333267,
+    "skip": 0.0,
+    "flagged": 72.66666666666667,
+    "work": 105.31400966183575,
+    "unreach": 0.0,
+    "unreach_s": 0.057971014492753624
+   },
+   "dafman17-1301": {
+    "n": 88,
+    "units": 80,
+    "recall": 0.928030303030303,
+    "recall_s": 0.928030303030303,
+    "precision": 0.9402849493210939,
+    "skip": 0.029239766081871343,
+    "flagged": 83.66666666666667,
+    "work": 95.07575757575758,
+    "unreach": 0.0,
+    "unreach_s": 0.022727272727272728
+   },
+   "POOLED_noCNSSI": {
+    "n": 240,
+    "units": 320,
+    "recall": 0.9625,
+    "recall_s": 0.9625,
+    "precision": 0.934183884065211,
+    "skip": 0.020512820512820513,
+    "flagged": 243,
+    "work": 101.25,
+    "unreach": 0.0,
+    "unreach_s": 0.025
+   },
+   "POOLED_all5": {
+    "n": 250,
+    "units": 400,
+    "recall": 0.964,
+    "recall_s": 0.964,
+    "precision": 0.9104030138512897,
+    "skip": 0.01951219512195122,
+    "flagged": 260.3333333333333,
+    "work": 104.13333333333334,
+    "unreach": 0.0,
+    "unreach_s": 0.024
+   },
+   "TABLE_units": {
+    "n": 0,
+    "units": 27,
+    "recall": 0.0,
+    "recall_s": 0.0,
+    "precision": 0.0,
+    "skip": 0.0,
+    "flagged": 1,
+    "work": 100.0,
+    "unreach": 0.0,
+    "unreach_s": 0.0
+   },
+   "NONTABLE_units": {
+    "n": 250,
+    "units": 373,
+    "recall": 0.964,
+    "recall_s": 0.964,
+    "precision": 0.9138897138897139,
+    "skip": 0.01951219512195122,
+    "flagged": 259.3333333333333,
+    "work": 103.73333333333333,
+    "unreach": 0.0,
+    "unreach_s": 0.024
+   }
+  },
+  "noise": {
+   "POOLED_noCNSSI.recall": 1.2499999999999956,
+   "POOLED_noCNSSI.precision": 2.0051483538815806,
+   "POOLED_all5.recall": 1.200000000000001,
+   "POOLED_all5.precision": 1.8565363392949674
+  }
+ },
+ "L8": {
+  "mean": {
+   "CNSSI_No1253": {
+    "n": 10,
+    "units": 80,
+    "recall": 0.8,
+    "recall_s": 0.8,
+    "precision": 0.2701707779886148,
+    "skip": 0.2,
+    "flagged": 30,
+    "work": 300.0,
+    "unreach": 0.0,
+    "unreach_s": 0.0
+   },
+   "DODI 5200.01": {
+    "n": 62,
+    "units": 80,
+    "recall": 0.9516129032258065,
+    "recall_s": 0.9516129032258065,
+    "precision": 0.7599213137187821,
+    "skip": 0.04093567251461988,
+    "flagged": 77.66666666666667,
+    "work": 125.26881720430107,
+    "unreach": 0.0,
+    "unreach_s": 0.0
+   },
+   "NIST.SP.800-125": {
+    "n": 21,
+    "units": 80,
+    "recall": 0.9047619047619048,
+    "recall_s": 0.9047619047619048,
+    "precision": 0.5810483870967742,
+    "skip": 0.1,
+    "flagged": 31,
+    "work": 147.61904761904762,
+    "unreach": 0.0,
+    "unreach_s": 0.0
+   },
+   "afi13-550": {
+    "n": 69,
+    "units": 80,
+    "recall": 1.0,
+    "recall_s": 1.0,
+    "precision": 0.8710507358238139,
+    "skip": 0.0,
+    "flagged": 80,
+    "work": 115.94202898550725,
+    "unreach": 0.0,
+    "unreach_s": 0.057971014492753624
+   },
+   "dafman17-1301": {
+    "n": 88,
+    "units": 80,
+    "recall": 0.9318181818181818,
+    "recall_s": 0.9318181818181818,
+    "precision": 0.7915878225411757,
+    "skip": 0.029239766081871343,
+    "flagged": 100.66666666666667,
+    "work": 114.39393939393939,
+    "unreach": 0.0,
+    "unreach_s": 0.022727272727272728
+   },
+   "POOLED_noCNSSI": {
+    "n": 240,
+    "units": 320,
+    "recall": 0.9541666666666667,
+    "recall_s": 0.9541666666666667,
+    "precision": 0.7823660733643303,
+    "skip": 0.030769230769230767,
+    "flagged": 289.3333333333333,
+    "work": 120.55555555555556,
+    "unreach": 0.0,
+    "unreach_s": 0.025
+   },
+   "POOLED_all5": {
+    "n": 250,
+    "units": 400,
+    "recall": 0.948,
+    "recall_s": 0.948,
+    "precision": 0.7339666819745888,
+    "skip": 0.03902439024390244,
+    "flagged": 319.3333333333333,
+    "work": 127.73333333333333,
+    "unreach": 0.0,
+    "unreach_s": 0.024
+   },
+   "TABLE_units": {
+    "n": 0,
+    "units": 27,
+    "recall": 0.0,
+    "recall_s": 0.0,
+    "precision": 0.0,
+    "skip": 0.0,
+    "flagged": 10.666666666666666,
+    "work": 1066.6666666666667,
+    "unreach": 0.0,
+    "unreach_s": 0.0
+   },
+   "NONTABLE_units": {
+    "n": 250,
+    "units": 373,
+    "recall": 0.948,
+    "recall_s": 0.948,
+    "precision": 0.7593008894994657,
+    "skip": 0.03902439024390244,
+    "flagged": 308.6666666666667,
+    "work": 123.46666666666667,
+    "unreach": 0.0,
+    "unreach_s": 0.024
+   }
+  },
+  "noise": {
+   "POOLED_noCNSSI.recall": 0.0,
+   "POOLED_noCNSSI.precision": 2.0873612602935965,
+   "POOLED_all5.recall": 0.8000000000000007,
+   "POOLED_all5.precision": 2.5222929936305705
+  }
+ }
+}
