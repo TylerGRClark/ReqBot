@@ -103,6 +103,7 @@ exclude = [
     "dist",
     "build",
     "__pycache__",
+    "eval/spike_results/clause_labeling/scripts*",  # throwaway experiment scripts kept for reproduction only
 ]
 
 [tool.ruff.lint]
