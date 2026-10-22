@@ -36,7 +36,7 @@
 | A | PDF to a structured document (Docling) | No | n/a |
 | B | Cut into chunks of up to 256 tokens (`raw_text`, and `text` with a heading breadcrumb) | No | n/a |
 | C | One call per chunk returns quotes that look like duties, plus a reference (8B, inclusive prompt D1) | Yes | Creates it |
-| D | Normalize: empty-quote check, fuzzy grounding (threshold 60) against `text`, junk filters (heading echo, cut-off fragment, orphan list item, dangling clause, change-log entry, definitional cross-reference), hierarchy and page metadata, de-duplication, whole-sentence expansion, stable ID | No | **Yes: expansion overwrites `source_quote`** |
+| D | Normalize: empty-quote check, fuzzy grounding (threshold 60) against `text`, junk filters (heading echo, cut-off fragment, orphan list item, dangling clause, definitional cross-reference), hierarchy and page metadata, de-duplication, whole-sentence expansion, stable ID | No | **Yes: expansion overwrites `source_quote`** |
 | after D | Parent stem and embedding text (rule-based; rewrites the normalized file in place; run twice) | No | No |
 | D.5 | Description, domain tags and requirement type (one call, three jobs) | Yes | No |
 | D.6 | Is the description supported by the quote? | Small model | No |
@@ -166,7 +166,7 @@ It does not say the rules are better than a model for context; they are cheaper,
 
 The code does branch on what a quote is, in many places, but each place has its own rule and none stores the result. The chart "How one requirement is treated, by kind" in [Architecture](ARCHITECTURE.md) draws every branch. In short:
 
-- **Branches that exist:** Step D can reject a quote for seven different reasons (in the October 2026 runs of the 13 documents four occurred: not found in the chunk, 117; cut-off fragment, 93; repeated heading, 40; the change-log check depends on a generated description and is inactive while descriptions are off); whole-sentence expansion and lead-in attachment each have conditions; a citation depends on whether the row sits in a table, a numbered paragraph, an unnumbered paragraph, the cover pages or a form template; `item_flags` marks six sorts of wording; the question writer withholds a question for five flags and adds a rule for negations; two review marks check the question's terms and actor.
+- **Branches that exist:** Step D can reject a quote for six different reasons (in the October 2026 runs of the 13 documents four occurred: not found in the chunk, 117; cut-off fragment, 93; repeated heading, 40; the earlier change-log check read a generated description, which is always empty, and was removed); whole-sentence expansion and lead-in attachment each have conditions; a citation depends on whether the row sits in a table, a numbered paragraph, an unnumbered paragraph, the cover pages or a form template; `item_flags` marks six sorts of wording; the question writer withholds a question for five flags and adds a rule for negations; two review marks check the question's terms and actor.
 - **What does not branch:** requirement finding sends every chunk (paragraph, list, table, definition) through one prompt. No field records what *kind* of statement a quote is (a duty, a prohibition, a permission, a definition, a statement of who the document applies to, a table row, an instruction inside a form). Each later step finds out again, from the wording, only the part it needs, so the same sentence can be handled differently by two steps.
 
 What that costs, measured on the three audit AFIs (779 rows, October 2026):

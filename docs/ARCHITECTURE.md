@@ -31,7 +31,7 @@ The [developer reference](../ARCHITECTURE.md) contains the module/import map.
 | PDF reading | Docling reads layout, headings, tables, and page provenance. | `*_ancestry.json` and an in-memory parsed document. |
 | Chunking | Structure-aware chunking adds section paths and parent context; the profile can exclude sections. | `*_chunks.jsonl` |
 | Requirement finding | Ollama returns, for each chunk, the quotes that look like duties, with references. The prompt is inclusive: it asks for anything that tells a party what it must, should, may or must not do. Raw responses and parse failures are retained. This output is the **root** of each requirement and is never edited. | `*_extracted_requirements.jsonl` |
-| Normalizing and checking | One step today, doing several jobs: validate fields and quote grounding, drop junk (headings, change-log lines, fragments), attach page and section metadata, deduplicate, record where each quote sits in its chunk and how exactly it matches (the `anchor_*` fields), build the explained text (the whole sentence it sits in), and assign IDs (hashed from the root). Deterministic parent-stem reconstruction follows. | `*_requirements_normalized.jsonl` |
+| Normalizing and checking | One step today, doing several jobs: validate fields and quote grounding, drop junk (headings, fragments; there is no working change-log rejection yet), attach page and section metadata, deduplicate, record where each quote sits in its chunk and how exactly it matches (the `anchor_*` fields), build the explained text (the whole sentence it sits in), and assign IDs (hashed from the root). Deterministic parent-stem reconstruction follows. | `*_requirements_normalized.jsonl` |
 | Enrichment | **Switched off** (October 2026): the code stays, but the pipeline no longer adds descriptions, domain tags or requirement types. | `*_requirements_enriched.jsonl` |
 | Description check | **Switched off** with enrichment: there are no generated descriptions to check. | `*_requirements_gated.jsonl` |
 | Totals and final file | Aggregate the selected output and record statistics. | `*_final_output.json`, `*_stats.json` |
@@ -88,7 +88,7 @@ flowchart TD
     N2 -.->|"chunk text"| N4
     N2 -.->|"chunk text"| N6
     N4 -->|"cannot be anchored and fails grounding"| FAIL
-    N7 -->|"empty, heading echo, change-log"| FAIL
+    N7 -->|"empty, heading echo"| FAIL
     N8 -->|"ok"| N11
     N8 -->|"flagged rows only"| N9
     N9 --> N10
@@ -180,11 +180,11 @@ One of those rules is under test: the negation test in the chart reads a plain "
 condition or a description ("... if this capability does not exist") as a prohibition, which can
 turn a duty into the question "does the unit avoid ...". A narrower test is being evaluated.
 
-A note on the red boxes: the code has seven rejection checks, but in the October 2026 runs of
+A note on the red boxes: the code has six rejection checks, but in the October 2026 runs of
 the 13 documents only three kinds of rejection occurred: not found in the chunk (117 records),
 cut-off fragment (93) and repeated heading (40). The empty-quote, definition-pointer and
-dangling-clause checks did not fire, and the change-log check depends on a generated description,
-so it is inactive while descriptions are switched off.
+dangling-clause checks did not fire. A change-log rejection does not exist: an earlier one read a
+generated description, which is always empty, and was removed.
 
 ### Planned changes
 

@@ -9,6 +9,7 @@ from pipeline.parse_and_normalize import (
     _is_unrepairable_fragment,
     build_chunk_text_map,
     compute_stable_id,
+    deduplicate_requirements,
     quote_word_coverage,
     run,
 )
@@ -56,6 +57,15 @@ def test_dedup_collapses_exact_quote(tmp_path):
     run(str(req_path), str(tmp_path / "no_chunks.jsonl"), "", str(out_dir))
     records = _read_jsonl(out_dir / "test_requirements_normalized.jsonl")
     assert len(records) == 1
+
+
+def test_dedup_keeps_distinct_quotes_that_share_a_source_ref_and_the_higher_confidence_copy():
+    a = {"source_ref": "2.1", "source_quote": "The CFP shall notify the MCCC.", "confidence": 0.5}
+    b = {"source_ref": "2.1", "source_quote": "The CFP  shall notify the MCCC.", "confidence": 0.9}  # same quote after whitespace tidying
+    c = {"source_ref": "2.1", "source_quote": "The CFP shall file a report."}
+    d = {"source_ref": "2.2", "source_quote": "The CFP shall notify the MCCC."}  # same quote, other reference
+    out = deduplicate_requirements([a, b, c, d])
+    assert out == [b, c, d]
 
 
 def test_source_quote_required_gate(tmp_path):

@@ -23,30 +23,15 @@ flowchart TD
     C6 -->|no| C7{"Opens with 'Term, as defined in ...'<br/>and nothing independent after the citation?"}
     C7 -->|"yes: orphaned_list_item_quote"| FAIL
     C7 -->|no| C8{"First word is is, are, was or were<br/>(subject missing), and no question mark anywhere?"}
-    C8 -->|no| C9
+    C8 -->|no| PASS
     C8 -->|yes| C8b{"Does the chunk have a parent header<br/>that could supply the subject?"}
     C8b -->|"no: dangling_clause_quote"| FAIL
-    C8b -->|"yes: kept; the subject is added later<br/>by parent-stem reconstruction"| C9
-
-    subgraph OFF["Checks that read a generated description (inactive while descriptions are switched off)"]
-        D1{"Description starts with<br/>'not explicitly stated'?"}
-        D2{"Description is a short 'change X to Y' entry<br/>(under 100 characters)?"}
-        D1 -->|"yes: not_actionable"| FAIL
-        D1 -->|no| D2
-        D2 -->|"yes: errata_change_entry"| FAIL
-    end
-
-    C9{"A generated description present?<br/>(none while descriptions are switched off)"}
-    C9 -->|no| PASS
-    C9 -->|yes| D1
-    D2 -->|no| PASS
+    C8b -->|"yes: kept; the subject is added later<br/>by parent-stem reconstruction"| PASS
 
     classDef fail fill:#fee2e2,stroke:#dc2626,color:#7f1d1d;
     classDef ok fill:#d1fae5,stroke:#059669,color:#064e3b;
-    classDef off fill:#f1f5f9,stroke:#94a3b8,color:#64748b,stroke-dasharray: 5 5;
     class FAIL fail;
     class PASS ok;
-    class C9,D1,D2 off;
 ```
 
 Every rejection is written to the failures file with the label shown on the arrow. Passing quotes continue unchanged.

@@ -8,7 +8,7 @@ Output:
   - normalization_failures.jsonl — requirements that failed normalization
 
 This step is deterministic. It validates domain tags, adds page references
-from chunk metadata, and deduplicates requirements by description similarity.
+from chunk metadata, and deduplicates requirements that share a source reference and quote.
 """
 
 import argparse
@@ -575,48 +575,26 @@ def _dedup_score(req: dict) -> float:
 
 
 def deduplicate_requirements(requirements: list[dict]) -> list[dict]:
-    """Remove duplicate requirements based on two keys:
-    1. source_ref + normalized description (only when description is non-empty)
-    2. source_ref + normalized source_quote (catches near-identical quotes)
+    """Remove duplicate requirements that share source_ref + normalized source_quote.
 
     When duplicates exist, keep the higher-confidence record; for equal
     confidence, prefer the shorter (more precise) source_quote.
 
-    Note: desc_key is skipped when description is empty. In Pass 1 mode all
-    descriptions are empty, so using desc_key would collapse distinct requirements
-    that share a source_ref into a single record, dropping valid extractions.
+    There is no description-based key: the first-pass extractor returns no
+    description, so such a key could never fire (and would collapse distinct
+    requirements that share a source_ref if it did).
     """
     seen: dict[str, dict] = {}
     for req in requirements:
         source_ref = req.get("source_ref", "")
-        description = normalize_text(req.get("description", ""))
         quote = normalize_text(req.get("source_quote", ""))
-
-        # Only build desc_key when description is non-empty; an empty description
-        # is not a meaningful dedupe signal and would cause false collisions in
-        # Pass 1 mode where all descriptions are intentionally absent.
-        desc_key = f"{source_ref}::desc::{description}" if description else None
-        quote_key = f"{source_ref}::quote::{quote}" if quote else None
-
-        # Check if either key was seen
-        existing_key = None
-        if desc_key and desc_key in seen:
-            existing_key = desc_key
-        elif quote_key and quote_key in seen:
-            existing_key = quote_key
-
-        if existing_key:
-            existing = seen[existing_key]
-            if _dedup_score(req) > _dedup_score(existing):
-                seen[existing_key] = req
-        else:
-            if desc_key:
-                seen[desc_key] = req
-            if quote_key:
-                seen[quote_key] = req
-    # Deduplicate the values (a req may be stored under both keys)
-    unique = {id(v): v for v in seen.values()}
-    return list(unique.values())
+        if not quote:
+            continue  # unchanged behavior: a record with no quote has no key and is not kept
+        quote_key = f"{source_ref}::quote::{quote}"
+        existing = seen.get(quote_key)
+        if existing is None or _dedup_score(req) > _dedup_score(existing):
+            seen[quote_key] = req
+    return list(seen.values())
 
 
 def run(
@@ -830,17 +808,6 @@ def run(
             if not recoverable_header:
                 failures.append({"requirement_id": req.get("requirement_id", "UNKNOWN"), "chunk_id": chunk_id, "error": "dangling_clause_quote", "raw": req})
                 continue
-
-        if description:
-            desc_lower = description.lower()
-            if desc_lower.startswith("not explicitly stated"):
-                failures.append({"requirement_id": req.get("requirement_id", "UNKNOWN"), "chunk_id": chunk_id, "error": "not_actionable", "raw": req})
-                continue
-
-            if desc_lower.startswith("change ") and (" to " in desc_lower or " from " in desc_lower):
-                if len(description) < 100:
-                    failures.append({"requirement_id": req.get("requirement_id", "UNKNOWN"), "chunk_id": chunk_id, "error": "errata_change_entry", "raw": req})
-                    continue
 
         raw_tags = req.get("domain_tags", [])
         if isinstance(raw_tags, str):
