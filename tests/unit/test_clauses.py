@@ -112,3 +112,19 @@ def test_chunk_unit_uses_raw_text_parent_header_and_the_last_section_ref():
     assert chunk_unit(old) == {"unit_id": 4, "text": "Units will report.", "heading": "Crumb", "ref": "1.3"}
     assert chunk_unit({"chunk_id": 5, "raw_text": "x"})["ref"] == ""
     assert [c["text"] for c in chunk_clauses(chunk)] == ["Units will report."]
+
+
+def test_every_closing_delimiter_after_a_sentence_end_stays_with_its_clause():
+    # Codex P2 on #361: the cut kept only the first closer, so ")" was in no clause.
+    text = 'The policy says ("Report.") Owners comply.'
+    assert _texts(text) == ['The policy says ("Report.")', "Owners comply."]
+
+
+def test_a_lead_in_with_a_tier_tag_after_its_colon_is_a_lead_in():
+    # Codex P2 on #361 (one case in the library, afi90-802): "options: (T-2)." governs the list under it.
+    text = "Training will use one of the following options: (T-2).\n- classroom courses"
+    cl = clauses_of(_unit(text))
+    assert [(c["text"], c["is_lead_in"], c["ctx_lead"]) for c in cl] == [
+        ("Training will use one of the following options: (T-2).", True, None),
+        ("- classroom courses", False, "Training will use one of the following options: (T-2)."),
+    ]
