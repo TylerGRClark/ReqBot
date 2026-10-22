@@ -1,0 +1,622 @@
+[
+ {
+  "id": "Q001",
+  "verdict": "PARTIAL",
+  "why": "prohibition stem ending in colon; the prohibited purposes are in the list"
+ },
+ {
+  "id": "Q002",
+  "verdict": "UNSURE",
+  "why": "says CUI requires protective measures; reads as explanation of CUI, borderline requirement"
+ },
+ {
+  "id": "Q003",
+  "verdict": "REAL",
+  "why": "prohibition: PM/ISO may not direct ASCA"
+ },
+ {
+  "id": "Q004",
+  "verdict": "REAL",
+  "why": "permission: DoD may vet AF overlays"
+ },
+ {
+  "id": "Q005",
+  "verdict": "UNSURE",
+  "why": "eligibility for the role (can be contractor/civilian/military); permission-like but no action"
+ },
+ {
+  "id": "Q006",
+  "verdict": "REAL",
+  "why": "prohibition: contractors not permitted to make decisions; may only advise"
+ },
+ {
+  "id": "Q007",
+  "verdict": "PARTIAL",
+  "why": "third-person duty but only introduces the following list of MAJCOM duties"
+ },
+ {
+  "id": "Q008",
+  "verdict": "NOT_REAL",
+  "why": "purpose statement of the issuance, also truncated"
+ },
+ {
+  "id": "Q009",
+  "verdict": "NOT_REAL",
+  "why": "heading / organization name"
+ },
+ {
+  "id": "Q010",
+  "verdict": "NOT_REAL",
+  "why": "bare cross-reference"
+ },
+ {
+  "id": "Q011",
+  "verdict": "PARTIAL",
+  "why": "condition item of a dissemination rule; meaning depends on stem"
+ },
+ {
+  "id": "Q012",
+  "verdict": "NOT_REAL",
+  "why": "explains tier waiver notation"
+ },
+ {
+  "id": "Q013",
+  "verdict": "PARTIAL",
+  "why": "table cell action without the responsible-party columns"
+ },
+ {
+  "id": "Q014",
+  "verdict": "REAL",
+  "why": "table row: required action with responsible parties marked"
+ },
+ {
+  "id": "Q015",
+  "verdict": "REAL",
+  "why": "AOs are appointed by SAF/CN in coordination with MAO; checkable process duty"
+ },
+ {
+  "id": "Q016",
+  "verdict": "PARTIAL",
+  "why": "purpose item completing 'PPSM standards will be implemented ... to:'"
+ },
+ {
+  "id": "Q017",
+  "verdict": "REAL",
+  "why": "assess-only criterion: product/version must be verified on recognized source"
+ },
+ {
+  "id": "Q018",
+  "verdict": "REAL",
+  "why": "will direct PCs to conduct inventories (T-1)"
+ },
+ {
+  "id": "Q019",
+  "verdict": "NOT_REAL",
+  "why": "definition fragment"
+ },
+ {
+  "id": "Q020",
+  "verdict": "NOT_REAL",
+  "why": "designation statement plus lead-in"
+ },
+ {
+  "id": "Q021",
+  "verdict": "REAL",
+  "why": "table row: biennial review with responsible party marked"
+ },
+ {
+  "id": "Q022",
+  "verdict": "PARTIAL",
+  "why": "purpose item completing 'PPSM standards will be implemented ... to:'"
+ },
+ {
+  "id": "Q023",
+  "verdict": "PARTIAL",
+  "why": "two duties (will review T-1; should mark) merged in one candidate"
+ },
+ {
+  "id": "Q024",
+  "verdict": "NOT_REAL",
+  "why": "describes the transfer process"
+ },
+ {
+  "id": "Q025",
+  "verdict": "REAL",
+  "why": "conditional third-person duty: SAF/CNZR retains IT until AO assigned"
+ },
+ {
+  "id": "Q026",
+  "verdict": "REAL",
+  "why": "AFRMC will adjudicate and provide recommendation"
+ },
+ {
+  "id": "Q027",
+  "verdict": "NOT_REAL",
+  "why": "lead-in ending in colon with no content"
+ },
+ {
+  "id": "Q028",
+  "verdict": "NOT_REAL",
+  "why": "definition of incident"
+ },
+ {
+  "id": "Q029",
+  "verdict": "NOT_REAL",
+  "why": "describes automated system behavior of ITIPS"
+ },
+ {
+  "id": "Q030",
+  "verdict": "NOT_REAL",
+  "why": "background on governance bodies"
+ },
+ {
+  "id": "Q031",
+  "verdict": "REAL",
+  "why": "third-person duty: monitors DODIN"
+ },
+ {
+  "id": "Q032",
+  "verdict": "NOT_REAL",
+  "why": "description of what RMF incorporates"
+ },
+ {
+  "id": "Q033",
+  "verdict": "PARTIAL",
+  "why": "command stem ending in colon; the designees are in the list"
+ },
+ {
+  "id": "Q034",
+  "verdict": "REAL",
+  "why": "permission: may be capitalized as development costs"
+ },
+ {
+  "id": "Q035",
+  "verdict": "REAL",
+  "why": "local commanders will determine adequacy and ensure completion (T-2)"
+ },
+ {
+  "id": "Q036",
+  "verdict": "NOT_REAL",
+  "why": "describes automated system assignment of numbers"
+ },
+ {
+  "id": "Q037",
+  "verdict": "PARTIAL",
+  "why": "list item condition; meaning depends on stem"
+ },
+ {
+  "id": "Q038",
+  "verdict": "PARTIAL",
+  "why": "step title command; the actual duty is in the following sentence"
+ },
+ {
+  "id": "Q039",
+  "verdict": "NOT_REAL",
+  "why": "cross-reference to attachment"
+ },
+ {
+  "id": "Q040",
+  "verdict": "REAL",
+  "why": "permission: category may be changed as investigation progresses"
+ },
+ {
+  "id": "Q041",
+  "verdict": "REAL",
+  "why": "third-person duty: notifies CUI EA of waivers"
+ },
+ {
+  "id": "Q042",
+  "verdict": "NOT_REAL",
+  "why": "describes package contents"
+ },
+ {
+  "id": "Q043",
+  "verdict": "NOT_REAL",
+  "why": "description of an inheritance package"
+ },
+ {
+  "id": "Q044",
+  "verdict": "NOT_REAL",
+  "why": "truncated disclaimer fragment"
+ },
+ {
+  "id": "Q045",
+  "verdict": "REAL",
+  "why": "command: ensure records maintained and disposed IAW AFMAN 33-363"
+ },
+ {
+  "id": "Q046",
+  "verdict": "PARTIAL",
+  "why": "list item of request contents; depends on stem"
+ },
+ {
+  "id": "Q047",
+  "verdict": "NOT_REAL",
+  "why": "explanation of schedule factors"
+ },
+ {
+  "id": "Q048",
+  "verdict": "PARTIAL",
+  "why": "list item (likely an eligibility/exclusion list); depends on stem"
+ },
+ {
+  "id": "Q049",
+  "verdict": "REAL",
+  "why": "command: resolve the incident per this instruction"
+ },
+ {
+  "id": "Q050",
+  "verdict": "PARTIAL",
+  "why": "definition merged with duty (ISO appointed and performs PM roles)"
+ },
+ {
+  "id": "Q051",
+  "verdict": "NOT_REAL",
+  "why": "describes capability of automated checks"
+ },
+ {
+  "id": "Q052",
+  "verdict": "REAL",
+  "why": "third-person duty: identifies unlicensed software, requests licenses"
+ },
+ {
+  "id": "Q053",
+  "verdict": "REAL",
+  "why": "permission: scan list may be included in inventory (with descriptive lead)"
+ },
+ {
+  "id": "Q054",
+  "verdict": "REAL",
+  "why": "AFOSI will notify ACD responders"
+ },
+ {
+  "id": "Q055",
+  "verdict": "REAL",
+  "why": "space systems will follow DoDI 8581.01"
+ },
+ {
+  "id": "Q056",
+  "verdict": "REAL",
+  "why": "must have lawful governmental purpose for access"
+ },
+ {
+  "id": "Q057",
+  "verdict": "NOT_REAL",
+  "why": "describes what discovery supports"
+ },
+ {
+  "id": "Q058",
+  "verdict": "NOT_REAL",
+  "why": "lead-in ending in colon"
+ },
+ {
+  "id": "Q059",
+  "verdict": "PARTIAL",
+  "why": "purpose item completing 'PPSM standards will be implemented ... to:'"
+ },
+ {
+  "id": "Q060",
+  "verdict": "NOT_REAL",
+  "why": "descriptive table cells relating activities to phases"
+ },
+ {
+  "id": "Q061",
+  "verdict": "PARTIAL",
+  "why": "permission merged with lead-in to Enterprise AO list"
+ },
+ {
+  "id": "Q062",
+  "verdict": "PARTIAL",
+  "why": "step title command; the actual duty is in the following sentence"
+ },
+ {
+  "id": "Q063",
+  "verdict": "NOT_REAL",
+  "why": "scope statement"
+ },
+ {
+  "id": "Q064",
+  "verdict": "PARTIAL",
+  "why": "condition item for release; depends on stem"
+ },
+ {
+  "id": "Q065",
+  "verdict": "REAL",
+  "why": "third-person duty: updates asset status field"
+ },
+ {
+  "id": "Q066",
+  "verdict": "NOT_REAL",
+  "why": "states a threshold value (fact), not an action"
+ },
+ {
+  "id": "Q067",
+  "verdict": "NOT_REAL",
+  "why": "pointer to other sections"
+ },
+ {
+  "id": "Q068",
+  "verdict": "PARTIAL",
+  "why": "list item factor/criterion; depends on stem"
+ },
+ {
+  "id": "Q069",
+  "verdict": "REAL",
+  "why": "command: forward product requests to 81 TRSS/TSQ"
+ },
+ {
+  "id": "Q070",
+  "verdict": "NOT_REAL",
+  "why": "cross-reference"
+ },
+ {
+  "id": "Q071",
+  "verdict": "UNSURE",
+  "why": "'may be inherited' reads descriptive, not a permission granted to an actor"
+ },
+ {
+  "id": "Q072",
+  "verdict": "NOT_REAL",
+  "why": "explains causes of delay"
+ },
+ {
+  "id": "Q073",
+  "verdict": "PARTIAL",
+  "why": "list item completing 'Designate in writing:'"
+ },
+ {
+  "id": "Q074",
+  "verdict": "NOT_REAL",
+  "why": "list item describing RMF KS capabilities"
+ },
+ {
+  "id": "Q075",
+  "verdict": "PARTIAL",
+  "why": "list item (likely eligibility/exclusion list); depends on stem"
+ },
+ {
+  "id": "Q076",
+  "verdict": "REAL",
+  "why": "third-person duty: reviews and recommends policy changes"
+ },
+ {
+  "id": "Q077",
+  "verdict": "NOT_REAL",
+  "why": "describes what happens during categorization"
+ },
+ {
+  "id": "Q078",
+  "verdict": "REAL",
+  "why": "documentation will be digitally signed and generated via eMASS"
+ },
+ {
+  "id": "Q079",
+  "verdict": "REAL",
+  "why": "participating organizations will attend planning conferences"
+ },
+ {
+  "id": "Q080",
+  "verdict": "REAL",
+  "why": "third-person duty: PPSM program performs vulnerability assessments"
+ },
+ {
+  "id": "Q081",
+  "verdict": "REAL",
+  "why": "command: ensure records maintained/disposed"
+ },
+ {
+  "id": "Q082",
+  "verdict": "REAL",
+  "why": "must annually certify baseline inventories"
+ },
+ {
+  "id": "Q083",
+  "verdict": "REAL",
+  "why": "capital cost will include specified costs (accounting rule)"
+ },
+ {
+  "id": "Q084",
+  "verdict": "NOT_REAL",
+  "why": "describes status-report process"
+ },
+ {
+  "id": "Q085",
+  "verdict": "PARTIAL",
+  "why": "table cell action without responsible-party columns"
+ },
+ {
+  "id": "Q086",
+  "verdict": "NOT_REAL",
+  "why": "describes how handbook is used"
+ },
+ {
+  "id": "Q087",
+  "verdict": "REAL",
+  "why": "will assist ESLM with annual inventory"
+ },
+ {
+  "id": "Q088",
+  "verdict": "REAL",
+  "why": "procedural: ATC requests submitted in eMASS as Guest System"
+ },
+ {
+  "id": "Q089",
+  "verdict": "REAL",
+  "why": "procedural: ATC requests submitted via Manage ATC"
+ },
+ {
+  "id": "Q090",
+  "verdict": "NOT_REAL",
+  "why": "definition of response and recovery"
+ },
+ {
+  "id": "Q091",
+  "verdict": "PARTIAL",
+  "why": "condition clause only; the permission (may continue to operate) is cut off"
+ },
+ {
+  "id": "Q092",
+  "verdict": "REAL",
+  "why": "PM/RMF team required to fill out ITCSC"
+ },
+ {
+  "id": "Q093",
+  "verdict": "REAL",
+  "why": "command: coordinate with command channels/AOs"
+ },
+ {
+  "id": "Q094",
+  "verdict": "REAL",
+  "why": "reporting rule: will be reported in this category (table debris attached)"
+ },
+ {
+  "id": "Q095",
+  "verdict": "PARTIAL",
+  "why": "list item noun phrase; depends on stem"
+ },
+ {
+  "id": "Q096",
+  "verdict": "NOT_REAL",
+  "why": "describes when development begins"
+ },
+ {
+  "id": "Q097",
+  "verdict": "NOT_REAL",
+  "why": "explains tier waiver notation"
+ },
+ {
+  "id": "Q098",
+  "verdict": "NOT_REAL",
+  "why": "consequence statement, no duty"
+ },
+ {
+  "id": "Q099",
+  "verdict": "PARTIAL",
+  "why": "condition list item; depends on stem"
+ },
+ {
+  "id": "Q100",
+  "verdict": "NOT_REAL",
+  "why": "purpose summary of the issuance"
+ },
+ {
+  "id": "Q101",
+  "verdict": "PARTIAL",
+  "why": "condition item for oversight duty"
+ },
+ {
+  "id": "Q102",
+  "verdict": "NOT_REAL",
+  "why": "describes what RMF KS provides"
+ },
+ {
+  "id": "Q103",
+  "verdict": "REAL",
+  "why": "reporting rule: will be reported in this category (table debris attached)"
+ },
+ {
+  "id": "Q104",
+  "verdict": "REAL",
+  "why": "permission: digital signatures authorized"
+ },
+ {
+  "id": "Q105",
+  "verdict": "NOT_REAL",
+  "why": "background on containment strategies"
+ },
+ {
+  "id": "Q106",
+  "verdict": "UNSURE",
+  "why": "org role description 'provide on-site capability'; third-person duty or intro background"
+ },
+ {
+  "id": "Q107",
+  "verdict": "NOT_REAL",
+  "why": "describes options for containment"
+ },
+ {
+  "id": "Q108",
+  "verdict": "NOT_REAL",
+  "why": "heading"
+ },
+ {
+  "id": "Q109",
+  "verdict": "UNSURE",
+  "why": "org role description 'provide situational awareness and manage systems'; duty or intro background"
+ },
+ {
+  "id": "Q110",
+  "verdict": "REAL",
+  "why": "shall implement licensed software"
+ },
+ {
+  "id": "Q111",
+  "verdict": "NOT_REAL",
+  "why": "purpose statement"
+ },
+ {
+  "id": "Q112",
+  "verdict": "REAL",
+  "why": "will meet RMF independence; ASCA reports only to SCA"
+ },
+ {
+  "id": "Q113",
+  "verdict": "NOT_REAL",
+  "why": "cross-reference"
+ },
+ {
+  "id": "Q114",
+  "verdict": "REAL",
+  "why": "list item command: address decontrol methods"
+ },
+ {
+  "id": "Q115",
+  "verdict": "NOT_REAL",
+  "why": "applicability/scope"
+ },
+ {
+  "id": "Q116",
+  "verdict": "REAL",
+  "why": "third-person duty: sets acquisition requirements"
+ },
+ {
+  "id": "Q117",
+  "verdict": "NOT_REAL",
+  "why": "rationale"
+ },
+ {
+  "id": "Q118",
+  "verdict": "NOT_REAL",
+  "why": "background"
+ },
+ {
+  "id": "Q119",
+  "verdict": "NOT_REAL",
+  "why": "describes scope of authority"
+ },
+ {
+  "id": "Q120",
+  "verdict": "REAL",
+  "why": "AFCFM tasks/prioritizes training products"
+ },
+ {
+  "id": "Q121",
+  "verdict": "REAL",
+  "why": "NOSs will coordinate through 624 OC"
+ },
+ {
+  "id": "Q122",
+  "verdict": "REAL",
+  "why": "permission: Enterprise AO may issue denial"
+ },
+ {
+  "id": "Q123",
+  "verdict": "UNSURE",
+  "why": "designation statement; implies requirement but phrased as description"
+ },
+ {
+  "id": "Q124",
+  "verdict": "REAL",
+  "why": "will assist PC in determining disposition (T-1)"
+ }
+]
