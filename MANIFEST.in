@@ -9,3 +9,6 @@ exclude profiles/test-*.json
 # (packaged/container builds). Absent in a plain source checkout; that's fine,
 # a missing recursive-include target is not an error.
 recursive-include frontend/dist *
+
+# Frozen model prompts read at runtime by pipeline/clause_labeling.py.
+include pipeline/prompts/*.txt
