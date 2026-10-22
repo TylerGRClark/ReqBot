@@ -23,7 +23,7 @@ if str(_ROOT) not in sys.path:
 
 from core.artifact_resolver import doc_key_from_requirements_path, resolve_requirement_file
 from core.profiles import load_profile
-from services import audit_questions, checklist_audit, checklist_missed, criticality
+from services import audit_questions, checklist_audit, checklist_missed, cleanup, criticality
 
 log = logging.getLogger(__name__)
 
@@ -394,6 +394,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     # WP-46.6: draft audit questions written earlier by `reqbot questions` (a sidecar file; building a checklist never calls a model)
     drafted = audit_questions.apply(items, audit_questions.sidecar_path(jsonl_path))
     criticality.apply(items, criticality.sidecar_path(jsonl_path), skip_ids=criticality.withheld_ids(audit_questions.sidecar_path(jsonl_path)))  # rough "look first" flag from the sidecar `reqbot questions` writes (no model call here)
+    cleanup.apply(items, cleanup.sidecar_path(jsonl_path), cleanup.chunk_texts(jsonl_path, items))  # optional "probably not a requirement" flag, added to the same priority cell (docs/CLEANUP_FLAG_PLAN.md)
 
     return {
         "format": "reqbot-checklist",
