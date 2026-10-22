@@ -63,3 +63,14 @@ def test_main_json_on_a_small_library(tmp_path, monkeypatch, capsys):
     out = json.loads(capsys.readouterr().out)
     assert out["totals"]["F1"] == 1 and out["totals"]["F8"] == 0 and out["totals"]["F6"] == 0
     assert frag.main(["--processed-dir", str(tmp_path), "--doc", "nope"]) == 1
+
+
+def test_list_label_is_not_a_lower_case_start_and_bullets_are_list_items():
+    f = frag.classify_row("(a) Notify the MCCC within 24 hours.", "(a) Notify the MCCC within 24 hours.", EXACT)
+    assert not f["F2"] and not f["F4"] and f["F3"]
+    b = frag.classify_row("- Notify the MCCC within 24 hours.", "- Notify the MCCC within 24 hours.", EXACT)
+    assert not b["F2"] and b["F3"]
+    n = frag.classify_row("2.3.1. Notify the MCCC.", "2.3.1. Notify the MCCC.", EXACT)
+    assert not n["F2"]
+    g = frag.classify_row("(b) and report it", "(b) and report it", EXACT)  # still mid-sentence after the label
+    assert g["F2"] and g["F4"]

@@ -6,8 +6,8 @@ more whole. For each document it builds the checklist the normal way (checklist_
 and counts, over the rows that came from the requirements file:
 
   F1  rows
-  F2  shown text starts mid-sentence (first letter is lower case)
-  F3  list scraps: the root is a list item and no lead-in is attached
+  F2  shown text starts mid-sentence (first letter is lower case, after any bullet, list label or paragraph number)
+  F3  list scraps: the root is a list item (bullet, "(a)", "1)" label) and no lead-in is attached
   F4  short lower-case scraps: mid-sentence and under 60 characters
   F5  table-line rows: shown text contains a pipe
   F6  shown text that is not a complete sentence (pipeline.sentence_expand.is_complete)
@@ -24,6 +24,7 @@ root); "root" is the record's source_quote.
 """
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -36,8 +37,20 @@ from pipeline.sentence_expand import is_complete  # noqa: E402
 from services import checklist_audit, checklist_service  # noqa: E402
 
 COUNT_KEYS = ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10_text_scan", "F10_possible_missed"]
+_BULLET = re.compile(r"^\s*[-\u2022\u2013*]\s+")
 SHORT_SCRAP_CHARS = 60
 SHORT_ROW_WORDS = 5
+
+
+def strip_label(text: str) -> str:
+    """The text without its leading bullet, list label ("(a)", "1)") or paragraph number ("2.3.1."), so "(a) Notify" is not read as starting in lower case."""
+    text = _BULLET.sub("", text or "", count=1)
+    text = checklist_audit._LIST_MARKER.sub("", text, count=1)
+    return checklist_audit._PARAGRAPH_NUMBER.sub("", text, count=1)
+
+
+def is_list_item(text: str) -> bool:
+    return bool(_BULLET.match(text or "")) or checklist_audit.has_list_marker(text)
 
 
 def classify_row(shown: str, root: str, record: dict) -> dict:
@@ -46,10 +59,10 @@ def classify_row(shown: str, root: str, record: dict) -> dict:
     root = (root or "").strip()
     parts = record.get("explained_parts") or []
     lead_in = any(p.get("kind") == "lead_in" for p in parts)
-    mid = checklist_audit.starts_mid_sentence(shown)
+    mid = checklist_audit.starts_mid_sentence(strip_label(shown))
     return {
         "F2": mid,
-        "F3": checklist_audit.has_list_marker(root) and not lead_in,
+        "F3": is_list_item(root) and not lead_in,
         "F4": mid and len(shown) < SHORT_SCRAP_CHARS,
         "F5": "|" in shown,
         "F6": not is_complete(shown),

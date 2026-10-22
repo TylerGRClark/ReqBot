@@ -4,9 +4,11 @@ Written 2026-10-22, before any run of the new method. Do not edit after a result
 bug is found, fix it, say so, and rerun everything.
 
 Before-numbers: `fragmentation_before_2026-10-22.json` (made by `fragmentation.py` on the live
-library with the old method; 8,940 rows; F2 144, F3 236, F4 55, F5 695, F6 1,210, F7 515,
+library with the old method; 8,940 rows; F2 114, F3 513, F4 35, F5 695, F6 1,210, F7 515,
 F8 1,247, F9 1,174, F10 564 text-scan rows and 14 possible-missed).
 After-numbers come from the same script on the re-extracted library.
+
+(Corrected the same day, still before any new-method run: a reviewer found that "(a) Notify" was read as starting in lower case and that bullets were not seen as list items; the script and these numbers were fixed. The first version read F2 144, F3 236, F4 55.)
 
 ## Expectations (library totals, after versus before)
 | Count | Expectation |
