@@ -246,7 +246,7 @@ def test_a_run_of_failed_batches_stops_the_run(tmp_path, monkeypatch):
     model = FakeModel({1: requests.ConnectionError("down"), 2: requests.ConnectionError("down")})
     rows = _run(tmp_path, model)
     assert len(model.prompts) == 2 and rows == []
-    assert len(_read(tmp_path / "out" / "doc_raw_responses.jsonl")) == 2
+    assert [r.get("error") for r in _read(tmp_path / "out" / "doc_raw_responses.jsonl")] == ["down", "down", "not_attempted"]
 
 
 def test_a_stable_id_comes_from_the_existing_recipe_when_the_document_is_known(tmp_path):
@@ -321,3 +321,36 @@ def test_nothing_calls_the_writer_yet():
     users = [p for d in ("api", "cli", "core", "mcp_server", "pipeline", "services") for p in (REPO / d).rglob("*.py")
              if "clause_labeling" in p.read_text(encoding="utf-8") and p.name != "clause_labeling.py"]
     assert users == []
+
+
+# ---- reviewer findings on #363
+def test_parse_refuses_a_duplicate_id():
+    # Codex P2: ids 1, 1, 2 were accepted and one label silently dropped.
+    assert cl.parse('[{"id": 1, "label": "DUTY"}, {"id": 1, "label": "NOT_REQUIREMENT"}, {"id": 2, "label": "DUTY"}]', 2) is None
+
+
+def test_a_section_path_stored_as_a_string_still_gives_the_citation():
+    # Codex P2: older chunk files store the path as "['1', '1.3']"; the prompt showed 1.3 but the row lost it.
+    chunk = {"chunk_id": 4, "raw_text": "Do it.", "section_title_path": "['CHAPTER 1', 'Scope']", "section_ref_path": "['1', '1.3']"}
+    assert cl.source_refs(chunk, chunk["raw_text"], cl.document_clauses([chunk])) == [("1.3", "section_path")]
+    titled = {"chunk_id": 5, "raw_text": "Do it.", "section_title_path": "['CHAPTER 1', '1.4. Scope.']"}
+    assert cl.source_refs(titled, titled["raw_text"], cl.document_clauses([titled])) == [("1.4", "section_path")]
+
+
+def test_a_retried_batch_leaves_one_ledger_line_so_the_run_reads_as_complete(tmp_path):
+    # Codex P2: index_replace.extraction_gaps counts every "failed" line, so a failure redone on resume must not stay in the ledger.
+    from pipeline.index_replace import extraction_gaps
+    _run(tmp_path, FakeModel({2: requests.ConnectionError("refused")}))
+    ledger_path = tmp_path / "out" / "doc_raw_responses.jsonl"
+    assert extraction_gaps(ledger_path) == {"failed": 1}
+    _run(tmp_path, FakeModel())
+    assert [(r["batch_id"], r["status"]) for r in _read(ledger_path)] == [("b00000", "complete"), ("b00001", "complete"), ("b00002", "complete")]
+    assert extraction_gaps(ledger_path) == {}
+
+
+def test_batches_left_after_a_stopped_run_are_recorded_as_failed(tmp_path, monkeypatch):
+    monkeypatch.setattr(cl, "MAX_FAILED_IN_A_ROW", 1)
+    _run(tmp_path, FakeModel({1: requests.ConnectionError("down")}))
+    ledger = _read(tmp_path / "out" / "doc_raw_responses.jsonl")
+    assert [(r["batch_id"], r["status"], r.get("error")) for r in ledger] == [
+        ("b00000", "failed", "down"), ("b00001", "failed", "not_attempted"), ("b00002", "failed", "not_attempted")]

@@ -26,7 +26,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from pipeline.clauses import chunk_clauses
+from pipeline.clauses import _as_list, chunk_clauses
 from pipeline.sentence_expand import tidy
 
 log = logging.getLogger(__name__)
@@ -99,7 +99,7 @@ def parse(answer: str, n: int) -> list[str] | None:
         except Exception:
             return None
         label = str(o.get("label", "")).strip().upper().replace(" ", "_")
-        if label not in LABELS:
+        if label not in LABELS or i in got:  # one entry per clause: a repeated id is not a usable answer
             return None
         got[i] = label
     if set(got) != set(range(1, n + 1)):
@@ -205,12 +205,12 @@ def own_numbers(text: str, clauses: list[dict]) -> list[str]:
 
 
 def _section_number(chunk: dict) -> str:
-    for entry in reversed([str(p) for p in (chunk.get("section_title_path") or [])]):
+    # Older chunk files store the paths as their string form ("['1', '1.3']"); read them as pipeline/clauses.chunk_unit does.
+    for entry in reversed([str(p) for p in _as_list(chunk.get("section_title_path"))]):
         m = _ENTRY_NUMBER.match(entry)
         if m:
             return m.group(1)
-    refs = chunk.get("section_ref_path") or []
-    for entry in reversed([str(p).strip().rstrip(".") for p in refs] if isinstance(refs, list) else []):
+    for entry in reversed([str(p).strip().rstrip(".") for p in _as_list(chunk.get("section_ref_path"))]):
         if re.fullmatch(_DOTTED, entry):
             return entry
     return ""
@@ -338,6 +338,7 @@ def run(chunks_jsonl: str, output_dir: str, *, model: str, ollama_url: str = "",
 
     from pipeline import progress
     finished: list[dict] = []
+    current: list[dict] = []  # this run's record for every batch, in order: what the ledger is compacted to at the end
     failed_chunks: set = set()
     counts = {"batches": len(batches), "reused": 0, "labeled": 0, "unparsed": 0, "failed": 0, "not_attempted": 0}
     failed_in_a_row = 0
@@ -349,15 +350,20 @@ def run(chunks_jsonl: str, output_dir: str, *, model: str, ollama_url: str = "",
             if old is not None:
                 counts["reused"] += 1
                 finished.append(old)
+                current.append(old)
                 continue
             if failed_in_a_row >= MAX_FAILED_IN_A_ROW:
                 counts["not_attempted"] += 1
                 failed_chunks.update(batch["chunk_ids"])
+                current.append({"batch_id": batch["batch_id"], "chunk_ids": batch["chunk_ids"], "clause_keys": batch["clause_keys"], "model": model,
+                                "prompt_sha": PROMPT_SHA256, "input_hash": input_hash(model, prompt), "raw_answer": "", "attempts": 0, "labels": None,
+                                "status": STATUS_FAILED, "error": "not_attempted"})
                 continue
             rec = label_batch(batch, prompt, model=model, call=call)
             rec["timestamp"] = datetime.now(timezone.utc).isoformat()
             ledger.write(json.dumps(rec, ensure_ascii=False) + "\n")
             ledger.flush()
+            current.append(rec)
             if rec["status"] == STATUS_FAILED:
                 counts["failed"] += 1
                 failed_in_a_row += 1
@@ -369,6 +375,10 @@ def run(chunks_jsonl: str, output_dir: str, *, model: str, ollama_url: str = "",
             counts["labeled"] += 1
             counts["unparsed"] += rec["status"] == STATUS_UNPARSED
             finished.append(rec)
+
+    # One line per batch of this run: a failure redone since, or a line from another model or prompt, would otherwise stay behind, and
+    # index_replace.extraction_gaps reads every "failed" line as a gap. Batches a stopped run never tried are recorded as failed, so the gap is seen.
+    _write_jsonl(raw_path, current)
 
     labels = {}
     for rec in finished:
