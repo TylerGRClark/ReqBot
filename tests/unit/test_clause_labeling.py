@@ -244,9 +244,40 @@ def test_resume_does_not_reuse_another_models_answers(tmp_path):
 def test_a_run_of_failed_batches_stops_the_run(tmp_path, monkeypatch):
     monkeypatch.setattr(cl, "MAX_FAILED_IN_A_ROW", 2)
     model = FakeModel({1: requests.ConnectionError("down"), 2: requests.ConnectionError("down")})
-    rows = _run(tmp_path, model)
-    assert len(model.prompts) == 2 and rows == []
+    with pytest.raises(RuntimeError, match="none of 3 batches"):  # nothing labeled at all: the pipeline stops instead of indexing an empty document
+        _run(tmp_path, model)
+    assert len(model.prompts) == 2 and _read(tmp_path / "out" / "doc_extracted_requirements.jsonl") == []
     assert [r.get("error") for r in _read(tmp_path / "out" / "doc_raw_responses.jsonl")] == ["down", "down", "not_attempted"]
+
+
+def test_a_run_with_some_batches_labeled_does_not_raise(tmp_path):
+    rows = _run(tmp_path, FakeModel({3: requests.ConnectionError("down")}))  # the last batch fails, the first two are labeled
+    assert rows and all(r["chunk_id"] != 3 for r in rows)
+
+
+def test_an_unreachable_server_fails_before_any_labeling(tmp_path, monkeypatch):
+    def get(url, timeout):
+        raise requests.ConnectionError("refused")
+
+    monkeypatch.setattr(requests, "get", get)
+    monkeypatch.setattr(requests, "post", lambda *a, **k: pytest.fail("no labeling call once the server is known to be down"))
+    with pytest.raises(RuntimeError, match="Cannot reach Ollama at http://ollama.invalid:11434"):
+        cl.run(str(_write_chunks(tmp_path)), str(tmp_path / "out"), model="ornith:35b", ollama_url="http://ollama.invalid:11434")
+    assert not (tmp_path / "out" / "doc_extracted_requirements.jsonl").exists()
+
+
+def test_a_model_the_server_does_not_list_only_warns(monkeypatch, caplog):
+    seen = []
+
+    def get(url, timeout):
+        seen.append(url)
+        return _Resp(200, {"models": [{"name": "llama3.1:8b"}, {"name": "ornith:35b"}]})
+
+    monkeypatch.setattr(requests, "get", get)
+    cl.check_server("http://ollama.invalid:11434/", "ornith:35b")
+    assert seen == ["http://ollama.invalid:11434/api/tags"] and "not found" not in caplog.text
+    cl.check_server("http://ollama.invalid:11434", "other:1b")
+    assert "Model 'other:1b' not found" in caplog.text
 
 
 def test_a_stable_id_comes_from_the_existing_recipe_when_the_document_is_known(tmp_path):
@@ -317,10 +348,12 @@ def test_request_errors_are_retried_with_backoff_then_raised(monkeypatch):
     assert calls[0] == "http://ollama.invalid:11434/api/chat"
 
 
-def test_nothing_calls_the_writer_yet():
-    users = [p for d in ("api", "cli", "core", "mcp_server", "pipeline", "services") for p in (REPO / d).rglob("*.py")
-             if "clause_labeling" in p.read_text(encoding="utf-8") and p.name != "clause_labeling.py"]
-    assert users == []
+def test_only_the_pipeline_calls_the_labeler():
+    """WP-4, the switch: requirement finding (run_pipeline.py) is the one caller."""
+    users = [p.relative_to(REPO).as_posix() for d in ("api", "cli", "core", "mcp_server", "pipeline", "services") for p in (REPO / d).rglob("*.py")
+             if re.search(r"from pipeline import .*\bclause_labeling\b|import pipeline\.clause_labeling|from pipeline\.clause_labeling import", p.read_text(encoding="utf-8"))
+             and p.name != "clause_labeling.py"]
+    assert users == ["pipeline/run_pipeline.py"]
 
 
 # ---- reviewer findings on #363
@@ -350,7 +383,8 @@ def test_a_retried_batch_leaves_one_ledger_line_so_the_run_reads_as_complete(tmp
 
 def test_batches_left_after_a_stopped_run_are_recorded_as_failed(tmp_path, monkeypatch):
     monkeypatch.setattr(cl, "MAX_FAILED_IN_A_ROW", 1)
-    _run(tmp_path, FakeModel({1: requests.ConnectionError("down")}))
+    with pytest.raises(RuntimeError):
+        _run(tmp_path, FakeModel({1: requests.ConnectionError("down")}))
     ledger = _read(tmp_path / "out" / "doc_raw_responses.jsonl")
     assert [(r["batch_id"], r["status"], r.get("error")) for r in ledger] == [
         ("b00000", "failed", "down"), ("b00001", "failed", "not_attempted"), ("b00002", "failed", "not_attempted")]

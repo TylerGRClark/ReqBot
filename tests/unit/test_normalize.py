@@ -1,16 +1,17 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from pipeline.parse_and_normalize import (
-    QUOTE_WORD_COVERAGE_THRESHOLD,
-    _is_dangling_clause,
+    SCHEMA_VERSION,
+    OldExtractionFormatError,
     _is_heading_echo,
     _is_orphaned_list_item,
     _is_unrepairable_fragment,
-    build_chunk_text_map,
+    clause_offset_mismatch,
     compute_stable_id,
     deduplicate_requirements,
-    quote_word_coverage,
     run,
 )
 
@@ -25,16 +26,43 @@ def _read_jsonl(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
-SAMPLE_EXTRACTED = {
-    "requirement_id": "R-1",
-    "source_quote": "Systems must enforce role-based access control policies.",
-    "source_ref": "1.1",
-    "description": "Enforce role-based access control for all system users.",
-    "requirement_type": "technical-control",
-    "domain_tags": ["access-control"],
-    "chunk_id": None,
-    "confidence": 0.9,
-}
+def _chunk(chunk_id: int, text: str, **extra) -> dict:
+    return {
+        "chunk_id": chunk_id,
+        "page_start": 1, "page_end": 1,
+        "text": text, "raw_text": text,
+        "section_ref_path": [], "section_title_path": [],
+        "parent_header_text": None, "parent_context": None,
+        "document_id": "abc123", "source_pdf": "TEST.pdf",
+        **extra,
+    }
+
+
+def _row(chunk: dict, quote: str, clause_index: int = 0, label: str = "DUTY", **extra) -> dict:
+    """A row as clause labeling writes it: the quote is the chunk's own text at its offsets."""
+    start = chunk["raw_text"].index(quote)
+    return {
+        "requirement_id": f"R-{chunk['chunk_id']}-{clause_index}",
+        "description": "", "source_ref": "", "source_ref_origin": "none", "domain_tags": [], "requirement_type": "",
+        "source_quote": quote, "chunk_id": chunk["chunk_id"], "clause_index": clause_index, "clause_label": label,
+        "anchor_status": "exact", "anchor_start": start, "anchor_end": start + len(quote), "anchor_text": quote,
+        "extraction_model": "labeler:1b", "label_prompt_sha": "abc", "schema_version": "3.0", "pipeline_version": "2.0",
+        **extra,
+    }
+
+
+def _run(tmp_path, chunks: list[dict], rows: list[dict]) -> tuple[list[dict], list[dict]]:
+    req_path = tmp_path / "test_extracted_requirements.jsonl"
+    chunks_path = tmp_path / "test_chunks.jsonl"
+    _write_jsonl(req_path, rows)
+    _write_jsonl(chunks_path, chunks)
+    out_dir = tmp_path / "out"
+    run(str(req_path), str(chunks_path), "", str(out_dir))
+    return _read_jsonl(out_dir / "test_requirements_normalized.jsonl"), _read_jsonl(out_dir / "test_normalization_failures.jsonl")
+
+
+SAMPLE_TEXT = "1.1. Systems must enforce role-based access control policies."
+SAMPLE_QUOTE = "Systems must enforce role-based access control policies."
 
 
 def test_stable_id_is_deterministic():
@@ -50,13 +78,13 @@ def test_stable_id_differs_for_different_quotes():
     assert id1 != id2
 
 
-def test_dedup_collapses_exact_quote(tmp_path):
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    _write_jsonl(req_path, [SAMPLE_EXTRACTED, SAMPLE_EXTRACTED])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(tmp_path / "no_chunks.jsonl"), "", str(out_dir))
-    records = _read_jsonl(out_dir / "test_requirements_normalized.jsonl")
-    assert len(records) == 1
+def test_dedup_collapses_the_same_clause_under_the_same_reference(tmp_path):
+    chunk = _chunk(1, "| Yes | Report it. |\n| No | Report it. |")
+    first = _row(chunk, "| Yes | Report it. |", 0, source_ref="Table 3.1")
+    second = dict(_row(chunk, "| No | Report it. |", 1, source_ref="Table 3.1"))
+    twin = dict(first, clause_index=2, requirement_id="R-1-2")  # a repeated line: same text, same reference
+    records, _ = _run(tmp_path, [chunk], [first, second, twin])
+    assert [r["source_quote"] for r in records] == ["| Yes | Report it. |", "| No | Report it. |"]
 
 
 def test_dedup_keeps_distinct_quotes_that_share_a_source_ref_and_the_higher_confidence_copy():
@@ -69,56 +97,28 @@ def test_dedup_keeps_distinct_quotes_that_share_a_source_ref_and_the_higher_conf
 
 
 def test_source_quote_required_gate(tmp_path):
-    req = dict(SAMPLE_EXTRACTED, source_quote="")
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    _write_jsonl(req_path, [req])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(tmp_path / "no_chunks.jsonl"), "", str(out_dir))
-    assert _read_jsonl(out_dir / "test_requirements_normalized.jsonl") == []
-    failures = _read_jsonl(out_dir / "test_normalization_failures.jsonl")
-    assert len(failures) == 1
-    assert failures[0]["error"] == "empty_source_quote"
+    chunk = _chunk(1, SAMPLE_TEXT)
+    records, failures = _run(tmp_path, [chunk], [dict(_row(chunk, SAMPLE_QUOTE), source_quote="")])
+    assert records == []
+    assert [f["error"] for f in failures] == ["empty_source_quote"]
 
 
 def test_hierarchy_fields_populated(tmp_path):
-    chunk = {
-        "chunk_id": 42,
-        "page_start": 1, "page_end": 2,
-        # Must actually contain SAMPLE_EXTRACTED's source_quote (WP-32.1's grounding
-        # check) -- this test verifies hierarchy metadata propagation, not grounding,
-        # so the chunk text just needs to be realistic enough not to trip that check.
-        "text": "1.1 Systems must enforce role-based access control policies.",
-        "section_ref_path": ["1", "1.1"],
-        "section_title_path": ["Access Control", "Auth Requirements"],
-        "parent_header_text": "Access Control",
-        "parent_context": "Section 1. Access Control. All systems must enforce RBAC.",
-        "document_id": "abc123",
-        "source_pdf": "TEST.pdf",
-    }
-    req = dict(SAMPLE_EXTRACTED, chunk_id=42)
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    chunks_path = tmp_path / "test_chunks.jsonl"
-    _write_jsonl(req_path, [req])
-    _write_jsonl(chunks_path, [chunk])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(chunks_path), "", str(out_dir))
-    records = _read_jsonl(out_dir / "test_requirements_normalized.jsonl")
+    chunk = _chunk(42, SAMPLE_TEXT, page_end=2, section_ref_path=["1", "1.1"], section_title_path=["Access Control", "Auth Requirements"],
+                   parent_header_text="Access Control", parent_context="Section 1. Access Control. All systems must enforce RBAC.")
+    records, _ = _run(tmp_path, [chunk], [_row(chunk, SAMPLE_QUOTE)])
     assert len(records) == 1
     r = records[0]
     assert r["section_ref_path"] == ["1", "1.1"]
     assert r["section_title_path"] == ["Access Control", "Auth Requirements"]
     assert r["parent_section_ref"] == "1"
     assert r["parent_context"] == "Section 1. Access Control. All systems must enforce RBAC."
+    assert (r["page_start"], r["page_end"]) == (1, 2)
 
 
 def test_optional_hierarchy_defaults_to_empty(tmp_path):
-    req = dict(SAMPLE_EXTRACTED, chunk_id=None)
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    _write_jsonl(req_path, [req])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(tmp_path / "no_chunks.jsonl"), "", str(out_dir))
-    records = _read_jsonl(out_dir / "test_requirements_normalized.jsonl")
-    assert len(records) == 1
+    chunk = _chunk(1, SAMPLE_TEXT)
+    records, _ = _run(tmp_path, [chunk], [_row(chunk, SAMPLE_QUOTE)])
     r = records[0]
     assert r["section_ref_path"] == []
     assert r["section_title_path"] == []
@@ -128,253 +128,103 @@ def test_optional_hierarchy_defaults_to_empty(tmp_path):
 
 
 def test_empty_input_produces_empty_output(tmp_path):
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    req_path.write_text("")
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(tmp_path / "no_chunks.jsonl"), "", str(out_dir))
-    assert _read_jsonl(out_dir / "test_requirements_normalized.jsonl") == []
+    records, failures = _run(tmp_path, [_chunk(1, SAMPLE_TEXT)], [])
+    assert records == [] and failures == []
 
 
 def test_all_records_missing_source_quote(tmp_path):
-    reqs = [dict(SAMPLE_EXTRACTED, source_quote="") for _ in range(3)]
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    _write_jsonl(req_path, reqs)
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(tmp_path / "no_chunks.jsonl"), "", str(out_dir))
-    assert _read_jsonl(out_dir / "test_requirements_normalized.jsonl") == []
-    failures = _read_jsonl(out_dir / "test_normalization_failures.jsonl")
+    chunk = _chunk(1, SAMPLE_TEXT)
+    records, failures = _run(tmp_path, [chunk], [dict(_row(chunk, SAMPLE_QUOTE, i), source_quote="") for i in range(3)])
+    assert records == []
     assert len(failures) == 3
 
 
-# WP-32.1: build_chunk_text_map + the quote-grounding gate in run(). See
-# archive/PHASE32_REQUIREMENTS.md for the corpus-wide investigation (21.55% of
-# indexed requirements failed this check; confirmed genuine Step C fabrication,
-# not a chunking bug) that motivated this and ruled out exact-substring matching
-# in favor of fuzz.partial_ratio.
+# Clause labeling (WP-4 of the extraction replacement): the record fields, the offset invariant, and the refusal of the old step's files.
 
-def test_build_chunk_text_map():
-    chunks = [
-        {"chunk_id": 1, "text": "First chunk text."},
-        {"chunk_id": 2, "text": "Second chunk text."},
-    ]
-    assert build_chunk_text_map(chunks) == {1: "First chunk text.", 2: "Second chunk text."}
-
-
-def test_build_chunk_text_map_null_text_becomes_empty_string(tmp_path):
-    # An explicit "text": null (not just a missing key) must still produce "" to honor
-    # this function's dict[int, str] contract -- dict.get(key, default) only substitutes
-    # default when the key is absent, not when present with an explicit None (Gemini
-    # review, PR #144).
-    chunks = [{"chunk_id": 1, "text": None}, {"chunk_id": 2, "text": ""}]
-    result = build_chunk_text_map(chunks)
-    assert result == {1: "", 2: ""}
-    assert all(isinstance(v, str) for v in result.values())
+def test_clause_fields_are_carried_through_and_the_schema_is_3(tmp_path):
+    chunk = _chunk(1, SAMPLE_TEXT)
+    row = _row(chunk, SAMPLE_QUOTE, label="UNSURE", source_ref="1.1", source_ref_origin="own_number")
+    records, failures = _run(tmp_path, [chunk], [row])
+    assert failures == []
+    r = records[0]
+    assert {k: r[k] for k in ("clause_index", "clause_label", "source_ref_origin", "label_prompt_sha", "anchor_status", "anchor_start", "anchor_end", "anchor_text")} == {
+        "clause_index": 0, "clause_label": "UNSURE", "source_ref_origin": "own_number", "label_prompt_sha": "abc", "anchor_status": "exact",
+        "anchor_start": 5, "anchor_end": 61, "anchor_text": SAMPLE_QUOTE}
+    assert r["source_quote"] == SAMPLE_QUOTE
+    assert r["extraction_model"] == "labeler:1b"  # the row's own labeler, not a default
+    assert SCHEMA_VERSION == "3.0" and r["schema_version"] == "3.0" and r["pipeline_version"] == "2.0"
+    for gone in ("recovered_truncated", "parent_stem", "embedding_text", "merged_roots", "anchor_score", "anchor_lead_in"):
+        assert gone not in r
 
 
-def _chunk(chunk_id: int, text: str) -> dict:
-    return {
-        "chunk_id": chunk_id,
-        "page_start": 1, "page_end": 1,
-        "text": text,
-        "section_ref_path": [], "section_title_path": [],
-        "parent_header_text": None, "parent_context": None,
-        "document_id": "abc123", "source_pdf": "TEST.pdf",
-    }
+def test_clause_offset_mismatch_rejects_a_row_whose_chunk_changed(tmp_path):
+    chunk = _chunk(1, SAMPLE_TEXT)
+    row = _row(chunk, SAMPLE_QUOTE)
+    changed = _chunk(1, "1.1. Systems must enforce mandatory access control policies.")  # re-chunked without a re-label
+    records, failures = _run(tmp_path, [changed], [row])
+    assert records == []
+    assert [f["error"] for f in failures] == ["clause_offset_mismatch"]
 
 
-def test_grounded_quote_passes(tmp_path):
-    chunk_text = "3.2.1 All systems shall enforce role-based access control policies for every user."
-    req = dict(SAMPLE_EXTRACTED, chunk_id=1, source_quote="Systems must enforce role-based access control policies.")
+def test_clause_offset_mismatch_rules():
+    raw = "  The unit  shall\n report it ."
+    ok = {"source_quote": "The unit shall report it.", "anchor_start": 2, "anchor_end": len(raw)}
+    assert clause_offset_mismatch(ok, raw) is False  # whitespace is tidied, nothing else
+    assert clause_offset_mismatch(ok, None) is True  # unknown chunk
+    assert clause_offset_mismatch(dict(ok, anchor_start=None), raw) is True
+    assert clause_offset_mismatch(dict(ok, anchor_end=len(raw) + 1), raw) is True
+    assert clause_offset_mismatch(dict(ok, source_quote="The unit shall report it"), raw) is True
+
+
+def test_an_old_format_extraction_file_is_refused(tmp_path):
+    chunk = _chunk(1, SAMPLE_TEXT)
+    old = {"requirement_id": "R-1", "source_quote": SAMPLE_QUOTE, "source_ref": "1.1", "chunk_id": 1, "recovered_truncated": False}
+    with pytest.raises(OldExtractionFormatError, match="clause_index"):
+        _run(tmp_path, [chunk], [old])
+
+
+def test_a_missing_chunk_file_is_an_error(tmp_path):
     req_path = tmp_path / "test_extracted_requirements.jsonl"
-    chunks_path = tmp_path / "test_chunks.jsonl"
-    _write_jsonl(req_path, [req])
-    _write_jsonl(chunks_path, [_chunk(1, chunk_text)])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(chunks_path), "", str(out_dir))
-    assert len(_read_jsonl(out_dir / "test_requirements_normalized.jsonl")) == 1
-    assert _read_jsonl(out_dir / "test_normalization_failures.jsonl") == []
+    _write_jsonl(req_path, [])
+    with pytest.raises(FileNotFoundError):
+        run(str(req_path), str(tmp_path / "no_chunks.jsonl"), "", str(tmp_path / "out"))
 
 
-def test_reformatted_quote_still_passes(tmp_path):
-    # Reproduces the WP-32.1 calibration finding: tabular/reflowed source text
-    # (e.g. NIST.SP.800-53Ar5's assessment-procedure tables) can reformat a real
-    # quote enough that exact substring matching would wrongly reject it.
-    chunk_text = "AU-16(2)  Cross-Organizational Auditing.  Sharing of Audit Information."
-    req = dict(SAMPLE_EXTRACTED, chunk_id=1, source_quote="Cross-Organizational Auditing | Sharing of Audit Information.")
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    chunks_path = tmp_path / "test_chunks.jsonl"
-    _write_jsonl(req_path, [req])
-    _write_jsonl(chunks_path, [_chunk(1, chunk_text)])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(chunks_path), "", str(out_dir))
-    assert len(_read_jsonl(out_dir / "test_requirements_normalized.jsonl")) == 1
+def test_a_subject_less_clause_is_kept(tmp_path):
+    """The dangling-clause rejection was deleted with the switch: "Is designated ..." is a real line of a responsibilities list."""
+    text = "2.2.2. Is designated Computer Network Defense Service Provider Certification Authority."
+    chunk = _chunk(1, text)
+    records, failures = _run(tmp_path, [chunk], [_row(chunk, "Is designated Computer Network Defense Service Provider Certification Authority.")])
+    assert len(records) == 1 and failures == []
 
 
-def test_fabricated_quote_rejected(tmp_path):
-    # Reproduces the exact confirmed WP-32.1 case: chunk text is an unrelated
-    # document introduction, quote is fabricated password-policy content that
-    # doesn't appear anywhere in it.
-    chunk_text = (
-        "An information system is a discrete set of information resources "
-        "organized for the collection, processing, maintenance, use, sharing, "
-        "dissemination, or disposition of information."
-    )
-    req = dict(
-        SAMPLE_EXTRACTED, chunk_id=1,
-        source_quote="shall conform to NIST SP 800-63B guidelines. Minimum password length is 12 characters.",
-    )
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    chunks_path = tmp_path / "test_chunks.jsonl"
-    _write_jsonl(req_path, [req])
-    _write_jsonl(chunks_path, [_chunk(1, chunk_text)])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(chunks_path), "", str(out_dir))
-    assert _read_jsonl(out_dir / "test_requirements_normalized.jsonl") == []
-    failures = _read_jsonl(out_dir / "test_normalization_failures.jsonl")
-    assert len(failures) == 1
-    assert failures[0]["error"] == "quote_not_grounded_in_chunk"
-    assert "grounding_score" in failures[0]
+def test_explained_layer_takes_the_marker_off_and_attaches_the_lead_in(tmp_path):
+    text = "3.1. The Director will:\na. Identify the mission owner.\nb. Report incidents to the ISSM."
+    chunk = _chunk(1, text)
+    rows = [_row(chunk, "The Director will:", 0), _row(chunk, "a. Identify the mission owner.", 1), _row(chunk, "b. Report incidents to the ISSM.", 2)]
+    records, failures = _run(tmp_path, [chunk], rows)
+    assert [f["error"] for f in failures] == ["unrepairable_fragment_quote"]  # the lead-in alone
+    assert [r["explained_text"] for r in records] == ["The Director will: Identify the mission owner.", "The Director will: Report incidents to the ISSM."]
+    assert [r["source_quote"] for r in records] == ["a. Identify the mission owner.", "b. Report incidents to the ISSM."]  # the root is never changed
+    assert records[0]["explained_parts"] == [{"kind": "lead_in", "text": "The Director will:", "origin": "rule"},
+                                             {"kind": "sentence", "text": "Identify the mission owner.", "origin": "rule"}]
+    assert records[0]["explain_notes"] == ["list number or dash taken off", "lead-in attached from the line above that ends with a colon"]
 
 
-def test_missing_chunk_passes_through_unchecked(tmp_path):
-    # chunk_id 999 doesn't exist in chunks.jsonl -- can't verify, so don't reject.
-    req = dict(SAMPLE_EXTRACTED, chunk_id=999, source_quote="Completely unverifiable quote text.")
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    chunks_path = tmp_path / "test_chunks.jsonl"
-    _write_jsonl(req_path, [req])
-    _write_jsonl(chunks_path, [_chunk(1, "Some unrelated chunk text.")])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(chunks_path), "", str(out_dir))
-    assert len(_read_jsonl(out_dir / "test_requirements_normalized.jsonl")) == 1
+def test_explained_layer_of_a_plain_sentence_is_the_clause(tmp_path):
+    chunk = _chunk(1, SAMPLE_TEXT)
+    records, _ = _run(tmp_path, [chunk], [_row(chunk, SAMPLE_QUOTE)])
+    assert records[0]["explained_text"] == SAMPLE_QUOTE
+    assert records[0]["explain_notes"] == []
 
 
-def test_empty_chunk_text_still_rejects_fabricated_quote(tmp_path):
-    # Distinct from test_missing_chunk_passes_through_unchecked above: chunk_id 1
-    # DOES exist in chunks.jsonl, it's just empty -- verifiable, not the same as
-    # unknown, and any non-empty quote against empty text is automatically
-    # ungrounded. An earlier version of this check used `if chunk_text:` (a
-    # truthiness test), which treated "chunk present but empty" the same as
-    # "chunk unknown" and silently let this pass -- caught by Gemini review, PR #144.
-    req = dict(SAMPLE_EXTRACTED, chunk_id=1, source_quote="Some fabricated requirement text.")
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    chunks_path = tmp_path / "test_chunks.jsonl"
-    _write_jsonl(req_path, [req])
-    _write_jsonl(chunks_path, [_chunk(1, "")])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(chunks_path), "", str(out_dir))
-    assert _read_jsonl(out_dir / "test_requirements_normalized.jsonl") == []
-    failures = _read_jsonl(out_dir / "test_normalization_failures.jsonl")
-    assert len(failures) == 1
-    assert failures[0]["error"] == "quote_not_grounded_in_chunk"
-
-
-# WP-44.1: word-coverage check (archive/PHASE44_REQUIREMENTS.md section 4). The 5 fixtures in
-# tests/fixtures/wp44_invented_quote_leaks.json are real quotes that passed the fuzzy
-# gate above (scores 62-76) and were indexed: each states an obligation its chunk (a
-# marking table, a bare glossary term, a cover page, a descriptive matrix) does not.
-
-def _leak_fixtures() -> list[dict]:
-    path = Path(__file__).resolve().parent.parent / "fixtures" / "wp44_invented_quote_leaks.json"
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def test_quote_word_coverage_values():
-    assert quote_word_coverage("Systems shall enforce access control.", "x. Systems shall enforce access control.") == 1.0
-    assert quote_word_coverage("alpha beta gamma delta", "alpha beta") == 0.5
-    # tokens are counted per occurrence: a repeated missing word lowers coverage twice
-    assert quote_word_coverage("alpha zeta zeta zeta", "alpha beta") == 0.25
-    # punctuation and case are ignored for the calculation only
-    assert quote_word_coverage("ACCESS-Control, (A)", "access control a") == 1.0
-    # no words -> 0.0 (never a division error), even against a non-empty chunk
-    assert quote_word_coverage("...", "alpha beta") == 0.0
-    assert quote_word_coverage("alpha", "") == 0.0
-
-
-def test_quote_word_coverage_threshold_is_inclusive_of_exactly_point_eight():
-    assert QUOTE_WORD_COVERAGE_THRESHOLD == 0.8
-    # 4 of 5 words present -> exactly 0.8 -> NOT below the threshold
-    assert quote_word_coverage("alpha beta gamma delta epsilon", "alpha beta gamma delta") == 0.8
-
-
-def test_real_invented_quote_leaks_are_rejected_by_word_coverage(tmp_path):
-    fixtures = _leak_fixtures()
-    assert len(fixtures) == 5
-    for i, fx in enumerate(fixtures):
-        d = tmp_path / str(i)
-        d.mkdir()
-        req = dict(SAMPLE_EXTRACTED, chunk_id=fx["chunk_id"], source_quote=fx["source_quote"])
-        _write_jsonl(d / "test_extracted_requirements.jsonl", [req])
-        _write_jsonl(d / "test_chunks.jsonl", [_chunk(fx["chunk_id"], fx["chunk_text"])])
-        run(str(d / "test_extracted_requirements.jsonl"), str(d / "test_chunks.jsonl"), "", str(d / "out"))
-        assert _read_jsonl(d / "out" / "test_requirements_normalized.jsonl") == [], fx["document"]
-        failures = _read_jsonl(d / "out" / "test_normalization_failures.jsonl")
-        assert len(failures) == 1
-        # rejected by the NEW check, i.e. these had passed the fuzzy gate
-        assert failures[0]["error"] == "quote_words_not_in_chunk", fx["document"]
-        assert failures[0]["grounding_score"] >= 60
-        assert failures[0]["word_coverage"] < 0.8
-        assert failures[0]["word_coverage_threshold"] == 0.8
-
-
-def test_fabricated_quote_below_fuzzy_threshold_keeps_original_failure_code(tmp_path):
-    # Records the fuzzy gate already rejects must not be re-labelled by the new check.
-    req = dict(SAMPLE_EXTRACTED, chunk_id=1, source_quote="Completely different invented sentence about firewalls.")
-    _write_jsonl(tmp_path / "test_extracted_requirements.jsonl", [req])
-    _write_jsonl(tmp_path / "test_chunks.jsonl", [_chunk(1, "Passwords must rotate every ninety days for administrators.")])
-    run(str(tmp_path / "test_extracted_requirements.jsonl"), str(tmp_path / "test_chunks.jsonl"), "", str(tmp_path / "out"))
-    failures = _read_jsonl(tmp_path / "out" / "test_normalization_failures.jsonl")
-    assert [f["error"] for f in failures] == ["quote_not_grounded_in_chunk"]
-
-
-def _passes_step_d(tmp_path, chunk_text: str, quote: str) -> bool:
-    req = dict(SAMPLE_EXTRACTED, chunk_id=1, source_quote=quote)
-    _write_jsonl(tmp_path / "test_extracted_requirements.jsonl", [req])
-    _write_jsonl(tmp_path / "test_chunks.jsonl", [_chunk(1, chunk_text)])
-    run(str(tmp_path / "test_extracted_requirements.jsonl"), str(tmp_path / "test_chunks.jsonl"), "", str(tmp_path / "out"))
-    return len(_read_jsonl(tmp_path / "out" / "test_requirements_normalized.jsonl")) == 1
-
-
-def test_stitched_lead_in_plus_item_passes(tmp_path):
-    # Real shape from afi13-550: list lead-in and item are separate lines in the chunk; the
-    # quote joins them. Tyler's decision: stitched quotes stay (they carry the hierarchy).
-    chunk = "- 3.3.3. AFGSC will:\n- 3.3.3.1. Chair the AF NLCC/NC3 Council.\n- 3.3.3.2. Co-chair the AF NLCC/NC3 Board and Group."
-    assert _passes_step_d(tmp_path, chunk, "AFGSC will: Chair the AF NLCC/NC3 Council.")
-
-
-def test_ellipsis_quote_passes(tmp_path):
-    chunk = "Pursuant to section 252.204-7012 of the DFARS, scientific, technical, and engineering information beyond basic research must be protected and shall be treated as CUI."
-    assert _passes_step_d(tmp_path, chunk, "Pursuant to section 252.204-7012 of the DFARS, scientific, technical, and engineering information beyond basic research... shall be treated as CUI.")
-
-
-def test_quote_with_dropped_acronym_parenthetical_passes(tmp_path):
-    # Real case, dafman17-1305 chunk 41: the model dropped "(WCO/DCO)" from the lead-in.
-    chunk = "2.14. Wing/Delta Cyberspace Offices (formerly known as Cybersecurity Offices) (WCO/DCO) shall:\n2.14.1. Monitor status on all Wing/Delta cyberspace workforce personnel."
-    assert _passes_step_d(tmp_path, chunk, "Wing/Delta Cyberspace Offices (formerly known as Cybersecurity Offices) shall: Monitor status on all Wing/Delta cyberspace workforce personnel.")
-
-
-# Documented limit of a bag-of-words check (not an endorsement of these as quotations): quotes
-# whose words ALL occur in the chunk score 1.0 and pass, even when they say something the
-# chunk does not. Expected results are fixed here; none of these shapes has been observed
-# producing a stored requirement in the measured corpus except the first (a 2-word drop).
-
-def test_documented_limit_dropped_words_are_not_detected():
-    # Real case, DODI 8410.03 chunk 13: "limited to" dropped; attribution right, sense altered.
-    chunk = "- d. Implement automated CM and PBNM capabilities and standards in new or modified NM systems, including but not specifically limited to determining architectures and technical approaches for:"
-    quote = "Implement automated CM and PBNM capabilities and standards in new or modified NM systems, including but not specifically determining architectures and technical approaches for:"
-    assert quote_word_coverage(quote, chunk) == 1.0
-
-
-def test_documented_limit_negation_number_and_exception_shapes_are_not_detected():
-    chunk = "Users shall not share passwords. Passwords must be at least 14 characters. Sessions expire after 15 minutes. Access is permitted except for contractors."
-    assert quote_word_coverage("Users shall share passwords.", chunk) == 1.0                 # negation flipped
-    assert quote_word_coverage("Passwords must be at least 15 characters.", chunk) == 1.0   # number swapped
-    assert quote_word_coverage("Access is permitted for contractors.", chunk) == 1.0        # exception dropped
-    assert quote_word_coverage("Sessions expire after 14 minutes. Users shall share passwords.", chunk) == 1.0  # unrelated passages joined
-
-
-def test_novel_word_inventions_are_detected_where_real_words_are_rearranged_is_not():
-    chunk = "Users shall not share passwords. Passwords must be at least 14 characters."
-    assert quote_word_coverage("The organization shall ensure that all users encrypt backups.", chunk) < 0.8
+def test_two_clauses_of_one_list_item_are_two_rows(tmp_path):
+    """No same-sentence merge any more: each clause is its own row."""
+    text = "a. Review the plan. Approve the plan."
+    chunk = _chunk(1, text)
+    records, _ = _run(tmp_path, [chunk], [_row(chunk, "a. Review the plan.", 0), _row(chunk, "Approve the plan.", 1)])
+    assert [r["explained_text"] for r in records] == ["Review the plan.", "Approve the plan."]
+    assert all("merged_roots" not in r for r in records)
 
 
 # WP-34.2: heading-echo and unrepairable-fragment rejection. Fixtures are the 5
@@ -446,55 +296,6 @@ def test_is_unrepairable_fragment_false_for_complete_terse_quote():
 
 def test_is_unrepairable_fragment_false_for_colon_with_content_after():
     assert not _is_unrepairable_fragment("Passwords must be at least 12 characters: no exceptions.")
-
-
-def test_heading_echo_rejected_in_full_pipeline(tmp_path):
-    chunk_text = "COMPLIANCE WITH THIS PUBLICATION IS MANDATORY"
-    req = dict(SAMPLE_EXTRACTED, chunk_id=1, source_quote=chunk_text)
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    chunks_path = tmp_path / "test_chunks.jsonl"
-    chunk = _chunk(1, chunk_text)
-    chunk["section_title_path"] = ["Purpose", chunk_text]
-    _write_jsonl(req_path, [req])
-    _write_jsonl(chunks_path, [chunk])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(chunks_path), "", str(out_dir))
-    assert _read_jsonl(out_dir / "test_requirements_normalized.jsonl") == []
-    failures = _read_jsonl(out_dir / "test_normalization_failures.jsonl")
-    assert len(failures) == 1
-    assert failures[0]["error"] == "heading_echo_quote"
-
-
-def test_unrepairable_fragment_rejected_in_full_pipeline(tmp_path):
-    chunk_text = "3.2 The process will be as follows: step one, step two, step three."
-    req = dict(SAMPLE_EXTRACTED, chunk_id=1, source_quote="The process will be as follows:")
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    chunks_path = tmp_path / "test_chunks.jsonl"
-    _write_jsonl(req_path, [req])
-    _write_jsonl(chunks_path, [_chunk(1, chunk_text)])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(chunks_path), "", str(out_dir))
-    assert _read_jsonl(out_dir / "test_requirements_normalized.jsonl") == []
-    failures = _read_jsonl(out_dir / "test_normalization_failures.jsonl")
-    assert len(failures) == 1
-    assert failures[0]["error"] == "unrepairable_fragment_quote"
-
-
-def test_negative_fixture_survives_full_pipeline(tmp_path):
-    # "KERs shall be approved by the MC4EB." -- terse and real, must survive
-    # both the heading-echo and unrepairable-fragment checks.
-    chunk_text = "4.1 KER Approval Process. KERs shall be approved by the MC4EB."
-    req = dict(SAMPLE_EXTRACTED, chunk_id=1, source_quote="KERs shall be approved by the MC4EB.")
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    chunks_path = tmp_path / "test_chunks.jsonl"
-    chunk = _chunk(1, chunk_text)
-    chunk["section_title_path"] = ["KER Approval Process"]
-    _write_jsonl(req_path, [req])
-    _write_jsonl(chunks_path, [chunk])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(chunks_path), "", str(out_dir))
-    assert len(_read_jsonl(out_dir / "test_requirements_normalized.jsonl")) == 1
-    assert _read_jsonl(out_dir / "test_normalization_failures.jsonl") == []
 
 
 # WP-38.2: real fixtures below are drawn from eval/audit_wp38_1/'s hand-labeled
@@ -740,180 +541,49 @@ def test_is_orphaned_list_item_defined_in_citation_with_multiple_references():
     )
 
 
-def test_is_dangling_clause_bare_copula_first_word():
-    # REQ-1b1071c8d317 (afi17-203): missing its real subject before "Is".
-    assert _is_dangling_clause(
-        "Is designated Computer Network Defense Service Provider (CNDSP) "
-        "Certification Authority (CA) for Special Access Program (SAP) "
-        "networks and is responsible for coordinating and directing SAP "
-        "enclave-wide CNDSP activities."
-    )
+def test_heading_echo_rejected_in_full_pipeline(tmp_path):
+    chunk_text = "COMPLIANCE WITH THIS PUBLICATION IS MANDATORY"
+    chunk = _chunk(1, chunk_text, section_title_path=["Purpose", chunk_text])
+    records, failures = _run(tmp_path, [chunk], [_row(chunk, chunk_text)])
+    assert records == []
+    assert [f["error"] for f in failures] == ["heading_echo_quote"]
 
 
-def test_is_dangling_clause_false_for_lowercase_start_real_list_item():
-    # REQ-474f99ed3b50 (DODI 5200.01): a real, correctly-kept requirement
-    # extracted starting mid-sentence on a shared governing clause -- this
-    # corpus's DoD/AF-style responsibility lists do this legitimately, which
-    # is why WP-38.2 calibrated away from a blanket "starts lowercase" rule.
-    assert not _is_dangling_clause(
-        "establish, direct, and administer all aspects of their respective "
-        "organization's SCI security programs"
-    )
+def test_unrepairable_fragment_rejected_in_full_pipeline(tmp_path):
+    chunk_text = "3.2 The process will be as follows:\nstep one, step two, step three."
+    chunk = _chunk(1, chunk_text)
+    records, failures = _run(tmp_path, [chunk], [_row(chunk, "The process will be as follows:")])
+    assert records == []
+    assert [f["error"] for f in failures] == ["unrepairable_fragment_quote"]
 
 
-def test_is_dangling_clause_false_for_bare_modal_first_word_real_requirement():
-    # REQ-580c9ef77b37 (DODI 5200.48): a real requirement starting directly
-    # with a bare modal, same shape as a real dangling-clause fragment
-    # ("shall be coordinated with the customer") -- not safely distinguishable
-    # by a modal-first-word check alone, so WP-38.2 doesn't use one.
-    assert not _is_dangling_clause("must have a lawful governmental purpose for such access")
+def test_negative_fixture_survives_full_pipeline(tmp_path):
+    # "KERs shall be approved by the MC4EB." -- terse and real, must survive
+    # both the heading-echo and unrepairable-fragment checks.
+    chunk_text = "4.1 KER Approval Process. KERs shall be approved by the MC4EB."
+    chunk = _chunk(1, chunk_text, section_title_path=["KER Approval Process"])
+    records, failures = _run(tmp_path, [chunk], [_row(chunk, "KERs shall be approved by the MC4EB.")])
+    assert len(records) == 1
+    assert failures == []
 
-
-def test_is_dangling_clause_false_for_trailing_comma_real_requirement():
-    # REQ-abf7f0a2a776 (DODI 5200.48): a real, complete requirement whose
-    # trailing comma is a punctuation artifact of a longer source list, not a
-    # sign of incomplete content -- why WP-38.2 doesn't use a trailing-comma
-    # rule.
-    assert not _is_dangling_clause(
-        "Reporting or accounting for UD of CUI shall be done in accordance "
-        "with Paragraph 3.5.a(4),"
-    )
-
-
-def test_is_dangling_clause_bare_copula_with_non_space_whitespace_after():
-    # Gemini review, PR #181: splitting only on a literal " " missed a bare
-    # copula followed by a newline/tab instead of a space.
-    assert _is_dangling_clause("Is\nresponsible for coordinating enclave-wide activities.")
-
-
-def test_is_dangling_clause_bare_copula_wrapped_in_quote_marks():
-    assert _is_dangling_clause('"Is designated the CNDSP Certification Authority."')
-
-
-def test_is_dangling_clause_false_for_real_question():
-    # Gemini review round 5, PR #181: a copula-first quote ending in "?" is a
-    # real interrogative requirement (the style NIST SP 800-53A-type
-    # assessment-procedure documents use) -- subject-auxiliary inversion
-    # puts the subject after the copula, which is grammatically complete,
-    # not the same missing-subject problem as the declarative case.
-    assert not _is_dangling_clause(
-        "Is multi-factor authentication enforced for all administrative access?"
-    )
-    assert not _is_dangling_clause("Are security audit logs reviewed at least weekly?")
-
-
-def test_is_dangling_clause_false_for_question_wrapped_in_quotes():
-    assert not _is_dangling_clause(
-        '"Is multi-factor authentication enforced for all administrative access?"'
-    )
-
-
-def test_is_dangling_clause_false_for_question_with_trailing_parenthetical():
-    # Gemini review round 7, PR #181: the round-5 fix only checked the
-    # quote's trailing non-alphanumeric run for "?", which misses a question
-    # mark followed by more content (a trailing parenthetical or control-ID
-    # note). Checking the whole quote is safe here since this function only
-    # ever fires on an already-narrow bare-copula-first-word trigger.
-    assert not _is_dangling_clause(
-        "Is multi-factor authentication enforced? (see NIST SP 800-53)"
-    )
-    assert not _is_dangling_clause("Is audit logging enabled? [Control AC-2]")
 
 
 def test_orphaned_list_item_rejected_in_full_pipeline(tmp_path):
     # Citation-only branch -- still active (only the marker+word-count branch
     # was removed; see test_is_orphaned_list_item_no_longer_rejects_short_marker_items).
-    chunk_text = (
-        "Suspicious activity reporting, as defined in DoDI 2000.26, "
-        "Suspicious Activity Reporting."
-    )
-    req = dict(SAMPLE_EXTRACTED, chunk_id=1, source_quote=chunk_text)
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    chunks_path = tmp_path / "test_chunks.jsonl"
-    _write_jsonl(req_path, [req])
-    _write_jsonl(chunks_path, [_chunk(1, chunk_text)])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(chunks_path), "", str(out_dir))
-    assert _read_jsonl(out_dir / "test_requirements_normalized.jsonl") == []
-    failures = _read_jsonl(out_dir / "test_normalization_failures.jsonl")
-    assert len(failures) == 1
-    assert failures[0]["error"] == "orphaned_list_item_quote"
+    chunk_text = "Suspicious activity reporting, as defined in DoDI 2000.26, Suspicious Activity Reporting."
+    chunk = _chunk(1, chunk_text)
+    records, failures = _run(tmp_path, [chunk], [_row(chunk, chunk_text)])
+    assert records == []
+    assert [f["error"] for f in failures] == ["orphaned_list_item_quote"]
 
 
 def test_marker_prefixed_short_fragment_survives_full_pipeline(tmp_path):
-    # Product direction (Tyler, PR #181, Codex local review second pass): the
-    # marker+word-count branch was removed entirely -- a short enumerated
-    # list item like this one may inherit its obligation from a parent stem
-    # ("Classification shall not be used to:"), so it's no longer rejected by
-    # Step D at all. Confirms this end-to-end through run(), not just the
-    # predicate in isolation.
-    chunk_text = "Classification shall not be used to: (1) ... (2) ... (3) Restrain competition."
-    req = dict(SAMPLE_EXTRACTED, chunk_id=1, source_quote="(3) Restrain competition.")
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    chunks_path = tmp_path / "test_chunks.jsonl"
-    _write_jsonl(req_path, [req])
-    _write_jsonl(chunks_path, [_chunk(1, chunk_text)])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(chunks_path), "", str(out_dir))
-    normalized = _read_jsonl(out_dir / "test_requirements_normalized.jsonl")
-    assert len(normalized) == 1
-    assert normalized[0]["source_quote"] == "(3) Restrain competition."
-
-
-def test_dangling_clause_rejected_in_full_pipeline(tmp_path):
-    chunk_text = (
-        "The 624 OC is designated Computer Network Defense Service Provider "
-        "Certification Authority for Special Access Program networks."
-    )
-    req = dict(
-        SAMPLE_EXTRACTED, chunk_id=1,
-        source_quote="Is designated Computer Network Defense Service Provider Certification Authority.",
-    )
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    chunks_path = tmp_path / "test_chunks.jsonl"
-    _write_jsonl(req_path, [req])
-    # _chunk()'s default parent_header_text=None -- no recoverable subject, so this
-    # must still reject exactly as before WP-41's ordering fix.
-    _write_jsonl(chunks_path, [_chunk(1, chunk_text)])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(chunks_path), "", str(out_dir))
-    assert _read_jsonl(out_dir / "test_requirements_normalized.jsonl") == []
-    failures = _read_jsonl(out_dir / "test_normalization_failures.jsonl")
-    assert len(failures) == 1
-    assert failures[0]["error"] == "dangling_clause_quote"
-
-
-def test_dangling_clause_survives_when_chunk_has_recoverable_header(tmp_path):
-    """WP-41: a dangling clause is NOT rejected when its chunk's parent_header_text
-    can supply the missing subject -- pipeline/enrich_requirements.py's
-    _find_heading_stem() exists specifically to recover this shape via
-    apply_parent_stem_reconstruction() (which only runs on records that survive
-    Step D), but a bare rejection here previously removed the record before
-    reconstruction ever got the chance. Mirrors the real REQ-1b1071c8d317 case
-    (afi17-203) found during WP-41 scoping."""
-    chunk_text = (
-        "2.2.1. Recommends security protection of new projects.\n"
-        "2.2.2. Is designated Computer Network Defense Service Provider "
-        "Certification Authority for Special Access Program networks."
-    )
-    req = dict(
-        SAMPLE_EXTRACTED, chunk_id=1,
-        source_quote="Is designated Computer Network Defense Service Provider Certification Authority.",
-    )
-    req_path = tmp_path / "test_extracted_requirements.jsonl"
-    chunks_path = tmp_path / "test_chunks.jsonl"
-    _write_jsonl(req_path, [req])
+    # Product direction (Tyler, PR #181): a short enumerated list item may inherit its obligation from its lead-in
+    # ("Classification shall not be used to:"), so it is not rejected; the explained layer puts the lead-in in front.
+    chunk_text = "Classification shall not be used to:\n(1) Conceal violations of law.\n(3) Restrain competition."
     chunk = _chunk(1, chunk_text)
-    chunk["parent_header_text"] = (
-        "2.2. Directorate of Security, Special Access Program Oversight and "
-        "Information Protection (SAF/AAZ)."
-    )
-    _write_jsonl(chunks_path, [chunk])
-    out_dir = tmp_path / "out"
-    run(str(req_path), str(chunks_path), "", str(out_dir))
-    normalized = _read_jsonl(out_dir / "test_requirements_normalized.jsonl")
-    assert len(normalized) == 1
-    assert normalized[0]["source_quote"] == (
-        "Is designated Computer Network Defense Service Provider Certification Authority."
-    )
-    assert _read_jsonl(out_dir / "test_normalization_failures.jsonl") == []
+    records, _ = _run(tmp_path, [chunk], [_row(chunk, "(3) Restrain competition.", 2)])
+    assert len(records) == 1
+    assert records[0]["source_quote"] == "(3) Restrain competition."
+    assert records[0]["explained_text"] == "Classification shall not be used to: Restrain competition."

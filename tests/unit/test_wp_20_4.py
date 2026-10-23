@@ -16,9 +16,18 @@ _BASE_EXTRACTED = {
     "description": "Enforce role-based access control for all system users.",
     "requirement_type": "technical-control",
     "domain_tags": ["access-control"],
-    "chunk_id": None,
+    "chunk_id": 1,
     "confidence": 0.9,
+    # a clause labeling row: the quote is its chunk's own text at these offsets
+    "clause_index": 0, "clause_label": "DUTY", "anchor_status": "exact", "anchor_start": 0, "anchor_end": 56,
 }
+
+
+def _chunks(tmp_path: Path) -> str:
+    path = tmp_path / "doc_chunks.jsonl"
+    text = _BASE_EXTRACTED["source_quote"]
+    path.write_text(json.dumps({"chunk_id": 1, "page_start": 1, "page_end": 1, "text": text, "raw_text": text}) + "\n", encoding="utf-8")
+    return str(path)
 
 
 def _write_jsonl(path: Path, records: list) -> None:
@@ -40,7 +49,7 @@ def test_normalize_writes_domain_profile_cybersecurity(tmp_path):
     _write_jsonl(req_path, [_BASE_EXTRACTED])
     out_dir = tmp_path / "out"
     normalize_run(
-        str(req_path), str(tmp_path / "no_chunks.jsonl"), "", str(out_dir),
+        str(req_path), _chunks(tmp_path), "", str(out_dir),
         profile=_CYBER_PROFILE,
     )
     records = _read_jsonl(out_dir / "doc_requirements_normalized.jsonl")
@@ -58,7 +67,7 @@ def test_normalize_writes_domain_profile_test_domain(tmp_path):
     _write_jsonl(req_path, [req])
     out_dir = tmp_path / "out"
     normalize_run(
-        str(req_path), str(tmp_path / "no_chunks.jsonl"), "", str(out_dir),
+        str(req_path), _chunks(tmp_path), "", str(out_dir),
         profile=_TEST_DOMAIN_PROFILE,
     )
     records = _read_jsonl(out_dir / "doc_requirements_normalized.jsonl")
@@ -72,7 +81,7 @@ def test_normalize_default_profile_writes_cybersecurity(tmp_path):
     _write_jsonl(req_path, [_BASE_EXTRACTED])
     out_dir = tmp_path / "out"
     normalize_run(
-        str(req_path), str(tmp_path / "no_chunks.jsonl"), "", str(out_dir),
+        str(req_path), _chunks(tmp_path), "", str(out_dir),
         # profile not passed — exercises the None → default_profile() path
     )
     records = _read_jsonl(out_dir / "doc_requirements_normalized.jsonl")

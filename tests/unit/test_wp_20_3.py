@@ -1,8 +1,9 @@
 """WP-20.3 unit tests — profile-aware pipeline integration.
 
 Verifies that profile vocabulary (domain_tags, requirement_types, obligation_verbs)
-flows correctly through Step C (llm_extract_requirements), Step D.5 (enrich_requirements),
-and run_pipeline. These tests do NOT call Ollama or the filesystem pipeline — they
+flows correctly through normalizing (parse_and_normalize), Step D.5 (enrich_requirements),
+and run_pipeline. The Step C tests (validate_requirement, the list-writing prompt) were deleted with
+that step: requirement finding is clause labeling now, which uses no profile vocabulary. These tests do NOT call Ollama or the filesystem pipeline — they
 test the plumbing in isolation.
 """
 
@@ -11,7 +12,6 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pipeline.enrich_requirements as enrich_mod
-import pipeline.llm_extract_requirements as extract_mod
 import pipeline.parse_and_normalize as normalize_mod
 from core.profiles import load_profile
 
@@ -40,99 +40,6 @@ def test_test_domain_profile_has_required_fields():
     p = load_profile("test-domain")
     for field in REQUIRED_FIELDS:
         assert field in p, f"Missing: {field}"
-
-
-# ---------------------------------------------------------------------------
-# Step C: validate_requirement uses profile domain tags and requirement types
-# ---------------------------------------------------------------------------
-
-def test_validate_requirement_accepts_profile_tag():
-    req = {
-        "source_quote": "Systems shall implement test-tag-alpha controls.",
-        "source_ref": "T-1",
-        "domain_tags": ["test-tag-alpha"],
-        "requirement_type": "policy",
-        "description": "",
-    }
-    result = extract_mod.validate_requirement(
-        req,
-        valid_domain_tags=_TEST_DOMAIN_PROFILE["domain_tags"],
-        valid_requirement_types=_TEST_DOMAIN_PROFILE["requirement_types"],
-    )
-    assert result is not None
-    assert result["domain_tags"] == ["test-tag-alpha"]
-    assert result["requirement_type"] == "policy"
-
-
-def test_validate_requirement_rejects_cybersecurity_tag_under_test_profile():
-    req = {
-        "source_quote": "Systems shall implement access controls.",
-        "source_ref": "T-2",
-        "domain_tags": ["access-control"],  # valid for cybersecurity, not for test-domain
-        "requirement_type": "policy",
-        "description": "",
-    }
-    result = extract_mod.validate_requirement(
-        req,
-        valid_domain_tags=_TEST_DOMAIN_PROFILE["domain_tags"],
-        valid_requirement_types=_TEST_DOMAIN_PROFILE["requirement_types"],
-    )
-    assert result is not None
-    assert result["domain_tags"] == []  # filtered out — not in test-domain tags
-
-
-def test_validate_requirement_rejects_unknown_type_under_test_profile():
-    req = {
-        "source_quote": "Systems shall implement controls.",
-        "source_ref": "T-3",
-        "domain_tags": ["test-tag-alpha"],
-        "requirement_type": "technical-control",  # valid for cybersecurity, not test-domain
-        "description": "",
-    }
-    result = extract_mod.validate_requirement(
-        req,
-        valid_domain_tags=_TEST_DOMAIN_PROFILE["domain_tags"],
-        valid_requirement_types=_TEST_DOMAIN_PROFILE["requirement_types"],
-    )
-    assert result is not None
-    assert result["requirement_type"] == ""  # cleared — not in test-domain types
-
-
-def test_validate_requirement_cybersecurity_profile_unchanged():
-    req = {
-        "source_quote": "The system shall enforce access control policies.",
-        "source_ref": "AC-3",
-        "domain_tags": ["access-control"],
-        "requirement_type": "technical-control",
-        "description": "",
-    }
-    result = extract_mod.validate_requirement(
-        req,
-        valid_domain_tags=_CYBER_PROFILE["domain_tags"],
-        valid_requirement_types=_CYBER_PROFILE["requirement_types"],
-    )
-    assert result is not None
-    assert result["domain_tags"] == ["access-control"]
-    assert result["requirement_type"] == "technical-control"
-
-
-# ---------------------------------------------------------------------------
-# Step C: obligation_verbs and domain_tags injected into prompt templates
-# ---------------------------------------------------------------------------
-
-def test_pass1_template_no_longer_depends_on_profile_obligation_verbs():
-    # WP-45.16: the inclusive prompt (D1) asks for any passage that tells a party what to do, so it no longer lists the profile's obligation verbs;
-    # the placeholder is gone and rendering with a profile's verbs changes nothing.
-    template = extract_mod.PASS1_PROMPT_TEMPLATE
-    assert "{obligation_verbs}" not in template
-    for profile in (_TEST_DOMAIN_PROFILE, _CYBER_PROFILE):
-        assert template.replace("{obligation_verbs}", ", ".join(profile["obligation_verbs"])) == template
-
-
-def test_pass1_template_is_inclusive_and_keeps_the_runtime_placeholders():
-    template = extract_mod.PASS1_PROMPT_TEMPLATE
-    assert "CANDIDATE" in template and "shall not" in template and "should" in template
-    assert "{chunk_text}" in template and "{source_ref_hints}" in template
 
 
 # ---------------------------------------------------------------------------
@@ -188,20 +95,21 @@ def test_validate_enrichment_cybersecurity_profile_unchanged():
 # run_pipeline: profile_name flows through to step C and D.5
 # ---------------------------------------------------------------------------
 
-def test_run_pipeline_passes_profile_to_step_c(tmp_path):
-    """run_pipeline.run() loads the named profile and passes it to llm_extract_requirements.run()."""
+def test_run_pipeline_passes_profile_to_normalizing(tmp_path):
+    """run_pipeline.run() loads the named profile and passes it to normalizing (parse_and_normalize.run()); the clause labeler takes none."""
     from pipeline import run_pipeline
 
     captured = {}
 
     def fake_step_c(chunks_jsonl, output_dir, **kwargs):
-        captured["profile"] = kwargs.get("profile")
+        captured["labeler_kwargs"] = kwargs
         # Write minimal output file so pipeline can continue
         out = Path(output_dir) / "doc_extracted_requirements.jsonl"
         out.write_text("", encoding="utf-8")
         return str(out)
 
     def fake_step_d(reqs_jsonl, chunks_jsonl, pdf_path, output_dir, **kwargs):
+        captured["profile"] = kwargs.get("profile")
         norm = Path(output_dir) / "doc_requirements_normalized.jsonl"
         norm.write_text("", encoding="utf-8")
         return str(norm)
@@ -223,7 +131,7 @@ def test_run_pipeline_passes_profile_to_step_c(tmp_path):
         patch("pipeline.run_pipeline._docling_available", return_value=True),
         patch("pipeline.section_parser.run", return_value=object()),
         patch("pipeline.chunk_text.run_structure_aware", return_value=str(chunks)),
-        patch("pipeline.llm_extract_requirements.run", side_effect=fake_step_c),
+        patch("pipeline.clause_labeling.run", side_effect=fake_step_c),
         patch("pipeline.parse_and_normalize.run", side_effect=fake_step_d),
         patch("pipeline.aggregate_and_export.run", side_effect=fake_step_e),
     ):
@@ -238,6 +146,7 @@ def test_run_pipeline_passes_profile_to_step_c(tmp_path):
             profile_name="test-domain",
         )
 
+    assert "profile" not in captured["labeler_kwargs"]
     assert captured.get("profile") is not None
     assert captured["profile"]["name"] == "test-domain"
     assert captured["profile"]["domain_tags"] == ["test-tag-alpha", "test-tag-beta"]
@@ -273,6 +182,20 @@ def test_empty_obligation_verbs_raises(tmp_path):
 # Review-round fixes — Codex P2 #1: parse_and_normalize uses profile tags
 # ---------------------------------------------------------------------------
 
+def _clause_files(tmp_path, rows: list[dict]):
+    """The extraction and chunk files for clause rows: each row's quote is its own chunk's text, with the offsets clause labeling would write."""
+    chunks, reqs = [], []
+    for i, row in enumerate(rows):
+        text = row["source_quote"]
+        chunks.append({"chunk_id": i, "page_start": 1, "page_end": 1, "text": text, "raw_text": text})
+        reqs.append({**row, "chunk_id": i, "clause_index": 0, "clause_label": "DUTY", "anchor_status": "exact", "anchor_start": 0, "anchor_end": len(text)})
+    reqs_file = tmp_path / "doc_extracted_requirements.jsonl"
+    reqs_file.write_text("".join(json.dumps(r) + "\n" for r in reqs), encoding="utf-8")
+    chunks_file = tmp_path / "doc_chunks.jsonl"
+    chunks_file.write_text("".join(json.dumps(c) + "\n" for c in chunks), encoding="utf-8")
+    return reqs_file, chunks_file
+
+
 def test_parse_normalize_uses_profile_domain_tags(tmp_path):
     """Step D must filter against the active profile's tags, not the hardcoded cybersecurity set."""
     req = {
@@ -281,13 +204,8 @@ def test_parse_normalize_uses_profile_domain_tags(tmp_path):
         "domain_tags": ["test-tag-alpha", "access-control"],
         "requirement_type": "policy",
         "description": "",
-        "chunk_id": None,
     }
-    reqs_file = tmp_path / "doc_extracted_requirements.jsonl"
-    reqs_file.write_text(json.dumps(req) + "\n", encoding="utf-8")
-
-    chunks_file = tmp_path / "doc_chunks.jsonl"
-    chunks_file.write_text("", encoding="utf-8")
+    reqs_file, chunks_file = _clause_files(tmp_path, [req])
 
     out = normalize_mod.run(str(reqs_file), str(chunks_file), "", str(tmp_path), profile=_TEST_DOMAIN_PROFILE)
 
@@ -305,7 +223,6 @@ def test_parse_normalize_uses_profile_requirement_types(tmp_path):
         "domain_tags": ["test-tag-alpha"],
         "requirement_type": "guidance",  # valid in test-domain
         "description": "",
-        "chunk_id": None,
     }
     req_invalid_type = {
         "source_quote": "Systems must enforce technical controls.",
@@ -313,14 +230,8 @@ def test_parse_normalize_uses_profile_requirement_types(tmp_path):
         "domain_tags": ["test-tag-beta"],
         "requirement_type": "technical-control",  # valid for cybersecurity, NOT test-domain
         "description": "",
-        "chunk_id": None,
     }
-    reqs_file = tmp_path / "doc_extracted_requirements.jsonl"
-    reqs_file.write_text(
-        json.dumps(req_valid) + "\n" + json.dumps(req_invalid_type) + "\n", encoding="utf-8"
-    )
-    chunks_file = tmp_path / "doc_chunks.jsonl"
-    chunks_file.write_text("", encoding="utf-8")
+    reqs_file, chunks_file = _clause_files(tmp_path, [req_valid, req_invalid_type])
 
     out = normalize_mod.run(str(reqs_file), str(chunks_file), "", str(tmp_path), profile=_TEST_DOMAIN_PROFILE)
 

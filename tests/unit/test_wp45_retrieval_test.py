@@ -117,21 +117,7 @@ def test_snapshot_digest_changes_with_any_vector(engine):
 # ------------------------------------------------------------------------------------------------------ variants
 
 
-def test_variants_follow_the_production_layout(variants):
-    payload = {
-        "source_quote": "Update courses.",
-        "source_ref": "2.2",
-        "embedding_text": "The CIO shall:\nUpdate courses.",
-    }
-    assert variants.production_text(payload) == "The CIO shall:\nUpdate courses.\nRef: 2.2"
-    assert variants.quote_alone_text(payload) == "Update courses.\nRef: 2.2"
-    assert (
-        variants.oracle_text(payload, "CCDRs will: | As appropriate,")
-        == "CCDRs will: As appropriate,\nUpdate courses.\nRef: 2.2"
-    )
-    assert variants.has_stem(payload) and not variants.has_stem({"source_quote": "x"})
-    bare = {"source_quote": "Do it.", "source_ref": ""}
-    assert variants.production_text(bare) == variants.quote_alone_text(bare) == "Do it."
+# test_variants_follow_the_production_layout was removed with clause labeling (WP-4): it pinned a text arm built on embedding_text, which production no longer embeds (eval/README.md).
 
 
 # ----------------------------------------------------------------------------------------------------- analysis

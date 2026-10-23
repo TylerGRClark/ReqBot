@@ -41,16 +41,12 @@ _HEADING_PREFIX_RE = re.compile(
 
 # WP-42: a single table's full markdown is now emitted once regardless of how
 # many chunks HybridChunker split it across (see _chunk_raw_text's
-# seen_table_refs). Step C's Ollama call (pipeline/llm_extract_requirements.py)
-# runs against a live-confirmed 8192-token context (2026-08-02: no explicit
-# num_ctx was set, so this depended on Ollama's server default -- pinned
-# explicitly there now). The largest table in the 4 documents this WP
-# processed was 10746 chars (~2686 tokens, ~43% of that budget with the rest
-# of the prompt template). Not currently a real risk, but not bounded either
-# -- log loudly if a future document's table approaches the budget, so a
-# human notices before it silently degrades extraction, rather than
-# rewriting chunk_text.py to token-bounded-rechunk table markdown on
-# spec (Codex review, PR #189).
+# seen_table_refs). This warning was written for the list-writing extraction
+# step, which sent a whole chunk to the model in an 8192-token context. Clause
+# labeling (pipeline/clause_labeling.py), which replaced it, sends each table
+# line as its own clause (at most 1200 characters each, 4 per call), so a big
+# table no longer risks the context; the warning stays as a size signal for a
+# human (Codex review, PR #189).
 _TABLE_MARKDOWN_WARN_CHARS = 20000
 
 

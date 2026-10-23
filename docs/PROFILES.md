@@ -17,9 +17,9 @@ supported way to read a profile; nothing else parses `profiles/*.json` directly.
 | Field | Type | Consumed by |
 |---|---|---|
 | `name` | `string` | Must match the filename (`profiles/foo.json` must have `"name": "foo"`) — checked last, after every other validation passes. |
-| `obligation_verbs` | `string[]`, non-empty | **No longer in the extraction prompt.** Until October 2026, requirement finding (Step C, `pipeline/llm_extract_requirements.py`) substituted this list into the prompt's `{obligation_verbs}` placeholder. The inclusive prompt that replaced it asks for anything that tells a party what it must, should, may or must not do, and does not list verbs. The field is still required, and `services/checklist_missed.py` uses the single-word entries as extra imperative verbs when it scans for possible missed requirements. |
+| `obligation_verbs` | `string[]`, non-empty | **No longer in the extraction prompt.** Until October 2026, requirement finding (Step C, the list-writing step, since deleted) substituted this list into the prompt's `{obligation_verbs}` placeholder. Clause labeling (`pipeline/clause_labeling.py`), which replaced it, uses a frozen prompt that does not list verbs. The field is still required, and `services/checklist_missed.py` uses the single-word entries as extra imperative verbs when it scans for possible missed requirements. |
 | `skip_sections` | `string[]`, empty allowed | Chunking (`pipeline/chunk_text.py`) — section headings to exclude from the corpus (e.g. `"GLOSSARY"`, `"REFERENCES"`). Takes effect on every ingest — docling (structure-aware parsing) is the only ingestion path as of WP-34.1, so there's no longer a legacy fallback where this field silently no-ops. |
-| `domain_tags` | `string[]`, non-empty | **Currently unused.** Enrichment is switched off (October 2026), so nothing assigns or checks tags; the field stays required. Earlier behavior, kept for reference: **Not requirement finding (Step C)** — `PASS1_PROMPT_TEMPLATE` only asks the LLM for `source_quote`/`source_ref`, it never references tags. The real prompting happens in the enrichment step's (Step D.5) prompt (`pipeline/enrich_requirements.py`'s `{valid_tags}` placeholder) — that's where the LLM is actually told to pick from this vocabulary. `pipeline/parse_and_normalize.py` (Step D) then silently drops any tag Step D.5 returned that isn't in this list. (Step C's `validate_requirement()`/`process_chunk()` do accept a `valid_domain_tags` parameter, but since Pass-1's prompt never asks the LLM for a `domain_tags` field, that filter always runs against empty input today — effectively inert, not a live consumer.) |
+| `domain_tags` | `string[]`, non-empty | **Currently unused.** Enrichment is switched off (October 2026), so nothing assigns or checks tags; the field stays required. Earlier behavior, kept for reference (the list-writing Step C named here was deleted when clause labeling replaced it): **Not requirement finding (Step C)** — `PASS1_PROMPT_TEMPLATE` only asked the LLM for `source_quote`/`source_ref`, it never references tags. The real prompting happens in the enrichment step's (Step D.5) prompt (`pipeline/enrich_requirements.py`'s `{valid_tags}` placeholder) — that's where the LLM is actually told to pick from this vocabulary. `pipeline/parse_and_normalize.py` (Step D) then silently drops any tag Step D.5 returned that isn't in this list. (Step C's `validate_requirement()`/`process_chunk()` do accept a `valid_domain_tags` parameter, but since Pass-1's prompt never asks the LLM for a `domain_tags` field, that filter always runs against empty input today — effectively inert, not a live consumer.) |
 | `requirement_types` | `string[]`, non-empty | **Currently unused**, for the same reason as `domain_tags`. Earlier behavior, kept for reference: same story as `domain_tags`: the enrichment step's (Step D.5) prompt (`{valid_types}`) is the real consumer, Step D enforces it afterward, and Step C's equivalent parameter is inert for the same reason. |
 
 ### Optional fields
@@ -53,14 +53,13 @@ pipeline plumbing validation only. Not a real domain."` — its own `description
 much). Don't treat it as precedent for what a second real profile should look like; it deliberately
 has the bare minimum required fields and nothing else.
 
-## Operational note: non-default profiles bypass the requirement-finding cache
+## Operational note: the profile and requirement finding
 
-`pipeline/llm_extract_requirements.py`'s `run()` defaults to the `cybersecurity` profile when none
-is passed. If you run with any other profile, Step C **always re-extracts from scratch** — the
-prompt-hash cache that normally lets you resume an interrupted run without re-calling the LLM is
-bypassed entirely for non-default profiles, because cached records don't yet track which profile
-produced them (a known gap, not yet fixed). Budget for a full re-extraction, not a resumed one,
-whenever testing a profile other than `cybersecurity`.
+Requirement finding (clause labeling, `pipeline/clause_labeling.py`) does not read the profile: the
+same frozen prompt labels every document, and its resume ledger is keyed by the clauses, the model
+and the prompt. (The list-writing step it replaced bypassed its cache for any non-default profile;
+that gap went away with it.) The profile still decides the sections chunking skips, the
+normalizing checks and the checklist.
 
 ## Should you add a second profile right now?
 

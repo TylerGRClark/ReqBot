@@ -204,7 +204,8 @@ def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs) -> d
     section_title_path = req.get("section_title_path") or []
     # a row from a table is cited by the table's own caption ("Table 3.1"); the converter's heading for a table is a guess, so no party is read from it either
     table_ref, table_heading = checklist_audit.table_label(chunks, req.get("chunk_id"), locate_text)
-    cite0 = table_ref or checklist_audit.citation(source_ref, "", section_title_path, locate_text)  # the paragraph number as extracted or as the quote opens; inferred ones need the passage
+    origin = req.get("source_ref_origin")  # how clause labeling found source_ref; None on records from before it
+    cite0 = table_ref or checklist_audit.citation(source_ref, "", section_title_path, locate_text, origin)  # the paragraph number as extracted or as the quote opens; inferred ones need the passage
     numbered = None if table_ref else checklist_audit.applies_to_numbered(cite0, hmap, section_title_path)
     applies = "" if table_ref else (numbered if numbered is not None else checklist_audit.applies_to(section_title_path))
     flags = checklist_audit.item_flags(source_quote, source_ref, applies, verbs)
@@ -216,12 +217,14 @@ def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs) -> d
     has_rule_lead_in = any(p.get("kind") == "lead_in" and p.get("origin") == "rule" for p in (req.get("explained_parts") or []))
     passage_flags = set(flags) | set(checklist_audit.item_flags(extracted_quote, source_ref, applies, verbs)) | ({"list_item"} if has_rule_lead_in else set())
     passage, found = checklist_audit.build_passage(locate_text, chunk, prev_chunk, passage_flags)
-    cite = table_ref or checklist_audit.citation(source_ref, passage, section_title_path, locate_text)
+    cite = table_ref or checklist_audit.citation(source_ref, passage, section_title_path, locate_text, origin)
     if cite != cite0:  # an inferred paragraph number: the numbering can now say who the row applies to
         numbered = checklist_audit.applies_to_numbered(cite, hmap, section_title_path)
         if numbered is not None:
             applies = numbered
             flags = checklist_audit.item_flags(source_quote, source_ref, applies, verbs)
+    if req.get("clause_label") == "UNSURE":
+        flags = [*flags, "labeled_unsure"]  # the labeler could not decide (or its answer could not be read): the row is kept for a reader to check
     if not cite:  # nothing numbered to cite: where the row sits, read from the document ("Front matter", "Figure A3.1")
         cite = checklist_audit.unnumbered_label(chunks, chunk_id, locate_text, first_numbered)
     return {"citation": cite, "table_ref": table_ref, "table_heading": table_heading, "applies": applies, "flags": flags, "passage": passage, "found": found}
@@ -306,7 +309,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             req_id = req.get("requirement_id", "")
             extracted_quote, source_quote, locate_text = _quotes(req)  # the root; what the sheet shows (the explained requirement when the record has one); what the passage is located by
             all_quotes.append(source_quote)
-            all_quotes.extend(q for q in [extracted_quote, *(req.get("merged_roots") or [])] if q)
+            all_quotes.extend(q for q in [extracted_quote, *(req.get("merged_roots") or [])] if q)  # merged_roots: only on records from before clause labeling
 
             # Hard provenance anchors — missing either means no checklist item
             if not req_id or not source_quote:

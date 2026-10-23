@@ -226,8 +226,7 @@ DESCRIPTION_ENTAILMENT_THRESHOLD = 0.85
 
 # The exact MiniCheck checkpoint the threshold above was calibrated against.
 # Not exposed as a CLI/config option — swapping models would silently
-# invalidate this threshold (same reasoning QUOTE_GROUNDING_THRESHOLD in
-# parse_and_normalize.py already applies to its own fixed threshold).
+# invalidate this threshold.
 MINICHECK_MODEL = "flan-t5-large"
 
 

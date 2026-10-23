@@ -225,13 +225,14 @@ def test_expected_ids_ignore_records_that_are_not_indexed():
 
 # -- the reviewer's findings on this change -------------------------------------------------
 
-def test_extraction_gaps_counts_failed_and_cut_off_chunks_and_nothing_else(tmp_path):
+def test_extraction_gaps_counts_failed_label_batches_and_nothing_else(tmp_path):
     p = tmp_path / "doc_raw_responses.jsonl"
     p.write_text("\n".join(json.dumps(r) for r in [
-        {"chunk_id": 0, "status": "complete"}, {"chunk_id": 1, "status": "failed"}, {"chunk_id": 2, "status": "truncated"},
-        {"chunk_id": 3, "status": "failed"}, {"chunk_id": 4},  # an older record with no status
+        {"batch_id": "b00000", "status": "complete"}, {"batch_id": "b00001", "status": "failed"}, {"batch_id": "b00002", "status": "unparsed"},
+        {"batch_id": "b00003", "status": "failed"}, {"chunk_id": 4, "status": "truncated"},  # an unparsed batch keeps its clauses as UNSURE: not a gap; "truncated" belonged to the deleted step
+        {"chunk_id": 5},  # an older record with no status
     ]) + "\nnot json\n")
-    assert index_replace.extraction_gaps(p) == {"failed": 2, "truncated": 1}
+    assert index_replace.extraction_gaps(p) == {"failed": 2}
     assert index_replace.extraction_gaps(tmp_path / "missing.jsonl") == {}
     p.write_text(json.dumps({"chunk_id": 0, "status": "complete"}) + "\n")
     assert index_replace.extraction_gaps(p) == {}

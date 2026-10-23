@@ -46,23 +46,11 @@ def test_cybersecurity_all_required_fields_present():
         assert field in result, f"Missing required field: {field}"
 
 
-# WP-33.1: these five pairs of tests are structural, not incidental, now -- each
+# WP-33.1: these pairs of tests are structural, not incidental, now -- each
 # module's VALID_DOMAIN_TAGS/VALID_REQUIREMENT_TYPES (or cli/console.py's
 # differently-named equivalents) is itself derived from core.profiles.default_profile()
 # at import time, not an independently hardcoded copy. Kept as explicit tests anyway,
 # as a regression guard against a future accidental re-hardcoding in any one file.
-
-def test_cybersecurity_domain_tags_match_pipeline_constants():
-    from pipeline.llm_extract_requirements import VALID_DOMAIN_TAGS
-    result = load_profile("cybersecurity")
-    assert result["domain_tags"] == VALID_DOMAIN_TAGS
-
-
-def test_cybersecurity_requirement_types_match_pipeline_constants():
-    from pipeline.llm_extract_requirements import VALID_REQUIREMENT_TYPES
-    result = load_profile("cybersecurity")
-    assert result["requirement_types"] == VALID_REQUIREMENT_TYPES
-
 
 def test_enrich_requirements_domain_tags_match_profile():
     from pipeline.enrich_requirements import VALID_DOMAIN_TAGS

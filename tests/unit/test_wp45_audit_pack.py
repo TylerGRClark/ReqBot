@@ -3,6 +3,9 @@
 The builder needs the 13 pinned documents to run for real, so these tests cover what does not: how a card shows a
 chunk (marking, windowing), the seeded stratified draw (determinism, exclusion, hard stops), and every way
 check_labels.py must reject a label file. eval/ scripts are loaded by path, as they are run.
+
+Tests that load a script importing the deleted list-writing extraction step or parent-stem finders were removed when clause labeling replaced
+that step (WP-4 of the extraction replacement; see eval/README.md). The scripts themselves are frozen and unchanged.
 """
 
 import importlib.util
@@ -31,117 +34,11 @@ def _load(name, path):
 
 
 @pytest.fixture(scope="module")
-def pack():
-    return _load("wp45_audit_pack", _WP / "audit_pack.py")
-
-
-@pytest.fixture(scope="module")
 def checker():
     return _load("wp45_check_labels", _WP / "audit_pack/check_labels.py")
 
 
 # --- builder ---------------------------------------------------------------------------------------------------
-
-
-def test_stratum_names(pack):
-    assert pack.stratum_of("same-chunk", True) == "same-chunk"
-    assert pack.stratum_of("heading", False) == "heading"
-    assert pack.stratum_of("none", True) == "none+signal"
-    assert pack.stratum_of("none", False) == "none+nosignal"
-    assert pack.stratum_of("not-a-candidate", True) == "not-a-candidate+signal"
-
-
-def test_show_chunk_marks_the_quote_across_whitespace_differences(pack):
-    note, text = pack.show_chunk(
-        "Intro.\nThe  CIO shall\nreview logs.  Next.", "The CIO shall review logs."
-    )
-    assert note == ""
-    assert f"{pack.MARK_OPEN}The  CIO shall\nreview logs.{pack.MARK_CLOSE}" in text
-
-
-def test_show_chunk_says_so_when_the_quote_is_not_in_the_chunk(pack):
-    note, text = pack.show_chunk("Something else entirely.", "A reworded requirement.")
-    assert "does not appear verbatim" in note
-    assert pack.MARK_OPEN not in text
-
-
-def test_show_chunk_windows_a_long_chunk_around_the_quote(pack):
-    body = (
-        ("filler words here. " * 400) + "The CIO shall review logs. " + ("more filler text. " * 400)
-    )
-    note, text = pack.show_chunk(body, "The CIO shall review logs.")
-    assert f"{pack.MARK_OPEN}The CIO shall review logs.{pack.MARK_CLOSE}" in text
-    assert "characters omitted" in text
-    assert len(text) < len(body) / 2
-
-
-def test_show_chunk_refuses_to_alter_text_that_contains_the_markers(pack):
-    with pytest.raises(SystemExit):
-        pack.show_chunk(f"text with {pack.MARK_OPEN} inside", "text")
-
-
-def _rows(strata):
-    rows, i = [], 0
-    for stratum, n in strata.items():
-        for _ in range(n):
-            rows.append({"stratum": stratum, "index": i})
-            i += 1
-    return rows
-
-
-@pytest.fixture
-def small_design(pack, monkeypatch):
-    population = {"a": 10, "b": 6}
-    monkeypatch.setattr(pack, "POPULATION", population)
-    monkeypatch.setattr(pack, "SAMPLE", {"a": 4, "b": 2})
-    return population
-
-
-def test_draw_is_deterministic_and_respects_sizes_and_exclusions(pack, small_design):
-    first = pack.draw(_rows(small_design), excluded={0, 1})
-    second = pack.draw(_rows(small_design), excluded={0, 1})
-    assert [r["index"] for r in first] == [r["index"] for r in second]
-    assert [r["id"] for r in first] == [f"R{n:03d}" for n in range(1, 7)]
-    assert (
-        sum(r["stratum"] == "a" for r in first) == 4
-        and sum(r["stratum"] == "b" for r in first) == 2
-    )
-    assert not {0, 1} & {r["index"] for r in first}
-
-
-def test_draw_can_be_extended_without_a_redraw(pack, small_design, monkeypatch):
-    small = {
-        r["index"] for r in pack.draw(_rows(small_design), excluded=set()) if r["stratum"] == "a"
-    }
-    monkeypatch.setattr(pack, "SAMPLE", {"a": 6, "b": 2})
-    larger = {
-        r["index"] for r in pack.draw(_rows(small_design), excluded=set()) if r["stratum"] == "a"
-    }
-    assert small < larger
-
-
-def test_draw_stops_when_a_stratum_population_changes(pack, small_design):
-    with pytest.raises(SystemExit):
-        pack.draw(_rows({"a": 9, "b": 6}), excluded=set())
-
-
-def test_draw_stops_when_a_stratum_has_too_few_eligible_records(pack, small_design):
-    with pytest.raises(SystemExit):
-        pack.draw(_rows(small_design), excluded=set(range(8)))  # leaves 2 of stratum a, sample is 4
-
-
-def test_draw_stops_on_a_stratum_it_has_no_design_for(pack, small_design):
-    rows = _rows(small_design) + [{"stratum": "zzz", "index": 99, "method": "zzz"}]
-    with pytest.raises(SystemExit, match="unexpected stratum"):
-        pack.draw(rows, excluded=set())
-
-
-def test_require_chunks_stops_on_a_missing_chunk(pack):
-    pack.require_chunks([{"chunk": {"text": "x"}}])
-    with pytest.raises(SystemExit):
-        pack.require_chunks(
-            [{"chunk": None, "chunk_id": 3, "document": "d", "requirement_id": "REQ-1"}]
-        )
 
 
 # --- label checker ---------------------------------------------------------------------------------------------

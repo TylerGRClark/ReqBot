@@ -18,6 +18,11 @@ from typing import Optional
 CONFIG_PATH = Path.home() / ".config" / "reqbot" / "config.json"
 AUTHORITY_REGISTRY_PATH = Path.home() / ".config" / "reqbot" / "authority.json"
 
+# The model suggested for requirement finding (the clause labeler, pipeline/clause_labeling.py) when a new configuration is written by `reqbot init`, and the
+# standalone pipeline's default. It was measured with this model (reqbot-agent-docs history/extraction-replacement-design_2026-10-22.md, section 5). It is NOT
+# the fallback for a configuration that leaves extraction_model unset: that still follows default_model, so no stored configuration changes meaning.
+RECOMMENDED_EXTRACTION_MODEL = "ornith:35b"
+
 _DEFAULTS: dict = {
     "ollama_url": "http://localhost:11434",
     "qdrant_url": "http://localhost:6333",
@@ -73,7 +78,7 @@ class ReqBotConfig:
     ollama_url: str
     qdrant_url: str
     default_model: str
-    extraction_model: str   # Step C; falls back to default_model when not set in config
+    extraction_model: str   # requirement finding (the clause labeler); falls back to default_model when not set in config
     enrichment_model: str   # Step D.5; falls back to default_model when not set in config
     rewrite_model: str      # query rewrite + HyDE; falls back to default_model when not set
     synthesis_model: str

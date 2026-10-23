@@ -96,15 +96,15 @@ Requirements and source context are indexed automatically after the pipeline.
 | Option | Behavior/default |
 |---|---|
 | `--output-dir DIR` | Explicit artifact directory; otherwise create a timestamped run. |
-| `--extraction-model MODEL` | Requirement-finding (Step C) model; defaults to configured extraction role. |
+| `--extraction-model MODEL` | Requirement-finding (Step C) model: it labels each clause of the document (duty, prohibition, permission, not a requirement, unsure); defaults to configured extraction role. The labels were measured with `ornith:35b`. |
 | `--enrichment-model MODEL` | Enrichment (Step D.5) model; defaults to configured enrichment role. |
 | `--model MODEL` | Sets both roles; when supplied, wins over individual role flags. |
 | `--profile NAME` | Domain profile; default `cybersecurity`. |
-| `--max-chunks N` | Limit requirement finding (Step C) for inspection/testing; produces a partial corpus. |
+| `--max-chunks N` | Label only the first N chunks in requirement finding (Step C), for inspection/testing; produces a partial corpus. |
 | `--no-index` | Write artifacts without indexing. |
 | `--replace` | Replace this document in the search index: once the new run is fully indexed and every point is verified present, remove the document's earlier points (matched by its PDF name) that the new run no longer has. Never before, so the document is never missing from search; a failure leaves the old points and a retry converges. Needs the whole document: not with `--max-chunks` or `--no-index`. Without it ingest only adds and overwrites, as before. |
 | `--progress-json` | Also print one JSON progress line per step on stdout, for the job runner (`{"step":"finding","done":120,"total":427}`); the log stays on stderr. Without it the output is unchanged. |
-| `--skip-enrichment` | Accepted, with no effect: enrichment (descriptions, tags, types) is switched off. Deterministic parent-stem reconstruction always runs. |
+| `--skip-enrichment` | Accepted, with no effect: enrichment (descriptions, tags, types) is switched off. |
 | `--skip-description-gate` | Accepted, with no effect: the description check is switched off. |
 | `--ollama-url URL` | Override the Ollama connection. |
 | `--qdrant-url URL` | Override the Qdrant connection. |
@@ -332,7 +332,7 @@ The queue is run by `reqbot serve` (a thread of the server) or by `reqbot jobs
 worker`; either one, one job at a time, whichever started it. A job that was
 running when its runner died is stopped (a child process can outlive its server)
 and marked `interrupted`; `retry` runs it again in the same run folder, where
-requirement finding reuses the answers it already has. Before it starts, the
+requirement finding reuses the clause labels it already has. Before it starts, the
 runner checks that the model machine, the model and Qdrant answer, and fails the
 job at once naming the one that does not.
 

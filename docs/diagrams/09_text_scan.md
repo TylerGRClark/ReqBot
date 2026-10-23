@@ -1,11 +1,11 @@
 # Text scan
 
-How duties that nobody extracted are found.
+How duties that the clause labeler did not keep are found. It still runs unchanged after the switch to clause labeling (kept for the first re-run, then measured).
 
 ```mermaid
 flowchart TD
     CH[("Chunks: raw text")]
-    EXT[("Every extracted quote<br/>the root, the explained text,<br/>and any merged roots")]
+    EXT[("Every row from requirement finding<br/>the clause (the root), the explained text,<br/>and merged roots on records from before clause labeling")]
 
     U1["Cut each chunk into paragraphs:<br/>at numbered, lettered or bulleted markers when there are two or more,<br/>otherwise at sentence ends"]
     U2["Take off a bare bullet<br/>(remembered: the row is still a list item)"]

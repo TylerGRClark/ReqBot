@@ -54,10 +54,10 @@ def test_progress_prints_one_compact_json_line_per_call(capsys):
     assert lines[1] == '{"step":"finding","done":120,"total":427}'
 
 
-def test_the_extraction_loop_and_indexers_say_nothing_when_progress_is_off(capsys):
-    from pipeline import embed_and_index, embed_context_index, llm_extract_requirements
+def test_the_labeler_and_indexers_say_nothing_when_progress_is_off(capsys):
+    from pipeline import embed_and_index, embed_context_index
 
-    llm_extract_requirements._emit_progress("finding", 1, 2)
+    progress.emit("finding", 1, 2)  # the clause labeler reports through pipeline.progress directly
     embed_and_index._emit_progress("indexing", 1, 2)
     embed_context_index._emit_progress("indexing-context", 1, 2)
     assert capsys.readouterr().out == ""

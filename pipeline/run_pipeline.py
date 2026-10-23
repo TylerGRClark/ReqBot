@@ -5,6 +5,10 @@ The steps are named by job; the older letters are kept beside them (docs/PIPELIN
 PDF reading (A), chunking (B), requirement finding (C), normalizing and checking (D), enrichment (D.5),
 description check (D.6), totals and final file (E). Search indexing (F) is run by the caller.
 
+Requirement finding is clause labeling (pipeline/clause_labeling.py): the chunk text is cut into clauses by rule and
+the model gives each clause one label; every clause not labeled NOT_REQUIREMENT becomes a row, in the document's own
+words. It replaced the step that asked the model to write a list of requirements (deleted, no switch back).
+
 Usage:
     python run_pipeline.py <pdf_path> [options]
 
@@ -33,6 +37,8 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
+
+from core.config import RECOMMENDED_EXTRACTION_MODEL  # noqa: E402  (the clause labeler's model when none is given)
 
 # Step names by job. The letters still work everywhere (options, older docs); a name is an alias for its letter.
 STEP_NAMES = {
@@ -112,7 +118,7 @@ def run(
     pdf_path: str,
     output_dir: str,
     *,
-    extraction_model: str = "llama3.1:8b-instruct-q4_K_M",
+    extraction_model: str = RECOMMENDED_EXTRACTION_MODEL,
     enrichment_model: str = "llama3.1:8b-instruct-q4_K_M",
     ollama_url: str = "http://localhost:11434",
     max_chunks: int | None = None,
@@ -130,18 +136,18 @@ def run(
     Args:
         pdf_path:          Path to the input PDF file.
         output_dir:        Directory to write all artifacts into.
-        extraction_model:  Ollama model for requirement finding (Step C). (R-2.2)
+        extraction_model:  Ollama model that labels the clauses in requirement finding (the clause labeler).
         enrichment_model:  Ollama model for enrichment (Step D.5). (R-2.2)
         ollama_url:        Ollama API base URL.
-        max_chunks:        Limit LLM processing to first N chunks.
+        max_chunks:        Label only the first N chunks (testing).
         timeout:           Per-request LLM timeout in seconds.
         skip_to:           Skip to a step: a letter ('A'-'E') or a name (pdf-reading, chunking, requirement-finding,
                            normalizing, totals). Requires prior artifacts.
         skip_enrichment:   Skip enrichment (Step D.5). Returns normalized JSONL path directly.
         skip_description_gate: Skip the description check (Step D.6, the description-grounding gate, WP-35.4).
         profile_name:      Domain profile name to load from profiles/<name>.json.
-                           Default 'cybersecurity'. Profile is loaded once and passed to
-                           Steps C and D.5.
+                           Default 'cybersecurity'. Loaded once and used by chunking (skip
+                           sections), normalizing and enrichment.
 
     Returns:
         Path to requirements_gated.jsonl if the Step D.6 gate ran, else
@@ -167,7 +173,7 @@ def run(
         )
 
     from pipeline import chunk_text as chunk_text_mod
-    from pipeline import llm_extract_requirements
+    from pipeline import clause_labeling
     from pipeline import progress
     from pipeline import parse_and_normalize
     from pipeline import aggregate_and_export
@@ -231,16 +237,15 @@ def run(
 
     if "C" in steps_to_run:
         log.info("=" * 60)
-        log.info("Starting requirement finding (Step C: LLM extraction, Pass 1 mode)")
-        log.info("Requirement finding — extraction model: %s", extraction_model)
+        log.info("Starting requirement finding (Step C: clause labeling)")
+        log.info("Requirement finding — labeling model: %s", extraction_model)
         log.info("=" * 60)
         progress.emit("finding")
         try:
-            llm_extract_requirements.run(
+            clause_labeling.run(
                 str(chunks_path), str(out_dir),
                 model=extraction_model, ollama_url=ollama_url,
                 timeout=timeout, max_chunks=max_chunks,
-                profile=profile,
             )
         except RuntimeError:
             raise
@@ -255,29 +260,10 @@ def run(
         try:
             parse_and_normalize.run(
                 str(reqs_path), str(chunks_path), str(pdf), str(out_dir),
-                profile=profile,
+                extraction_model=extraction_model, profile=profile,
             )
         except Exception as e:
             raise RuntimeError(f"Normalizing and checking (Step D) failed: {e}") from e
-
-    # WP-39.2: parent-stem reconstruction. Deterministic and offline (no Ollama) --
-    # called here, unconditionally and before the --skip-enrichment check below, so it
-    # survives both --skip-enrichment and a Step D.5 LLM failure. It writes directly
-    # into norm_path (the *_requirements_normalized.jsonl file), the artifact
-    # resolver's lowest, always-present tier -- unlike *_requirements_enriched.jsonl,
-    # which is never created in either of those cases. This call has its own error
-    # handling, separate from Step D.5's try/except below -- a bug here must not be
-    # allowed to crash the whole pipeline run, but it also must not share fate with
-    # (or be skippable via the same flag as) the LLM-calling enrichment step.
-    if "D" in steps_to_run:
-        try:
-            from pipeline import enrich_requirements as _enrich_mod
-            _enrich_mod.apply_parent_stem_reconstruction(str(norm_path))
-        except Exception as e:
-            log.warning(
-                "Parent-stem reconstruction failed (%s) — proceeding without it",
-                e,
-            )
 
     # Step D.5: Enrich requirements with description, domain_tags, requirement_type.
     # Only runs when Step D ran in this invocation (ensures fresh norm_path exists
@@ -384,9 +370,9 @@ def main() -> None:
     parser.add_argument(
         "--extraction-model",
         type=str,
-        default="llama3.1:8b-instruct-q4_K_M",
+        default=RECOMMENDED_EXTRACTION_MODEL,
         dest="extraction_model",
-        help="Ollama model for Step C extraction (default: llama3.1:8b-instruct-q4_K_M)",
+        help=f"Ollama model that labels the clauses in requirement finding (default: {RECOMMENDED_EXTRACTION_MODEL})",
     )
     parser.add_argument(
         "--enrichment-model",
@@ -417,7 +403,7 @@ def main() -> None:
         "--max-chunks",
         type=int,
         default=None,
-        help="Limit LLM processing to first N chunks (for testing)",
+        help="Label only the first N chunks (for testing)",
     )
     parser.add_argument(
         "--timeout",

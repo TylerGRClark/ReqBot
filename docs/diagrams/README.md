@@ -1,7 +1,7 @@
 # Logic diagrams
 
 What ReqBot does today, from PDF to checklist, drawn from the code. One diagram per stage; the overview comes first.
-Last checked against the code on 2026-10-11 (main at `8b1bab5`).
+Last checked against the code on 2026-10-22 (the switch to clause labeling, WP-4).
 
 ## How to read them
 
@@ -11,7 +11,7 @@ Last checked against the code on 2026-10-11 (main at `8b1bab5`).
 - The stages are named by job, as in the [redesign plan](../PIPELINE_REDESIGN_PLAN.md). The old step letters
   are not used here; section 6 of the plan translates them where an older document or a log line still has one.
 - The main diagrams show only what runs today. Planned and switched-off parts are on the roadmap diagram.
-- Code-style names (rejection labels, anchor statuses, hint flags) are the real names in the code, so they can be searched for.
+- Code-style names (rejection labels, clause labels, hint flags) are the real names in the code, so they can be searched for.
 
 ## The diagrams
 
@@ -19,14 +19,14 @@ Last checked against the code on 2026-10-11 (main at `8b1bab5`).
 |---|---|
 | [Overview](00_overview.md) | The whole path today, in the order the code runs it. |
 | [PDF reading and chunking](01_pdf_reading_and_chunking.md) | How a PDF becomes chunks that know which section they sit in. |
-| [Requirement finding](02_requirement_finding.md) | What happens to each chunk when the model is asked for the duties in it. |
-| [Screening](03_screening_today.md) | Which quotes are rejected, and in what order the checks run. |
-| [Anchoring](04_anchoring.md) | How exactly each quote is found in its chunk. |
-| [Context attaching](05_context_attaching.md) | How the explained text beside each quote is built. |
-| [De-duplication, identity and parent stems](06_dedup_identity_stem.md) | De-duplication, requirement IDs, and subjects for fragments. |
+| [Requirement finding](02_requirement_finding.md) | How each line of a chunk is labeled, and which lines become rows. |
+| [Screening](03_screening_today.md) | Which rows are rejected, and in what order the checks run. |
+| [Anchoring](04_anchoring.md) | Where each row sits in its chunk (the splitter's offsets, checked). |
+| [Context attaching](05_context_attaching.md) | How the explained text beside each row is built. |
+| [De-duplication and identity](06_dedup_identity_stem.md) | De-duplication and requirement IDs. |
 | [Totals and search indexing](07_totals_and_indexing.md) | What is written at the end, and what goes into search. |
 | [Checklist building](08_checklist_building.md) | How each row gets its citation, party, flags and passage. |
-| [Text scan](09_text_scan.md) | How duties that nobody extracted are found. |
+| [Text scan](09_text_scan.md) | How duties that the labeler did not keep are found. |
 | [Draft audit questions](10_draft_questions.md) | How a draft question is written, withheld and read back. |
 | [Kind labels](11_kind_labels.md) | How each row is labelled by what sort of statement it is. |
 | [Delivery](12_delivery.md) | How the checklist reaches an assessor. |

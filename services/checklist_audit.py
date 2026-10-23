@@ -197,11 +197,20 @@ _PARAGRAPH_REF = re.compile(r"^[A-Z]{0,2}\d+(?:\.\d+)+$")
 _LINE_NUMBER = re.compile(r"(?m)^\W*((?:[A-Z]{1,2})?\d+(?:\.\d+)+)\.?\s")
 
 
-def citation(source_ref: str, passage: str, section_title_path, quote: str = "") -> str:
+def citation(source_ref: str, passage: str, section_title_path, quote: str = "", source_ref_origin: str | None = None) -> str:
     """The paragraph citation for a row: `source_ref` when it is a paragraph number; else the paragraph number the quote itself opens with; else an inferred one marked
     "(inferred)" (the last paragraph number opening a line in the passage before the marked requirement, which needs the marker: with no marker the quote was not located and the
-    passage says nothing about where it sits; else the nearest numbered heading); else an empty string."""
+    passage says nothing about where it sits; else the nearest numbered heading); else an empty string.
+
+    `source_ref_origin` is how clause labeling found `source_ref` (pipeline/clause_labeling.source_refs). The clause's own paragraph number (own_number) and a table caption
+    (table_caption) are cited as they are; a number read from above the clause (number_above) or from the section path (section_path) is marked "(inferred)"; none means there
+    was nothing, and the steps above run. Records from before clause labeling have no origin and keep the rule above."""
     ref = (source_ref or "").strip().rstrip(".")
+    if source_ref_origin and ref:
+        if source_ref_origin in ("number_above", "section_path"):
+            return f"{ref} (inferred)"
+        if source_ref_origin in ("own_number", "table_caption"):
+            return ref
     if _PARAGRAPH_REF.match(ref):
         return ref
     own = _LINE_NUMBER.match((quote or "").lstrip() + " ")

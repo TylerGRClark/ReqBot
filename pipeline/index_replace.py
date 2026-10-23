@@ -7,8 +7,7 @@ new run no longer has stays behind as a stale point. To replace a document prope
   2. removes the document's points that are not in the new expected set (matched by the document's name, `source_pdf` without its `.pdf`; nothing else is touched).
 
 The old points are therefore never removed before the new ones are in. A failure at any moment leaves the old document fully searchable plus whatever new points were written,
-and a retry converges. An incomplete run prunes nothing: an embedding that failed and was skipped, or (checked by the caller with `extraction_gaps`) a chunk the model failed on or
-whose answer was cut off. A run with no requirements at all prunes nothing either (that is far more likely a failed extraction than an edition with no rules).
+and a retry converges. An incomplete run prunes nothing: an embedding that failed and was skipped, or (checked by the caller with `extraction_gaps`) a batch the labeler failed on. A run with no requirements at all prunes nothing either (that is far more likely a failed extraction than an edition with no rules).
 
 "The document" is the file name: ReqBot's document key is the PDF's stem, so a replacement is a file of the same name. A file with another name is another document.
 """
@@ -22,13 +21,13 @@ BATCH = 256
 
 
 def extraction_gaps(raw_responses_path) -> dict:
-    """{"failed": n, "truncated": m}: chunks of the run whose answer from the model failed or was cut off, read from the run's `*_raw_responses.jsonl`. A run with any of these is
-    missing requirements that the old index may hold, so replacing on it would delete real rules; the caller keeps the old points and asks for a re-run (which retries those chunks).
-    A missing file, or a record without a status (older runs), counts as no gap."""
+    """{"failed": n}: batches of clauses whose call to the labeler failed, read from the run's `*_raw_responses.jsonl` (pipeline/clause_labeling.py). Their chunks have no rows, so
+    the run is missing requirements that the old index may hold, and replacing on it would delete real rules; the caller keeps the old points and asks for a re-run (which retries
+    those batches). A missing file, or a record without a status, counts as no gap. An unparsed batch is not a gap: its clauses are kept as UNSURE."""
     import json
     from pathlib import Path
 
-    gaps = {"failed": 0, "truncated": 0}
+    gaps = {"failed": 0}
     try:
         for line in Path(raw_responses_path).read_text(encoding="utf-8").splitlines():
             if not line.strip():

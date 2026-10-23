@@ -77,8 +77,27 @@ if str(_ROOT) not in sys.path:
 
 from core.artifact_resolver import resolve_latest_requirement_files  # noqa: E402
 from core.ask import retrieve  # noqa: E402
-from pipeline.enrich_requirements import _is_reconstruction_candidate  # noqa: E402
 from pipeline.parse_and_normalize import normalize_text  # noqa: E402
+
+# A frozen copy of the WP-39.2 candidacy check (pipeline/enrich_requirements._is_reconstruction_candidate with the bare-copula test of
+# parse_and_normalize._is_dangling_clause). Both were deleted with parent-stem reconstruction when clause labeling replaced the list-writing
+# extraction step; this classifier reads records from before that switch, so it keeps the rule it was measured with.
+_LIST_MARKER_RE = re.compile(r"^\(?([a-zA-Z0-9]{1,3})[.)]\s")
+_MAX_CANDIDATE_WORDS = 20
+_BARE_COPULA_OPENERS = ("is", "are", "was", "were")
+
+
+def _is_reconstruction_candidate(source_quote: str) -> bool:
+    """Fragment-shaped: opens with a list marker, is 20 words or fewer, or opens with a bare copula and holds no "?"."""
+    stripped = (source_quote or "").strip()
+    if not stripped:
+        return False
+    if _LIST_MARKER_RE.match(stripped) or len(stripped.split()) <= _MAX_CANDIDATE_WORDS:
+        return True
+    if "?" in stripped:
+        return False
+    first_word = re.sub(r"^[^A-Za-z0-9]+|[^A-Za-z0-9]+$", "", stripped.split(maxsplit=1)[0])
+    return first_word.lower() in _BARE_COPULA_OPENERS
 
 CATEGORIES = (
     "extraction_failure",

@@ -4,12 +4,12 @@ What is written at the end, and what goes into search.
 
 ```mermaid
 flowchart TD
-    N[("Normalized records file<br/>after parent-stem reconstruction")]
+    N[("Normalized records file")]
 
     subgraph TOT["Totals and final file"]
-        T1["Count the records, and count the lines of the side files:<br/>pages, chunks, raw responses,<br/>parse failures, normalization failures"]
+        T1["Count the records, and read the side files:<br/>pages, chunks, normalization failures,<br/>label batches by status (complete, unparsed, failed)"]
         T2[("Final output file<br/>document metadata and every record")]
-        T3[("Statistics file<br/>chunks created, model parse success rate,<br/>records before and after the checks,<br/>records per 1,000 characters,<br/>how many records have a reference<br/>and a heading trail")]
+        T3[("Statistics file<br/>chunks created, label batches unparsed and failed,<br/>rows by clause label,<br/>records before and after the checks,<br/>records per 1,000 characters,<br/>how many records have a reference<br/>and a heading trail")]
         T1 --> T2
         T1 --> T3
     end
@@ -18,9 +18,9 @@ flowchart TD
         subgraph REQIDX["Requirements collection"]
             I1{"Quote empty?"}
             I1a["Skipped, with a warning"]
-            I2["Text to embed, first that exists:<br/>the stem plus explained text, the explained text, the quote<br/>then a line: Ref and the source reference"]
+            I2["Text to embed, first that exists:<br/>the explained text, the quote<br/>then a line: Ref and the source reference"]
             I3["Dense vector from the Ollama embedding model<br/>and a sparse keyword (BM25) vector<br/>in batches of 32; a failed batch is retried one by one;<br/>a record that still fails is skipped"]
-            I4["One point per requirement<br/>its ID comes from the requirement ID, so re-indexing overwrites<br/>payload: quote, explained text, citation label, metadata<br/>(the label is shown, never embedded)"]
+            I4["One point per requirement<br/>its ID comes from the requirement ID, so re-indexing overwrites<br/>payload: quote, explained text, clause label, citation label, metadata<br/>(the label is shown, never embedded)"]
             I1 -->|yes| I1a
             I1 -->|no| I2
             I2 --> I3

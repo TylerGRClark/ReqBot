@@ -108,7 +108,7 @@ context. Run the rebuild again to bring the context up to date.
 
 ## Resume an interrupted run
 
-Resume in the **same run directory** to retain the requirement-finding step's (Step C) prompt-hash cache.
+Resume in the **same run directory** to keep the requirement-finding step's (Step C) clause labels (its resume ledger, `<doc>_raw_responses.jsonl`).
 From a source checkout, use the original PDF:
 
 ```bash
@@ -116,7 +116,7 @@ python3 pipeline/run_pipeline.py /path/to/policy.pdf \
   --output-dir /path/to/existing_run \
   --skip-to C \
   --ollama-url http://localhost:11434 \
-  --extraction-model llama3.1:8b-instruct-q4_K_M \
+  --extraction-model ornith:35b \
   --enrichment-model llama3.1:8b-instruct-q4_K_M
 ```
 
@@ -131,21 +131,22 @@ The direct script's `--skip-to` takes a letter or the step name: `pdf-reading` (
 |---|---|
 | `--skip-to A` (PDF reading) | Run all stages. |
 | `--skip-to B` (chunking) | The parser runs to obtain the in-memory Docling document, then chunks again. |
-| `--skip-to C` (requirement finding) | Existing matching chunks; extract or reuse valid cached responses. |
-| `--skip-to D` (normalizing and checking) | Existing chunks and extracted requirements; normalize, reconstruct, enrich/check, and export. |
+| `--skip-to C` (requirement finding) | Existing chunks; label the clauses, reusing labels already in the ledger. This is also how a run folder from before clause labeling (October 2026) is brought up to date: the chunk file is reused, the PDF is not read again. |
+| `--skip-to D` (normalizing and checking) | Existing chunks and extracted requirements from clause labeling; normalize, check, and export. An extraction file from the old list-writing step is refused: run from `--skip-to C` instead. |
 | `--skip-to E` (totals and final file) | Existing normalized requirements; aggregate without rerunning enrichment and the description check (D.5/D.6). |
 
 The original PDF is still required because the script checks its existence and
-normalization uses its content identity. Changing model/prompt inputs can
-invalidate cached extraction work (a new prompt, such as the inclusive prompt adopted in October 2026, means a full re-extraction). Non-default profiles bypass the requirement-finding step's cache;
-the direct script has no profile flag and uses `cybersecurity`.
+normalization uses its content identity. A label is reused only when the clauses,
+the model and the frozen prompt are unchanged, so another model means a full
+re-labeling. The direct script has no profile flag and uses `cybersecurity`.
 
-On resume, requirement finding redoes any chunk whose request failed or whose answer could not
-be parsed, and skips chunks it finished. If a chunk's answer is cut off at the
-output limit, it retries it once with a larger allowance that still fits the
-context window; if it is still cut off, the requirements recovered so far are kept
-and the chunk is not retried. The end-of-run log lists chunks that failed (run
-again to retry them) and chunks that may be missing requirements.
+On resume, requirement finding redoes any batch of clauses whose request failed
+and skips batches it finished. A batch whose answer could not be read after two
+tries is finished: its clauses are kept as UNSURE (flagged `labeled_unsure` on the
+checklist). The end-of-run log lists chunks that have no rows because a batch
+failed (run again to retry them). If the model server cannot be reached, or not
+one batch could be labeled, the run stops with an error instead of writing an
+empty document.
 
 Other direct-script options are `--model` (sets both role models),
 `--max-chunks`, `--timeout` (per-request seconds, default 120),
