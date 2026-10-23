@@ -118,7 +118,6 @@ rejection with a flag.
 ```mermaid
 flowchart TD
     Q["A clause kept by requirement finding<br/>(labeled anything but NOT_REQUIREMENT)"]
-    SCAN["Text scan finds a duty sentence<br/>that nobody extracted"]
 
     Q --> E1{"Empty, or a heading repeated<br/>as if it were a requirement?"}
     E1 -->|yes| R1["Rejected"]
@@ -198,7 +197,7 @@ offsets; the model only labels it. Normalizing checks that the offsets give back
 (`clause_offset_mismatch` otherwise, never expected). So every accepted root is word for word in its
 chunk by construction. What the labels do not establish is that every kept clause is a requirement
 or that every requirement was kept: the labels are a model's judgement (UNSURE rows are kept and
-flagged `labeled_unsure` on the checklist), and the text scan still runs as a net.
+flagged `labeled_unsure` on the checklist).
 
 The explained text is built beside the root (`pipeline/sentence_expand.explain_records`): the clause
 with its list marker taken off, and, for a list item, the lead-in line it belongs to in front
@@ -223,10 +222,7 @@ A checklist is built on demand from the newest processed run of a document; buil
 never calls a model. Each row is one requirement with its citation, section heading,
 the paragraph it sits under (read from the document's own numbering), who it applies to,
 the surrounding passage with the quote marked, and hint flags (for example "starts
-mid-sentence" or "table fragment"). Duty sentences in paragraphs (numbered or not) that look like duties but were not
-extracted become ordinary rows in their place in the document, flagged `found_by_text_scan` (a paragraph with no number of its own is cited
-by inference, marked "(inferred)", or not at all); other passages of that kind, such as a purpose statement with no duty sentence, are listed
-separately as possible missed requirements. Draft audit questions
+mid-sentence" or "table fragment"). Draft audit questions
 come from `reqbot questions`, which writes a sidecar file (`*_audit_questions.jsonl`) that
 the checklist reads; they are drafts for the auditor to check.
 
@@ -237,26 +233,16 @@ separate `reqbot questions` step, whose output the checklist reads back:
 flowchart TD
     RUN[("Newest processed run<br/>requirements file: gated, else enriched, else normalized<br/>*_chunks.jsonl")]
     ROWS["Rows from extracted requirements<br/>citation, section heading, parent paragraph,<br/>who it applies to, passage with the quote marked,<br/>hint flags"]
-    SCAN["Text scan<br/>duty sentences that were not extracted"]
-    FOUND["Found rows (found_by_text_scan)<br/>duty sentences, placed in document order"]
-    POSS["Possible missed requirements<br/>passages with no duty sentence of their own"]
-    MERGE["Rows in document order"]
     SIDE[("Draft questions<br/>*_audit_questions.jsonl")]
     APPLY["Question and review marks added<br/>no model call"]
     OUT["Checklist: sheet, CSV, JSON, Markdown,<br/>web screen, MCP tool"]
     WRITE["reqbot questions --doc<br/>separate step, local model<br/>asks for a question for each eligible row<br/>(none for fragments, definitions, descriptions, permissions)"]
 
     RUN --> ROWS
-    RUN --> SCAN
-    SCAN --> FOUND
-    SCAN --> POSS
-    ROWS --> MERGE
-    FOUND --> MERGE
-    MERGE --> APPLY
+    ROWS --> APPLY
     SIDE --> APPLY
     APPLY --> OUT
-    POSS -->|"listed below the rows"| OUT
-    MERGE -.->|"rows to ask about"| WRITE
+    ROWS -.->|"rows to ask about"| WRITE
     WRITE --> SIDE
 ```
 

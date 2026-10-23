@@ -5,7 +5,7 @@ How the checklist reaches an assessor.
 ```mermaid
 flowchart TD
     GEN["Checklist building<br/>(its own diagram)<br/>read-only on the published records"]
-    ENV[("Checklist<br/>items, possible missed, summary")]
+    ENV[("Checklist<br/>items, summary")]
     GEN --> ENV
 
     subgraph OUTS["Ways to get it"]

@@ -208,8 +208,7 @@ def test_a_numbered_lead_in_paragraph_titles_its_children_with_the_sentence_that
 
 
 def test_a_chunk_with_one_numbered_paragraph_keeps_its_number_with_its_text():
-    from services import checklist_missed as MM
-    units = MM.paragraph_units("3.6. Incident Analysis .  Incident analysis is a series of analytical steps. Include the mission owner in the process.")
+    units = A.paragraph_units("3.6. Incident Analysis .  Incident analysis is a series of analytical steps. Include the mission owner in the process.")
     assert units[0].startswith("3.6. Incident Analysis") and A.heading_map([], units)["3.6"] == "Incident Analysis"
 
 
@@ -302,17 +301,6 @@ def test_generate_cites_unnumbered_cover_rows_as_front_matter_and_keeps_numbered
     items = {i["requirement_ids"][0]: i for i in generate(tmp_path, "doc", "cybersecurity")["items"]}
     assert items["REQ-1"]["citation"] == "Front matter"
     assert items["REQ-2"]["citation"] == "2.1"
-
-
-def test_a_row_the_text_scan_finds_in_a_table_is_cited_by_the_table(tmp_path):
-    grid = "| Category | Description |\n|---|---|\n| 8 | Investigating (Event): Events that are potentially malicious or anomalous activity and warrant further review. No event will be closed out as a Category 8 without review by the NOS. Reviewed events are re-categorized. |"
-    chunks = [{"chunk_id": 0, "raw_text": "1.1. The CFP will notify the servicing MCCC within 24 hours of detection.", "section_title_path": ["INTRODUCTION"], "page_start": 4},
-              {"chunk_id": 1, "raw_text": "Table 1.1.  Categories of Events.\n\n" + grid, "section_title_path": ["INTRODUCTION"], "page_start": 6}]
-    _doc(tmp_path, [_rec("REQ-1", "The CFP will notify the servicing MCCC within 24 hours of detection.", 0, ["INTRODUCTION"])], chunks)
-    found = [i for i in generate(tmp_path, "doc", "cybersecurity")["items"] if "found_by_text_scan" in i["item_flags"]]
-    assert [i["citation"] for i in found] == ["Table 1.1"]
-    assert found[0]["section_heading"] == "Table 1.1 Categories of Events" and found[0]["applies_to"] == ""
-    assert "table_fragment" not in found[0]["item_flags"]  # a whole sentence in a cell is cited by the table but is not a scrap: its draft question is not withheld
 
 
 def test_citation_follows_the_clause_labelers_source_ref_origin():

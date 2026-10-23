@@ -557,7 +557,7 @@ def test_xlsx_hides_the_tags_and_confidence_columns_when_no_row_has_a_value():
             "item_flags": [], "review_reasons": [], "status": "not-started", "assessor_notes": "", "audit_question": "", "applies_to": "", "parent_text": "", "passage": ""}
 
     def hidden(item):
-        ws = load_workbook(BytesIO(to_xlsx({"items": [item], "possible_missed": [], "summary": {}, "document": {}}))).active
+        ws = load_workbook(BytesIO(to_xlsx({"items": [item], "summary": {}, "document": {}}))).active
         letters = [openpyxl.utils.get_column_letter(_col(ws, h)) for h in ("Conf.", "Tags")]
         return ws.column_dimensions[letters[0]].hidden, ws.column_dimensions[letters[1]].hidden
 
@@ -581,9 +581,9 @@ def test_the_sheet_says_which_document_it_is_and_the_facts_about_it():
 
 
 def test_the_title_falls_back_to_the_document_id_and_the_facts_survive_a_bare_envelope():
-    ws = _sheet({"items": [], "possible_missed": [], "summary": {}, "document": {"document_id": "abc123"}})
+    ws = _sheet({"items": [], "summary": {}, "document": {"document_id": "abc123"}})
     assert ws["A1"].value == "Audit checklist: abc123"
-    ws = _sheet({"items": [], "possible_missed": [], "summary": {}, "document": {}})
+    ws = _sheet({"items": [], "summary": {}, "document": {}})
     assert ws["A1"].value == "Audit checklist: Unknown document"
     assert ws["A2"].value == "0 items"
 
@@ -632,21 +632,12 @@ def test_the_sheet_prints_landscape_with_the_headers_repeated_and_the_document_i
     assert "Page &P of &N" in ws.oddFooter.right.text
 
 
-def test_the_possible_missed_block_has_a_colored_banner():
-    checklist = {**ENVELOPE, "possible_missed": [{**COMPLETE_ITEM, "checklist_item_id": "MISS-1"}]}
-    ws = _sheet(checklist)
-    banner = next(r for r in range(5, ws.max_row + 1) if str(ws.cell(row=r, column=1).value or "").startswith("POSSIBLE MISSED"))
-    assert ws.cell(row=banner, column=1).fill.patternType == "solid"
-    assert "1 possible missed" in ws["A2"].value
-
-
-def test_the_facts_count_flagged_items_apart_from_the_possible_missed_block():
+def test_the_facts_count_flagged_items():
     flagged = {**COMPLETE_ITEM, "checklist_item_id": "CHK-F", "item_flags": ["table_fragment"]}
-    missed = {**COMPLETE_ITEM, "checklist_item_id": "MISS-1", "item_flags": ["possible_missed"]}
-    facts = _sheet({**EMPTY_ENVELOPE, "items": [flagged], "possible_missed": [missed]})["A2"].value
-    assert "1 item · 1 of them flagged (!) for a second look · 1 possible missed, listed at the bottom" in facts
-    only_missed = _sheet({**EMPTY_ENVELOPE, "items": [], "possible_missed": [missed]})["A2"].value
-    assert "0 items" in only_missed and "of them flagged" not in only_missed and "1 possible missed" in only_missed
+    facts = _sheet({**EMPTY_ENVELOPE, "items": [flagged]})["A2"].value
+    assert "1 item · 1 of them flagged (!) for a second look" in facts and "missed" not in facts
+    none = _sheet({**EMPTY_ENVELOPE, "items": []})["A2"].value
+    assert "0 items" in none and "of them flagged" not in none
 
 
 # --- row height ---
@@ -682,13 +673,6 @@ def test_a_row_has_at_least_two_lines_and_never_more_than_excel_allows():
     assert huge_h <= 409.5
 
 
-def test_the_possible_missed_rows_are_capped_the_same_way():
-    missed = {**COMPLETE_ITEM, "checklist_item_id": "MISS-1", "item_flags": ["possible_missed"], "source_quote": "Short.", "audit_question": "", "passage": "p " * 3000}
-    ws = _sheet({**EMPTY_ENVELOPE, "items": [], "possible_missed": [missed]})
-    last = ws.max_row
-    assert ws.row_dimensions[last].height <= 4 * 13 + 4
-
-
 # --- the review marker and the alternating stripes ---
 
 def test_rows_alternate_by_a_rule_that_follows_sorting_and_filtering():
@@ -713,12 +697,6 @@ def test_the_marker_column_is_narrow_and_says_what_it_is():
     assert ws.cell(row=4, column=1).value == "Review"
     assert ws.column_dimensions["A"].width <= 8
     assert "(!)" in ws["A2"].value  # the facts line says what the mark means
-
-
-def test_a_possible_missed_row_carries_the_marker_too():
-    missed = {**COMPLETE_ITEM, "checklist_item_id": "MISS-1", "item_flags": ["possible_missed"]}
-    ws = _sheet({**EMPTY_ENVELOPE, "items": [], "possible_missed": [missed]})
-    assert ws.cell(row=ws.max_row, column=1).value == "!"
 
 
 def test_a_marked_row_always_says_why_in_the_check_column():

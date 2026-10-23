@@ -23,7 +23,7 @@ if str(_ROOT) not in sys.path:
 
 from core.artifact_resolver import doc_key_from_requirements_path, resolve_requirement_file
 from core.profiles import load_profile
-from services import audit_questions, checklist_audit, checklist_missed, cleanup, criticality
+from services import audit_questions, checklist_audit, cleanup, criticality
 
 log = logging.getLogger(__name__)
 
@@ -86,7 +86,7 @@ def _heading_map(chunks: dict) -> dict:
     for chunk_id in sorted(k for k in chunks if isinstance(k, int)):
         chunk = chunks[chunk_id]
         headings.extend(str(p) for p in (chunk.get("section_title_path") or []))
-        units.extend(checklist_missed.paragraph_units(chunk.get("raw_text") or ""))
+        units.extend(checklist_audit.paragraph_units(chunk.get("raw_text") or ""))
     return checklist_audit.heading_map(headings, units)
 
 
@@ -96,93 +96,13 @@ def _paragraph_map(chunks: dict) -> dict:
     for chunk_id in sorted(k for k in chunks if isinstance(k, int)):
         chunk = chunks[chunk_id]
         units.extend(str(p) for p in (chunk.get("section_title_path") or []))
-        units.extend(checklist_missed.paragraph_units(chunk.get("raw_text") or ""))
+        units.extend(checklist_audit.paragraph_units(chunk.get("raw_text") or ""))
     return checklist_audit.paragraph_map(units)
 
 
 def requirements_path(processed_dir: Path, doc_key: str) -> Path:
     """The requirements file a checklist for `doc_key` is built from (the newest run's best tier)."""
     return _resolve_doc_path(processed_dir, doc_key)
-
-
-def _found_item(c: dict, chunks: dict, hmap: dict, para_map: dict, verbs, first_numbered=checklist_audit._UNSET) -> dict:
-    """A checklist row for a duty sentence the text scan found in a paragraph that was not extracted. It is built like an extracted row (citation, section, who it applies to,
-    passage, parent paragraph, flags), flagged found_by_text_scan and left for review; nothing here is model-made."""
-    cite, path, text = c["ref"], c["path"], c["text"]  # the paragraph's own number, read from the document: exact, not inferred; empty when the paragraph has none
-    table_ref, table_heading = checklist_audit.table_label(chunks, c["chunk_id"], text)  # a row from a table is cited by the table's caption, as an extracted row is
-    cite = table_ref or cite
-    own_number = bool(cite)
-    bulleted = bool(c.get("list_item"))  # the scan removed a bare bullet from the text: the row is still a list item (its lead-in is above it)
-
-    def row_flags(cite, applies):
-        flags = checklist_audit.item_flags(text, cite, applies, verbs)
-        return flags + ["list_item"] if bulleted and "list_item" not in flags else flags
-
-    numbered = None if table_ref else checklist_audit.applies_to_numbered(cite, hmap, path)
-    applies = "" if table_ref else (numbered if numbered is not None else checklist_audit.applies_to(path))  # the converter's heading for a table is a guess: no party is read from it
-    flags = row_flags(c["ref"], applies)  # the paragraph's own number, not the table label: a "Table" reference would flag a whole sentence in a cell as a table scrap and withhold its question
-    chunk = chunks.get(c["chunk_id"])
-    prev_chunk = chunks.get(c["chunk_id"] - 1)
-    passage, found = checklist_audit.build_passage(text, chunk, prev_chunk, set(flags), c["offset"])
-    if not own_number:  # cited like an extracted row without a number: the nearest number before it, marked "(inferred)", else the nearest numbered heading
-        cite = checklist_audit.citation("", passage, path, text) or checklist_audit.unnumbered_label(chunks, c["chunk_id"], text, first_numbered)
-        numbered = checklist_audit.applies_to_numbered(cite, hmap, path) if cite else None
-        if numbered is not None:
-            applies = numbered
-            flags = row_flags(cite, applies)
-    flags = ["found_by_text_scan"] + flags
-    if not passage:
-        flags.append("no_passage")
-    elif not found:
-        flags.append("quote_not_located_in_passage")
-    parent_ref, parent_text = checklist_audit.parent_paragraph(cite, para_map)
-    return {
-        "checklist_item_id": c["checklist_item_id"],
-        "requirement_ids": [],
-        "domain_tags": [],
-        "source_ref": "",
-        "page_refs": c["pages"],
-        "section_title_path": path,
-        "citation": cite,
-        "section_heading": table_heading if table_ref else checklist_audit.section_heading(cite, hmap),
-        "applies_to": applies,
-        "parent_ref": parent_ref,
-        "parent_text": parent_text,
-        "source_quote": text,
-        "extracted_quote": "",
-        "explain_notes": [],
-        "passage": passage,
-        "item_flags": flags,
-        "audit_question": "",
-        "evidence_to_request": [],
-        "generation_notes": "found by a text scan, not extracted",
-        "assessor_notes": "",
-        "status": "not-started",
-        "confidence": None,
-        "requires_human_review": True,
-        "review_reasons": ["not-extracted"],
-    }
-
-
-def _merge_in_order(items: list[dict], keys: list[tuple], extra: list[dict], extra_keys: list[tuple]) -> list[dict]:
-    """`extra` rows placed among `items` by their position in the document: (chunk id, offset in the chunk). An item with no known position takes its predecessor's."""
-    if not extra:
-        return items
-    filled, last = [], (-1, -1)
-    for chunk_id, at in keys:
-        chunk_id = chunk_id if isinstance(chunk_id, int) else last[0]
-        at = at if isinstance(at, int) else (last[1] if chunk_id == last[0] else -1)
-        last = (chunk_id, at)
-        filled.append(last)
-    order = sorted(range(len(extra)), key=lambda i: extra_keys[i])
-    merged, j = [], 0
-    for item, key in zip(items, filled):
-        while j < len(order) and extra_keys[order[j]] < key:
-            merged.append(extra[order[j]])
-            j += 1
-        merged.append(item)
-    merged.extend(extra[i] for i in order[j:])
-    return merged
 
 
 def _quotes(req: dict) -> tuple[str, str, str]:
@@ -285,8 +205,6 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     first_numbered = checklist_audit.first_numbered_chunk(chunks)  # for rows with no number to cite (front matter)
 
     items = []
-    item_keys: list[tuple] = []  # where each item sits in the document: (chunk id, offset in the chunk), for placing rows found by the text scan
-    all_quotes: list[str] = []
     document_id = ""
     source_pdf = ""
     skipped = 0
@@ -308,8 +226,6 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
 
             req_id = req.get("requirement_id", "")
             extracted_quote, source_quote, locate_text = _quotes(req)  # the root; what the sheet shows (the explained requirement when the record has one); what the passage is located by
-            all_quotes.append(source_quote)
-            all_quotes.extend(q for q in [extracted_quote, *(req.get("merged_roots") or [])] if q)  # merged_roots: only on records from before clause labeling
 
             # Hard provenance anchors — missing either means no checklist item
             if not req_id or not source_quote:
@@ -331,8 +247,6 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             table_ref, table_heading, cite = where["table_ref"], where["table_heading"], where["citation"]
             applies, flags, passage = where["applies"], where["flags"], where["passage"]
             parent_ref, parent_text = checklist_audit.parent_paragraph(source_ref, para_map)
-            chunk_id = req.get("chunk_id")
-            chunk = chunks.get(chunk_id)
             if not passage:
                 flags.append("no_passage")
             elif not where["found"]:
@@ -351,12 +265,6 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             if source_profile != profile_name:
                 review_reasons.append("profile-mismatch")
 
-            item_at = req.get("anchor_start") if isinstance(req.get("anchor_start"), int) else None
-            if item_at is None and chunk:
-                pattern = checklist_audit._flex_pattern(locate_text)
-                hit = pattern.search(chunk.get("raw_text") or "") if pattern else None
-                item_at = hit.start() if hit else None
-            item_keys.append((chunk_id, item_at))
             items.append({
                 "checklist_item_id": _checklist_item_id([req_id]),
                 "requirement_ids": [req_id],
@@ -387,13 +295,6 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     if skipped:
         log.info("Skipped %d record(s) missing requirement_id or source_quote", skipped)
 
-    # WP-46.2: passages that look like obligations but were not extracted (rule-based, no model). A numbered paragraph's duty sentences become rows in their place in the document,
-    # flagged found_by_text_scan; the rest are listed apart, below the items, and are not counted as items
-    obligation_verbs = profile.get("obligation_verbs", [])
-    promoted, possible_missed = checklist_missed.split_candidates(chunks, all_quotes, obligation_verbs) if chunks else ([], [])
-    found_items = [_found_item(c, chunks, hmap, para_map, obligation_verbs, first_numbered) for c in promoted]
-    items = _merge_in_order(items, item_keys, found_items, [(c["chunk_id"], c["offset"]) for c in promoted])
-
     # WP-46.6: draft audit questions written earlier by `reqbot questions` (a sidecar file; building a checklist never calls a model)
     drafted = audit_questions.apply(items, audit_questions.sidecar_path(jsonl_path))
     criticality.apply(items, criticality.sidecar_path(jsonl_path), skip_ids=criticality.withheld_ids(audit_questions.sidecar_path(jsonl_path)))  # rough "look first" flag from the sidecar `reqbot questions` writes (no model call here)
@@ -416,10 +317,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
             "total_items": len(items),
             "items_requiring_review": sum(1 for i in items if i["requires_human_review"]),
             "items_with_flags": sum(1 for i in items if i["item_flags"]),
-            "found_by_text_scan": len(found_items),
-            "possible_missed": len(possible_missed),
             "items_with_draft_question": drafted,
         },
         "items": items,
-        "possible_missed": possible_missed,
     }
