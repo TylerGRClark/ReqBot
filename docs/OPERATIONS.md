@@ -39,8 +39,7 @@ directories are `<processed_dir>/<pdf_stem>_<YYYYMMDD>_<HHMMSS>/`.
 Use `--no-index` to inspect artifacts before indexing, or `--output-dir` for
 an explicitly managed run directory.
 
-Read logs for rejected quotes, skipped enrichment, skipped entailment checks,
-and description-gate failures. See [Architecture](ARCHITECTURE.md) for artifacts
+Read logs for rejected quotes and failed batches. See [Architecture](ARCHITECTURE.md) for artifacts
 and validation boundaries.
 
 On an Ollama host with GPU support, `ollama ps` or its API helps inspect model
@@ -116,8 +115,7 @@ python3 pipeline/run_pipeline.py /path/to/policy.pdf \
   --output-dir /path/to/existing_run \
   --skip-to C \
   --ollama-url http://localhost:11434 \
-  --extraction-model ornith:35b \
-  --enrichment-model llama3.1:8b-instruct-q4_K_M
+  --extraction-model ornith:35b
 ```
 
 Replace the URL and model names with those from the original run. The direct
@@ -133,7 +131,7 @@ The direct script's `--skip-to` takes a letter or the step name: `pdf-reading` (
 | `--skip-to B` (chunking) | The parser runs to obtain the in-memory Docling document, then chunks again. |
 | `--skip-to C` (requirement finding) | Existing chunks; label the clauses, reusing labels already in the ledger. This is also how a run folder from before clause labeling (October 2026) is brought up to date: the chunk file is reused, the PDF is not read again. |
 | `--skip-to D` (normalizing and checking) | Existing chunks and extracted requirements from clause labeling; normalize, check, and export. An extraction file from the old list-writing step is refused: run from `--skip-to C` instead. |
-| `--skip-to E` (totals and final file) | Existing normalized requirements; aggregate without rerunning enrichment and the description check (D.5/D.6). |
+| `--skip-to E` (totals and final file) | Existing normalized requirements; aggregate without rerunning normalizing. |
 
 The original PDF is still required because the script checks its existence and
 normalization uses its content identity. A label is reused only when the clauses,
@@ -149,15 +147,14 @@ again in the same folder to retry only those batches. The same happens if the
 model server cannot be reached or not one batch could be labeled, so a partly
 labeled document is never normalized or indexed as if it were complete.
 
-Other direct-script options are `--model` (sets both role models),
-`--max-chunks`, `--timeout` (per-request seconds, default 120),
-`--skip-enrichment`, `--skip-description-gate` (both accepted with no effect: enrichment and the description check are switched off), and `--qdrant-url`.
+Other direct-script options are `--model` (alias for `--extraction-model`),
+`--max-chunks`, `--timeout` (per-request seconds, default 120), and `--qdrant-url`.
 The direct script does **not** index unless `--index` is supplied.
 Its `--index` path uses indexing-module defaults, so for a deployment with a
 custom embedding model, finish the resume and use configured `reqbot reindex`
 over its processed directory instead.
 
-Use `--skip-to D` to rerun validation/enrichment; `--skip-to E` selects normalized
+Use `--skip-to D` to rerun normalizing and checking; `--skip-to E` selects normalized
 input and is not a shortcut for exporting an existing gated artifact.
 Preserve originals before a rerun if you need to compare outcomes.
 
@@ -168,7 +165,7 @@ reqbot reindex
 ```
 
 This re-embeds existing artifacts with the configured embedding model, rebuilding
-requirements and source context. It does not rerun extraction or enrichment.
+requirements and source context. It does not rerun extraction.
 
 Artifact selection is based on **modification times**, not directory timestamps:
 

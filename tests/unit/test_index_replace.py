@@ -171,8 +171,8 @@ def test_the_context_collection_is_replaced_the_same_way(tmp_path):
 # -- the command and the job ----------------------------------------------------------
 
 def _ingest_args(**kw):
-    base = dict(pdf="x.pdf", output_dir=None, extraction_model=None, enrichment_model=None, model=None, max_chunks=None, no_index=False, skip_enrichment=False,
-                skip_description_gate=False, profile="cybersecurity", ollama_url="http://o", qdrant_url="http://q", progress_json=False, replace=False)
+    base = dict(pdf="x.pdf", output_dir=None, extraction_model=None, model=None, max_chunks=None, no_index=False, 
+                profile="cybersecurity", ollama_url="http://o", qdrant_url="http://q", progress_json=False, replace=False)
     base.update(kw)
     return SimpleNamespace(**base)
 

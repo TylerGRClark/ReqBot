@@ -118,7 +118,7 @@ def _normalize_filter_flags(
 ) -> tuple[list[str], list[str]]:
     """Normalize and warn on inline --domain-tag and --requirement-type values.
 
-    Applies the same hyphen/case normalization as build_query_filter() in ask.py,
+    Normalizes hyphens and case,
     and emits a shell warning for any value not in the known valid sets.
     Returns (normalized_domain_tags, normalized_requirement_types).
     """
@@ -688,11 +688,9 @@ class GrcaiConsole(cmd.Cmd):
             model=parsed.model if parsed.model else self._session["default_model"],
             max_chunks=parsed.max_chunks,
             no_index=parsed.no_index,
-            # cmd_ingest reads these unconditionally; the interactive shell has
-            # no --skip-enrichment/--profile flags of its own, so supply the
-            # same defaults cli/reqbot.py's argparse would (this Namespace was
-            # previously missing both, which crashed cmd_ingest on every call).
-            skip_enrichment=False,
+            # cmd_ingest reads this unconditionally; the interactive shell has
+            # no --profile flag of its own, so supply the same default
+            # cli/reqbot.py's argparse would.
             profile="cybersecurity",
             ollama_url=self._session["ollama_url"],
             qdrant_url=self._session["qdrant_url"],
@@ -786,11 +784,6 @@ class GrcaiConsole(cmd.Cmd):
         ns = Namespace(
             pdf_dir=parsed.pdf_dir,
             model=parsed.model if parsed.model else self._session["default_model"],
-            # cmd_batch reads this unconditionally; the interactive shell has no
-            # --skip-enrichment flag of its own, so supply the same default
-            # cli/reqbot.py's argparse would (same pre-existing gap do_ingest's
-            # Namespace was already fixed for -- this one was missed).
-            skip_enrichment=False,
             ollama_url=self._session["ollama_url"],
             qdrant_url=self._session["qdrant_url"],
         )
