@@ -138,3 +138,8 @@ def test_a_new_sentence_after_a_tier_tag_is_cut_off():
 def test_a_tier_tag_in_the_middle_of_a_sentence_does_not_cut():
     text = "Advocate in accordance with DoDI 8500.01, (T-0) AFI 17-130, and more. (T-2)"
     assert _texts(text) == [text]
+
+
+def test_a_spaced_tier_tag_as_the_converter_writes_it_is_cut_the_same_way():
+    text = "A copy of the letter will be provided to the office. ( T-1 )  In addition:\n2.1. Staff must read."
+    assert _texts(text)[:2] == ["A copy of the letter will be provided to the office. ( T-1 )", "In addition:"]

@@ -35,7 +35,7 @@ ABBRRE = re.compile(r"^(\(?[A-Za-z]\.){1,}$|^(no|nos|para|paras|fig|etc|vs|dr|mr
 _NUMBER_TOKEN = re.compile(r"\d+\.\d+\.?|[A-Za-z0-9]{1,2}\.")
 _TWO_LETTERS = re.compile(r"[A-Za-z]{2}")
 _CLOSERS = re.compile(r"[\"')\]]*")
-_TAG_CUT = re.compile(r"(?<=[.!?])[\"')\]]*\s+\(T-\d\)\s+(?=[\"'(\[]?[A-Z0-9])")  # "...office. (T-1) In addition:": the tag stays with its sentence and the next sentence starts after it
+_TAG_CUT = re.compile(r"(?<=[.!?])[\"')\]]*\s+\(\s*T\s*-\s*\d\s*\)\s+(?=[\"'(\[]?[A-Z0-9])")  # "...office. (T-1) In addition:": the tag stays with its sentence and the next sentence starts after it
 _LEAD_IN_END = re.compile(r":(\s*\(T-\d\)\.?)?$")  # "will:" and, after a tier tag, "options: (T-2)."
 
 
