@@ -114,7 +114,7 @@ def _quotes(req: dict) -> tuple[str, str, str]:
     return root, req.get("explained_text") or root, (sentence_parts[-1] if sentence_parts else root)
 
 
-def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs) -> dict:
+def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs, doc_lines=None) -> dict:
     """Where a record sits in its document, read from the document: how it is cited, who it applies to, its hint flags and the passage around its quote. No model.
 
     The checklist and the search index both call this, so the label an auditor sees on a sheet and the one a search result shows cannot drift apart. `table_ref` is the table's label
@@ -136,7 +136,8 @@ def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs) -> d
     # not from the explained text (which starts with the lead-in), and always when a lead-in was attached by rule (it may sit in the previous chunk)
     has_rule_lead_in = any(p.get("kind") == "lead_in" and p.get("origin") == "rule" for p in (req.get("explained_parts") or []))
     passage_flags = set(flags) | set(checklist_audit.item_flags(extracted_quote, source_ref, applies, verbs)) | ({"list_item"} if has_rule_lead_in else set())
-    passage, found = checklist_audit.build_passage(locate_text, chunk, prev_chunk, passage_flags)
+    span = (req["anchor_start"], req["anchor_end"]) if _anchor_matches(req, chunk) else None  # schema 3.0 rows store the clause's exact offsets in the chunk
+    passage, found = checklist_audit.build_passage(locate_text, chunk, prev_chunk, passage_flags, span=span)
     cite = table_ref or checklist_audit.citation(source_ref, passage, section_title_path, locate_text, origin)
     if cite != cite0:  # an inferred paragraph number: the numbering can now say who the row applies to
         numbered = checklist_audit.applies_to_numbered(cite, hmap, section_title_path)
@@ -147,7 +148,36 @@ def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs) -> d
         flags = [*flags, "labeled_unsure"]  # the labeler could not decide (or its answer could not be read): the row is kept for a reader to check
     if not cite:  # nothing numbered to cite: where the row sits, read from the document ("Front matter", "Figure A3.1")
         cite = checklist_audit.unnumbered_label(chunks, chunk_id, locate_text, first_numbered)
-    return {"citation": cite, "table_ref": table_ref, "table_heading": table_heading, "applies": applies, "flags": flags, "passage": passage, "found": found}
+    windows = _prompt_windows(req, chunk, locate_text, span, passage, doc_lines) if found and doc_lines else {}
+    return {"citation": cite, "table_ref": table_ref, "table_heading": table_heading, "applies": applies, "flags": flags, "passage": passage, "found": found, "prompt_windows": windows}
+
+
+def _anchor_matches(req: dict, chunk) -> bool:
+    """True when the row's stored clause offsets point at its stored clause text inside the chunk (else the offsets are not trusted and the quote is found by text search)."""
+    s, e = req.get("anchor_start"), req.get("anchor_end")
+    if not chunk or not isinstance(s, int) or not isinstance(e, int) or isinstance(s, bool) or isinstance(e, bool) or not 0 <= s < e:
+        return False
+    raw = chunk.get("raw_text") or chunk.get("text") or ""
+    return e <= len(raw) and raw[s:e] == req.get("anchor_text")
+
+
+def _prompt_windows(req: dict, chunk, locate_text: str, span, passage: str, doc_lines) -> dict:
+    """{str(cap): window} for each prompt cut whose plain first-`cap`-characters slice of the passage would lose the marked requirement or its lead-in. A row whose slice is enough gets
+    no entry, so its prompt stays exactly as it was."""
+    lead = checklist_audit.lead_in_prefix(req.get("explained_parts"))
+    out = {}
+    raw = chunk.get("raw_text") or chunk.get("text") or ""
+    m = checklist_audit.locate_quote(locate_text, raw, 0, span)
+    if not m:
+        return out
+    marked = raw[: m.start()] + checklist_audit.MARK_OPEN + raw[m.start(): m.end()] + checklist_audit.MARK_CLOSE + raw[m.end():]
+    for cap in (checklist_audit.QUESTION_PASSAGE_CHARS, checklist_audit.SCORE_PASSAGE_CHARS):
+        if checklist_audit.cut_is_enough(passage, cap, lead):
+            continue
+        w = checklist_audit.prompt_window(doc_lines, req.get("chunk_id"), marked, lead, cap)
+        if w:
+            out[str(cap)] = w
+    return out
 
 
 def requirement_citations(jsonl_path) -> dict[str, str]:
@@ -202,6 +232,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     chunks = _load_chunks(jsonl_path)
     hmap = _heading_map(chunks)
     para_map = _paragraph_map(chunks)  # WP-46.1: the document's own text, for the passage column; {} when the chunk file is not beside the requirements
+    doc_lines = checklist_audit.document_lines(chunks)  # the document line by line, for the prompt windows
     first_numbered = checklist_audit.first_numbered_chunk(chunks)  # for rows with no number to cite (front matter)
 
     items = []
@@ -243,7 +274,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
 
             # WP-46.1 audit layout: who the row applies to, the document's own passage, and specific hints (nothing here is model-made)
             verbs = profile.get("obligation_verbs", [])
-            where = _locate_row(req, chunks, hmap, first_numbered, verbs)
+            where = _locate_row(req, chunks, hmap, first_numbered, verbs, doc_lines)
             table_ref, table_heading, cite = where["table_ref"], where["table_heading"], where["citation"]
             applies, flags, passage = where["applies"], where["flags"], where["passage"]
             parent_ref, parent_text = checklist_audit.parent_paragraph(source_ref, para_map)
@@ -281,6 +312,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
                 "extracted_quote": extracted_quote,
                 "explain_notes": req.get("explain_notes") or [],
                 "passage": passage,
+                **({"prompt_windows": where["prompt_windows"]} if where["prompt_windows"] else {}),  # only rows whose plain prompt cut would lose the requirement
                 "item_flags": flags,
                 "audit_question": "",
                 "evidence_to_request": [],
