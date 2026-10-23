@@ -388,3 +388,10 @@ def test_batches_left_after_a_stopped_run_are_recorded_as_failed(tmp_path, monke
     ledger = _read(tmp_path / "out" / "doc_raw_responses.jsonl")
     assert [(r["batch_id"], r["status"], r.get("error")) for r in ledger] == [
         ("b00000", "failed", "down"), ("b00001", "failed", "not_attempted"), ("b00002", "failed", "not_attempted")]
+
+
+def test_max_chunks_zero_labels_nothing(tmp_path):
+    # 0 is a limit, not "no limit" (as the deleted extractor treated it; Codex review, PR #365)
+    model = FakeModel()
+    out = cl.run(str(_write_chunks(tmp_path)), str(tmp_path / "out"), model="m", call=model, max_chunks=0)
+    assert model.prompts == [] and _read(out) == []

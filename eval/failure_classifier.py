@@ -299,11 +299,17 @@ def classify_miss(
     # WP-39.2's own reconstruction uses) but parent_stem is empty, i.e.
     # either STEM_NEVER_EXTRACTED or reconstruction genuinely found no
     # governing clause for it.
-    if not rec.get("parent_stem") and _is_reconstruction_candidate(rec.get("source_quote", "")):
+    # A record from clause labeling (it has clause_index) never carries parent_stem: its context is the
+    # lead-in in explained_parts, so that is what is checked for it (Codex review, PR #365).
+    if rec.get("clause_index") is not None:
+        has_context = any(p.get("kind") == "lead_in" for p in rec.get("explained_parts") or [])
+    else:
+        has_context = bool(rec.get("parent_stem"))
+    if not has_context and _is_reconstruction_candidate(rec.get("source_quote", "")):
         return {
             "category": "missing_context",
             "evidence": f"{missing_id}: fragment-shaped (_is_reconstruction_candidate=True) but "
-                        f"parent_stem is empty -- source_quote={rec.get('source_quote', '')[:100]!r}",
+                        f"no parent_stem or lead-in -- source_quote={rec.get('source_quote', '')[:100]!r}",
         }
 
     # Categories 4/5/7/8b are read directly from pool_hits -- no new call

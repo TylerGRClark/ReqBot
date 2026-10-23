@@ -351,7 +351,7 @@ def run(chunks_jsonl: str, output_dir: str, *, model: str, ollama_url: str = "",
 
     with open(chunks_path, encoding="utf-8") as f:
         chunks = [json.loads(line) for line in f if line.strip()]
-    if max_chunks:
+    if max_chunks is not None:  # 0 labels nothing (a limit, not "no limit")
         chunks = chunks[:max_chunks]
     template = load_prompt()
     batches = make_batches(document_clauses(chunks))

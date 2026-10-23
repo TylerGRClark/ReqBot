@@ -100,7 +100,7 @@ def cmd_ingest(args: argparse.Namespace) -> int:
         _progress.enable()
 
     replace = bool(getattr(args, "replace", False))
-    if replace and (getattr(args, "max_chunks", None) or getattr(args, "no_index", False)):
+    if replace and (getattr(args, "max_chunks", None) is not None or getattr(args, "no_index", False)):
         log.error("--replace needs the whole document indexed: it cannot be combined with --max-chunks or --no-index")
         return 1
 
