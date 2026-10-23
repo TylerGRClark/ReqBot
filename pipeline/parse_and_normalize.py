@@ -96,29 +96,6 @@ def _is_heading_echo(source_quote: str, section_title_path: list[str]) -> bool:
     return False
 
 
-def _is_unrepairable_fragment(source_quote: str) -> bool:
-    """True if source_quote is a truncated list-header with no content of its own.
-
-    A quote ending in a bare colon (e.g. "The process will be as follows:")
-    carries no obligation content on its own -- Step D.5 enrichment was found
-    fabricating plausible-sounding description text to "complete" it, content
-    that appears nowhere in source_quote (WP-34.2). Only fires on quotes that
-    literally end in a colon; a quote that merely contains one mid-sentence
-    (and so has real content following it) is untouched.
-
-    WP-34.2 originally also required the quote to be under 25 words, reasoning
-    that a longer colon-terminated quote might be a genuinely complete quote
-    that just happens to end mid-punctuation. WP-38.1's audit found 3 real
-    colon-terminated list-header fragments at 30, 39, and 41 words that the cap
-    let through, and turned up no example -- in WP-34.2's original spike or
-    WP-38.1's 333-record hand-read audit -- of a genuinely complete quote that
-    legitimately ends in a bare colon. A colon promises content the quote
-    doesn't contain regardless of how many words precede it, so WP-38.2 removed
-    the length cap: the trigger is "ends in a bare colon," full stop.
-    """
-    return source_quote.strip().endswith(":")
-
-
 # WP-38.2: an entire quote whose only content is a term followed by a
 # "as defined in <citation>" cross-reference carries no independent
 # obligation -- it's a definitional pointer, not a requirement (e.g.
@@ -608,11 +585,6 @@ def run(
         # WP-34.2: a clause that only repeats a heading of its own section (e.g. "COMPLIANCE WITH THIS PUBLICATION IS MANDATORY").
         if _is_heading_echo(source_quote, section_title_path):
             failures.append({"requirement_id": req.get("requirement_id", "UNKNOWN"), "chunk_id": chunk_id, "error": "heading_echo_quote", "raw": req})
-            continue
-
-        # WP-34.2: a clause ending in a colon is a list's lead-in on its own ("The process will be as follows:"); the explained layer puts it in front of each item instead.
-        if _is_unrepairable_fragment(source_quote):
-            failures.append({"requirement_id": req.get("requirement_id", "UNKNOWN"), "chunk_id": chunk_id, "error": "unrepairable_fragment_quote", "raw": req})
             continue
 
         # WP-38.2: a definitional cross-reference with no obligation of its own ("Term, as defined in CNSSI 4009."); see _is_orphaned_list_item().

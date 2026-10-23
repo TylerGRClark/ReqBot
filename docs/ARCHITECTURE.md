@@ -31,7 +31,7 @@ The [developer reference](../ARCHITECTURE.md) contains the module/import map.
 | PDF reading | Docling reads layout, headings, tables, and page provenance. | `*_ancestry.json` and an in-memory parsed document. |
 | Chunking | Structure-aware chunking adds section paths and parent context; the profile can exclude sections. | `*_chunks.jsonl` |
 | Requirement finding | Clause labeling: rules cut each chunk's raw text into clauses (sentences, list lines, table lines) with their exact offsets; a local model (the configured extraction model; measured with `ornith:35b`) gives each clause one label, four per call: DUTY, PROHIBITION, PERMISSION, NOT_REQUIREMENT or UNSURE. Every clause not labeled NOT_REQUIREMENT becomes a row whose quote is the clause itself, the **root**, never edited. The source reference is found by rule and says how (`source_ref_origin`). The batch ledger (raw responses) makes a re-run resume. It replaced, in October 2026, the step that asked the model to write a list of requirements. | `*_extracted_requirements.jsonl` |
-| Normalizing and checking | One step, doing several jobs: refuse an extraction file from the old step, check each clause against its offsets (`clause_offset_mismatch`), drop junk (a repeated heading, a lead-in on its own, a definitional pointer; there is no working change-log rejection yet), attach page and section metadata, deduplicate, build the explained text (the clause without its list marker, with its list's lead-in in front), and assign IDs (hashed from the root). | `*_requirements_normalized.jsonl` |
+| Normalizing and checking | One step, doing several jobs: refuse an extraction file from the old step, check each clause against its offsets (`clause_offset_mismatch`), drop junk (a repeated heading, a definitional pointer; a lead-in that ends in a colon is kept as a row; there is no working change-log rejection yet), attach page and section metadata, deduplicate, build the explained text (the clause without its list marker, with its list's lead-in in front), and assign IDs (hashed from the root). | `*_requirements_normalized.jsonl` |
 | Enrichment | **Switched off** (October 2026): the code stays, but the pipeline no longer adds descriptions, domain tags or requirement types. | `*_requirements_enriched.jsonl` |
 | Description check | **Switched off** with enrichment: there are no generated descriptions to check. | `*_requirements_gated.jsonl` |
 | Totals and final file | Aggregate the selected output and record statistics. | `*_final_output.json`, `*_stats.json` |
@@ -121,8 +121,8 @@ flowchart TD
 
     Q --> E1{"Empty, or a heading repeated<br/>as if it were a requirement?"}
     E1 -->|yes| R1["Rejected"]
-    E1 -->|no| E3{"A lead-in that ends in a colon,<br/>or a definition pointer<br/>such as X, as defined in Y?"}
-    E3 -->|yes| R3["Rejected today<br/>(the plan flags these instead)"]
+    E1 -->|no| E3{"A definition pointer<br/>such as X, as defined in Y?"}
+    E3 -->|yes| R3["Rejected"]
     E3 -->|no| A["Kept: its offsets in its chunk<br/>are exact by construction"]
 
     A --> X["Sentence: the clause without its list marker"]

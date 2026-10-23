@@ -18,9 +18,7 @@ flowchart TD
     C2 -->|"no: clause_offset_mismatch"| FAIL
     C2 -->|yes| C5{"Repeats a heading from its own section path<br/>(90 percent or more alike, any level)?"}
     C5 -->|"yes: heading_echo_quote"| FAIL
-    C5 -->|no| C6{"Ends in a bare colon<br/>(a list's lead-in on its own)?"}
-    C6 -->|"yes: unrepairable_fragment_quote"| FAIL
-    C6 -->|no| C7{"Opens with 'Term, as defined in ...'<br/>and nothing independent after the citation?"}
+    C5 -->|no| C7{"Opens with 'Term, as defined in ...'<br/>and nothing independent after the citation?"}
     C7 -->|"yes: orphaned_list_item_quote"| FAIL
     C7 -->|no| PASS
 

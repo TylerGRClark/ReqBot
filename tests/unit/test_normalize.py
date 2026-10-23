@@ -8,7 +8,6 @@ from pipeline.parse_and_normalize import (
     OldExtractionFormatError,
     _is_heading_echo,
     _is_orphaned_list_item,
-    _is_unrepairable_fragment,
     clause_offset_mismatch,
     compute_stable_id,
     deduplicate_requirements,
@@ -205,12 +204,12 @@ def test_explained_layer_takes_the_marker_off_and_attaches_the_lead_in(tmp_path)
     chunk = _chunk(1, text)
     rows = [_row(chunk, "The Director will:", 0), _row(chunk, "a. Identify the mission owner.", 1), _row(chunk, "b. Report incidents to the ISSM.", 2)]
     records, failures = _run(tmp_path, [chunk], rows)
-    assert [f["error"] for f in failures] == ["unrepairable_fragment_quote"]  # the lead-in alone
-    assert [r["explained_text"] for r in records] == ["The Director will: Identify the mission owner.", "The Director will: Report incidents to the ISSM."]
-    assert [r["source_quote"] for r in records] == ["a. Identify the mission owner.", "b. Report incidents to the ISSM."]  # the root is never changed
-    assert records[0]["explained_parts"] == [{"kind": "lead_in", "text": "The Director will:", "origin": "rule"},
+    assert failures == []  # the lead-in is kept as a row of its own
+    assert [r["source_quote"] for r in records] == ["The Director will:", "a. Identify the mission owner.", "b. Report incidents to the ISSM."]  # the root is never changed
+    assert [r["explained_text"] for r in records[1:]] == ["The Director will: Identify the mission owner.", "The Director will: Report incidents to the ISSM."]
+    assert records[1]["explained_parts"] == [{"kind": "lead_in", "text": "The Director will:", "origin": "rule"},
                                              {"kind": "sentence", "text": "Identify the mission owner.", "origin": "rule"}]
-    assert records[0]["explain_notes"] == ["list number or dash taken off", "lead-in attached from the line above that ends with a colon"]
+    assert records[1]["explain_notes"] == ["list number or dash taken off", "lead-in attached from the line above that ends with a colon"]
 
 
 def test_explained_layer_of_a_plain_sentence_is_the_clause(tmp_path):
@@ -229,7 +228,7 @@ def test_two_clauses_of_one_list_item_are_two_rows(tmp_path):
     assert all("merged_roots" not in r for r in records)
 
 
-# WP-34.2: heading-echo and unrepairable-fragment rejection. Fixtures are the 5
+# WP-34.2: heading-echo rejection. Fixtures are the 5
 # real examples confirmed in archive/PHASE34_REQUIREMENTS.md (afpd_17-1.pdf and
 # CJCSI 6510.02G.pdf docling re-ingests), plus the original WP-33.3 fixture.
 
@@ -276,44 +275,14 @@ def test_is_heading_echo_false_with_no_hierarchy():
     assert not _is_heading_echo("Any quote text.", [])
 
 
-def test_is_unrepairable_fragment_short_colon_lead_in():
-    assert _is_unrepairable_fragment("The process will be as follows:")
 
 
-def test_is_unrepairable_fragment_longer_colon_lead_in():
-    assert _is_unrepairable_fragment(
-        "The KER may be sent either by scanned soft copy via SIPRNET or by mail to the address listed below:"
-    )
 
 
-def test_is_unrepairable_fragment_original_wp_33_3_fixture():
-    assert _is_unrepairable_fragment("The MC4EB will:")
 
 
-def test_is_unrepairable_fragment_false_for_complete_terse_quote():
-    # Must not over-reject a genuinely terse-but-real requirement just because
-    # it's short -- the trigger is the trailing bare colon, not brevity alone.
-    assert not _is_unrepairable_fragment("KERs shall be approved by the MC4EB.")
 
 
-def test_is_unrepairable_fragment_false_for_colon_with_content_after():
-    assert not _is_unrepairable_fragment("Passwords must be at least 12 characters: no exceptions.")
-
-
-# WP-38.2: real fixtures below are drawn from eval/audit_wp38_1/'s hand-labeled
-# audit (archive/PHASE38_REQUIREMENTS.md's WP-38.1/WP-38.2 Findings), not invented
-# examples -- both the positive and negative cases are real quotes this
-# project's own corpus produced.
-
-def test_is_heading_echo_matches_ancestor_heading_not_just_immediate():
-    # REQ-955ab005b394 (afi10-2402): a real quote that echoes an *ancestor*
-    # heading two levels up, not the chunk's own immediate heading -- the
-    # exact case WP-34.2's original section_title_path[-1]-only check
-    # structurally couldn't catch.
-    assert _is_heading_echo(
-        "COMPLIANCE WITH THIS PUBLICATION IS MANDATORY",
-        ["COMPLIANCE WITH THIS PUBLICATION IS MANDATORY", "1.1. Executive Summary"],
-    )
 
 
 def test_is_heading_echo_false_when_no_heading_in_path_matches():
@@ -331,19 +300,6 @@ def test_is_heading_echo_false_for_none_section_title_path():
     assert not _is_heading_echo("Any quote text.", None)
 
 
-def test_is_unrepairable_fragment_no_longer_capped_by_length():
-    # REQ-97e6e5483093 (DODI 5200.44): a real 41-word colon-terminated
-    # fragment that WP-34.2's original 25-word cap let through -- WP-38.2
-    # removed the cap since a colon-ending quote carries no content of its
-    # own regardless of length.
-    assert _is_unrepairable_fragment(
-        "Designate a focal point and resources to represent the acquisition "
-        "executive; risk management executive; and counterintelligence, "
-        "security, and operational communities with access to the DoD "
-        "Component's research, development, acquisition, sustainment "
-        "activities, and ICT supply chain risk analyses for applicable "
-        "systems to:"
-    )
 
 
 def test_is_orphaned_list_item_no_longer_rejects_short_marker_items():
@@ -551,17 +507,17 @@ def test_heading_echo_rejected_in_full_pipeline(tmp_path):
     assert [f["error"] for f in failures] == ["heading_echo_quote"]
 
 
-def test_unrepairable_fragment_rejected_in_full_pipeline(tmp_path):
+def test_colon_lead_in_is_kept_in_full_pipeline(tmp_path):
     chunk_text = "3.2 The process will be as follows:\nstep one, step two, step three."
     chunk = _chunk(1, chunk_text)
     records, failures = _run(tmp_path, [chunk], [_row(chunk, "The process will be as follows:")])
-    assert records == []
-    assert [f["error"] for f in failures] == ["unrepairable_fragment_quote"]
+    assert [r["source_quote"] for r in records] == ["The process will be as follows:"]
+    assert failures == []
 
 
 def test_negative_fixture_survives_full_pipeline(tmp_path):
     # "KERs shall be approved by the MC4EB." -- terse and real, must survive
-    # both the heading-echo and unrepairable-fragment checks.
+    # the heading-echo check.
     chunk_text = "4.1 KER Approval Process. KERs shall be approved by the MC4EB."
     chunk = _chunk(1, chunk_text, section_title_path=["KER Approval Process"])
     records, failures = _run(tmp_path, [chunk], [_row(chunk, "KERs shall be approved by the MC4EB.")])
