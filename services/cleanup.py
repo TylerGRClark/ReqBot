@@ -45,7 +45,7 @@ def sidecar_path(requirements_path: Path) -> Path:
 
 def chunk_texts(requirements_path: Path, items: list[dict]) -> dict[str, str]:
     """{checklist_item_id: text of the chunk the row was found in}: the whole chunk is what the evaluation showed the model (the checklist's passage is a shorter window and flagged two real
-    rows the chunk did not). A row with no extracted record (found by the text scan) or no readable chunk file is left out and the builder falls back to its passage."""
+    rows the chunk did not). A row with no extracted record or no readable chunk file is left out and the builder falls back to its passage."""
     chunks: dict = {}
     try:
         for line in (requirements_path.parent / f"{doc_key_from_requirements_path(requirements_path)}_chunks.jsonl").read_text(encoding="utf-8").splitlines():
@@ -70,7 +70,7 @@ def chunk_texts(requirements_path: Path, items: list[dict]) -> dict[str, str]:
 def build_prompt(item: dict, text: str = "") -> str | None:
     """None when the row has no quote or no passage text to show the model. Judges the root quote (`extracted_quote`), not the explained text the sheet shows. `text` is the whole chunk
     (see `chunk_texts`); without it the item's own passage is shown."""
-    quote = (item.get("extracted_quote") or item.get("source_quote") or "").strip()  # the root quote, as in the evaluation; a row found by the text scan has no root and shows its own text
+    quote = (item.get("extracted_quote") or item.get("source_quote") or "").strip()  # the root quote, as in the evaluation
     passage = (text or item.get("passage") or "").strip()
     if not quote or not passage:
         return None

@@ -129,7 +129,7 @@ def test_ollama_reply_with_probabilities_gives_digit_probabilities(monkeypatch):
 
 def _env(items):
     return {"format": "reqbot-checklist", "format_version": "1.1", "generated_at": "2026-10-17T00:00:00+00:00", "generator": {"tool": "reqbot"}, "profile": "cybersecurity",
-            "summary": {"total_items": len(items), "items_requiring_review": 0}, "items": items, "possible_missed": []}
+            "summary": {"total_items": len(items), "items_requiring_review": 0}, "items": items}
 
 
 def test_exports_without_scores_have_no_criticality_column():

@@ -44,7 +44,7 @@
 | D.6 | Is the description supported by the quote? | Small model | No |
 | E | Totals and the final output file | No | No |
 | F | Embed and store in Qdrant | Embeddings | No |
-| Checklist | On demand: citation, section heading, parent paragraph, applies-to, passage, flags, possible-missed passages | No | No |
+| Checklist | On demand: citation, section heading, parent paragraph, applies-to, passage, flags | No | No |
 | Draft questions | `reqbot questions`, a sidecar file | Yes (14B) | No |
 
 What is tangled:

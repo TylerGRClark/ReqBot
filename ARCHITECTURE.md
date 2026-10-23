@@ -28,7 +28,6 @@ This page maps implementation ownership and change dependencies for contributors
 | `services/evidence_service.py` | Evidence retrieval/grouping, context, and optional synthesis. |
 | `services/checklist_service.py` | Artifact-backed checklist envelope, stable item IDs, and review flags. |
 | `services/checklist_audit.py` | Audit-sheet fields derived from the document's own text: citation, section heading, parent paragraph, applies-to, passage, hint flags. |
-| `services/checklist_missed.py` | Rule-based scan for passages that look like duties but were not extracted. |
 | `services/audit_questions.py` | Draft audit questions (Ollama) written to a sidecar file and read back by the checklist. |
 | `services/config_service.py` | Shared configuration read/write path for init and settings API. |
 | `api/app.py` | FastAPI assembly, CORS, route registration, and SPA static-file serving. |

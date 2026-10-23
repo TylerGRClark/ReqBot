@@ -128,3 +128,18 @@ def test_a_lead_in_with_a_tier_tag_after_its_colon_is_a_lead_in():
         ("Training will use one of the following options: (T-2).", True, None),
         ("- classroom courses", False, "Training will use one of the following options: (T-2)."),
     ]
+
+
+def test_a_new_sentence_after_a_tier_tag_is_cut_off():
+    text = "A copy of the letter will be provided to the office. (T-1) In addition:\n(1) Do x."
+    assert _texts(text) == ["A copy of the letter will be provided to the office. (T-1)", "In addition:", "(1) Do x."]
+
+
+def test_a_tier_tag_in_the_middle_of_a_sentence_does_not_cut():
+    text = "Advocate in accordance with DoDI 8500.01, (T-0) AFI 17-130, and more. (T-2)"
+    assert _texts(text) == [text]
+
+
+def test_a_spaced_tier_tag_as_the_converter_writes_it_is_cut_the_same_way():
+    text = "A copy of the letter will be provided to the office. ( T-1 )  In addition:\n2.1. Staff must read."
+    assert _texts(text)[:2] == ["A copy of the letter will be provided to the office. ( T-1 )", "In addition:"]

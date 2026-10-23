@@ -243,14 +243,13 @@ The checklist envelope contains:
 
 | Field | Shape / meaning |
 |---|---|
-| `format`, `format_version` | `"reqbot-checklist"`, `"1.1"` (1.1 added `applies_to`, `passage`, `item_flags` and `summary.items_with_flags`; nothing was removed). |
+| `format`, `format_version` | `"reqbot-checklist"`, `"1.2"` (1.1 added `applies_to`, `passage`, `item_flags` and `summary.items_with_flags`; 1.2 removed `possible_missed`, `summary.possible_missed` and `summary.found_by_text_scan` with the text scan). |
 | `generated_at` | UTC ISO 8601 timestamp. |
 | `generator` | `{tool, command}`. |
 | `document` | `{document_id, source_pdf}`. |
 | `profile` | Selected profile name. |
-| `summary` | `{total_items, items_requiring_review, items_with_flags, found_by_text_scan, possible_missed}`. |
+| `summary` | `{total_items, items_requiring_review, items_with_flags}`. |
 | `items` | Checklist item objects. |
-| `possible_missed` | Item-shaped objects for passages of the document that look like obligations but were not extracted, found by a rule-based text scan (modal word or imperative opener, not a lead-in ending in a colon, not covered by any extracted quote). Their `checklist_item_id` starts with `MISS-`, `item_flags` contains `possible_missed`, and they are not counted in `total_items`. A prompt to check, not requirements: some are descriptions or examples. Empty when the chunk file is not beside the requirements. A candidate with a duty sentence is not listed here but promoted into `items` (below), whether or not its paragraph carries a number; one whose duty sentences are all extracted already is dropped. What remains here is a passage with a modal word but no duty sentence of its own (for example a statement of purpose). |
 
 Each item includes `checklist_item_id`, `requirement_ids`, `domain_tags`,
 `source_ref`, `page_refs`, `section_title_path`, `source_quote`, `confidence`,
@@ -264,7 +263,7 @@ the requirement marked `>> <<`; for a list item or a quote that starts
 mid-sentence, the end of the previous chunk is put in front) and `item_flags`
 (rule-based hints such as `starts_mid_sentence`, `list_item`, `table_fragment`,
 `no_stated_actor`, `definition_or_description`, `applicability_statement`, `no_passage`; a flagged row is
-never dropped). A paragraph the text scan found but extraction missed is promoted into `items`, in its place in the document, numbered or not: one row for each sentence that holds a duty (the whole sentence, without the paragraph number; an unnumbered paragraph is cited by inference, marked `(inferred)`, or has an empty `citation`), flagged first with `found_by_text_scan`, counted in `total_items` and `found_by_text_scan`, with empty `requirement_ids` and `extracted_quote`, `review_reasons` `["not-extracted"]`, and the same citation, section, passage and parent paragraph as any other row. None of these is model-generated. It also initializes
+never dropped). It also initializes
 `audit_question`, `evidence_to_request`, `generation_notes`, `assessor_notes`,
 and `status` (`"not-started"`). Those initially empty fields are not completed
 assessments or automatically generated evidence.

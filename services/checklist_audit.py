@@ -145,7 +145,7 @@ def build_passage(quote: str, chunk, prev_chunk=None, flags=(), start: int = 0) 
         cut = tail.find(" ")
         prefix = "... " + (tail[cut + 1:] if 0 <= cut < len(tail) - 1 and len(tail) == PASSAGE_TAIL_CHARS else tail).strip() + "\n\n"
     pat = _flex_pattern(quote)
-    m = pat.search(raw, max(start, 0)) if pat else None  # `start`: a row found by the text scan is marked at its own paragraph, not at an earlier identical sentence
+    m = pat.search(raw, max(start, 0)) if pat else None  # `start`: search from this offset on
     if not m:
         return (prefix + raw).strip(), False
     return (prefix + raw[: m.start()] + MARK_OPEN + raw[m.start(): m.end()] + MARK_CLOSE + raw[m.end():]).strip(), True
@@ -157,6 +157,25 @@ def build_passage(quote: str, chunk, prev_chunk=None, flags=(), start: int = 0) 
 _DOTTED = re.compile(r"^(?:[A-Z]{1,2})?\d+(?:\.\d+)+$")  # an attachment paragraph ("A2.2.3.1") is a paragraph number too
 _PARA_START = re.compile(r"^\W*((?:[A-Z]{1,2})?\d+(?:\.\d+)+)\.?\s+(.*)$", re.DOTALL)
 PARENT_TEXT_CHARS = 300
+
+
+# a paragraph starts at a line that opens with a bullet, or with a numbered/lettered marker (optionally after a bullet)
+_MARKER = re.compile(r"(?m)^[ \t]*(?:[-•*][ \t]+(?=\S)|(?:[-•*][ \t]*)?(?=(?:\d+(?:\.\d+)+\.?|\([a-zA-Z0-9]{1,3}\)|[a-z]\.)[ \t]+\S))")
+_SENTENCE = re.compile(r"(?<=[.;:])\s+(?=[A-Z(])")
+_NUMBER_ONLY = re.compile(r"^\W*(?:[A-Z]{1,2})?\d+(?:\.\d+)+\.?$")
+
+
+def paragraph_units(raw_text: str) -> list[str]:
+    """The paragraphs of a chunk: split at numbered/lettered markers when there are at least two, otherwise at sentence ends."""
+    starts = sorted({m.start() for m in _MARKER.finditer(raw_text)})
+    if len(starts) >= 2:
+        # text before the first marker (the end of a paragraph that began in the previous chunk) is a unit of its own
+        bounds = ([0] if starts[0] > 0 and raw_text[: starts[0]].strip() else []) + starts + [len(raw_text)]
+        return [raw_text[a:b].strip() for a, b in zip(bounds, bounds[1:]) if raw_text[a:b].strip()]
+    pieces = [s.strip() for s in _SENTENCE.split(raw_text) if s.strip()]
+    if len(pieces) > 1 and _NUMBER_ONLY.match(pieces[0]):  # "3.6. Incident Analysis. ..." must not be cut into "3.6." and "Incident Analysis. ..."
+        pieces = [pieces[0] + " " + pieces[1]] + pieces[2:]
+    return pieces
 
 
 def paragraph_map(units) -> dict:

@@ -1,6 +1,6 @@
-"""Sentence helpers shared by the explained layer, the lead-in rule and the checklist's text scan (pure functions), and the explained layer itself.
+"""Sentence helpers shared by the explained layer and the lead-in rule (pure functions), and the explained layer itself.
 
-`tidy`, `flex_pattern`, `split_sentences` and `is_complete` are used by pipeline/lead_in.py, services/checklist_missed.py and the fragmentation measurement. A sentence ends at `.`, `?`
+`tidy`, `flex_pattern`, `split_sentences` and `is_complete` are used by pipeline/lead_in.py and the fragmentation measurement. A sentence ends at `.`, `?`
 or `!` (optionally spaced before it and followed by closing quotes or brackets) when the next thing is a space and a capital letter, a digit or an opening bracket, or the end of the
 paragraph. It does not end after an abbreviation, a single capital letter or a paragraph number such as `3.6.1.1.`.
 

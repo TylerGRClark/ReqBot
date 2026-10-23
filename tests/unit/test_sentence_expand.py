@@ -1,7 +1,7 @@
 """The sentence helpers (WP-45.14) and the explained layer built from a clause (WP-4 of the extraction replacement).
 
 `expand()` and the same-sentence merge were deleted with the list-writing extraction step; the sentence-boundary rules they were tested
-through live on in `split_sentences` (used by the lead-in rule and the checklist's text scan), so those cases are kept here against it."""
+through live on in `split_sentences` (used by the lead-in rule), so those cases are kept here against it."""
 from pipeline import sentence_expand as SE
 
 

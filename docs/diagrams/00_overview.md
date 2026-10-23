@@ -31,7 +31,7 @@ flowchart TD
     end
 
     subgraph DEMAND["On demand, read from the published records"]
-        K1["Checklist building<br/>citation, passage, flags,<br/>text scan for missed duties<br/>no model call"]
+        K1["Checklist building<br/>citation, passage, flags<br/>no model call"]
         K2["Draft audit questions<br/>14B model, written to a side file"]
         K3["Kind labels<br/>rule-based, side file,<br/>changes nothing yet"]
         K4["Delivery<br/>CLI, web UI, Excel, CSV, MCP"]

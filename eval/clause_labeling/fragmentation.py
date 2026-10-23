@@ -14,8 +14,9 @@ and counts, over the rows that came from the requirements file:
   F7  rows under 5 words
   F8  root not exactly located (anchor_status other than "exact"; a record with none counts)
   F9  rows with a lead-in attached (explained_parts has a lead_in)
-  F10 rows found by the text scan, and the size of the possible-missed block (reported apart,
-      not part of F1 to F9)
+
+(The text scan and its F10 columns were removed with the scan; fragmentation_before_2026-10-22.json
+still carries them as a historical record and nothing reads it.)
 
 "Shown text" is what the sheet shows (the explained text when the record has one, else the
 root); "root" is the record's source_quote.
@@ -36,7 +37,7 @@ from core.artifact_resolver import resolve_latest_requirement_files  # noqa: E40
 from pipeline.sentence_expand import is_complete  # noqa: E402
 from services import checklist_audit, checklist_service  # noqa: E402
 
-COUNT_KEYS = ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10_text_scan", "F10_possible_missed"]
+COUNT_KEYS = ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9"]
 _BULLET = re.compile(r"^\s*[-\u2022\u2013*]\s+")
 SHORT_SCRAP_CHARS = 60
 SHORT_ROW_WORDS = 5
@@ -89,12 +90,11 @@ def _records_by_id(jsonl_path: Path) -> dict:
 
 
 def count_document(checklist: dict, records: dict) -> dict:
-    """Counts for one checklist envelope. Rows without a requirement id (text-scan rows) are counted in F10 only."""
+    """Counts for one checklist envelope. Rows without a requirement id are skipped."""
     counts = {k: 0 for k in COUNT_KEYS}
     for item in checklist.get("items", []):
         ids = item.get("requirement_ids") or []
         if not ids:
-            counts["F10_text_scan"] += 1
             continue
         record = records.get(ids[0], {})
         root = item.get("extracted_quote") or item.get("source_quote", "")
@@ -102,7 +102,6 @@ def count_document(checklist: dict, records: dict) -> dict:
         counts["F1"] += 1
         for k, v in flags.items():
             counts[k] += int(v)
-    counts["F10_possible_missed"] = len(checklist.get("possible_missed", []))
     return counts
 
 
@@ -121,9 +120,8 @@ def run(processed_dir: Path, doc: str | None = None, profile: str = "cybersecuri
 
 def format_table(result: dict) -> str:
     cols = COUNT_KEYS
-    short = [c.replace("F10_text_scan", "F10a").replace("F10_possible_missed", "F10b") for c in cols]
     width = max([len(k) for k in result["documents"]] + [6, len("TOTAL")])
-    lines = ["  ".join([f"{'document':<{width}}"] + [f"{c:>6}" for c in short])]
+    lines = ["  ".join([f"{'document':<{width}}"] + [f"{c:>6}" for c in cols])]
     for key, d in list(result["documents"].items()) + [("TOTAL", result["totals"])]:
         lines.append("  ".join([f"{key:<{width}}"] + [f"{d[c]:>6}" for c in cols]))
     return "\n".join(lines)
