@@ -143,10 +143,11 @@ re-labeling. The direct script has no profile flag and uses `cybersecurity`.
 On resume, requirement finding redoes any batch of clauses whose request failed
 and skips batches it finished. A batch whose answer could not be read after two
 tries is finished: its clauses are kept as UNSURE (flagged `labeled_unsure` on the
-checklist). The end-of-run log lists chunks that have no rows because a batch
-failed (run again to retry them). If the model server cannot be reached, or not
-one batch could be labeled, the run stops with an error instead of writing an
-empty document.
+checklist). If any batch fails, the run stops with an error after writing the
+finished rows and the ledger, and the log lists the chunks that have no rows: run
+again in the same folder to retry only those batches. The same happens if the
+model server cannot be reached or not one batch could be labeled, so a partly
+labeled document is never normalized or indexed as if it were complete.
 
 Other direct-script options are `--model` (sets both role models),
 `--max-chunks`, `--timeout` (per-request seconds, default 120),
