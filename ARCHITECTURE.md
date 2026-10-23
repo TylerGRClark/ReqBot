@@ -47,8 +47,6 @@ This page maps implementation ownership and change dependencies for contributors
 | `pipeline/clause_labeling.py` | Requirement finding, part 2: the frozen labeling prompt (`pipeline/prompts/clause_label_v3.txt`), four clauses per Ollama call, resume ledger, one row per clause not labeled NOT_REQUIREMENT, source reference by rule. |
 | `pipeline/parse_and_normalize.py` | Normalizing and checking: refuses an old-format extraction file, checks each clause against its offsets, junk filters, deduplication, the explained layer, document/requirement identity. |
 | `pipeline/sentence_expand.py` | Sentence helpers (tidy, sentence split, completeness) and the explained layer: the clause without its list marker, with its lead-in from `pipeline/lead_in.py`. |
-| `pipeline/enrich_requirements.py` | Enrichment: LLM descriptions/classification (switched off). |
-| `pipeline/entailment_gate.py` | Description check (switched off): optional MiniCheck scoring, gated artifact/failure output. |
 | `pipeline/aggregate_and_export.py` | Totals and final file. |
 | `pipeline/embed_and_index.py` | Search indexing: dense/sparse requirement vectors, Qdrant schema and payloads. |
 | `pipeline/embed_context_index.py` | Search indexing: dense/sparse context vectors and linked chunk identity. |
@@ -87,7 +85,7 @@ without treating them as missing static files.
 
 Keep pipeline sequencing in `run_pipeline.py` rather than adding alternate
 stage-order implementations in interfaces. Stage/helper imports already exist
-(e.g. normalization helpers used by enrichment/gating); do not assume the stages
+(e.g. normalization helpers shared with the checklist and eval scripts); do not assume the stages
 form a completely isolated import graph.
 
 Docling's parsed `AncestryResult` is passed in memory from parsing to chunking
@@ -124,8 +122,8 @@ bind mount. There is no current installer-managed upgrade directory contract.
 | Change | Consumers / validation to inspect |
 |---|---|
 | Config keys/defaults/env map | CLI/init, config service, HTTP settings model, MCP setup, Configuration guide. |
-| Normalized payload/schema | Enrichment/gates/indexers, retrieval/trace/compare/evidence, checklist exports, frontend types. |
-| Quote validation or parent reconstruction | Accepted record identities, rejection reasons, downstream enrichment, representative corpus replay. |
+| Normalized payload/schema | Indexers, retrieval/trace/compare/evidence, checklist exports, frontend types. |
+| Quote validation or parent reconstruction | Accepted record identities, rejection reasons, downstream readers, representative corpus replay. |
 | Artifact names or freshness | Resolver, reindex, checklist, document listing, resume, Operations guide. |
 | Chunk identity/hierarchy | Normalization, context index UUIDs, search/trace/evidence context joins. |
 | Embedding/vector schema | Both indexers, query services, dimension/provenance warnings, complete reindex. |

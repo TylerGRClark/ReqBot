@@ -190,7 +190,7 @@ Run these from the repository root, in the same activated environment:
 |---|---|
 | `pip install ".[remote]"` | Remote synthesis provider SDKs. |
 | `pip install ".[mcp]"` | MCP server support: stdio for local AI clients and the HTTP door for other machines. The Docker image includes it. |
-| `pip install ".[grounding-check]"` | MiniCheck entailment scoring in the description gate. |
+| `pip install ".[grounding-check]"` | MiniCheck, used only by the evaluation scripts `eval/entailment_spike.py` and `eval/threshold_sweep.py` (the pipeline's description check that used it was removed). |
 | `pip install ".[rerank]"` | Experimental reranker for programmatic/evaluation use; no public CLI switch. |
 | `pip install ".[dev]"` | Test and lint tools. |
 
@@ -204,9 +204,7 @@ The `grounding-check` extra installs MiniCheck from the pinned Git source in
 python3 -c "import nltk; nltk.download('punkt_tab')"
 ```
 
-Model weights can require additional first-use downloads. Without a working
-MiniCheck installation, the deterministic description checks still run, but
-the entailment check is skipped. Logs report this distinction.
+Model weights can require additional first-use downloads.
 
 ## First document
 

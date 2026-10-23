@@ -43,8 +43,6 @@ log = logging.getLogger(__name__)
 SCHEMA_VERSION = "3.0"   # clause labeling (pipeline/clause_labeling.py writes the same)
 PIPELINE_VERSION = "2.0"
 
-COMPUTE_CONFIDENCE = False  # see the comment where confidence is computed
-
 
 # WP-34.2: minimum fuzz.ratio (0-100, whole-string similarity) between a
 # normalized source_quote and its chunk's own heading before treating it as a
@@ -403,30 +401,19 @@ def normalize_text(text: str) -> str:
     return re.sub(r"\s+", " ", text.strip().lower())
 
 
-def _dedup_score(req: dict) -> float:
-    """Score a requirement for winner selection during deduplication.
+def _dedup_score(req: dict) -> int:
+    """Score a requirement for winner selection during deduplication: higher is preferred.
 
-    Higher score = preferred record. Formula:
-      confidence * 1000 - len(source_quote)
-
-    Confidence (0.0–1.0) dominates: a record with higher confidence always
-    wins over one with lower confidence. For equal confidence, a shorter
-    source_quote is preferred — it indicates a more precise verbatim capture
-    rather than a padded or over-long quote.
-
-    Tag count is intentionally excluded: the LLM can hallucinate tags, and
-    more tags does not imply a better extraction.
+    The shorter source_quote wins, as the more precise verbatim capture rather than a padded or over-long one. (Records carry no confidence;
+    that tie-break is gone with it. Tag count was never part of the score: the model could invent tags.)
     """
-    confidence = req.get("confidence", 0.0)
-    quote_len = len(req.get("source_quote", ""))
-    return confidence * 1000 - quote_len
+    return -len(req.get("source_quote", ""))
 
 
 def deduplicate_requirements(requirements: list[dict]) -> list[dict]:
     """Remove duplicate requirements that share source_ref + normalized source_quote.
 
-    When duplicates exist, keep the higher-confidence record; for equal
-    confidence, prefer the shorter (more precise) source_quote.
+    When duplicates exist, keep the one with the shorter (more precise) source_quote.
 
     There is no description-based key: the first-pass extractor returns no
     description, so such a key could never fire (and would collapse distinct
@@ -606,20 +593,6 @@ def run(
         if chunk_id is not None and chunk_id in chunk_page_map:
             page_start, page_end = chunk_page_map[chunk_id]
 
-        # Switched off (docs/PIPELINE_REDESIGN_PLAN.md): confidence measured whether the record had tags, a description and a source reference, and the first-pass extractor supplies
-        # neither of the first two, so every record scored 0.6 or 0.7 and the number said nothing. The record carries no confidence while COMPUTE_CONFIDENCE is False.
-        confidence = None
-        if COMPUTE_CONFIDENCE:
-            confidence = 1.0
-            if not domain_tags:
-                confidence -= 0.2
-            if not source_quote:
-                confidence -= 0.2
-            if len(description) < 20:
-                confidence -= 0.1
-            if not source_ref:
-                confidence -= 0.1
-
         normalized = {
             "requirement_id": req.get("requirement_id", f"R-{chunk_id}-X"),
             "description": description,
@@ -630,7 +603,6 @@ def run(
             "chunk_id": chunk_id,
             "page_start": page_start,
             "page_end": page_end,
-            **({"confidence": round(max(0.0, confidence), 2)} if confidence is not None else {}),
             # Hierarchy metadata (WP-14.3) — deterministic parser output from WP-14.2.
             "section_ref_path": section_ref_path,
             "section_title_path": section_title_path,

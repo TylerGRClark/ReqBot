@@ -2,9 +2,7 @@
 
 FlashRank is always faked via a fake `flashrank` module injected into
 sys.modules -- these tests must not require the optional 'rerank' extra to
-be installed to run, matching this codebase's existing convention for other
-optional-dependency scorers (see tests/unit/test_entailment_gate.py's
-_FakeScorer for MiniCheck, the other extra-gated scorer in this codebase).
+be installed to run, matching this codebase's convention for optional-dependency scorers.
 Faking the whole module (not just core.reranker._get_ranker) also exercises
 rerank()'s own `from flashrank import RerankRequest` import, not just the
 Ranker construction seam.

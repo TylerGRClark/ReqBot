@@ -658,9 +658,8 @@ def enqueue_ingest(pdf_path: str | Path, *, store: JobStore | None = None, cfg=N
     run_dir = reserve_run_dir(cfg.processed_dir_path(), pdf.stem)
     # Every choice the command depends on is fixed now, so what is checked before the run is what runs, however long the job waits and whatever config does meanwhile.
     argv = [sys.executable, str(CLI_SCRIPT), "ingest", str(pdf), "--output-dir", str(run_dir)]
-    for flag, value in (("--extraction-model", cfg.extraction_model), ("--enrichment-model", cfg.enrichment_model)):
-        if value:  # an unset role is left to the command's own fallback; the string "None" must never reach it
-            argv += [flag, str(value)]
+    if cfg.extraction_model:  # an unset role is left to the command's own fallback; the string "None" must never reach it
+        argv += ["--extraction-model", str(cfg.extraction_model)]
     argv += ["--ollama-url", cfg.ollama_url, "--qdrant-url", cfg.qdrant_url, "--progress-json"]
     if no_index:
         argv.append("--no-index")
