@@ -10,7 +10,8 @@ Rules, in order:
 2. A line is joined to the block above (a hard line wrap) unless it starts a list item or table row (LISTSTART) or the block above already ends a sentence
    or a lead-in (ENDS: . ! ? : ; with closing quotes or brackets, optionally followed by a tier tag such as "(T-2)").
 3. Each block is cut into sentences at SENT (end mark, optional closing quote or bracket, white space, then an upper-case letter, digit or opening
-   quote/bracket). A tier tag "(T-2)" after the end mark never starts a new sentence. No cut after an abbreviation (ABBRRE: "U.S.", "e.g.", "para.",
+   quote/bracket). A tier tag "(T-2)" after the end mark never starts a new sentence; it stays with the sentence it follows, and when a new sentence
+   follows the tag (TAG_CUT: end mark, tag, white space, upper-case letter, digit or opening quote/bracket) the cut falls after the tag. No cut after an abbreviation (ABBRRE: "U.S.", "e.g.", "para.",
    "E.O."), a two-level section number ("3.6.", "2.1") or a one- or two-character token ending in a period ("a.", "1."). A deeper number
    ("3.6.1.1.") is NOT protected: the cut falls after it and, having no letters, it is dropped by rule 4, so the clause starts at its sentence and the
    number stays in the chunk text just before the clause start (as measured; a reader that wants the number looks there).
@@ -34,6 +35,7 @@ ABBRRE = re.compile(r"^(\(?[A-Za-z]\.){1,}$|^(no|nos|para|paras|fig|etc|vs|dr|mr
 _NUMBER_TOKEN = re.compile(r"\d+\.\d+\.?|[A-Za-z0-9]{1,2}\.")
 _TWO_LETTERS = re.compile(r"[A-Za-z]{2}")
 _CLOSERS = re.compile(r"[\"')\]]*")
+_TAG_CUT = re.compile(r"(?<=[.!?])[\"')\]]*\s+\(T-\d\)\s+(?=[\"'(\[]?[A-Z0-9])")  # "...office. (T-1) In addition:": the tag stays with its sentence and the next sentence starts after it
 _LEAD_IN_END = re.compile(r":(\s*\(T-\d\)\.?)?$")  # "will:" and, after a tier tag, "options: (T-2)."
 
 
@@ -62,15 +64,19 @@ def split_clauses(text: str) -> list[tuple[int, int]]:
     for bs, be in blocks:
         seg = text[bs:be]
         a = 0
-        for m in SENT.finditer(seg):
-            pre = seg[a:m.start() + 1].split()
+        cuts = [(m.start(), m.end(), False) for m in SENT.finditer(seg)] + [(m.start(), m.end(), True) for m in _TAG_CUT.finditer(seg)]
+        for ms, me, after_tag in sorted(cuts):
+            pre = seg[a:ms + 1].split()
             last = pre[-1] if pre else ""
             if ABBRRE.match(last) or _NUMBER_TOKEN.fullmatch(last):
                 continue
-            # The clause keeps every closing quote or bracket after its end mark (no source character is lost); with none it keeps the one following character, as
-            # measured. Only the first part changes what the experiment cut: 0 such cuts in the 23-document library.
-            out.append((bs + a, bs + m.start() + max(1, len(_CLOSERS.match(m.group()).group()))))
-            a = m.end()
+            if after_tag:  # the clause runs to the end of the tag
+                out.append((bs + a, bs + seg.index(")", ms) + 1))
+            else:
+                # The clause keeps every closing quote or bracket after its end mark (no source character is lost); with none it keeps the one following character, as
+                # measured. Only the first part changes what the experiment cut: 0 such cuts in the 23-document library.
+                out.append((bs + a, bs + ms + max(1, len(_CLOSERS.match(seg[ms:me]).group()))))
+            a = me
         out.append((bs + a, be))
     return [(s, e) for s, e in out if e > s and _TWO_LETTERS.search(text[s:e])]
 

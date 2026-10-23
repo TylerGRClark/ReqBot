@@ -122,8 +122,8 @@ flowchart TD
 
     Q --> E1{"Empty, or a heading repeated<br/>as if it were a requirement?"}
     E1 -->|yes| R1["Rejected"]
-    E1 -->|no| E3{"A lead-in that ends in a colon,<br/>or a definition pointer<br/>such as X, as defined in Y?"}
-    E3 -->|yes| R3["Rejected today<br/>(the plan flags these instead)"]
+    E1 -->|no| E3{"A definition pointer<br/>such as X, as defined in Y?"}
+    E3 -->|yes| R3["Rejected"]
     E3 -->|no| A["Kept: its offsets in its chunk<br/>are exact by construction"]
 
     A --> X["Sentence: the clause without its list marker"]
