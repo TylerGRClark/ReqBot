@@ -229,10 +229,10 @@ def test_extraction_gaps_counts_failed_label_batches_and_nothing_else(tmp_path):
     p = tmp_path / "doc_raw_responses.jsonl"
     p.write_text("\n".join(json.dumps(r) for r in [
         {"batch_id": "b00000", "status": "complete"}, {"batch_id": "b00001", "status": "failed"}, {"batch_id": "b00002", "status": "unparsed"},
-        {"batch_id": "b00003", "status": "failed"}, {"chunk_id": 4, "status": "truncated"},  # an unparsed batch keeps its clauses as UNSURE: not a gap; "truncated" belonged to the deleted step
+        {"batch_id": "b00003", "status": "failed"}, {"chunk_id": 4, "status": "truncated"},  # an unparsed batch keeps its clauses as UNSURE: not a gap; "truncated" is a run folder from the deleted list-extraction step, still a gap
         {"chunk_id": 5},  # an older record with no status
     ]) + "\nnot json\n")
-    assert index_replace.extraction_gaps(p) == {"failed": 2}
+    assert index_replace.extraction_gaps(p) == {"failed": 2, "truncated": 1}
     assert index_replace.extraction_gaps(tmp_path / "missing.jsonl") == {}
     p.write_text(json.dumps({"chunk_id": 0, "status": "complete"}) + "\n")
     assert index_replace.extraction_gaps(p) == {}

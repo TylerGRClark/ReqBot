@@ -415,4 +415,6 @@ def run(chunks_jsonl: str, output_dir: str, *, model: str, ollama_url: str = "",
         log.warning("%d chunk(s) have no rows because a batch failed; run again in the same folder to retry: %s", len(failed_chunks), sorted(failed_chunks))
     if batches and not finished:  # not one batch labeled: the model server or the model is not working; stop the pipeline rather than index an empty document
         raise RuntimeError(f"Clause labeling failed: none of {len(batches)} batches could be labeled with model {model}. Run again in the same folder to resume.")
+    if counts["failed"]:  # a partly labeled document must not flow on to normalizing and the index as if it were complete; the ledger and the finished batches are kept, a re-run retries only the failed ones
+        raise RuntimeError(f"Clause labeling is incomplete: {counts['failed']} of {len(batches)} batches failed ({len(failed_chunks)} chunks have no rows). Run again in the same folder to resume; finished batches are reused.")
     return str(reqs_path)

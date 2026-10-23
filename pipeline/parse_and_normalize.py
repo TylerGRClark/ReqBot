@@ -732,6 +732,8 @@ def run(
         for failure in failures:
             f.write(json.dumps(failure, ensure_ascii=False) + "\n")
     log.info("Wrote %s (%d failures)", fail_path, len(failures))
+    if mismatches:  # an invariant violation is a bug or a stale chunk file, not a row to drop quietly; the files above are written for inspection
+        raise RuntimeError(f"{mismatches} clause(s) failed the offset invariant (clause_offset_mismatch): the chunk file no longer matches the extraction file. Re-run requirement finding.")
 
     return str(norm_path)
 

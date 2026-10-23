@@ -161,9 +161,11 @@ def test_clause_offset_mismatch_rejects_a_row_whose_chunk_changed(tmp_path):
     chunk = _chunk(1, SAMPLE_TEXT)
     row = _row(chunk, SAMPLE_QUOTE)
     changed = _chunk(1, "1.1. Systems must enforce mandatory access control policies.")  # re-chunked without a re-label
-    records, failures = _run(tmp_path, [changed], [row])
-    assert records == []
-    assert [f["error"] for f in failures] == ["clause_offset_mismatch"]
+    with pytest.raises(RuntimeError, match="clause_offset_mismatch"):  # Codex P1 on #365: an invariant violation stops the pipeline instead of dropping rows quietly
+        _run(tmp_path, [changed], [row])
+    out_dir = tmp_path / "out"  # the files are still written for inspection
+    assert _read_jsonl(out_dir / "test_requirements_normalized.jsonl") == []
+    assert [f["error"] for f in _read_jsonl(out_dir / "test_normalization_failures.jsonl")] == ["clause_offset_mismatch"]
 
 
 def test_clause_offset_mismatch_rules():

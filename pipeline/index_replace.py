@@ -27,7 +27,7 @@ def extraction_gaps(raw_responses_path) -> dict:
     import json
     from pathlib import Path
 
-    gaps = {"failed": 0}
+    gaps = {"failed": 0, "truncated": 0}  # "truncated": a run folder written by the old list-extraction step may still be resumed and replaced on
     try:
         for line in Path(raw_responses_path).read_text(encoding="utf-8").splitlines():
             if not line.strip():

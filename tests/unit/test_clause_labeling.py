@@ -78,6 +78,13 @@ def _run(tmp_path, call):
     return _read(out)
 
 
+def _run_incomplete(tmp_path, call):
+    """A run with a failed batch stops the pipeline (RuntimeError) but keeps its finished rows and the ledger on disk; returns the rows."""
+    with pytest.raises(RuntimeError, match="Clause labeling is incomplete"):
+        cl.run(str(_write_chunks(tmp_path)), str(tmp_path / "out"), model="ornith:35b", call=call)
+    return _read(tmp_path / "out" / "doc_extracted_requirements.jsonl")
+
+
 # ---- prompt
 def test_the_prompt_file_is_the_frozen_one():
     path = REPO / "pipeline" / "prompts" / "clause_label_v3.txt"
@@ -206,7 +213,7 @@ def test_an_unparsed_batch_makes_every_clause_unsure_and_logs_a_parse_failure(tm
 
 def test_a_connection_failure_fails_the_batch_and_its_chunks_get_no_rows(tmp_path):
     model = FakeModel({2: requests.ConnectionError("refused")})  # batch 2 holds chunks 1 and 2
-    rows = _run(tmp_path, model)
+    rows = _run_incomplete(tmp_path, model)
     assert [(r["chunk_id"], r["clause_index"]) for r in rows] == [(0, 2), (0, 3), (3, 0)]
     ledger = _read(tmp_path / "out" / "doc_raw_responses.jsonl")
     assert [(r["batch_id"], r["status"]) for r in ledger] == [("b00000", "complete"), ("b00001", "failed"), ("b00002", "complete")]
@@ -223,7 +230,7 @@ def test_the_ledger_line_records_the_batch(tmp_path):
 
 
 def test_resume_reuses_finished_batches_and_redoes_failed_ones(tmp_path):
-    _run(tmp_path, FakeModel({2: requests.ConnectionError("refused")}))
+    _run_incomplete(tmp_path, FakeModel({2: requests.ConnectionError("refused")}))
     again = FakeModel()
     rows = _run(tmp_path, again)
     assert len(again.prompts) == 1
@@ -250,8 +257,9 @@ def test_a_run_of_failed_batches_stops_the_run(tmp_path, monkeypatch):
     assert [r.get("error") for r in _read(tmp_path / "out" / "doc_raw_responses.jsonl")] == ["down", "down", "not_attempted"]
 
 
-def test_a_run_with_some_batches_labeled_does_not_raise(tmp_path):
-    rows = _run(tmp_path, FakeModel({3: requests.ConnectionError("down")}))  # the last batch fails, the first two are labeled
+def test_a_run_with_a_failed_batch_stops_the_pipeline_but_keeps_the_finished_rows(tmp_path):
+    # Codex P1 on #365: a partly labeled document must not flow on to normalizing and the index as if it were complete
+    rows = _run_incomplete(tmp_path, FakeModel({3: requests.ConnectionError("down")}))  # the last batch fails, the first two are labeled
     assert rows and all(r["chunk_id"] != 3 for r in rows)
 
 
@@ -373,7 +381,7 @@ def test_a_section_path_stored_as_a_string_still_gives_the_citation():
 def test_a_retried_batch_leaves_one_ledger_line_so_the_run_reads_as_complete(tmp_path):
     # Codex P2: index_replace.extraction_gaps counts every "failed" line, so a failure redone on resume must not stay in the ledger.
     from pipeline.index_replace import extraction_gaps
-    _run(tmp_path, FakeModel({2: requests.ConnectionError("refused")}))
+    _run_incomplete(tmp_path, FakeModel({2: requests.ConnectionError("refused")}))
     ledger_path = tmp_path / "out" / "doc_raw_responses.jsonl"
     assert extraction_gaps(ledger_path) == {"failed": 1}
     _run(tmp_path, FakeModel())
