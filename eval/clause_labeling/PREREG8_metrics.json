@@ -1,0 +1,289 @@
+{
+ "control": {
+  "labeled": 624,
+  "found": 593,
+  "rows_in_units": 709,
+  "rows_right": 619,
+  "recall": 95.03205128205128,
+  "precision": 87.30606488011283,
+  "seconds": 875.1511380672455,
+  "batches": 575,
+  "unparsed": 0,
+  "failed": 0,
+  "clauses": 2289,
+  "rows": 1188,
+  "prompt_sha": [
+   "b9b20379597d04b346f6d7f30b1e6df6257f86fd15c372588dc06a1bbdd8dbc4"
+  ],
+  "row_agree_vs_control": null,
+  "requirement_agree_vs_control": null,
+  "list_items": {
+   "labeled": 624,
+   "found": 192,
+   "rows_in_units": 224,
+   "rows_right": 188,
+   "recall": 30.76923076923077,
+   "precision": 83.92857142857143
+  }
+ },
+ "control2": {
+  "labeled": 624,
+  "found": 592,
+  "rows_in_units": 708,
+  "rows_right": 618,
+  "recall": 94.87179487179488,
+  "precision": 87.28813559322033,
+  "seconds": 865.7351479530334,
+  "batches": 575,
+  "unparsed": 0,
+  "failed": 0,
+  "clauses": 2289,
+  "rows": 1187,
+  "prompt_sha": [
+   "b9b20379597d04b346f6d7f30b1e6df6257f86fd15c372588dc06a1bbdd8dbc4"
+  ],
+  "row_agree_vs_control": {
+   "n": 2289,
+   "same": 2288,
+   "pct": 99.9563128003495
+  },
+  "requirement_agree_vs_control": {
+   "n": 2289,
+   "same": 2288,
+   "pct": 99.9563128003495
+  },
+  "list_items": {
+   "labeled": 624,
+   "found": 191,
+   "rows_in_units": 223,
+   "rows_right": 187,
+   "recall": 30.608974358974358,
+   "precision": 83.85650224215247
+  }
+ },
+ "rule": {
+  "labeled": 624,
+  "found": 597,
+  "rows_in_units": 705,
+  "rows_right": 624,
+  "recall": 95.67307692307692,
+  "precision": 88.51063829787235,
+  "seconds": 877.1328630447388,
+  "batches": 575,
+  "unparsed": 0,
+  "failed": 0,
+  "clauses": 2289,
+  "rows": 1178,
+  "prompt_sha": [
+   "b9b20379597d04b346f6d7f30b1e6df6257f86fd15c372588dc06a1bbdd8dbc4"
+  ],
+  "row_agree_vs_control": {
+   "n": 2289,
+   "same": 2218,
+   "pct": 96.89820882481433
+  },
+  "requirement_agree_vs_control": {
+   "n": 2289,
+   "same": 2229,
+   "pct": 97.37876802096986
+  },
+  "list_items": {
+   "labeled": 624,
+   "found": 193,
+   "rows_in_units": 221,
+   "rows_right": 189,
+   "recall": 30.92948717948718,
+   "precision": 85.52036199095022
+  }
+ },
+ "b8": {
+  "labeled": 624,
+  "found": 592,
+  "rows_in_units": 710,
+  "rows_right": 619,
+  "recall": 94.87179487179488,
+  "precision": 87.1830985915493,
+  "seconds": 825.0027346611023,
+  "batches": 289,
+  "unparsed": 0,
+  "failed": 0,
+  "clauses": 2289,
+  "rows": 1196,
+  "prompt_sha": [
+   "b9b20379597d04b346f6d7f30b1e6df6257f86fd15c372588dc06a1bbdd8dbc4"
+  ],
+  "row_agree_vs_control": {
+   "n": 2289,
+   "same": 2191,
+   "pct": 95.71865443425077
+  },
+  "requirement_agree_vs_control": {
+   "n": 2289,
+   "same": 2203,
+   "pct": 96.2429008300568
+  },
+  "list_items": {
+   "labeled": 624,
+   "found": 193,
+   "rows_in_units": 225,
+   "rows_right": 189,
+   "recall": 30.92948717948718,
+   "precision": 84.0
+  }
+ },
+ "b16": {
+  "labeled": 624,
+  "found": 590,
+  "rows_in_units": 696,
+  "rows_right": 616,
+  "recall": 94.55128205128206,
+  "precision": 88.50574712643679,
+  "seconds": 738.5352308750153,
+  "batches": 147,
+  "unparsed": 0,
+  "failed": 0,
+  "clauses": 2289,
+  "rows": 1173,
+  "prompt_sha": [
+   "b9b20379597d04b346f6d7f30b1e6df6257f86fd15c372588dc06a1bbdd8dbc4"
+  ],
+  "row_agree_vs_control": {
+   "n": 2289,
+   "same": 2157,
+   "pct": 94.23328964613368
+  },
+  "requirement_agree_vs_control": {
+   "n": 2289,
+   "same": 2172,
+   "pct": 94.88859764089122
+  },
+  "list_items": {
+   "labeled": 624,
+   "found": 192,
+   "rows_in_units": 225,
+   "rows_right": 188,
+   "recall": 30.76923076923077,
+   "precision": 83.55555555555556
+  }
+ },
+ "c4096": {
+  "labeled": 624,
+  "found": 594,
+  "rows_in_units": 706,
+  "rows_right": 619,
+  "recall": 95.1923076923077,
+  "precision": 87.6770538243626,
+  "seconds": 833.4217414855957,
+  "batches": 575,
+  "unparsed": 0,
+  "failed": 0,
+  "clauses": 2289,
+  "rows": 1183,
+  "prompt_sha": [
+   "b9b20379597d04b346f6d7f30b1e6df6257f86fd15c372588dc06a1bbdd8dbc4"
+  ],
+  "row_agree_vs_control": {
+   "n": 2289,
+   "same": 2274,
+   "pct": 99.34469200524246
+  },
+  "requirement_agree_vs_control": {
+   "n": 2289,
+   "same": 2276,
+   "pct": 99.43206640454346
+  },
+  "list_items": {
+   "labeled": 624,
+   "found": 192,
+   "rows_in_units": 223,
+   "rows_right": 188,
+   "recall": 30.76923076923077,
+   "precision": 84.30493273542601
+  }
+ },
+ "p100": {
+  "labeled": 624,
+  "found": 594,
+  "rows_in_units": 706,
+  "rows_right": 619,
+  "recall": 95.1923076923077,
+  "precision": 87.6770538243626,
+  "seconds": 832.039389371872,
+  "batches": 575,
+  "unparsed": 0,
+  "failed": 0,
+  "clauses": 2289,
+  "rows": 1183,
+  "prompt_sha": [
+   "b9b20379597d04b346f6d7f30b1e6df6257f86fd15c372588dc06a1bbdd8dbc4"
+  ],
+  "row_agree_vs_control": {
+   "n": 2289,
+   "same": 2274,
+   "pct": 99.34469200524246
+  },
+  "requirement_agree_vs_control": {
+   "n": 2289,
+   "same": 2276,
+   "pct": 99.43206640454346
+  },
+  "list_items": {
+   "labeled": 624,
+   "found": 192,
+   "rows_in_units": 223,
+   "rows_right": 188,
+   "recall": 30.76923076923077,
+   "precision": 84.30493273542601
+  }
+ },
+ "combo": {
+  "labeled": 624,
+  "found": 622,
+  "rows_in_units": 1533,
+  "rows_right": 788,
+  "recall": 99.67948717948718,
+  "precision": 51.40247879973907,
+  "seconds": 699.9001858234406,
+  "batches": 147,
+  "unparsed": 143,
+  "failed": 0,
+  "clauses": 2289,
+  "rows": 2281,
+  "prompt_sha": [
+   "b9b20379597d04b346f6d7f30b1e6df6257f86fd15c372588dc06a1bbdd8dbc4"
+  ],
+  "row_agree_vs_control": {
+   "n": 2289,
+   "same": 15,
+   "pct": 0.6553079947575361
+  },
+  "requirement_agree_vs_control": {
+   "n": 2289,
+   "same": 1196,
+   "pct": 52.249890782000875
+  },
+  "list_items": {
+   "labeled": 624,
+   "found": 199,
+   "rows_in_units": 309,
+   "rows_right": 195,
+   "recall": 31.891025641025642,
+   "precision": 63.10679611650485
+  }
+ },
+ "_q1": {
+  "clauses_changed": 388,
+  "label_changed": 28,
+  "requirement_flips": 26,
+  "judged": {
+   "wrong": 7,
+   "correct": 16
+  },
+  "to_row": 14,
+  "to_nr": 12,
+  "changed_agree": {
+   "n": 388,
+   "same": 360
+  }
+ }
+}

@@ -27,6 +27,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from pipeline.clauses import _as_list, chunk_clauses
+from pipeline.lead_in import find_lead_in
 from pipeline.sentence_expand import tidy
 
 log = logging.getLogger(__name__)
@@ -150,9 +151,24 @@ def check_server(ollama_url: str, model: str, timeout: int = 10) -> None:
         log.warning("Model '%s' not found in Ollama. Available: %s", model, sorted(n for n in names if n))
 
 
+def _section_key(chunk: dict) -> tuple:
+    return (tuple(_as_list(chunk.get("section_ref_path"))), tuple(_as_list(chunk.get("section_title_path"))))
+
+
 def document_clauses(chunks: list[dict]) -> list[dict]:
-    """Every clause of the document in order: chunk file order, then clause order."""
-    return [c for chunk in chunks for c in chunk_clauses(chunk)]
+    """Every clause of the document in order: chunk file order, then clause order. The lead-in the labeler is shown (`ctx_lead`) is the one the checklist uses
+    (pipeline/lead_in.find_lead_in: sibling logic, looks back into the previous chunk when it is in the same section); a plain sentence gets none. PREREG8: recall +0.6,
+    precision +1.2 against the old nearest-colon-clause rule, 16 of 23 gold-judged flips right."""
+    by_id = {c["chunk_id"]: c for c in chunks if "chunk_id" in c}
+    out = []
+    for chunk in chunks:
+        raw = chunk.get("raw_text") or chunk.get("text") or ""
+        prev = by_id.get(chunk["chunk_id"] - 1) if isinstance(chunk.get("chunk_id"), int) else None
+        prev_raw = (prev.get("raw_text") or prev.get("text") or "") if prev is not None and _section_key(prev) == _section_key(chunk) else ""
+        for c in chunk_clauses(chunk):
+            c["ctx_lead"] = find_lead_in(raw, c["start"], prev_raw)
+            out.append(c)
+    return out
 
 
 def make_batches(clauses: list[dict], size: int = BATCH_SIZE) -> list[dict]:
