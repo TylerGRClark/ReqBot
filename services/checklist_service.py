@@ -302,7 +302,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
 
     return {
         "format": "reqbot-checklist",
-        "format_version": "1.1",
+        "format_version": "1.2",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "generator": {
             "tool": "reqbot",

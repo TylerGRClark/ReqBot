@@ -60,7 +60,7 @@ def test_generate_adds_the_audit_layout_and_flags_a_missing_chunk_file(tmp_path)
     (run_dir / "doc_chunks.jsonl").write_text("".join(json.dumps(c) + "\n" for c in chunks))
     result = generate(tmp_path, "doc", "cybersecurity")
     item = result["items"][0]
-    assert result["format_version"] == "1.1" and "The Director will:" in item["passage"] and ">> (a) Review logs monthly. <<" in item["passage"]
+    assert result["format_version"] == "1.2" and "The Director will:" in item["passage"] and ">> (a) Review logs monthly. <<" in item["passage"]
     assert "no_passage" not in item["item_flags"] and "list_item" in item["item_flags"]
     assert result["summary"]["items_with_flags"] == 1
 

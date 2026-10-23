@@ -243,7 +243,7 @@ The checklist envelope contains:
 
 | Field | Shape / meaning |
 |---|---|
-| `format`, `format_version` | `"reqbot-checklist"`, `"1.1"` (1.1 added `applies_to`, `passage`, `item_flags` and `summary.items_with_flags`; nothing was removed). |
+| `format`, `format_version` | `"reqbot-checklist"`, `"1.2"` (1.1 added `applies_to`, `passage`, `item_flags` and `summary.items_with_flags`; 1.2 removed `possible_missed`, `summary.possible_missed` and `summary.found_by_text_scan` with the text scan). |
 | `generated_at` | UTC ISO 8601 timestamp. |
 | `generator` | `{tool, command}`. |
 | `document` | `{document_id, source_pdf}`. |
