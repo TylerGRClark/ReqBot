@@ -196,7 +196,7 @@ def label_batch(batch: dict, prompt: str, *, model: str, call) -> dict:
 _DOTTED = r"(?:[A-Z]{1,2})?\d+(?:\.\d+)+"
 _OPENS_WITH_NUMBER = re.compile(rf"^\W*({_DOTTED})\.?\s")
 _GAP_IS_NUMBER = re.compile(rf"^\W*({_DOTTED})\.?\W*$")
-_LINE_NUMBER = re.compile(rf"(?m)^\W*({_DOTTED})\.?\s")
+_LINE_NUMBER = re.compile(rf"(?m)^(?!\s*\|)\W*({_DOTTED})\.?\s")  # a table grid line ("| 3.4.1 | ... |") is not a paragraph number
 _TABLE_CAPTION = re.compile(r"(?m)^[ \t]*(Table\s+(?:[A-Z]{1,2})?\d+(?:\.\d+)*)\.(?=\s)")  # "Table 3.1.", "Table A2.1."; "Table 3.1 shows ..." is prose
 _ENTRY_NUMBER = re.compile(rf"^\W*({_DOTTED})\.?(?:\s|$)")
 

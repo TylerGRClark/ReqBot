@@ -306,6 +306,13 @@ def test_each_source_ref_origin():
         ("7.3", "section_path")]
 
 
+def test_a_table_cell_number_is_not_the_number_above_for_later_rows():
+    # Codex P2 on #365: a cell value such as "3.4.1" must not become the "number above" of every later row of an uncaptioned table
+    chunk = {"chunk_id": 1, "raw_text": "| 3.4.1 | Review logs weekly |\n| Report incidents daily | ISSO |"}
+    clauses = cl.document_clauses([chunk])
+    assert [o for _, o in cl.source_refs(chunk, chunk["raw_text"], clauses)] == ["none", "none"]
+
+
 def test_a_number_inside_a_table_cell_is_not_the_rows_paragraph():
     chunk = {"chunk_id": 1, "raw_text": "| 3.4.1 | Review logs |"}
     clauses = cl.document_clauses([chunk])

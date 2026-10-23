@@ -78,6 +78,7 @@ if str(_ROOT) not in sys.path:
 from core.artifact_resolver import resolve_latest_requirement_files  # noqa: E402
 from core.ask import retrieve  # noqa: E402
 from pipeline.parse_and_normalize import normalize_text  # noqa: E402
+from pipeline.sentence_expand import is_complete  # noqa: E402
 
 # A frozen copy of the WP-39.2 candidacy check (pipeline/enrich_requirements._is_reconstruction_candidate with the bare-copula test of
 # parse_and_normalize._is_dangling_clause). Both were deleted with parent-stem reconstruction when clause labeling replaced the list-writing
@@ -301,8 +302,12 @@ def classify_miss(
     # governing clause for it.
     # A record from clause labeling (it has clause_index) never carries parent_stem: its context is the
     # lead-in in explained_parts, so that is what is checked for it (Codex review, PR #365).
+    # A clause that is already a whole sentence needs no lead-in, so only a fragment-shaped clause without one is "missing context" (Codex review, PR #365).
     if rec.get("clause_index") is not None:
-        has_context = any(p.get("kind") == "lead_in" for p in rec.get("explained_parts") or [])
+        quote = rec.get("source_quote", "")
+        # a list item "(3) Restrain competition." reads complete but is only a piece of its stem's sentence; a whole sentence ("Systems shall log access.") is not
+        whole_sentence = is_complete(quote) and not re.match(r"\s*(?:[-•*]\s+)?(?:\([A-Za-z0-9]{1,3}\)|[A-Za-z0-9]{1,2}[.)])\s", quote)
+        has_context = any(p.get("kind") == "lead_in" for p in rec.get("explained_parts") or []) or whole_sentence
     else:
         has_context = bool(rec.get("parent_stem"))
     if not has_context and _is_reconstruction_candidate(rec.get("source_quote", "")):
