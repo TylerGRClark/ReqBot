@@ -37,7 +37,6 @@ export default function ChecklistPreviewView() {
   }, [docId, profile, reloadTick])
 
   const items: ChecklistItem[] = data?.items ?? []
-  const missed: ChecklistItem[] = data?.possible_missed ?? []
   const displayItems = flaggedOnly ? items.filter(needsAttention) : items
   const flaggedCount = items.filter(needsAttention).length
 
@@ -113,18 +112,6 @@ export default function ChecklistPreviewView() {
               <ChecklistTable items={displayItems} />
             )}
 
-            {missed.length > 0 && (
-              <section className="space-y-2 pt-4" aria-label="Possible missed requirements">
-                <h2 className="text-base font-semibold text-gray-900">
-                  Possible missed requirements ({missed.length})
-                </h2>
-                <p className="text-sm text-gray-500">
-                  These passages look like obligations but were not extracted (found by a text scan). Confirm each one;
-                  they are not counted above.
-                </p>
-                <ChecklistTable items={missed} />
-              </section>
-            )}
           </>
         )}
       </main>

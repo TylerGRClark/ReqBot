@@ -27,15 +27,12 @@ flowchart TD
         PS2{"Passage result"}
         PS3["no_passage flag<br/>(chunk missing)"]
         PS4["quote_not_located_in_passage flag<br/>(whole chunk shown, unmarked)"]
-        PR["Parent paragraph: the nearest numbered ancestor present<br/>in the document, text cut at a word<br/>Extracted row: looked up from its extracted reference only<br/>(none when that is empty or not a paragraph number)<br/>Found row: looked up from its citation"]
+        PR["Parent paragraph: the nearest numbered ancestor present<br/>in the document, text cut at a word<br/>Looked up from its extracted reference only<br/>(none when that is empty or not a paragraph number)"]
         RR["Review reasons: no source reference, no section path,<br/>no page numbers, low confidence (when a record has one),<br/>profile mismatch"]
-        POS["Position kept: chunk and offset in the chunk"]
     end
 
-    SCAN["Text scan: duty sentences nobody extracted<br/>(its own diagram)"]
-    MERGE["Merge in document order<br/>by chunk and offset"]
     APPLY["Draft questions applied<br/>from the side file<br/>(never a model call here)"]
-    ENV[("Checklist<br/>items, possible missed, summary counts")]
+    ENV[("Checklist<br/>items, summary counts")]
 
     REQ --> S0
     CH --> MAPS
@@ -56,14 +53,9 @@ flowchart TD
     PS3 --> PR
     PS4 --> PR
     PR --> RR
-    RR --> POS
-    CH --> SCAN
-    POS --> MERGE
-    SCAN -->|"promoted rows"| MERGE
-    MERGE --> APPLY
+    RR --> APPLY
     SIDE --> APPLY
     APPLY --> ENV
-    SCAN -->|"possible missed, listed apart"| ENV
 
     classDef built fill:#d1fae5,stroke:#059669,color:#064e3b;
     classDef drop fill:#fee2e2,stroke:#dc2626,color:#7f1d1d;

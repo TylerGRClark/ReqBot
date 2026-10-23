@@ -304,10 +304,8 @@ export interface ChecklistEnvelope {
   generator: { tool: string; command: string }
   document: { document_id: string; source_pdf: string }
   profile: string
-  summary: { total_items: number; items_requiring_review: number; items_with_flags?: number; possible_missed?: number }
+  summary: { total_items: number; items_requiring_review: number; items_with_flags?: number }
   items: ChecklistItem[]
-  // passages that look like obligations but were not extracted (rule-based scan); not counted in total_items
-  possible_missed?: ChecklistItem[]
 }
 
 export interface ProfilesResponse {

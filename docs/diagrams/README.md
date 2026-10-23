@@ -26,7 +26,6 @@ Last checked against the code on 2026-10-22 (the switch to clause labeling, WP-4
 | [De-duplication and identity](06_dedup_identity_stem.md) | De-duplication and requirement IDs. |
 | [Totals and search indexing](07_totals_and_indexing.md) | What is written at the end, and what goes into search. |
 | [Checklist building](08_checklist_building.md) | How each row gets its citation, party, flags and passage. |
-| [Text scan](09_text_scan.md) | How duties that the labeler did not keep are found. |
 | [Draft audit questions](10_draft_questions.md) | How a draft question is written, withheld and read back. |
 | [Kind labels](11_kind_labels.md) | How each row is labelled by what sort of statement it is. |
 | [Delivery](12_delivery.md) | How the checklist reaches an assessor. |

@@ -124,7 +124,7 @@ def _csv_row(item: dict) -> dict:
 def to_csv(checklist: dict) -> str:
     """Return the checklist items as a CSV string (UTF-8, Excel-friendly)."""
     buf = io.StringIO()
-    rows = checklist.get("items", []) + checklist.get("possible_missed", [])
+    rows = checklist.get("items", [])
     extra = _CRITICALITY_CSV_COLUMNS if any("criticality" in i for i in rows) else []  # without scores the file is exactly what it was
     writer = csv.DictWriter(buf, fieldnames=_CSV_COLUMNS + extra, lineterminator="\r\n")
     writer.writeheader()
@@ -319,8 +319,8 @@ def to_xlsx(checklist: dict, *, workbook=None, sheet_title: str = "Checklist") -
 
     With `workbook`, the sheet is added to that workbook under `sheet_title` instead and nothing is returned (used to put several documents in one workbook).
 
-    Layout (rows): 1 the document's name, 2 a line of facts (profile, when, how many items, how many are flagged, how many possible missed), 3 the column groups (Ask, Record,
-    Context, Locate, Trace), each in its own color, 4 the column headers in the lighter shade of the group's color, then one row per item, then the possible-missed block.
+    Layout (rows): 1 the document's name, 2 a line of facts (profile, when, how many items, how many are flagged), 3 the column groups (Ask, Record,
+    Context, Locate, Trace), each in its own color, 4 the column headers in the lighter shade of the group's color, then one row per item.
     Columns: Review (a narrow marker: "!" in an amber cell on a row worth a second look), Requirement, Audit Question, Status (a drop-down, colored by what is chosen), Notes,
     Check (the tool's hints and review reasons for the row), Passage, Ref, Pages, then the small Item ID and Req IDs, then Conf. and Tags (hidden when no row has a value). Rows alternate in
     color by a conditional-format rule, so the stripes stay even when the sheet is sorted or filtered. A row is as tall as its requirement, question and hints need; a long
@@ -349,7 +349,6 @@ def to_xlsx(checklist: dict, *, workbook=None, sheet_title: str = "Checklist") -
     status_col, conf_col = col_of["status"], col_of["confidence"]
     last_col = len(columns)
 
-    missed = checklist.get("possible_missed", [])
     title = _xlsx_title(checklist)
 
     if workbook is None:
@@ -377,9 +376,7 @@ def to_xlsx(checklist: dict, *, workbook=None, sheet_title: str = "Checklist") -
     facts.append(f"{len(items_all)} item{'' if len(items_all) == 1 else 's'}")
     shaded = sum(1 for i in items_all if _needs_attention(i))
     if shaded:
-        facts.append(f"{shaded} of them flagged (!) for a second look")  # the possible-missed rows below are flagged too: they are counted on their own
-    if missed:
-        facts.append(f"{len(missed)} possible missed, listed at the bottom")
+        facts.append(f"{shaded} of them flagged (!) for a second look")
     ws.cell(row=2, column=1, value=_csv_safe(" · ".join(facts))).font = Font(name=face, size=10, color=soft)
     ws.row_dimensions[2].height = 16
 
@@ -459,22 +456,8 @@ def to_xlsx(checklist: dict, *, workbook=None, sheet_title: str = "Checklist") -
     for item in items_all:
         write_item(item)
 
-    # Auto-filter covers the extracted rows only; the possible-missed section below is separate
+    # Auto-filter covers the item rows
     last_item_row = ws.max_row
-
-    if missed:
-        banner_row = ws.max_row + 2
-        banner = ws.cell(
-            row=banner_row, column=1,
-            value=f"POSSIBLE MISSED REQUIREMENTS ({len(missed)}): found in the document text but not extracted. Confirm each; they are not counted above.",
-        )
-        banner.font = Font(name=face, size=10, bold=True, color="92400E")
-        banner.fill = PatternFill("solid", fgColor="FEF3C7")
-        banner.alignment = Alignment(vertical="center")
-        ws.merge_cells(start_row=banner_row, start_column=1, end_row=banner_row, end_column=last_col)
-        ws.row_dimensions[banner_row].height = 24
-        for item in missed:
-            write_item(item)
 
     # The Status cell takes the color of what was chosen (not-started stays plain)
     status_letter = get_column_letter(status_col)
@@ -549,18 +532,5 @@ def to_markdown(checklist: dict) -> str:
 
     for i, item in enumerate(checklist.get("items", []), start=1):
         lines.append(_md_item(item, i))
-
-    missed = checklist.get("possible_missed", [])
-    if missed:
-        lines += [
-            "# Possible missed requirements",
-            "",
-            f"{len(missed)} passage(s) look like obligations but were not extracted (found by a text scan). Confirm each; they are not counted above.",
-            "",
-            "---",
-            "",
-        ]
-        for i, item in enumerate(missed, start=1):
-            lines.append(_md_item(item, i))
 
     return "\n".join(lines)

@@ -47,11 +47,10 @@ def test_count_document_hand_counted():
             {"requirement_ids": ["b"], "source_quote": "and report it", "extracted_quote": "and report it"},
             {"requirement_ids": [], "source_quote": "Reports are filed daily by the unit.", "extracted_quote": ""},
         ],
-        "possible_missed": [{}, {}],
     }
     records = {"a": EXACT, "b": {"anchor_status": "words_trimmed"}}
     c = frag.count_document(checklist, records)
-    assert c == {"F1": 2, "F2": 1, "F3": 0, "F4": 1, "F5": 0, "F6": 1, "F7": 1, "F8": 1, "F9": 0, "F10_text_scan": 1, "F10_possible_missed": 2}
+    assert c == {"F1": 2, "F2": 1, "F3": 0, "F4": 1, "F5": 0, "F6": 1, "F7": 1, "F8": 1, "F9": 0}
 
 
 def test_main_json_on_a_small_library(tmp_path, monkeypatch, capsys):
