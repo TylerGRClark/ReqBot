@@ -66,6 +66,8 @@ def split_clauses(text: str) -> list[tuple[int, int]]:
         a = 0
         cuts = [(m.start(), m.end(), False) for m in SENT.finditer(seg)] + [(m.start(), m.end(), True) for m in _TAG_CUT.finditer(seg)]
         for ms, me, after_tag in sorted(cuts):
+            if ms < a:  # a cut that falls inside the clause just closed (two patterns meeting at one place) is ignored
+                continue
             pre = seg[a:ms + 1].split()
             last = pre[-1] if pre else ""
             if ABBRRE.match(last) or _NUMBER_TOKEN.fullmatch(last):
