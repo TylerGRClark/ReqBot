@@ -28,6 +28,7 @@ ARMS = {  # arm -> settings
     "b16": dict(rule=False, size=16, num_ctx=8192, num_predict=300),
     "c4096": dict(rule=False, size=4, num_ctx=4096, num_predict=300),
     "p100": dict(rule=False, size=4, num_ctx=8192, num_predict=100),
+    "combo": dict(rule=False, size=16, num_ctx=4096, num_predict=100),  # every Q2 setting that met the quality rule (all four did)
 }
 
 
