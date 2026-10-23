@@ -13,6 +13,7 @@ Use --synthesize to get an LLM-generated answer with citations.
 import argparse
 import json
 import logging
+import re
 import sys
 import uuid
 from pathlib import Path
@@ -274,8 +275,12 @@ def _context_text_for_hit(hit, context_map: dict | None, window: int = 300) -> s
 
     # Try to center the window on the exact source_quote
     quote = hit.payload.get("source_quote", "")
-    if quote and quote in ctx:
-        idx = ctx.find(quote)
+    idx = ctx.find(quote) if quote else -1
+    if quote and idx < 0:
+        # the stored quote has its spacing tidied (a hard line wrap becomes one space), so look for it whatever the whitespace between its words
+        m = re.search(r"\s+".join(re.escape(w) for w in quote.split()), ctx)
+        idx = m.start() if m else -1
+    if quote and idx >= 0:
         start = max(0, idx - window)
         end = min(len(ctx), idx + len(quote) + window)
         prefix = "..." if start > 0 else ""
