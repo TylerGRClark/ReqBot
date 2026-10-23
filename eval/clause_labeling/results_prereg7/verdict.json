@@ -1,0 +1,208 @@
+{
+ "512": {
+  "summary": {
+   "end_cuts": 18,
+   "F3": 9,
+   "F9": 193,
+   "F8": 0,
+   "grid": 67,
+   "chunks": 234,
+   "li": 66,
+   "li_in": 11,
+   "labeled": 172,
+   "found": 167,
+   "rows_in_units": 205,
+   "rows_right": 186,
+   "secs": 781.0,
+   "secs_missing": 0,
+   "recall": 97.09302325581395,
+   "precision": 90.73170731707317
+  },
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4a": false,
+  "P4b": false,
+  "P5": true,
+  "P6_shipped": false,
+  "P6_window": true,
+  "beyond_pct": {
+   "1500": 22.047970479704798,
+   "1200": 33.94833948339483
+  },
+  "beyond_pct_control": {
+   "1500": 2.4141132776230267,
+   "1200": 6.7780872794800375
+  },
+  "window_lead_in_cov_pct": 98.44559585492227,
+  "control_shipped_lead_in_cov_pct": 92.45283018867924,
+  "verdict": "FAIL",
+  "sizes": {
+   "chunks": 234,
+   "median": 1376,
+   "p90": 2182,
+   "max": 10689
+  }
+ },
+ "1024": {
+  "summary": {
+   "end_cuts": 13,
+   "F3": 9,
+   "F9": 255,
+   "F8": 0,
+   "grid": 67,
+   "chunks": 165,
+   "li": 66,
+   "li_in": 12,
+   "labeled": 172,
+   "found": 167,
+   "rows_in_units": 207,
+   "rows_right": 186,
+   "secs": 786.0,
+   "secs_missing": 0,
+   "recall": 97.09302325581395,
+   "precision": 89.85507246376811
+  },
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4a": true,
+  "P4b": true,
+  "P5": true,
+  "P6_shipped": false,
+  "P6_window": true,
+  "beyond_pct": {
+   "1500": 45.46287809349221,
+   "1200": 53.8038496791934
+  },
+  "beyond_pct_control": {
+   "1500": 2.4141132776230267,
+   "1200": 6.7780872794800375
+  },
+  "window_lead_in_cov_pct": 98.03921568627452,
+  "control_shipped_lead_in_cov_pct": 92.45283018867924,
+  "verdict": "PASS with window rule",
+  "sizes": {
+   "chunks": 165,
+   "median": 1742,
+   "p90": 4050,
+   "max": 10960
+  }
+ },
+ "A": {
+  "summary": {
+   "end_cuts": 53,
+   "F3": 9,
+   "F9": 173,
+   "F8": 0,
+   "grid": 67,
+   "chunks": 688,
+   "li": 66,
+   "li_in": 4,
+   "labeled": 172,
+   "found": 167,
+   "rows_in_units": 203,
+   "rows_right": 186,
+   "secs": 809.0,
+   "secs_missing": 0,
+   "recall": 97.09302325581395,
+   "precision": 91.6256157635468
+  },
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4a": false,
+  "P4b": false,
+  "P5": true,
+  "P6_shipped": false,
+  "P6_window": true,
+  "beyond_pct": {
+   "1500": 19.746376811594203,
+   "1200": 25.452898550724637
+  },
+  "beyond_pct_control": {
+   "1500": 2.4141132776230267,
+   "1200": 6.7780872794800375
+  },
+  "window_lead_in_cov_pct": 97.10982658959537,
+  "control_shipped_lead_in_cov_pct": 92.45283018867924,
+  "verdict": "FAIL",
+  "sizes": {
+   "chunks": 688,
+   "median": 261,
+   "p90": 1090,
+   "max": 10689
+  }
+ },
+ "C": {
+  "summary": {
+   "end_cuts": 53,
+   "F3": 9,
+   "F9": 191,
+   "F8": 0,
+   "grid": 67,
+   "chunks": 655,
+   "li": 66,
+   "li_in": 12,
+   "labeled": 172,
+   "found": 167,
+   "rows_in_units": 201,
+   "rows_right": 186,
+   "secs": 808.0,
+   "secs_missing": 0,
+   "recall": 97.09302325581395,
+   "precision": 92.53731343283582
+  },
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4a": false,
+  "P4b": false,
+  "P5": true,
+  "P6_shipped": false,
+  "P6_window": true,
+  "beyond_pct": {
+   "1500": 20.326678765880217,
+   "1200": 26.31578947368421
+  },
+  "beyond_pct_control": {
+   "1500": 2.4141132776230267,
+   "1200": 6.7780872794800375
+  },
+  "window_lead_in_cov_pct": 97.38219895287958,
+  "control_shipped_lead_in_cov_pct": 92.45283018867924,
+  "verdict": "FAIL",
+  "sizes": {
+   "chunks": 655,
+   "median": 282,
+   "p90": 1203,
+   "max": 10689
+  }
+ },
+ "control": {
+  "summary": {
+   "end_cuts": 33,
+   "F3": 9,
+   "F9": 159,
+   "F8": 0,
+   "grid": 67,
+   "chunks": 403,
+   "li": 66,
+   "li_in": 1,
+   "labeled": 172,
+   "found": 168,
+   "rows_in_units": 209,
+   "rows_right": 190,
+   "secs": 803.0,
+   "secs_missing": 0,
+   "recall": 97.67441860465117,
+   "precision": 90.9090909090909
+  },
+  "sizes": {
+   "chunks": 403,
+   "median": 826,
+   "p90": 1134,
+   "max": 10689
+  }
+ }
+}
