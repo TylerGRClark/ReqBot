@@ -1,0 +1,928 @@
+{
+ "512": {
+  "afi17-203": {
+   "clauses_control": 337,
+   "clauses_arm": 329,
+   "same_text": 323,
+   "flag_flips": 2,
+   "label_changes": 4,
+   "control_only_clauses": 14,
+   "arm_only_clauses": 6,
+   "control_only_rows": 5,
+   "arm_only_rows": 3
+  },
+  "afi13-550": {
+   "clauses_control": 324,
+   "clauses_arm": 307,
+   "same_text": 300,
+   "flag_flips": 7,
+   "label_changes": 7,
+   "control_only_clauses": 24,
+   "arm_only_clauses": 7,
+   "control_only_rows": 5,
+   "arm_only_rows": 2
+  },
+  "afi10-2402": {
+   "clauses_control": 639,
+   "clauses_arm": 617,
+   "same_text": 616,
+   "flag_flips": 22,
+   "label_changes": 23,
+   "control_only_clauses": 23,
+   "arm_only_clauses": 1,
+   "control_only_rows": 9,
+   "arm_only_rows": 0
+  },
+  "dafman17-1304": {
+   "clauses_control": 870,
+   "clauses_arm": 846,
+   "same_text": 837,
+   "flag_flips": 38,
+   "label_changes": 44,
+   "control_only_clauses": 33,
+   "arm_only_clauses": 9,
+   "control_only_rows": 12,
+   "arm_only_rows": 2,
+   "flip_examples": [
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Responsible for all aspects of the issuance and management of certificates, to include the  registration  process,  identification  and  authentication,  public"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Hardware-based  certificates  are  stored  on  a  Federal  Information  Processing Standard (FIPS) 140-2 Level 2 or higher cryptographic device (e.g. smart toke"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "More restrictive federal, DoD, or DAF guidance take precedence over this publication, (e.g.,  DoDI  8520.02, Public  Key  Infrastructure  (PKI)  and  Public  Ke"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "These  certificates  are  used  to  sign  the  subordinate  CAs  operated  in  the AFNET  and  at  DAF-supported  CCMDs,  in  turn,  and  issue  device  identit"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "A6O serves as ICAM service owner. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "An issued token remains the property of the U.S. Government, in accordance with AFI 36-3026V1. (T-0). "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Positive  control  includes  maintaining  visual  contact  when  in  use  and  retention  or secured on the person when not in use. "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Requests for access to resources located on the AFIN are vetted through identity and  authentication  steps  prior  to  receiving  an  authorization  decision. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "It  also  ensures  external  roots  and  associated certificates  can  be  trusted  by  AF  relying  parties. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Government sponsors approve the applications for government credentials."
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "The responsibility for assigning and documenting unique attributes may vary by subscriber or NPE type, but the correct binding of the identity attributes to the"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Go to: https://intelshare.intelink.gov/sites/usaf-pki/ReferenceDocs/ browse  for  CI-09-03-002_Role-Based_Certificate_Request_Procedures_v1.3.0.pdf and open it;"
+    ],
+    [
+     "PROHIBITION",
+     "NOT_REQUIREMENT",
+     "The DoD Mobile Policy STIG prohibits the use of personally owned or contractor owned CMDs to access DoD information or connect to DoD networks."
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Assurance level credential strengths include Level C for Medium Assurance, Level D for Medium Hardware, and Level E for PIV-Authentication  in accordance with D"
+    ],
+    [
+     "PROHIBITION",
+     "NOT_REQUIREMENT",
+     "The Air Force Enterprise AO is the only authority permitted to grant an approval to connect to Air Force information networks. "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Assurance level credential strengths include Level C for Medium Assurance, Level D for Medium Hardware, and Level E for Personal Identity Verification (PIV)-A i"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "For NIPRNET subscriber accounts on AFNET, unique identity attribute binding for individual (non-administrative or non-group accounts) is the responsibility of A"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Either are acceptable as long as the attributes come from an authorized source (e.g., AFDS, AFNET AD)."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The program is the Authoritative Data Source for the E4C address and makes it available to other authoritative data sources, as requested."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Relying  parties authenticate approved external PKI certificates using either a direct trust mechanism or crosscertification mechanism. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "When  the  subscriber accomplishes the face-to-face requirement, the identity meets IAL3, in accordance with NIST SP 800-63-3."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The required strength a credential must have varies according to the classification of the system to be accessed (unclassified or classified), in accordance wit"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Group, Executive Support Staff, Role, Admin Service and Organizational mailbox accounts follow the established procedures and document requirements in the previ"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Depending on the IAL/AAL level, registration might require face-to-face verification of the individual's identity using  a  government  issued  identification, "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Describes data elements available in the AFDS IDD repository."
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "DoD-issued  medium-hardware assurance  PKI credentials  meet  the  criteria  for  IAL-3/AAL-3,  in  accordance  with  NIST  SP  800-63-3. "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "AFDS establishes new account upon CAC issue via a data driven process initiated by DMDC. "
+    ],
+    [
+     "PROHIBITION",
+     "NOT_REQUIREMENT",
+     "Non-unique attributes may also be assigned or gathered at this time but are not part of the identity proofing. "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Helps requester properly fill out IdM 3215 Form."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The authentication of subscribers and the granting of logical and physical access is  a  combination  of  enterprise-wide  and  local  functions  (e.g.,  DEERS,"
+    ]
+   ],
+   "lost_examples": [
+    "Submit requests for waivers through the chain of command to  the  appropriate  Tier  waiver  approval  authority,  or  alternately,  to  the  requestor's comman",
+    "This  DAFMAN  may  be  supplemented  but  all supplements  to  this  publication  must  be  routed  to  SAF/CN,  Cybersecurity  Division,  for coordination prio",
+    "Submit requests for waivers through the chain of command to  the  appropriate  Tier  waiver  approval  authority,  or  alternately,  to  the  requestor's comman",
+    "WCOs consult the Host or MAJCOM foreign disclosure officer and applicable ISSM before authorizing access by FN or LN subscribers to ISs processing, storing, or ",
+    "Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change",
+    "Ensure all records generated as a result of processes prescribed in this publication adhere  to  AFI  33-322, Records  Management  and  Information  Governance ",
+    "Encryption certificates for organizational email mailboxes, to include portable electronic devices (PEDs), must have a designated sponsor appointed in writing u",
+    "For organizational email mailboxes on PEDs, follow the appropriate DoD STIG. ",
+    "This  DAFMAN  may  be  supplemented  but  all supplements  to  this  publication  must  be  routed  to  SAF/CN,  Cybersecurity  Division,  for coordination prio",
+    "The AF RA or LRA, as appropriate, will maintain a file of requirement validation documentation. (T-3). ",
+    "Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change",
+    "Ensure all records generated as a result of processes prescribed in this publication adhere  to  AFI  33-322, Records  Management  and  Information  Governance "
+   ],
+   "added_examples": [
+    "WCOs consult the Host or MAJCOM foreign disclosure officer and applicable ISSM before authorizing access by FN or LN subscribers to ISs processing, storing, or ",
+    "System/Enclave ISSM is responsible for requesting the removal of any stale or not required accounts in accordance with CJCSI 6510.01F. (T-3)."
+   ]
+  },
+  "TOTAL": {
+   "clauses_control": 2170,
+   "clauses_arm": 2099,
+   "same_text": 2076,
+   "flag_flips": 69,
+   "label_changes": 78,
+   "control_only": 94,
+   "arm_only": 23,
+   "control_only_rows": 31,
+   "arm_only_rows": 7
+  }
+ },
+ "1024": {
+  "afi17-203": {
+   "clauses_control": 337,
+   "clauses_arm": 329,
+   "same_text": 323,
+   "flag_flips": 7,
+   "label_changes": 9,
+   "control_only_clauses": 14,
+   "arm_only_clauses": 6,
+   "control_only_rows": 5,
+   "arm_only_rows": 3
+  },
+  "afi13-550": {
+   "clauses_control": 324,
+   "clauses_arm": 307,
+   "same_text": 301,
+   "flag_flips": 9,
+   "label_changes": 9,
+   "control_only_clauses": 23,
+   "arm_only_clauses": 6,
+   "control_only_rows": 5,
+   "arm_only_rows": 2
+  },
+  "afi10-2402": {
+   "clauses_control": 639,
+   "clauses_arm": 628,
+   "same_text": 624,
+   "flag_flips": 36,
+   "label_changes": 40,
+   "control_only_clauses": 15,
+   "arm_only_clauses": 4,
+   "control_only_rows": 5,
+   "arm_only_rows": 1
+  },
+  "dafman17-1304": {
+   "clauses_control": 870,
+   "clauses_arm": 846,
+   "same_text": 837,
+   "flag_flips": 39,
+   "label_changes": 46,
+   "control_only_clauses": 33,
+   "arm_only_clauses": 9,
+   "control_only_rows": 12,
+   "arm_only_rows": 2,
+   "flip_examples": [
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Responsible for all aspects of the issuance and management of certificates, to include the  registration  process,  identification  and  authentication,  public"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Hardware-based  certificates  are  stored  on  a  Federal  Information  Processing Standard (FIPS) 140-2 Level 2 or higher cryptographic device (e.g. smart toke"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "More restrictive federal, DoD, or DAF guidance take precedence over this publication, (e.g.,  DoDI  8520.02, Public  Key  Infrastructure  (PKI)  and  Public  Ke"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "These  certificates  are  used  to  sign  the  subordinate  CAs  operated  in  the AFNET  and  at  DAF-supported  CCMDs,  in  turn,  and  issue  device  identit"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "A6O serves as ICAM service owner. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "An issued token remains the property of the U.S. Government, in accordance with AFI 36-3026V1. (T-0). "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Positive  control  includes  maintaining  visual  contact  when  in  use  and  retention  or secured on the person when not in use. "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Requests for access to resources located on the AFIN are vetted through identity and  authentication  steps  prior  to  receiving  an  authorization  decision. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "It  also  ensures  external  roots  and  associated certificates  can  be  trusted  by  AF  relying  parties. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Government sponsors approve the applications for government credentials."
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "The responsibility for assigning and documenting unique attributes may vary by subscriber or NPE type, but the correct binding of the identity attributes to the"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Go to: https://intelshare.intelink.gov/sites/usaf-pki/ReferenceDocs/ browse  for  CI-09-03-002_Role-Based_Certificate_Request_Procedures_v1.3.0.pdf and open it;"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Trained in accordance with https://intelshare.intelink.gov/sites/usafpki/_layouts/15/start.aspx#/SitePages/Help%20and%20Training%20for%20Local%20 Registration%2"
+    ],
+    [
+     "PROHIBITION",
+     "NOT_REQUIREMENT",
+     "The DoD Mobile Policy STIG prohibits the use of personally owned or contractor owned CMDs to access DoD information or connect to DoD networks."
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Assurance level credential strengths include Level C for Medium Assurance, Level D for Medium Hardware, and Level E for PIV-Authentication  in accordance with D"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Assurance level credential strengths include Level C for Medium Assurance, Level D for Medium Hardware, and Level E for Personal Identity Verification (PIV)-A i"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "For NIPRNET subscriber accounts on AFNET, unique identity attribute binding for individual (non-administrative or non-group accounts) is the responsibility of A"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Either are acceptable as long as the attributes come from an authorized source (e.g., AFDS, AFNET AD)."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The program is the Authoritative Data Source for the E4C address and makes it available to other authoritative data sources, as requested."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Relying  parties authenticate approved external PKI certificates using either a direct trust mechanism or crosscertification mechanism. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "When  the  subscriber accomplishes the face-to-face requirement, the identity meets IAL3, in accordance with NIST SP 800-63-3."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The required strength a credential must have varies according to the classification of the system to be accessed (unclassified or classified), in accordance wit"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Group, Executive Support Staff, Role, Admin Service and Organizational mailbox accounts follow the established procedures and document requirements in the previ"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Depending on the IAL/AAL level, registration might require face-to-face verification of the individual's identity using  a  government  issued  identification, "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Describes data elements available in the AFDS IDD repository."
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "DoD-issued  medium-hardware assurance  PKI credentials  meet  the  criteria  for  IAL-3/AAL-3,  in  accordance  with  NIST  SP  800-63-3. "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "AFDS establishes new account upon CAC issue via a data driven process initiated by DMDC. "
+    ],
+    [
+     "PROHIBITION",
+     "NOT_REQUIREMENT",
+     "Non-unique attributes may also be assigned or gathered at this time but are not part of the identity proofing. "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Helps requester properly fill out IdM 3215 Form."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The authentication of subscribers and the granting of logical and physical access is  a  combination  of  enterprise-wide  and  local  functions  (e.g.,  DEERS,"
+    ]
+   ],
+   "lost_examples": [
+    "Submit requests for waivers through the chain of command to  the  appropriate  Tier  waiver  approval  authority,  or  alternately,  to  the  requestor's comman",
+    "This  DAFMAN  may  be  supplemented  but  all supplements  to  this  publication  must  be  routed  to  SAF/CN,  Cybersecurity  Division,  for coordination prio",
+    "Submit requests for waivers through the chain of command to  the  appropriate  Tier  waiver  approval  authority,  or  alternately,  to  the  requestor's comman",
+    "WCOs consult the Host or MAJCOM foreign disclosure officer and applicable ISSM before authorizing access by FN or LN subscribers to ISs processing, storing, or ",
+    "Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change",
+    "Ensure all records generated as a result of processes prescribed in this publication adhere  to  AFI  33-322, Records  Management  and  Information  Governance ",
+    "Encryption certificates for organizational email mailboxes, to include portable electronic devices (PEDs), must have a designated sponsor appointed in writing u",
+    "For organizational email mailboxes on PEDs, follow the appropriate DoD STIG. ",
+    "This  DAFMAN  may  be  supplemented  but  all supplements  to  this  publication  must  be  routed  to  SAF/CN,  Cybersecurity  Division,  for coordination prio",
+    "The AF RA or LRA, as appropriate, will maintain a file of requirement validation documentation. (T-3). ",
+    "Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change",
+    "Ensure all records generated as a result of processes prescribed in this publication adhere  to  AFI  33-322, Records  Management  and  Information  Governance "
+   ],
+   "added_examples": [
+    "WCOs consult the Host or MAJCOM foreign disclosure officer and applicable ISSM before authorizing access by FN or LN subscribers to ISs processing, storing, or ",
+    "System/Enclave ISSM is responsible for requesting the removal of any stale or not required accounts in accordance with CJCSI 6510.01F. (T-3)."
+   ]
+  },
+  "TOTAL": {
+   "clauses_control": 2170,
+   "clauses_arm": 2110,
+   "same_text": 2085,
+   "flag_flips": 91,
+   "label_changes": 104,
+   "control_only": 85,
+   "arm_only": 25,
+   "control_only_rows": 27,
+   "arm_only_rows": 8
+  }
+ },
+ "A": {
+  "afi17-203": {
+   "clauses_control": 337,
+   "clauses_arm": 344,
+   "same_text": 324,
+   "flag_flips": 13,
+   "label_changes": 14,
+   "control_only_clauses": 13,
+   "arm_only_clauses": 20,
+   "control_only_rows": 6,
+   "arm_only_rows": 4
+  },
+  "afi13-550": {
+   "clauses_control": 324,
+   "clauses_arm": 315,
+   "same_text": 297,
+   "flag_flips": 1,
+   "label_changes": 1,
+   "control_only_clauses": 27,
+   "arm_only_clauses": 18,
+   "control_only_rows": 5,
+   "arm_only_rows": 2
+  },
+  "afi10-2402": {
+   "clauses_control": 639,
+   "clauses_arm": 657,
+   "same_text": 620,
+   "flag_flips": 20,
+   "label_changes": 23,
+   "control_only_clauses": 19,
+   "arm_only_clauses": 37,
+   "control_only_rows": 6,
+   "arm_only_rows": 1
+  },
+  "dafman17-1304": {
+   "clauses_control": 870,
+   "clauses_arm": 866,
+   "same_text": 839,
+   "flag_flips": 43,
+   "label_changes": 47,
+   "control_only_clauses": 31,
+   "arm_only_clauses": 27,
+   "control_only_rows": 15,
+   "arm_only_rows": 8,
+   "flip_examples": [
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "These certificates are required for external facing AF server and domains and are issued by the AF RA."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "More restrictive federal, DoD, or DAF guidance take precedence over this publication, (e.g.,  DoDI  8520.02, Public  Key  Infrastructure  (PKI)  and  Public  Ke"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "IAL1 and IAL2 and AAL1 and AAL2 bound credentials are allowed on a case-by-case basis. "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "AFDS  obtains  updated  information  from authoritative data sources and replicates that data to the AFNET for subscriber accounts. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The DoD maintains a repository for posting CA certificates and policy object identifiers for approved external PKIs."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Designated as the DAF lead command for Cyberspace. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Provides a common repository known as authoritative attribute store of role-based identity data for warfighters that can be used by systems, applications, and d"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Go to the following link for the Alternate TA Designation Letter and Acknowledgement of Responsibilities: https://intelshare.intelink.gov/sites/usafpki/_layouts"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Privileged subscribers are separated into a tier system, in accordance with DoDD 5205.16, The DoD Insider Threat Program."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "It  also  ensures  external  roots  and  associated certificates  can  be  trusted  by  AF  relying  parties. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Government sponsors approve the applications for government credentials."
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "This Memorandum becomes void after one year has elapsed from the date of this Memorandum, or upon incorporation by interim change to, or rewrite of, DAFMAN17-13"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Securely  issues  approved  CMD  DoD  PKI  device  certificates  and  allows DoD PKI subscribers to request and receive subscriber credentials onto their CMDs."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Enterprise  IDD  (unclassified  or  classified):    Retrieves  data  from  multiple,  disparate USAF and DoD data sources to create a single consolidated digita"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "RAs are individuals authorized by the CMA to collect, verify, and submit information provided by potential subscribers, which is entered into public key certifi"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Methods and mechanisms  are  used  to  restrict  physical  and  logical  access  based  on  verified  identity,  valid credentials, and policies governing the a"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Revocation status information is provided using the OCSP, CRLs, or some other  mechanism  in  accordance  with  Internet  X.509  PKI  Certificate  and  CRL  Pro"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Primary cybersecurity technical advisor to the AO for the DAF IT."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The DoD CAC, for those eligible, serves as the authoritative assertion of identity and is used as proof of DoD or DAF affiliation,  in  accordance  with  DoDI  "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "It remains the service provider's or relying party's responsibility for which attributes ensure proper authorization occurs."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "For NIPRNET subscriber accounts on AFNET, unique identity attribute binding for individual (non-administrative or non-group accounts) is the responsibility of A"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Compliance  with  the  FIPS  standards  include  antitamper detection, evaluation to Protection Profile at Evaluated Assurance Level 2 or greater, and a secure "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Failure to complete annual Cyber Awareness Challenge training results in immediate suspension of access to unclassified and classified information systems. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "AF RAs are appointed by SAF/CNZ."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "CACs are returned to a RAPIDS location. (T-0)."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The  DAF  follows  defined  sensitivity  levels  to  determine  appropriate  authentication methods, in accordance with National Institute of Standards and Tech"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The program is the Authoritative Data Source for the E4C address and makes it available to other authoritative data sources, as requested."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "When  the  subscriber accomplishes the face-to-face requirement, the identity meets IAL3, in accordance with NIST SP 800-63-3."
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "The DoD Non-classified Internet Protocol Router Network (NIPRNet) and National Security Systems (NSS) Secret Internet Protocol Router Network (SIPRNet) PKI curr"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Describes data elements available in the AFDS IDD repository."
+    ]
+   ],
+   "lost_examples": [
+    "Submit requests for waivers through the chain of command to  the  appropriate  Tier  waiver  approval  authority,  or  alternately,  to  the  requestor's comman",
+    "This  DAFMAN  may  be  supplemented  but  all supplements  to  this  publication  must  be  routed  to  SAF/CN,  Cybersecurity  Division,  for coordination prio",
+    "Submit requests for waivers through the chain of command to  the  appropriate  Tier  waiver  approval  authority,  or  alternately,  to  the  requestor's comman",
+    "Go to https://intelshare.intelink.gov/sites/usaf-pki/ReferenceDocs/CI-09-03-002_Role-\nBased_Certificate_Request_Procedures_v1.3.0.pdf ; open the Standard Operat",
+    "Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change",
+    "Ensure all records generated as a result of processes prescribed in this publication adhere  to  AFI  33-322, Records  Management  and  Information  Governance ",
+    "Encryption certificates for organizational email mailboxes, to include portable electronic devices (PEDs), must have a designated sponsor appointed in writing u",
+    "For organizational email mailboxes on PEDs, follow the appropriate DoD STIG. ",
+    "This  DAFMAN  may  be  supplemented  but  all supplements  to  this  publication  must  be  routed  to  SAF/CN,  Cybersecurity  Division,  for coordination prio",
+    "DAF systems and\norganizations will use AFDS IDD (DAF attribute store) service to populate directories with DAF enterprise attributes. (T-3).",
+    "The AF RA or LRA, as appropriate, will maintain a file of requirement validation documentation. (T-3). ",
+    "Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change",
+    "Ensure all records generated as a result of processes prescribed in this publication adhere  to  AFI  33-322, Records  Management  and  Information  Governance ",
+    "TAs are required to submit the request for VIP, Group, Code Signing, and Role sponsor to ACC HQ CCC/CYX ICAM\n( https://cs2.eis.af.mil/sites/13015/_layouts/15/st",
+    "The Security Manager  performs  a  security  clearance  and  background  investigation  verification  and\ndigitally signs the form before routing for account cr"
+   ],
+   "added_examples": [
+    "organizations will use AFDS IDD (DAF attribute store) service to populate directories with DAF enterprise attributes. (T-3).",
+    "digitally signs the form before routing for account creation, in accordance with DoDM 5200.02_AFMAN 16-1405 and AFMAN17-1301.",
+    "Based_Certificate_Request_Procedures_v1.3.0.pdf ; open the Standard Operating Procedure, then go to Appendix C to obtain the list of applicable personnel templa",
+    "Go to https://intelshare.intelink.gov/sites/usaf-pki/ReferenceDocs/CI-09-03-002_Role-",
+    "System/Enclave ISSM is responsible for requesting the removal of any stale or not required accounts in accordance with CJCSI 6510.01F. (T-3).",
+    "TAs are required to submit the request for VIP, Group, Code Signing, and Role sponsor to ACC HQ CCC/CYX ICAM",
+    "The Security Manager  performs  a  security  clearance  and  background  investigation  verification  and",
+    "By Order of the Secretary of the Air Force, this Department of the Air Force Guidance Memorandum immediately issues DAFGM2025-01 to the Department of Air Force "
+   ]
+  },
+  "TOTAL": {
+   "clauses_control": 2170,
+   "clauses_arm": 2182,
+   "same_text": 2080,
+   "flag_flips": 77,
+   "label_changes": 85,
+   "control_only": 90,
+   "arm_only": 102,
+   "control_only_rows": 32,
+   "arm_only_rows": 15
+  }
+ },
+ "C": {
+  "afi17-203": {
+   "clauses_control": 337,
+   "clauses_arm": 344,
+   "same_text": 324,
+   "flag_flips": 11,
+   "label_changes": 12,
+   "control_only_clauses": 13,
+   "arm_only_clauses": 20,
+   "control_only_rows": 6,
+   "arm_only_rows": 4
+  },
+  "afi13-550": {
+   "clauses_control": 324,
+   "clauses_arm": 315,
+   "same_text": 297,
+   "flag_flips": 1,
+   "label_changes": 1,
+   "control_only_clauses": 27,
+   "arm_only_clauses": 18,
+   "control_only_rows": 5,
+   "arm_only_rows": 2
+  },
+  "afi10-2402": {
+   "clauses_control": 639,
+   "clauses_arm": 657,
+   "same_text": 620,
+   "flag_flips": 20,
+   "label_changes": 22,
+   "control_only_clauses": 19,
+   "arm_only_clauses": 37,
+   "control_only_rows": 6,
+   "arm_only_rows": 1
+  },
+  "dafman17-1304": {
+   "clauses_control": 870,
+   "clauses_arm": 866,
+   "same_text": 839,
+   "flag_flips": 43,
+   "label_changes": 47,
+   "control_only_clauses": 31,
+   "arm_only_clauses": 27,
+   "control_only_rows": 15,
+   "arm_only_rows": 8,
+   "flip_examples": [
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "These certificates are required for external facing AF server and domains and are issued by the AF RA."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "More restrictive federal, DoD, or DAF guidance take precedence over this publication, (e.g.,  DoDI  8520.02, Public  Key  Infrastructure  (PKI)  and  Public  Ke"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "IAL1 and IAL2 and AAL1 and AAL2 bound credentials are allowed on a case-by-case basis. "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "AFDS  obtains  updated  information  from authoritative data sources and replicates that data to the AFNET for subscriber accounts. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The DoD maintains a repository for posting CA certificates and policy object identifiers for approved external PKIs."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Designated as the DAF lead command for Cyberspace. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Provides a common repository known as authoritative attribute store of role-based identity data for warfighters that can be used by systems, applications, and d"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Go to the following link for the Alternate TA Designation Letter and Acknowledgement of Responsibilities: https://intelshare.intelink.gov/sites/usafpki/_layouts"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Privileged subscribers are separated into a tier system, in accordance with DoDD 5205.16, The DoD Insider Threat Program."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "It  also  ensures  external  roots  and  associated certificates  can  be  trusted  by  AF  relying  parties. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Government sponsors approve the applications for government credentials."
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "This Memorandum becomes void after one year has elapsed from the date of this Memorandum, or upon incorporation by interim change to, or rewrite of, DAFMAN17-13"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Securely  issues  approved  CMD  DoD  PKI  device  certificates  and  allows DoD PKI subscribers to request and receive subscriber credentials onto their CMDs."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Enterprise  IDD  (unclassified  or  classified):    Retrieves  data  from  multiple,  disparate USAF and DoD data sources to create a single consolidated digita"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "RAs are individuals authorized by the CMA to collect, verify, and submit information provided by potential subscribers, which is entered into public key certifi"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Methods and mechanisms  are  used  to  restrict  physical  and  logical  access  based  on  verified  identity,  valid credentials, and policies governing the a"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Revocation status information is provided using the OCSP, CRLs, or some other  mechanism  in  accordance  with  Internet  X.509  PKI  Certificate  and  CRL  Pro"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Primary cybersecurity technical advisor to the AO for the DAF IT."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The DoD CAC, for those eligible, serves as the authoritative assertion of identity and is used as proof of DoD or DAF affiliation,  in  accordance  with  DoDI  "
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "It remains the service provider's or relying party's responsibility for which attributes ensure proper authorization occurs."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "For NIPRNET subscriber accounts on AFNET, unique identity attribute binding for individual (non-administrative or non-group accounts) is the responsibility of A"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Compliance  with  the  FIPS  standards  include  antitamper detection, evaluation to Protection Profile at Evaluated Assurance Level 2 or greater, and a secure "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "Failure to complete annual Cyber Awareness Challenge training results in immediate suspension of access to unclassified and classified information systems. "
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "AF RAs are appointed by SAF/CNZ."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "CACs are returned to a RAPIDS location. (T-0)."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The  DAF  follows  defined  sensitivity  levels  to  determine  appropriate  authentication methods, in accordance with National Institute of Standards and Tech"
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "The program is the Authoritative Data Source for the E4C address and makes it available to other authoritative data sources, as requested."
+    ],
+    [
+     "NOT_REQUIREMENT",
+     "DUTY",
+     "When  the  subscriber accomplishes the face-to-face requirement, the identity meets IAL3, in accordance with NIST SP 800-63-3."
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "The DoD Non-classified Internet Protocol Router Network (NIPRNet) and National Security Systems (NSS) Secret Internet Protocol Router Network (SIPRNet) PKI curr"
+    ],
+    [
+     "DUTY",
+     "NOT_REQUIREMENT",
+     "Describes data elements available in the AFDS IDD repository."
+    ]
+   ],
+   "lost_examples": [
+    "Submit requests for waivers through the chain of command to  the  appropriate  Tier  waiver  approval  authority,  or  alternately,  to  the  requestor's comman",
+    "This  DAFMAN  may  be  supplemented  but  all supplements  to  this  publication  must  be  routed  to  SAF/CN,  Cybersecurity  Division,  for coordination prio",
+    "Submit requests for waivers through the chain of command to  the  appropriate  Tier  waiver  approval  authority,  or  alternately,  to  the  requestor's comman",
+    "Go to https://intelshare.intelink.gov/sites/usaf-pki/ReferenceDocs/CI-09-03-002_Role-\nBased_Certificate_Request_Procedures_v1.3.0.pdf ; open the Standard Operat",
+    "Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change",
+    "Ensure all records generated as a result of processes prescribed in this publication adhere  to  AFI  33-322, Records  Management  and  Information  Governance ",
+    "Encryption certificates for organizational email mailboxes, to include portable electronic devices (PEDs), must have a designated sponsor appointed in writing u",
+    "For organizational email mailboxes on PEDs, follow the appropriate DoD STIG. ",
+    "This  DAFMAN  may  be  supplemented  but  all supplements  to  this  publication  must  be  routed  to  SAF/CN,  Cybersecurity  Division,  for coordination prio",
+    "DAF systems and\norganizations will use AFDS IDD (DAF attribute store) service to populate directories with DAF enterprise attributes. (T-3).",
+    "The AF RA or LRA, as appropriate, will maintain a file of requirement validation documentation. (T-3). ",
+    "Refer recommended changes and questions about this publication to the Office of Primary Responsibility (OPR) using the AF  Form 847, Recommendation  for  Change",
+    "Ensure all records generated as a result of processes prescribed in this publication adhere  to  AFI  33-322, Records  Management  and  Information  Governance ",
+    "TAs are required to submit the request for VIP, Group, Code Signing, and Role sponsor to ACC HQ CCC/CYX ICAM\n( https://cs2.eis.af.mil/sites/13015/_layouts/15/st",
+    "The Security Manager  performs  a  security  clearance  and  background  investigation  verification  and\ndigitally signs the form before routing for account cr"
+   ],
+   "added_examples": [
+    "organizations will use AFDS IDD (DAF attribute store) service to populate directories with DAF enterprise attributes. (T-3).",
+    "digitally signs the form before routing for account creation, in accordance with DoDM 5200.02_AFMAN 16-1405 and AFMAN17-1301.",
+    "Based_Certificate_Request_Procedures_v1.3.0.pdf ; open the Standard Operating Procedure, then go to Appendix C to obtain the list of applicable personnel templa",
+    "Go to https://intelshare.intelink.gov/sites/usaf-pki/ReferenceDocs/CI-09-03-002_Role-",
+    "System/Enclave ISSM is responsible for requesting the removal of any stale or not required accounts in accordance with CJCSI 6510.01F. (T-3).",
+    "TAs are required to submit the request for VIP, Group, Code Signing, and Role sponsor to ACC HQ CCC/CYX ICAM",
+    "The Security Manager  performs  a  security  clearance  and  background  investigation  verification  and",
+    "By Order of the Secretary of the Air Force, this Department of the Air Force Guidance Memorandum immediately issues DAFGM2025-01 to the Department of Air Force "
+   ]
+  },
+  "TOTAL": {
+   "clauses_control": 2170,
+   "clauses_arm": 2182,
+   "same_text": 2080,
+   "flag_flips": 75,
+   "label_changes": 82,
+   "control_only": 90,
+   "arm_only": 102,
+   "control_only_rows": 32,
+   "arm_only_rows": 15
+  }
+ }
+}
