@@ -8,12 +8,13 @@ Features exercised:
   WP-23.2 — XLSX export via checklist service → to_xlsx()
   WP-23.4 — cybersecurity profile has skip_sections; param accepted by the
              structure-aware chunk_text entry point
-  WP-23.5 — recovered_truncated flows from extraction through parse_and_normalize
   Regression — CSV/JSON/MD checklist generation unchanged by Phase 23
 
 WP-23.3's overlap-guard/page-contiguity tests were removed under WP-34.1 (legacy
 pymupdf/pdfplumber chunking, the only thing those functions applied to, was
-deleted -- see archive/PHASE34_REQUIREMENTS.md).
+deleted -- see archive/PHASE34_REQUIREMENTS.md). WP-23.5's recovered_truncated tests were removed
+with the list-writing extraction step it belonged to (replaced by clause labeling, which writes no
+truncated lists to recover).
 """
 import io
 import json
@@ -25,8 +26,6 @@ import pytest
 
 from core.profiles import load_profile
 from pipeline.checklist_export import to_csv, to_json, to_markdown, to_xlsx
-from pipeline.llm_extract_requirements import extract_json_array
-from pipeline.parse_and_normalize import run as normalize_run
 from services.checklist_service import generate
 
 _FIXTURE = Path(__file__).resolve().parent.parent / "fixtures" / "sample_normalized_reqs.jsonl"
@@ -100,74 +99,6 @@ def test_chunk_text_run_structure_aware_accepts_skip_sections_param():
     import pipeline.chunk_text as ct
     sig = inspect.signature(ct.run_structure_aware)
     assert "skip_sections" in sig.parameters
-
-
-# ---------------------------------------------------------------------------
-# WP-23.5 — recovered_truncated flows through parse_and_normalize
-# ---------------------------------------------------------------------------
-
-def _write_jsonl(path: Path, records: list[dict]) -> None:
-    with open(path, "w") as f:
-        for rec in records:
-            f.write(json.dumps(rec) + "\n")
-
-
-@pytest.fixture()
-def normalize_dir(tmp_path: Path) -> Path:
-    return tmp_path
-
-
-def test_recovered_truncated_true_preserved_in_normalized(normalize_dir):
-    reqs_path = normalize_dir / "doc_extracted_requirements.jsonl"
-    chunks_path = normalize_dir / "doc_chunks.jsonl"
-    _write_jsonl(reqs_path, [{
-        "chunk_id": 1,
-        "requirement_id": "R-1-0",
-        "source_quote": "Systems shall encrypt data at rest.",
-        "source_ref": "3.1",
-        "description": "",
-        "domain_tags": [],
-        "requirement_type": "",
-        "recovered_truncated": True,
-    }])
-    _write_jsonl(chunks_path, [{"chunk_id": 1, "page_start": 1, "page_end": 1, "text": "Systems shall encrypt data at rest."}])
-    out_path = normalize_run(str(reqs_path), str(chunks_path), "", str(normalize_dir))
-    records = [json.loads(line) for line in Path(out_path).read_text().splitlines() if line.strip()]
-    assert len(records) == 1
-    assert records[0].get("recovered_truncated") is True
-
-
-def test_recovered_truncated_false_for_normal_extraction(normalize_dir):
-    reqs_path = normalize_dir / "doc2_extracted_requirements.jsonl"
-    chunks_path = normalize_dir / "doc2_chunks.jsonl"
-    _write_jsonl(reqs_path, [{
-        "chunk_id": 1,
-        "requirement_id": "R-1-0",
-        "source_quote": "Organizations must implement access controls.",
-        "source_ref": "AC-1",
-        "description": "",
-        "domain_tags": [],
-        "requirement_type": "",
-    }])
-    _write_jsonl(chunks_path, [{"chunk_id": 1, "page_start": 1, "page_end": 1, "text": "Organizations must implement access controls."}])
-    out_path = normalize_run(str(reqs_path), str(chunks_path), "", str(normalize_dir))
-    records = [json.loads(line) for line in Path(out_path).read_text().splitlines() if line.strip()]
-    assert len(records) == 1
-    assert records[0].get("recovered_truncated") is False
-
-
-def test_extract_json_array_returns_tuple():
-    result, recovered = extract_json_array('[{"source_quote": "test", "source_ref": "1"}]')
-    assert isinstance(result, list)
-    assert isinstance(recovered, bool)
-    assert recovered is False
-
-
-def test_extract_json_array_truncated_returns_true():
-    raw = '[{"source_quote": "test", "source_ref": "1"}, {"source_quote": "inc'
-    result, recovered = extract_json_array(raw)
-    assert result is not None
-    assert recovered is True
 
 
 # ---------------------------------------------------------------------------

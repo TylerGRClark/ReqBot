@@ -44,12 +44,12 @@ def _get_ranker(model_name: str = DEFAULT_RERANK_MODEL):
 def _scoring_text(candidate: dict) -> str:
     """Text FlashRank scores against the query for one candidate.
 
-    Prefers embedding_text (WP-39.2's parent-stem-prefixed reconstruction)
-    over bare source_quote, mirroring pipeline/embed_and_index.py's
-    build_embedding_text() precedence at index time -- without it, a
-    fragment-shaped quote (e.g. "(3) Restrain competition." with no visible
-    list-introducing clause) reaches the reranker with no governing context
-    and can be wrongly demoted.
+    Prefers embedding_text (a parent stem in front of the quote) over bare
+    source_quote. Only points indexed before clause labeling carry it: the
+    step that wrote it was deleted with the list-writing extraction, and a
+    point indexed since has none, so it is scored on source_quote. Whether
+    it should be scored on explained_text, as the index now embeds, changes
+    search ranking and is a separate, measured decision (not made here).
 
     Also includes source_ref when present (Codex review, PR #191), for the
     same reason build_embedding_text() appends it at index time: for a

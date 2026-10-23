@@ -1,9 +1,12 @@
-"""WP-45.7e: the fresh draw and its blind pack (offline; synthetic frames for the logic, the committed files for integrity; no corpus, no labels)."""
+"""WP-45.7e: the fresh draw and its blind pack (offline; synthetic frames for the logic, the committed files for integrity; no corpus, no labels).
+
+Tests that load a script importing the deleted list-writing extraction step or parent-stem finders were removed when clause labeling replaced
+that step (WP-4 of the extraction replacement; see eval/README.md). The scripts themselves are frozen and unchanged.
+"""
 
 import hashlib
 import importlib.util
 import json
-import random
 import sys
 from pathlib import Path
 
@@ -25,92 +28,8 @@ def _load(name):
 
 
 @pytest.fixture(scope="module")
-def FP():
-    return _load("fresh_pack")
-
-
-@pytest.fixture(scope="module")
 def FG():
     return _load("fresh_gold")
-
-
-def _rows(FP, dup_quote=None):
-    """Synthetic census rows with exactly the audit's stratum populations."""
-    rows, i = [], 0
-    for stratum, n in FP.AP.POPULATION.items():
-        for k in range(n):
-            rows.append({"stratum": stratum, "index": i, "document": f"D{i % 3}", "quote": f"quote {stratum} {k}", "method": "m", "stem": "",
-                         "requirement_id": f"REQ-{i}", "chunk_id": 1})
-            i += 1
-    return rows
-
-
-def _audit_first_n(FP, rows, excluded):
-    taken = set()
-    for stratum in FP.AP.POPULATION:
-        frame = sorted((r for r in rows if r["stratum"] == stratum and r["index"] not in excluded), key=lambda r: r["index"])
-        random.Random(f"{FP.AP.SEED}/{stratum}").shuffle(frame)
-        taken |= {r["index"] for r in frame[: FP.AP.SAMPLE[stratum]]}
-    return taken
-
-
-def test_the_draw_takes_the_records_after_the_audits_own_slice_of_each_shuffle(FP):
-    rows = _rows(FP)
-    chosen, skipped = FP.draw(rows, set(), set())
-    by = {}
-    for r in chosen:
-        by[r["stratum"]] = by.get(r["stratum"], 0) + 1
-    assert by == {s: n for s, n in FP.EXTRA.items() if n} and len(chosen) == sum(FP.EXTRA.values()) == 114
-    assert not {r["index"] for r in chosen} & _audit_first_n(FP, rows, set())  # none was in the audit
-    assert [r["id"] for r in chosen] == [f"R{n}" for n in range(201, 201 + len(chosen))] and sum(skipped.values()) == 0
-    again, _ = FP.draw(_rows(FP), set(), set())
-    assert [r["index"] for r in again] == [r["index"] for r in chosen]  # deterministic
-    # the extension is the NEXT slice of the same shuffle: the audit's n plus ours are distinct and contiguous
-    frame = sorted((r for r in rows if r["stratum"] == "same-chunk"), key=lambda r: r["index"])
-    random.Random(f"{FP.AP.SEED}/same-chunk").shuffle(frame)
-    expected = {r["index"] for r in frame[FP.AP.SAMPLE["same-chunk"]: FP.AP.SAMPLE["same-chunk"] + FP.EXTRA["same-chunk"]]}
-    assert {r["index"] for r in chosen if r["stratum"] == "same-chunk"} == expected
-
-
-def test_records_that_duplicate_a_spent_quote_are_skipped_and_the_next_one_takes_their_place(FP):
-    rows = _rows(FP)
-    base, _ = FP.draw(rows, set(), set())
-    victim = next(r for r in base if r["stratum"] == "cross-chunk")
-    spent = {(victim["document"], FP.B.normalize(victim["quote"]).lower())}
-    chosen, skipped = FP.draw(_rows(FP), set(), spent)
-    assert victim["index"] not in {r["index"] for r in chosen} and skipped["cross-chunk"] == 1
-    assert len([r for r in chosen if r["stratum"] == "cross-chunk"]) == FP.EXTRA["cross-chunk"]  # replaced from further down the shuffle
-    assert not {(r["document"], FP.B.normalize(r["quote"]).lower()) for r in chosen} & spent
-
-
-def test_the_draw_stops_when_a_stratum_cannot_supply_or_the_frame_changed(FP):
-    rows = _rows(FP)
-    every_quote = {(r["document"], FP.B.normalize(r["quote"]).lower()) for r in rows if r["stratum"] == "cross-chunk"}
-    with pytest.raises(SystemExit) as e:
-        FP.draw(rows, set(), every_quote)
-    assert "cross-chunk" in str(e.value)
-    with pytest.raises(SystemExit) as e:
-        FP.draw(rows[:-1], set(), set())
-    assert "populations changed" in str(e.value)
-
-
-def test_the_committed_pack_is_the_unlabeled_draw_it_says_it_is(FP, FG):
-    manifest = json.loads((_DIR / "outputs/fresh_pack_manifest.json").read_text())
-    pack = _DIR / "fresh_pack"
-    for name, digest in manifest["file_sha256"].items():
-        path = _DIR / "outputs" / name if name == "fresh_draw_map.json" else pack / name
-        assert hashlib.sha256(path.read_bytes()).hexdigest() == digest, name
-    key = json.loads((_DIR / "outputs/fresh_draw_map.json").read_text())["items"]
-    cards = FG.parse_pack_a((pack / "pack_a.md").read_text(encoding="utf-8"))
-    assert set(cards) == set(key) and len(key) == manifest["drawn"] == 114 and min(key) == "R201" and max(key) == "R314"
-    with_stem = {k for k, v in key.items() if v["stem"]}
-    b_ids = set(FG.re.findall(r"^## (R\d{3})\s*$", (pack / "pack_b.md").read_text(encoding="utf-8"), flags=FG.re.M))
-    assert b_ids == with_stem and len(with_stem) == manifest["pass_b_cards"]
-    assert manifest["by_stratum"] == {s: n for s, n in FP.EXTRA.items() if n}
-    # the labelers' instructions and checker are the audit's own, byte for byte
-    audit = _ROOT / "eval/spike_results/wp_45_1/audit_pack"
-    for name in ("RUBRIC.md", "check_labels.py"):
-        assert (pack / name).read_bytes() == (audit / name).read_bytes(), name
 
 
 def test_no_fresh_candidate_is_a_spent_or_audit_record(FG):
@@ -282,21 +201,6 @@ def test_the_committed_gold_equals_the_recomputed_one_and_meets_the_plans_minimu
     assert {g["half"] for g in gold} == {"evaluation"} and {g["set"] for g in gold} == {"audit"}
     # every record of a stem has its verdict and no record without a stem has one
     assert all(bool(g["production_stem"]) == bool(g["stem_verdict"]) for g in gold)
-
-
-def test_the_fresh_gold_works_with_the_scorers_and_the_v6_guards(FG, tree_at_commit):
-    S = _load("score_resolver")
-    gold = json.loads(FG.FROZEN.read_text(encoding="utf-8"))["gold"]
-    assert sum(1 for g in gold if S.attachment_scored(g)) == 104 and sum(1 for g in gold if S.is_real(g)) == 105
-    base = {}
-    for g in gold:
-        if S.attachment_scored(g):
-            base[S.baseline_attachment(g)] = base.get(S.baseline_attachment(g), 0) + 1
-    assert base == {"right": 41, "misleading": 36, "incomplete": 27}  # production on the fresh set, from pass B: the verdict's anchors
-    S.check_sufficiency("v6", gold)
-    manifest = json.loads((S.OUTPUTS / S.FROZEN_CODE["v6"]).read_text())
-    # the manifest pins and every sealed file match the tree of the stage D protocol commit (224e5a8, #241), the tree the one-shot ran from
-    S.check_frozen_code("v6", root=tree_at_commit("224e5a8", {**manifest["files"], **manifest["sealed_until_c2"]}))
 
 
 def test_the_gold_differs_from_the_first_serialization_only_in_the_disclosed_amendments(FG):

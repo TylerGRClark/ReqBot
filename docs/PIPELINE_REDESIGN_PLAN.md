@@ -2,13 +2,15 @@
 
 *Written 2026-10-09 from a discussion with the owner. This is a plan for review: no code, no data and no behavior changes with this PR. Each change below becomes its own PR, with its measurements and pass rules written down before any result is read. A phase number has not been assigned.*
 
-## Status (updated 2026-10-09, evening)
+## Status (updated 2026-10-23)
+
+**Requirement finding was replaced by clause labeling (2026-10-23, this pull request).** Rules cut each chunk into clauses; the model gives each clause one label (DUTY, PROHIBITION, PERMISSION, NOT_REQUIREMENT, UNSURE); every clause not labeled NOT_REQUIREMENT becomes a row in the document's own words, anchored exactly. Deleted with the old list-writing step: anchoring's search (anchor fields are now the splitter's offsets, always exact), the quote-to-sentence stretching and same-sentence merging, parent-stem reconstruction, and normalizing's fuzzy grounding, word-coverage and dangling-clause checks. Sections 2 and 4 below describe the pipeline before the switch. The live library is unchanged until it is re-run (design: reqbot-agent-docs history/extraction-replacement-design_2026-10-22.md).
 
 | Plan step | State |
 |---|---|
 | Plan, documentation rewrite, rename (`--skip-to` takes names) | done (#284, #285, #286) |
-| 4 Anchoring (`anchor_*` fields) | done (#287); 92.7% of roots exact |
-| Root kept, explained layer beside it, IDs from the root, merged roots | done (#288, #291) |
+| 4 Anchoring (`anchor_*` fields) | done (#287); 92.7% of roots exact. Since clause labeling: the splitter's offsets, 100% exact by construction, the search deleted |
+| Root kept, explained layer beside it, IDs from the root, merged roots | done (#288, #291); merged roots deleted with clause labeling (a clause is already a whole line, no two rows share one) |
 | 6 Context attaching, rule tier: sentence and verified lead-in stored on the record | done (in #288); citation, section heading, parent paragraph and applies-to are still built per checklist, not stored |
 | 5 Rating of the explained text (30 rows) | done: 28 of 28 rated better or same (bar 80%); three rows noted as not requirements (a lead-in line and two definitions), which is the case for screening |
 | 7 Screening on the explained text, filters flag instead of reject | **not built**: waits for the owner's decision on colon-ending lead-ins (section 8) and his rating |
@@ -16,7 +18,7 @@
 | Readers show the explained text (Ask, Evidence, Trace, Compare, cards, CLI) | done (#289) |
 | 8 to 10 Faithfulness check, repair, re-check | not built; own plan and the owner's rating first |
 | Model-picks (resolver) for prose documents | not built; waits for rebuilt test groups |
-| Data | the 13 reference documents were re-run with the new code, the Qdrant index rebuilt from them, draft questions regenerated |
+| Data | the 13 reference documents were re-run with the new code, the Qdrant index rebuilt from them, draft questions regenerated. Not yet re-run with clause labeling |
 | Requirement kind (section 10) | **proposed, 2026-10-11**; the owner settled the list of kinds the same day. Stage 1 (write the kind, no behavior change) is next; nothing else is built |
 
 ## 1. Principles (the owner's)
@@ -29,7 +31,7 @@
 6. **Every piece of the explained text that comes from the document is verbatim**, and each piece is labeled with what it is and where it came from.
 7. **A model chooses or judges; it does not write text into the explained layer.** There is no plain-language restatement layer (owner's decision). The one exception is the repair step (step 9): it writes, but into its own layer, from the root's exact words, labeled as model-written, and what it writes must pass the faithfulness check again.
 
-## 2. The pipeline today
+## 2. The pipeline before clause labeling (as written 2026-10-09)
 
 | Step | Job | Model? | Touches the quote? |
 |---|---|---|---|

@@ -78,6 +78,13 @@ def _run(tmp_path, call):
     return _read(out)
 
 
+def _run_incomplete(tmp_path, call):
+    """A run with a failed batch stops the pipeline (RuntimeError) but keeps its finished rows and the ledger on disk; returns the rows."""
+    with pytest.raises(RuntimeError, match="Clause labeling is incomplete"):
+        cl.run(str(_write_chunks(tmp_path)), str(tmp_path / "out"), model="ornith:35b", call=call)
+    return _read(tmp_path / "out" / "doc_extracted_requirements.jsonl")
+
+
 # ---- prompt
 def test_the_prompt_file_is_the_frozen_one():
     path = REPO / "pipeline" / "prompts" / "clause_label_v3.txt"
@@ -206,7 +213,7 @@ def test_an_unparsed_batch_makes_every_clause_unsure_and_logs_a_parse_failure(tm
 
 def test_a_connection_failure_fails_the_batch_and_its_chunks_get_no_rows(tmp_path):
     model = FakeModel({2: requests.ConnectionError("refused")})  # batch 2 holds chunks 1 and 2
-    rows = _run(tmp_path, model)
+    rows = _run_incomplete(tmp_path, model)
     assert [(r["chunk_id"], r["clause_index"]) for r in rows] == [(0, 2), (0, 3), (3, 0)]
     ledger = _read(tmp_path / "out" / "doc_raw_responses.jsonl")
     assert [(r["batch_id"], r["status"]) for r in ledger] == [("b00000", "complete"), ("b00001", "failed"), ("b00002", "complete")]
@@ -223,7 +230,7 @@ def test_the_ledger_line_records_the_batch(tmp_path):
 
 
 def test_resume_reuses_finished_batches_and_redoes_failed_ones(tmp_path):
-    _run(tmp_path, FakeModel({2: requests.ConnectionError("refused")}))
+    _run_incomplete(tmp_path, FakeModel({2: requests.ConnectionError("refused")}))
     again = FakeModel()
     rows = _run(tmp_path, again)
     assert len(again.prompts) == 1
@@ -244,9 +251,41 @@ def test_resume_does_not_reuse_another_models_answers(tmp_path):
 def test_a_run_of_failed_batches_stops_the_run(tmp_path, monkeypatch):
     monkeypatch.setattr(cl, "MAX_FAILED_IN_A_ROW", 2)
     model = FakeModel({1: requests.ConnectionError("down"), 2: requests.ConnectionError("down")})
-    rows = _run(tmp_path, model)
-    assert len(model.prompts) == 2 and rows == []
+    with pytest.raises(RuntimeError, match="none of 3 batches"):  # nothing labeled at all: the pipeline stops instead of indexing an empty document
+        _run(tmp_path, model)
+    assert len(model.prompts) == 2 and _read(tmp_path / "out" / "doc_extracted_requirements.jsonl") == []
     assert [r.get("error") for r in _read(tmp_path / "out" / "doc_raw_responses.jsonl")] == ["down", "down", "not_attempted"]
+
+
+def test_a_run_with_a_failed_batch_stops_the_pipeline_but_keeps_the_finished_rows(tmp_path):
+    # Codex P1 on #365: a partly labeled document must not flow on to normalizing and the index as if it were complete
+    rows = _run_incomplete(tmp_path, FakeModel({3: requests.ConnectionError("down")}))  # the last batch fails, the first two are labeled
+    assert rows and all(r["chunk_id"] != 3 for r in rows)
+
+
+def test_an_unreachable_server_fails_before_any_labeling(tmp_path, monkeypatch):
+    def get(url, timeout):
+        raise requests.ConnectionError("refused")
+
+    monkeypatch.setattr(requests, "get", get)
+    monkeypatch.setattr(requests, "post", lambda *a, **k: pytest.fail("no labeling call once the server is known to be down"))
+    with pytest.raises(RuntimeError, match="Cannot reach Ollama at http://ollama.invalid:11434"):
+        cl.run(str(_write_chunks(tmp_path)), str(tmp_path / "out"), model="ornith:35b", ollama_url="http://ollama.invalid:11434")
+    assert not (tmp_path / "out" / "doc_extracted_requirements.jsonl").exists()
+
+
+def test_a_model_the_server_does_not_list_only_warns(monkeypatch, caplog):
+    seen = []
+
+    def get(url, timeout):
+        seen.append(url)
+        return _Resp(200, {"models": [{"name": "llama3.1:8b"}, {"name": "ornith:35b"}]})
+
+    monkeypatch.setattr(requests, "get", get)
+    cl.check_server("http://ollama.invalid:11434/", "ornith:35b")
+    assert seen == ["http://ollama.invalid:11434/api/tags"] and "not found" not in caplog.text
+    cl.check_server("http://ollama.invalid:11434", "other:1b")
+    assert "Model 'other:1b' not found" in caplog.text
 
 
 def test_a_stable_id_comes_from_the_existing_recipe_when_the_document_is_known(tmp_path):
@@ -265,6 +304,13 @@ def test_each_source_ref_origin():
     assert cl.source_refs(chunk, chunk["raw_text"], clauses) == [("A2.1", "own_number"), ("A2.1", "number_above"), ("2.5.1.1", "own_number")]
     assert cl.source_refs({"section_title_path": ["X"], "section_ref_path": ["7.3"]}, "Do it.", cl.document_clauses([{"chunk_id": 1, "raw_text": "Do it."}])) == [
         ("7.3", "section_path")]
+
+
+def test_a_table_cell_number_is_not_the_number_above_for_later_rows():
+    # Codex P2 on #365: a cell value such as "3.4.1" must not become the "number above" of every later row of an uncaptioned table
+    chunk = {"chunk_id": 1, "raw_text": "| 3.4.1 | Review logs weekly |\n| Report incidents daily | ISSO |"}
+    clauses = cl.document_clauses([chunk])
+    assert [o for _, o in cl.source_refs(chunk, chunk["raw_text"], clauses)] == ["none", "none"]
 
 
 def test_a_number_inside_a_table_cell_is_not_the_rows_paragraph():
@@ -317,10 +363,12 @@ def test_request_errors_are_retried_with_backoff_then_raised(monkeypatch):
     assert calls[0] == "http://ollama.invalid:11434/api/chat"
 
 
-def test_nothing_calls_the_writer_yet():
-    users = [p for d in ("api", "cli", "core", "mcp_server", "pipeline", "services") for p in (REPO / d).rglob("*.py")
-             if "clause_labeling" in p.read_text(encoding="utf-8") and p.name != "clause_labeling.py"]
-    assert users == []
+def test_only_the_pipeline_calls_the_labeler():
+    """WP-4, the switch: requirement finding (run_pipeline.py) is the one caller."""
+    users = [p.relative_to(REPO).as_posix() for d in ("api", "cli", "core", "mcp_server", "pipeline", "services") for p in (REPO / d).rglob("*.py")
+             if re.search(r"from pipeline import .*\bclause_labeling\b|import pipeline\.clause_labeling|from pipeline\.clause_labeling import", p.read_text(encoding="utf-8"))
+             and p.name != "clause_labeling.py"]
+    assert users == ["pipeline/run_pipeline.py"]
 
 
 # ---- reviewer findings on #363
@@ -340,7 +388,7 @@ def test_a_section_path_stored_as_a_string_still_gives_the_citation():
 def test_a_retried_batch_leaves_one_ledger_line_so_the_run_reads_as_complete(tmp_path):
     # Codex P2: index_replace.extraction_gaps counts every "failed" line, so a failure redone on resume must not stay in the ledger.
     from pipeline.index_replace import extraction_gaps
-    _run(tmp_path, FakeModel({2: requests.ConnectionError("refused")}))
+    _run_incomplete(tmp_path, FakeModel({2: requests.ConnectionError("refused")}))
     ledger_path = tmp_path / "out" / "doc_raw_responses.jsonl"
     assert extraction_gaps(ledger_path) == {"failed": 1}
     _run(tmp_path, FakeModel())
@@ -350,7 +398,15 @@ def test_a_retried_batch_leaves_one_ledger_line_so_the_run_reads_as_complete(tmp
 
 def test_batches_left_after_a_stopped_run_are_recorded_as_failed(tmp_path, monkeypatch):
     monkeypatch.setattr(cl, "MAX_FAILED_IN_A_ROW", 1)
-    _run(tmp_path, FakeModel({1: requests.ConnectionError("down")}))
+    with pytest.raises(RuntimeError):
+        _run(tmp_path, FakeModel({1: requests.ConnectionError("down")}))
     ledger = _read(tmp_path / "out" / "doc_raw_responses.jsonl")
     assert [(r["batch_id"], r["status"], r.get("error")) for r in ledger] == [
         ("b00000", "failed", "down"), ("b00001", "failed", "not_attempted"), ("b00002", "failed", "not_attempted")]
+
+
+def test_max_chunks_zero_labels_nothing(tmp_path):
+    # 0 is a limit, not "no limit" (as the deleted extractor treated it; Codex review, PR #365)
+    model = FakeModel()
+    out = cl.run(str(_write_chunks(tmp_path)), str(tmp_path / "out"), model="m", call=model, max_chunks=0)
+    assert model.prompts == [] and _read(out) == []

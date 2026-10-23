@@ -1,7 +1,7 @@
 """Label every clause of a document with the frozen clause-labeling prompt, and build requirement records from the flagged clauses.
 
-Design: reqbot-agent-docs history/extraction-replacement-design_2026-10-22.md, work package WP-3 (sections 1 and 2). NOT wired into the pipeline yet: nothing calls
-`run()` until the switch (WP-4), so the live pipeline is unchanged.
+Design: reqbot-agent-docs history/extraction-replacement-design_2026-10-22.md, work packages WP-3 (sections 1 and 2) and WP-4 (the switch): this is requirement finding
+(Step C) of pipeline/run_pipeline.py. It replaced the step that asked the model to write a list of requirements.
 
 How it works:
 - Clauses come from pipeline/clauses.py, in document order (chunk file order, then clause order), and are sent BATCH_SIZE at a time; a batch may span two chunks.
@@ -134,6 +134,22 @@ def ollama_chat(prompt: str, *, model: str, ollama_url: str, timeout: int = 600)
             _sleep(backoff)
 
 
+def check_server(ollama_url: str, model: str, timeout: int = 10) -> None:
+    """Before labeling: raise RuntimeError when the model server cannot be reached (as the deleted list-writing step did), so a run with the server down fails at once with
+    a clear message instead of writing an empty extraction file; a model the server does not list only gets a warning (its name may be spelled with a tag)."""
+    import requests
+
+    try:
+        resp = requests.get(f"{ollama_url.rstrip('/')}/api/tags", timeout=timeout)
+        resp.raise_for_status()
+        names = {m.get("name") for m in (resp.json() or {}).get("models") or [] if isinstance(m, dict)}
+    except requests.RequestException as e:
+        log.error("Cannot reach Ollama at %s: %s", ollama_url, e)
+        raise RuntimeError(f"Cannot reach Ollama at {ollama_url}: {e}") from e
+    if names and model not in names and f"{model}:latest" not in names:
+        log.warning("Model '%s' not found in Ollama. Available: %s", model, sorted(n for n in names if n))
+
+
 def document_clauses(chunks: list[dict]) -> list[dict]:
     """Every clause of the document in order: chunk file order, then clause order."""
     return [c for chunk in chunks for c in chunk_clauses(chunk)]
@@ -180,7 +196,7 @@ def label_batch(batch: dict, prompt: str, *, model: str, call) -> dict:
 _DOTTED = r"(?:[A-Z]{1,2})?\d+(?:\.\d+)+"
 _OPENS_WITH_NUMBER = re.compile(rf"^\W*({_DOTTED})\.?\s")
 _GAP_IS_NUMBER = re.compile(rf"^\W*({_DOTTED})\.?\W*$")
-_LINE_NUMBER = re.compile(rf"(?m)^\W*({_DOTTED})\.?\s")
+_LINE_NUMBER = re.compile(rf"(?m)^(?!\s*\|)\W*({_DOTTED})\.?\s")  # a table grid line ("| 3.4.1 | ... |") is not a paragraph number
 _TABLE_CAPTION = re.compile(r"(?m)^[ \t]*(Table\s+(?:[A-Z]{1,2})?\d+(?:\.\d+)*)\.(?=\s)")  # "Table 3.1.", "Table A2.1."; "Table 3.1 shows ..." is prose
 _ENTRY_NUMBER = re.compile(rf"^\W*({_DOTTED})\.?(?:\s|$)")
 
@@ -315,11 +331,15 @@ def _write_jsonl(path: Path, records: list[dict]) -> None:
     os.replace(tmp, path)
 
 
-def run(chunks_jsonl: str, output_dir: str, *, model: str, ollama_url: str = "", timeout: int = 600, call=None, document_id: str | None = None) -> str:
+def run(chunks_jsonl: str, output_dir: str, *, model: str, ollama_url: str = "", timeout: int = 600, call=None, document_id: str | None = None,
+        max_chunks: int | None = None) -> str:
     """Label every clause of <doc>_chunks.jsonl and write <doc>_extracted_requirements.jsonl (rewritten whole from the ledger), <doc>_parse_failures.jsonl and the ledger
-    <doc>_raw_responses.jsonl in `output_dir`. `call(prompt) -> str` replaces the Ollama call in tests. Returns the requirements path. Not called by the pipeline yet (WP-4)."""
+    <doc>_raw_responses.jsonl in `output_dir`. `call(prompt) -> str` replaces the Ollama call in tests; `max_chunks` labels only the first N chunks (testing). Returns the
+    requirements path."""
     if call is None and not ollama_url:
         raise ValueError("ollama_url is required when no call function is given")
+    if call is None:
+        check_server(ollama_url, model)
     call = call or (lambda prompt: ollama_chat(prompt, model=model, ollama_url=ollama_url, timeout=timeout))
     chunks_path = Path(chunks_jsonl).resolve()
     out_dir = Path(output_dir).resolve()
@@ -331,6 +351,8 @@ def run(chunks_jsonl: str, output_dir: str, *, model: str, ollama_url: str = "",
 
     with open(chunks_path, encoding="utf-8") as f:
         chunks = [json.loads(line) for line in f if line.strip()]
+    if max_chunks is not None:  # 0 labels nothing (a limit, not "no limit")
+        chunks = chunks[:max_chunks]
     template = load_prompt()
     batches = make_batches(document_clauses(chunks))
     done = _load_ledger(raw_path)
@@ -391,4 +413,8 @@ def run(chunks_jsonl: str, output_dir: str, *, model: str, ollama_url: str = "",
     log.info("Clause labeling done: %s; %d rows", counts, len(rows))
     if failed_chunks:
         log.warning("%d chunk(s) have no rows because a batch failed; run again in the same folder to retry: %s", len(failed_chunks), sorted(failed_chunks))
+    if batches and not finished:  # not one batch labeled: the model server or the model is not working; stop the pipeline rather than index an empty document
+        raise RuntimeError(f"Clause labeling failed: none of {len(batches)} batches could be labeled with model {model}. Run again in the same folder to resume.")
+    if counts["failed"]:  # a partly labeled document must not flow on to normalizing and the index as if it were complete; the ledger and the finished batches are kept, a re-run retries only the failed ones
+        raise RuntimeError(f"Clause labeling is incomplete: {counts['failed']} of {len(batches)} batches failed ({len(failed_chunks)} chunks have no rows). Run again in the same folder to resume; finished batches are reused.")
     return str(reqs_path)

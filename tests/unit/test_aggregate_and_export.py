@@ -72,3 +72,19 @@ def test_stats_json_file_contains_the_same_values(tmp_path):
     written = json.loads(stats_path.read_text(encoding="utf-8"))
     assert written["pipeline"]["layout_mode_used"] == "docling"
     assert written["pipeline"]["skip_sections_applied"] is True
+
+
+def test_label_batch_stats_come_from_the_clause_labelers_ledger(tmp_path):
+    ledger = [{"batch_id": "b0", "status": "complete"}, {"batch_id": "b1", "status": "complete"}, {"batch_id": "b2", "status": "unparsed"},
+              {"batch_id": "b3", "status": "failed"}]
+    (tmp_path / "doc_raw_responses.jsonl").write_text("".join(json.dumps(r) + "\n" for r in ledger) + "not json\n", encoding="utf-8")
+    stats = _run(tmp_path)
+    assert (stats["pipeline"]["label_batches"], stats["pipeline"]["label_batches_unparsed"], stats["pipeline"]["label_batches_failed"]) == (4, 1, 1)
+    assert "llm_parse_success_rate_pct" not in stats["pipeline"]
+
+
+def test_clause_label_distribution(tmp_path):
+    reqs_path = tmp_path / "doc_requirements_normalized.jsonl"
+    _write_jsonl(reqs_path, [{"requirement_id": "a", "clause_label": "DUTY"}, {"requirement_id": "b", "clause_label": "DUTY"}, {"requirement_id": "c", "clause_label": "UNSURE"}])
+    stats = run(requirements_jsonl=str(reqs_path), output_dir=str(tmp_path), source_pdf="doc.pdf")
+    assert stats["requirements"]["clause_label_distribution"] == {"DUTY": 2, "UNSURE": 1}

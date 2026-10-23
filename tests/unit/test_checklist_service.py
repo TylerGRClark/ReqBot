@@ -518,3 +518,27 @@ def test_resolve_doc_key_containing_requirements_substring(tmp_path):
     _write_jsonl(run_dir / f"{tricky_key}_requirements_normalized.jsonl", [COMPLETE_REQ])
     result = generate(tmp_path, tricky_key, "cybersecurity")
     assert result["summary"]["total_items"] == 1
+
+
+# ---------------------------------------------------------------------------
+# Clause labeling records (schema 3.0)
+# ---------------------------------------------------------------------------
+
+def _items(tmp_path, records):
+    return generate(_make_doc(tmp_path, "doc", records), "doc", "cybersecurity")["items"]
+
+
+def test_generate_flags_a_clause_the_labeler_was_unsure_about(tmp_path):
+    unsure = {**COMPLETE_REQ, "requirement_id": "REQ-u", "source_quote": "Systems must log access.", "clause_label": "UNSURE"}
+    duty = {**COMPLETE_REQ, "clause_label": "DUTY"}
+    flags = {i["requirement_ids"][0]: i["item_flags"] for i in _items(tmp_path, [duty, unsure])}
+    assert "labeled_unsure" in flags["REQ-u"]
+    assert "labeled_unsure" not in flags["REQ-abc123"]
+
+
+def test_generate_cites_by_the_source_ref_origin(tmp_path):
+    own = {**COMPLETE_REQ, "source_ref": "3.1.1", "source_ref_origin": "own_number"}
+    above = {**COMPLETE_REQ, "requirement_id": "REQ-b", "source_quote": "Systems must log access.", "source_ref": "3.1.2", "source_ref_origin": "number_above"}
+    from_path = {**COMPLETE_REQ, "requirement_id": "REQ-c", "source_quote": "Systems must lock idle sessions.", "source_ref": "4.2", "source_ref_origin": "section_path"}
+    cites = {i["requirement_ids"][0]: i["citation"] for i in _items(tmp_path, [own, above, from_path])}
+    assert cites == {"REQ-abc123": "3.1.1", "REQ-b": "3.1.2 (inferred)", "REQ-c": "4.2 (inferred)"}

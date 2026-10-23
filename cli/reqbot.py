@@ -100,7 +100,7 @@ def cmd_ingest(args: argparse.Namespace) -> int:
         _progress.enable()
 
     replace = bool(getattr(args, "replace", False))
-    if replace and (getattr(args, "max_chunks", None) or getattr(args, "no_index", False)):
+    if replace and (getattr(args, "max_chunks", None) is not None or getattr(args, "no_index", False)):
         log.error("--replace needs the whole document indexed: it cannot be combined with --max-chunks or --no-index")
         return 1
 
@@ -150,8 +150,8 @@ def cmd_ingest(args: argparse.Namespace) -> int:
         if gaps:
             log.warning(
                 "Replace skipped: %s. The new points are indexed but the old ones are kept, because this run may be missing requirements the old index has. "
-                "Run it again to retry those chunks.",
-                " and ".join(f"{n} chunk(s) {k}" for k, n in gaps.items()),
+                "Run it again to retry them.",
+                " and ".join(f"{n} batch(es) of clauses {k}" for k, n in gaps.items()),
             )
             replace = False
 
@@ -1522,7 +1522,9 @@ def cmd_init(args: argparse.Namespace) -> int:
             print(f"  [!] Warning: '{default_model}' not found on Ollama server.")
             print(f"      Available: {', '.join(available_models)}")
 
-        extraction_model = _prompt_role_model("Step C extraction model (default: same as above)", default_model)
+        # requirement finding labels each clause with this model; it was measured with the recommended one (blank still follows the default model)
+        extraction_model = _prompt_role_model(f"Requirement-finding model, labels each clause (recommended: {_config.RECOMMENDED_EXTRACTION_MODEL}; blank: same as above)",
+                                              default_model)
         if extraction_model and available_models and not _model_installed(extraction_model):
             print(f"  [!] Warning: '{extraction_model}' not found on Ollama server.")
             print(f"      Available: {', '.join(available_models)}")
@@ -1955,7 +1957,7 @@ def main() -> None:
     p_ingest.add_argument("--output-dir", type=str, help="Output directory")
     p_ingest.add_argument(
         "--extraction-model", type=str, default=None, dest="extraction_model",
-        help="Ollama model for Step C extraction (default: from config)",
+        help="Ollama model that labels the clauses in requirement finding (default: extraction_model from config)",
     )
     p_ingest.add_argument(
         "--enrichment-model", type=str, default=None, dest="enrichment_model",
@@ -2039,7 +2041,7 @@ def main() -> None:
     p_batch.add_argument("pdf_dir", type=str, help="Directory containing PDF files")
     p_batch.add_argument(
         "--extraction-model", type=str, default=None, dest="extraction_model",
-        help="Ollama model for Step C extraction (default: from config)",
+        help="Ollama model that labels the clauses in requirement finding (default: extraction_model from config)",
     )
     p_batch.add_argument(
         "--enrichment-model", type=str, default=None, dest="enrichment_model",

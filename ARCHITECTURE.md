@@ -44,10 +44,11 @@ This page maps implementation ownership and change dependencies for contributors
 | `pipeline/run_pipeline.py` | In-process stage sequencing, resume boundaries, stage failure/fallback behavior. |
 | `pipeline/section_parser.py` | PDF reading: Docling PDF conversion and ancestry/page/parent metadata. |
 | `pipeline/chunk_text.py` | Chunking: HybridChunker, breadcrumbs, section exclusions, and chunk artifacts. |
-| `pipeline/llm_extract_requirements.py` | Requirement finding: the inclusive prompt, Ollama extraction, response parsing, prompt-hash cache. |
-| `pipeline/parse_and_normalize.py` | Normalizing and checking: quote checks, junk filters, deduplication, whole-sentence expansion, document/requirement identity. Several jobs in one module today; the redesign plan splits it. |
-| `pipeline/sentence_expand.py` | Expands a quote to the whole sentence it sits in (verbatim); called by the normalizing module. |
-| `pipeline/enrich_requirements.py` | Enrichment: LLM descriptions/classification (switched off), plus deterministic parent-stem reconstruction (still runs). |
+| `pipeline/clauses.py` | Requirement finding, part 1: cuts a chunk's raw text into clauses (sentences, list and table lines) with exact offsets, by rule. |
+| `pipeline/clause_labeling.py` | Requirement finding, part 2: the frozen labeling prompt (`pipeline/prompts/clause_label_v3.txt`), four clauses per Ollama call, resume ledger, one row per clause not labeled NOT_REQUIREMENT, source reference by rule. |
+| `pipeline/parse_and_normalize.py` | Normalizing and checking: refuses an old-format extraction file, checks each clause against its offsets, junk filters, deduplication, the explained layer, document/requirement identity. |
+| `pipeline/sentence_expand.py` | Sentence helpers (tidy, sentence split, completeness) and the explained layer: the clause without its list marker, with its lead-in from `pipeline/lead_in.py`. |
+| `pipeline/enrich_requirements.py` | Enrichment: LLM descriptions/classification (switched off). |
 | `pipeline/entailment_gate.py` | Description check (switched off): optional MiniCheck scoring, gated artifact/failure output. |
 | `pipeline/aggregate_and_export.py` | Totals and final file. |
 | `pipeline/embed_and_index.py` | Search indexing: dense/sparse requirement vectors, Qdrant schema and payloads. |

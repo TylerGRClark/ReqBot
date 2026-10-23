@@ -144,6 +144,47 @@ def test_classify_miss_not_missing_context_when_parent_stem_present():
     assert result["category"] == "embedding_miss"
 
 
+def test_classify_miss_clause_record_with_a_lead_in_is_not_missing_context():
+    # A record from clause labeling (schema 3.0) never has parent_stem; its context is the lead-in in explained_parts (Codex review, PR #365).
+    records = {
+        "REQ-c1": {
+            "chunk_id": 2, "source_quote": "(3) Restrain competition.", "clause_index": 4, "clause_label": "DUTY",
+            "explained_parts": [{"kind": "lead_in", "text": "Information will not be classified in order to:", "origin": "rule"},
+                                {"kind": "sentence", "text": "Restrain competition.", "origin": "rule"}],
+        }
+    }
+    corpus = _corpus(records)
+    pool_hits = [{"requirement_id": "REQ-other", "score": 0.5}]
+    result = fc.classify_miss(
+        {"query_id": "Q-1", "query": "irrelevant"}, "REQ-c1", corpus, pool_hits,
+        qdrant_url="http://x", ollama_url="http://y",
+    )
+    assert result["category"] == "embedding_miss"
+
+
+def test_classify_miss_complete_clause_without_a_lead_in_is_not_missing_context():
+    # Codex P2 on #365: a clause that is already a whole sentence needs no lead-in
+    records = {"REQ-c3": {"chunk_id": 2, "source_quote": "Systems shall log access.", "clause_index": 1, "clause_label": "DUTY",
+                          "explained_parts": [{"kind": "sentence", "text": "Systems shall log access.", "origin": "rule"}]}}
+    corpus = _corpus(records)
+    result = fc.classify_miss(
+        {"query_id": "Q-1", "query": "irrelevant"}, "REQ-c3", corpus, [{"requirement_id": "REQ-other", "score": 0.5}],
+        qdrant_url="http://x", ollama_url="http://y",
+    )
+    assert result["category"] == "embedding_miss"
+
+
+def test_classify_miss_clause_record_without_a_lead_in_is_missing_context():
+    records = {"REQ-c2": {"chunk_id": 2, "source_quote": "(3) Restrain competition.", "clause_index": 4, "clause_label": "DUTY",
+                          "explained_parts": [{"kind": "sentence", "text": "Restrain competition.", "origin": "rule"}]}}
+    corpus = _corpus(records)
+    result = fc.classify_miss(
+        {"query_id": "Q-1", "query": "irrelevant"}, "REQ-c2", corpus, [],
+        qdrant_url="http://x", ollama_url="http://y",
+    )
+    assert result["category"] == "missing_context"
+
+
 # --- Category 4: embedding_miss ---------------------------------------------
 
 def test_classify_miss_embedding_miss_when_absent_from_pool():

@@ -313,3 +313,11 @@ def test_a_row_the_text_scan_finds_in_a_table_is_cited_by_the_table(tmp_path):
     assert [i["citation"] for i in found] == ["Table 1.1"]
     assert found[0]["section_heading"] == "Table 1.1 Categories of Events" and found[0]["applies_to"] == ""
     assert "table_fragment" not in found[0]["item_flags"]  # a whole sentence in a cell is cited by the table but is not a scrap: its draft question is not withheld
+
+
+def test_citation_follows_the_clause_labelers_source_ref_origin():
+    assert A.citation("3.1.1", "", [], "", "own_number") == "3.1.1"
+    assert A.citation("Table 3.1", "", [], "", "table_caption") == "Table 3.1"  # a caption is cited as it is, not inferred
+    assert A.citation("3.1.1", "", [], "", "number_above") == "3.1.1 (inferred)"
+    assert A.citation("4.2", "", [], "", "section_path") == "4.2 (inferred)"
+    assert A.citation("3.1", "", [], "") == "3.1"  # a record from before clause labeling (no origin) keeps the old rule

@@ -38,13 +38,7 @@ def test_strings_exclude_flagged_rows_non_verbatim_spans_and_empty_strings(tmp_p
     assert strings == {"a": "The Director shall:"} and evaluated == {"a", "b", "c", "d"}  # evaluated ids include the abstentions, so unseen ids can be told apart
 
 
-def test_resolver_text_uses_the_string_or_the_quote_alone_and_hybrid_falls_back_to_production():
-    with_string = RUN.resolver_text(PAYLOAD, "The Director shall:")
-    assert "The Director shall:\n(a) Report findings." in with_string and "Old stem:" not in with_string
-    alone = RUN.resolver_text(PAYLOAD, "")
-    assert "Old stem:" not in alone and "(a) Report findings." in alone
-    assert RUN.hybrid_text(PAYLOAD, "") == RUN.V.production_text(PAYLOAD) and "Old stem:" in RUN.hybrid_text(PAYLOAD, "")
-    assert RUN.hybrid_text(PAYLOAD, "The Director shall:") == with_string
+# test_resolver_text_uses_the_string_or_the_quote_alone_and_hybrid_falls_back_to_production was removed with clause labeling (WP-4): it pinned a text arm built on embedding_text, which production no longer embeds (eval/README.md).
 
 
 def cell(mean, lo, hi, n=20, mean_worst=None, lo_w=None, hi_w=None):

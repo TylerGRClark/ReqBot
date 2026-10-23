@@ -1,4 +1,8 @@
-"""WP-45.6: the pure pieces of the extraction-model comparison (matching rule, per-side overlap counts)."""
+"""WP-45.6: the pure pieces of the extraction-model comparison (matching rule, per-side overlap counts).
+
+Tests that load a script importing the deleted list-writing extraction step or parent-stem finders were removed when clause labeling replaced
+that step (WP-4 of the extraction replacement; see eval/README.md). The scripts themselves are frozen and unchanged.
+"""
 
 import argparse
 import importlib.util
@@ -24,63 +28,12 @@ def _load(name):
         sys.path.remove(str(_DIR))
 
 
-@pytest.fixture(scope="module")
-def cmp():
-    return _load("compare")
-
-
-def _rec(rid, chunk, quote):
-    return {"requirement_id": rid, "chunk_id": chunk, "source_quote": quote}
-
-
-def test_same_record_needs_the_same_chunk_and_equal_or_contained_quotes(cmp):
-    a, b = cmp.prepare([_rec("A", 1, "The CIO shall  update the list."), _rec("B", 1, "The CIO shall update the list.")])
-    assert cmp.same_record(a, b)  # equal after whitespace normalization
-    short = cmp.prepare([_rec("S", 1, "The CIO shall update the list")])[0]  # no final period: a clause of the longer quote
-    long_ = cmp.prepare([_rec("L", 1, "The CIO shall update the list and report it quarterly.")])[0]
-    assert cmp.same_record(short, long_) and cmp.same_record(long_, short)  # one contains the other, either way round
-    assert not cmp.same_record(a, long_)  # a full sentence with its period is not a substring of a longer sentence
-    other_chunk = cmp.prepare([_rec("O", 2, "The CIO shall update the list.")])[0]
-    assert not cmp.same_record(a, other_chunk)
-    different = cmp.prepare([_rec("D", 1, "Components shall comply.")])[0]
-    assert not cmp.same_record(a, different)
-    empty = cmp.prepare([_rec("E", 1, "")])[0]
-    assert not cmp.same_record(a, empty) and not cmp.same_record(empty, empty)
-
-
-def test_overlap_counts_each_side_and_handles_merges_and_splits(cmp):
-    base = cmp.prepare(
-        [
-            _rec("b1", 1, "Ensure X is done."),  # matched exactly
-            _rec("b2", 2, "Ensure Y is done."),  # two base quotes inside one new quote (a merge)
-            _rec("b3", 2, "Report Z quarterly."),
-            _rec("b4", 3, "Only the 8B found this one."),
-        ]
-    )
-    new = cmp.prepare(
-        [
-            _rec("n1", 1, "Ensure X is done."),
-            _rec("n2", 2, "Ensure Y is done. Report Z quarterly."),
-            _rec("n3", 4, "Only the 14B found this one."),
-        ]
-    )
-    ov = cmp.overlap(base, new)
-    assert ov["base_matched"] == ["b1", "b2", "b3"] and ov["base_only"] == ["b4"]
-    assert ov["new_matched"] == ["n1", "n2"] and ov["new_only"] == ["n3"]  # 3 base records matched by 2 new ones
-    assert ov["exact_equal_pairs"] == 1
-
-
 # ------------------------------------------------------------------------------------------------ scoring and pack
 
 
 @pytest.fixture(scope="module")
 def score():
     return _load("score")
-
-
-@pytest.fixture(scope="module")
-def pack():
-    return _load("pack")
 
 
 @pytest.fixture(scope="module")
@@ -126,23 +79,6 @@ def test_wilson_and_rate_difference_are_sane(score):
     assert 0.2 < lo < 0.5 < hi < 0.8 and score.wilson(0, 10)[0] == 0.0
     diff, lo, hi = score.rate_difference(10, 100, 20, 100)
     assert diff == pytest.approx(-0.10) and lo < diff < hi < 0.05
-
-
-def test_pack_draw_is_seeded_extendable_and_ids_hide_the_set(pack):
-    frame = {
-        "new_only": [("d", "new", f"N{i}") for i in range(60)],
-        "base_only": [("d", "base", f"B{i}") for i in range(50)],
-        "both": [("d", "new", f"M{i}") for i in range(10)],  # smaller than the sample: taken whole
-    }
-    a, b = pack.draw(frame), pack.draw(frame)
-    assert a == b and [len(a[k]) for k in ("new_only", "base_only", "both")] == [40, 40, 10]
-    small = pack.draw(frame, sample={"new_only": 5, "base_only": 5, "both": 5})
-    assert a["new_only"][:5] == small["new_only"]  # the first n of the same shuffle, so a sample can be extended
-    ids = pack.assign_ids(a)
-    assert sorted(ids) == [f"R{i:03d}" for i in range(1, 91)]
-    sets_in_id_order = [ids[k]["set"] for k in sorted(ids)]
-    assert sets_in_id_order != sorted(sets_in_id_order)  # ids are shuffled, not grouped by set
-    assert pack.assign_ids(a) == ids  # deterministic
 
 
 def test_empty_groups_give_nan_and_fail_the_criterion_instead_of_raising(score):

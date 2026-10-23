@@ -64,16 +64,14 @@ def build_embedding_text(req: dict) -> str | None:
     source_quote is required at ingest; an empty value indicates a data
     integrity violation that should have been caught at Step C or Step D.
 
-    WP-39.2: prefers the precomputed embedding_text field (source_quote prefixed with
-    parent_stem, when reconstruction found one — see pipeline/enrich_requirements.py's
-    apply_parent_stem_reconstruction()) over bare source_quote when present. Backward
-    compatible: absent on older/unreconstructed records, which fall back to the
-    original behavior unchanged.
+    The text is the explained requirement (the clause with its list's lead-in in front, see pipeline/sentence_expand.explain_records) when the record has one, else the
+    clause itself; the paragraph reference follows. Older records may carry `embedding_text` (a parent stem in front of the quote, from a step that was deleted with
+    the list-writing extraction): it is no longer read, so a reindex of an old folder embeds its explained text instead.
     """
     source_quote = (req.get("source_quote") or "").strip()
     if not source_quote:
         return None
-    text = (req.get("embedding_text") or "").strip() or (req.get("explained_text") or "").strip() or source_quote
+    text = (req.get("explained_text") or "").strip() or source_quote
     source_ref = (req.get("source_ref") or "").strip()
     if source_ref:
         text += f"\nRef: {source_ref}"
@@ -102,8 +100,7 @@ def build_payload(req: dict, embedding_model: str, embedding_dim: int, extra: di
         "requirement_type": req.get("requirement_type", ""),
         "source_quote": req.get("source_quote", ""),
         "explained_text": req.get("explained_text", ""),
-        "parent_stem": req.get("parent_stem", ""),
-        "embedding_text": req.get("embedding_text", ""),
+        "clause_label": req.get("clause_label", ""),  # DUTY, PROHIBITION, PERMISSION or UNSURE (clause labeling); "" for records from before it
         "description": req.get("description", ""),
         "page_start": req.get("page_start"),
         "page_end": req.get("page_end"),

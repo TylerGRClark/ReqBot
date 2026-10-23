@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-"""Step D: Normalize and deduplicate extracted requirements.
+"""Normalizing and checking: turn the clause labeler's rows into the final requirement records.
 
-Input:  extracted_requirements.jsonl (from Step C)
-        chunks.jsonl (from Step B, for page reference lookup)
+Input:  <doc>_extracted_requirements.jsonl (requirement finding: pipeline/clause_labeling.py, one row per clause not labeled NOT_REQUIREMENT)
+        <doc>_chunks.jsonl (chunking: page references, section paths, and the chunk text the clause offsets index)
 Output:
-  - requirements_normalized.jsonl — final schema per requirement
-  - normalization_failures.jsonl — requirements that failed normalization
+  - <doc>_requirements_normalized.jsonl: final schema per requirement
+  - <doc>_normalization_failures.jsonl: rows rejected here, with the reason
 
-This step is deterministic. It validates domain tags, adds page references
-from chunk metadata, and deduplicates requirements that share a source reference and quote.
+Deterministic. Rejections: an empty clause, a clause that only repeats a heading of its own section, a clause that ends with a colon (a list's lead-in on its own; it is put in front
+of its items instead), and a definitional pointer ("Term, as defined in DoDI 2000.26."). Invariant: the clause's offsets give back its text (clause_offset_mismatch otherwise, which
+should never happen). Then page and section metadata, de-duplication and the stable requirement ID. An extraction file from the old list-writing step (rows without clause_index)
+is refused: re-run requirement finding on that folder.
 """
 
 import argparse
@@ -28,8 +30,8 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from pipeline import anchor as anchor_mod
 from pipeline.chunk_text import _normalize_heading
+from pipeline.sentence_expand import tidy
 
 logging.basicConfig(
     level=logging.INFO,
@@ -38,66 +40,16 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-SCHEMA_VERSION = "2.0"
-PIPELINE_VERSION = "1.0"
+SCHEMA_VERSION = "3.0"   # clause labeling (pipeline/clause_labeling.py writes the same)
+PIPELINE_VERSION = "2.0"
 
-# WP-32.1: minimum fuzz.partial_ratio (0-100) between a requirement's source_quote
-# and its own chunk's text before it's trusted as actually grounded in the source
-# document, rather than fabricated by Step C. partial_ratio (not token_sort_ratio,
-# which eval/eval_harness.py uses for a different comparison -- two same-length
-# quotes) is the right tool here: it scores how well a short string matches the
-# best-aligned substring of a long one, which is exactly "is this quote actually
-# in this chunk." Exact substring matching was tried first and rejected -- it
-# would have flagged ~16/30 real quotes reformatted from tabular source text
-# (e.g. NIST.SP.800-53Ar5's assessment procedures) as fabricated.
-#
-# 60 was chosen by sweeping thresholds against eval/gold_eval_chunks_curated.jsonl's
-# 2,452 hand-verified real quotes (the false-positive side) and the full local
-# corpus's 33,462 requirements (the catch-rate side):
-#   threshold  gold false-positive rate   corpus flagged rate
-#       50            0.86%                     3.51%
-#       60            1.75%                     4.42%
-#       80            4.61%                     5.64%
-# Diminishing returns above ~60: pushing to 80 nearly triples the gold
-# false-positive rate for comparatively little extra corpus coverage -- most
-# genuine fabrications score far below 60 anyway (the confirmed hallucination
-# that motivated this WP scored 44). See archive/PHASE32_REQUIREMENTS.md for the
-# full investigation.
 COMPUTE_CONFIDENCE = False  # see the comment where confidence is computed
-QUOTE_GROUNDING_THRESHOLD = 60
-
-
-# WP-44.1: minimum share of a source_quote's word occurrences that must appear
-# somewhere in its own chunk's text. QUOTE_GROUNDING_THRESHOLD's fuzzy
-# partial_ratio accepted 5 invented quotes (scores 62-76) out of 1,991 in the
-# measured corpus; all 5 had word coverage 0.19-0.65 while every other
-# classified quote scored >= 0.857 (eval/spike_results/wp_44/report.md). 0.8 sits
-# in that gap. It was selected on that same corpus, so it is a measured
-# threshold, not a generalization guarantee. This is a bag-of-words check: it
-# cannot detect real words rearranged to change meaning, and it adds no
-# punctuation/ligature handling (archive/PHASE44_REQUIREMENTS.md section 4).
-QUOTE_WORD_COVERAGE_THRESHOLD = 0.8
-
-
-def quote_word_coverage(source_quote: str, chunk_text: str) -> float:
-    """Share of source_quote's word occurrences whose word appears in chunk_text.
-
-    Words are lowercase [a-z0-9]+ runs of normalize_text(); membership is
-    whole-word against the chunk's word set. Punctuation is ignored for this
-    calculation only -- no text is rewritten. A quote with no words scores 0.0.
-    """
-    quote_words = re.findall(r"[a-z0-9]+", normalize_text(source_quote))
-    if not quote_words:
-        return 0.0
-    chunk_words = set(re.findall(r"[a-z0-9]+", normalize_text(chunk_text)))
-    return sum(w in chunk_words for w in quote_words) / len(quote_words)
 
 
 # WP-34.2: minimum fuzz.ratio (0-100, whole-string similarity) between a
 # normalized source_quote and its chunk's own heading before treating it as a
 # heading echo rather than real body content. ratio (not partial_ratio, which
-# QUOTE_GROUNDING_THRESHOLD above uses for a different comparison shape -- a
-# short quote against a much longer chunk) is the right tool here: it scores
+# scores a short string against the best-aligned piece of a long one) is the right tool here: it scores
 # the two full strings against each other, so a short generic heading (e.g.
 # "Purpose") merely appearing as a substring inside an unrelated, much longer
 # real quote scores low and passes through -- a literal substring-containment
@@ -356,75 +308,6 @@ def _is_orphaned_list_item(source_quote: str) -> bool:
     return _is_definitional_citation_only(stripped)
 
 
-# WP-38.2: bare copulas that, as a quote's very first word, almost always
-# indicate a missing subject (e.g. "Is designated..." extracted without the
-# "[X]" that should precede "is").
-_BARE_COPULA_OPENERS = ("is", "are", "was", "were")
-
-
-def _is_dangling_clause(source_quote: str) -> bool:
-    """True if source_quote's first word is a bare copula with no subject
-    before it (WP-38.2 -- e.g. "Is designated Computer Network Defense
-    Service Provider..." extracted without the "[X]" that should precede
-    "is").
-
-    Three broader candidate signals were tried and rejected during
-    calibration against WP-38.1's audit fixture (eval/audit_wp38_1/) because
-    each produced a real false positive against a genuine, correctly-kept
-    requirement in this corpus:
-
-    - "Starts with a lowercase letter" -- this corpus's real DoD/AF-style
-      responsibility lists commonly extract individual list items starting
-      mid-sentence on a shared "will:" governing clause (e.g. a real,
-      correctly-kept "establish, direct, and administer all aspects of
-      their respective organization's SCI security programs"), so
-      lowercase-first is common in genuine content here, not just fragments.
-    - "First word is a bare modal (shall/will/must/should/may)" -- same
-      cause: a real, correctly-kept record ("must have a lawful governmental
-      purpose for such access") starts exactly this way.
-    - "Ends in a bare trailing comma" -- a real, correctly-kept record
-      ("Reporting or accounting for UD of CUI shall be done in accordance
-      with Paragraph 3.5.a(4),") ends in one too; the comma there is a
-      punctuation artifact of a longer source list, not a sign the quote's
-      own content is incomplete.
-
-    A copula-first quote containing "?" anywhere is excluded too (Gemini
-    round 5, tightened round 7): a real interrogative requirement, the kind
-    assessment-procedure documents like NIST SP 800-53A use (e.g. "Is
-    multi-factor authentication enforced for all administrative access?"),
-    puts the subject *after* the copula via subject-auxiliary inversion --
-    grammatically complete, not a missing subject the way the declarative
-    case is. This corpus doesn't currently have any assessment-
-    questionnaire-style documents ingested, but a future one plausibly
-    could. Round 5's first fix only checked the quote's trailing
-    non-alphanumeric run, which misses a "?" followed by more content (e.g.
-    a trailing parenthetical or control-ID note: "...enforced? (see NIST SP
-    800-53)") -- checking the whole quote for "?" is safe here since this
-    function only ever fires on an already-narrow trigger (bare-copula-first-
-    word); a declarative fragment that happens to also contain a "?"
-    somewhere else is a genuinely contrived case, and exempting it errs
-    toward not discarding real data, the same direction every other choice
-    in this function already errs.
-
-    Only the bare-copula-first-word signal survived calibration with zero
-    false positives against the fixture's 284 real records -- catches 1 of
-    WP-38.1's 6 dangling-clause fragment examples. The other 5 (a preamble
-    ending mid-clause, a subordinate clause with no main clause, a bare
-    modal predicate with no subject) are real fragments but aren't safely
-    distinguishable from genuine subject-less-but-complete list items in
-    this corpus without actual grammatical analysis -- left as an honest
-    gap rather than a rule broad enough to risk discarding real data. See
-    archive/PHASE38_REQUIREMENTS.md's WP-38.2 Findings.
-    """
-    stripped = source_quote.strip()
-    if not stripped:
-        return False
-    if "?" in stripped:
-        return False
-    first_word = _NON_ALNUM_EDGE_RE.sub("", stripped.split(maxsplit=1)[0])
-    return first_word.lower() in _BARE_COPULA_OPENERS
-
-
 def compute_document_identity(pdf_path: Path) -> dict:
     """Compute document identity from PDF file bytes.
 
@@ -497,18 +380,6 @@ def build_chunk_page_map(chunks: list[dict]) -> dict[int, tuple[int, int]]:
         c["chunk_id"]: (c["page_start"], c["page_end"])
         for c in chunks
     }
-
-
-def build_chunk_text_map(chunks: list[dict]) -> dict[int, str]:
-    """Build a mapping from chunk_id to its chunk text.
-
-    Uses the "text" field specifically -- the same field
-    pipeline/llm_extract_requirements.py substitutes into Step C's prompt via
-    {chunk_text}, not "raw_text" (a different, pre-cleaning field). Grounding a
-    requirement's source_quote against anything other than what the LLM actually
-    saw would be checking against the wrong text (WP-32.1).
-    """
-    return {c["chunk_id"]: c.get("text") or "" for c in chunks}
 
 
 def build_chunk_hierarchy_map(chunks: list[dict]) -> dict[int, dict]:
@@ -597,35 +468,54 @@ def deduplicate_requirements(requirements: list[dict]) -> list[dict]:
     return list(seen.values())
 
 
+class OldExtractionFormatError(ValueError):
+    """The extraction file was written by the old list-writing step (its rows have no clause_index)."""
+
+
+# Fields the clause labeler writes that normalizing carries through unchanged (pipeline/clause_labeling.build_records).
+CLAUSE_FIELDS = ("clause_index", "clause_label", "source_ref_origin", "label_prompt_sha", "anchor_status", "anchor_start", "anchor_end", "anchor_text")
+
+
+def check_extraction_format(raw_reqs: list[dict], path) -> None:
+    """Refuse rows from the old list-writing extraction step: they carry no clause_index, and their quotes were the model's own copy, which the checks that repaired them (grounding,
+    anchoring, sentence stretching, parent stems) no longer exist to fix."""
+    old = sum(1 for r in raw_reqs if r.get("clause_index") is None)
+    if old:
+        raise OldExtractionFormatError(
+            f"{path}: {old} of {len(raw_reqs)} rows have no clause_index. This file was written by the old requirement-finding step, which no longer exists. "
+            "Run requirement finding again on this folder (run_pipeline.py --skip-to requirement-finding); the chunk file is reused, the PDF is not read again.")
+
+
+def clause_offset_mismatch(req: dict, raw_text: str | None) -> bool:
+    """True when the clause's offsets do not give back its text: tidy(raw_text[anchor_start:anchor_end]) must equal source_quote. Clause labeling builds both from the same
+    splitter offsets, so this should never fire; it guards against a chunk file that changed under the extraction file (a re-chunk without a re-label)."""
+    start, end = req.get("anchor_start"), req.get("anchor_end")
+    if raw_text is None or not isinstance(start, int) or not isinstance(end, int) or not 0 <= start < end <= len(raw_text):
+        return True
+    return tidy(raw_text[start:end]) != (req.get("source_quote") or "").strip()
+
+
 def run(
     requirements_jsonl: str,
     chunks_jsonl: str,
     source_pdf_path: str,
     output_dir: str,
     *,
-    extraction_model: str = "llama3.1:8b-instruct-q4_K_M",
+    extraction_model: str | None = None,
     profile: dict | None = None,
-    expand_sentences: bool = True,
 ) -> str:
-    """Normalize and deduplicate extracted requirements and write output JSONL.
-
-    Callable interface for in-process use by run_pipeline.py.
-    Standalone CLI usage is unchanged via main() / __main__.
+    """Normalize, check and de-duplicate the clause labeler's rows and write <doc>_requirements_normalized.jsonl (and the failures file).
 
     Args:
-        requirements_jsonl: Path to extracted_requirements.jsonl from Step C.
-        chunks_jsonl:       Path to chunks.jsonl from Step B (for page refs).
-        source_pdf_path:    Path to original PDF (for document identity hash).
-        output_dir:         Directory to write normalized JSONL into.
-        extraction_model:   LLM name used in Step C (written to schema).
-        profile:            Validated profile dict from core.profiles.load_profile().
-                            When None, the cybersecurity default profile is loaded.
-        expand_sentences:   WP-45.15: expand every source_quote to the whole sentence it sits in
-                            (pipeline/sentence_expand.py) and merge records that end up with the
-                            same sentence in the same chunk. Quotes stay verbatim source text.
+        requirements_jsonl: <doc>_extracted_requirements.jsonl from requirement finding (clause labeling).
+        chunks_jsonl:       <doc>_chunks.jsonl from chunking: required (the clause offsets index its text; it gives pages and section paths).
+        source_pdf_path:    Path to the original PDF (for the document identity hash).
+        output_dir:         Directory to write into.
+        extraction_model:   The labeler's model name; a row's own extraction_model wins (the labeler writes it on every row).
+        profile:            Validated profile dict from core.profiles.load_profile(); the cybersecurity default when None.
 
-    Returns:
-        Path to the requirements_normalized.jsonl file that was written (str).
+    Raises OldExtractionFormatError for an extraction file from the old list-writing step, FileNotFoundError when the chunk file is missing.
+    Returns the path of the normalized file (str).
     """
     if profile is None:
         from core.profiles import default_profile as _default_profile
@@ -638,6 +528,15 @@ def run(
     out_dir = Path(output_dir).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    log.info("Loading requirements from: %s", reqs_path)
+    raw_reqs = load_jsonl(reqs_path)
+    log.info("Loaded %d raw requirements", len(raw_reqs))
+    check_extraction_format(raw_reqs, reqs_path)
+
+    chunks_path = Path(chunks_jsonl).resolve()
+    if not chunks_path.exists():
+        raise FileNotFoundError(f"Chunks file not found: {chunks_path} (normalizing checks each clause against its chunk's text)")
+
     doc_identity = {"document_id": "", "document_hash_full": "", "source_pdf": ""}
     if source_pdf_path:
         pdf_path = Path(source_pdf_path).resolve()
@@ -647,39 +546,20 @@ def run(
         else:
             log.warning("PDF file not found: %s — document_id will be empty", pdf_path)
 
-    chunks_path = Path(chunks_jsonl).resolve()
     from core.artifact_resolver import doc_key_from_extracted_path
     stem = doc_key_from_extracted_path(reqs_path)
     norm_path = out_dir / f"{stem}_requirements_normalized.jsonl"
     fail_path = out_dir / f"{stem}_normalization_failures.jsonl"
 
-    log.info("Loading requirements from: %s", reqs_path)
-    raw_reqs = load_jsonl(reqs_path)
-    log.info("Loaded %d raw requirements", len(raw_reqs))
-
-    chunk_page_map: dict[int, tuple[int, int]] = {}
-    chunk_hierarchy_map: dict[int, dict] = {}
-    section_children_map: dict[str, list[str]] = {}
-    chunk_text_map: dict[int, str] = {}
-    chunk_raw_text_map: dict[int, str] = {}
-    chunk_breadcrumb_map: dict[int, str] = {}
-    if chunks_path.exists():
-        log.info("Loading chunk metadata from: %s", chunks_path)
-        chunks = load_jsonl(chunks_path)
-        chunk_page_map = build_chunk_page_map(chunks)
-        chunk_hierarchy_map = build_chunk_hierarchy_map(chunks)
-        section_children_map = build_section_children_map(chunks)
-        chunk_text_map = build_chunk_text_map(chunks)
-        chunk_raw_text_map = {c["chunk_id"]: c.get("raw_text") or c.get("text") or "" for c in chunks if "chunk_id" in c}
-        chunk_breadcrumb_map = {c["chunk_id"]: str(c.get("breadcrumb") or "") for c in chunks if "chunk_id" in c}
-        log.info("Loaded page references for %d chunks", len(chunk_page_map))
-        sections_with_children = sum(1 for v in section_children_map.values() if v)
-        log.info(
-            "Hierarchy map: %d chunks, %d sections with children",
-            len(chunk_hierarchy_map), sections_with_children,
-        )
-    else:
-        log.warning("Chunks file not found: %s — page references will be empty", chunks_path)
+    log.info("Loading chunk metadata from: %s", chunks_path)
+    chunks = load_jsonl(chunks_path)
+    chunk_page_map = build_chunk_page_map(chunks)
+    chunk_hierarchy_map = build_chunk_hierarchy_map(chunks)
+    section_children_map = build_section_children_map(chunks)
+    chunk_raw_text_map = {c["chunk_id"]: c.get("raw_text") or c.get("text") or "" for c in chunks if "chunk_id" in c}
+    log.info("Loaded page references for %d chunks", len(chunk_page_map))
+    sections_with_children = sum(1 for v in section_children_map.values() if v)
+    log.info("Hierarchy map: %d chunks, %d sections with children", len(chunk_hierarchy_map), sections_with_children)
 
     run_timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     start = time.time()
@@ -694,10 +574,6 @@ def run(
         req_type = req.get("requirement_type", "").strip().lower()
         chunk_id = req.get("chunk_id")
 
-        # Hierarchy metadata — sourced from deterministic WP-14.2 parser output.
-        # Falls back to empty values for legacy (pre-WP-14.2) chunks. Resolved here,
-        # ahead of the validation checks below, because WP-34.2's heading-echo check
-        # needs section_title_path -- it used to be resolved after this loop's checks.
         hierarchy = chunk_hierarchy_map.get(chunk_id) if chunk_id is not None else None
         if hierarchy:
             section_ref_path: list[str] = hierarchy["section_ref_path"]
@@ -723,91 +599,26 @@ def run(
             failures.append({"requirement_id": req.get("requirement_id", "UNKNOWN"), "chunk_id": chunk_id, "error": "empty_source_quote", "raw": req})
             continue
 
-        # WP-32.1: reject requirements whose source_quote isn't actually grounded in
-        # its own chunk's text -- Step C's extraction model was found to sometimes
-        # fabricate plausible-sounding requirements (confirmed at 21.55% across the
-        # existing corpus during this WP's spike) rather than only extracting what's
-        # present. Skipped (not rejected) only when the chunk itself is unverifiable
-        # (chunk_id missing or not present in chunks.jsonl) -- a chunk that IS present
-        # but has empty text is verifiable and must still be checked: any non-empty
-        # quote scores 0 against empty text and correctly fails, rather than silently
-        # passing through on an `if chunk_text:` truthiness check that treated "empty
-        # but real" the same as "unverifiable" (Gemini review, PR #144).
-        chunk_known = chunk_id is not None and chunk_id in chunk_text_map
-        if chunk_known:
-            chunk_text = chunk_text_map[chunk_id]
-            grounding_score = fuzz.partial_ratio(normalize_text(source_quote), normalize_text(chunk_text))
-            if grounding_score < QUOTE_GROUNDING_THRESHOLD:
-                failures.append({
-                    "requirement_id": req.get("requirement_id", "UNKNOWN"),
-                    "chunk_id": chunk_id,
-                    "error": "quote_not_grounded_in_chunk",
-                    "grounding_score": round(grounding_score, 1),
-                    "raw": req,
-                })
-                continue
+        # The invariant: the clause is the document's own text at its offsets. Never expected to fire (both come from the splitter); a chunk file changed under the
+        # extraction file would make it fire, and such a row must not be indexed under a position it does not have.
+        if clause_offset_mismatch(req, chunk_raw_text_map.get(chunk_id)):
+            failures.append({"requirement_id": req.get("requirement_id", "UNKNOWN"), "chunk_id": chunk_id, "error": "clause_offset_mismatch", "raw": req})
+            continue
 
-            # WP-44.1: the fuzzy check above can pass a quote made mostly of words
-            # that aren't in the chunk. Runs after it, so already-rejected records
-            # keep their original failure code.
-            word_coverage = quote_word_coverage(source_quote, chunk_text)
-            if word_coverage < QUOTE_WORD_COVERAGE_THRESHOLD:
-                failures.append({
-                    "requirement_id": req.get("requirement_id", "UNKNOWN"),
-                    "chunk_id": chunk_id,
-                    "error": "quote_words_not_in_chunk",
-                    "word_coverage": round(word_coverage, 3),
-                    "word_coverage_threshold": QUOTE_WORD_COVERAGE_THRESHOLD,
-                    "grounding_score": round(grounding_score, 1),
-                    "raw": req,
-                })
-                continue
-
-        # WP-34.2: reject a chunk's own structural heading extracted as if it were
-        # a body-content requirement (e.g. "COMPLIANCE WITH THIS PUBLICATION IS
-        # MANDATORY", which is exactly that chunk's section_title_path[-1]).
+        # WP-34.2: a clause that only repeats a heading of its own section (e.g. "COMPLIANCE WITH THIS PUBLICATION IS MANDATORY").
         if _is_heading_echo(source_quote, section_title_path):
             failures.append({"requirement_id": req.get("requirement_id", "UNKNOWN"), "chunk_id": chunk_id, "error": "heading_echo_quote", "raw": req})
             continue
 
-        # WP-34.2: reject a truncated list-header quote with no obligation content
-        # of its own (e.g. "The process will be as follows:") -- left in place,
-        # Step D.5 enrichment was found fabricating description text to "complete"
-        # these rather than the pipeline ever inventing or assembling real content.
+        # WP-34.2: a clause ending in a colon is a list's lead-in on its own ("The process will be as follows:"); the explained layer puts it in front of each item instead.
         if _is_unrepairable_fragment(source_quote):
             failures.append({"requirement_id": req.get("requirement_id", "UNKNOWN"), "chunk_id": chunk_id, "error": "unrepairable_fragment_quote", "raw": req})
             continue
 
-        # WP-38.2: reject a definitional cross-reference with no independent
-        # obligation content of its own (e.g. "Term, as defined in CNSSI
-        # 4009."). Does NOT reject a short enumerated-list item by marker or
-        # word count alone -- see _is_orphaned_list_item()'s docstring
-        # (Gemini review, PR #181, caught this comment going stale after that
-        # branch was removed).
+        # WP-38.2: a definitional cross-reference with no obligation of its own ("Term, as defined in CNSSI 4009."); see _is_orphaned_list_item().
         if _is_orphaned_list_item(source_quote):
             failures.append({"requirement_id": req.get("requirement_id", "UNKNOWN"), "chunk_id": chunk_id, "error": "orphaned_list_item_quote", "raw": req})
             continue
-
-        # WP-38.2: reject a subordinate clause or predicate extracted without
-        # its main clause or subject (e.g. "shall be coordinated with the
-        # customer" -- a dangling predicate with no subject at all). WP-41:
-        # NOT rejected when the chunk's own parent_header_text supplies the
-        # missing subject -- pipeline/enrich_requirements.py's
-        # _find_heading_stem() exists specifically to recover this exact
-        # shape (already gated on this same _is_dangling_clause() check, and
-        # already proven correct by
-        # tests/unit/test_parent_stem_reconstruction.py's own regression
-        # test), but apply_parent_stem_reconstruction() only ever processes
-        # records that survive Step D -- so a recoverable dangling clause
-        # was rejected here before reconstruction ever got the chance to run
-        # on it. Only skips rejection when a real header exists; an
-        # unrecoverable dangling clause (no parent_header_text for its
-        # chunk) is rejected exactly as before.
-        if _is_dangling_clause(source_quote):
-            recoverable_header = ((hierarchy or {}).get("parent_header_text") or "").strip()
-            if not recoverable_header:
-                failures.append({"requirement_id": req.get("requirement_id", "UNKNOWN"), "chunk_id": chunk_id, "error": "dangling_clause_quote", "raw": req})
-                continue
 
         raw_tags = req.get("domain_tags", [])
         if isinstance(raw_tags, str):
@@ -837,10 +648,6 @@ def run(
             if not source_ref:
                 confidence -= 0.1
 
-        # Anchoring (docs/PIPELINE_REDESIGN_PLAN.md): metadata beside the root quote about where it sits in the chunk and how exact the match is. Adds fields only; the quote
-        # itself is not touched here, and nothing is accepted or rejected on this basis yet.
-        anchor_fields = anchor_mod.anchor(source_quote, chunk_raw_text_map.get(chunk_id, ""), chunk_breadcrumb_map.get(chunk_id, ""))  # an unknown chunk gives the same fields, as not_found
-
         normalized = {
             "requirement_id": req.get("requirement_id", f"R-{chunk_id}-X"),
             "description": description,
@@ -853,38 +660,35 @@ def run(
             "page_end": page_end,
             **({"confidence": round(max(0.0, confidence), 2)} if confidence is not None else {}),
             # Hierarchy metadata (WP-14.3) — deterministic parser output from WP-14.2.
-            # Empty for requirements produced by the legacy fixed-size chunker.
             "section_ref_path": section_ref_path,
             "section_title_path": section_title_path,
             "parent_section_ref": parent_section_ref,
             "parent_context": parent_context,
             "child_section_refs": child_section_refs,
-            "recovered_truncated": req.get("recovered_truncated", False),
             "domain_profile": profile["name"],
             "document_id": doc_identity["document_id"],
             "document_hash_full": doc_identity["document_hash_full"],
             "source_pdf": doc_identity["source_pdf"],
             "schema_version": SCHEMA_VERSION,
             "pipeline_version": PIPELINE_VERSION,
-            "extraction_model": extraction_model,
+            "extraction_model": req.get("extraction_model") or extraction_model or "",
             "run_timestamp": run_timestamp,
         }
-        normalized.update(anchor_fields)
+        normalized.update({k: req.get(k) for k in CLAUSE_FIELDS})
         valid_reqs.append(normalized)
 
     before_dedup = len(valid_reqs)
     valid_reqs = deduplicate_requirements(valid_reqs)
     dedup_removed = before_dedup - len(valid_reqs)
 
-    # Explained layer (docs/PIPELINE_REDESIGN_PLAN.md): the whole sentence the root sits in, with a glued lead-in kept when the source backs it. It is a separate field beside the root;
-    # source_quote is never changed. Records that reach the same sentence in the same chunk are shown once (the others' roots are kept in merged_roots), which also keeps IDs unique.
-    if expand_sentences and chunk_raw_text_map:
-        from pipeline import sentence_expand
-        valid_reqs, explain_counts = sentence_expand.explain_records(
-            valid_reqs, chunk_raw_text_map,
-            {cid: (tuple(h.get("section_ref_path") or ()), tuple(h.get("section_title_path") or ())) for cid, h in chunk_hierarchy_map.items()},
-        )
-        log.info("Explained layer: %s", explain_counts)
+    # Explained layer (docs/PIPELINE_REDESIGN_PLAN.md): the clause without its list marker, with the lead-in of its list in front when it is a list item. A separate field beside the
+    # root; source_quote is never changed.
+    from pipeline import sentence_expand
+    valid_reqs, explain_counts = sentence_expand.explain_records(
+        valid_reqs, chunk_raw_text_map,
+        {cid: (tuple(h.get("section_ref_path") or ()), tuple(h.get("section_title_path") or ())) for cid, h in chunk_hierarchy_map.items()},
+    )
+    log.info("Explained layer: %s", explain_counts)
 
     for req in valid_reqs:
         req["requirement_id"] = compute_stable_id(
@@ -908,19 +712,15 @@ def run(
         valid_reqs = unique
 
     elapsed = time.time() - start
-
-    tagged_count = sum(1 for r in valid_reqs if r["domain_tags"])
-    typed_count = sum(1 for r in valid_reqs if r["requirement_type"])
+    mismatches = sum(1 for f in failures if f["error"] == "clause_offset_mismatch")
+    if mismatches:
+        log.error("%d clause(s) failed the offset invariant (clause_offset_mismatch): the chunk file no longer matches the extraction file; re-run requirement finding", mismatches)
+    by_label: dict = {}
+    for r in valid_reqs:
+        by_label[r.get("clause_label")] = by_label.get(r.get("clause_label"), 0) + 1
     log.info(
-        "Normalized %d requirements in %.2fs — %d failures, %d duplicates removed",
-        len(valid_reqs), elapsed, len(failures), dedup_removed,
-    )
-    log.info(
-        "Domain tags assigned: %d/%d (%.1f%%), typed: %d/%d (%.1f%%)",
-        tagged_count, len(valid_reqs),
-        tagged_count / len(valid_reqs) * 100 if valid_reqs else 0,
-        typed_count, len(valid_reqs),
-        typed_count / len(valid_reqs) * 100 if valid_reqs else 0,
+        "Normalized %d requirements in %.2fs — %d failures, %d duplicates removed; labels %s",
+        len(valid_reqs), elapsed, len(failures), dedup_removed, by_label,
     )
 
     with open(norm_path, "w", encoding="utf-8") as f:
@@ -932,26 +732,8 @@ def run(
         for failure in failures:
             f.write(json.dumps(failure, ensure_ascii=False) + "\n")
     log.info("Wrote %s (%d failures)", fail_path, len(failures))
-
-    # WP-41: a nonempty parent_header_text only means the dangling-clause
-    # bypass above *could* recover a subject -- it doesn't mean reconstruction
-    # actually ran. run_pipeline.py's own call to this same function happens
-    # in a separate step (and is itself non-fatal on failure), and
-    # parse_and_normalize.py's own standalone CLI usage (main(), below) never
-    # called it at all -- either path could leave a bypassed dangling clause
-    # in the corpus with no subject and no parent_stem. Calling it here too
-    # (local import: pipeline.enrich_requirements imports back from this
-    # module, so a top-level import would be circular) guarantees every
-    # caller of this function gets reconstruction attempted on its own
-    # output, not just the in-process pipeline path. Idempotent and already
-    # designed for redundant calls (Codex review, PR #188; same "belt and
-    # suspenders" pattern enrich_requirements.run() already uses for its own
-    # standalone-invocation safety).
-    try:
-        from pipeline import enrich_requirements as _enrich_mod
-        _enrich_mod.apply_parent_stem_reconstruction(str(norm_path))
-    except Exception as e:
-        log.warning("Parent-stem reconstruction failed (%s) — proceeding without it", e)
+    if mismatches:  # an invariant violation is a bug or a stale chunk file, not a row to drop quietly; the files above are written for inspection
+        raise RuntimeError(f"{mismatches} clause(s) failed the offset invariant (clause_offset_mismatch): the chunk file no longer matches the extraction file. Re-run requirement finding.")
 
     return str(norm_path)
 
@@ -963,13 +745,13 @@ def main() -> None:
     parser.add_argument(
         "requirements_jsonl",
         type=str,
-        help="Path to extracted_requirements.jsonl from Step C",
+        help="Path to <doc>_extracted_requirements.jsonl from requirement finding (clause labeling)",
     )
     parser.add_argument(
         "--chunks-jsonl",
         type=str,
         default=None,
-        help="Path to chunks.jsonl from Step B (for page references). "
+        help="Path to <doc>_chunks.jsonl from chunking (required: clause offsets, pages, sections). "
              "Auto-detected if not provided.",
     )
     parser.add_argument(
@@ -988,13 +770,8 @@ def main() -> None:
     parser.add_argument(
         "--extraction-model",
         type=str,
-        default="llama3.1:8b-instruct-q4_K_M",
-        help="Name of the LLM used in Step C extraction (written to schema metadata).",
-    )
-    parser.add_argument(
-        "--no-sentence-expand",
-        action="store_true",
-        help="WP-45.15: keep each source_quote as Step C returned it instead of expanding it to the whole sentence (for debugging).",
+        default=None,
+        help="Name of the labeling model, for rows that do not carry one (the clause labeler writes it on every row).",
     )
     args = parser.parse_args()
 
@@ -1019,7 +796,6 @@ def main() -> None:
         args.source_pdf_path or "",
         str(out_dir),
         extraction_model=args.extraction_model,
-        expand_sentences=not args.no_sentence_expand,
     )
 
 

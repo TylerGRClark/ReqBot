@@ -1,12 +1,12 @@
-# De-duplication, identity and parent stems
+# De-duplication and identity
 
-De-duplication, requirement IDs, and subjects for fragments.
+De-duplication and requirement IDs.
 
 ```mermaid
 flowchart TD
     subgraph DEDUP["De-duplication (before context attaching)"]
-        D0["Quotes that passed screening, with anchor fields"]
-        D1{"Same reference and same normalized quote<br/>as one already seen?<br/>(or same reference and same description,<br/>when a description exists)"}
+        D0["Rows that passed screening"]
+        D1{"Same reference and same normalized quote<br/>as one already seen?<br/>(two identical table lines under one caption, for example)"}
         D2["Kept"]
         D3["Only one stays: the shorter quote<br/>(the confidence score is switched off,<br/>so length decides; a tie keeps the first)"]
         D0 --> D1
@@ -41,33 +41,14 @@ flowchart TD
     I7 --> W
     W[("Written: the normalized records file<br/>and the failures file")]
 
-    subgraph STEM["Parent-stem reconstruction (in place, on the written file)"]
-        S0{"Short quote (20 words or fewer),<br/>starts with a list marker,<br/>or has a dangling start?"}
-        S1{"1. An earlier quote in the same chunk that can serve as a stem<br/>(walks back past sibling list items)?"}
-        S2{"2. Chunk opens mid-list (first marker is not 1, a or i):<br/>a stem from the previous chunk?"}
-        S3{"3. Dangling start and the chunk has a parent header?"}
-        S4["Stem found: parent_stem and embedding_text<br/>(stem plus the explained text) written<br/>root and ID untouched"]
-        S5["No stem: both fields left empty"]
-        S0 -->|no| S5
-        S0 -->|yes| S1
-        S1 -->|yes| S4
-        S1 -->|no| S2
-        S2 -->|yes| S4
-        S2 -->|no| S3
-        S3 -->|"yes: the header is the stem"| S4
-        S3 -->|no| S5
-    end
-
-    W --> S0
-
     classDef ok fill:#d1fae5,stroke:#059669,color:#064e3b;
     classDef keep fill:#fef3c7,stroke:#d97706,color:#78350f;
     classDef data fill:#e0e7ff,stroke:#4f46e5,color:#1e1b4b;
-    class D2,D3,I5,S4 ok;
-    class I7,S5 keep;
+    class D2,D3,I5 ok;
+    class I7 keep;
     class W data;
 ```
 
-De-duplication runs before context attaching; IDs and parent stems come after it.
+De-duplication runs before context attaching; IDs come after it. Parent-stem reconstruction, which used to run on the written file, was deleted with the list-writing step: the lead-in rule in context attaching gives a list item its governing line from the document itself.
 
 Back to the [diagram index](README.md).

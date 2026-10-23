@@ -2,7 +2,7 @@
 """Step E: Aggregate normalized requirements and export final outputs.
 
 Input:  requirements_normalized.jsonl (from Step D)
-        Optionally: pages.jsonl, chunks.jsonl, parse_failures.jsonl for stats
+        Optionally: pages.jsonl, chunks.jsonl, raw_responses.jsonl (the clause labeler's ledger) for stats
 Output:
   - final_output.json — complete document with metadata and all requirements
   - stats.json — pipeline metrics (counts, rates, etc.)
@@ -51,6 +51,22 @@ def count_lines(path: Path) -> int:
     return count
 
 
+def label_batch_counts(raw_responses_path: Path) -> dict:
+    """{status: batches} from the clause labeler's ledger (<doc>_raw_responses.jsonl): complete, unparsed, failed. A missing file or an unreadable line counts nothing."""
+    counts: Counter = Counter()
+    if not raw_responses_path.exists():
+        return {}
+    with open(raw_responses_path, encoding="utf-8") as f:
+        for line in f:
+            try:
+                rec = json.loads(line)
+            except ValueError:
+                continue
+            if isinstance(rec, dict) and rec.get("status"):
+                counts[rec["status"]] += 1
+    return dict(counts)
+
+
 def run(
     requirements_jsonl: str,
     output_dir: str,
@@ -89,7 +105,6 @@ def run(
     pages_path = reqs_path.parent / f"{stem}_pages.jsonl"
     chunks_path = reqs_path.parent / f"{stem}_chunks.jsonl"
     raw_resp_path = reqs_path.parent / f"{stem}_raw_responses.jsonl"
-    parse_fail_path = reqs_path.parent / f"{stem}_parse_failures.jsonl"
     norm_fail_path = reqs_path.parent / f"{stem}_normalization_failures.jsonl"
 
     log.info("Loading normalized requirements from: %s", reqs_path)
@@ -98,8 +113,7 @@ def run(
 
     page_count = count_lines(pages_path)
     chunk_count = count_lines(chunks_path)
-    raw_response_count = count_lines(raw_resp_path)
-    parse_failure_count = count_lines(parse_fail_path)
+    batch_status = label_batch_counts(raw_resp_path)
     norm_failure_count = count_lines(norm_fail_path)
 
     total_chars = 0
@@ -145,10 +159,6 @@ def run(
     }
 
     reqs_per_1k = (len(requirements) / total_chars * 1000) if total_chars > 0 else 0
-    parse_success_rate = (
-        (raw_response_count - parse_failure_count) / raw_response_count * 100
-        if raw_response_count > 0 else 0
-    )
 
     # WP-33.2: skip_sections only takes effect on the docling layout mode -- a
     # profile can configure it while the actual ingest silently no-ops on it (no
@@ -165,9 +175,11 @@ def run(
             "pages_extracted": page_count,
             "total_characters": total_chars,
             "chunks_created": chunk_count,
-            "chunks_processed_by_llm": raw_response_count,
-            "llm_parse_failures": parse_failure_count,
-            "llm_parse_success_rate_pct": round(parse_success_rate, 1),
+            # requirement finding (clause labeling): batches of clauses sent to the labeler, those whose answer could not be read (their clauses kept as UNSURE),
+            # and those whose call failed (their chunks have no rows until a re-run in the same folder)
+            "label_batches": sum(batch_status.values()),
+            "label_batches_unparsed": batch_status.get("unparsed", 0),
+            "label_batches_failed": batch_status.get("failed", 0),
             "normalization_failures": norm_failure_count,
             "requirements_before_normalization": len(requirements) + norm_failure_count,
             "requirements_after_normalization": len(requirements),
@@ -184,6 +196,7 @@ def run(
             "average_confidence": round(avg_confidence, 3) if avg_confidence is not None else None,
             "domain_tag_distribution": dict(sorted(tag_counts.items())),
             "requirement_type_distribution": dict(sorted(type_counts.items())),
+            "clause_label_distribution": dict(sorted(Counter(r.get("clause_label") or "none" for r in requirements).items())),
             "hierarchy": {
                 "with_section_path": with_section_path,
                 "with_parent_context": with_parent_context,
@@ -205,7 +218,7 @@ def run(
 
     log.info("=== Pipeline Summary ===")
     log.info("Pages: %d | Chunks: %d | Requirements: %d", page_count, chunk_count, len(requirements))
-    log.info("Parse success rate: %.1f%%", parse_success_rate)
+    log.info("Label batches: %s", batch_status or "none recorded")
     log.info("Tagged: %d/%d (%.1f%%)", tagged_count, len(requirements),
              tagged_count / len(requirements) * 100 if requirements else 0)
     log.info("Source refs: %d unique across %d requirements", unique_source_refs, has_source_ref)

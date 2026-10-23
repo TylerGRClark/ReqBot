@@ -21,7 +21,8 @@ _REQ = {
     "domain_tags": ["access-control"],
     "requirement_type": "policy",
     "description": "",
-    "chunk_id": None,
+    "chunk_id": 1,
+    "clause_index": 0, "clause_label": "DUTY", "anchor_status": "exact", "anchor_start": 0, "anchor_end": 40,  # the clause is its chunk's whole text
 }
 
 
@@ -35,7 +36,7 @@ def test_normalized_filename_preserves_pdf_stem_containing_extracted_substring(t
     reqs_file.write_text(json.dumps(_REQ) + "\n", encoding="utf-8")
 
     chunks_file = tmp_path / f"{stem}_chunks.jsonl"
-    chunks_file.write_text("", encoding="utf-8")
+    chunks_file.write_text(json.dumps({"chunk_id": _REQ["chunk_id"], "page_start": 1, "page_end": 1, "raw_text": _REQ["source_quote"]}) + "\n", encoding="utf-8")
 
     out = normalize_mod.run(str(reqs_file), str(chunks_file), "", str(tmp_path))
 
@@ -43,3 +44,4 @@ def test_normalized_filename_preserves_pdf_stem_containing_extracted_substring(t
     # "_extracted_requirements" substring found earlier in the filename —
     # this is what lets the real *_chunks.jsonl file still be found by doc_key.
     assert Path(out).name == f"{stem}_requirements_normalized.jsonl"
+    assert len(Path(out).read_text(encoding="utf-8").splitlines()) == 1  # the row passed every check (its offsets give back its text)

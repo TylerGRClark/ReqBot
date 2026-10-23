@@ -13,6 +13,7 @@ Use --synthesize to get an LLM-generated answer with citations.
 import argparse
 import json
 import logging
+import re
 import sys
 import uuid
 from pathlib import Path
@@ -274,8 +275,12 @@ def _context_text_for_hit(hit, context_map: dict | None, window: int = 300) -> s
 
     # Try to center the window on the exact source_quote
     quote = hit.payload.get("source_quote", "")
-    if quote and quote in ctx:
-        idx = ctx.find(quote)
+    idx = ctx.find(quote) if quote else -1
+    if quote and idx < 0:
+        # the stored quote has its spacing tidied (a hard line wrap becomes one space), so look for it whatever the whitespace between its words
+        m = re.search(r"\s+".join(re.escape(w) for w in quote.split()), ctx)
+        idx = m.start() if m else -1
+    if quote and idx >= 0:
         start = max(0, idx - window)
         end = min(len(ctx), idx + len(quote) + window)
         prefix = "..." if start > 0 else ""
@@ -318,13 +323,6 @@ def format_evidence(results: list[dict]) -> str:
         entry += f"    Requirement: {primary}"
         if hit.get("source_quote") and hit.get("source_quote") != primary:
             entry += f"\n    Quote: {hit['source_quote']}"
-        # WP-39.2: governing stem recovered by parent-stem reconstruction, for
-        # fragment-shaped quotes that don't stand on their own (e.g. "(3) Restrain
-        # competition." with no visible list-introducing clause) -- otherwise
-        # reconstruction only improves ranking, not what a query actually shows.
-        stem = hit.get("parent_stem")
-        if stem:
-            entry += f"\n    Governing clause: {stem}"
         ctx = hit.get("context_text")
         if ctx:
             entry += f"\n    Context: {ctx}"
@@ -371,9 +369,6 @@ def print_results_table(results: list[dict]) -> None:
             if len(quote) > 120:
                 quote = quote[:120] + "..."
             print(f"    Quote: \"{quote}\"")
-        stem = hit.get("parent_stem")
-        if stem:
-            print(f"    Governing clause: {stem}")
         ctx = hit.get("context_text")
         if ctx:
             print(f"    Context: {ctx}")

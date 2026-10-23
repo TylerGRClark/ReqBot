@@ -60,7 +60,7 @@ def _run_with_mocked_steps(tmp_path, **run_kwargs):
         # wiring, not about detection itself (covered separately above).
         patch("pipeline.run_pipeline._docling_available", return_value=True),
         patch("pipeline.section_parser.run", side_effect=RuntimeError("docling boom")) as mock_docling,
-        patch("pipeline.llm_extract_requirements.run", side_effect=fake_step_c),
+        patch("pipeline.clause_labeling.run", side_effect=fake_step_c),
         patch("pipeline.parse_and_normalize.run", side_effect=fake_step_d),
         patch("pipeline.aggregate_and_export.run"),
     ):
@@ -158,7 +158,7 @@ def test_resume_past_step_b_records_actual_chunks_mode_not_fresh_assumption(tmp_
 
     with (
         patch("pipeline.run_pipeline._docling_available", return_value=True),
-        patch("pipeline.llm_extract_requirements.run", side_effect=fake_step_c),
+        patch("pipeline.clause_labeling.run", side_effect=fake_step_c),
         patch("pipeline.parse_and_normalize.run", side_effect=fake_step_d),
         patch("pipeline.aggregate_and_export.run") as mock_step_e,
     ):

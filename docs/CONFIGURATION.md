@@ -40,7 +40,7 @@ column means no dedicated `REQBOT_*` override is implemented.
 | `ollama_url` | `http://localhost:11434` | Ollama for embeddings, extraction, enrichment, rewrite, and local synthesis. | `REQBOT_OLLAMA_URL` |
 | `qdrant_url` | `http://localhost:6333` | Qdrant requirements/context indexes. | `REQBOT_QDRANT_URL` |
 | `default_model` | `llama3.1:8b-instruct-q4_K_M` | Fallback for the three inheriting model roles below. | `REQBOT_DEFAULT_MODEL` |
-| `extraction_model` | `null` → `default_model` | Requirement finding (Step C). | `REQBOT_EXTRACTION_MODEL` |
+| `extraction_model` | `null` → `default_model` | Requirement finding (Step C): the model labels each clause of the document. `reqbot init` suggests `ornith:35b`, the model the labels were measured with; an existing configuration is never changed. | `REQBOT_EXTRACTION_MODEL` |
 | `enrichment_model` | `null` → `default_model` | Enrichment (Step D.5): descriptions, tags, and types. | `REQBOT_ENRICHMENT_MODEL` |
 | `rewrite_model` | `null` → `default_model` | Search query rewriting and HyDE hypotheses. | `REQBOT_REWRITE_MODEL` |
 | `cleanup_model` | `null` → `default_model` | Checklist cleanup flag (`reqbot questions --cleanup`). A larger model flags more junk. | `REQBOT_CLEANUP_MODEL` |
