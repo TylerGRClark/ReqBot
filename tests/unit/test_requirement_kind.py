@@ -304,3 +304,32 @@ def test_review_findings_on_kind_rules_8_a_qualified_negation_a_noun_phrase_and_
     assert _kind("Issues include weak passwords and unsupported systems.") == "unknown"
     assert _kind("Issues guidance on supply chain risk to the Components.") == "duty_imperative"
     assert _kind("DoD policy mandates that all components encrypt backups.") == "duty_with_actor"
+
+
+# The five real duties the audit of 2026-10-24 found wrongly classed as not a duty: a real command, then a pointer or exemption tail.
+_CARM_WG_1 = ("Establish and manage a CARM WG or incorporate the requirement into an equivalent, existing MAJCOM/DRU WG (e.g. Threat, EM, or Integrated Defense (ID)) to: Develop strategies for "
+              "remediating or mitigating identified vulnerabilities and risks to assessed TCAs and infrastructures to inform the HAF CARM Program office and HAF CARM WG. "
+              "A detailed description of the roles and expectations of a CARM WG can be found in section 3.6.")
+_CARM_WG_2 = ("Establish and manage a CARM WG or incorporate the requirement into an equivalent, existing Center/Wing or Installation WG (e.g. Threat, EM, or ID WG) to facilitate cross-functional "
+              "dialogue on TCA identification, availability, and reliability, as well as to support consequence management and COOP planning. (T-2) "
+              "Additional details regarding the purpose and responsibilities of the CARM WG can be found in section 3.6.")
+
+
+def test_a_command_followed_by_a_pointer_tail_is_still_a_duty():
+    assert _kind("Assess the event against the incident criteria to determine if it is a reportable event or incident (See Table 1.1, Incident Categories).") == "duty_imperative"
+    assert _kind(_CARM_WG_1) == "duty_imperative"
+    assert _kind(_CARM_WG_2) == "duty_imperative"
+    assert _kind("Support MAAs of TCAs. (T-1) Assessment types and actions are described in section 3.3.") == "duty_imperative"
+
+
+def test_a_command_followed_by_an_exemption_tail_is_still_a_duty():
+    assert _kind("Execute the responsibilities found in section 2.22. if responsible for any TCAs. (T-1) Host Centers/Wings will be exempt if capable of demonstrating an absence of TCAs.") == "duty_imperative"
+
+
+def test_rows_that_only_point_or_only_exempt_stay_pointer_and_exemption():
+    assert _kind("Refer to paragraph 4 for guidance on identifying exercise incidents/events reported, and the processes for de-conflicting real world and exercise activities.") == "pointer"
+    assert _kind("Refer to AFI 10-701 for details.") == "pointer"
+    assert _kind("Centers/Wings will be exempt if capable of demonstrating an absence of TCAs.") == "exemption"
+    assert _kind("Host Centers/Wings will be exempt if capable of demonstrating an absence of TCAs.") == "exemption"
+    assert _kind("A list of programs can be found in Section 1.4.1.") == "pointer"
+    assert _kind("Details on the process can be found in appendix G.") == "pointer"

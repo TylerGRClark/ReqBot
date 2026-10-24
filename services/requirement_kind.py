@@ -197,6 +197,16 @@ def named_actor_then_command(quote: str):
     return (m.group("actor").strip(), verb) if verb else None
 
 
+def _command_then_tail(text: str, m) -> bool:
+    """True when `text` opens with a real command and the pointer or exemption wording `m` is only a tail: in a later sentence or in a trailing "(See Table 1.1)". A row that opens with the pointer
+    itself ("Refer to paragraph 4 ...") is a pointer, so "refer" and "see" are not commands here."""
+    verb = leading_command(text)
+    if not verb or verb.lower() in ("refer", "see", "is", "are", "be"):
+        return False
+    before = text[:m.start()]
+    return bool(re.search(r"[.;]\s", before) or re.search(r"\(\s*$", before))
+
+
 POSITION_KINDS = frozenset({"table_row", "form_template_text", "cover_page_text"})  # decided by where the row sits, not by what it says
 
 
@@ -231,7 +241,7 @@ def classify(item: dict, *, use_position: bool = True) -> dict:
         decide("table_row", f"cited by a table caption ({citation})")
     elif applies:
         decide("applicability", "says who the document applies to")
-    elif (m := _POINTER.search(text)) and not _STRONG.search(text):
+    elif (m := _POINTER.search(text)) and not _STRONG.search(text) and not _command_then_tail(text, m):
         decide("pointer", "points elsewhere", m)
     elif m := _PROHIBIT.search(negated):
         allowed = first_permission(text)
@@ -241,7 +251,9 @@ def classify(item: dict, *, use_position: bool = True) -> dict:
             decide("prohibition", "a negation of an obligation or permission", m)
     elif m := _EXEMPT.search(text):
         duty = _STRONG_DUTY.search(text)
-        if duty and duty.start() < m.start():  # "are required to meet X but are not required to meet Y": the duty comes first and the exemption limits it
+        if _command_then_tail(text, m):  # "Execute the responsibilities in 2.22. (T-1) Host Centers/Wings will be exempt if ...": the command is the duty, the exemption is its tail
+            decide("duty_imperative", "a command that a later exemption limits", m)
+        elif duty and duty.start() < m.start():  # "are required to meet X but are not required to meet Y": the duty comes first and the exemption limits it
             decide("duty_with_actor", "a duty that a later exemption limits", duty)
         else:
             decide("exemption", "says something does not apply or is not required", m)
