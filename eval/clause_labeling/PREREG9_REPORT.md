@@ -1,6 +1,6 @@
 # PREREG9 report: confirmation of the lead-in labeler context (arm `rule`) on four untouched documents
 
-Run 2026-10-23/24, base main 3c0990a + proposed commit 5b5c511, `ornith:35b`, frozen prompt v3 (same sha both arms), whole documents, one model job at a time, no unparsed or failed batch in either arm. Rule written and committed before any run: `PREREG9.md`. Numbers: `PREREG9_metrics.json`; every flip and the number-start cases: `PREREG9_flips.json`. Scorer = PREREG8 scorer (`label_ctx_metrics.py`) unchanged plus the CNSSI gold file (`confirm_metrics.py`). Nothing tuned.
+Run 2026-10-23/24, base main 3c0990a + proposed commit 5b5c511 (run in the worktree; this PR carries only the eval files, the commit itself is in #372), `ornith:35b`, frozen prompt v3 (same sha both arms), whole documents, one model job at a time, no unparsed or failed batch in either arm. Rule written and committed before any run: `PREREG9.md`. Numbers: `PREREG9_metrics.json`; every flip and the number-start cases: `PREREG9_flips.json`. Scorer = PREREG8 scorer (`label_ctx_metrics.py`) unchanged plus the CNSSI gold file (`confirm_metrics.py`). Nothing tuned.
 
 ## Verdict by the written rule: NOT CONFIRMED (not a fail)
 - Rule 1 recall within 1.0 pooled: HOLDS (94.14 -> 94.14, change 0.00).
