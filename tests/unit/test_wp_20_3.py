@@ -1,7 +1,7 @@
 """WP-20.3 unit tests — profile-aware pipeline integration.
 
 Verifies that profile vocabulary (domain_tags, requirement_types, obligation_verbs)
-flows correctly through normalizing (parse_and_normalize), Step D.5 (enrich_requirements),
+flows correctly through normalizing (parse_and_normalize)
 and run_pipeline. The Step C tests (validate_requirement, the list-writing prompt) were deleted with
 that step: requirement finding is clause labeling now, which uses no profile vocabulary. These tests do NOT call Ollama or the filesystem pipeline — they
 test the plumbing in isolation.
@@ -11,7 +11,6 @@ import json
 from pathlib import Path
 from unittest.mock import patch
 
-import pipeline.enrich_requirements as enrich_mod
 import pipeline.parse_and_normalize as normalize_mod
 from core.profiles import load_profile
 
@@ -40,55 +39,6 @@ def test_test_domain_profile_has_required_fields():
     p = load_profile("test-domain")
     for field in REQUIRED_FIELDS:
         assert field in p, f"Missing: {field}"
-
-
-# ---------------------------------------------------------------------------
-# Step D.5: _validate_enrichment uses profile domain tags and requirement types
-# ---------------------------------------------------------------------------
-
-def test_validate_enrichment_accepts_profile_tag():
-    raw = {
-        "description": "Test requirement.",
-        "domain_tags": ["test-tag-beta"],
-        "requirement_type": "guidance",
-    }
-    result = enrich_mod._validate_enrichment(
-        raw,
-        valid_domain_tags=_TEST_DOMAIN_PROFILE["domain_tags"],
-        valid_requirement_types=_TEST_DOMAIN_PROFILE["requirement_types"],
-    )
-    assert result["domain_tags"] == ["test-tag-beta"]
-    assert result["requirement_type"] == "guidance"
-
-
-def test_validate_enrichment_rejects_cybersecurity_tag_under_test_profile():
-    raw = {
-        "description": "Test requirement.",
-        "domain_tags": ["audit-and-logging"],  # valid cybersecurity tag
-        "requirement_type": "technical-control",  # valid cybersecurity type
-    }
-    result = enrich_mod._validate_enrichment(
-        raw,
-        valid_domain_tags=_TEST_DOMAIN_PROFILE["domain_tags"],
-        valid_requirement_types=_TEST_DOMAIN_PROFILE["requirement_types"],
-    )
-    assert result["domain_tags"] == []
-    assert result["requirement_type"] == ""
-
-
-def test_validate_enrichment_cybersecurity_profile_unchanged():
-    raw = {
-        "description": "MFA must be enforced.",
-        "domain_tags": ["authentication-and-identity"],
-        "requirement_type": "technical-control",
-    }
-    result = enrich_mod._validate_enrichment(
-        raw,
-        valid_domain_tags=_CYBER_PROFILE["domain_tags"],
-        valid_requirement_types=_CYBER_PROFILE["requirement_types"],
-    )
-    assert result["domain_tags"] == ["authentication-and-identity"]
-    assert result["requirement_type"] == "technical-control"
 
 
 # ---------------------------------------------------------------------------
@@ -142,7 +92,6 @@ def test_run_pipeline_passes_profile_to_normalizing(tmp_path):
         run_pipeline.run(
             str(fake_pdf),
             str(tmp_path),
-            skip_enrichment=True,
             profile_name="test-domain",
         )
 
@@ -240,121 +189,3 @@ def test_parse_normalize_uses_profile_requirement_types(tmp_path):
     by_ref = {r["source_ref"]: r for r in records}
     assert by_ref["T-1"]["requirement_type"] == "guidance"
     assert by_ref["T-2"]["requirement_type"] == "", "technical-control must be cleared under test-domain profile"
-
-
-# ---------------------------------------------------------------------------
-# Review-round fixes — Codex P2 #2: enrichment cache invalidated on profile change
-# ---------------------------------------------------------------------------
-
-_BASE_NORM_REQ = {
-    "requirement_id": "REQ-cachetest000001",
-    "source_quote": "Systems shall restrict access.",
-    "source_ref": "T-1",
-    "description": "",
-    "domain_tags": [],
-    "requirement_type": "",
-    "chunk_id": 1,
-    "page_start": 1,
-    "page_end": 1,
-    "confidence": 0.9,
-    "document_id": "abcd1234",
-    "document_hash_full": "abcd1234abcd1234",
-    "source_pdf": "test.pdf",
-    "schema_version": "2.0",
-    "pipeline_version": "1.0",
-    "extraction_model": "test-model",
-    "run_timestamp": "2026-01-01T00:00:00Z",
-    "section_ref_path": [],
-    "section_title_path": [],
-    "parent_section_ref": None,
-    "parent_context": None,
-    "child_section_refs": [],
-}
-
-
-def test_enrichment_cache_bypassed_on_profile_change(tmp_path):
-    """A cache record stamped with 'cybersecurity' must be re-enriched under 'test-domain'."""
-    norm_file = tmp_path / "doc_requirements_normalized.jsonl"
-    norm_file.write_text(json.dumps(_BASE_NORM_REQ) + "\n", encoding="utf-8")
-
-    cached = {
-        **_BASE_NORM_REQ,
-        "description": "Old cached enrichment.",
-        "domain_tags": ["access-control"],
-        "requirement_type": "policy",
-        "enrichment_model": "test-model",
-        "enrichment_profile": "cybersecurity",
-    }
-    enriched_file = tmp_path / "doc_requirements_enriched.jsonl"
-    enriched_file.write_text(json.dumps(cached) + "\n", encoding="utf-8")
-
-    enrich_calls: list = []
-
-    def fake_batch(batch, model, url, timeout, *, valid_tags_str, valid_types_str, valid_domain_tags, valid_requirement_types):
-        enrich_calls.extend(batch)
-        return [{"description": "new", "domain_tags": ["test-tag-alpha"], "requirement_type": "guidance"}]
-
-    import requests as _requests
-    fake_resp = type("R", (), {"raise_for_status": lambda self: None})()
-
-    with (
-        patch.object(enrich_mod, "_enrich_batch", side_effect=fake_batch),
-        patch.object(_requests, "get", return_value=fake_resp),
-    ):
-        enrich_mod.run(
-            str(norm_file), str(tmp_path),
-            model="test-model",
-            ollama_url="http://localhost:11434",
-            profile=_TEST_DOMAIN_PROFILE,
-        )
-
-    assert len(enrich_calls) == 1, "Cache should be bypassed when profile changes"
-    assert enrich_calls[0]["requirement_id"] == "REQ-cachetest000001"
-
-    # enrichment_profile is NOT written to output records (WP-20.4 owns schema changes)
-    out_records = [json.loads(line) for line in enriched_file.read_text(encoding="utf-8").splitlines() if line.strip()]
-    assert "enrichment_profile" not in out_records[0]
-
-
-def test_enrichment_cache_honored_when_profile_matches(tmp_path):
-    """A cybersecurity cache record (no enrichment_profile field) must not be re-enriched on a cybersecurity run.
-
-    This is the production scenario: pre-WP-20.4 records have no enrichment_profile field;
-    the cybersecurity run treats them as cybersecurity-valid and skips re-enrichment.
-    """
-    norm_file = tmp_path / "doc_requirements_normalized.jsonl"
-    norm_file.write_text(json.dumps(_BASE_NORM_REQ) + "\n", encoding="utf-8")
-
-    # Production-accurate: cybersecurity enrichment record has no enrichment_profile field
-    cached = {
-        **_BASE_NORM_REQ,
-        "description": "Cached cybersecurity enrichment.",
-        "domain_tags": ["access-control"],
-        "requirement_type": "technical-control",
-        "enrichment_model": "test-model",
-        # No enrichment_profile field — all existing records are cybersecurity by assumption
-    }
-    enriched_file = tmp_path / "doc_requirements_enriched.jsonl"
-    enriched_file.write_text(json.dumps(cached) + "\n", encoding="utf-8")
-
-    enrich_calls: list = []
-
-    def fake_batch(batch, *args, **kwargs):
-        enrich_calls.extend(batch)
-        return [{"description": "new", "domain_tags": [], "requirement_type": ""}]
-
-    import requests as _requests
-    fake_resp = type("R", (), {"raise_for_status": lambda self: None})()
-
-    with (
-        patch.object(enrich_mod, "_enrich_batch", side_effect=fake_batch),
-        patch.object(_requests, "get", return_value=fake_resp),
-    ):
-        enrich_mod.run(
-            str(norm_file), str(tmp_path),
-            model="test-model",
-            ollama_url="http://localhost:11434",
-            profile=_CYBER_PROFILE,
-        )
-
-    assert len(enrich_calls) == 0, "Cybersecurity cache with matching model must be honored"

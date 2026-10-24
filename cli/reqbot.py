@@ -118,10 +118,8 @@ def cmd_ingest(args: argparse.Namespace) -> int:
     # --model is a convenience alias; individual flags take precedence when --model not given
     if args.model:
         extraction_model = args.model
-        enrichment_model = args.model
     else:
         extraction_model = args.extraction_model or _cfg.extraction_model
-        enrichment_model = args.enrichment_model or _cfg.enrichment_model
 
     try:
         index_path = _run_pipeline.run(
@@ -129,10 +127,7 @@ def cmd_ingest(args: argparse.Namespace) -> int:
             str(out_dir),
             ollama_url=args.ollama_url,
             extraction_model=extraction_model,
-            enrichment_model=enrichment_model,
             max_chunks=args.max_chunks,
-            skip_enrichment=args.skip_enrichment,
-            skip_description_gate=args.skip_description_gate,
             profile_name=args.profile,
         )
     except RuntimeError as e:
@@ -155,7 +150,7 @@ def cmd_ingest(args: argparse.Namespace) -> int:
             )
             replace = False
 
-    # Index by default (uses enriched JSONL if enrichment ran, else normalized)
+    # Index by default
     _progress.emit("indexing")
     try:
         _embed.run(
@@ -286,10 +281,8 @@ def cmd_batch(args: argparse.Namespace) -> int:
     # Resolve models once for the whole batch (same alias logic as cmd_ingest)
     if args.model:
         batch_extraction_model = args.model
-        batch_enrichment_model = args.model
     else:
         batch_extraction_model = args.extraction_model or _cfg.extraction_model
-        batch_enrichment_model = args.enrichment_model or _cfg.enrichment_model
 
     succeeded = []
     failed = []
@@ -308,9 +301,6 @@ def cmd_batch(args: argparse.Namespace) -> int:
                 str(out_dir),
                 ollama_url=args.ollama_url,
                 extraction_model=batch_extraction_model,
-                enrichment_model=batch_enrichment_model,
-                skip_enrichment=args.skip_enrichment,
-                skip_description_gate=args.skip_description_gate,
             )
         except RuntimeError as e:
             log.error("Pipeline FAILED for %s: %s", pdf_path.name, e)
@@ -1961,17 +1951,18 @@ def main() -> None:
     )
     p_ingest.add_argument(
         "--enrichment-model", type=str, default=None, dest="enrichment_model",
-        help="Ollama model for Step D.5 enrichment (default: from config)",
+        help=argparse.SUPPRESS,
     )
     p_ingest.add_argument(
         "--model", type=str, default=None,
-        help="Convenience alias: sets both --extraction-model and --enrichment-model",
+        help="Convenience alias for --extraction-model",
     )
     p_ingest.add_argument("--max-chunks", type=int, help="Limit chunks for testing")
     p_ingest.add_argument(
         "--no-index", action="store_true", dest="no_index",
         help="Skip indexing — write pipeline artifacts only (debug/inspection)",
     )
+    # --enrichment-model, --skip-enrichment and --skip-description-gate below are likewise accepted and ignored (enrichment and the description check are gone).
     # Deprecated: indexing is now the default, so --index is an inert no-op.
     # Kept accepted (not removed) so old scripts/shell history/README snippets
     # that still type --index don't suddenly fail to parse.
@@ -1980,13 +1971,13 @@ def main() -> None:
         "--skip-enrichment",
         action="store_true",
         dest="skip_enrichment",
-        help="Skip Pass 2 enrichment (description/tags/type). Index source_quote-only output directly.",
+        help=argparse.SUPPRESS,
     )
     p_ingest.add_argument(
         "--skip-description-gate",
         action="store_true",
         dest="skip_description_gate",
-        help="Skip Step D.6 description-grounding gate (WP-35.4). Index enriched output without checking descriptions for fabrication.",
+        help=argparse.SUPPRESS,
     )
     p_ingest.add_argument(
         "--profile",
@@ -2045,23 +2036,23 @@ def main() -> None:
     )
     p_batch.add_argument(
         "--enrichment-model", type=str, default=None, dest="enrichment_model",
-        help="Ollama model for Step D.5 enrichment (default: from config)",
+        help=argparse.SUPPRESS,
     )
     p_batch.add_argument(
         "--model", type=str, default=None,
-        help="Convenience alias: sets both --extraction-model and --enrichment-model",
+        help="Convenience alias for --extraction-model",
     )
     p_batch.add_argument(
         "--skip-enrichment",
         action="store_true",
         dest="skip_enrichment",
-        help="Skip Pass 2 enrichment (description/tags/type). Index source_quote-only output directly.",
+        help=argparse.SUPPRESS,
     )
     p_batch.add_argument(
         "--skip-description-gate",
         action="store_true",
         dest="skip_description_gate",
-        help="Skip Step D.6 description-grounding gate (WP-35.4). Index enriched output without checking descriptions for fabrication.",
+        help=argparse.SUPPRESS,
     )
     p_batch.add_argument("--ollama-url", type=str, default=_cfg.ollama_url, dest="ollama_url")
     p_batch.add_argument("--qdrant-url", type=str, default=_cfg.qdrant_url, dest="qdrant_url")

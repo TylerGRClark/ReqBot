@@ -6,9 +6,10 @@ Evaluation scripts, gold sets and the frozen results of past experiments (`spike
 
 When clause labeling replaced the list-writing requirement-finding step, these modules were
 deleted: `pipeline/llm_extract_requirements.py`, `pipeline/anchor.py`,
-`sentence_expand.expand()` and its same-sentence merge, parent-stem reconstruction in
-`pipeline/enrich_requirements.py`, and normalizing's grounding, word-coverage and
-dangling-clause checks.
+`sentence_expand.expand()` and its same-sentence merge, `pipeline/enrich_requirements.py`
+(enrichment, with its parent-stem reconstruction), `pipeline/entailment_gate.py` (the description
+check; `eval/modality_fabrication_check.py`, which imported it, went with it), and normalizing's
+grounding, word-coverage and dangling-clause checks.
 
 The experiment scripts below import them. They are kept unchanged because their files are
 hash-pinned (their sealed results cite them); their recorded results stay valid. To run one

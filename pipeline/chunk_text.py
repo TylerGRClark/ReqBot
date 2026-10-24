@@ -41,12 +41,10 @@ _HEADING_PREFIX_RE = re.compile(
 
 # WP-42: a single table's full markdown is now emitted once regardless of how
 # many chunks HybridChunker split it across (see _chunk_raw_text's
-# seen_table_refs). This warning was written for the list-writing extraction
-# step, which sent a whole chunk to the model in an 8192-token context. Clause
-# labeling (pipeline/clause_labeling.py), which replaced it, sends each table
-# line as its own clause (at most 1200 characters each, 4 per call), so a big
-# table no longer risks the context; the warning stays as a size signal for a
-# human (Codex review, PR #189).
+# seen_table_refs). Clause labeling (pipeline/clause_labeling.py) sends each
+# table line as its own clause (at most 1200 characters each, 4 per call), so a
+# big table does not risk the model's context; the warning is a size signal for
+# a human (Codex review, PR #189).
 _TABLE_MARKDOWN_WARN_CHARS = 20000
 
 
@@ -269,9 +267,8 @@ def _raw_text_with_table_grids(chunk: object, doc: object, tables: list, table_o
             seen_table_refs.add(ref)
         if len(grid) > _TABLE_MARKDOWN_WARN_CHARS:  # the same warning the per-item path gives for a typed table
             log.warning(
-                "Table markdown for %s is %d chars (~%d tokens) -- approaching "
-                "Step C's context budget. Extraction quality for this table "
-                "should be spot-checked.",
+                "Table markdown for %s is %d chars (~%d tokens) -- very large, "
+                "approaching a size where its clause labels should be spot-checked.",
                 ref, len(grid), len(grid) // 4,
             )
     return text.strip()
@@ -303,13 +300,11 @@ def _chunk_raw_text(chunk: object, doc: object = None, *, seen_table_refs: set |
     against all 4 WP-42 documents, every table in every one of them is split
     this way (afi10-2402's largest table alone spans 11 chunks). Calling
     export_to_markdown() unconditionally on each would re-export the whole
-    table N times, multiplying Step C's LLM cost by N and creating a latent
-    non-determinism risk (temperature-sampled extraction could disagree
-    across the N redundant calls). The caller threads one shared set across
+    table N times, repeating the table's lines N times in the output. The caller threads one shared set across
     the whole per-document chunking loop; a table's self_ref is emitted in
     full exactly once, on the first chunk that references it, and skipped
     (contributes nothing, not even a fallback) on every subsequent chunk —
-    the full table already reached Step C once, intact.
+    the full table already appeared once, intact.
 
     Falls back to chunk.text when doc_items cannot be inspected, but NOT for
     a chunk whose only content was an already-emitted table: that chunk
@@ -358,9 +353,8 @@ def _chunk_raw_text(chunk: object, doc: object = None, *, seen_table_refs: set |
                 seen_table_refs.add(self_ref)
             if len(text) > _TABLE_MARKDOWN_WARN_CHARS:
                 log.warning(
-                    "Table markdown for %s is %d chars (~%d tokens) -- approaching "
-                    "Step C's context budget. Extraction quality for this table "
-                    "should be spot-checked.",
+                    "Table markdown for %s is %d chars (~%d tokens) -- very large, "
+                    "approaching a size where its clause labels should be spot-checked.",
                     self_ref, len(text), len(text) // 4,
                 )
         if not text and not isinstance(item, TableItem):

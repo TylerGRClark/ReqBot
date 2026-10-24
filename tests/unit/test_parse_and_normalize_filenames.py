@@ -1,5 +1,5 @@
 """Regression test for parse_and_normalize.py's normalized-filename derivation
-(Codex PR #92 follow-up review — sibling of the enrich_requirements.py fix).
+(Codex PR #92 follow-up review).
 
 A broad `.replace("_extracted_requirements", "")` on the extracted-requirements
 JSONL's stem would collapse every occurrence of that substring, not just the
