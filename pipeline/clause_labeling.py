@@ -168,7 +168,7 @@ def document_clauses(chunks: list[dict]) -> list[dict]:
         prev = by_id.get(chunk["chunk_id"] - 1) if isinstance(chunk.get("chunk_id"), int) else None
         prev_raw = (prev.get("raw_text") or prev.get("text") or "") if prev is not None and _section_key(prev) == _section_key(chunk) else ""
         for c in chunk_clauses(chunk):
-            c["ctx_lead"] = find_lead_in(raw, c["start"], prev_raw)
+            c["ctx_lead"] = find_lead_in(raw, c["start"], prev_raw, _as_list(chunk.get("section_title_path")))
             out.append(c)
     return out
 

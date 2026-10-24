@@ -54,3 +54,20 @@ Flip list with old context, new context, label change and gold status; label agr
 
 ## Limits stated in advance
 One run per arm; no repeat arm (noise floor from PREREG8: repeat control differed on 1 of 2,289 clauses); gold is two model families, precision a lower bound; the F3 test is on the same 23 documents that suggested the fix (it is a measurement of the explained layer, not a held-out test); the cause classification is heuristic and author-read; the author reads the lead-in samples; blind graders are two models, no human.
+
+## Amendment 1 (2026-10-24, still before any model run; only no-model counts exist)
+Writing the code showed that the "at least three words" rule in the proposal drops legitimate lead-ins such as "DISA will:" and "CCDRs will:" (15 of the heading rows). Replaced by: at least two words, and the heading's last word is not a preposition (to, of, for, by, with, from, on, in, at, per), which still excludes the memo header "Reply to:". Nothing else in the proposal or the pass rules changes. The committed script `f3_causes.py` is the authoritative classification (the table above came from a scratch version with slightly different tie-breaking). Its counts on the 377 rows, first match wins:
+
+| cause (script name) | rows |
+|---|---|
+| heading (rule above applies) | 128 |
+| further (lead-in more than one chunk back, other fix) | 69 |
+| self_head (item ends in a colon) | 14 |
+| sibling (colon line rejected as a sibling) | 12 |
+| form (letter or form template) | 15 |
+| period (lead-in sentence ends in a period) | 4 |
+| none_junk (nothing governs; path entry is `UNCLASSIFIED`) | 15 |
+| none (nothing governs) | 120 |
+| junk_blocked | 0 |
+
+Rows with `UNCLASSIFIED` as the last path entry: 21 (not 28). Expected F3 after the change if every heading row resolves: 377 - 128 = 249 (down 34.0%); the 30% line is 263, so at most 14 of the 128 may fail to resolve for the F3 rule to pass.

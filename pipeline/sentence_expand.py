@@ -93,7 +93,8 @@ def explain_records(records: list[dict], raw_text_by_chunk: dict, section_by_chu
 
     - the sentence: the clause with a leading list marker or paragraph number taken off ("a. Identify ..." -> "Identify ...");
     - a list item gets the lead-in that governs it in front ("AFMC will: Identify ..."): the nearest earlier line ending with a colon, in the same chunk or, when the list began
-      there and the previous chunk is in the same section, at the end of the previous chunk (pipeline/lead_in.find_lead_in, unchanged).
+      there and the previous chunk is in the same section, at the end of the previous chunk (pipeline/lead_in.find_lead_in);
+    - when that finds no line, a list item that opens its section gets the section heading as its lead-in if the heading ends in a colon or modal (PREREG10, proposed).
     Records are copied, one out for each one in (no merging). Returns (records, counts)."""
     from pipeline import lead_in as _lead_in  # imported here: lead_in uses this module's helpers
     out: list[dict] = []
@@ -112,12 +113,14 @@ def explain_records(records: list[dict], raw_text_by_chunk: dict, section_by_chu
         prev_cid = cid - 1 if isinstance(cid, int) else None
         # the previous chunk is only consulted when it is in the same section: a list that continues across a chunk boundary stays in its section, and another section's lead-in must not be borrowed
         same_section = section_by_chunk is None or (prev_cid in section_by_chunk and section_by_chunk.get(prev_cid) == section_by_chunk.get(cid))
-        lead = _lead_in.find_lead_in(raw, rec.get("anchor_start"), raw_text_by_chunk.get(prev_cid, "") if prev_cid is not None and same_section else "")
+        title_path = (section_by_chunk or {}).get(cid, ((), ()))[1]
+        lead = _lead_in.find_lead_in(raw, rec.get("anchor_start"), raw_text_by_chunk.get(prev_cid, "") if prev_cid is not None and same_section else "", title_path)
         if lead and text.lower().startswith(tidy(lead).lower()):
             lead = None
         parts = []
         if lead:
-            notes.append("lead-in attached from the line above that ends with a colon")
+            from_heading = lead == _lead_in.heading_lead_in(title_path)
+            notes.append("lead-in attached from the section heading" if from_heading else "lead-in attached from the line above that ends with a colon")
             counts["lead_in_attached"] += 1
             parts.append({"kind": "lead_in", "text": lead, "origin": "rule"})
         parts.append({"kind": "sentence", "text": text, "origin": "rule"})

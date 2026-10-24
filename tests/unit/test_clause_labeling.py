@@ -443,3 +443,12 @@ def test_document_clauses_lead_in_with_tier_tag_after_colon_same_chunk_and_previ
     got = [(c["text"], c["ctx_lead"]) for c in cl.document_clauses(chunks)]
     tag = "Training will use one of the following options: (T-2)."
     assert got == [(tag, None), ("- classroom courses", tag), ("- online courses", tag)]
+
+
+def test_document_clauses_heading_lead_in_for_a_list_that_opens_its_section():
+    sec = {"section_title_path": ["1. DoD CHIEF INFORMATION OFFICER (DoD CIO). The DoD CIO, shall:"], "section_ref_path": ["1"]}
+    chunks = [{"chunk_id": 0, "raw_text": "- a. Provide strategy.\n- b. Coordinate with the Components.", **sec}, {"chunk_id": 1, "raw_text": "- c. Report yearly.", **sec},
+              {"chunk_id": 2, "raw_text": "- a. Report yearly.", "section_title_path": ["2. DUTIES."], "section_ref_path": ["2"]}]
+    got = [(c["text"], c["ctx_lead"]) for c in cl.document_clauses(chunks)]
+    assert got == [("- a. Provide strategy.", "The DoD CIO, shall:"), ("- b. Coordinate with the Components.", "The DoD CIO, shall:"), ("- c. Report yearly.", "The DoD CIO, shall:"),
+                   ("- a. Report yearly.", None)]

@@ -85,3 +85,16 @@ def test_records_are_never_merged():
             {"chunk_id": 1, "source_quote": "| Yes | Report it. |", "anchor_start": 21, "anchor_end": 41}]
     out, _ = SE.explain_records(recs, {1: raw})
     assert len(out) == 2 and all("merged_roots" not in r for r in out)
+
+
+def test_a_list_item_that_opens_its_section_gets_the_heading_as_lead_in():
+    raw = "- a.  Provide strategy and policy.\n- b.  Coordinate with the Components."
+    sections = {1: (("1",), ("1.  DoD CHIEF INFORMATION OFFICER (DoD CIO).  The DoD CIO, shall:",))}
+    out, counts = SE.explain_records([_rec(1, raw, "- b.  Coordinate with the Components.")], {1: raw}, sections)
+    assert out[0]["explained_text"] == "The DoD CIO, shall: Coordinate with the Components."
+    assert out[0]["explained_parts"] == [{"kind": "lead_in", "text": "The DoD CIO, shall:", "origin": "rule"}, {"kind": "sentence", "text": "Coordinate with the Components.", "origin": "rule"}]
+    assert out[0]["explain_notes"] == ["list number or dash taken off", "lead-in attached from the section heading"]
+    assert out[0]["source_quote"] == "- b.  Coordinate with the Components."
+    assert counts["lead_in_attached"] == 1
+    plain, _ = SE.explain_records([_rec(1, raw, "- b.  Coordinate with the Components.")], {1: raw}, {1: (("1",), ("1.  DUTIES.",))})
+    assert plain[0]["explained_text"] == "Coordinate with the Components."

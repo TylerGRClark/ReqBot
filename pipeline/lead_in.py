@@ -3,6 +3,9 @@
 A list item such as "Include the mission owner in the process." means little without the line above it that ends with a colon ("The Director will:"). This finds that line: the nearest
 earlier line, in the same chunk or at the end of the previous chunk, that ends with a colon and is not a sibling of the item. Nothing is guessed: the lead-in is an exact line of the
 source, or there is none.
+
+When a list item has no such line at all because the list opens a section whose heading is itself the governing statement ("1. DoD CHIEF INFORMATION OFFICER (DoD CIO). The DoD CIO, shall:"
+and the chunk text starts at "- a. Provide strategy ..."), the heading is the lead-in (PREREG10, PROPOSED: `heading_lead_in`, used only when the caller passes the chunk's section title path).
 """
 import re
 
@@ -13,6 +16,10 @@ MAX_LEAD_IN_CHARS = 300
 _DOTTED = re.compile(r"^(?:[A-Z]{1,2})?\d+(?:\.\d+)+\.?\s")
 _COLON_END = re.compile(r":(\s*\(T-\d\)\.?)?$")  # same rule as pipeline/clauses._LEAD_IN_END: "will:" and, after a tier tag, "options: (T-2)."
 _TAG_AFTER_COLON = re.compile(r"(?<=:)\s*\(T-\d\)\.?$")
+_MODAL_END = re.compile(r"\b(?:shall|will|must|should|may)\s*$", re.I)
+_JUNK_HEADING = re.compile(r"^\W*(?:(?:UNCLASSIFIED|CUI|FOUO|CONFIDENTIAL|SECRET|TOP SECRET)(?:\s*//.*)?|(?:page\s+)?\d{1,4}(?:\s+of\s+\d{1,4})?)\W*$", re.I)
+MIN_HEADING_WORDS = 2
+_DANGLING_END = re.compile(r"\b(?:to|of|for|by|with|from|on|in|at|per)\s*:?$", re.I)  # "Reply to:" names no party
 _STYLES = (
     ("alpha_p", re.compile(r"^\([a-z]{1,2}\)\s")),
     ("alpha", re.compile(r"^[a-z]{1,2}[.)]\s")),
@@ -75,6 +82,23 @@ def _candidate(units: list[tuple[int, str]], index: int, item_style: tuple[str, 
     return None
 
 
+def is_junk_heading(entry: str) -> bool:
+    """A section-path entry that is a page header or footer (a classification banner or a page number), not a heading."""
+    return bool(_JUNK_HEADING.match((entry or "").strip()))
+
+
+def heading_lead_in(title_path) -> str | None:
+    """The lead-in a section heading gives to the list under it: the last sentence of the nearest real heading (page-header junk skipped; only that one entry is looked at) when it
+    ends in a colon or a modal ("The DoD CIO, shall:", "The Services will"), has at least two words, does not end in a preposition ("Reply to:") and fits the cap; else None."""
+    entries = [e for e in (title_path or []) if isinstance(e, str) and e.strip() and not is_junk_heading(e)]
+    if not entries:
+        return None
+    text = _text_of(entries[-1])
+    if len(text.split()) < MIN_HEADING_WORDS or len(text) > MAX_LEAD_IN_CHARS or _DANGLING_END.search(text.replace(" :", ":").rstrip()):
+        return None
+    return text if (_COLON_END.search(text) or _MODAL_END.search(text.rstrip(".;,"))) else None
+
+
 _BARE_NUMBER_START = re.compile(r"\d{1,3}[ \t]+\S")
 
 
@@ -87,9 +111,10 @@ def _is_plain_line_after_marker_line(raw: str, item_start: int, unit_start: int)
     return raw[:line_start].rstrip()[-1:] in (".", ":", "?", "!", '"', "'", ")")
 
 
-def find_lead_in(raw: str, item_start: int, prev_raw: str = "") -> str | None:
+def find_lead_in(raw: str, item_start: int, prev_raw: str = "", heading_path=None) -> str | None:
     """The lead-in line for the list item that starts at `item_start` in the chunk's `raw` text, looking in `prev_raw` (the previous chunk) when the list began there; None when the
-    item is not a list item or no governing line is found."""
+    item is not a list item or no governing line is found. With `heading_path` (the chunk's section title path), a list item that has no lead-in line and no plain paragraph above it in the
+    chunk or in the previous chunk of its section gets the section heading's lead-in when there is one (`heading_lead_in`)."""
     if item_start is None or not raw:
         return None
     units = _units(raw)
@@ -107,4 +132,7 @@ def find_lead_in(raw: str, item_start: int, prev_raw: str = "") -> str | None:
     if any(_marker_style(u)[0] == "none" for _, u in units[:index]):
         return None  # an ordinary paragraph comes before the item in this chunk: the list began after it
     prev_units = _units(prev_raw) if prev_raw else []
-    return _candidate(prev_units, len(prev_units), item_style) if prev_units else None
+    found = _candidate(prev_units, len(prev_units), item_style) if prev_units else None
+    if found or any(_marker_style(u)[0] == "none" for _, u in prev_units):
+        return found  # a lead-in line, or a plain paragraph in the previous chunk: the list does not open straight under the heading
+    return heading_lead_in(heading_path) if heading_path else None
