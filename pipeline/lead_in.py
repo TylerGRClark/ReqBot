@@ -71,6 +71,18 @@ def _candidate(units: list[tuple[int, str]], index: int, item_style: tuple[str, 
     return None
 
 
+_BARE_NUMBER_START = re.compile(r"\d{1,3}[ \t]+\S")
+
+
+def _is_plain_line_after_marker_line(raw: str, item_start: int, unit_start: int) -> bool:
+    """True when the item is a line of its own that begins with a bare number (no dot or bracket, so not a list marker), sits inside an earlier list item's unit (the unit started on
+    an earlier line), and follows a line that ended a sentence or a colon. Units split only at markers, so such a line would otherwise count as part of the list item above it."""
+    line_start = raw.rfind("\n", 0, item_start) + 1
+    if line_start <= unit_start or raw[line_start:item_start].strip() or not _BARE_NUMBER_START.match(raw, item_start):
+        return False
+    return raw[:line_start].rstrip()[-1:] in (".", ":", "?", "!", '"', "'", ")")
+
+
 def find_lead_in(raw: str, item_start: int, prev_raw: str = "") -> str | None:
     """The lead-in line for the list item that starts at `item_start` in the chunk's `raw` text, looking in `prev_raw` (the previous chunk) when the list began there; None when the
     item is not a list item or no governing line is found."""
@@ -80,6 +92,8 @@ def find_lead_in(raw: str, item_start: int, prev_raw: str = "") -> str | None:
     index = max((i for i, (start, _) in enumerate(units) if start <= item_start), default=None)
     if index is None:
         return None
+    if _is_plain_line_after_marker_line(raw, item_start, units[index][0]):
+        return None  # a plain sentence that starts with a bare number ("24 AF is designated as ...") on a line of its own, after a list item: not itself a list item
     item_style = _marker_style(units[index][1])
     if item_style[0] == "none":
         return None  # a plain sentence stands on its own

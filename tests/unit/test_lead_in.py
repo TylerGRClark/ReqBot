@@ -50,3 +50,19 @@ def test_an_abbreviation_in_the_lead_in_does_not_cut_it():
     assert find_lead_in(raw, _at(raw, "Keep")) == "The U.S. Cyber Command will:"
     raw2 = "Dr. Smith will:\n- a. Brief the staff weekly.\n- b. Keep the records."
     assert find_lead_in(raw2, _at(raw2, "Keep")) == "Dr. Smith will:"
+
+
+def test_a_bare_number_line_after_a_list_item_is_a_plain_sentence_with_no_lead_in():
+    # CNSSI 1253 footnote-style lines: "2 Examples ..." follows the bullets; units split only at markers, so it used to inherit the lead-in above the list.
+    raw = "The assumptions are:\n- Systems are networked.\n2 Examples of systems that diverge include test rigs."
+    assert find_lead_in(raw, _at(raw, "Systems are")) == "The assumptions are:"
+    assert find_lead_in(raw, _at(raw, "2 Examples")) is None
+    raw2 = "Complete the following:\n- Document the gap.\nAt the discretion of the AO this may be filed.\n8 All guidance applies to NSS."
+    assert find_lead_in(raw2, _at(raw2, "8 All")) is None
+
+
+def test_a_bare_number_inside_a_numbered_item_or_a_wrapped_line_keeps_its_lead_in():
+    raw = "Duties:\n- 2.5.1.1.7.  24 AF is designated as the CNDSP."
+    assert find_lead_in(raw, _at(raw, "24 AF")) == "Duties:"
+    raw2 = "Duties:\n- Brief the units assigned to\n24 AF every week."  # wrapped line: the previous line did not end a sentence
+    assert find_lead_in(raw2, _at(raw2, "24 AF")) == "Duties:"
