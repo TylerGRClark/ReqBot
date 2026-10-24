@@ -24,7 +24,6 @@ The web page reads. Every command that writes, or runs for more than a few secon
 | `questions` (draft audit questions) | Checklist screen: "Write draft audit questions" | built (stage 6) |
 | `reindex` (rebuild the search library) | System: "Rebuild the library" | built (stage 6) |
 | `mcp` | not a web feature; local only | **stage 2** (network service) |
-| `kinds` | none | when something reads the kinds (nothing does yet) |
 | `index`, `index-context` | none | not planned: ingest and rebuild cover them |
 | `remove` (take a document out of the library) | Document page: "Remove this document…" with a typed-name confirmation | built (stage 6) |
 
