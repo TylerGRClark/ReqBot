@@ -1,0 +1,107 @@
+{
+ "flips": [
+  {
+   "doc": "afi13-550",
+   "key": "26:0",
+   "control": "DUTY",
+   "heading": "NOT_REQUIREMENT",
+   "in_gold_unit": true,
+   "verdict": "wrong",
+   "ctx_control": null,
+   "ctx_heading": "Deputy Chief of Staff for Operations (AF/A3) will:",
+   "clause": "AFMC designates  the Air  Force  Nuclear  Weapons  Center,  NC3  Integration Director  (AFNWC/NC) as  the  designated  Principle  Integrator  for  AN/USQ-225  materiel management  and  sustainment  activities. "
+  },
+  {
+   "doc": "afi17-101",
+   "key": "27:2",
+   "control": "NOT_REQUIREMENT",
+   "heading": "DUTY",
+   "in_gold_unit": true,
+   "verdict": "wrong",
+   "ctx_control": null,
+   "ctx_heading": "The SCA:",
+   "clause": "This position may be an organic or contracted resource. "
+  },
+  {
+   "doc": "afman17-204",
+   "key": "17:4",
+   "control": "DUTY",
+   "heading": "NOT_REQUIREMENT",
+   "in_gold_unit": true,
+   "verdict": "correct",
+   "ctx_control": null,
+   "ctx_heading": "The 81st Training Support Squadron Qualification Flight (81st TRSS/TSQ) will:",
+   "clause": "Refer to Attachment 5 for  information request for project memorandum format."
+  },
+  {
+   "doc": "DODI 8410.03",
+   "key": "20:3",
+   "control": "NOT_REQUIREMENT",
+   "heading": "DUTY",
+   "in_gold_unit": false,
+   "verdict": null,
+   "ctx_control": null,
+   "ctx_heading": "The DOT&E shall:",
+   "clause": "The CJCS, in addition to the responsibilities in section 8 of this enclosure and in coordination with the other Heads of the DoD Components, shall:"
+  },
+  {
+   "doc": "DODI 8410.03",
+   "key": "21:1",
+   "control": "NOT_REQUIREMENT",
+   "heading": "DUTY",
+   "in_gold_unit": true,
+   "verdict": "wrong",
+   "ctx_control": null,
+   "ctx_heading": "The DOT&E shall:",
+   "clause": "The CDRUSSTRATCOM, in addition to the responsibilities in sections 8 and 10 of this enclosure, shall:"
+  }
+ ],
+ "blind_key": {
+  "1": {
+   "doc": "DODI 8410.03",
+   "key": "21:1",
+   "control": "NOT_REQUIREMENT",
+   "heading": "DUTY"
+  },
+  "2": {
+   "doc": "afman17-204",
+   "key": "17:4",
+   "control": "DUTY",
+   "heading": "NOT_REQUIREMENT"
+  },
+  "3": {
+   "doc": "DODI 8410.03",
+   "key": "20:3",
+   "control": "NOT_REQUIREMENT",
+   "heading": "DUTY"
+  },
+  "4": {
+   "doc": "afi17-101",
+   "key": "27:2",
+   "control": "NOT_REQUIREMENT",
+   "heading": "DUTY"
+  },
+  "5": {
+   "doc": "afi13-550",
+   "key": "26:0",
+   "control": "DUTY",
+   "heading": "NOT_REQUIREMENT"
+  }
+ },
+ "blind_grades": {
+  "claude": {
+   "1": "UNSURE",
+   "2": "NO",
+   "3": "UNSURE",
+   "4": "NO",
+   "5": "YES"
+  },
+  "codex": {
+   "1": "YES",
+   "2": "NO",
+   "3": "YES",
+   "4": "YES",
+   "5": "YES"
+  }
+ }
+}
