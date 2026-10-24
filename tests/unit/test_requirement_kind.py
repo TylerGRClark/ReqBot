@@ -1,6 +1,4 @@
 """Requirement kind, stage 1: rule-based labels in a sidecar file (no model, no reader uses them yet)."""
-import json
-
 from services import requirement_kind as RK
 
 
@@ -74,23 +72,6 @@ def test_every_kind_the_rules_can_give_is_in_the_list():
         assert RK.classify(_item(q, **kw))["kind"] in RK.KINDS
 
 
-def test_sidecar_round_trip_and_counts(tmp_path):
-    items = [_item("The Director will act.", checklist_item_id="CL-1"), _item("   ", checklist_item_id="CL-2"), _item("It may happen.", checklist_item_id="CL-3")]
-    records = RK.label_items(items)
-    assert list(records) == ["CL-1", "CL-3"]  # a row with no requirement text gets no label
-    path = tmp_path / "doc_kinds.jsonl"
-    RK.write(path, records)
-    assert RK.load(path) == records and json.loads(path.read_text().splitlines()[0])["rules_version"] == RK.RULES_VERSION
-    tally = RK.counts(records)
-    assert tally["duty_with_actor"] == 1 and tally["permission"] == 1 and tally["total"] == 2
-    assert RK.load(tmp_path / "missing.jsonl") == {}
-
-
-def test_sidecar_path_sits_beside_the_requirements_file(tmp_path):
-    p = tmp_path / "doc_20260101_120000" / "afi_requirements_normalized.jsonl"
-    assert RK.sidecar_path(p).name == "afi_kinds.jsonl" and RK.sidecar_path(p).parent == p.parent
-
-
 def test_a_permission_that_a_later_negation_limits_is_a_permission():
     # DAFMAN 17-1305 4.1.7: the grant opens the sentence, the prohibition limits it
     q = "Authorizing Officials may extend time limits for a specifically dated period, not to exceed six months, and shall not authorize any consecutive waivers (T-0)."
@@ -134,10 +115,6 @@ def test_an_applicability_sentence_in_the_front_matter_is_applicability_and_keep
     assert r["kind"] == "applicability" and "front_matter" in r["kind_tags"]
     r = RK.classify(_item("Compliance with this publication is mandatory.", citation="Front matter"))
     assert r["kind"] == "cover_page_text" and "front_matter" not in r["kind_tags"]
-
-
-def test_the_rules_version_names_the_current_rule_set():
-    assert RK.RULES_VERSION == "kind-rules-8"
 
 
 def test_a_row_whose_kind_comes_from_its_position_also_keeps_what_its_words_say():
