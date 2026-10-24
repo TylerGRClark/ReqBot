@@ -18,7 +18,7 @@ Rules, in order:
 4. A clause is kept only if it has two letters in a row.
 
 Each clause is a dict: chunk_id, clause_index (0-based within the chunk), start and end (text[start:end] is the clause, character for character), text,
-is_lead_in (ends with ':', or with ':' and a tier tag such as ": (T-2)."), ctx_lead (the nearest preceding lead-in in the same chunk, None for a lead-in itself; a new lead-in replaces the old one),
+is_lead_in (ends with ':', or with ':' and a tier tag such as ": (T-2)."),
 heading (the chunk's parent header, else its breadcrumb) and ref (the last entry of the chunk's section reference path).
 """
 from __future__ import annotations
@@ -84,16 +84,12 @@ def split_clauses(text: str) -> list[tuple[int, int]]:
 
 
 def clauses_of(unit: dict) -> list[dict]:
-    """Clauses of one unit {"unit_id", "text", "heading", "ref"}, with the lead-in context. unit_id is stored as chunk_id."""
+    """Clauses of one unit {"unit_id", "text", "heading", "ref"}. unit_id is stored as chunk_id. The lead-in line shown to the labeler is not set here: see clause_labeling.document_clauses."""
     t = unit["text"]
     cl = []
     for i, (s, e) in enumerate(split_clauses(t)):
         cl.append(dict(chunk_id=unit["unit_id"], clause_index=i, start=s, end=e, text=t[s:e], is_lead_in=bool(_LEAD_IN_END.search(t[s:e].rstrip()))))
-    last = None  # the nearest preceding lead-in; a new lead-in replaces it, and it never crosses into another chunk
     for c in cl:
-        c["ctx_lead"] = last if not c["is_lead_in"] else None
-        if c["is_lead_in"]:
-            last = c["text"]
         c["heading"] = unit.get("heading") or ""
         c["ref"] = unit.get("ref") or ""
     return cl
