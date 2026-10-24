@@ -11,6 +11,8 @@ from pipeline.sentence_expand import _LEADING_NUMBER, _MARKER, _TERMINAL, _is_se
 MAX_UNITS_BACK = 40
 MAX_LEAD_IN_CHARS = 300
 _DOTTED = re.compile(r"^(?:[A-Z]{1,2})?\d+(?:\.\d+)+\.?\s")
+_COLON_END = re.compile(r":(\s*\(T-\d\)\.?)?$")  # same rule as pipeline/clauses._LEAD_IN_END: "will:" and, after a tier tag, "options: (T-2)."
+_TAG_AFTER_COLON = re.compile(r"(?<=:)\s*\(T-\d\)\.?$")
 _STYLES = (
     ("alpha_p", re.compile(r"^\([a-z]{1,2}\)\s")),
     ("alpha", re.compile(r"^[a-z]{1,2}[.)]\s")),
@@ -46,9 +48,11 @@ def _text_of(unit: str) -> str:
     body = unit.strip()
     m = _LEADING_NUMBER.match(body)
     body = tidy(body[m.end():] if m else body)
+    cut = _TAG_AFTER_COLON.search(body)
+    scan = body[:cut.start()] if cut else body  # the tier tag after the colon is not a sentence end; it stays in the returned text
     last_start = 0
-    for t in _TERMINAL.finditer(body):
-        if _is_sentence_end(body, t):  # abbreviations ("U.S. Cyber Command") and initials do not end a sentence
+    for t in _TERMINAL.finditer(scan):
+        if _is_sentence_end(scan, t):  # abbreviations ("U.S. Cyber Command") and initials do not end a sentence
             last_start = t.end()
     return body[last_start:].strip()
 
@@ -59,7 +63,7 @@ def _candidate(units: list[tuple[int, str]], index: int, item_style: tuple[str, 
         unit = units[j][1]
         style = _marker_style(unit)
         text = _text_of(unit)
-        if text.endswith(":"):
+        if _COLON_END.search(text):
             same_style = style[0] == item_style[0] and style[0] not in ("none", "bullet")
             if same_style and not (style[0] == "dotted" and style[1] < item_style[1]):
                 continue  # a sibling that also introduces a list (or a deeper one), not the item's parent

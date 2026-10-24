@@ -435,3 +435,11 @@ def test_document_clauses_stale_colon_is_not_a_lead_in_and_bare_number_line_gets
     assert got == {"The ISSM will:": None, "- Keep logs.": "The ISSM will:", "- 3 Review them.": "The ISSM will:", "2 Examples of systems include test rigs.": None}
     plain = "The ISSM will:\nKeep logs.\n\nSee the annex."
     assert [(c["text"], c["ctx_lead"]) for c in cl.document_clauses([{"chunk_id": 0, "raw_text": plain}])] == [("The ISSM will:", None), ("Keep logs.", None), ("See the annex.", None)]
+
+
+def test_document_clauses_lead_in_with_tier_tag_after_colon_same_chunk_and_previous_chunk():
+    path = {"section_title_path": ["A"], "section_ref_path": ["1"]}
+    chunks = [{"chunk_id": 0, "raw_text": "Training will use one of the following options: (T-2).\n- classroom courses", **path}, {"chunk_id": 1, "raw_text": "- online courses", **path}]
+    got = [(c["text"], c["ctx_lead"]) for c in cl.document_clauses(chunks)]
+    tag = "Training will use one of the following options: (T-2)."
+    assert got == [(tag, None), ("- classroom courses", tag), ("- online courses", tag)]

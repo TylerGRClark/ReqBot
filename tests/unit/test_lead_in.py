@@ -66,3 +66,13 @@ def test_a_bare_number_inside_a_numbered_item_or_a_wrapped_line_keeps_its_lead_i
     assert find_lead_in(raw, _at(raw, "24 AF")) == "Duties:"
     raw2 = "Duties:\n- Brief the units assigned to\n24 AF every week."  # wrapped line: the previous line did not end a sentence
     assert find_lead_in(raw2, _at(raw2, "24 AF")) == "Duties:"
+
+
+def test_a_lead_in_whose_colon_is_followed_by_a_tier_tag_is_a_lead_in():
+    raw = "Training will use one of the following options: (T-2).\n- classroom courses"
+    assert find_lead_in(raw, _at(raw, "classroom")) == "Training will use one of the following options: (T-2)."
+    raw2 = "Background text. The Director will: (T-1)\n- Approve plans."
+    assert find_lead_in(raw2, _at(raw2, "Approve")) == "The Director will: (T-1)"
+    prev = "Intro.\nUnits shall do the following: (T-3)."
+    raw3 = "- Keep logs."
+    assert find_lead_in(raw3, 2, prev) == "Units shall do the following: (T-3)."
