@@ -500,8 +500,8 @@ def document_lines(chunks: dict) -> list[tuple[int, tuple, str]]:
     out = []
     for cid in sorted(k for k in chunks if isinstance(k, int)):
         c = chunks[cid]
-        path = c.get("section_ref_path") or c.get("section_title_path") or []
-        path = tuple(path) if isinstance(path, (list, tuple)) else (str(path),)
+        # a section is identified by both paths: headings without a canonical id are missing from the ref path, so sibling prose-titled subsections share it
+        path = tuple(tuple(p) if isinstance(p, (list, tuple)) else (str(p),) for p in (c.get("section_ref_path") or [], c.get("section_title_path") or []))
         for ln in (c.get("raw_text") or c.get("text") or "").split("\n"):
             if ln.strip():
                 out.append((cid, path, ln.rstrip()))

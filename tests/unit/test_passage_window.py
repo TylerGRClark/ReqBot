@@ -118,3 +118,10 @@ def test_generate_marks_the_occurrence_at_the_stored_offsets(tmp_path):
     rec2 = dict(rec, anchor_text="something else")  # offsets that do not hold the text are not trusted
     item2 = _doc(stale, [{"chunk_id": 1, "raw_text": raw, "section_title_path": ["Logs"]}], rec2)
     assert item2["passage"] == ">> Staff must log events. << Other text. Staff must log events."
+
+
+def test_window_does_not_cross_into_a_sibling_prose_titled_subsection():
+    same_ref = ["2.1"]  # prose-titled subsections carry no canonical id, so both share this ref path
+    lines = A.document_lines({1: {"raw_text": "duty of Alpha", "section_ref_path": same_ref, "section_title_path": ["Roles", "Alpha"]},
+                              2: {"raw_text": "duty of Beta", "section_ref_path": same_ref, "section_title_path": ["Roles", "Beta"]}})
+    assert A.prompt_window(lines, 1, ">> duty of Alpha <<", "", 1500) == ">> duty of Alpha <<"
