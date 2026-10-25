@@ -10,6 +10,7 @@ import json
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import confirm_metrics as C  # noqa: E402
 import label_ctx_metrics as M  # noqa: E402

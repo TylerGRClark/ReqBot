@@ -56,10 +56,11 @@ def render(cells: str, caption: str | None) -> str:
 
 
 def document_table_context(chunks: list[dict], clauses: list[dict]) -> None:
-    """Sets clause["ctx_table"] (str or None) on every clause of the document, in place. Clauses must come in chunk order."""
+    """Sets clause["ctx_table"] (str or None) on every clause of the document, in place. Clauses must come in chunk order. Each table's caption is resolved when the
+    table is reached, in document order: its own caption, else the one last seen above an earlier table with the same header (never a later table's)."""
     raw = {c["chunk_id"]: (c.get("raw_text") or c.get("text") or "") for c in chunks}
-    caps: dict[str, str] = {}  # header cells -> last caption seen above a table with that header, as of the chunk being read
-    ctx = {}
+    caps: dict[str, str] = {}  # header cells -> last caption seen above a table with that header
+    resolved: dict[tuple, str | None] = {}  # (chunk_id, first line of the table) -> caption to show
     for ch in chunks:
         cid = ch["chunk_id"]
         r = raw[cid]
@@ -68,13 +69,17 @@ def document_table_context(chunks: list[dict], clauses: list[dict]) -> None:
         for i, ln in enumerate(lines):
             if ln.lstrip().startswith("|") and (i == 0 or not lines[i - 1].lstrip().startswith("|")):
                 info = header_info(r, pos + (len(ln) - len(ln.lstrip())))
-                if info and info[1]:
-                    caps[info[0]] = info[1]
+                if info:
+                    resolved[(cid, i)] = info[1] or caps.get(info[0])
+                    if info[1]:
+                        caps[info[0]] = info[1]
             pos += len(ln) + 1
-        ctx[cid] = dict(caps)
     for c in clauses:
-        info = header_info(raw[c["chunk_id"]], c["start"])
+        r = raw[c["chunk_id"]]
+        info = header_info(r, c["start"])
         c["ctx_table"] = None
         if info and not info[2]:
-            cells, cap, _ = info
-            c["ctx_table"] = render(cells, cap or ctx[c["chunk_id"]].get(cells))
+            first = r[:c["start"]].count("\n")
+            while first > 0 and r.split("\n")[first - 1].lstrip().startswith("|"):
+                first -= 1
+            c["ctx_table"] = render(info[0], resolved.get((c["chunk_id"], first)))

@@ -53,3 +53,21 @@ def test_clause_block_shows_the_table_context_after_the_lead_in_and_is_unchanged
     plain = {"text": "Second.", "heading": "", "ref": "", "ctx_lead": None, "ctx_table": None}
     assert cl.clause_block([plain]) == "[1]\nContext: (none)\nClause: Second."
     assert cl.clause_block([{k: v for k, v in plain.items() if k != "ctx_table"}]) == "[1]\nContext: (none)\nClause: Second."
+
+
+def test_a_table_does_not_inherit_the_caption_of_a_later_table_with_the_same_header():
+    # chunk 1 continues table 2.1 (header repeated, no caption), then Table 2.2 starts with the same header: rows above it must keep Table 2.1's caption.
+    head = "| Device Type | Recommended |\n|---|---|\n"
+    chunks = [{"chunk_id": 0, "raw_text": TABLE},
+              {"chunk_id": 1, "raw_text": head + "| Laptop | 5 years |\n\nTable 2.2. Server Refresh Rate\n\n" + head + "| Rack | 7 years |\n"}]
+    got = _ctx(chunks)
+    assert got["| Laptop | 5 years |"] == "Table 2.1. End User Device Refresh Rate. Column headers: Device Type | Recommended"
+    assert got["| Rack | 7 years |"] == "Table 2.2. Server Refresh Rate. Column headers: Device Type | Recommended"
+
+
+def test_a_captionless_first_table_gets_no_caption_from_a_later_table_in_the_same_chunk():
+    head = "| Device Type | Recommended |\n|---|---|\n"
+    raw = head + "| Laptop | 5 years |\n\nTable 2.2. Server Refresh Rate\n\n" + head + "| Rack | 7 years |\n"
+    got = _ctx([{"chunk_id": 0, "raw_text": raw}])
+    assert got["| Laptop | 5 years |"] == "Column headers: Device Type | Recommended"
+    assert got["| Rack | 7 years |"] == "Table 2.2. Server Refresh Rate. Column headers: Device Type | Recommended"
