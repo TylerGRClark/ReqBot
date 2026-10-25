@@ -45,7 +45,7 @@ def main() -> int:
     a = ap.parse_args()
     root = Path(a.root).expanduser()
     out = {}
-    for arm in ("512", "1024"):
+    for arm in ("512", "1024", "A", "C"):
         tot = collections.Counter()
         for doc in M.DOCS:
             dc, da = M.run_dir(root, "control", doc), M.run_dir(root, arm, doc)

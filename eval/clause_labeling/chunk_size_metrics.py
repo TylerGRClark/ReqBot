@@ -23,7 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from pipeline.clauses import chunk_clauses  # noqa: E402
 import fragmentation  # noqa: E402
 
-ARMS = ["control", "512", "1024"]
+ARMS = ["control", "512", "1024", "A", "C"]  # PREREG6 arms, then the PREREG7 arms (A: merge_peers off; C: A plus lead-in glue)
 DOCS = ["afi17-203", "afi13-550", "afi10-2402", "dafman17-1304"]
 SCRATCH = Path.home() / "reqbot-work/scratch"
 _END = re.compile(r"[.!?:;][\"')\]]*(\s*\(T-\d+\)\.?)?\s*$")
@@ -71,8 +71,13 @@ def chunk_metrics(chunks: list[dict]) -> dict:
         "list_items_with_lead_in_in_chunk": li_with,
         "grid_lines": grid,
         "raw_chars_median": sizes[len(sizes) // 2] if sizes else 0,
+        "raw_chars_p90": sizes[int(0.90 * (len(sizes) - 1))] if sizes else 0,
         "raw_chars_p95": sizes[int(0.95 * (len(sizes) - 1))] if sizes else 0,
         "raw_chars_max": sizes[-1] if sizes else 0,
+        "chunks_over_1500_chars": sum(1 for n in sizes if n > 1500),
+        "chunks_under_150_chars": sum(1 for n in sizes if n < 150),
+        "chars_total": sum(sizes),
+        "chars_beyond_1500": sum(max(0, n - 1500) for n in sizes),
     }
 
 
@@ -181,11 +186,13 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=str(SCRATCH / "chunk_size"))
     ap.add_argument("--json", default=None)
+    ap.add_argument("--arms", default=",".join(ARMS), help="comma list of arms to read")
     args = ap.parse_args()
     root = Path(args.root).expanduser()
+    arms = args.arms.split(",")
     silver, gold = silver_sets(), gold_sets()
     res: dict = {}
-    for arm in ARMS:
+    for arm in arms:
         per: dict = {}
         for doc in DOCS:
             d = run_dir(root, arm, doc)
@@ -212,7 +219,7 @@ def main() -> int:
     if args.json:
         Path(args.json).write_text(json.dumps(res, indent=1), encoding="utf-8")
     # compact print
-    for arm in ARMS:
+    for arm in arms:
         for doc, e in res[arm].items():
             q = {k: v for k, v in e.items() if k.startswith(("silver_", "gold2_"))}
             print(arm, doc, "rows", e["rows"], "secs", e["label_seconds"], e["chunk"], q, e.get("frag"))

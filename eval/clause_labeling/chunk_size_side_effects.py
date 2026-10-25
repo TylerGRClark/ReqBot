@@ -33,10 +33,11 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=str(M.SCRATCH / "chunk_size"))
     ap.add_argument("--json", default=None)
+    ap.add_argument("--arms", default=",".join(M.ARMS))
     args = ap.parse_args()
     root = Path(args.root).expanduser()
     out: dict = {}
-    for arm in M.ARMS:
+    for arm in args.arms.split(","):
         agg = {"rows": 0, "with_passage": 0, "not_located": 0, "lengths": [], "beyond": {k: 0 for k in CUTS}, "chunk_chars": 0, "chunk_chars_beyond_1500": 0}
         for doc in M.DOCS:
             d = M.run_dir(root, arm, doc)
