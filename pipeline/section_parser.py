@@ -76,6 +76,16 @@ _DEPTH_RE = re.compile(r'^[A-Z]?\d+(\.\d+)*', re.IGNORECASE)
 # that would match real headings such as "Chapter 1", "Appendix 2", "Section 3".
 _TOC_HEADING_RE = re.compile(r'\.{5,}')
 
+# Front-matter headings that are closed blocks. In some AFIs the body's first
+# numbered paragraphs (1.1, 1.2) come before the "Chapter 1" heading in reading
+# order, so they would be filed under this heading for good. A numbered
+# sub-heading ends the block; see _drop_front_matter.
+_FRONT_MATTER_RE = re.compile(
+    r'^(SUMMARY OF (CHANGES|CORRECTIVE ACTIONS)|RECORD OF CHANGES|'
+    r'COMPLIANCE WITH THIS PUBLICATION IS MANDATORY)\W*$',
+    re.IGNORECASE,
+)
+
 
 # ---------------------------------------------------------------------------
 # Data structures
@@ -197,6 +207,13 @@ def _is_toc_heading(text: str) -> bool:
     return bool(_TOC_HEADING_RE.search(text.strip()))
 
 
+def _drop_front_matter(stack: list[dict], depth: int, section_ref: str) -> list[dict]:
+    """Pop front-matter headings when a numbered paragraph heading arrives below them."""
+    if depth < 2 or not section_ref:
+        return stack
+    return [h for h in stack if not _FRONT_MATTER_RE.match(h["heading_text"])]
+
+
 def _ancestry_from_stack(stack: list[dict]) -> dict:
     """Compute ancestry fields from the current heading stack.
 
@@ -275,6 +292,7 @@ def _parse_ancestry(doc: Any) -> tuple[list[dict], dict[str, dict], dict[str, st
 
             # Pop same-or-deeper headings before pushing the new one.
             heading_stack = [h for h in heading_stack if h["depth"] < depth]
+            heading_stack = _drop_front_matter(heading_stack, depth, section_ref)
 
             # Record ancestry for this heading BEFORE pushing it onto the stack.
             # The heading's own parent is the current stack top, not itself.
