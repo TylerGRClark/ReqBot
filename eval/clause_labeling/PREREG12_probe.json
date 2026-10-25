@@ -1,0 +1,397 @@
+{
+ "n_chunks": 2444,
+ "over1500": 217,
+ "over3000": 122,
+ "arms": {
+  "cut1500": {
+   "embed_seconds": 10.0,
+   "mrr": 0.5955,
+   "hit@5": 0.6667,
+   "hit@10": 0.8,
+   "per_query": {
+    "Q-N01": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 7
+    },
+    "Q-N02": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N03": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N04": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N05": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N06": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N07": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-B01": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 33
+    },
+    "Q-B02": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 44
+    },
+    "Q-B03": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 2
+    },
+    "Q-B04": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-B05": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 17
+    },
+    "Q-N08": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N09": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N10": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 131
+    },
+    "Q-N11": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-B06": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 5
+    },
+    "Q-B07": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 2
+    },
+    "Q-B08": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 2
+    },
+    "Q-C03": {
+     "shape": "parent_child_context",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-C05": {
+     "shape": "parent_child_context",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-C06": {
+     "shape": "parent_child_context",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-C07": {
+     "shape": "parent_child_context",
+     "first_gold_chunk_rank": 11
+    },
+    "Q-T02": {
+     "shape": "table_derived",
+     "first_gold_chunk_rank": 2
+    },
+    "Q-T03": {
+     "shape": "table_derived",
+     "first_gold_chunk_rank": 946
+    },
+    "Q-O01": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 9
+    },
+    "Q-O02": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 10
+    },
+    "Q-O03": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-O04": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 10
+    },
+    "Q-O05": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 1
+    }
+   }
+  },
+  "cut3000": {
+   "embed_seconds": 10.2,
+   "mrr": 0.5958,
+   "hit@5": 0.6667,
+   "hit@10": 0.8,
+   "per_query": {
+    "Q-N01": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 7
+    },
+    "Q-N02": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N03": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N04": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N05": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N06": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N07": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-B01": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 35
+    },
+    "Q-B02": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 44
+    },
+    "Q-B03": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 2
+    },
+    "Q-B04": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-B05": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 17
+    },
+    "Q-N08": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N09": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N10": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 127
+    },
+    "Q-N11": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-B06": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 5
+    },
+    "Q-B07": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 2
+    },
+    "Q-B08": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 2
+    },
+    "Q-C03": {
+     "shape": "parent_child_context",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-C05": {
+     "shape": "parent_child_context",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-C06": {
+     "shape": "parent_child_context",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-C07": {
+     "shape": "parent_child_context",
+     "first_gold_chunk_rank": 11
+    },
+    "Q-T02": {
+     "shape": "table_derived",
+     "first_gold_chunk_rank": 2
+    },
+    "Q-T03": {
+     "shape": "table_derived",
+     "first_gold_chunk_rank": 92
+    },
+    "Q-O01": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 9
+    },
+    "Q-O02": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 10
+    },
+    "Q-O03": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-O04": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 10
+    },
+    "Q-O05": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 1
+    }
+   }
+  },
+  "full": {
+   "embed_seconds": 10.8,
+   "mrr": 0.5958,
+   "hit@5": 0.6667,
+   "hit@10": 0.8,
+   "per_query": {
+    "Q-N01": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 7
+    },
+    "Q-N02": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N03": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N04": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N05": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N06": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N07": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-B01": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 35
+    },
+    "Q-B02": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 44
+    },
+    "Q-B03": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 2
+    },
+    "Q-B04": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-B05": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 17
+    },
+    "Q-N08": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N09": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-N10": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 127
+    },
+    "Q-N11": {
+     "shape": "narrow",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-B06": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 5
+    },
+    "Q-B07": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 2
+    },
+    "Q-B08": {
+     "shape": "broad",
+     "first_gold_chunk_rank": 2
+    },
+    "Q-C03": {
+     "shape": "parent_child_context",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-C05": {
+     "shape": "parent_child_context",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-C06": {
+     "shape": "parent_child_context",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-C07": {
+     "shape": "parent_child_context",
+     "first_gold_chunk_rank": 11
+    },
+    "Q-T02": {
+     "shape": "table_derived",
+     "first_gold_chunk_rank": 2
+    },
+    "Q-T03": {
+     "shape": "table_derived",
+     "first_gold_chunk_rank": 100
+    },
+    "Q-O01": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 9
+    },
+    "Q-O02": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 10
+    },
+    "Q-O03": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 1
+    },
+    "Q-O04": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 10
+    },
+    "Q-O05": {
+     "shape": "messy_pdf_overgrab",
+     "first_gold_chunk_rank": 1
+    }
+   }
+  }
+ },
+ "queries_scored": 30,
+ "queries_any_gold_chunk_over1500": 3,
+ "queries_all_gold_chunks_over1500": 2,
+ "queries_any_gold_quote_past_1500": 2,
+ "gold_rows_quote_past_1500": 2,
+ "gold_rows": 118
+}
