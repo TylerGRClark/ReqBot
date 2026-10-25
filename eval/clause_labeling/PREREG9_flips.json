@@ -1,0 +1,161 @@
+{
+ "flips": [
+  {
+   "doc": "dafman17-1203",
+   "key": "56:2",
+   "control": "NOT_REQUIREMENT",
+   "rule": "DUTY",
+   "in_gold_unit": false,
+   "verdict": null,
+   "ctx_control": "IT assets that are components of a Weapon System or other similar capability will be managed by this manual if both of the following apply:",
+   "ctx_rule": null,
+   "clause": "The  IT  components  meet  the  requirements  of paragraph 2.4.3 or paragraph 2.4.4 of this manual.  (T-1)."
+  },
+  {
+   "doc": "dafman17-1203",
+   "key": "82:0",
+   "control": "DUTY",
+   "rule": "NOT_REQUIREMENT",
+   "in_gold_unit": false,
+   "verdict": null,
+   "ctx_control": null,
+   "ctx_rule": "Capital Assets will:",
+   "clause": "Have  a  valid  fund  code  assigned  within  DPAS. "
+  },
+  {
+   "doc": "dafman17-1203",
+   "key": "82:2",
+   "control": "NOT_REQUIREMENT",
+   "rule": "DUTY",
+   "in_gold_unit": false,
+   "verdict": null,
+   "ctx_control": null,
+   "ctx_rule": "Capital Assets will:",
+   "clause": "POC  for  fund  codes  will  be  the  servicing resource advisor or contracting office."
+  },
+  {
+   "doc": "dafman17-1203",
+   "key": "205:0",
+   "control": "NOT_REQUIREMENT",
+   "rule": "DUTY",
+   "in_gold_unit": false,
+   "verdict": null,
+   "ctx_control": null,
+   "ctx_rule": "To perform an asset inventory, the PC will:",
+   "clause": "- digitally signed email or digitally signed memorandum certifying they still possess the asset(s). (T-1)."
+  },
+  {
+   "doc": "NIST.SP.800-125",
+   "key": "100:10",
+   "control": "NOT_REQUIREMENT",
+   "rule": "DUTY",
+   "in_gold_unit": false,
+   "verdict": null,
+   "ctx_control": null,
+   "ctx_rule": "Aspects of the solution that should be evaluated include the following:",
+   "clause": "The virtualization solution does not interfere with the use of applications or servers within the guest OSs."
+  },
+  {
+   "doc": "NIST.SP.800-125",
+   "key": "100:12",
+   "control": "DUTY",
+   "rule": "NOT_REQUIREMENT",
+   "in_gold_unit": false,
+   "verdict": null,
+   "ctx_control": null,
+   "ctx_rule": "Aspects of the solution that should be evaluated include the following:",
+   "clause": "The internal networking offered by the virtualization solution can be configured to conform to the organization's security policy. "
+  },
+  {
+   "doc": "NIST.SP.800-125",
+   "key": "100:15",
+   "control": "DUTY",
+   "rule": "NOT_REQUIREMENT",
+   "in_gold_unit": false,
+   "verdict": null,
+   "ctx_control": null,
+   "ctx_rule": "Aspects of the solution that should be evaluated include the following:",
+   "clause": "Administrators can configure and manage the solution effectively and securely. "
+  },
+  {
+   "doc": "CNSSI_No1253",
+   "key": "68:0",
+   "control": "DUTY",
+   "rule": "NOT_REQUIREMENT",
+   "in_gold_unit": false,
+   "verdict": null,
+   "ctx_control": null,
+   "ctx_rule": "The common controls identified in Table D-2 are based on the following assumptions:",
+   "clause": "-  Common controls may be allocated at the organization, mission/business process, or information system level."
+  },
+  {
+   "doc": "CNSSI_No1253",
+   "key": "68:2",
+   "control": "DUTY",
+   "rule": "NOT_REQUIREMENT",
+   "in_gold_unit": false,
+   "verdict": null,
+   "ctx_control": null,
+   "ctx_rule": "The common controls identified in Table D-2 are based on the following assumptions:",
+   "clause": "-  Organizations have established services (e.g. enterprise, local) that implement technical security controls other information systems can inherit."
+  },
+  {
+   "doc": "CNSSI_No1253",
+   "key": "68:3",
+   "control": "DUTY",
+   "rule": "NOT_REQUIREMENT",
+   "in_gold_unit": false,
+   "verdict": null,
+   "ctx_control": null,
+   "ctx_rule": "The common controls identified in Table D-2 are based on the following assumptions:",
+   "clause": "-  Information systems are located in physical facilities that provide physical security services (e.g., guns, gates, and guards, climate control, fire suppression)."
+  },
+  {
+   "doc": "CNSSI_No1253",
+   "key": "68:4",
+   "control": "DUTY",
+   "rule": "NOT_REQUIREMENT",
+   "in_gold_unit": false,
+   "verdict": null,
+   "ctx_control": null,
+   "ctx_rule": "The common controls identified in Table D-2 are based on the following assumptions:",
+   "clause": "-  Authorization boundaries have been established for controlled interfaces that do not include the interconnected information systems."
+  },
+  {
+   "doc": "CNSSI_No1253",
+   "key": "68:5",
+   "control": "DUTY",
+   "rule": "NOT_REQUIREMENT",
+   "in_gold_unit": false,
+   "verdict": null,
+   "ctx_control": null,
+   "ctx_rule": "The common controls identified in Table D-2 are based on the following assumptions:",
+   "clause": "-  A single authorization boundary will be established for a cloud-based enterprise."
+  }
+ ],
+ "numstart": {
+  "bare_number_all": 19,
+  "bare_number_with_leadin": [
+   {
+    "doc": "CNSSI_No1253",
+    "key": "13:10",
+    "ctrl_label": "NOT_REQUIREMENT",
+    "rule_label": "NOT_REQUIREMENT",
+    "ctx_control": "The additional, NSS-specific assumptions are:",
+    "ctx_rule": "This Instruction accepts all assumptions from NIST SP 800-53 by adopting the NIST security control baselines as the foundation for the NSS baselines defined in Table D-1, in Appendix D. The NIST SP 800-53 assumptions are:",
+    "clause": "2 Examples of systems that may diverge from the assumptions include systems not located in physical facilities, systems in resource constrained environments, and stand-alone systems."
+   },
+   {
+    "doc": "CNSSI_No1253",
+    "key": "25:7",
+    "ctrl_label": "NOT_REQUIREMENT",
+    "rule_label": "NOT_REQUIREMENT",
+    "ctx_control": null,
+    "ctx_rule": "To tailor the initial security control set, complete the following activities:",
+    "clause": "8 All of the guidance in NIST SP 800-53, Section 3.2 applies to NSS except for the subsection titled 'Security Objective-Related Considerations.'"
+   }
+  ],
+  "numdot_paren_all": 0,
+  "numdot_paren_with_leadin": []
+ }
+}

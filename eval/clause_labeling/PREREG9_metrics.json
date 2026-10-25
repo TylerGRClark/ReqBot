@@ -1,0 +1,199 @@
+{
+ "pooled4": {
+  "control": {
+   "labeled": 239,
+   "found": 225,
+   "rows_in_units": 345,
+   "rows_right": 223,
+   "recall": 94.14225941422595,
+   "precision": 64.6376811594203,
+   "rows": 1370,
+   "clauses": 5334,
+   "seconds": 2092.882036447525,
+   "unparsed": 0
+  },
+  "rule": {
+   "labeled": 239,
+   "found": 225,
+   "rows_in_units": 347,
+   "rows_right": 223,
+   "recall": 94.14225941422595,
+   "precision": 64.26512968299711,
+   "rows": 1380,
+   "clauses": 5334,
+   "seconds": 2075.370950937271,
+   "unparsed": 0
+  }
+ },
+ "pooled_no_cnssi": {
+  "control": {
+   "labeled": 229,
+   "found": 217,
+   "rows_in_units": 231,
+   "rows_right": 215,
+   "recall": 94.75982532751091,
+   "precision": 93.07359307359307,
+   "rows": 1169,
+   "clauses": 2642,
+   "seconds": 1034.3570201396942,
+   "unparsed": 0
+  },
+  "rule": {
+   "labeled": 229,
+   "found": 217,
+   "rows_in_units": 233,
+   "rows_right": 215,
+   "recall": 94.75982532751091,
+   "precision": 92.27467811158799,
+   "rows": 1182,
+   "clauses": 2642,
+   "seconds": 1041.237196445465,
+   "unparsed": 0
+  }
+ },
+ "dafman17-1301": {
+  "control": {
+   "labeled": 88,
+   "found": 84,
+   "rows_in_units": 88,
+   "rows_right": 83,
+   "recall": 95.45454545454545,
+   "precision": 94.31818181818181,
+   "rows": 464,
+   "clauses": 894,
+   "seconds": 349.68677830696106,
+   "unparsed": 0
+  },
+  "rule": {
+   "labeled": 88,
+   "found": 83,
+   "rows_in_units": 88,
+   "rows_right": 82,
+   "recall": 94.31818181818181,
+   "precision": 93.18181818181819,
+   "rows": 467,
+   "clauses": 894,
+   "seconds": 346.1927320957184,
+   "unparsed": 0
+  }
+ },
+ "dafman17-1203": {
+  "control": {
+   "labeled": 120,
+   "found": 112,
+   "rows_in_units": 117,
+   "rows_right": 112,
+   "recall": 93.33333333333333,
+   "precision": 95.72649572649573,
+   "rows": 575,
+   "clauses": 1088,
+   "seconds": 425.9060983657837,
+   "unparsed": 0
+  },
+  "rule": {
+   "labeled": 120,
+   "found": 113,
+   "rows_in_units": 119,
+   "rows_right": 113,
+   "recall": 94.16666666666667,
+   "precision": 94.95798319327731,
+   "rows": 586,
+   "clauses": 1088,
+   "seconds": 436.1416108608246,
+   "unparsed": 0
+  }
+ },
+ "NIST.SP.800-125": {
+  "control": {
+   "labeled": 21,
+   "found": 21,
+   "rows_in_units": 26,
+   "rows_right": 20,
+   "recall": 100.0,
+   "precision": 76.92307692307692,
+   "rows": 130,
+   "clauses": 660,
+   "seconds": 258.76414346694946,
+   "unparsed": 0
+  },
+  "rule": {
+   "labeled": 21,
+   "found": 21,
+   "rows_in_units": 26,
+   "rows_right": 20,
+   "recall": 100.0,
+   "precision": 76.92307692307692,
+   "rows": 129,
+   "clauses": 660,
+   "seconds": 258.9028534889221,
+   "unparsed": 0
+  }
+ },
+ "CNSSI_No1253": {
+  "control": {
+   "labeled": 10,
+   "found": 8,
+   "rows_in_units": 114,
+   "rows_right": 8,
+   "recall": 80.0,
+   "precision": 7.017543859649122,
+   "rows": 201,
+   "clauses": 2692,
+   "seconds": 1058.5250163078308,
+   "unparsed": 0
+  },
+  "rule": {
+   "labeled": 10,
+   "found": 8,
+   "rows_in_units": 114,
+   "rows_right": 8,
+   "recall": 80.0,
+   "precision": 7.017543859649122,
+   "rows": 198,
+   "clauses": 2692,
+   "seconds": 1034.133754491806,
+   "unparsed": 0
+  }
+ },
+ "_flips": {
+  "changed_context": {
+   "dafman17-1301": 45,
+   "dafman17-1203": 93,
+   "NIST.SP.800-125": 61,
+   "CNSSI_No1253": 40
+  },
+  "n_flips": 12,
+  "judged_by_doc": {},
+  "judged_pooled": {},
+  "judged_no_cnssi": {}
+ },
+ "_agree": {
+  "n": 5334,
+  "same": 5268
+ },
+ "_numstart": {
+  "bare_number_all": 19,
+  "bare_number_with_leadin": [
+   {
+    "doc": "CNSSI_No1253",
+    "key": "13:10",
+    "ctrl_label": "NOT_REQUIREMENT",
+    "rule_label": "NOT_REQUIREMENT",
+    "ctx_control": "The additional, NSS-specific assumptions are:",
+    "ctx_rule": "This Instruction accepts all assumptions from NIST SP 800-53 by adopting the NIST security control baselines as the foundation for the NSS baselines defined in Table D-1, in Appendix D. The NIST SP 800-53 assumptions are:",
+    "clause": "2 Examples of systems that may diverge from the assumptions include systems not located in physical facilities, systems in resource constrained environments, and stand-alone systems."
+   },
+   {
+    "doc": "CNSSI_No1253",
+    "key": "25:7",
+    "ctrl_label": "NOT_REQUIREMENT",
+    "rule_label": "NOT_REQUIREMENT",
+    "ctx_control": null,
+    "ctx_rule": "To tailor the initial security control set, complete the following activities:",
+    "clause": "8 All of the guidance in NIST SP 800-53, Section 3.2 applies to NSS except for the subsection titled 'Security Objective-Related Considerations.'"
+   }
+  ],
+  "numdot_paren_all": 0,
+  "numdot_paren_with_leadin": []
+ }
+}
