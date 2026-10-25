@@ -157,7 +157,7 @@ def _md_item(item: dict, index: int) -> str:
     if tier:
         lines.append(f"**Tier:** {tier}  ")
     if item.get("criticality"):
-        lines.append(f"**Rough criticality:** {item['criticality']}  ")  # a cleanup-flagged row reads e.g. "High · junk"
+        lines.append(f"**Rough criticality:** {item['criticality']}  ")
     tags = _join(item.get("domain_tags") or [], ", ")
     if tags:
         lines.append(f"**Domain Tags:** {tags}  ")

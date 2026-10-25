@@ -30,7 +30,6 @@ _DEFAULTS: dict = {
     "extraction_model": None,   # None → falls back to default_model at load time (R-2.1)
     "enrichment_model": None,   # None → falls back to default_model at load time (R-2.1)
     "rewrite_model": None,      # None → falls back to default_model at load time (R-2.1)
-    "cleanup_model": None,      # checklist cleanup flag (docs/CLEANUP_FLAG_PLAN.md); None → falls back to default_model
     "synthesis_model": "qwen2.5:14b",
     # embedding_model is independent of default_model — it defines the vector shape
     # already stored in Qdrant, so it never silently inherits a default_model change
@@ -53,7 +52,6 @@ _ENV_MAP: dict[str, str] = {
     "extraction_model": "REQBOT_EXTRACTION_MODEL",
     "enrichment_model": "REQBOT_ENRICHMENT_MODEL",
     "rewrite_model": "REQBOT_REWRITE_MODEL",
-    "cleanup_model": "REQBOT_CLEANUP_MODEL",
     "synthesis_model": "REQBOT_SYNTHESIS_MODEL",
     "embedding_model": "REQBOT_EMBEDDING_MODEL",
     "top_k": "REQBOT_TOP_K",
@@ -91,7 +89,6 @@ class ReqBotConfig:
     remote_provider: str = "anthropic"
     remote_model: str = "claude-sonnet-4-6"
     api_key_env: str = "ANTHROPIC_API_KEY"
-    cleanup_model: str = ""  # model for the checklist cleanup flag; load() resolves an unset value to default_model
     authority: dict = field(default_factory=dict)  # source_pdf -> AuthorityEntry
 
     def processed_dir_path(self) -> Path:
@@ -199,7 +196,6 @@ def load() -> ReqBotConfig:
         # (Phase 27, WP-27.2; remote_model consistency fix per Gemini review, PR #120).
         remote_model=values.get("remote_model") or "claude-sonnet-4-6",
         api_key_env=values.get("api_key_env") or "ANTHROPIC_API_KEY",
-        cleanup_model=values.get("cleanup_model") or default_model,
     )
 
     # Load authority registry (optional — graceful if missing)

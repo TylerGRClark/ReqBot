@@ -1199,7 +1199,7 @@ def cmd_evidence(args: argparse.Namespace) -> int:
 def cmd_questions(args: argparse.Namespace) -> int:
     """Write draft audit questions for a document's checklist rows to a sidecar file (WP-46.6); `reqbot checklist` shows them."""
     from pipeline import progress as _progress
-    from services import audit_questions, checklist_service, cleanup, criticality
+    from services import audit_questions, checklist_service, criticality
 
     if getattr(args, "progress_json", False):
         _progress.enable()
@@ -1226,15 +1226,6 @@ def cmd_questions(args: argparse.Namespace) -> int:
         )
         print(f"Rough criticality for {args.doc}: {crit}", file=sys.stderr if _progress.enabled() else sys.stdout)
         counts["errors"] += crit["errors"]
-    if getattr(args, "cleanup", False) and not counts.get("aborted"):
-        # third job, off unless asked for: flag rows that are probably not requirements (docs/CLEANUP_FLAG_PLAN.md); a flag only, nothing is removed
-        req_path = checklist_service.requirements_path(processed_dir, args.doc)
-        flagged = cleanup.judge_rows(
-            checklist["items"], cleanup.sidecar_path(req_path), model=args.cleanup_model or _cfg.cleanup_model, ollama_url=args.ollama_url, texts=cleanup.chunk_texts(req_path, checklist["items"]),
-            progress=lambda c: log.info("cleanup so far: %s", c), on_row=lambda done, total: _progress.emit("cleanup", done, total),
-        )
-        print(f"Cleanup flag for {args.doc}: {flagged}", file=sys.stderr if _progress.enabled() else sys.stdout)
-        counts["errors"] += flagged["errors"]
     if not counts["errors"]:
         _progress.emit("done")
     return 1 if counts["errors"] else 0
@@ -2166,8 +2157,6 @@ def main() -> None:
     p_questions.add_argument("--model", type=str, default="qwen2.5:14b", help="Ollama model that writes the questions (default: qwen2.5:14b)")
     p_questions.add_argument("--ollama-url", type=str, default=_cfg.ollama_url, dest="ollama_url")
     p_questions.add_argument("--no-criticality", action="store_true", dest="no_criticality", help="Skip the rough criticality score (a second model call per row) that is written beside the questions")
-    p_questions.add_argument("--cleanup", action="store_true", help="Also flag rows that are probably not requirements (a third model call per row; off by default; nothing is removed)")
-    p_questions.add_argument("--cleanup-model", type=str, default="", dest="cleanup_model", help="Ollama model for --cleanup (default: the cleanup_model setting, else the main model; a larger model flags about twice as much)")
     p_questions.add_argument("--progress-json", action="store_true", dest="progress_json", help="Print one JSON progress line per row on stdout (used by the job runner)")
 
     # trace

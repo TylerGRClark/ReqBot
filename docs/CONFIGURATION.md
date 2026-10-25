@@ -43,7 +43,6 @@ column means no dedicated `REQBOT_*` override is implemented.
 | `extraction_model` | `null` → `default_model` | Requirement finding (Step C): the model labels each clause of the document. `reqbot init` suggests `ornith:35b`, the model the labels were measured with; an existing configuration is never changed. | `REQBOT_EXTRACTION_MODEL` |
 | `enrichment_model` | `null` → `default_model` | Unused: enrichment was removed. The key is still accepted so older config files load. | `REQBOT_ENRICHMENT_MODEL` |
 | `rewrite_model` | `null` → `default_model` | Search query rewriting and HyDE hypotheses. | `REQBOT_REWRITE_MODEL` |
-| `cleanup_model` | `null` → `default_model` | Checklist cleanup flag (`reqbot questions --cleanup`). A larger model flags more junk. | `REQBOT_CLEANUP_MODEL` |
 | `synthesis_model` | `qwen2.5:14b` | Local answer/evidence synthesis. | `REQBOT_SYNTHESIS_MODEL` |
 | `embedding_model` | `nomic-embed-text` | Dense embeddings for indexing and querying. | `REQBOT_EMBEDDING_MODEL` |
 | `top_k` | `20` | Default result limit for CLI `ask` and `compare`. | `REQBOT_TOP_K` |

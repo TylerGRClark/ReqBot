@@ -4,7 +4,7 @@
 For each arm and document it builds the checklist the normal way and measures, over the rows that carry a passage:
 - passage length (the passage is the whole chunk that holds the row, plus the tail of the previous chunk for a mid-sentence or list row);
 - where the marked requirement (>> <<) sits inside the passage, against the cut-offs other jobs apply: the draft-question prompt keeps the first 1500 characters
-  (services/audit_questions.build_prompt), the criticality prompt the first 1200, the cleanup check the first 6000 (services/cleanup.MAX_PASSAGE_CHARS);
+  (services/audit_questions.build_prompt), the criticality prompt the first 1200;
 - rows whose quote is not located in the passage;
 - the share of chunk text beyond the first 1500 characters, which is all the context index embeds (pipeline/embed_context_index).
 
@@ -22,7 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from services import checklist_audit, checklist_service  # noqa: E402
 import chunk_size_metrics as M  # noqa: E402
 
-CUTS = {"questions_1500": 1500, "criticality_1200": 1200, "cleanup_6000": 6000}
+CUTS = {"questions_1500": 1500, "criticality_1200": 1200}
 
 
 def pct(sorted_vals, p):

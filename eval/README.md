@@ -31,3 +31,5 @@ Two one-off scripts outside `spike_results/` that exercised only deleted code we
 (WP-38.2 check of the dangling-clause rule).
 
 `spike_results/requirement_kind/make_rating_sheet.py` needs the `reqbot kinds` command and the kind sidecar helpers (`RULES_VERSION`, `load`, `sidecar_path`), which were removed as unread. It is kept unchanged and runs only at the commit before that removal (`git checkout 3c0990a` in a separate worktree).
+
+The cleanup (junk) flag was removed 2026-10-25 after Tyler's blind rating of 100 rows (of 60 flagged: 24 real, 18 not, 18 unsure; of 40 unflagged: 39 real, 0 junk). Scripts under `spike_results/` that need `services.cleanup` (`spike_results/clause_labeling/scripts/lc.py`, `scripts4/lc_exam.py`) run only at the commit before this removal.
