@@ -5,13 +5,15 @@ Design: reqbot-agent-docs history/extraction-replacement-design_2026-10-22.md, w
 
 How it works:
 - Clauses come from pipeline/clauses.py, in document order (chunk file order, then clause order), and are sent BATCH_SIZE at a time; a batch may span two chunks.
+- The prompt's "Lead-in line above" is the checklist's lead-in (pipeline/lead_in.find_lead_in, set in document_clauses): for a list item, the nearest earlier line ending in a colon that is not
+  a sibling of the item, looked up in the previous chunk too when it is in the same section; a plain sentence gets none. (Before, it was the nearest colon clause in the chunk, even a stale one.)
 - The prompt is pipeline/prompts/clause_label_v3.txt, frozen (sha256 PROMPT_SHA256, checked on load). It holds JSON braces, so it is filled with str.replace, never format().
 - Ollama /api/chat, temperature 0, num_ctx 8192, num_predict 300, thinking off (retried without the field for a model that refuses it). Request errors are retried with
   backoff (2, 4, 8 s); a batch whose call still fails is `failed`: it writes no labels, every chunk it touches gets no rows, and the next run in the same folder redoes it.
 - An answer must be a JSON list with ids 1..n, each label one of LABELS. Two attempts per batch; still unparsed -> every clause in the batch is UNSURE (kept, so a reader
   checks it) and a line goes to <doc>_parse_failures.jsonl.
 - Resume ledger <doc>_raw_responses.jsonl, one line per labeled batch: batch_id, chunk_ids, clause_keys, model, prompt_sha, input_hash, raw_answer, labels, status. A batch whose
-  clauses, model and filled prompt are unchanged and whose status is complete or unparsed is reused; a failed one is redone.
+  clauses, model and filled prompt (so also each clause's lead-in) are unchanged and whose status is complete or unparsed is reused; a failed one is redone.
 - Every clause not labeled NOT_REQUIREMENT becomes a row (section 2 of the design): source_quote is the clause, whitespace tidied (the document's own words, never a model's),
   anchored exactly by the splitter's offsets, cited by the five-step source_ref rule.
 """
@@ -58,7 +60,7 @@ def load_prompt(path: Path = PROMPT_PATH) -> str:
 
 
 def clause_block(items: list[dict]) -> str:
-    """The numbered clauses with their context, as the experiment showed them (heading, paragraph, lead-in line above; each cut to its limit)."""
+    """The numbered clauses with their context (heading, paragraph, lead-in line above from find_lead_in; each cut to its limit)."""
     parts = []
     for i, c in enumerate(items, 1):
         ctx = []
@@ -157,7 +159,7 @@ def _section_key(chunk: dict) -> tuple:
 
 def document_clauses(chunks: list[dict]) -> list[dict]:
     """Every clause of the document in order: chunk file order, then clause order. The lead-in the labeler is shown (`ctx_lead`) is the one the checklist uses
-    (pipeline/lead_in.find_lead_in: sibling logic, looks back into the previous chunk when it is in the same section); a plain sentence gets none. PREREG8: recall +0.6,
+    (pipeline/lead_in.find_lead_in: sibling logic, looks back into the previous chunk when it is in the same section); a plain sentence (including a line that starts with a bare number) gets none. PREREG8: recall +0.6,
     precision +1.2 against the old nearest-colon-clause rule, 16 of 23 gold-judged flips right."""
     by_id = {c["chunk_id"]: c for c in chunks if "chunk_id" in c}
     out = []
