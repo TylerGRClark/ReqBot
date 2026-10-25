@@ -1136,8 +1136,8 @@ DECISIONS AND GUARDRAILS
   model family would be judging its own questions. If this catches the row 3 kind of problem, the repair
   step in docs/PIPELINE_REDESIGN_PLAN.md (steps 8 to 10) may not be needed at all.
 
-- Make criticality and the junk flag mutually exclusive (2026-10-21, Tyler). Phase 1 of the checklist cleanup flag
-  (docs/CLEANUP_FLAG_PLAN.md) shows both on a row. After the first runs across the 22 documents, count junk-flagged
+- [OBSOLETE: the junk flag was removed 2026-10-25, see eval/README.md] Make criticality and the junk flag mutually exclusive (2026-10-21, Tyler). Phase 1 of the checklist cleanup flag
+  (docs/CLEANUP_FLAG_PLAN.md, deleted; in git history) shows both on a row. After the first runs across the 22 documents, count junk-flagged
   rows that also rate Critical or High; if at most 1% of Critical rows and 3% of High rows, and Tyler has read
   those overlaps, a junk-flagged row gets no band and a Critical row cannot be flagged junk. Related: ACTIVE BACKLOG
   items 35-36 (flag, never silently drop; recall floor on a held-out labeled set).

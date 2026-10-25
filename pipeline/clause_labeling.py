@@ -114,7 +114,7 @@ def parse(answer: str, n: int) -> list[str] | None:
 
 
 def ollama_chat(prompt: str, *, model: str, ollama_url: str, timeout: int = 600) -> str:
-    """One answer from Ollama /api/chat with thinking off; a model that refuses the `think` field is asked again without it (services/cleanup.ollama_call). Request errors are
+    """One answer from Ollama /api/chat with thinking off; a model that refuses the `think` field is asked again without it. Request errors are
     retried MAX_RETRIES times with backoff; then the error is raised (requests errors are OSError subclasses)."""
     import requests
 

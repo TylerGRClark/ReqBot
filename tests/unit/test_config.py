@@ -33,6 +33,16 @@ def test_config_file_values_override_defaults(monkeypatch, tmp_path):
     assert c.qdrant_url == "http://localhost:6333"  # unchanged default
 
 
+def test_legacy_cleanup_model_key_in_config_file_is_ignored(monkeypatch, tmp_path):
+    """The cleanup (junk) flag was removed; a config file written earlier still loads."""
+    config_file = tmp_path / "config.json"
+    config_file.write_text(json.dumps({"cleanup_model": "qwen2.5:14b", "top_k": 7}))
+    monkeypatch.setattr(cfg, "CONFIG_PATH", config_file)
+    c = cfg.load()
+    assert c.top_k == 7
+    assert not hasattr(c, "cleanup_model")
+
+
 def test_env_var_overrides_config_file(monkeypatch, tmp_path):
     config_file = tmp_path / "config.json"
     config_file.write_text(json.dumps({"ollama_url": "http://from-file:11434"}))

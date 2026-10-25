@@ -253,7 +253,6 @@ to regenerate the corpus.
 | `*_final_output.json`, `*_stats.json` | Aggregated export and run metrics. |
 | `*_audit_questions.jsonl` | Draft audit questions written by `reqbot questions`; read by the checklist. |
 | `*_criticality.jsonl` | Rough criticality scores written by `reqbot questions` (a second model call per row); read by the checklist, which shows a Critical, High, Medium or Low band by rank within the document. |
-| `*_cleanup.jsonl` | Optional "probably not a requirement" flags written by `reqbot questions --cleanup` (a third model call per row); read by the checklist, which adds `· junk` to the priority cell. Nothing is removed. |
 
 Some artifacts are absent when their stage is skipped or fails. Reindex and
 checklist generation share an artifact resolver: pick the run with the most
