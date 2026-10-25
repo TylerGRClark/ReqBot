@@ -18,7 +18,7 @@ sys.path.insert(0, str(_ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from pipeline import clause_labeling as CL  # noqa: E402
-import table_header as TH  # noqa: E402
+from pipeline import table_header as TH  # noqa: E402
 
 DOCS = ["CNSSI_No1253", "dafman17-1203", "dafpam90-803", "afi17-203", "afi10-2402", "dafi36-2903"]
 ARMS = {"control": False, "control2": False, "header": True}

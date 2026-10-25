@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import table_header as TH  # noqa: E402
+from pipeline import table_header as TH  # noqa: E402
 from table_hdr_metrics import NR, OUT, load  # noqa: E402
 
 LIMIT, SEED, WIN = 80, 11, 600

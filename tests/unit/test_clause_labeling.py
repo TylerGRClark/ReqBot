@@ -234,7 +234,7 @@ def test_resume_reuses_finished_batches_and_redoes_failed_ones(tmp_path):
     again = FakeModel()
     rows = _run(tmp_path, again)
     assert len(again.prompts) == 1
-    assert "[3]\nContext: Heading: 3.2. Roles. | Paragraph: 3.2\nClause: | ISSM | Reviews logs and shall sign |" in again.prompts[0]
+    assert "[3]\nContext: Heading: 3.2. Roles. | Paragraph: 3.2 | Table context: Table 3.1. Roles. Column headers: Role | Duty\nClause: | ISSM | Reviews logs and shall sign |" in again.prompts[0]
     assert [(r["chunk_id"], r["clause_index"]) for r in rows] == [(0, 2), (0, 3), (1, 2), (2, 0), (3, 0)]
     third = FakeModel()
     _run(tmp_path, third)
