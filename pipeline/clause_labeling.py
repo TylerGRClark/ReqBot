@@ -31,6 +31,7 @@ from pathlib import Path
 from pipeline.clauses import _as_list, chunk_clauses
 from pipeline.lead_in import find_lead_in
 from pipeline.sentence_expand import tidy
+from pipeline.table_header import MAX_CHARS as TABLE_CONTEXT_CHARS, document_table_context
 
 log = logging.getLogger(__name__)
 
@@ -60,7 +61,7 @@ def load_prompt(path: Path = PROMPT_PATH) -> str:
 
 
 def clause_block(items: list[dict]) -> str:
-    """The numbered clauses with their context (heading, paragraph, lead-in line above from find_lead_in; each cut to its limit)."""
+    """The numbered clauses with their context (heading, paragraph, lead-in line above from find_lead_in, table caption and column headers for a grid line; each cut to its limit)."""
     parts = []
     for i, c in enumerate(items, 1):
         ctx = []
@@ -70,6 +71,8 @@ def clause_block(items: list[dict]) -> str:
             ctx.append("Paragraph: " + c["ref"][:PARAGRAPH_CHARS])
         if c["ctx_lead"]:
             ctx.append("Lead-in line above: " + c["ctx_lead"][:LEAD_IN_CHARS])
+        if c.get("ctx_table"):
+            ctx.append("Table context: " + c["ctx_table"][:TABLE_CONTEXT_CHARS])
         parts.append("[%d]\nContext: %s\nClause: %s" % (i, " | ".join(ctx) if ctx else "(none)", re.sub(r"[ \t]{2,}", " ", c["text"])[:CLAUSE_CHARS]))
     return "\n\n".join(parts)
 
@@ -170,6 +173,7 @@ def document_clauses(chunks: list[dict]) -> list[dict]:
         for c in chunk_clauses(chunk):
             c["ctx_lead"] = find_lead_in(raw, c["start"], prev_raw)
             out.append(c)
+    document_table_context(chunks, out)  # PREREG11: a table grid line also gets its table's caption and column headers (c["ctx_table"])
     return out
 
 
