@@ -85,12 +85,12 @@ def row_with_headers(raw: str, start: int, end: int):
 
 
 MAX_LABEL_CHARS = 80
-MAX_LABEL_WORDS = 6
+MAX_LABEL_WORDS = 8
 
 
 def _is_label(h: str) -> bool:
     """A header cell is used as a label when it is short text with at least two letters. A bare number or one letter ("5", "B": the converter's own column marks, or a first data row it took for a
-    header) and a header as long as a sentence (over 6 words or 80 characters) (a caption repeated in a merged cell, a data row) say nothing about the column, so the value is shown without it."""
+    header) and a header as long as a sentence (over 8 words or 80 characters) (a caption repeated in a merged cell, a data row) say nothing about the column, so the value is shown without it."""
     return len(h) <= MAX_LABEL_CHARS and len(h.split()) <= MAX_LABEL_WORDS and sum(ch.isalpha() for ch in h) >= 2
 
 
