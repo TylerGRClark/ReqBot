@@ -5,13 +5,15 @@ Design: reqbot-agent-docs history/extraction-replacement-design_2026-10-22.md, w
 
 How it works:
 - Clauses come from pipeline/clauses.py, in document order (chunk file order, then clause order), and are sent BATCH_SIZE at a time; a batch may span two chunks.
+- The prompt's "Lead-in line above" is the checklist's lead-in (pipeline/lead_in.find_lead_in, set in document_clauses): for a list item, the nearest earlier line ending in a colon that is not
+  a sibling of the item, looked up in the previous chunk too when it is in the same section; a plain sentence gets none. (Before, it was the nearest colon clause in the chunk, even a stale one.)
 - The prompt is pipeline/prompts/clause_label_v3.txt, frozen (sha256 PROMPT_SHA256, checked on load). It holds JSON braces, so it is filled with str.replace, never format().
 - Ollama /api/chat, temperature 0, num_ctx 8192, num_predict 300, thinking off (retried without the field for a model that refuses it). Request errors are retried with
   backoff (2, 4, 8 s); a batch whose call still fails is `failed`: it writes no labels, every chunk it touches gets no rows, and the next run in the same folder redoes it.
 - An answer must be a JSON list with ids 1..n, each label one of LABELS. Two attempts per batch; still unparsed -> every clause in the batch is UNSURE (kept, so a reader
   checks it) and a line goes to <doc>_parse_failures.jsonl.
 - Resume ledger <doc>_raw_responses.jsonl, one line per labeled batch: batch_id, chunk_ids, clause_keys, model, prompt_sha, input_hash, raw_answer, labels, status. A batch whose
-  clauses, model and filled prompt are unchanged and whose status is complete or unparsed is reused; a failed one is redone.
+  clauses, model and filled prompt (so also each clause's lead-in) are unchanged and whose status is complete or unparsed is reused; a failed one is redone.
 - Every clause not labeled NOT_REQUIREMENT becomes a row (section 2 of the design): source_quote is the clause, whitespace tidied (the document's own words, never a model's),
   anchored exactly by the splitter's offsets, cited by the five-step source_ref rule.
 """
@@ -27,6 +29,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from pipeline.clauses import _as_list, chunk_clauses
+from pipeline.lead_in import find_lead_in
 from pipeline.sentence_expand import tidy
 
 log = logging.getLogger(__name__)
@@ -57,7 +60,7 @@ def load_prompt(path: Path = PROMPT_PATH) -> str:
 
 
 def clause_block(items: list[dict]) -> str:
-    """The numbered clauses with their context, as the experiment showed them (heading, paragraph, lead-in line above; each cut to its limit)."""
+    """The numbered clauses with their context (heading, paragraph, lead-in line above from find_lead_in; each cut to its limit)."""
     parts = []
     for i, c in enumerate(items, 1):
         ctx = []
@@ -150,9 +153,24 @@ def check_server(ollama_url: str, model: str, timeout: int = 10) -> None:
         log.warning("Model '%s' not found in Ollama. Available: %s", model, sorted(n for n in names if n))
 
 
+def _section_key(chunk: dict) -> tuple:
+    return (tuple(_as_list(chunk.get("section_ref_path"))), tuple(_as_list(chunk.get("section_title_path"))))
+
+
 def document_clauses(chunks: list[dict]) -> list[dict]:
-    """Every clause of the document in order: chunk file order, then clause order."""
-    return [c for chunk in chunks for c in chunk_clauses(chunk)]
+    """Every clause of the document in order: chunk file order, then clause order. The lead-in the labeler is shown (`ctx_lead`) is the one the checklist uses
+    (pipeline/lead_in.find_lead_in: sibling logic, looks back into the previous chunk when it is in the same section); a plain sentence (including a line that starts with a bare number) gets none. PREREG8: recall +0.6,
+    precision +1.2 against the old nearest-colon-clause rule, 16 of 23 gold-judged flips right."""
+    by_id = {c["chunk_id"]: c for c in chunks if "chunk_id" in c}
+    out = []
+    for chunk in chunks:
+        raw = chunk.get("raw_text") or chunk.get("text") or ""
+        prev = by_id.get(chunk["chunk_id"] - 1) if isinstance(chunk.get("chunk_id"), int) else None
+        prev_raw = (prev.get("raw_text") or prev.get("text") or "") if prev is not None and _section_key(prev) == _section_key(chunk) else ""
+        for c in chunk_clauses(chunk):
+            c["ctx_lead"] = find_lead_in(raw, c["start"], prev_raw)
+            out.append(c)
+    return out
 
 
 def make_batches(clauses: list[dict], size: int = BATCH_SIZE) -> list[dict]:

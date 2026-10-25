@@ -86,13 +86,13 @@ def test_dedup_collapses_the_same_clause_under_the_same_reference(tmp_path):
     assert [r["source_quote"] for r in records] == ["| Yes | Report it. |", "| No | Report it. |"]
 
 
-def test_dedup_keeps_distinct_quotes_that_share_a_source_ref_and_the_higher_confidence_copy():
-    a = {"source_ref": "2.1", "source_quote": "The CFP shall notify the MCCC.", "confidence": 0.5}
-    b = {"source_ref": "2.1", "source_quote": "The CFP  shall notify the MCCC.", "confidence": 0.9}  # same quote after whitespace tidying
+def test_dedup_keeps_distinct_quotes_that_share_a_source_ref_and_the_shorter_copy():
+    a = {"source_ref": "2.1", "source_quote": "The CFP shall notify the MCCC."}
+    b = {"source_ref": "2.1", "source_quote": "The CFP  shall notify the MCCC."}  # same quote after whitespace tidying
     c = {"source_ref": "2.1", "source_quote": "The CFP shall file a report."}
     d = {"source_ref": "2.2", "source_quote": "The CFP shall notify the MCCC."}  # same quote, other reference
     out = deduplicate_requirements([a, b, c, d])
-    assert out == [b, c, d]
+    assert out == [a, c, d]
 
 
 def test_source_quote_required_gate(tmp_path):

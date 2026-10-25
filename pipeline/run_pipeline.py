@@ -2,8 +2,8 @@
 """Orchestrator: run the full GRC requirements extraction pipeline.
 
 The steps are named by job; the older letters are kept beside them (docs/PIPELINE_REDESIGN_PLAN.md):
-PDF reading (A), chunking (B), requirement finding (C), normalizing and checking (D), enrichment (D.5),
-description check (D.6), totals and final file (E). Search indexing (F) is run by the caller.
+PDF reading (A), chunking (B), requirement finding (C), normalizing and checking (D),
+totals and final file (E). Search indexing (F) is run by the caller.
 
 Requirement finding is clause labeling (pipeline/clause_labeling.py): the chunk text is cut into clauses by rule and
 the model gives each clause one label; every clause not labeled NOT_REQUIREMENT becomes a row, in the document's own
@@ -45,16 +45,11 @@ STEP_NAMES = {
     "pdf-reading": "A",
     "chunking": "B",
     "requirement-finding": "C",
-    "normalizing": "D",   # normalizing and checking, then (until they are switched off) enrichment and the description check
+    "normalizing": "D",   # normalizing and checking
     "totals": "E",        # totals and final file
 }
 STEP_CHOICES = sorted(STEP_NAMES) + list("ABCDE")
 
-# Switched off (docs/PIPELINE_REDESIGN_PLAN.md, 2026-10-09): enrichment (descriptions, domain tags, requirement types) and the description check. The tags are a cybersecurity vocabulary that
-# would be wrong for other domains, the descriptions were nearly verbatim or blank, and the explained text replaces them. The code stays; setting these back to True runs them again.
-# No option flag turns them on: --skip-enrichment and --skip-description-gate are still accepted and have no effect while these are False.
-ENRICHMENT_ENABLED = False
-DESCRIPTION_CHECK_ENABLED = False
 
 
 def resolve_step(value: str) -> str:
@@ -119,16 +114,13 @@ def run(
     output_dir: str,
     *,
     extraction_model: str = RECOMMENDED_EXTRACTION_MODEL,
-    enrichment_model: str = "llama3.1:8b-instruct-q4_K_M",
     ollama_url: str = "http://localhost:11434",
     max_chunks: int | None = None,
     timeout: int = 120,
     skip_to: str = "A",
-    skip_enrichment: bool = False,
-    skip_description_gate: bool = False,
     profile_name: str = "cybersecurity",
 ) -> str:
-    """Run the full extraction pipeline in-process (PDF reading to totals, with enrichment and the description check unless skipped).
+    """Run the full extraction pipeline in-process (PDF reading to totals).
 
     Callable interface for in-process use by reqbot.py.
     Standalone CLI usage is unchanged via main() / __main__.
@@ -137,22 +129,17 @@ def run(
         pdf_path:          Path to the input PDF file.
         output_dir:        Directory to write all artifacts into.
         extraction_model:  Ollama model that labels the clauses in requirement finding (the clause labeler).
-        enrichment_model:  Ollama model for enrichment (Step D.5). (R-2.2)
         ollama_url:        Ollama API base URL.
         max_chunks:        Label only the first N chunks (testing).
         timeout:           Per-request LLM timeout in seconds.
         skip_to:           Skip to a step: a letter ('A'-'E') or a name (pdf-reading, chunking, requirement-finding,
                            normalizing, totals). Requires prior artifacts.
-        skip_enrichment:   Skip enrichment (Step D.5). Returns normalized JSONL path directly.
-        skip_description_gate: Skip the description check (Step D.6, the description-grounding gate, WP-35.4).
         profile_name:      Domain profile name to load from profiles/<name>.json.
                            Default 'cybersecurity'. Loaded once and used by chunking (skip
-                           sections), normalizing and enrichment.
+                           sections) and normalizing.
 
     Returns:
-        Path to requirements_gated.jsonl if the Step D.6 gate ran, else
-        requirements_enriched.jsonl if enrichment ran, else
-        requirements_normalized.jsonl (str).
+        Path to requirements_normalized.jsonl (str).
 
     Raises:
         RuntimeError: If any pipeline step fails, including docling itself being
@@ -265,64 +252,7 @@ def run(
         except Exception as e:
             raise RuntimeError(f"Normalizing and checking (Step D) failed: {e}") from e
 
-    # Step D.5: Enrich requirements with description, domain_tags, requirement_type.
-    # Only runs when Step D ran in this invocation (ensures fresh norm_path exists
-    # and prevents unexpected LLM work when skip_to skips past D, e.g. --skip-to E).
-    # Skipped if --skip-enrichment is set.
-    # If enrichment fails, the pipeline continues with the normalized JSONL.
     index_path = norm_path
-    if "D" in steps_to_run and ENRICHMENT_ENABLED and not skip_enrichment:
-        log.info("=" * 60)
-        log.info("Starting enrichment (Step D.5: Pass 2)")
-        log.info("Enrichment — model: %s", enrichment_model)
-        log.info("=" * 60)
-        try:
-            from pipeline import enrich_requirements as _enrich_mod
-            enrich_result = _enrich_mod.run(
-                str(norm_path), str(out_dir),
-                model=enrichment_model, ollama_url=ollama_url, timeout=timeout,
-                profile=profile,
-            )
-            index_path = Path(enrich_result)
-        except Exception as e:
-            log.warning(
-                "Enrichment (Step D.5) failed (%s) — proceeding with normalized JSONL for indexing",
-                e,
-            )
-    elif not ENRICHMENT_ENABLED:
-        log.info("Enrichment (Step D.5) is switched off (descriptions, tags and types are no longer assigned)")
-    elif skip_enrichment:
-        log.info("Enrichment (Step D.5) skipped (--skip-enrichment)")
-    else:
-        log.info("Enrichment (Step D.5) skipped (normalizing did not run in this invocation)")
-
-    # Step D.6: Description-grounding entailment gate (WP-35.4). Runs on
-    # whatever index_path currently is (enriched if D.5 succeeded, normalized
-    # otherwise) whenever Step D ran this invocation, so a description
-    # carried through from Step C still gets checked even if D.5 was skipped.
-    # Never drops a requirement -- only clears a rejected description field.
-    # If the gate itself fails (e.g. a corrupt input file), the pipeline
-    # continues with the pre-gate JSONL for indexing, same "pipeline
-    # continues" precedent Step D.5 already established.
-    if "D" in steps_to_run and DESCRIPTION_CHECK_ENABLED and not skip_description_gate:
-        log.info("=" * 60)
-        log.info("Starting description check (Step D.6: description-grounding gate)")
-        log.info("=" * 60)
-        try:
-            from pipeline import entailment_gate as _gate_mod
-            gate_result = _gate_mod.run(str(index_path), str(out_dir))
-            index_path = Path(gate_result)
-        except Exception as e:
-            log.warning(
-                "Description check (Step D.6) failed (%s) — proceeding with ungated JSONL for indexing",
-                e,
-            )
-    elif not DESCRIPTION_CHECK_ENABLED:
-        log.info("Description check (Step D.6) is switched off (there are no generated descriptions to check)")
-    elif skip_description_gate:
-        log.info("Description check (Step D.6) skipped (--skip-description-gate)")
-    else:
-        log.info("Description check (Step D.6) skipped (normalizing did not run in this invocation)")
 
     if "E" in steps_to_run:
         log.info("=" * 60)
@@ -375,17 +305,10 @@ def main() -> None:
         help=f"Ollama model that labels the clauses in requirement finding (default: {RECOMMENDED_EXTRACTION_MODEL})",
     )
     parser.add_argument(
-        "--enrichment-model",
-        type=str,
-        default="llama3.1:8b-instruct-q4_K_M",
-        dest="enrichment_model",
-        help="Ollama model for Step D.5 enrichment (default: llama3.1:8b-instruct-q4_K_M)",
-    )
-    parser.add_argument(
         "--model",
         type=str,
         default=None,
-        help="Convenience alias: sets both --extraction-model and --enrichment-model",
+        help="Convenience alias for --extraction-model",
     )
     parser.add_argument(
         "--ollama-url",
@@ -425,18 +348,6 @@ def main() -> None:
         action="store_true",
         help="After pipeline completes, embed and index requirements into Qdrant",
     )
-    parser.add_argument(
-        "--skip-enrichment",
-        action="store_true",
-        dest="skip_enrichment",
-        help="Skip Step D.5 enrichment (Pass 2). Index normalized JSONL directly without adding description/tags/type.",
-    )
-    parser.add_argument(
-        "--skip-description-gate",
-        action="store_true",
-        dest="skip_description_gate",
-        help="Skip Step D.6 description-grounding gate (WP-35.4). Index enriched/normalized JSONL without checking descriptions for fabrication.",
-    )
     args = parser.parse_args()
 
     pdf_path = Path(args.pdf_path).resolve()
@@ -453,23 +364,18 @@ def main() -> None:
     # --model is a convenience alias; individual flags take precedence when --model not given
     if args.model:
         extraction_model = args.model
-        enrichment_model = args.model
     else:
         extraction_model = args.extraction_model
-        enrichment_model = args.enrichment_model
 
     try:
         index_path = run(
             str(pdf_path),
             str(out_dir),
             extraction_model=extraction_model,
-            enrichment_model=enrichment_model,
             ollama_url=args.ollama_url,
             max_chunks=args.max_chunks,
             timeout=args.timeout,
             skip_to=args.skip_to,
-            skip_enrichment=args.skip_enrichment,
-            skip_description_gate=args.skip_description_gate,
         )
     except RuntimeError as e:
         log.error("%s", e)

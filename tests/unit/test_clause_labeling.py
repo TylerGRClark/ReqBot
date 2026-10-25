@@ -410,3 +410,36 @@ def test_max_chunks_zero_labels_nothing(tmp_path):
     model = FakeModel()
     out = cl.run(str(_write_chunks(tmp_path)), str(tmp_path / "out"), model="m", call=model, max_chunks=0)
     assert model.prompts == [] and _read(out) == []
+
+
+# ---- PREREG8: the labeler is shown the lead-in the checklist uses (pipeline/lead_in.find_lead_in)
+def test_document_clauses_lead_in_crosses_chunks_in_same_section():
+    path = {"section_title_path": ["1. Duties"], "section_ref_path": ["1"]}
+    chunks = [{"chunk_id": 0, "raw_text": "The ISSM will:\n- Keep logs.", **path}, {"chunk_id": 1, "raw_text": "- Review logs weekly.", **path}]
+    got = [(c["text"], c["ctx_lead"]) for c in cl.document_clauses(chunks)]
+    assert got == [("The ISSM will:", None), ("- Keep logs.", "The ISSM will:"), ("- Review logs weekly.", "The ISSM will:")]
+
+
+def test_document_clauses_no_lead_in_across_sections_or_for_plain_sentences():
+    chunks = [{"chunk_id": 0, "raw_text": "The ISSM will:\n- Keep logs.", "section_title_path": ["A"], "section_ref_path": ["1"]},
+              {"chunk_id": 1, "raw_text": "- Review logs weekly.\n\nThank you for your cooperation.", "section_title_path": ["B"], "section_ref_path": ["2"]}]
+    got = {c["text"]: c["ctx_lead"] for c in cl.document_clauses(chunks)}
+    assert got["- Review logs weekly."] is None
+    assert got["Thank you for your cooperation."] is None
+
+
+def test_document_clauses_stale_colon_is_not_a_lead_in_and_bare_number_line_gets_none():
+    # Old rule: the nearest colon clause earlier in the chunk, however far back and whatever the clause is. Now only a list item gets a lead-in.
+    raw = "The ISSM will:\n- Keep logs.\n- 3 Review them.\n2 Examples of systems include test rigs."
+    got = {c["text"]: c["ctx_lead"] for c in cl.document_clauses([{"chunk_id": 0, "raw_text": raw}])}
+    assert got == {"The ISSM will:": None, "- Keep logs.": "The ISSM will:", "- 3 Review them.": "The ISSM will:", "2 Examples of systems include test rigs.": None}
+    plain = "The ISSM will:\nKeep logs.\n\nSee the annex."
+    assert [(c["text"], c["ctx_lead"]) for c in cl.document_clauses([{"chunk_id": 0, "raw_text": plain}])] == [("The ISSM will:", None), ("Keep logs.", None), ("See the annex.", None)]
+
+
+def test_document_clauses_lead_in_with_tier_tag_after_colon_same_chunk_and_previous_chunk():
+    path = {"section_title_path": ["A"], "section_ref_path": ["1"]}
+    chunks = [{"chunk_id": 0, "raw_text": "Training will use one of the following options: (T-2).\n- classroom courses", **path}, {"chunk_id": 1, "raw_text": "- online courses", **path}]
+    got = [(c["text"], c["ctx_lead"]) for c in cl.document_clauses(chunks)]
+    tag = "Training will use one of the following options: (T-2)."
+    assert got == [(tag, None), ("- classroom courses", tag), ("- online courses", tag)]

@@ -10,14 +10,14 @@ API, and MCP server expose those workflows.
 
 | Component | Responsibility |
 |---|---|
-| `pipeline/` | Parse PDFs, chunk source text, extract/validate/enrich requirements, export artifacts, and build indexes. |
+| `pipeline/` | Parse PDFs, chunk source text, extract/validate requirements, export artifacts, and build indexes. |
 | `core/` | Configuration, profiles, artifact selection, retrieval, synthesis, and shared utilities. |
 | `services/` | Return structured search, trace, comparison, evidence, checklist, status, and configuration results; `job_service.py` queues long commands and runs them one at a time as child processes (state under `<processed_dir>/.jobs/`). |
 | `cli/` | CLI and interactive-shell command parsing and presentation. |
 | `api/` | HTTP request validation, error mapping, and frontend serving. |
 | `mcp_server/` | Read-only tools over shared services: stdio for a local AI client, and an optional HTTP door (`network.py`) for other machines. |
 | `frontend/` | Browser screens and presentation; calls the HTTP API. |
-| Ollama | Dense embeddings and local extraction, enrichment, query, and synthesis model calls. |
+| Ollama | Dense embeddings and local extraction, query, and synthesis model calls. |
 | Qdrant | Rebuildable dense/sparse requirements and source-context indexes. |
 
 Interfaces own presentation and request validation. Retrieval belongs in
@@ -32,8 +32,6 @@ The [developer reference](../ARCHITECTURE.md) contains the module/import map.
 | Chunking | Structure-aware chunking adds section paths and parent context; the profile can exclude sections. | `*_chunks.jsonl` |
 | Requirement finding | Clause labeling: rules cut each chunk's raw text into clauses (sentences, list lines, table lines) with their exact offsets; a local model (the configured extraction model; measured with `ornith:35b`) gives each clause one label, four per call: DUTY, PROHIBITION, PERMISSION, NOT_REQUIREMENT or UNSURE. Every clause not labeled NOT_REQUIREMENT becomes a row whose quote is the clause itself, the **root**, never edited. The source reference is found by rule and says how (`source_ref_origin`). The batch ledger (raw responses) makes a re-run resume. It replaced, in October 2026, the step that asked the model to write a list of requirements. | `*_extracted_requirements.jsonl` |
 | Normalizing and checking | One step, doing several jobs: refuse an extraction file from the old step, check each clause against its offsets (`clause_offset_mismatch`), drop junk (a repeated heading, a definitional pointer; a lead-in that ends in a colon is kept as a row; there is no working change-log rejection yet), attach page and section metadata, deduplicate, build the explained text (the clause without its list marker, with its list's lead-in in front), and assign IDs (hashed from the root). | `*_requirements_normalized.jsonl` |
-| Enrichment | **Switched off** (October 2026): the code stays, but the pipeline no longer adds descriptions, domain tags or requirement types. | `*_requirements_enriched.jsonl` |
-| Description check | **Switched off** with enrichment: there are no generated descriptions to check. | `*_requirements_gated.jsonl` |
 | Totals and final file | Aggregate the selected output and record statistics. | `*_final_output.json`, `*_stats.json` |
 | Index requirements | Embed selected requirement artifacts with dense Ollama embeddings and sparse BM25 features. | Qdrant `grc_requirements` |
 | Index context | Embed source chunks with the same dense/sparse strategy. | Qdrant `grc_context` |
@@ -76,7 +74,6 @@ flowchart TD
     FAIL["Rejected records<br/>kept in a failures file"]
     CL["On demand: checklist building<br/>citation, passage, flags, draft questions<br/>no model call"]
     DQ["On demand: draft questions<br/>14B model, written to a side file<br/>(reqbot questions)"]
-    OFF["Switched off: tagging, requirement types,<br/>descriptions and the description check"]
 
     N1 --> N2
     N2 --> N3
@@ -104,7 +101,7 @@ flowchart TD
     classDef side fill:#e0e7ff,stroke:#4f46e5,color:#1e1b4b;
     class N1,N2,N3,N11,N12,CL,DQ built;
     class N4,N5,N6 inside;
-    class N7,N8,N9,N10,OFF planned;
+    class N7,N8,N9,N10 planned;
     class FAIL side;
 ```
 
@@ -182,7 +179,7 @@ description, which is always empty, and was removed.
 The [pipeline redesign plan](PIPELINE_REDESIGN_PLAN.md) describes where the pipeline is
 going. Built so far: clause labeling as requirement finding (so every root is the document's own
 line and exactly located), the root kept untouched with the explained text beside it, enrichment
-and the description check switched off, `confidence` dropped, and readers showing the explained
+and the description check removed, `confidence` dropped, and readers showing the explained
 text. Still to come: the normalizing module split into separate steps and screening on the
 explained text.
 
@@ -207,14 +204,8 @@ note of what was done in `explain_notes`. `source_quote` is never replaced.
 Records written before the switch keep their old fields (`parent_stem`, `embedding_text`,
 `merged_roots`, anchor statuses other than exact); readers still accept them, but normalizing
 refuses an old extraction file: re-run requirement finding on that folder.
-Generated descriptions are distinct from source quotes. The description check has
-deterministic checks and, when the optional MiniCheck dependency is available,
-an entailment check. A rejected description is cleared; its requirement remains.
-
-Enrichment failures can fall back to normalized artifacts. A description-gate
-failure can fall back to the pre-gate artifact, with a log warning. Inspect logs
-and failure artifacts when assessing a run; completion alone does not mean every
-optional check executed. Human review of source quotes remains necessary.
+The pipeline writes no generated descriptions (enrichment and the description check were removed in October 2026). Inspect logs
+and failure artifacts when assessing a run. Human review of source quotes remains necessary.
 
 ## Checklists
 
@@ -258,8 +249,7 @@ to regenerate the corpus.
 | `*_raw_responses.jsonl` | The clause labeler's ledger: one line per batch of clauses (labels, raw answer, status complete, unparsed or failed); resume evidence. |
 | `*_extracted_requirements.jsonl`, `*_parse_failures.jsonl` | One row per clause not labeled NOT_REQUIREMENT; batches whose answer could not be read (their clauses kept as UNSURE). |
 | `*_requirements_normalized.jsonl`, `*_normalization_failures.jsonl` | Accepted normalized records and rejection reasons. |
-| `*_requirements_enriched.jsonl` | Added descriptions/classifications before description checking. |
-| `*_requirements_gated.jsonl`, `*_description_gate_failures.jsonl` | Post-check records and rejected-description evidence. |
+| `*_requirements_enriched.jsonl`, `*_requirements_gated.jsonl`, `*_description_gate_failures.jsonl` | Written by runs from before October 2026 (descriptions, then the description check). No current stage writes them; readers still use them in older run folders. |
 | `*_final_output.json`, `*_stats.json` | Aggregated export and run metrics. |
 | `*_audit_questions.jsonl` | Draft audit questions written by `reqbot questions`; read by the checklist. |
 | `*_criticality.jsonl` | Rough criticality scores written by `reqbot questions` (a second model call per row); read by the checklist, which shows a Critical, High, Medium or Low band by rank within the document. |
