@@ -1,17 +1,12 @@
 """Requirement kind, stage 1 (docs/PIPELINE_REDESIGN_PLAN.md section 10): what sort of statement a checklist row is.
 
-Rule-based and verbatim: it reads the row's own words, its citation and its hint flags, never a model, and writes labels beside the row. It never edits the requirement, never drops a row
-and never changes what any reader shows. `unknown` is a legal answer. Stage 1 stores the labels in a sidecar file (`<doc>_kinds.jsonl`, like the draft questions) so the first rules can be
-rated before any reader uses them; the plan's step between context attaching and screening comes with the stages that read the kind.
+Rule-based and verbatim: it reads the row's own words, its citation and its hint flags, never a model. It never edits the requirement, never drops a row. `unknown` is a legal answer.
+The only reader is the question gate (services/audit_questions.py), which calls `classify` itself; nothing is stored.
 """
-import json
-import os
 import re
-from pathlib import Path
 
 from services import checklist_audit
 
-RULES_VERSION = "kind-rules-8"
 KINDS = (
     "duty_with_actor", "duty_imperative", "recommendation", "permission", "prohibition", "exemption", "definition_or_description", "applicability", "pointer", "table_row",
     "form_template_text", "cover_page_text", "unknown",
@@ -197,6 +192,16 @@ def named_actor_then_command(quote: str):
     return (m.group("actor").strip(), verb) if verb else None
 
 
+def _command_then_tail(text: str, m) -> bool:
+    """True when `text` opens with a real command and the pointer or exemption wording `m` is only a tail: in a later sentence or in a trailing "(See Table 1.1)". A row that opens with the pointer
+    itself ("Refer to paragraph 4 ...") is a pointer, so "refer" and "see" are not commands here."""
+    verb = leading_command(text)
+    if not verb or verb.lower() in ("refer", "see", "is", "are", "be"):
+        return False
+    before = text[:m.start()]
+    return bool(re.search(r"[.;]\s", before) or re.search(r"\(\s*$", before))
+
+
 POSITION_KINDS = frozenset({"table_row", "form_template_text", "cover_page_text"})  # decided by where the row sits, not by what it says
 
 
@@ -231,7 +236,7 @@ def classify(item: dict, *, use_position: bool = True) -> dict:
         decide("table_row", f"cited by a table caption ({citation})")
     elif applies:
         decide("applicability", "says who the document applies to")
-    elif (m := _POINTER.search(text)) and not _STRONG.search(text):
+    elif (m := _POINTER.search(text)) and not _STRONG.search(text) and not _command_then_tail(text, m):
         decide("pointer", "points elsewhere", m)
     elif m := _PROHIBIT.search(negated):
         allowed = first_permission(text)
@@ -241,7 +246,9 @@ def classify(item: dict, *, use_position: bool = True) -> dict:
             decide("prohibition", "a negation of an obligation or permission", m)
     elif m := _EXEMPT.search(text):
         duty = _STRONG_DUTY.search(text)
-        if duty and duty.start() < m.start():  # "are required to meet X but are not required to meet Y": the duty comes first and the exemption limits it
+        if _command_then_tail(text, m):  # "Execute the responsibilities in 2.22. (T-1) Host Centers/Wings will be exempt if ...": the command is the duty, the exemption is its tail
+            decide("duty_imperative", "a command that a later exemption limits", m)
+        elif duty and duty.start() < m.start():  # "are required to meet X but are not required to meet Y": the duty comes first and the exemption limits it
             decide("duty_with_actor", "a duty that a later exemption limits", duty)
         else:
             decide("exemption", "says something does not apply or is not required", m)
@@ -289,50 +296,3 @@ def classify(item: dict, *, use_position: bool = True) -> dict:
     if kind in POSITION_KINDS and use_position:
         out["kind_by_wording"] = classify(item, use_position=False)["kind"]
     return out
-
-
-def sidecar_path(requirements_path: Path) -> Path:
-    """`<doc>_kinds.jsonl` beside `<doc>_requirements_*.jsonl`."""
-    name = re.sub(r"_requirements_(?:normalized|enriched|gated)\.jsonl$", "", requirements_path.name)
-    return requirements_path.with_name(f"{name}_kinds.jsonl")
-
-
-def label_items(items: list[dict]) -> dict[str, dict]:
-    """{checklist_item_id: record} for every item that has a requirement text."""
-    out = {}
-    for item in items:
-        if not (item.get("source_quote") or "").strip():
-            continue
-        out[item["checklist_item_id"]] = {"checklist_item_id": item["checklist_item_id"], **classify(item), "rules_version": RULES_VERSION}
-    return out
-
-
-def write(path: Path, records: dict[str, dict]) -> None:
-    tmp = path.with_name(path.name + ".tmp")
-    tmp.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in records.values()), encoding="utf-8")
-    os.replace(tmp, path)
-
-
-def load(path: Path) -> dict[str, dict]:
-    """{checklist_item_id: record}; a missing or unreadable file is an empty set."""
-    out: dict[str, dict] = {}
-    try:
-        with open(path, encoding="utf-8") as f:
-            for line in f:
-                try:
-                    rec = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if isinstance(rec, dict) and rec.get("checklist_item_id"):
-                    out[rec["checklist_item_id"]] = rec
-    except OSError:
-        pass
-    return out
-
-
-def counts(records: dict[str, dict]) -> dict[str, int]:
-    tally = {k: 0 for k in KINDS}
-    for rec in records.values():
-        tally[rec["kind"]] = tally.get(rec["kind"], 0) + 1
-    tally["total"] = len(records)
-    return tally

@@ -1,6 +1,4 @@
 """Requirement kind, stage 1: rule-based labels in a sidecar file (no model, no reader uses them yet)."""
-import json
-
 from services import requirement_kind as RK
 
 
@@ -74,23 +72,6 @@ def test_every_kind_the_rules_can_give_is_in_the_list():
         assert RK.classify(_item(q, **kw))["kind"] in RK.KINDS
 
 
-def test_sidecar_round_trip_and_counts(tmp_path):
-    items = [_item("The Director will act.", checklist_item_id="CL-1"), _item("   ", checklist_item_id="CL-2"), _item("It may happen.", checklist_item_id="CL-3")]
-    records = RK.label_items(items)
-    assert list(records) == ["CL-1", "CL-3"]  # a row with no requirement text gets no label
-    path = tmp_path / "doc_kinds.jsonl"
-    RK.write(path, records)
-    assert RK.load(path) == records and json.loads(path.read_text().splitlines()[0])["rules_version"] == RK.RULES_VERSION
-    tally = RK.counts(records)
-    assert tally["duty_with_actor"] == 1 and tally["permission"] == 1 and tally["total"] == 2
-    assert RK.load(tmp_path / "missing.jsonl") == {}
-
-
-def test_sidecar_path_sits_beside_the_requirements_file(tmp_path):
-    p = tmp_path / "doc_20260101_120000" / "afi_requirements_normalized.jsonl"
-    assert RK.sidecar_path(p).name == "afi_kinds.jsonl" and RK.sidecar_path(p).parent == p.parent
-
-
 def test_a_permission_that_a_later_negation_limits_is_a_permission():
     # DAFMAN 17-1305 4.1.7: the grant opens the sentence, the prohibition limits it
     q = "Authorizing Officials may extend time limits for a specifically dated period, not to exceed six months, and shall not authorize any consecutive waivers (T-0)."
@@ -134,10 +115,6 @@ def test_an_applicability_sentence_in_the_front_matter_is_applicability_and_keep
     assert r["kind"] == "applicability" and "front_matter" in r["kind_tags"]
     r = RK.classify(_item("Compliance with this publication is mandatory.", citation="Front matter"))
     assert r["kind"] == "cover_page_text" and "front_matter" not in r["kind_tags"]
-
-
-def test_the_rules_version_names_the_current_rule_set():
-    assert RK.RULES_VERSION == "kind-rules-8"
 
 
 def test_a_row_whose_kind_comes_from_its_position_also_keeps_what_its_words_say():
@@ -304,3 +281,32 @@ def test_review_findings_on_kind_rules_8_a_qualified_negation_a_noun_phrase_and_
     assert _kind("Issues include weak passwords and unsupported systems.") == "unknown"
     assert _kind("Issues guidance on supply chain risk to the Components.") == "duty_imperative"
     assert _kind("DoD policy mandates that all components encrypt backups.") == "duty_with_actor"
+
+
+# The five real duties the audit of 2026-10-24 found wrongly classed as not a duty: a real command, then a pointer or exemption tail.
+_CARM_WG_1 = ("Establish and manage a CARM WG or incorporate the requirement into an equivalent, existing MAJCOM/DRU WG (e.g. Threat, EM, or Integrated Defense (ID)) to: Develop strategies for "
+              "remediating or mitigating identified vulnerabilities and risks to assessed TCAs and infrastructures to inform the HAF CARM Program office and HAF CARM WG. "
+              "A detailed description of the roles and expectations of a CARM WG can be found in section 3.6.")
+_CARM_WG_2 = ("Establish and manage a CARM WG or incorporate the requirement into an equivalent, existing Center/Wing or Installation WG (e.g. Threat, EM, or ID WG) to facilitate cross-functional "
+              "dialogue on TCA identification, availability, and reliability, as well as to support consequence management and COOP planning. (T-2) "
+              "Additional details regarding the purpose and responsibilities of the CARM WG can be found in section 3.6.")
+
+
+def test_a_command_followed_by_a_pointer_tail_is_still_a_duty():
+    assert _kind("Assess the event against the incident criteria to determine if it is a reportable event or incident (See Table 1.1, Incident Categories).") == "duty_imperative"
+    assert _kind(_CARM_WG_1) == "duty_imperative"
+    assert _kind(_CARM_WG_2) == "duty_imperative"
+    assert _kind("Support MAAs of TCAs. (T-1) Assessment types and actions are described in section 3.3.") == "duty_imperative"
+
+
+def test_a_command_followed_by_an_exemption_tail_is_still_a_duty():
+    assert _kind("Execute the responsibilities found in section 2.22. if responsible for any TCAs. (T-1) Host Centers/Wings will be exempt if capable of demonstrating an absence of TCAs.") == "duty_imperative"
+
+
+def test_rows_that_only_point_or_only_exempt_stay_pointer_and_exemption():
+    assert _kind("Refer to paragraph 4 for guidance on identifying exercise incidents/events reported, and the processes for de-conflicting real world and exercise activities.") == "pointer"
+    assert _kind("Refer to AFI 10-701 for details.") == "pointer"
+    assert _kind("Centers/Wings will be exempt if capable of demonstrating an absence of TCAs.") == "exemption"
+    assert _kind("Host Centers/Wings will be exempt if capable of demonstrating an absence of TCAs.") == "exemption"
+    assert _kind("A list of programs can be found in Section 1.4.1.") == "pointer"
+    assert _kind("Details on the process can be found in appendix G.") == "pointer"

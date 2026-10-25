@@ -130,11 +130,24 @@ def _flex_pattern(text: str):
     return re.compile(r"\s+".join(pieces)) if pieces else None
 
 
-def build_passage(quote: str, chunk, prev_chunk=None, flags=(), start: int = 0) -> tuple[str, bool]:
+def locate_quote(quote: str, raw: str, start: int = 0, span: tuple[int, int] | None = None):
+    """The match of `quote` in the chunk text `raw`. With `span` (the clause's stored (start, end) offsets) the clause itself is searched first, so a sentence repeated elsewhere in
+    the chunk is not marked instead; a row without offsets, or whose quote is not inside them, is found by text search from `start`."""
+    pat = _flex_pattern(quote)
+    if not pat:
+        return None
+    if span and 0 <= span[0] < span[1] <= len(raw):
+        m = pat.search(raw, span[0], span[1])
+        if m:
+            return m
+    return pat.search(raw, max(start, 0))
+
+
+def build_passage(quote: str, chunk, prev_chunk=None, flags=(), start: int = 0, span: tuple[int, int] | None = None) -> tuple[str, bool]:
     """(passage, quote_found): the document's own text around the quote, verbatim, with the quote wrapped in >> << markers.
 
     The passage is the text of the chunk that holds the quote. When the quote starts mid-sentence or is a list item, the tail of the previous chunk is put in front (the
-    lead-in is usually there), separated by an ellipsis. If the chunk is missing the passage is empty; if the quote cannot be located the whole chunk is returned unmarked.
+    lead-in is usually there), separated by an ellipsis. `span` is the clause's (start, end) offsets in the chunk text, when the row stores them. If the chunk is missing the passage is empty; if the quote cannot be located the whole chunk is returned unmarked.
     """
     if not chunk:
         return "", False
@@ -144,8 +157,7 @@ def build_passage(quote: str, chunk, prev_chunk=None, flags=(), start: int = 0) 
         tail = (prev_chunk.get("raw_text") or prev_chunk.get("text") or "")[-PASSAGE_TAIL_CHARS:]
         cut = tail.find(" ")
         prefix = "... " + (tail[cut + 1:] if 0 <= cut < len(tail) - 1 and len(tail) == PASSAGE_TAIL_CHARS else tail).strip() + "\n\n"
-    pat = _flex_pattern(quote)
-    m = pat.search(raw, max(start, 0)) if pat else None  # `start`: search from this offset on
+    m = locate_quote(quote, raw, start, span)
     if not m:
         return (prefix + raw).strip(), False
     return (prefix + raw[: m.start()] + MARK_OPEN + raw[m.start(): m.end()] + MARK_CLOSE + raw[m.end():]).strip(), True
@@ -451,3 +463,126 @@ def applies_to_numbered(citation: str, hmap: dict, section_title_path):
             return ""
         parts = parts[:-1]
     return ""
+
+
+# The question and importance-score prompts show the model only a cut of the passage. Cutting the first N characters can drop the marked requirement (the chunk is long, or the
+# previous-chunk tail sits in front) or the lead-in of a list item. `prompt_window` is the window rule measured in PREREG7 (eval/clause_labeling/PREREG7_REPORT.md): the lines that
+# hold the requirement, the line holding its lead-in, then one line after and one before (same section only, across chunk borders) up to the cap. The requirement is never cut.
+QUESTION_PASSAGE_CHARS = 1500  # the draft-question prompt
+SCORE_PASSAGE_CHARS = 1200  # the importance-score prompt
+LEAD_LOOKBACK_LINES = 40
+
+
+def squash(text: str) -> str:
+    """Letters and digits only, lower case, so a lead-in is found whatever the spacing."""
+    return re.sub(r"[^a-z0-9]+", "", (text or "").lower())
+
+
+def lead_in_prefix(explained_parts) -> str:
+    """The squashed first 60 characters of the row's lead-in (explained_parts kind lead_in), or ""."""
+    for p in explained_parts or []:
+        if p.get("kind") == "lead_in":
+            return squash(p.get("text") or "")[:60]
+    return ""
+
+
+def cut_is_enough(passage: str, cap: int, lead_prefix: str = "") -> bool:
+    """True when the plain first `cap` characters of the marked passage already hold the whole marked requirement and the row's lead-in (if it has one)."""
+    i = (passage or "").find(MARK_OPEN)
+    j = passage.find(MARK_CLOSE, i) if i >= 0 else -1
+    if j < 0 or j + len(MARK_CLOSE) > cap:
+        return False
+    return not lead_prefix or lead_prefix in squash(passage[:cap])
+
+
+def document_lines(chunks: dict) -> list[tuple[int, tuple, str]]:
+    """(chunk_id, section path, line) for every non-empty line of the document, chunks in id order."""
+    out = []
+    for cid in sorted(k for k in chunks if isinstance(k, int)):
+        c = chunks[cid]
+        # a section is identified by both paths: headings without a canonical id are missing from the ref path, so sibling prose-titled subsections share it
+        path = tuple(tuple(p) if isinstance(p, (list, tuple)) else (str(p),) for p in (c.get("section_ref_path") or [], c.get("section_title_path") or []))
+        for ln in (c.get("raw_text") or c.get("text") or "").split("\n"):
+            if ln.strip():
+                out.append((cid, path, ln.rstrip()))
+    return out
+
+
+def prompt_window(lines, quote_chunk_id: int, marked_raw: str, lead_prefix: str, cap: int) -> str | None:
+    """The window of the document around a marked requirement, at most about `cap` characters, or None when the marked text cannot be placed in `lines`.
+
+    `lines` comes from document_lines with the requirement's chunk already carrying the >> << markers (`marked_raw` is that chunk's marked text). A side that was cut is shown as "..."."""
+    marked_lines = [ln.rstrip() for ln in marked_raw.split("\n") if ln.strip()]
+    first = next((k for k, ln in enumerate(lines) if ln[0] == quote_chunk_id), None)
+    if first is None or len(marked_lines) != sum(1 for ln in lines if ln[0] == quote_chunk_id):
+        return None
+    lines = list(lines)
+    for k, ln in enumerate(marked_lines):  # put the marked version of the chunk in place
+        lines[first + k] = (quote_chunk_id, lines[first + k][1], ln)
+    hit = [k for k in range(first, first + len(marked_lines)) if MARK_OPEN.strip() in lines[k][2] or MARK_CLOSE.strip() in lines[k][2]]
+    open_line = next((k for k in range(first, first + len(marked_lines)) if MARK_OPEN.strip() in lines[k][2]), None)
+    close_line = next((k for k in range(first, first + len(marked_lines)) if MARK_CLOSE.strip() in lines[k][2]), None)
+    if open_line is None or close_line is None:
+        return None
+    lo, hi = open_line, close_line
+    sect = lines[lo][1]
+
+    def size(a, b):
+        return sum(len(lines[i][2]) + 1 for i in range(a, b + 1))
+
+    lead = None
+    if lead_prefix:
+        for i in range(lo, max(-1, lo - 1 - LEAD_LOOKBACK_LINES), -1):
+            if lines[i][1] != sect:
+                break
+            if lead_prefix in squash(lines[i][2]):
+                lead = i if i < lo else None  # in the requirement's own line: already inside
+                break
+    a = lo
+    if lead is not None and size(lead, hi) <= cap:
+        a = lead
+    extra_before = [lead] if lead is not None and a == lo else []
+    used = size(a, hi) + sum(len(lines[i][2]) + 1 for i in extra_before)
+    if used > cap:  # the requirement (with its lead-in) is over the cap: never cut it; crop its own line around it only when that line is the whole problem
+        if lo == hi and not extra_before and len(hit) == 1:
+            return _crop_line(lines[lo][2], cap)
+        return "\n".join([lines[i][2] for i in extra_before] + [lines[i][2] for i in range(a, hi + 1)])
+    nxt, prv = hi + 1, a - 1
+    after, before = [], []
+    while True:
+        moved = False
+        if nxt < len(lines) and lines[nxt][1] == sect and used + len(lines[nxt][2]) + 1 <= cap:
+            used += len(lines[nxt][2]) + 1
+            after.append(nxt)
+            nxt += 1
+            moved = True
+        if prv >= 0 and lines[prv][1] == sect and prv not in extra_before and used + len(lines[prv][2]) + 1 <= cap:
+            used += len(lines[prv][2]) + 1
+            before.append(prv)
+            prv -= 1
+            moved = True
+        if not moved:
+            break
+    order = sorted(set(before) | set(extra_before) | set(range(a, hi + 1)) | set(after))
+    text = "\n".join(lines[i][2] for i in order)
+    if order[0] > 0 and lines[order[0] - 1][1] == sect:
+        text = "... " + text
+    if order[-1] + 1 < len(lines) and lines[order[-1] + 1][1] == sect:
+        text += " ..."
+    return text
+
+
+def _crop_line(line: str, cap: int) -> str:
+    """One long line cut around the marked requirement at word boundaries, to about `cap` characters; the marked requirement stays whole."""
+    qs, qe = line.find(MARK_OPEN.strip()), line.find(MARK_CLOSE.strip()) + len(MARK_CLOSE.strip())
+    budget = cap - (qe - qs)
+    if budget <= 0:
+        return line[qs:qe]
+    s0 = max(0, qs - budget // 2)
+    e0 = min(len(line), qe + (budget - (qs - s0)))
+    s0 = max(0, min(s0, qs - (budget - (e0 - qe))))
+    while 0 < s0 < qs and line[s0 - 1] != " ":
+        s0 += 1
+    while qe < e0 < len(line) and line[e0] != " ":
+        e0 -= 1
+    return ("... " if s0 > 0 else "") + line[s0:e0] + (" ..." if e0 < len(line) else "")

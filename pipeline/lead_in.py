@@ -11,6 +11,8 @@ from pipeline.sentence_expand import _LEADING_NUMBER, _MARKER, _TERMINAL, _is_se
 MAX_UNITS_BACK = 40
 MAX_LEAD_IN_CHARS = 300
 _DOTTED = re.compile(r"^(?:[A-Z]{1,2})?\d+(?:\.\d+)+\.?\s")
+_COLON_END = re.compile(r":(\s*\(T-\d\)\.?)?$")  # same rule as pipeline/clauses._LEAD_IN_END: "will:" and, after a tier tag, "options: (T-2)."
+_TAG_AFTER_COLON = re.compile(r"(?<=:)\s*\(T-\d\)\.?$")
 _STYLES = (
     ("alpha_p", re.compile(r"^\([a-z]{1,2}\)\s")),
     ("alpha", re.compile(r"^[a-z]{1,2}[.)]\s")),
@@ -46,9 +48,11 @@ def _text_of(unit: str) -> str:
     body = unit.strip()
     m = _LEADING_NUMBER.match(body)
     body = tidy(body[m.end():] if m else body)
+    cut = _TAG_AFTER_COLON.search(body)
+    scan = body[:cut.start()] if cut else body  # the tier tag after the colon is not a sentence end; it stays in the returned text
     last_start = 0
-    for t in _TERMINAL.finditer(body):
-        if _is_sentence_end(body, t):  # abbreviations ("U.S. Cyber Command") and initials do not end a sentence
+    for t in _TERMINAL.finditer(scan):
+        if _is_sentence_end(scan, t):  # abbreviations ("U.S. Cyber Command") and initials do not end a sentence
             last_start = t.end()
     return body[last_start:].strip()
 
@@ -59,7 +63,7 @@ def _candidate(units: list[tuple[int, str]], index: int, item_style: tuple[str, 
         unit = units[j][1]
         style = _marker_style(unit)
         text = _text_of(unit)
-        if text.endswith(":"):
+        if _COLON_END.search(text):
             same_style = style[0] == item_style[0] and style[0] not in ("none", "bullet")
             if same_style and not (style[0] == "dotted" and style[1] < item_style[1]):
                 continue  # a sibling that also introduces a list (or a deeper one), not the item's parent
@@ -71,6 +75,18 @@ def _candidate(units: list[tuple[int, str]], index: int, item_style: tuple[str, 
     return None
 
 
+_BARE_NUMBER_START = re.compile(r"\d{1,3}[ \t]+\S")
+
+
+def _is_plain_line_after_marker_line(raw: str, item_start: int, unit_start: int) -> bool:
+    """True when the item is a line of its own that begins with a bare number (no dot or bracket, so not a list marker), sits inside an earlier list item's unit (the unit started on
+    an earlier line), and follows a line that ended a sentence or a colon. Units split only at markers, so such a line would otherwise count as part of the list item above it."""
+    line_start = raw.rfind("\n", 0, item_start) + 1
+    if line_start <= unit_start or raw[line_start:item_start].strip() or not _BARE_NUMBER_START.match(raw, item_start):
+        return False
+    return raw[:line_start].rstrip()[-1:] in (".", ":", "?", "!", '"', "'", ")")
+
+
 def find_lead_in(raw: str, item_start: int, prev_raw: str = "") -> str | None:
     """The lead-in line for the list item that starts at `item_start` in the chunk's `raw` text, looking in `prev_raw` (the previous chunk) when the list began there; None when the
     item is not a list item or no governing line is found."""
@@ -80,6 +96,8 @@ def find_lead_in(raw: str, item_start: int, prev_raw: str = "") -> str | None:
     index = max((i for i, (start, _) in enumerate(units) if start <= item_start), default=None)
     if index is None:
         return None
+    if _is_plain_line_after_marker_line(raw, item_start, units[index][0]):
+        return None  # a plain sentence that starts with a bare number ("24 AF is designated as ...") on a line of its own, after a list item: not itself a list item
     item_style = _marker_style(units[index][1])
     if item_style[0] == "none":
         return None  # a plain sentence stands on its own

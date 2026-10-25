@@ -17,7 +17,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from services import requirement_kind
+from services import checklist_audit, requirement_kind
 
 log = logging.getLogger(__name__)
 
@@ -104,7 +104,14 @@ def passage_only_terms(question: str, item: dict) -> list[str]:
 
 
 def row_material(item: dict) -> str:
-    return " ".join([item.get("applies_to") or "", item.get("parent_text") or "", item.get("source_quote") or "", item.get("passage") or ""])
+    return " ".join([item.get("applies_to") or "", item.get("parent_text") or "", item.get("source_quote") or "", item.get("passage") or "", *(item.get("prompt_windows") or {}).values()])
+
+
+def prompt_passage(item: dict, cap: int) -> str:
+    """The passage the model is shown: the window around the marked requirement when the checklist stored one for this cut (the plain cut would lose the requirement or its lead-in),
+    else the first `cap` characters, as before."""
+    window = (item.get("prompt_windows") or {}).get(str(cap))
+    return window if window else (item.get("passage") or "")[:cap]
 
 
 def build_prompt(item: dict) -> str:
@@ -112,7 +119,7 @@ def build_prompt(item: dict) -> str:
     if PROHIBITION.search(item.get("source_quote") or ""):
         template = template.replace("- If the requirement is a fragment,", PROHIBITION_RULE + "- If the requirement is a fragment,")
     parent = f"{item.get('parent_ref') or ''} {item.get('parent_text') or ''}".strip()
-    return template.format(applies=item.get("applies_to") or "(none)", parent=parent or "(none)", quote=item.get("source_quote") or "", passage=(item.get("passage") or "")[:1500])
+    return template.format(applies=item.get("applies_to") or "(none)", parent=parent or "(none)", quote=item.get("source_quote") or "", passage=prompt_passage(item, checklist_audit.QUESTION_PASSAGE_CHARS))
 
 
 # Kinds (services/requirement_kind.py) whose rows state no duty an auditor can check: no question is drafted for them (the row stays on the checklist). Always on; REQBOT_QUESTION_GATE=off
@@ -189,7 +196,7 @@ def score_prompt(item: dict) -> str:
     examples = "\n".join(f'- "{quote[:220]}" -> score {score}' for quote, score in SCORE_EXAMPLES)
     parent = (item.get("parent_text") or "").strip() or "(none)"
     return SCORE_PROMPT.format(definition=SCORE_DEFINITION, examples=examples, applies=item.get("applies_to") or "(none)", parent=parent[:400], quote=item.get("source_quote") or "",
-                               passage=(item.get("passage") or "")[:1200])
+                               passage=prompt_passage(item, checklist_audit.SCORE_PASSAGE_CHARS))
 
 
 def score_hash(prompt: str, model: str) -> str:

@@ -78,8 +78,8 @@ def test_ingest_with_the_flag_prints_progress_and_without_it_prints_nothing_on_s
     (out_dir / "DOC_chunks.jsonl").write_text(json.dumps({"chunk_id": 0, "text": "x"}) + "\n")
 
     def args(flag):
-        return SimpleNamespace(pdf=str(pdf), output_dir=str(out_dir), extraction_model=None, enrichment_model=None, model=None, max_chunks=None, no_index=False,
-                               skip_enrichment=False, skip_description_gate=False, profile="cybersecurity", ollama_url="http://o", qdrant_url="http://q",
+        return SimpleNamespace(pdf=str(pdf), output_dir=str(out_dir), extraction_model=None, model=None, max_chunks=None, no_index=False,
+                               profile="cybersecurity", ollama_url="http://o", qdrant_url="http://q",
                                progress_json=flag)
 
     for flag, expect in ((False, ""), (True, "indexing")):

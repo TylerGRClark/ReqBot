@@ -52,18 +52,6 @@ def test_cybersecurity_all_required_fields_present():
 # at import time, not an independently hardcoded copy. Kept as explicit tests anyway,
 # as a regression guard against a future accidental re-hardcoding in any one file.
 
-def test_enrich_requirements_domain_tags_match_profile():
-    from pipeline.enrich_requirements import VALID_DOMAIN_TAGS
-    result = load_profile("cybersecurity")
-    assert result["domain_tags"] == VALID_DOMAIN_TAGS
-
-
-def test_enrich_requirements_requirement_types_match_profile():
-    from pipeline.enrich_requirements import VALID_REQUIREMENT_TYPES
-    result = load_profile("cybersecurity")
-    assert result["requirement_types"] == VALID_REQUIREMENT_TYPES
-
-
 def test_core_ask_domain_tags_match_profile():
     from core.ask import VALID_DOMAIN_TAGS
     result = load_profile("cybersecurity")

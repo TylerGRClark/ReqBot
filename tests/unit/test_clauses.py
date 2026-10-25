@@ -86,22 +86,11 @@ def test_lead_in_detection_and_context():
     cl = clauses_of(_unit(text, heading="Chapter 3", ref="3.6"))
     assert [c["text"] for c in cl] == ["Background text. ", "The ISSM will:", "- review logs", "- file reports"]
     assert [c["is_lead_in"] for c in cl] == [False, True, False, False]
-    assert [c["ctx_lead"] for c in cl] == [None, None, "The ISSM will:", "The ISSM will:"]
+    assert all("ctx_lead" not in c for c in cl)  # the labeler's lead-in comes from clause_labeling.document_clauses, not from here
     assert [c["clause_index"] for c in cl] == [0, 1, 2, 3]
     assert {c["heading"] for c in cl} == {"Chapter 3"}
     assert {c["ref"] for c in cl} == {"3.6"}
     assert {c["chunk_id"] for c in cl} == {7}
-
-
-def test_the_context_lead_in_resets_at_the_next_lead_in():
-    text = "The ISSM will:\n- review logs.\nThe ISSO will:\n- file reports"
-    cl = clauses_of(_unit(text))
-    assert [(c["text"], c["ctx_lead"]) for c in cl] == [
-        ("The ISSM will:", None),
-        ("- review logs.", "The ISSM will:"),
-        ("The ISSO will:", None),
-        ("- file reports", "The ISSO will:"),
-    ]
 
 
 def test_chunk_unit_uses_raw_text_parent_header_and_the_last_section_ref():
@@ -124,9 +113,9 @@ def test_a_lead_in_with_a_tier_tag_after_its_colon_is_a_lead_in():
     # Codex P2 on #361 (one case in the library, afi90-802): "options: (T-2)." governs the list under it.
     text = "Training will use one of the following options: (T-2).\n- classroom courses"
     cl = clauses_of(_unit(text))
-    assert [(c["text"], c["is_lead_in"], c["ctx_lead"]) for c in cl] == [
-        ("Training will use one of the following options: (T-2).", True, None),
-        ("- classroom courses", False, "Training will use one of the following options: (T-2)."),
+    assert [(c["text"], c["is_lead_in"]) for c in cl] == [
+        ("Training will use one of the following options: (T-2).", True),
+        ("- classroom courses", False),
     ]
 
 

@@ -62,8 +62,7 @@ Return ONLY valid JSON. No explanation, no markdown, no other text.
 
 QUESTION: {question}"""
 
-# Query-time filter validation (warn-only, see build_query_filter() below) against
-# the cybersecurity profile's vocabulary -- derived from core.profiles rather than
+# Query-rewrite tag vocabulary: the cybersecurity profile's tags -- derived from core.profiles rather than
 # hardcoded so there's exactly one place that defines it (WP-33.1). Not
 # profile-aware for a hypothetical multi-profile corpus: there's no single "active
 # profile" concept at query time the way there is per-document at ingest time, and
@@ -97,42 +96,9 @@ QUESTION: {question}
 ANSWER:"""
 
 
-def normalize_filter_value(value: str) -> str:
-    """Normalize a filter value to canonical form (lowercase, hyphens)."""
-    return value.strip().lower().replace(" ", "-").replace("_", "-")
-
-
-def build_query_filter(
-    domain_tags: list[str] | None,
-    requirement_types: list[str] | None,
-    document_ids: list[str] | None,
-) -> models.Filter | None:
-    """Build a Qdrant filter from CLI arguments."""
+def build_query_filter(document_ids: list[str] | None) -> models.Filter | None:
+    """Build a Qdrant filter from the document list. (Tag and type filters are not applied: the pipeline assigns neither, see retrieve().)"""
     conditions = []
-
-    if domain_tags:
-        normalized = [normalize_filter_value(t) for t in domain_tags]
-        for tag in normalized:
-            if tag not in VALID_DOMAIN_TAGS:
-                log.warning("Unknown domain tag '%s' — will filter anyway", tag)
-        conditions.append(
-            models.FieldCondition(
-                key="domain_tags",
-                match=models.MatchAny(any=normalized),
-            )
-        )
-
-    if requirement_types:
-        normalized = [normalize_filter_value(t) for t in requirement_types]
-        for rt in normalized:
-            if rt not in VALID_REQUIREMENT_TYPES:
-                log.warning("Unknown requirement type '%s' — will filter anyway", rt)
-        conditions.append(
-            models.FieldCondition(
-                key="requirement_type",
-                match=models.MatchAny(any=normalized),
-            )
-        )
 
     if document_ids:
         conditions.append(
@@ -613,7 +579,7 @@ def retrieve(
 
     # The pipeline no longer assigns domain tags or requirement types (docs/PIPELINE_REDESIGN_PLAN.md), so a filter on them would match nothing: ignore it and say so.
     filter_warnings: list[str] = []
-    if (domain_tags or requirement_types) and not _constants.TAG_TYPE_FILTERS_ENABLED:
+    if domain_tags or requirement_types:
         domain_tags, requirement_types = None, None
         filter_warnings.append(_constants.TAG_TYPE_FILTERS_OFF_WARNING)
 
@@ -692,9 +658,7 @@ def retrieve(
     )
 
     # Build filter
-    query_filter = build_query_filter(
-        effective_domain_tags or None, requirement_types, document_ids,
-    )
+    query_filter = build_query_filter(document_ids)
     if query_filter:
         log.info("Applying filters: %s", query_filter)
 

@@ -32,7 +32,6 @@ Unless listed otherwise, service URL flags default to the effective
 | `evidence` | Export a grouped evidence pack. |
 | `checklist` | Export a checklist from processed requirement artifacts. |
 | `questions` | Write draft audit questions for a document's checklist rows (local model; shown by `checklist`). |
-| `kinds` | Label each checklist row with the kind of statement it is (rule-based, no model; written to a side file, nothing else reads it yet). |
 | `reindex` | Rebuild indexes from processed artifacts without extraction. |
 | `index` | Index one requirement JSONL file directly. |
 | `index-context` | Index one source-chunk JSONL file directly. |
@@ -97,15 +96,13 @@ Requirements and source context are indexed automatically after the pipeline.
 |---|---|
 | `--output-dir DIR` | Explicit artifact directory; otherwise create a timestamped run. |
 | `--extraction-model MODEL` | Requirement-finding (Step C) model: it labels each clause of the document (duty, prohibition, permission, not a requirement, unsure); defaults to configured extraction role. The labels were measured with `ornith:35b`. |
-| `--enrichment-model MODEL` | Enrichment (Step D.5) model; defaults to configured enrichment role. |
-| `--model MODEL` | Sets both roles; when supplied, wins over individual role flags. |
+| `--model MODEL` | Model for requirement finding; when supplied, wins over `--extraction-model`. |
 | `--profile NAME` | Domain profile; default `cybersecurity`. |
 | `--max-chunks N` | Label only the first N chunks in requirement finding (Step C), for inspection/testing; produces a partial corpus. |
 | `--no-index` | Write artifacts without indexing. |
 | `--replace` | Replace this document in the search index: once the new run is fully indexed and every point is verified present, remove the document's earlier points (matched by its PDF name) that the new run no longer has. Never before, so the document is never missing from search; a failure leaves the old points and a retry converges. Needs the whole document: not with `--max-chunks` or `--no-index`. Without it ingest only adds and overwrites, as before. |
 | `--progress-json` | Also print one JSON progress line per step on stdout, for the job runner (`{"step":"finding","done":120,"total":427}`); the log stays on stderr. Without it the output is unchanged. |
-| `--skip-enrichment` | Accepted, with no effect: enrichment (descriptions, tags, types) is switched off. |
-| `--skip-description-gate` | Accepted, with no effect: the description check is switched off. |
+| `--enrichment-model`, `--skip-enrichment`, `--skip-description-gate` | Accepted, with no effect: enrichment and the description check no longer exist. |
 | `--ollama-url URL` | Override the Ollama connection. |
 | `--qdrant-url URL` | Override the Qdrant connection. |
 
@@ -117,13 +114,12 @@ there is no CLI `ingest --skip-to` flag.
 
 ```bash
 reqbot batch /path/to/pdfs
-reqbot batch /path/to/pdfs --skip-enrichment
+reqbot batch /path/to/pdfs --extraction-model ornith:35b
 ```
 
 Processes immediate `*.pdf` and `*.PDF` files in the directory, not recursive
-subdirectories. Accepts `--extraction-model`, `--enrichment-model`, `--model`,
-`--skip-enrichment`, `--skip-description-gate`, `--ollama-url`, and
-`--qdrant-url`, with the same role/URL behavior as `ingest`.
+subdirectories. Accepts `--extraction-model`, `--model`, `--ollama-url`, and
+`--qdrant-url` (and the three no-effect flags listed under `ingest`), with the same role/URL behavior as `ingest`.
 
 Unlike `ingest`, it has no `--profile`, `--output-dir`, `--max-chunks`, or
 `--no-index` option. It uses the default profile and indexes each completed PDF.
@@ -229,14 +225,6 @@ The same command then adds a rough criticality rating, a second model call per r
 
 With `--cleanup` (off by default) the command also flags rows that are probably not requirements: a third model call per row, written to `<doc>_cleanup.jsonl`. A flag only; no row is removed. The model sees the row's original quote and the whole chunk it came from and answers YES or NO; only a clear NO flags the row, so an error never flags anything. The flag is added to the existing "Criticality (rough)" column as a suffix, for example `High · junk`, or `junk` alone when the row has no rating; one filter covers both and the stored rating is never changed. `--cleanup-model` (or the `cleanup_model` setting, `REQBOT_CLEANUP_MODEL`) picks the model; unset means the main model, and a larger model flags about twice as much (35B: 56.5% of junk rows flagged, 0 of 258 real rows; Llama 8B: about 21%). Junk left after cleanup is still about 1 row in 10. Checklists made before any cleanup run are unchanged. Plan and evidence: [CLEANUP_FLAG_PLAN.md](CLEANUP_FLAG_PLAN.md).
 
-## kinds
-
-```bash
-reqbot kinds --doc policy
-```
-
-Labels each checklist row with the kind of statement it is (a duty with a named party, a command, a recommendation, a permission, a prohibition, an exemption, a definition or description, a statement of who the document applies to, a pointer, a table row, text in a form template, cover-page text, or `unknown`) and writes the labels, the rule that fired and a few tags (`refers_back`, `list_item`, `fragment`, `front_matter`) to `<doc>_kinds.jsonl`. A row whose kind comes from where it sits (a table row, form-template text, cover-page text) also carries `kind_by_wording`: what its words alone would make it beside the document's requirements. It reads the same rows as `checklist`, uses wording rules and no model, and changes nothing else: this is stage 1 of the requirement-kind proposal (docs/PIPELINE_REDESIGN_PLAN.md, section 10), and no reader uses the labels yet.
-
 ## checklist
 
 ```bash
@@ -265,7 +253,7 @@ reqbot reindex --requirements-only
 ```
 
 Reads selected requirement artifacts and matching chunks beneath configured
-`processed_dir`. No extraction or enrichment is rerun. Uses the current
+`processed_dir`. No extraction is rerun. Uses the current
 embedding model. Accepts `--requirements-only`, `--ollama-url URL`, and
 `--qdrant-url URL`.
 

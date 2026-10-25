@@ -611,7 +611,7 @@ def test_the_models_are_fixed_when_the_job_is_queued(tmp_path):
     store = _store(tmp_path)
     job = js.enqueue_ingest(pdf, store=store, cfg=cfg)
     argv = job["argv"]
-    assert argv[argv.index("--extraction-model") + 1] == "llama3.1:8b" and argv[argv.index("--enrichment-model") + 1] == "llama3.1:8b"
+    assert argv[argv.index("--extraction-model") + 1] == "llama3.1:8b" and "--enrichment-model" not in argv
     assert job["env"] == {"REQBOT_EMBEDDING_MODEL": "nomic-embed-text"}
     cfg.embedding_model = "a-different-model"  # config changes while the job waits
     cfg.extraction_model = "another-model"

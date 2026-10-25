@@ -91,10 +91,11 @@ def run_doc(doc: str, arm: str, out: Path, ollama_url: str, model: str) -> None:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--arm", required=True, choices=sorted(ARMS))
+    ap.add_argument("--docs", nargs="*", default=None)
     ap.add_argument("--out", default=str(Path.home() / "reqbot-work/scratch/label_ctx"))
     a = ap.parse_args()
     cfgf = json.load(open(Path.home() / ".config/reqbot/config.json"))
-    for doc in DOCS:
+    for doc in (a.docs or DOCS):
         run_doc(doc, a.arm, Path(a.out), cfgf["ollama_url"], cfgf["extraction_model"])
     return 0
 

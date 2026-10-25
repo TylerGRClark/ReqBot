@@ -220,7 +220,7 @@ def build(
 
     document_ids = document_ids or []
     filter_warnings: list[str] = []
-    if (domain_tags or requirement_types) and not _const.TAG_TYPE_FILTERS_ENABLED:
+    if domain_tags or requirement_types:
         domain_tags, requirement_types = [], []
         filter_warnings.append(_const.TAG_TYPE_FILTERS_OFF_WARNING)
     domain_tags = domain_tags or []
