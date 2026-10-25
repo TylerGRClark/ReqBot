@@ -46,7 +46,7 @@ This page maps implementation ownership and change dependencies for contributors
 | `pipeline/clauses.py` | Requirement finding, part 1: cuts a chunk's raw text into clauses (sentences, list and table lines) with exact offsets, by rule. |
 | `pipeline/clause_labeling.py` | Requirement finding, part 2: the frozen labeling prompt (`pipeline/prompts/clause_label_v3.txt`), four clauses per Ollama call, resume ledger, one row per clause not labeled NOT_REQUIREMENT, source reference by rule. |
 | `pipeline/parse_and_normalize.py` | Normalizing and checking: refuses an old-format extraction file, checks each clause against its offsets, junk filters, deduplication, the explained layer, document/requirement identity. |
-| `pipeline/sentence_expand.py` | Sentence helpers (tidy, sentence split, completeness) and the explained layer: the clause without its list marker, with its lead-in from `pipeline/lead_in.py`. |
+| `pipeline/sentence_expand.py` | Sentence helpers (tidy, sentence split, completeness) and the explained layer: the clause without its list marker, with its lead-in from `pipeline/lead_in.py`, or for a table row its caption and column headers from `pipeline/table_header.py`. |
 | `pipeline/aggregate_and_export.py` | Totals and final file. |
 | `pipeline/embed_and_index.py` | Search indexing: dense/sparse requirement vectors, Qdrant schema and payloads. |
 | `pipeline/embed_context_index.py` | Search indexing: dense/sparse context vectors and linked chunk identity. |

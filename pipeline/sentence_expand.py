@@ -94,10 +94,15 @@ def explain_records(records: list[dict], raw_text_by_chunk: dict, section_by_chu
     - the sentence: the clause with a leading list marker or paragraph number taken off ("a. Identify ..." -> "Identify ...");
     - a list item gets the lead-in that governs it in front ("AFMC will: Identify ..."): the nearest earlier line ending with a colon, in the same chunk or, when the list began
       there and the previous chunk is in the same section, at the end of the previous chunk (pipeline/lead_in.find_lead_in, unchanged).
+    - a row from a table grid gets its table's caption and column headers in front of each cell ("Table 3-1 Overlay parameters. ID: CP-9(1) | Parameter: ... | Value: ..."), built
+      from the table's own text by pipeline/table_header.py; it replaces the shown text only, as a `table_context` part in front of the unchanged `sentence` part. A table with no
+      header row, a row whose cells do not line up with the header, or a clause that is not a whole grid line is left as it was.
     Records are copied, one out for each one in (no merging). Returns (records, counts)."""
     from pipeline import lead_in as _lead_in  # imported here: lead_in uses this module's helpers
+    from pipeline import table_header as _table_header
     out: list[dict] = []
-    counts: dict = {"marker_removed": 0, "lead_in_attached": 0}
+    counts: dict = {"marker_removed": 0, "lead_in_attached": 0, "table_context_attached": 0}
+    captions = None  # resolved lazily: only a document with grid rows needs it
     for rec in records:
         root = (rec.get("source_quote") or "").strip()
         lead_match = _LEADING_NUMBER.match(root)
@@ -120,9 +125,21 @@ def explain_records(records: list[dict], raw_text_by_chunk: dict, section_by_chu
             notes.append("lead-in attached from the line above that ends with a colon")
             counts["lead_in_attached"] += 1
             parts.append({"kind": "lead_in", "text": lead, "origin": "rule"})
+        shown = tidy((lead + " " if lead else "") + text)
+        table_text = None
+        a_start, a_end = rec.get("anchor_start"), rec.get("anchor_end")
+        if not lead and root.startswith("|") and isinstance(a_start, int) and isinstance(a_end, int) and not isinstance(a_start, bool) and 0 <= a_start < a_end <= len(raw) and tidy(raw[a_start:a_end]) == root:
+            if captions is None:
+                captions = _table_header.resolved_captions([{"chunk_id": k, "raw_text": v} for k, v in sorted(raw_text_by_chunk.items(), key=lambda kv: (not isinstance(kv[0], int), kv[0] if isinstance(kv[0], int) else 0))])
+            table_text = _table_header.table_context_text(raw, a_start, a_end, captions.get((cid, _table_header.table_start_line(raw, a_start))))
+        if table_text:
+            notes.append("table caption and column headers attached")
+            counts["table_context_attached"] += 1
+            parts.append({"kind": "table_context", "text": table_text, "origin": "rule"})
+            shown = table_text
         parts.append({"kind": "sentence", "text": text, "origin": "rule"})
         new = dict(rec)
-        new["explained_text"] = tidy((lead + " " if lead else "") + text)
+        new["explained_text"] = shown
         new["explained_parts"] = parts
         new["explain_notes"] = notes
         out.append(new)

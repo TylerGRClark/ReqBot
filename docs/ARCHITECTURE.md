@@ -199,7 +199,10 @@ flagged `labeled_unsure` on the checklist).
 The explained text is built beside the root (`pipeline/sentence_expand.explain_records`): the clause
 with its list marker taken off, and, for a list item, the lead-in line it belongs to in front
 (`pipeline/lead_in.py`), stored in `explained_text`, with its pieces in `explained_parts` and a short
-note of what was done in `explain_notes`. `source_quote` is never replaced.
+note of what was done in `explain_notes`. A row from a table grid also gets its table's caption and
+column headers from the table's own text (`pipeline/table_header.py`): `explained_text` reads
+"Table E-1: Title. ID: CP-9(1) | Control Text: ... | Defined Value: ...", and `explained_parts` holds a
+`table_context` part in front of the unchanged `sentence` part. `source_quote` is never replaced.
 
 Records written before the switch keep their old fields (`parent_stem`, `embedding_text`,
 `merged_roots`, anchor statuses other than exact); readers still accept them, but normalizing

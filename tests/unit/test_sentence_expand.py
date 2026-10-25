@@ -56,7 +56,7 @@ def test_the_explained_sentence_is_the_clause_without_its_marker_and_the_root_ne
     assert [r["explained_text"] for r in out] == ["Appoint a monitor.", "Enhance baseline standards in accordance with DoDI 8500.01.",
                                                   "Units shall retain logs for one year (T-2)."]
     assert out[0]["explain_notes"] == ["list number or dash taken off"] and out[2]["explain_notes"] == []
-    assert counts == {"marker_removed": 2, "lead_in_attached": 0}
+    assert counts == {"marker_removed": 2, "lead_in_attached": 0, "table_context_attached": 0}
 
 
 def test_a_list_item_gets_its_lead_in_in_front():

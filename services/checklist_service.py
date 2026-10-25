@@ -128,7 +128,10 @@ def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs, doc_
     cite0 = table_ref or checklist_audit.citation(source_ref, "", section_title_path, locate_text, origin)  # the paragraph number as extracted or as the quote opens; inferred ones need the passage
     numbered = None if table_ref else checklist_audit.applies_to_numbered(cite0, hmap, section_title_path)
     applies = "" if table_ref else (numbered if numbered is not None else checklist_audit.applies_to(section_title_path))
-    flags = checklist_audit.item_flags(source_quote, source_ref, applies, verbs)
+    # the hints are judged on the row itself: a table's caption and column headers put in front of it for the reader (explained_parts kind table_context) must not change them
+    has_table_context = any(p.get("kind") == "table_context" for p in (req.get("explained_parts") or []))
+    judged = locate_text if has_table_context else source_quote
+    flags = checklist_audit.item_flags(judged, source_ref, applies, verbs)
     chunk_id = req.get("chunk_id")
     chunk = chunks.get(chunk_id)
     prev_chunk = chunks.get(chunk_id - 1) if isinstance(chunk_id, int) else None
@@ -143,7 +146,7 @@ def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs, doc_
         numbered = checklist_audit.applies_to_numbered(cite, hmap, section_title_path)
         if numbered is not None:
             applies = numbered
-            flags = checklist_audit.item_flags(source_quote, source_ref, applies, verbs)
+            flags = checklist_audit.item_flags(judged, source_ref, applies, verbs)
     if req.get("clause_label") == "UNSURE":
         flags = [*flags, "labeled_unsure"]  # the labeler could not decide (or its answer could not be read): the row is kept for a reader to check
     if not cite:  # nothing numbered to cite: where the row sits, read from the document ("Front matter", "Figure A3.1")
