@@ -20,6 +20,11 @@ def load(d):
     return runs
 
 
+def build_seconds(d, arm):
+    f = Path(d) / f"build_{arm}.json"
+    return json.loads(f.read_text())["build_seconds"] if f.exists() else None
+
+
 def scored(run):
     return [r for r in run["per_query"] if r.get("shape") != "zero" and "error" not in r and r.get("relevant_count", 0) > 0]
 
@@ -61,10 +66,15 @@ def main(d):
             zero_ok = st.mean(a["zero_returned"]) <= st.mean(c["zero_returned"]) + 1.0
             r1 = d_mrr >= max(0.02, rng["mrr"]) and d_h5 >= max(0.02, rng["hit@5"])
             r2 = all(x >= -0.02 for x in segworse.values())
+            bc, ba = build_seconds(d, "control"), build_seconds(d, arm)
+            # PREREG12 condition 4: build time at most 25% above control. Unrecorded = not met.
+            cost_ok = bc is not None and ba is not None and ba <= 1.25 * bc
             equiv = abs(d_mrr) <= 0.02 and abs(d_h5) <= 0.02 and r2
             verdicts[arm] = {"d_mrr": round(d_mrr, 4), "d_hit5": round(d_h5, 4), "seg_delta_mrr": segworse,
                              "rule1_gain": r1, "rule2_no_segment_worse": r2, "rule3_zero": zero_ok,
-                             "pass": bool(r1 and r2 and zero_ok), "equivalent": bool(equiv and zero_ok)}
+                             "rule4_build_cost": cost_ok, "build_seconds": [bc, ba],
+                             "pass": bool(r1 and r2 and zero_ok and cost_ok),
+                             "equivalent": bool(equiv and zero_ok and cost_ok)}
         print(json.dumps(verdicts, indent=1))
     Path(d, "summary.json").write_text(json.dumps({"{}|{}".format(*k): v for k, v in out.items()} | {"verdicts": verdicts}, indent=1))
 

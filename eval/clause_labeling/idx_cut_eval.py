@@ -35,6 +35,13 @@ def main():
     a = ap.parse_args()
     from core import config
     cfg = config.load()
+    # run_harness uses core.ask's built-in rewrite model and the default embedding model, so
+    # a customised config would score a different search than production. Refuse to run then.
+    assert cfg.rewrite_model == ASK.DEFAULT_REWRITE_MODEL, (
+        f"configured rewrite_model {cfg.rewrite_model!r} differs from the harness default "
+        f"{ASK.DEFAULT_REWRITE_MODEL!r}; the harness would not measure production search")
+    assert cfg.embedding_model == "nomic-embed-text", (
+        f"configured embedding_model {cfg.embedding_model!r} differs from the harness default")
     coll = f"idxtest_{a.arm}"
     assert coll.startswith("idxtest_")
     ASK.COLLECTION_NAME = coll
