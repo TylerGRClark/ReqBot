@@ -34,6 +34,10 @@ def means(run, shape=None):
     return {m: (sum(r[m] for r in q) / len(q) if q else None) for m in M}, len(q)
 
 
+def scored_ids(rs):
+    return [frozenset(r["query_id"] for r in scored(run)) for run in rs]
+
+
 def main(d):
     runs = load(d)
     out = {}
@@ -69,12 +73,17 @@ def main(d):
             bc, ba = build_seconds(d, "control"), build_seconds(d, arm)
             # PREREG12 condition 4: build time at most 25% above control. Unrecorded = not met.
             cost_ok = bc is not None and ba is not None and ba <= 1.25 * bc
+            # A failed query drops out of the denominators, so an arm could pass on easier queries.
+            # Require no failures and the same scored queries in every control and arm run.
+            ids = scored_ids(runs[("prod", "control")]) + scored_ids(runs[("prod", arm)])
+            complete = c["failed"] == 0 and a["failed"] == 0 and len(set(ids)) == 1
             equiv = abs(d_mrr) <= 0.02 and abs(d_h5) <= 0.02 and r2
             verdicts[arm] = {"d_mrr": round(d_mrr, 4), "d_hit5": round(d_h5, 4), "seg_delta_mrr": segworse,
                              "rule1_gain": r1, "rule2_no_segment_worse": r2, "rule3_zero": zero_ok,
                              "rule4_build_cost": cost_ok, "build_seconds": [bc, ba],
-                             "pass": bool(r1 and r2 and zero_ok and cost_ok),
-                             "equivalent": bool(equiv and zero_ok and cost_ok)}
+                             "complete_runs": complete,
+                             "pass": bool(r1 and r2 and zero_ok and cost_ok and complete),
+                             "equivalent": bool(equiv and zero_ok and cost_ok and complete)}
         print(json.dumps(verdicts, indent=1))
     Path(d, "summary.json").write_text(json.dumps({"{}|{}".format(*k): v for k, v in out.items()} | {"verdicts": verdicts}, indent=1))
 
