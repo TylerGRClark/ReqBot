@@ -376,8 +376,14 @@ def main() -> None:
                          help="WP-43: candidate pool size before reranking (default 100)")
     parser.add_argument("--rerank-model", default=DEFAULT_RERANK_MODEL,
                          help=f"WP-43: FlashRank model to rerank with (default {DEFAULT_RERANK_MODEL})")
+    parser.add_argument("--variant-cache", default=None,
+                        help="JSON file that freezes the model-written query rewrite and HyDE text, so runs "
+                             "being compared use identical variants (written on first use, then reused)")
     parser.add_argument("--output-dir", default=str(_ROOT / "eval" / "spike_results" / "wp_37_1"))
     args = parser.parse_args()
+    if args.variant_cache:
+        from eval.variant_cache import install  # noqa: E402
+        install(args.variant_cache)
 
     if args.top_k < max(K_VALUES):
         parser.error(
