@@ -76,7 +76,12 @@ def row_with_headers(raw: str, start: int, end: int):
     if not line.lstrip().startswith("|") or raw[line_start:start].strip() or not clause.startswith("|") or not flat.startswith(clause) or SEP.match(line):
         return None
     a, _ = table_of(lines, idx)
-    sep = next(i for i in range(a, idx + 1) if SEP.match(lines[i]))
+    sep = next((i for i in range(a, idx + 1) if SEP.match(lines[i])), None)
+    if sep is None:
+        # idx sits before the table's first separator row (e.g. a duplicated/garbled
+        # header-looking line Docling repeated above the real one) -- not a data row
+        # under any header yet, so there is nothing to attach here.
+        return None
     headers, cells = _split_row(lines[sep - 1]), _split_row(clause)
     whole = clause == flat
     if (whole and len(headers) != len(cells)) or len(cells) > len(headers):

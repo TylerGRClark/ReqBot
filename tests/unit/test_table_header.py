@@ -1,5 +1,6 @@
 """PROPOSED (PREREG11): a table grid line is labeled with its table's caption and column headers. Expected values are written out by hand."""
 from pipeline import clause_labeling as cl
+from pipeline.table_header import row_with_headers
 
 TABLE = ("Table 2.1. End User Device Refresh Rate\n\n"
          "| Device Type | Recommended |\n"
@@ -71,3 +72,13 @@ def test_a_captionless_first_table_gets_no_caption_from_a_later_table_in_the_sam
     got = _ctx([{"chunk_id": 0, "raw_text": raw}])
     assert got["| Laptop | 5 years |"] == "Column headers: Device Type | Recommended"
     assert got["| Rack | 7 years |"] == "Table 2.2. Server Refresh Rate. Column headers: Device Type | Recommended"
+
+
+def test_a_grid_line_above_the_real_separator_gets_none_instead_of_crashing():
+    # Docling can repeat/duplicate a header-looking line above the table's real separator
+    # at a chunk boundary (see this module's docstring). A clause on that stray line is
+    # before any separator in range, which must give None, not raise StopIteration.
+    raw = "| dup header |\n| real header |\n|---|\n| value |\n"
+    start = 0
+    end = raw.find("\n")
+    assert row_with_headers(raw, start, end) is None
