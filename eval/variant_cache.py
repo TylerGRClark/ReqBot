@@ -15,11 +15,11 @@ from core import ask
 
 def install(path) -> None:
     path = Path(path)
-    cache = json.loads(path.read_text()) if path.exists() else {}
+    cache = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
 
     def save() -> None:
         tmp = path.with_suffix(".tmp")
-        tmp.write_text(json.dumps(cache, indent=1, sort_keys=True))
+        tmp.write_text(json.dumps(cache, indent=1, sort_keys=True), encoding="utf-8")
         tmp.replace(path)
 
     def freeze(name: str, original):
