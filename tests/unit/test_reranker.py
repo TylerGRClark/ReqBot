@@ -225,3 +225,24 @@ def test_parent_child_context_fragment_scores_using_governing_clause(monkeypatch
 
     assert fragment_result[0]["rerank_score"] == pytest.approx(0.0)
     assert reconstructed_result[0]["rerank_score"] == pytest.approx(1.0)
+
+
+def test_hf_cross_encoder_scores_requirement_text_and_orders_by_score(monkeypatch):
+    seen = {}
+
+    def fake_scores(query, candidates, model_name):
+        seen["args"] = (query, [c["source_quote"] for c in candidates], model_name)
+        return [0.1, 2.5, -1.0]
+
+    monkeypatch.setattr(reranker, "_hf_scores", fake_scores)
+    cands = [{"source_quote": "a"}, {"source_quote": "b"}, {"source_quote": "c"}]
+    out = reranker.rerank("q", cands, top_k=2, model_name="BAAI/bge-reranker-v2-m3")
+    assert [c["source_quote"] for c in out] == ["b", "a"]
+    assert out[0]["rerank_score"] == 2.5
+    assert seen["args"] == ("q", ["a", "b", "c"], "BAAI/bge-reranker-v2-m3")
+
+
+def test_a_model_name_without_a_slash_still_uses_flashrank(monkeypatch):
+    monkeypatch.setattr(reranker, "_hf_scores", lambda *a: (_ for _ in ()).throw(AssertionError("must not run")))
+    assert reranker._is_hf_model("ms-marco-TinyBERT-L-2-v2") is False
+    assert reranker._is_hf_model("BAAI/bge-reranker-v2-m3") is True

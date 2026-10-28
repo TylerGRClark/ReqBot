@@ -23,6 +23,52 @@ log = logging.getLogger(__name__)
 DEFAULT_RERANK_MODEL = "ms-marco-TinyBERT-L-2-v2"
 
 _rankers: dict = {}
+_hf_models: dict = {}
+
+# A Hugging Face cross-encoder (any model id with a "/", e.g. "BAAI/bge-reranker-v2-m3") is scored
+# through transformers instead of FlashRank. Measured 2026-10-28 on three query sets (see
+# notes/search_overnight in the agent docs): the 568M bge-reranker-v2-m3 over the hybrid list raised MRR by
+# +0.07 to +0.10 where the small FlashRank model gave none. Opt-in like everything here: retrieve(rerank=True).
+HF_MAX_LENGTH = 256
+HF_BATCH = 16
+
+
+def _is_hf_model(model_name: str) -> bool:
+    return "/" in model_name
+
+
+def _get_hf(model_name: str):
+    """(tokenizer, model) for a Hugging Face cross-encoder, loaded once per process."""
+    if model_name not in _hf_models:
+        try:
+            from transformers import AutoModelForSequenceClassification, AutoTokenizer
+        except ImportError as exc:
+            raise ImportError(
+                "A Hugging Face reranker needs transformers and torch (installed with docling)."
+            ) from exc
+        _hf_models[model_name] = (
+            AutoTokenizer.from_pretrained(model_name),
+            AutoModelForSequenceClassification.from_pretrained(model_name).eval(),
+        )
+    return _hf_models[model_name]
+
+
+def _hf_scores(query: str, candidates: list[dict], model_name: str) -> list[float]:
+    """Relevance logit for (query, requirement text as the reader sees it) per candidate."""
+    import torch
+
+    from core.display import requirement_text
+
+    tokenizer, model = _get_hf(model_name)
+    texts = [requirement_text(c) for c in candidates]
+    scores: list[float] = []
+    with torch.no_grad():
+        for start in range(0, len(texts), HF_BATCH):
+            batch = texts[start:start + HF_BATCH]
+            enc = tokenizer([query] * len(batch), batch, padding=True, truncation=True,
+                            max_length=HF_MAX_LENGTH, return_tensors="pt")
+            scores.extend(model(**enc).logits.view(-1).tolist())
+    return scores
 
 
 def _get_ranker(model_name: str = DEFAULT_RERANK_MODEL):
@@ -86,6 +132,11 @@ def rerank(
     """
     if not candidates:
         return []
+
+    if _is_hf_model(model_name):
+        for c, score in zip(candidates, _hf_scores(query, candidates, model_name)):
+            c["rerank_score"] = float(score)
+        return sorted(candidates, key=lambda c: c["rerank_score"], reverse=True)[:top_k]
 
     # _get_ranker() first -- it's the seam that raises the clear "install the
     # 'rerank' extra" error. Importing RerankRequest before it would instead
