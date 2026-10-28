@@ -6,11 +6,19 @@ differently. For an A/B test of a ranking change that noise is not the thing bei
 install() wraps those two calls in core.ask with a JSON file keyed by (call, model, question):
 the first run writes each variant, every later run reads it back. Production code is untouched;
 only eval scripts that call install() are affected. Delete the file to draw fresh variants.
+A failed or empty generation is not saved, so a transient Ollama error cannot be frozen into every later run.
+Latency: the run that fills the cache includes the generation time; compare latencies only between runs that reuse it.
 """
 import json
 from pathlib import Path
 
 from core import ask
+
+
+def _usable(name: str, question: str, value) -> bool:
+    if name == "hyde":
+        return bool(value)  # None or empty: the model call failed or returned nothing
+    return bool(value) and value.get("expanded_query") != question  # rewrite_query's failure fallback echoes the question
 
 
 def install(path) -> None:
@@ -25,10 +33,13 @@ def install(path) -> None:
     def freeze(name: str, original):
         def wrapped(question, model, *args, **kwargs):
             key = json.dumps([name, model, question])
-            if key not in cache:
-                cache[key] = original(question, model, *args, **kwargs)
+            if key in cache:
+                return cache[key]
+            value = original(question, model, *args, **kwargs)
+            if _usable(name, question, value):  # a failed generation is returned but never frozen
+                cache[key] = value
                 save()
-            return cache[key]
+            return value
         return wrapped
 
     ask.rewrite_query = freeze("rewrite", ask.rewrite_query)

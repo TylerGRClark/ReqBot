@@ -30,3 +30,14 @@ def test_variants_are_drawn_once_then_reused_across_runs(tmp_path, monkeypatch):
     assert len(calls) == 2  # no new model calls
     assert ask.rewrite_query("q2", "m", None) != first[0]  # a new question still draws once
     assert len(calls) == 3
+
+
+def test_a_failed_generation_is_not_frozen(tmp_path, monkeypatch):
+    outcomes = iter([None, "good hypothesis"])
+    monkeypatch.setattr(ask, "rewrite_query", lambda q, m, c: {"expanded_query": q, "control_ids": [], "domain_tags": []})
+    monkeypatch.setattr(ask, "generate_hyde_hypothesis", lambda q, m, c, **k: next(outcomes))
+    variant_cache.install(tmp_path / "v.json")
+    assert ask.generate_hyde_hypothesis("q", "m", None) is None  # failed: returned, not saved
+    assert ask.generate_hyde_hypothesis("q", "m", None) == "good hypothesis"  # drawn again
+    assert ask.generate_hyde_hypothesis("q", "m", None) == "good hypothesis"  # now frozen
+    assert ask.rewrite_query("q", "m", None)["expanded_query"] == "q"  # echo of the question = failure fallback
