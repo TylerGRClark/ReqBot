@@ -144,3 +144,19 @@ def test_rerank_true_result_order_and_trim_follows_reranker():
 
     assert [r["requirement_id"] for r in result["results"]] == ["REQ-3", "REQ-0"]
     assert result["total"] == 2
+
+
+def test_an_unreachable_reranker_service_falls_back_to_the_original_order_with_a_warning():
+    hits = [_fake_hit("REQ-1", score=0.5), _fake_hit("REQ-2", score=0.4), _fake_hit("REQ-3", score=0.3)]
+    with patch("core.ask.rerank_candidates", side_effect=OSError("connection refused")):
+        result, _ = _run_retrieve(hits, rerank=True, rerank_model="http://reranker:8732", top_k=2)
+    assert [r["requirement_id"] for r in result["results"]] == ["REQ-1", "REQ-2"]
+    assert any("re-ranker" in w for w in result["warnings"])
+
+
+def test_a_local_model_failure_is_not_swallowed():
+    import pytest
+    hits = [_fake_hit("REQ-1", score=0.5)]
+    with patch("core.ask.rerank_candidates", side_effect=ImportError("needs the rerank extra")):
+        with pytest.raises(ImportError):
+            _run_retrieve(hits, rerank=True)

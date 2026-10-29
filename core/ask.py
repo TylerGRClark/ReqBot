@@ -717,15 +717,26 @@ def retrieve(
         # WP-43: skip the min_score filter entirely (see retrieve()'s docstring) --
         # reorder/trim the fused pool by the reranker's own score instead.
         candidates = [{"score": h.score, **h.payload} for h in hits]
-        reranked = rerank_candidates(dense_query, candidates, top_k, model_name=rerank_model)
-        hits_by_id = {h.payload.get("requirement_id"): h for h in hits}
-        new_hits = []
-        for r in reranked:
-            h = hits_by_id[r["requirement_id"]]
-            h.payload["rerank_score"] = r["rerank_score"]
-            new_hits.append(h)
-        hits = new_hits
-        log.info("Reranked %d candidate(s), kept top %d", len(candidates), len(hits))
+        try:
+            reranked = rerank_candidates(dense_query, candidates, top_k, model_name=rerank_model)
+        except Exception as exc:
+            # A reranker service that is down must not take search down with it.
+            if not rerank_model.startswith(("http://", "https://")):
+                raise
+            log.warning("Reranker service unreachable (%s); returning unreranked results", exc)
+            filter_warnings.append("The re-ranker service could not be reached, so these results are in the original search order.")
+            reranked = None
+        if reranked is not None:
+            hits_by_id = {h.payload.get("requirement_id"): h for h in hits}
+            new_hits = []
+            for r in reranked:
+                h = hits_by_id[r["requirement_id"]]
+                h.payload["rerank_score"] = r["rerank_score"]
+                new_hits.append(h)
+            hits = new_hits
+            log.info("Reranked %d candidate(s), kept top %d", len(candidates), len(hits))
+        else:
+            hits = hits[:top_k]
     else:
         # Score threshold — drop results below min_score, then trim to top_k.
         # Filtering after fusion (not before) ensures the threshold acts on final RRF scores.

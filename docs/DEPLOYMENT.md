@@ -191,7 +191,7 @@ Run these from the repository root, in the same activated environment:
 | `pip install ".[remote]"` | Remote synthesis provider SDKs. |
 | `pip install ".[mcp]"` | MCP server support: stdio for local AI clients and the HTTP door for other machines. The Docker image includes it. |
 | `pip install ".[grounding-check]"` | MiniCheck, used only by the evaluation scripts `eval/entailment_spike.py` and `eval/threshold_sweep.py` (the pipeline's description check that used it was removed). |
-| `pip install ".[rerank]"` | Experimental reranker for programmatic/evaluation use; no public CLI switch. |
+| `pip install ".[rerank]"` | FlashRank reranker for programmatic/evaluation use. The supported reranker is the optional `reranker` Compose service below. |
 | `pip install ".[dev]"` | Test and lint tools. |
 
 Docling is a base dependency and the only current PDF parsing path. There is no
@@ -370,3 +370,7 @@ from the internet, the address must be reachable from there, which is a decision
 for your network team; ReqBot's codes are not a substitute for their gateway.
 
 For problems after installation, see the [operations runbook](OPERATIONS.md).
+
+### Optional re-ranker service
+
+The `reranker` service in `docker-compose.example.yml` runs a cross-encoder (`BAAI/bge-reranker-v2-m3`) that re-orders the top 50 search results. Start it with `docker compose --profile rerank up -d`, then set `REQBOT_RERANK_URL` (or `rerank_url` in `config.json`) to its address, for example `http://reranker:8732`. Leave it unset and search behaves exactly as before. If the service is down, search returns the normal order with a warning. It needs a GPU to be fast (about 0.3 seconds per search on an RTX 3070); the model downloads on first start. The service has no authentication, so keep it on a private network.

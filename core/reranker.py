@@ -32,6 +32,33 @@ _hf_models: dict = {}
 HF_MAX_LENGTH = 256
 HF_BATCH = 16
 
+# A model_name that is itself a URL (e.g. "http://192.168.0.218:8732") routes to a remote
+# rerank_server.py instance instead of loading the cross-encoder in this process -- for
+# running the same bge-reranker-v2-m3 scoring on a machine with a GPU when this one has
+# none. See notes/search_overnight 2026-10-29: CPU-only scoring was too slow to ship.
+REMOTE_TIMEOUT_SECONDS = 30
+
+
+def _is_remote_model(model_name: str) -> bool:
+    return model_name.startswith("http://") or model_name.startswith("https://")
+
+
+def _remote_scores(query: str, candidates: list[dict], base_url: str) -> list[float]:
+    """Relevance scores from a remote rerank_server.py instance's /rerank endpoint."""
+    import json
+    import urllib.request
+
+    from core.display import requirement_text
+
+    texts = [requirement_text(c) for c in candidates]
+    payload = json.dumps({"query": query, "texts": texts}).encode("utf-8")
+    req = urllib.request.Request(
+        base_url.rstrip("/") + "/rerank", data=payload, headers={"Content-Type": "application/json"},
+    )
+    with urllib.request.urlopen(req, timeout=REMOTE_TIMEOUT_SECONDS) as resp:
+        body = json.loads(resp.read())
+    return body["scores"]
+
 
 def _is_hf_model(model_name: str) -> bool:
     return "/" in model_name
@@ -132,6 +159,11 @@ def rerank(
     """
     if not candidates:
         return []
+
+    if _is_remote_model(model_name):
+        for c, score in zip(candidates, _remote_scores(query, candidates, model_name)):
+            c["rerank_score"] = float(score)
+        return sorted(candidates, key=lambda c: c["rerank_score"], reverse=True)[:top_k]
 
     if _is_hf_model(model_name):
         for c, score in zip(candidates, _hf_scores(query, candidates, model_name)):

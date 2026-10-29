@@ -43,6 +43,9 @@ _DEFAULTS: dict = {
     "remote_provider": "anthropic",
     "remote_model": "claude-sonnet-4-6",
     "api_key_env": "ANTHROPIC_API_KEY",
+    # Base URL of a reranker service (rerank_server/, the optional "reranker" Compose service).
+    # None = search is unchanged. When set, search re-orders its top 50 with a cross-encoder.
+    "rerank_url": None,
 }
 
 _ENV_MAP: dict[str, str] = {
@@ -58,6 +61,7 @@ _ENV_MAP: dict[str, str] = {
     "min_score": "REQBOT_MIN_SCORE",
     "processed_dir": "REQBOT_PROCESSED_DIR",
     "synthesis_backend": "REQBOT_SYNTHESIS_BACKEND",
+    "rerank_url": "REQBOT_RERANK_URL",
 }
 
 
@@ -89,6 +93,7 @@ class ReqBotConfig:
     remote_provider: str = "anthropic"
     remote_model: str = "claude-sonnet-4-6"
     api_key_env: str = "ANTHROPIC_API_KEY"
+    rerank_url: Optional[str] = None
     authority: dict = field(default_factory=dict)  # source_pdf -> AuthorityEntry
 
     def processed_dir_path(self) -> Path:
@@ -196,6 +201,7 @@ def load() -> ReqBotConfig:
         # (Phase 27, WP-27.2; remote_model consistency fix per Gemini review, PR #120).
         remote_model=values.get("remote_model") or "claude-sonnet-4-6",
         api_key_env=values.get("api_key_env") or "ANTHROPIC_API_KEY",
+        rerank_url=values.get("rerank_url") or None,
     )
 
     # Load authority registry (optional — graceful if missing)

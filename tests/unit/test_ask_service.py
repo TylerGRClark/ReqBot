@@ -133,3 +133,23 @@ def test_hyde_false_is_forwarded(mock_retrieve):
     ask("test", "http://qdrant:6333", "http://ollama:11434", hyde=False)
     _, kwargs = mock_retrieve.call_args
     assert kwargs["hyde"] is False
+
+
+@patch("core.ask.retrieve")
+def test_rerank_is_off_unless_a_rerank_url_is_configured(mock_retrieve, monkeypatch):
+    monkeypatch.delenv("REQBOT_RERANK_URL", raising=False)
+    monkeypatch.setattr("core.config.CONFIG_PATH", __import__("pathlib").Path("/nonexistent/config.json"))
+    mock_retrieve.return_value = _make_retrieve_result()
+    ask("q", qdrant_url="http://q", ollama_url="http://o")
+    assert mock_retrieve.call_args.kwargs["rerank"] is False
+
+
+@patch("core.ask.retrieve")
+def test_a_configured_rerank_url_turns_rerank_on_with_the_measured_pool(mock_retrieve, monkeypatch):
+    monkeypatch.setenv("REQBOT_RERANK_URL", "http://reranker:8732")
+    mock_retrieve.return_value = _make_retrieve_result()
+    ask("q", qdrant_url="http://q", ollama_url="http://o")
+    kwargs = mock_retrieve.call_args.kwargs
+    assert kwargs["rerank"] is True
+    assert kwargs["rerank_model"] == "http://reranker:8732"
+    assert kwargs["rerank_pool_size"] == 50
