@@ -736,6 +736,12 @@ def retrieve(
             hits = new_hits
             log.info("Reranked %d candidate(s), kept top %d", len(candidates), len(hits))
         else:
+            # Codex review, PR #385: a reranker outage must fall back to the SAME
+            # behavior as rerank=False (min_score cutoff, then top_k) -- not skip
+            # min_score entirely, which would let low-relevance hits through into
+            # results and, with synthesis on, into answer evidence.
+            if min_score > 0:
+                hits = [r for r in hits if r.score >= min_score]
             hits = hits[:top_k]
     else:
         # Score threshold — drop results below min_score, then trim to top_k.
@@ -830,6 +836,7 @@ def run(
     context_collection: str = CONTEXT_COLLECTION_NAME,
     hyde: bool = True,
     hyde_debug_log: bool = False,
+    rerank_url: str = "",
 ) -> list[dict]:
     """Query GRC requirements and print results to stdout.
 
@@ -901,6 +908,12 @@ def run(
         synthesis_backend=syn_backend,
         synthesis_provider=syn_provider,
         synthesis_api_key=syn_api_key,
+        # Codex review, PR #385: rerank_url was only wired into services/ask_service.py
+        # (the API/MCP path) -- the CLI silently ignored the same setting. 50 matches
+        # the pool size ask_service.py uses (measured 2026-10-29, search_overnight notes).
+        rerank=bool(rerank_url),
+        rerank_model=rerank_url or DEFAULT_RERANK_MODEL,
+        rerank_pool_size=50,
     )
 
     if not data["results"]:

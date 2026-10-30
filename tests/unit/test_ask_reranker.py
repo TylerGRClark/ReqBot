@@ -160,3 +160,17 @@ def test_a_local_model_failure_is_not_swallowed():
     with patch("core.ask.rerank_candidates", side_effect=ImportError("needs the rerank extra")):
         with pytest.raises(ImportError):
             _run_retrieve(hits, rerank=True)
+
+
+def test_a_reranker_outage_still_applies_min_score_before_trimming():
+    """Codex review, PR #385: the rerank=True fallback path used to skip min_score
+    entirely on a reranker outage (unlike the normal rerank=False path right below
+    it), letting low-relevance hits through and, with synthesis on, into answer
+    evidence."""
+    hits = [
+        _fake_hit("REQ-high", score=0.9),
+        _fake_hit("REQ-low", score=0.01),  # below the min_score used below
+    ]
+    with patch("core.ask.rerank_candidates", side_effect=OSError("connection refused")):
+        result, _ = _run_retrieve(hits, rerank=True, rerank_model="http://reranker:8732", top_k=5, min_score=0.5)
+    assert [r["requirement_id"] for r in result["results"]] == ["REQ-high"]

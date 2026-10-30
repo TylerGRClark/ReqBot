@@ -233,6 +233,7 @@ def cmd_ask(args: argparse.Namespace) -> int:
             context=args.context,
             context_collection=args.context_collection,
             hyde=not getattr(args, "no_hyde", False),
+            rerank_url=_cfg.rerank_url or "",
         )
         return 0
     except Exception as e:
