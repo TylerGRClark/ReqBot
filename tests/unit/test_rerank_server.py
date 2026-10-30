@@ -163,3 +163,41 @@ def test_score_marks_busy_during_the_call_and_clears_it_after(server):
         server._model.__class__.__call__ = real_call
 
     assert server._busy == 0  # cleared after the call completes
+
+
+def test_slow_load_does_not_leave_the_idle_clock_expired(server, monkeypatch):
+    """Gemini finding: the clock was stamped before a slow load, so a load longer than
+    IDLE_SECONDS finished already 'idle'. The stamp must come after the load."""
+    clock = [100.0]
+    monkeypatch.setattr(server.time, "monotonic", lambda: clock[0])
+    from transformers import AutoModelForSequenceClassification as M
+
+    def _slow_load(*a, **kw):
+        clock[0] += 500.0  # load takes far longer than the idle window
+        return M.from_pretrained.return_value
+
+    M.from_pretrained.side_effect = _slow_load
+    monkeypatch.setattr(server, "IDLE_SECONDS", 60.0)
+    server._ensure_loaded()
+    assert server.time.monotonic() - server._last_used < server.IDLE_SECONDS
+
+
+def test_score_loads_and_marks_busy_under_one_lock_hold(server):
+    """Gemini/Codex finding: a gap between 'loaded' and 'marked busy' let the idle-unload
+    thread evict the model before inference. Both must happen while the lock is held."""
+    held = []
+    real = server._ensure_loaded
+
+    def _spy():
+        # RLock: a second thread can't take it while score() holds it
+        import threading
+        got = []
+        t = threading.Thread(target=lambda: got.append(server._lock.acquire(timeout=0.2)))
+        t.start()
+        t.join()
+        held.append(not got[0])
+        real()
+
+    server._ensure_loaded = _spy
+    server.score("q", ["a"])
+    assert held == [True]

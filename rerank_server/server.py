@@ -31,7 +31,7 @@ IDLE_SECONDS = float(os.environ.get("RERANK_IDLE_SECONDS", "900"))  # 0 = never 
 MAX_LENGTH = 256
 BATCH = 16
 
-_lock = threading.Lock()
+_lock = threading.RLock()  # re-entrant: score() holds it across load + busy-mark
 _tokenizer = None
 _model = None
 _device = None
@@ -44,8 +44,8 @@ def _ensure_loaded():
     concurrent requests arriving while unloaded must not each start their own load."""
     global _tokenizer, _model, _device, _last_used
     with _lock:
-        _last_used = time.monotonic()
         if _model is not None:
+            _last_used = time.monotonic()
             return
         import torch
         from transformers import AutoModelForSequenceClassification, AutoTokenizer
@@ -54,6 +54,7 @@ def _ensure_loaded():
         t0 = time.time()
         _tokenizer = AutoTokenizer.from_pretrained(MODEL)
         _model = AutoModelForSequenceClassification.from_pretrained(MODEL).eval().to(_device)
+        _last_used = time.monotonic()  # after the load, so a slow load can't look "already idle"
         print(f"ready ({time.time() - t0:.1f}s)", flush=True)
 
 
@@ -80,17 +81,18 @@ def _unload_if_idle():
 def score(query: str, texts: list[str]) -> list[float]:
     global _busy, _last_used
     import torch
-    _ensure_loaded()
-    with _lock:
+    with _lock:  # load and mark busy in one step: no gap for the idle-unload thread to slip into
+        _ensure_loaded()
         _busy += 1
+        tokenizer, model, device = _tokenizer, _model, _device
     try:
         out: list[float] = []
         with torch.no_grad():
             for start in range(0, len(texts), BATCH):
                 batch = texts[start:start + BATCH]
-                enc = _tokenizer([query] * len(batch), batch, padding=True, truncation=True,
-                                  max_length=MAX_LENGTH, return_tensors="pt").to(_device)
-                out.extend(_model(**enc).logits.view(-1).tolist())
+                enc = tokenizer([query] * len(batch), batch, padding=True, truncation=True,
+                                  max_length=MAX_LENGTH, return_tensors="pt").to(device)
+                out.extend(model(**enc).logits.view(-1).tolist())
         return out
     finally:
         with _lock:
