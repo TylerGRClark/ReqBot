@@ -56,6 +56,11 @@ services:
   # unchanged without that setting, and falls back to the normal order if this service is down.
   # CPU is too slow to be pleasant (seconds per search); on a Linux host with the NVIDIA Container
   # Toolkit build with the cu124 TORCH_INDEX shown below and uncomment the GPU block.
+  #
+  # It unloads itself from GPU memory after 15 minutes idle (RERANK_IDLE_SECONDS; 0 disables
+  # this, for an admin who wants it always-on) and reloads in ~5 seconds on the next search
+  # (measured 2026-10-29) -- the API server also pings it to load on its own startup
+  # (api/app.py) so that first reload usually isn't on a real user's search either.
   reranker:
     profiles: ["rerank"]
     build:
@@ -65,6 +70,8 @@ services:
     image: reqbot-reranker:latest
     ports:
       - "127.0.0.1:8732:8732"
+    environment:
+      RERANK_IDLE_SECONDS: "900"
     volumes:
       - reranker-models:/models
     # deploy:
