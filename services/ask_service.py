@@ -16,6 +16,10 @@ if str(_ROOT) not in sys.path:
 log = logging.getLogger(__name__)
 
 
+# Measured 2026-10-29: pool 50 beat pool 20 on the hard question set.
+RERANK_POOL_SIZE = 50
+
+
 def ask(
     question: str,
     qdrant_url: str,
@@ -62,7 +66,9 @@ def ask(
     based on synthesis_backend (Phase 27, WP-27.4), mirroring evidence_service.build().
     """
     from core import ask as _ask
+    from core import config as _config
 
+    rerank_url = _config.load().rerank_url
     data = _ask.retrieve(
         question,
         top_k=top_k,
@@ -85,6 +91,9 @@ def ask(
         synthesis_backend=synthesis_backend,
         synthesis_provider=synthesis_provider,
         synthesis_api_key=synthesis_api_key,
+        rerank=bool(rerank_url),
+        rerank_model=rerank_url or _ask.DEFAULT_RERANK_MODEL,
+        rerank_pool_size=RERANK_POOL_SIZE,
     )
     return {
         "query": question,

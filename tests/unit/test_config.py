@@ -163,3 +163,17 @@ def test_remote_model_config_file_value_respected(monkeypatch, tmp_path):
     monkeypatch.setattr(cfg, "CONFIG_PATH", config_file)
     c = cfg.load()
     assert c.remote_model == "gpt-4o"
+
+
+def test_rerank_url_is_off_by_default_and_settable_by_file_and_env(monkeypatch, tmp_path):
+    monkeypatch.delenv("REQBOT_RERANK_URL", raising=False)
+    config_file = tmp_path / "config.json"
+    config_file.write_text(json.dumps({}))
+    monkeypatch.setattr(cfg, "CONFIG_PATH", config_file)
+    assert cfg.load().rerank_url is None
+
+    config_file.write_text(json.dumps({"rerank_url": "http://from-file:8732"}))
+    assert cfg.load().rerank_url == "http://from-file:8732"
+
+    monkeypatch.setenv("REQBOT_RERANK_URL", "http://from-env:8732")
+    assert cfg.load().rerank_url == "http://from-env:8732"

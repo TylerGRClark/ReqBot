@@ -50,6 +50,31 @@ services:
     volumes:
       - qdrant-storage:/qdrant/storage
 
+  # Optional re-ranker: re-orders search results with a cross-encoder (measured +0.04 to +0.10 MRR
+  # on the hard question set). Off unless you start it with `docker compose --profile rerank up -d`,
+  # then set REQBOT_RERANK_URL: "http://reranker:8732" on the reqbot service above. Search is
+  # unchanged without that setting, and falls back to the normal order if this service is down.
+  # CPU is too slow to be pleasant (seconds per search); on a Linux host with the NVIDIA Container
+  # Toolkit build with the cu124 TORCH_INDEX shown below and uncomment the GPU block.
+  reranker:
+    profiles: ["rerank"]
+    build:
+      context: ./rerank_server
+      # args:
+      #   TORCH_INDEX: https://download.pytorch.org/whl/cu124
+    image: reqbot-reranker:latest
+    ports:
+      - "127.0.0.1:8732:8732"
+    volumes:
+      - reranker-models:/models
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
   # Uncomment if you want Ollama itself running in Compose rather than pointing at an
   # existing instance. GPU passthrough syntax varies by host (Linux/nvidia-container-toolkit
   # vs. Docker Desktop vs. no GPU at all) — this is the plain-CPU form; add a `deploy.
@@ -66,4 +91,5 @@ services:
 
 volumes:
   qdrant-storage:
+  reranker-models:
   # ollama-storage:

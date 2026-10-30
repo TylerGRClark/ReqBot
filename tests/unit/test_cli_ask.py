@@ -70,6 +70,7 @@ def test_no_model_flag_passes_empty_string_not_hardcoded_default():
         synthesis_model="configured-synth-model",
         rewrite_model="configured-rewrite-model",
         embedding_model="configured-embedding-model",
+        rerank_url=None,
     )
     with patch("cli.reqbot._cfg", mock_cfg), patch("core.ask.run") as mock_run:
         rc = cmd_ask(_args(model=None, rewrite_model=None))
@@ -83,6 +84,7 @@ def test_explicit_model_flag_overrides_config():
         synthesis_model="configured-synth-model",
         rewrite_model="configured-rewrite-model",
         embedding_model="configured-embedding-model",
+        rerank_url=None,
     )
     with patch("cli.reqbot._cfg", mock_cfg), patch("core.ask.run") as mock_run:
         rc = cmd_ask(_args(model="explicit-model"))
@@ -97,6 +99,7 @@ def test_no_rewrite_model_flag_falls_back_to_configured_rewrite_model():
         synthesis_model="configured-synth-model",
         rewrite_model="configured-rewrite-model",
         embedding_model="configured-embedding-model",
+        rerank_url=None,
     )
     with patch("cli.reqbot._cfg", mock_cfg), patch("core.ask.run") as mock_run:
         rc = cmd_ask(_args(rewrite_model=None))
@@ -110,6 +113,7 @@ def test_explicit_rewrite_model_flag_overrides_config():
         synthesis_model="configured-synth-model",
         rewrite_model="configured-rewrite-model",
         embedding_model="configured-embedding-model",
+        rerank_url=None,
     )
     with patch("cli.reqbot._cfg", mock_cfg), patch("core.ask.run") as mock_run:
         rc = cmd_ask(_args(rewrite_model="explicit-rewrite-model"))
@@ -126,6 +130,7 @@ def test_unknown_document_ids_logs_clear_error_not_crash():
         synthesis_model="configured-synth-model",
         rewrite_model="configured-rewrite-model",
         embedding_model="configured-embedding-model",
+        rerank_url=None,
     )
     with (
         patch("cli.reqbot._cfg", mock_cfg),
@@ -136,3 +141,33 @@ def test_unknown_document_ids_logs_clear_error_not_crash():
     assert rc == 1
     logged = " ".join(str(c) for c in mock_log.error.call_args)
     assert "bad-doc" in logged
+
+
+def test_rerank_url_from_config_is_passed_to_run():
+    """Codex review, PR #385: the CLI used to silently ignore rerank_url -- only
+    services/ask_service.py (API/MCP) wired it in. cmd_ask must pass it through too."""
+    mock_cfg = SimpleNamespace(
+        synthesis_model="configured-synth-model",
+        rewrite_model="configured-rewrite-model",
+        embedding_model="configured-embedding-model",
+        rerank_url="http://reranker:8732",
+    )
+    with patch("cli.reqbot._cfg", mock_cfg), patch("core.ask.run") as mock_run:
+        rc = cmd_ask(_args())
+    assert rc == 0
+    _, kwargs = mock_run.call_args
+    assert kwargs["rerank_url"] == "http://reranker:8732"
+
+
+def test_no_rerank_url_configured_passes_empty_string():
+    mock_cfg = SimpleNamespace(
+        synthesis_model="configured-synth-model",
+        rewrite_model="configured-rewrite-model",
+        embedding_model="configured-embedding-model",
+        rerank_url=None,
+    )
+    with patch("cli.reqbot._cfg", mock_cfg), patch("core.ask.run") as mock_run:
+        rc = cmd_ask(_args())
+    assert rc == 0
+    _, kwargs = mock_run.call_args
+    assert kwargs["rerank_url"] == ""

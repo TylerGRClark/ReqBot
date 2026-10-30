@@ -86,3 +86,22 @@ def test_remote_missing_api_key_warning_goes_to_stderr_with_json_output(capsys, 
     assert parsed == [SAMPLE_RESULT]
     assert "falling back to local" in captured.err.lower()
     assert "falling back to local" not in captured.out.lower()
+
+
+def test_run_passes_rerank_url_through_to_retrieve_as_rerank_settings():
+    """Codex review, PR #385: run() must turn a configured rerank_url into
+    retrieve(rerank=True, rerank_model=<url>, rerank_pool_size=50) -- the same
+    shape services/ask_service.py already uses for the API/MCP path."""
+    with patch("core.ask.retrieve", return_value=_fake_retrieve_result()) as mock_retrieve:
+        core_ask.run("access control", rerank_url="http://reranker:8732")
+    kwargs = mock_retrieve.call_args.kwargs
+    assert kwargs["rerank"] is True
+    assert kwargs["rerank_model"] == "http://reranker:8732"
+    assert kwargs["rerank_pool_size"] == 50
+
+
+def test_run_with_no_rerank_url_leaves_rerank_off():
+    with patch("core.ask.retrieve", return_value=_fake_retrieve_result()) as mock_retrieve:
+        core_ask.run("access control")
+    kwargs = mock_retrieve.call_args.kwargs
+    assert kwargs["rerank"] is False

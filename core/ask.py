@@ -717,15 +717,32 @@ def retrieve(
         # WP-43: skip the min_score filter entirely (see retrieve()'s docstring) --
         # reorder/trim the fused pool by the reranker's own score instead.
         candidates = [{"score": h.score, **h.payload} for h in hits]
-        reranked = rerank_candidates(dense_query, candidates, top_k, model_name=rerank_model)
-        hits_by_id = {h.payload.get("requirement_id"): h for h in hits}
-        new_hits = []
-        for r in reranked:
-            h = hits_by_id[r["requirement_id"]]
-            h.payload["rerank_score"] = r["rerank_score"]
-            new_hits.append(h)
-        hits = new_hits
-        log.info("Reranked %d candidate(s), kept top %d", len(candidates), len(hits))
+        try:
+            reranked = rerank_candidates(dense_query, candidates, top_k, model_name=rerank_model)
+        except Exception as exc:
+            # A reranker service that is down must not take search down with it.
+            if not rerank_model.startswith(("http://", "https://")):
+                raise
+            log.warning("Reranker service unreachable (%s); returning unreranked results", exc)
+            filter_warnings.append("The re-ranker service could not be reached, so these results are in the original search order.")
+            reranked = None
+        if reranked is not None:
+            hits_by_id = {h.payload.get("requirement_id"): h for h in hits}
+            new_hits = []
+            for r in reranked:
+                h = hits_by_id[r["requirement_id"]]
+                h.payload["rerank_score"] = r["rerank_score"]
+                new_hits.append(h)
+            hits = new_hits
+            log.info("Reranked %d candidate(s), kept top %d", len(candidates), len(hits))
+        else:
+            # Codex review, PR #385: a reranker outage must fall back to the SAME
+            # behavior as rerank=False (min_score cutoff, then top_k) -- not skip
+            # min_score entirely, which would let low-relevance hits through into
+            # results and, with synthesis on, into answer evidence.
+            if min_score > 0:
+                hits = [r for r in hits if r.score >= min_score]
+            hits = hits[:top_k]
     else:
         # Score threshold — drop results below min_score, then trim to top_k.
         # Filtering after fusion (not before) ensures the threshold acts on final RRF scores.
@@ -819,6 +836,7 @@ def run(
     context_collection: str = CONTEXT_COLLECTION_NAME,
     hyde: bool = True,
     hyde_debug_log: bool = False,
+    rerank_url: str = "",
 ) -> list[dict]:
     """Query GRC requirements and print results to stdout.
 
@@ -890,6 +908,12 @@ def run(
         synthesis_backend=syn_backend,
         synthesis_provider=syn_provider,
         synthesis_api_key=syn_api_key,
+        # Codex review, PR #385: rerank_url was only wired into services/ask_service.py
+        # (the API/MCP path) -- the CLI silently ignored the same setting. 50 matches
+        # the pool size ask_service.py uses (measured 2026-10-29, search_overnight notes).
+        rerank=bool(rerank_url),
+        rerank_model=rerank_url or DEFAULT_RERANK_MODEL,
+        rerank_pool_size=50,
     )
 
     if not data["results"]:

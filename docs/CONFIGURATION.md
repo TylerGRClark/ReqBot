@@ -45,6 +45,7 @@ column means no dedicated `REQBOT_*` override is implemented.
 | `rewrite_model` | `null` → `default_model` | Search query rewriting and HyDE hypotheses. | `REQBOT_REWRITE_MODEL` |
 | `synthesis_model` | `qwen2.5:14b` | Local answer/evidence synthesis. | `REQBOT_SYNTHESIS_MODEL` |
 | `embedding_model` | `nomic-embed-text` | Dense embeddings for indexing and querying. | `REQBOT_EMBEDDING_MODEL` |
+| `rerank_url` | unset | Address of the optional re-ranker service (see DEPLOYMENT.md). Unset leaves search unchanged. | `REQBOT_RERANK_URL` |
 | `top_k` | `20` | Default result limit for CLI `ask` and `compare`. | `REQBOT_TOP_K` |
 | `min_score` | `0.02` | Default RRF score cutoff for CLI search and MCP search. | `REQBOT_MIN_SCORE` |
 | `processed_dir` | `~/documents/processed` | Durable processed artifacts; `~` expands for the running account. | `REQBOT_PROCESSED_DIR` |
