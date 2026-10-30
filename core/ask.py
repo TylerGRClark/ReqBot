@@ -625,6 +625,16 @@ def retrieve(
     dense_result = ollama_client.embed(model=embedding_model, input=dense_query)
     dense_vector = dense_result.embeddings[0]
 
+    # Keep the user's own words as their own search leg -- a rewrite must never fully
+    # replace them. Measured 2026-10-29 (318-question sealed set, see agent notes
+    # search_overnight): when rewrite changes the query, dropping the raw leg cost
+    # about 0.10 MRR; adding it back alongside the rewritten leg recovers that loss
+    # in full (ties dropping rewrite outright) without giving up whatever the rewrite
+    # legitimately helps elsewhere.
+    raw_dense_vector = None
+    if dense_query != question:
+        raw_dense_vector = ollama_client.embed(model=embedding_model, input=question).embeddings[0]
+
     # HyDE — generate a hypothetical requirement and embed it as a second dense leg.
     # The hypothesis is intentionally answer-shaped so its embedding aligns more closely
     # with indexed corpus text than the question-shaped query embedding does.
@@ -656,6 +666,16 @@ def retrieve(
         indices=sparse_emb.indices.tolist(),
         values=sparse_emb.values.tolist(),
     )
+
+    # Same as the raw dense leg above: the user's own words also keep their own exact-
+    # keyword-match leg, not just their rewritten/control-ID-stuffed one.
+    raw_sparse_vector = None
+    if sparse_query != question:
+        raw_sparse_emb = next(iter(sparse_model.embed([question])))
+        raw_sparse_vector = models.SparseVector(
+            indices=raw_sparse_emb.indices.tolist(),
+            values=raw_sparse_emb.values.tolist(),
+        )
 
     # Build filter
     query_filter = build_query_filter(document_ids)
@@ -704,6 +724,26 @@ def retrieve(
             )
         )
         log.info("HyDE: using 3-leg RRF (baseline dense + BM25 + HyDE dense)")
+    if raw_dense_vector is not None:
+        prefetch_legs.append(
+            models.Prefetch(
+                query=raw_dense_vector,
+                using="dense",
+                filter=query_filter,
+                limit=prefetch_limit,
+            )
+        )
+    if raw_sparse_vector is not None:
+        prefetch_legs.append(
+            models.Prefetch(
+                query=raw_sparse_vector,
+                using="sparse",
+                filter=query_filter,
+                limit=prefetch_limit,
+            )
+        )
+    if raw_dense_vector is not None or raw_sparse_vector is not None:
+        log.info("Keeping the raw question as its own leg(s) alongside the rewritten query")
 
     hits = qdrant_client.query_points(
         collection_name=COLLECTION_NAME,
