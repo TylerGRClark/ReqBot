@@ -10,6 +10,7 @@ flashrank faking: these tests must not require a GPU or the real model to run.
 """
 import importlib
 import sys
+import time
 import types
 from pathlib import Path
 from unittest.mock import MagicMock
@@ -116,3 +117,49 @@ def test_ensure_loaded_updates_last_used(server, monkeypatch):
     monkeypatch.setattr(server.time, "monotonic", lambda: 42.0)
     server._ensure_loaded()
     assert server._last_used == 42.0
+
+
+def test_unload_never_fires_while_a_request_is_actively_using_the_model(server, monkeypatch):
+    """A slow/large single request must not have its model pulled out from under it
+    mid-flight, even if the idle clock (reset only at request start) looks expired by
+    the time a background unload check runs."""
+    server._ensure_loaded()
+    server._busy = 1  # simulate: a request is actively using the model right now
+    server._last_used = 0.0  # as if the request started a very long time ago
+    monkeypatch.setattr(server, "IDLE_SECONDS", 1.0)
+
+    with server._lock:
+        should_unload = (
+            server._model is not None and server._busy == 0
+            and time.monotonic() - server._last_used >= server.IDLE_SECONDS
+        )
+        if should_unload:
+            server._model = None
+    assert server._model is not None  # busy guard held
+
+
+def test_score_marks_busy_during_the_call_and_clears_it_after(server):
+    import threading
+
+    server._ensure_loaded()
+    release = threading.Event()
+    started = threading.Event()
+    real_call = server._model.__class__.__call__
+
+    def _slow_call(self, *a, **kw):
+        started.set()
+        release.wait(timeout=2)
+        return real_call(self, *a, **kw)
+
+    server._model.__class__.__call__ = _slow_call
+    try:
+        t = threading.Thread(target=server.score, args=("q", ["a"]))
+        t.start()
+        assert started.wait(timeout=2)
+        assert server._busy == 1  # busy while the request is still inside the model call
+        release.set()
+        t.join(timeout=2)
+    finally:
+        server._model.__class__.__call__ = real_call
+
+    assert server._busy == 0  # cleared after the call completes

@@ -34,6 +34,7 @@ _tokenizer = None
 _model = None
 _device = None
 _last_used = 0.0
+_busy = 0  # count of requests currently using the model -- never unload while > 0
 
 
 def _ensure_loaded():
@@ -56,14 +57,16 @@ def _ensure_loaded():
 
 def _unload_if_idle():
     """Background loop: drop the model from GPU memory after IDLE_SECONDS of no use.
-    Disabled entirely when IDLE_SECONDS <= 0."""
+    Disabled entirely when IDLE_SECONDS <= 0. Never unloads while a request is actively
+    using the model (_busy > 0) -- a slow or large single request must not have its
+    model pulled out from under it mid-flight."""
     global _tokenizer, _model
     if IDLE_SECONDS <= 0:
         return
     while True:
         time.sleep(min(30, IDLE_SECONDS))
         with _lock:
-            if _model is not None and time.monotonic() - _last_used >= IDLE_SECONDS:
+            if _model is not None and _busy == 0 and time.monotonic() - _last_used >= IDLE_SECONDS:
                 import torch
                 print("idle timeout -- unloading model", flush=True)
                 _tokenizer = None
@@ -73,16 +76,24 @@ def _unload_if_idle():
 
 
 def score(query: str, texts: list[str]) -> list[float]:
+    global _busy, _last_used
     import torch
     _ensure_loaded()
-    out: list[float] = []
-    with torch.no_grad():
-        for start in range(0, len(texts), BATCH):
-            batch = texts[start:start + BATCH]
-            enc = _tokenizer([query] * len(batch), batch, padding=True, truncation=True,
-                              max_length=MAX_LENGTH, return_tensors="pt").to(_device)
-            out.extend(_model(**enc).logits.view(-1).tolist())
-    return out
+    with _lock:
+        _busy += 1
+    try:
+        out: list[float] = []
+        with torch.no_grad():
+            for start in range(0, len(texts), BATCH):
+                batch = texts[start:start + BATCH]
+                enc = _tokenizer([query] * len(batch), batch, padding=True, truncation=True,
+                                  max_length=MAX_LENGTH, return_tensors="pt").to(_device)
+                out.extend(_model(**enc).logits.view(-1).tolist())
+        return out
+    finally:
+        with _lock:
+            _busy -= 1
+            _last_used = time.monotonic()  # restart the idle clock from completion, not start
 
 
 class Handler(BaseHTTPRequestHandler):
