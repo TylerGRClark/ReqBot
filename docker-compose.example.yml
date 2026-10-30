@@ -59,8 +59,7 @@ services:
   #
   # It unloads itself from GPU memory after 15 minutes idle (RERANK_IDLE_SECONDS; 0 disables
   # this, for an admin who wants it always-on) and reloads in ~5 seconds on the next search
-  # (measured 2026-10-29) -- the API server also pings it to load on its own startup
-  # (api/app.py) so that first reload usually isn't on a real user's search either.
+  # (measured 2026-10-29).
   reranker:
     profiles: ["rerank"]
     build:

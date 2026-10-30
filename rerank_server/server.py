@@ -1,19 +1,22 @@
 """Reranker service: loads a cross-encoder on demand and scores (query, text) pairs over HTTP.
 
 POST /rerank {"query": str, "texts": [str]} -> {"scores": [float], "seconds": float}
-POST /warm   -> {"status": "ok", "loaded": true, "seconds": float}  -- loads the model
-               without scoring anything, so a caller can pay the load cost ahead of a
-               user's actual search instead of on it.
 GET  /health -> {"status": "ok", "loaded": bool, "device": "cuda" | "cpu"}
 
-Idle unload: after RERANK_IDLE_SECONDS of no /rerank or /warm calls, the model is
-dropped from GPU memory so it stops costing anything on a shared machine -- the same
-behavior Ollama already has by default (measured 2026-10-29: Ollama evicts an idle
-model after 5 minutes). The next call reloads it (measured warm-cache load: ~5
-seconds -- the 2-minute figure seen once was a one-time model download, not a normal
-reload). Set RERANK_IDLE_SECONDS=0 to disable eviction entirely (Tyler's "admin-only
-always-on" case) -- not exposed as a CLI flag on purpose, since an ordinary deployment
-should not need it.
+A request loads the model if it isn't already loaded, uses it, and resets an idle
+clock. After RERANK_IDLE_SECONDS of no /rerank calls, the model is dropped from GPU
+memory -- the same behavior Ollama already has by default (measured 2026-10-29:
+Ollama evicts an idle model after 5 minutes). The next request reloads it (measured
+warm-cache load: ~5 seconds -- the 2-minute figure seen once was a one-time model
+download, not a normal reload). Set RERANK_IDLE_SECONDS=0 to disable eviction
+entirely (Tyler's "admin-only always-on" case) -- not exposed as a CLI flag on
+purpose, since an ordinary deployment should not need it.
+
+Deliberately no separate warm-up/pre-load signal: Tyler's call, 2026-10-29 -- a
+proactive "wake it up early" ping only ever helps the very first request after this
+process starts, since every later idle-unload cycle during normal operation isn't
+covered by a one-time startup signal anyway. That's not enough benefit for the
+background thread, extra endpoint, and caller-side wiring it would take.
 """
 import json
 import os
@@ -25,7 +28,6 @@ MODEL = os.environ.get("RERANK_MODEL", "BAAI/bge-reranker-v2-m3")
 HOST = os.environ.get("RERANK_HOST", "0.0.0.0")
 PORT = int(os.environ.get("RERANK_PORT", "8732"))
 IDLE_SECONDS = float(os.environ.get("RERANK_IDLE_SECONDS", "900"))  # 0 = never unload
-PREWARM_ON_START = os.environ.get("RERANK_PREWARM_ON_START", "1") not in ("0", "", "false", "False")
 MAX_LENGTH = 256
 BATCH = 16
 
@@ -115,10 +117,6 @@ class Handler(BaseHTTPRequestHandler):
                 self._send(200, {"scores": scores, "seconds": time.time() - t0})
             except Exception as exc:
                 self._send(400, {"error": str(exc)})
-        elif self.path == "/warm":
-            t0 = time.time()
-            _ensure_loaded()
-            self._send(200, {"status": "ok", "loaded": True, "seconds": time.time() - t0})
         else:
             self._send(404, {"error": "not found"})
 
@@ -133,10 +131,6 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     threading.Thread(target=_unload_if_idle, daemon=True).start()
-    if PREWARM_ON_START:
-        # Pay the load cost at container startup, well before any real user search,
-        # rather than on the first /rerank call.
-        threading.Thread(target=_ensure_loaded, daemon=True).start()
     print(f"listening on {HOST}:{PORT} (idle unload: "
           f"{'disabled' if IDLE_SECONDS <= 0 else f'{IDLE_SECONDS:.0f}s'})", flush=True)
     ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()

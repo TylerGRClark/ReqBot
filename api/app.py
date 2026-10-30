@@ -32,8 +32,6 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -60,44 +58,12 @@ log = logging.getLogger(__name__)
 # bundler preserves this relative structure (api/app.py → frontend/dist/).
 _DIST_DIR = Path(__file__).resolve().parent.parent / "frontend" / "dist"
 
-
-@asynccontextmanager
-async def _lifespan(_app: FastAPI):
-    _warm_reranker_if_configured()
-    yield
-
-
-def _warm_reranker_if_configured() -> None:
-    """Fire-and-forget: if a reranker service is configured, ask it to load its
-    model now, in parallel with this server starting up, instead of waiting for
-    a user's first search to pay that cost. The reranker itself may be idle-
-    unloaded later (rerank_server/server.py); this just avoids a cold first hit
-    right after a restart. Never blocks server startup or raises on failure --
-    a reranker that's slow or unreachable at boot just stays cold until first use."""
-    import threading
-    import urllib.request
-
-    from core import config as _config
-    rerank_url = _config.load().rerank_url
-    if not rerank_url:
-        return
-
-    def _ping():
-        try:
-            urllib.request.urlopen(rerank_url.rstrip("/") + "/warm", data=b"{}", timeout=120)
-        except Exception as exc:
-            log.info("Reranker warm-up ping failed (%s) -- will load on first search instead", exc)
-
-    threading.Thread(target=_ping, daemon=True).start()
-
-
 app = FastAPI(
     title="ReqBot API",
     version="0.2.0",
     description="Read-only compliance requirements intelligence API.",
     docs_url="/api-docs",
     redoc_url="/api-redoc",
-    lifespan=_lifespan,
 )
 
 # CORS — restricted to known local GUI origins.
