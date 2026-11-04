@@ -8,10 +8,12 @@ recognised heading and numbered paragraphs do not always count as one. On the 20
 library about 28% of the chunks that can be checked had a stale path.
 
 The repair compares the chunk's FIRST numbered paragraph with the last numbered entry
-of its path. When the paragraph is not under that entry, the numbered part of the path is
+of its path. When the paragraph is not under that entry, or the chunk has a title but no
+numbered path at all (about 40% of the library's chunks), the numbered part of the path is
 rebuilt from the paragraph's ancestors, using headings the document's own text shows
 ("3.9. Information System Owners (ISO)."). A chunk whose path already contains its first
-paragraph is never touched. A chunk that cannot be resolved keeps its stored path.
+paragraph is never touched. A chunk that cannot be resolved keeps its stored path. Chapter-level titles that carry
+no paragraph number stay in front of the rebuilt entries.
 
 An ancestor only counts as a heading when it reads like one: a short title, or a short
 "... will:" actor line; never a long sentence, and never an instruction ("Ensure ...").
@@ -120,10 +122,10 @@ def repair_heading_paths(chunks: list[dict]) -> list[dict]:
         out.append(fixed)
         refs = [str(r).rstrip(".") for r in (chunk.get("section_ref_path") or [])]
         found = [n.rstrip(".") for n, _ in _LINE.findall(_text(chunk))]
-        if not refs or not found:
+        if not found:
             continue
         first = found[0]
-        if _under(first, refs[-1]):
+        if refs and _under(first, refs[-1]):
             continue
         has_children = any(n.startswith(first + ".") for n in numbers)
         chain = [a for a in _ancestors(first) + ([first] if has_children else [])
@@ -134,10 +136,11 @@ def repair_heading_paths(chunks: list[dict]) -> list[dict]:
         new_refs = list(dict.fromkeys(kept + [a for a in chain if a not in kept]))
         titles = [str(t) for t in (chunk.get("section_title_path") or [])]
         stored = dict(zip(reversed(refs), reversed(titles)))
+        lead = titles[:max(len(titles) - len(refs), 0)]  # chapter-level titles that carry no paragraph number stay in front
         # the parser's own paths: the paragraph map must not read a shortened title as the paragraph, and the prompt windows
         # (checklist_audit.document_lines) use the stored paths as section identities, so a repair must not move a boundary
         fixed["stored_section_ref_path"] = list(chunk.get("section_ref_path") or [])
         fixed["stored_section_title_path"] = titles
         fixed["section_ref_path"] = new_refs
-        fixed["section_title_path"] = [stored.get(r) or table.get(r) or r for r in new_refs]
+        fixed["section_title_path"] = lead + [stored.get(r) or table.get(r) or r for r in new_refs]
     return out

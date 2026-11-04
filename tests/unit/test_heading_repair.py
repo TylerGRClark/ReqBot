@@ -135,3 +135,31 @@ def test_an_abbreviation_does_not_end_a_heading_title():
     assert _title("3.9", "Information System Owners (ISO). Official responsible for systems.") == "3.9. Information System Owners (ISO)."
     assert _title("3.4", "Alteration/Modification. Intentional alterations are not allowed.") == "3.4. Alteration/Modification."
     assert _title("3.2", "Dr. Smith leads the board. Other text.") == "3.2. Dr. Smith leads the board."
+
+
+def test_a_chunk_with_a_chapter_title_but_no_numbered_path_gets_one():
+    chunks = [
+        _chunk(0, "- 4.9. Mobile Computing Devices. Rules for mobile devices.\n- 4.9.1. Configure devices.", [], ["ENDPOINT SECURITY"]),
+        _chunk(1, "- 4.9.3. Government-owned devices need approval.\n- 4.9.4. Report loss.", [], ["ENDPOINT SECURITY"]),
+    ]
+    fixed = repair_heading_paths(chunks)
+    assert fixed[1]["section_ref_path"] == ["4.9"]
+    assert fixed[1]["section_title_path"][0] == "ENDPOINT SECURITY"  # the chapter title stays in front
+    assert fixed[1]["section_title_path"][-1].startswith("4.9. Mobile Computing Devices.")
+    assert fixed[1]["stored_section_ref_path"] == []
+
+
+def test_a_repaired_path_keeps_its_unnumbered_chapter_title():
+    chunks = [
+        _chunk(0, "3.6. Security Control Assessor (SCA). The SCA:\n- 3.6.1. Ensures assessments are done.", ["3.6"], ["RMF ROLES AND RESPONSIBILITIES", "3.6. Security Control Assessor (SCA). The SCA:"]),
+        _chunk(1, "- 3.9. Information System Owners (ISO). Official responsible.\n- 3.9.1. Must plan.", ["3.6"], ["RMF ROLES AND RESPONSIBILITIES", "3.6. Security Control Assessor (SCA). The SCA:"]),
+    ]
+    fixed = repair_heading_paths(chunks)
+    assert fixed[1]["section_ref_path"] == ["3.9"]
+    assert fixed[1]["section_title_path"][0] == "RMF ROLES AND RESPONSIBILITIES"
+    assert fixed[1]["section_title_path"][-1].startswith("3.9. Information System Owners")
+
+
+def test_a_chunk_with_no_numbered_text_and_no_path_is_left_alone():
+    chunk = _chunk(0, "Plain prose with no paragraph numbers at all.", [], ["INTRODUCTION"])
+    assert repair_heading_paths([chunk]) == [chunk]
