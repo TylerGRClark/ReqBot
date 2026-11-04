@@ -501,7 +501,10 @@ def document_lines(chunks: dict) -> list[tuple[int, tuple, str]]:
     for cid in sorted(k for k in chunks if isinstance(k, int)):
         c = chunks[cid]
         # a section is identified by both paths: headings without a canonical id are missing from the ref path, so sibling prose-titled subsections share it
-        path = tuple(tuple(p) if isinstance(p, (list, tuple)) else (str(p),) for p in (c.get("section_ref_path") or [], c.get("section_title_path") or []))
+        # the parser's own paths when a heading repair (services/heading_repair.py) has changed them: a repair must not move a section boundary
+        refs = c.get("stored_section_ref_path", c.get("section_ref_path")) or []
+        titles = c.get("stored_section_title_path", c.get("section_title_path")) or []
+        path = tuple(tuple(p) if isinstance(p, (list, tuple)) else (str(p),) for p in (refs, titles))
         for ln in (c.get("raw_text") or c.get("text") or "").split("\n"):
             if ln.strip():
                 out.append((cid, path, ln.rstrip()))
