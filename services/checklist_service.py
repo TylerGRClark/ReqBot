@@ -23,7 +23,7 @@ if str(_ROOT) not in sys.path:
 
 from core.artifact_resolver import doc_key_from_requirements_path, resolve_requirement_file
 from core.profiles import load_profile
-from services import audit_questions, checklist_audit, criticality
+from services import audit_questions, checklist_audit, criticality, heading_repair
 
 log = logging.getLogger(__name__)
 
@@ -77,7 +77,11 @@ def _load_chunks(jsonl_path: Path) -> dict:
     except (OSError, ValueError):
         log.warning("No readable chunk file beside %s; checklist passages will be empty", jsonl_path.name)
         return {}
-    return out
+    try:  # a stale heading path is rebuilt at read time (services/heading_repair.py); the chunk file is not changed
+        return {c.get("chunk_id"): c for c in heading_repair.repair_heading_paths(list(out.values()))}
+    except Exception as e:  # a label aid: never fail a checklist over it
+        log.warning("Heading paths not repaired for %s: %s; using the stored paths", jsonl_path.name, e)
+        return out
 
 
 def _heading_map(chunks: dict) -> dict:
