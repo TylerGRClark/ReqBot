@@ -30,7 +30,8 @@ from services.checklist_audit import IMPERATIVE_VERBS
 
 _NUM = r"((?:[A-Z]\d{0,2}\.)?\d{1,2}(?:\.\d{1,3})+)"
 _LINE = re.compile(r"(?m)^\s*(?:[-*•]\s*)?" + _NUM + r"\.?\s+(.+)$")
-_TITLE = re.compile(r"(.{3,140}?(?::|\.(?=\s+[A-Z(])|$))")
+_SENTENCE_END = re.compile(r"(\S+)\s?\.(?=\s+[A-Z(])")
+_ABBREVIATIONS = frozenset({"mr", "mrs", "ms", "dr", "st", "no", "inc", "co", "corp", "vs", "etc", "al"})
 MAX_TITLE_WORDS = 12
 MAX_ACTOR_LINE_WORDS = 20
 
@@ -52,10 +53,27 @@ def _ancestors(num: str) -> list[str]:
     return [".".join(parts[:i]) for i in range(1, len(parts))]
 
 
+def _is_abbreviation(token: str) -> bool:
+    """'U.S', 'e.g', 'Dr', a lone capital: a period after these does not end a title."""
+    t = token.strip("()").rstrip(".")
+    return t.lower() in _ABBREVIATIONS or bool(re.fullmatch(r"(?:[A-Za-z]\.)+[A-Za-z]", t)) or bool(re.fullmatch(r"[A-Z]", t))
+
+
+def _cut_title(rest: str) -> str:
+    """The first sentence of a paragraph's opening line: up to a colon, or a period that is not an abbreviation's."""
+    colon = rest.find(":")
+    end = min(len(rest), 140)
+    for m in _SENTENCE_END.finditer(rest):
+        if not _is_abbreviation(m.group(1)):
+            end = min(end, m.end())
+            break
+    if 0 <= colon < end:
+        end = colon + 1
+    return rest[:end].strip()
+
+
 def _title(num: str, rest: str) -> str:
-    rest = _squash(rest)
-    m = _TITLE.match(rest)
-    return f"{num}. {m.group(1) if m else rest[:140]}".strip()
+    return f"{num}. {_cut_title(_squash(rest))}".strip()
 
 
 _MODALS = frozenset({"will", "shall", "must", "may", "should", "can"})

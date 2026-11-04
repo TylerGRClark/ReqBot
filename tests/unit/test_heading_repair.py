@@ -126,3 +126,12 @@ def test_prompt_window_section_identity_ignores_the_repair():
     assert fixed[1]["section_ref_path"] != chunks[1]["section_ref_path"]  # the repair did change the second chunk
     after = checklist_audit.document_lines({c["chunk_id"]: c for c in fixed})
     assert [line[1] for line in after] == [line[1] for line in before]
+
+
+def test_an_abbreviation_does_not_end_a_heading_title():
+    from services.heading_repair import _title
+
+    assert _title("3.9", "U.S. Air Force commanders will: Plan the work.") == "3.9. U.S. Air Force commanders will:"
+    assert _title("3.9", "Information System Owners (ISO). Official responsible for systems.") == "3.9. Information System Owners (ISO)."
+    assert _title("3.4", "Alteration/Modification. Intentional alterations are not allowed.") == "3.4. Alteration/Modification."
+    assert _title("3.2", "Dr. Smith leads the board. Other text.") == "3.2. Dr. Smith leads the board."
