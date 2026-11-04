@@ -17,7 +17,8 @@ An ancestor only counts as a heading when it reads like one: a short title, or a
 "... will:" actor line; never a long sentence, and never an instruction ("Ensure ...").
 Otherwise a duty sentence would be shown as the section a row belongs to.
 
-Read-time only: the stored chunk file is not changed.
+Read-time only: the stored chunk file is not changed. A repaired chunk also carries
+`stored_section_title_path`, the parser's own titles, so the paragraph map keeps reading full paragraph text.
 """
 from __future__ import annotations
 
@@ -56,10 +57,22 @@ def _title(num: str, rest: str) -> str:
     return f"{num}. {m.group(1) if m else rest[:140]}".strip()
 
 
+_MODALS = frozenset({"will", "shall", "must", "may", "should", "can"})
+
+
+def _is_instruction(word: str) -> bool:
+    """An instruction or duty opener: 'Ensure', 'Ensures', 'Reviews', 'Identifies', 'Will'."""
+    w = word.lower().strip(",:;")
+    if w in _MODALS or w in IMPERATIVE_VERBS:
+        return True
+    return (w.endswith("s") and w[:-1] in IMPERATIVE_VERBS) or (w.endswith("es") and w[:-2] in IMPERATIVE_VERBS) \
+        or (w.endswith("ies") and w[:-3] + "y" in IMPERATIVE_VERBS)
+
+
 def _heading_like(title: str) -> bool:
     body = title.split(". ", 1)[1] if ". " in title else title
     words = body.split()
-    if not words or words[0].lower().strip(",:;") in IMPERATIVE_VERBS:
+    if not words or _is_instruction(words[0]):
         return False
     return len(words) <= MAX_TITLE_WORDS or (body.rstrip().endswith(":") and len(words) <= MAX_ACTOR_LINE_WORDS)
 
@@ -70,8 +83,7 @@ def _titles(chunks: list[dict]) -> dict[str, str]:
     for c in chunks:
         refs = [str(r).rstrip(".") for r in (c.get("section_ref_path") or [])]
         titles = [str(t) for t in (c.get("section_title_path") or [])]
-        for ref, title in zip(refs[-len(titles):] if len(titles) <= len(refs) else refs,
-                              titles[-len(refs):] if len(refs) <= len(titles) else titles):
+        for ref, title in zip(reversed(refs), reversed(titles)):  # paths are aligned from the leaf up when their lengths differ
             table.setdefault(ref, title)
     for c in chunks:
         for num, rest in _LINE.findall(_text(c)):
@@ -102,7 +114,8 @@ def repair_heading_paths(chunks: list[dict]) -> list[dict]:
         kept = [r for r in refs if _under(first, r)]
         new_refs = list(dict.fromkeys(kept + [a for a in chain if a not in kept]))
         titles = [str(t) for t in (chunk.get("section_title_path") or [])]
-        stored = dict(zip(refs, titles[-len(refs):])) if len(titles) >= len(refs) else {}
+        stored = dict(zip(reversed(refs), reversed(titles)))
+        fixed["stored_section_title_path"] = titles  # the parser's own titles; the paragraph map must not read a shortened title as the paragraph
         fixed["section_ref_path"] = new_refs
-        fixed["section_title_path"] = [stored.get(r) or table[r] for r in new_refs]
+        fixed["section_title_path"] = [stored.get(r) or table.get(r) or r for r in new_refs]
     return out

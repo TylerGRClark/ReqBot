@@ -99,7 +99,8 @@ def _paragraph_map(chunks: dict) -> dict:
     units: list[str] = []
     for chunk_id in sorted(k for k in chunks if isinstance(k, int)):
         chunk = chunks[chunk_id]
-        units.extend(str(p) for p in (chunk.get("section_title_path") or []))
+        # the parser's own titles, not a title the heading repair shortened from the text: the map must hold the full paragraph
+        units.extend(str(p) for p in (chunk.get("stored_section_title_path", chunk.get("section_title_path")) or []))
         units.extend(checklist_audit.paragraph_units(chunk.get("raw_text") or ""))
     return checklist_audit.paragraph_map(units)
 

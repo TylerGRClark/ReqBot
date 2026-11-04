@@ -79,3 +79,34 @@ def test_load_chunks_returns_the_repaired_paths(tmp_path: Path):
     req.write_text("", encoding="utf-8")
     chunks = checklist_service._load_chunks(req)
     assert chunks[1]["section_ref_path"] == ["3.9"]
+
+
+def test_a_path_with_fewer_titles_than_refs_does_not_raise():
+    chunks = [
+        _chunk(0, "3.9. Information System Owners (ISO). Official responsible.\n- 3.9.1. Must plan.", ["3", "3.6"], ["3.6. SCA. The SCA:"]),
+        _chunk(1, "- 3.9.4. Reports status.", ["3", "3.6"], ["3.6. SCA. The SCA:"]),
+    ]
+    fixed = repair_heading_paths(chunks)
+    assert fixed[1]["section_ref_path"][-1] == "3.9"
+    assert all(fixed[1]["section_title_path"])
+
+
+def test_a_third_person_duty_sentence_is_not_used_as_a_heading():
+    chunks = [
+        _chunk(0, "- 2.2.6. Program Manager.\n- 2.2.6.1. Plans the work.", ["2.2.4"], ["2.2.4. AFNWC/NC will:"]),
+        _chunk(1, "- 2.2.7.1. Ensures assessments are done.\n- 2.2.7.1.1. Records them.\n- 2.2.7.2. Reports status.", ["2.2.4"], ["2.2.4. AFNWC/NC will:"]),
+        _chunk(2, "- 2.2.7.3. Chairs the board.", ["2.2.4"], ["2.2.4. AFNWC/NC will:"]),
+    ]
+    fixed = repair_heading_paths(chunks)
+    assert not any("Ensures assessments" in t for t in fixed[2]["section_title_path"])
+
+
+def test_the_paragraph_map_keeps_the_full_paragraph_not_a_shortened_title():
+    chunks = [
+        _chunk(0, "2.2.6. Program Manager. The PM is responsible for the program.\n- 2.2.6.1. Plans the work.", ["2.2.4"], ["2.2.4. AFNWC/NC will:"]),
+        _chunk(1, "- 2.2.6.2. Reports status.", ["2.2.4"], ["2.2.4. AFNWC/NC will:"]),
+    ]
+    fixed = repair_heading_paths(chunks)
+    assert fixed[0]["section_title_path"][-1].startswith("2.2.6. Program Manager.")
+    para = checklist_service._paragraph_map({c["chunk_id"]: c for c in fixed})
+    assert "responsible for the program" in para["2.2.6"]
