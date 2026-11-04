@@ -18,7 +18,8 @@ An ancestor only counts as a heading when it reads like one: a short title, or a
 Otherwise a duty sentence would be shown as the section a row belongs to.
 
 Read-time only: the stored chunk file is not changed. A repaired chunk also carries
-`stored_section_title_path`, the parser's own titles, so the paragraph map keeps reading full paragraph text.
+`stored_section_ref_path` / `stored_section_title_path`, the parser's own paths: the paragraph map keeps reading full
+paragraph text, and the prompt windows keep their section boundaries.
 """
 from __future__ import annotations
 
@@ -115,7 +116,10 @@ def repair_heading_paths(chunks: list[dict]) -> list[dict]:
         new_refs = list(dict.fromkeys(kept + [a for a in chain if a not in kept]))
         titles = [str(t) for t in (chunk.get("section_title_path") or [])]
         stored = dict(zip(reversed(refs), reversed(titles)))
-        fixed["stored_section_title_path"] = titles  # the parser's own titles; the paragraph map must not read a shortened title as the paragraph
+        # the parser's own paths: the paragraph map must not read a shortened title as the paragraph, and the prompt windows
+        # (checklist_audit.document_lines) use the stored paths as section identities, so a repair must not move a boundary
+        fixed["stored_section_ref_path"] = list(chunk.get("section_ref_path") or [])
+        fixed["stored_section_title_path"] = titles
         fixed["section_ref_path"] = new_refs
         fixed["section_title_path"] = [stored.get(r) or table.get(r) or r for r in new_refs]
     return out

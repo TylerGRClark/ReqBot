@@ -110,3 +110,19 @@ def test_the_paragraph_map_keeps_the_full_paragraph_not_a_shortened_title():
     assert fixed[0]["section_title_path"][-1].startswith("2.2.6. Program Manager.")
     para = checklist_service._paragraph_map({c["chunk_id"]: c for c in fixed})
     assert "responsible for the program" in para["2.2.6"]
+
+
+def test_prompt_window_section_identity_ignores_the_repair():
+    """A chunk that ends with the next section's lead-in keeps its old path; the chunk after it is repaired.
+    The two must still look like one section to the prompt window, or the lead-in is cut off."""
+    from services import checklist_audit
+
+    chunks = [
+        _chunk(0, "- 3.6.1. Ensures assessments are done.\n3.9. System Owners will:", ["3.6"], ["3.6. Security Control Assessor (SCA). The SCA:"]),
+        _chunk(1, "- 3.9.1. Plan the system.", ["3.6"], ["3.6. Security Control Assessor (SCA). The SCA:"]),
+    ]
+    before = checklist_audit.document_lines({c["chunk_id"]: c for c in chunks})
+    fixed = repair_heading_paths(chunks)
+    assert fixed[1]["section_ref_path"] != chunks[1]["section_ref_path"]  # the repair did change the second chunk
+    after = checklist_audit.document_lines({c["chunk_id"]: c for c in fixed})
+    assert [line[1] for line in after] == [line[1] for line in before]
