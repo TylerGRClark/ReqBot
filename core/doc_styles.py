@@ -16,6 +16,8 @@ import copy
 import json
 from pathlib import Path
 
+from core.reference_grammar import parse_grammar
+
 _STYLES_DIR = Path(__file__).resolve().parent.parent / "doc_styles"
 
 DEFAULT_STYLE = "general"
@@ -37,9 +39,9 @@ def _validate(data: dict) -> None:
             raise ValueError(f"Style field '{field}' must not be empty")
     grammar = data.get("reference_grammar")
     if grammar is not None:
-        # No grammar is defined yet (it arrives with the shared reference grammar); until then only
-        # null ("no document-type numbering rules") is allowed, so a typo cannot silently do nothing.
-        raise ValueError("Style field 'reference_grammar' must be null (no grammar is defined yet)")
+        # null means "no document-type numbering rules" (today's behavior); an object is checked
+        # by the shared grammar itself, so a typo is an error and cannot silently do nothing.
+        parse_grammar(grammar)
 
 
 def load_style(name: str = DEFAULT_STYLE) -> dict:

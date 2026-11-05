@@ -90,10 +90,15 @@ def test_wrong_types_and_empty_values_are_rejected(style_dir):
         load_style("test")
 
 
-def test_a_grammar_is_refused_until_one_is_defined(style_dir):
-    """A typo cannot silently do nothing: any non-null grammar is an error for now."""
-    _write(style_dir, {**_VALID, "reference_grammar": {"levels": []}})
-    with pytest.raises(ValueError, match="reference_grammar"):
+def test_a_valid_grammar_is_accepted(style_dir):
+    _write(style_dir, {**_VALID, "reference_grammar": {"gap_tolerance": 4}})
+    assert load_style("test")["reference_grammar"] == {"gap_tolerance": 4}
+
+
+def test_a_bad_grammar_is_an_error_not_a_silent_no_op(style_dir):
+    """A typo in a grammar field must not quietly turn the rules off."""
+    _write(style_dir, {**_VALID, "reference_grammar": {"gap_tolerence": 4}})
+    with pytest.raises(ValueError, match="gap_tolerence"):
         load_style("test")
 
 
