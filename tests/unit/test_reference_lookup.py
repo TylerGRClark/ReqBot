@@ -159,8 +159,8 @@ def test_the_file_round_trips(tmp_path):
 
 CHUNKS = [
     {"chunk_id": 0, "raw_text": "Front page of the instruction.", "section_title_path": ["Front"], "page_start": 1, "page_end": 1},
-    {"chunk_id": 1, "raw_text": "b. " + QUOTE_A, "section_title_path": ["Responsibilities"], "page_start": 2, "page_end": 2},
-    {"chunk_id": 2, "raw_text": "1.2. Units will report incidents within twenty four hours of discovery.", "section_title_path": ["Reporting"], "page_start": 2, "page_end": 2},
+    {"chunk_id": 1, "raw_text": "1.2. Units will report incidents within twenty four hours of discovery.", "section_title_path": ["Reporting"], "page_start": 2, "page_end": 2},
+    {"chunk_id": 2, "raw_text": "b. " + QUOTE_A, "section_title_path": ["Responsibilities"], "page_start": 2, "page_end": 2},  # after the first numbered paragraph
 ]
 
 
@@ -171,8 +171,8 @@ def _req(rid, quote, ref, chunk_id, **extra):
 
 
 REQS = [
-    _req("REQ-blank", QUOTE_A, "", 1),
-    _req("REQ-numbered", "Units will report incidents within twenty four hours of discovery.", "1.2", 2),
+    _req("REQ-blank", QUOTE_A, "", 2),
+    _req("REQ-numbered", "Units will report incidents within twenty four hours of discovery.", "1.2", 1),
 ]
 
 
@@ -286,3 +286,28 @@ def test_a_label_from_the_wrong_section_is_not_used(tmp_path):
     run = next(root.iterdir())
     RL.write_sidecar(RL.sidecar_path(run, "doc"), RL.build_sidecar(wrong, load_style("outline-dod")))
     assert generate(root, "doc", "cybersecurity")["items"][0]["citation"] == "2.1 (inferred)"
+
+
+def test_a_label_does_not_replace_front_matter_or_figure_citations(tmp_path):
+    """Rows cited by where they sit ("Front matter", "Figure A3.1") keep that citation (Codex, PR 393)."""
+    quote = "Compliance with this publication is mandatory for all units and personnel."
+    chunks = [{"chunk_id": 0, "raw_text": quote, "section_title_path": ["BY ORDER"], "page_start": 1, "page_end": 1},
+              {"chunk_id": 1, "raw_text": "1.1. Purpose. This instruction sets the rules for every unit.", "section_title_path": ["1. Introduction"], "page_start": 2, "page_end": 2}]
+    req = {"requirement_id": "REQ-front", "source_quote": quote, "source_ref": "", "chunk_id": 0, "source_pdf": "doc.pdf", "document_id": "d1",
+           "section_title_path": ["BY ORDER"], "page_start": 1, "page_end": 1}
+    items = [{"kind": "list_item", "text": "Director will:", "marker": "5.", "page": 1}, {"kind": "list_item", "text": quote, "marker": "a.", "page": 1}]
+
+    def build(base, labels):
+        base.mkdir(parents=True)
+        run = base / "doc_20260101_120000"
+        run.mkdir()
+        (run / "doc_requirements_normalized.jsonl").write_text(json.dumps(req) + "\n", encoding="utf-8")
+        (run / "doc_chunks.jsonl").write_text("".join(json.dumps(c) + "\n" for c in chunks), encoding="utf-8")
+        if labels:
+            RL.write_sidecar(RL.sidecar_path(run, "doc"), RL.build_sidecar(items, load_style("outline-dod")))
+        return run
+
+    plain = requirement_citations(build(tmp_path / "a", False) / "doc_requirements_normalized.jsonl")
+    labeled = requirement_citations(build(tmp_path / "b", True) / "doc_requirements_normalized.jsonl")
+    assert plain["REQ-front"] == "Front matter"
+    assert labeled == plain

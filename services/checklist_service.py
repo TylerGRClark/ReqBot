@@ -166,6 +166,10 @@ def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs, doc_
         if numbered is not None:
             applies = numbered
             flags = checklist_audit.item_flags(judged, source_ref, applies, verbs)
+    if req.get("clause_label") == "UNSURE":
+        flags = [*flags, "labeled_unsure"]  # the labeler could not decide (or its answer could not be read): the row is kept for a reader to check
+    if not cite:  # nothing numbered to cite: where the row sits, read from the document ("Front matter", "Figure A3.1")
+        cite = checklist_audit.unnumbered_label(chunks, chunk_id, locate_text, first_numbered)
     heading_cite = cite  # the section heading column is looked up from the paragraph number as before; a longer label ("2.1.a") would find none
     if references is not None and not table_ref and (not cite or cite.endswith("(inferred)")):
         # a document style with a reference grammar: the paragraph the row sits under, from the document's own numbering ("Encl A, 5.k", "2.10.b(3)").
@@ -174,10 +178,6 @@ def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs, doc_
         ref = references.find(extracted_quote, req.get("page_start"), req.get("page_end"))
         if ref and _label_fits(cite, ref):
             cite = ref
-    if req.get("clause_label") == "UNSURE":
-        flags = [*flags, "labeled_unsure"]  # the labeler could not decide (or its answer could not be read): the row is kept for a reader to check
-    if not cite:  # nothing numbered to cite: where the row sits, read from the document ("Front matter", "Figure A3.1")
-        cite = checklist_audit.unnumbered_label(chunks, chunk_id, locate_text, first_numbered)
     windows = _prompt_windows(req, chunk, locate_text, span, passage, doc_lines) if found and doc_lines else {}
     return {"citation": cite, "heading_citation": heading_cite, "table_ref": table_ref, "table_heading": table_heading, "applies": applies, "flags": flags, "passage": passage, "found": found, "prompt_windows": windows}
 
