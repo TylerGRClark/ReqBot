@@ -545,3 +545,49 @@ def test_marker_prefixed_short_fragment_survives_full_pipeline(tmp_path):
     assert len(records) == 1
     assert records[0]["source_quote"] == "(3) Restrain competition."
     assert records[0]["explained_text"] == "Classification shall not be used to: Restrain competition."
+
+
+# --- the paragraph reference stamped on each record (docs/DOCUMENT_STYLES.md) -------------------
+
+_REF_TEXT = "- a.  Plan the work carefully.\n- b.  " + SAMPLE_QUOTE
+
+
+def test_a_record_carries_the_reference_of_the_span_that_holds_its_clause(tmp_path):
+    start_b = _REF_TEXT.index("- b.")
+    chunk = _chunk(0, _REF_TEXT, reference_spans=[[0, start_b - 1, "Encl A, 5.a"], [start_b, len(_REF_TEXT), "Encl A, 5.b"]])
+    rows, _ = _run(tmp_path, [chunk], [_row(chunk, SAMPLE_QUOTE)])
+    assert rows[0]["reference"] == "Encl A, 5.b"
+    assert rows[0]["source_ref"] == ""                       # the reference never goes into source_ref
+
+
+def _sub(tmp_path, name):
+    folder = tmp_path / name
+    folder.mkdir()
+    return folder
+
+
+def test_the_reference_does_not_change_the_requirement_id(tmp_path):
+    plain = _chunk(0, _REF_TEXT)
+    labeled = _chunk(0, _REF_TEXT, reference_spans=[[0, len(_REF_TEXT), "Encl A, 5.b"]])
+    a, _ = _run(_sub(tmp_path, "a"), [plain], [_row(plain, SAMPLE_QUOTE)])
+    b, _ = _run(_sub(tmp_path, "b"), [labeled], [_row(labeled, SAMPLE_QUOTE)])
+    assert a[0]["requirement_id"] == b[0]["requirement_id"]
+
+
+def test_a_chunk_without_spans_gives_an_empty_reference(tmp_path):
+    chunk = _chunk(0, _REF_TEXT)
+    rows, _ = _run(tmp_path, [chunk], [_row(chunk, SAMPLE_QUOTE)])
+    assert rows[0]["reference"] == ""
+
+
+def test_a_clause_outside_every_span_gets_no_reference(tmp_path):
+    chunk = _chunk(0, _REF_TEXT, reference_spans=[[0, 5, "Encl A, 5.a"]])
+    rows, _ = _run(tmp_path, [chunk], [_row(chunk, SAMPLE_QUOTE)])
+    assert rows[0]["reference"] == ""
+
+
+@pytest.mark.parametrize("n,bad", enumerate(["oops", [None], [[1]], [["x", "y", 3]]]))
+def test_damaged_spans_never_break_normalizing(tmp_path, n, bad):
+    chunk = _chunk(0, _REF_TEXT, reference_spans=bad)
+    rows, failures = _run(_sub(tmp_path, f"d{n}"), [chunk], [_row(chunk, SAMPLE_QUOTE)])
+    assert rows[0]["reference"] == "" and failures == []

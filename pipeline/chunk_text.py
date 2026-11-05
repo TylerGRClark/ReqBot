@@ -425,6 +425,7 @@ def run_structure_aware(
     *,
     ancestry_result: object,
     skip_sections: list[str] | None = None,
+    item_references: dict[str, str] | None = None,
 ) -> str:
     """Chunk a DoclingDocument with HybridChunker and inject WP-14.1 ancestry breadcrumbs.
 
@@ -435,6 +436,8 @@ def run_structure_aware(
         ancestry_result: AncestryResult from section_parser.run().  Must carry
                          a live DoclingDocument in .doc and the ancestry map in
                          .item_ancestry.
+        item_references: {item self_ref: paragraph reference} from pipeline.reference_labels.label_document, when a document style with a reference grammar is in use.
+                         Each chunk then also gets `reference_spans`, where its labeled items sit in raw_text. None leaves the chunk records exactly as before.
 
     Returns:
         output_path (str) — the file that was written.
@@ -444,6 +447,7 @@ def run_structure_aware(
         raw_text, breadcrumb, text,
         section_ref_path, section_title_path,
         parent_header_text, parent_context
+        (and reference_spans, only when item_references is given and a span was found)
     """
     try:
         from docling.chunking import HybridChunker
@@ -539,6 +543,11 @@ def run_structure_aware(
             "parent_header_text": ancestry.get("parent_header_text"),
             "parent_context": ancestry.get("parent_context"),
         })
+        if item_references:
+            from pipeline import reference_labels
+            spans = reference_labels.spans_for_chunk(chunk, doc, raw_text, item_references)
+            if spans:
+                records[-1]["reference_spans"] = spans
         chunk_id += 1
 
     log.info(

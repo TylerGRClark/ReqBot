@@ -22,7 +22,6 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from core import reference_lookup
 from core.artifact_resolver import doc_key_from_requirements_path, resolve_requirement_file
 from core.profiles import load_profile
 from services import audit_questions, checklist_audit, criticality, heading_repair
@@ -133,7 +132,7 @@ def _label_fits(inferred: str, label: str) -> bool:
     return label == base or label.startswith((base + ".", base + "("))
 
 
-def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs, doc_lines=None, references=None) -> dict:
+def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs, doc_lines=None) -> dict:
     """Where a record sits in its document, read from the document: how it is cited, who it applies to, its hint flags and the passage around its quote. No model.
 
     The checklist and the search index both call this, so the label an auditor sees on a sheet and the one a search result shows cannot drift apart. `table_ref` is the table's label
@@ -171,13 +170,12 @@ def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs, doc_
     if not cite:  # nothing numbered to cite: where the row sits, read from the document ("Front matter", "Figure A3.1")
         cite = checklist_audit.unnumbered_label(chunks, chunk_id, locate_text, first_numbered)
     heading_cite = cite  # the section heading column is looked up from the paragraph number as before; a longer label ("2.1.a") would find none
-    if references is not None and not table_ref and (not cite or cite.endswith("(inferred)")):
-        # a document style with a reference grammar: the paragraph the row sits under, from the document's own numbering ("Encl A, 5.k", "2.10.b(3)").
-        # It only replaces a blank or inferred citation, never one read from the row itself; only when the quote sits under exactly one reference;
-        # and an inferred number is only made more exact, never contradicted (so a wrong style on a document cannot move its rows to other sections).
-        ref = references.find(extracted_quote, req.get("page_start"), req.get("page_end"))
-        if ref and _label_fits(cite, ref):
-            cite = ref
+    reference = req.get("reference") or ""
+    if reference and not table_ref and (not cite or cite.endswith("(inferred)")) and _label_fits(cite, reference):
+        # the record carries the paragraph it sits under in the document's own numbering ("Encl A, 5.k", "2.10.b(3)"; docs/DOCUMENT_STYLES.md). It only replaces a blank or
+        # inferred citation, never one read from the row itself or a "Front matter" / "Figure" one, and an inferred number is only made more exact, never contradicted
+        # (so a wrong style on a document cannot move its rows to other sections).
+        cite = reference
     windows = _prompt_windows(req, chunk, locate_text, span, passage, doc_lines) if found and doc_lines else {}
     return {"citation": cite, "heading_citation": heading_cite, "table_ref": table_ref, "table_heading": table_heading, "applies": applies, "flags": flags, "passage": passage, "found": found, "prompt_windows": windows}
 
@@ -210,11 +208,6 @@ def _prompt_windows(req: dict, chunk, locate_text: str, span, passage: str, doc_
     return out
 
 
-def _load_references(jsonl_path):
-    """The reference labels beside a requirements file (core/reference_lookup.py), or None: most documents have none."""
-    return reference_lookup.load_lookup(Path(jsonl_path).parent, doc_key_from_requirements_path(Path(jsonl_path)))
-
-
 def requirement_citations(jsonl_path) -> dict[str, str]:
     """{requirement_id: citation} for every record of a requirements file: the label the checklist gives the row (a paragraph number, "Table 3.1", "Front matter", marked
     "(inferred)" when it was worked out from the text before the quote), read from the document's chunk file beside it. The search index stores it next to `source_ref`, which it
@@ -224,7 +217,6 @@ def requirement_citations(jsonl_path) -> dict[str, str]:
     chunks = _load_chunks(jsonl_path)
     hmap = _heading_map(chunks)
     first_numbered = checklist_audit.first_numbered_chunk(chunks)
-    references = _load_references(jsonl_path)
     out: dict[str, str] = {}
     with open(jsonl_path, encoding="utf-8") as f:
         for line in f:
@@ -239,7 +231,7 @@ def requirement_citations(jsonl_path) -> dict[str, str]:
             if not req_id or not _quotes(req)[1]:
                 continue
             # the verbs only decide the "no stated actor" hint, which does not change where a row sits or how it is cited
-            out[req_id] = _locate_row(req, chunks, hmap, first_numbered, (), references=references)["citation"]
+            out[req_id] = _locate_row(req, chunks, hmap, first_numbered, ())["citation"]
     return out
 
 
@@ -270,7 +262,6 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
     para_map = _paragraph_map(chunks)  # WP-46.1: the document's own text, for the passage column; {} when the chunk file is not beside the requirements
     doc_lines = checklist_audit.document_lines(chunks)  # the document line by line, for the prompt windows
     first_numbered = checklist_audit.first_numbered_chunk(chunks)  # for rows with no number to cite (front matter)
-    references = _load_references(jsonl_path)  # None unless the document was labeled under a document style
 
     items = []
     document_id = ""
@@ -311,7 +302,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
 
             # WP-46.1 audit layout: who the row applies to, the document's own passage, and specific hints (nothing here is model-made)
             verbs = profile.get("obligation_verbs", [])
-            where = _locate_row(req, chunks, hmap, first_numbered, verbs, doc_lines, references=references)
+            where = _locate_row(req, chunks, hmap, first_numbered, verbs, doc_lines)
             table_ref, table_heading, cite = where["table_ref"], where["table_heading"], where["citation"]
             applies, flags, passage = where["applies"], where["flags"], where["passage"]
             parent_ref, parent_text = checklist_audit.parent_paragraph(source_ref, para_map)

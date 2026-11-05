@@ -40,6 +40,8 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
+from pipeline.reference_labels import reference_at  # noqa: E402  (pure helper; reference_labels imports nothing heavy at module level)
+
 SCHEMA_VERSION = "3.0"   # clause labeling (pipeline/clause_labeling.py writes the same)
 PIPELINE_VERSION = "2.0"
 
@@ -521,6 +523,7 @@ def run(
     chunk_hierarchy_map = build_chunk_hierarchy_map(chunks)
     section_children_map = build_section_children_map(chunks)
     chunk_raw_text_map = {c["chunk_id"]: c.get("raw_text") or c.get("text") or "" for c in chunks if "chunk_id" in c}
+    chunk_reference_spans = {c["chunk_id"]: c.get("reference_spans") for c in chunks if "chunk_id" in c}  # only chunks made under a document style with a reference grammar have them
     log.info("Loaded page references for %d chunks", len(chunk_page_map))
     sections_with_children = sum(1 for v in section_children_map.values() if v)
     log.info("Hierarchy map: %d chunks, %d sections with children", len(chunk_hierarchy_map), sections_with_children)
@@ -597,6 +600,9 @@ def run(
             "requirement_id": req.get("requirement_id", f"R-{chunk_id}-X"),
             "description": description,
             "source_ref": source_ref,
+            # The paragraph the clause sits under in the document's own numbering ("Encl A, 5.k", "2.10.b(3)"), read from the chunk span that holds the clause's offset; "" when
+            # the document has no such labels or the clause sits in no labeled item (docs/DOCUMENT_STYLES.md). Never part of source_ref or the requirement ID.
+            "reference": reference_at(chunk_reference_spans.get(chunk_id), req.get("anchor_start")),
             "domain_tags": domain_tags,
             "requirement_type": req_type,
             "source_quote": source_quote,

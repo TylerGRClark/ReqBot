@@ -203,6 +203,7 @@ def run(
     # Failure here is a hard error -- no legacy fallback (WP-34.1).
 
     ancestry_result = None  # populated by Step A; used in Step B
+    item_references = None  # {item self_ref: paragraph reference}, only under a document style with a reference grammar
     docling_step = None
     try:
         if "A" in steps_to_run:
@@ -213,10 +214,6 @@ def run(
             progress.emit("reading")
             from pipeline import section_parser as _section_parser
             ancestry_result = _section_parser.run(str(pdf), str(out_dir))
-            if doc_style.get("reference_grammar"):
-                # a document style with numbering rules: label the reader's items now, while they still carry the document's own numbering
-                from pipeline import reference_labels as _reference_labels
-                _reference_labels.write_for_document(ancestry_result.doc, doc_style, out_dir, pdf.stem)
 
         if "B" in steps_to_run:
             docling_step = "B"
@@ -229,10 +226,15 @@ def run(
                 log.info("Step A was skipped — running section_parser to obtain DoclingDocument")
                 from pipeline import section_parser as _section_parser
                 ancestry_result = _section_parser.run(str(pdf), str(out_dir))
+            if doc_style.get("reference_grammar"):
+                # label the reader's items now, while they still carry the document's own numbering; chunking records where each sits in the chunk text
+                from pipeline import reference_labels as _reference_labels
+                item_references = _reference_labels.label_document(ancestry_result.doc, doc_style)
             chunk_text_mod.run_structure_aware(
                 str(chunks_path),
                 ancestry_result=ancestry_result,
                 skip_sections=profile.get("skip_sections", []),
+                item_references=item_references,
             )
     except Exception as e:
         raise RuntimeError(f"Step {docling_step} (Docling) failed: {e}") from e
