@@ -1,0 +1,6 @@
+{
+  "name": "general",
+  "version": "1",
+  "description": "Today's behavior for every document: no document-type rules. The default when no style is chosen.",
+  "reference_grammar": null
+}

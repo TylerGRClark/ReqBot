@@ -129,6 +129,7 @@ def cmd_ingest(args: argparse.Namespace) -> int:
             extraction_model=extraction_model,
             max_chunks=args.max_chunks,
             profile_name=args.profile,
+            doc_style_name=getattr(args, "style", "general"),
         )
     except RuntimeError as e:
         log.error("%s", e)
@@ -1959,6 +1960,13 @@ def main() -> None:
         type=str,
         default="cybersecurity",
         help="Domain profile name (default: cybersecurity). Profile must exist in profiles/<name>.json.",
+    )
+    p_ingest.add_argument(
+        "--style",
+        type=str,
+        default="general",
+        help="Document style: how this kind of document is laid out and numbered (default: general = no "
+             "document-type rules, today's behavior). Style must exist in doc_styles/<name>.json.",
     )
     p_ingest.add_argument(
         "--replace", action="store_true",
