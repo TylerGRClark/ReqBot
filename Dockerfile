@@ -39,6 +39,7 @@ COPY mcp_server/ ./mcp_server/
 COPY models/ ./models/
 COPY pipeline/ ./pipeline/
 COPY profiles/ ./profiles/
+COPY doc_styles/ ./doc_styles/
 COPY services/ ./services/
 COPY frontend/__init__.py ./frontend/__init__.py
 COPY --from=frontend /frontend/dist ./frontend/dist

@@ -73,6 +73,7 @@ def run(
     source_pdf: str = "",
     layout_mode_used: str = "",
     skip_sections_configured: list[str] | None = None,
+    doc_style: dict | None = None,
 ) -> dict:
     """Aggregate normalized requirements and write final_output.json and stats.json.
 
@@ -91,6 +92,9 @@ def run(
         skip_sections_configured: The active profile's skip_sections value at
                                    ingest time (WP-33.2) -- used only to compute
                                    skip_sections_applied below, not stored verbatim.
+        doc_style:                The document style this ingest ran with, as {"name", "version"}
+                                   (core.doc_styles.style_record). Recorded in stats only; it adds
+                                   no field to any requirement record. None when unknown.
 
     Returns:
         stats dict — the same content written to stats.json.
@@ -186,6 +190,7 @@ def run(
             "requirements_per_1000_chars": round(reqs_per_1k, 3),
             "layout_mode_used": layout_mode_used,
             "skip_sections_applied": skip_sections_applied,
+            "doc_style": doc_style,
         },
         "requirements": {
             "total": len(requirements),

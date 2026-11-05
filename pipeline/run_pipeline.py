@@ -119,6 +119,7 @@ def run(
     timeout: int = 120,
     skip_to: str = "A",
     profile_name: str = "cybersecurity",
+    doc_style_name: str = "general",
 ) -> str:
     """Run the full extraction pipeline in-process (PDF reading to totals).
 
@@ -137,6 +138,10 @@ def run(
         profile_name:      Domain profile name to load from profiles/<name>.json.
                            Default 'cybersecurity'. Loaded once and used by chunking (skip
                            sections) and normalizing.
+        doc_style_name:    Document style name from doc_styles/<name>.json (how this kind of
+                           document is laid out and numbered). Default 'general' = today's
+                           behavior. Loaded here so a bad name fails before any work starts, and
+                           recorded in the run's stats. It does not change any output yet.
 
     Returns:
         Path to requirements_normalized.jsonl (str).
@@ -152,6 +157,12 @@ def run(
         profile = _load_profile(profile_name)
     except (FileNotFoundError, ValueError) as e:
         raise RuntimeError(f"Failed to load profile '{profile_name}': {e}") from e
+
+    from core.doc_styles import load_style as _load_style, style_record as _style_record
+    try:
+        doc_style = _load_style(doc_style_name)
+    except (FileNotFoundError, ValueError) as e:
+        raise RuntimeError(f"Failed to load document style '{doc_style_name}': {e}") from e
 
     if not _docling_available():
         raise RuntimeError(
@@ -273,6 +284,7 @@ def run(
                 str(index_path), str(out_dir), source_pdf=pdf.name,
                 layout_mode_used=layout_mode_for_stats,
                 skip_sections_configured=profile.get("skip_sections", []),
+                doc_style=_style_record(doc_style),
             )
         except Exception as e:
             raise RuntimeError(f"Totals and final file (Step E) failed: {e}") from e

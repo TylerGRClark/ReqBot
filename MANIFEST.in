@@ -5,6 +5,10 @@
 recursive-include profiles *.json
 exclude profiles/test-*.json
 
+# Document styles (layout and numbering rules per document type) — needed at runtime by core/doc_styles.py.
+recursive-include doc_styles *.json
+exclude doc_styles/test-*.json
+
 # Built frontend — present only when build/build-frontend.sh has run first
 # (packaged/container builds). Absent in a plain source checkout; that's fine,
 # a missing recursive-include target is not an error.

@@ -84,6 +84,7 @@ packages = [
     "pipeline",
     "services",
     "profiles",
+    "doc_styles",
 ]
 # MANIFEST.in is the source of truth for which non-.py files get included (a plain
 # package-data glob doesn't reliably handle frontend/dist/'s dynamically-hashed,
@@ -93,6 +94,7 @@ include-package-data = true
 [tool.setuptools.exclude-package-data]
 # test-*.json fixtures are for tests/unit/, not something the installed package ships.
 profiles = ["test-*.json"]
+doc_styles = ["test-*.json"]
 
 [tool.ruff]
 target-version = "py312"
