@@ -70,6 +70,10 @@ def test_the_sheet_and_the_index_use_the_same_label(tmp_path):
     ("2.1 (inferred)", "2.10.b", False),          # "2.1" is not a prefix of "2.10" as a paragraph
     ("3.4.4.2 (inferred)", "3.4.4", False),       # a shallower label is not "more exact"
     ("Front matter", "1.a", False),               # anything not a plain number stays as it is
+    ("2.1 (inferred)", "Encl A, 2.1.b", True),    # an enclosure-qualified label is compared by its paragraph (Codex, PR 393)
+    ("2.1 (inferred)", "Encl 3, 2.1", True),
+    ("3.3 (inferred)", "Encl A, 2.2", False),
+    ("2.1 (inferred)", "Encl A, 2.10.b", False),
 ])
 def test_a_reference_only_refines_an_inferred_number(old, label, ok):
     assert _label_fits(old, label) is ok

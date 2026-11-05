@@ -121,6 +121,7 @@ def _quotes(req: dict) -> tuple[str, str, str]:
 
 
 _PLAIN_NUMBER = re.compile(r"^[A-Z]{0,2}\d+(?:\.\d+)*$")
+_ENCLOSURE_PREFIX = re.compile(r"^Encl [A-Z0-9]+, ")
 
 
 def _label_fits(inferred: str, label: str) -> bool:
@@ -129,6 +130,7 @@ def _label_fits(inferred: str, label: str) -> bool:
     base = inferred.replace("(inferred)", "").strip()
     if not base or not _PLAIN_NUMBER.match(base):
         return not base
+    label = _ENCLOSURE_PREFIX.sub("", label)   # "Encl A, 2.1.b" is compared by its paragraph, "2.1.b"
     return label == base or label.startswith((base + ".", base + "("))
 
 

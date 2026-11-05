@@ -51,6 +51,7 @@ _KINDS = {"section_header": "heading", "heading": "heading", "title": "heading",
           "list_item": "list_item", "text": "text", "paragraph": "text"}
 _HEADING_LABELS = frozenset({"section_header", "title"})
 BACKUP_SUFFIX = ".before-references"
+_PLACE_FIELDS = ("page_start", "page_end", "section_ref_path", "section_title_path")   # what must agree, beside the text, before spans are copied to a stored chunk
 
 
 def item_kind(docling_label) -> str:
@@ -72,22 +73,37 @@ def label_document(doc, style: dict) -> dict[str, str]:
                           getattr(item, "marker", None) or "", prov[0].page_no if prov else None))
         refs_of.append(getattr(item, "self_ref", None))
     out = {}
-    for self_ref, ref in zip(refs_of, label_items(items, grammar)):
+    for self_ref, item, ref in zip(refs_of, items, label_items(items, grammar)):
         text = ref.text()
-        if self_ref and text:
+        if self_ref and text and item.kind != "other":   # tables, pictures and captions are not paragraphs: they carry no reference of their own
             out[self_ref] = text
     return out
 
 
+def _table_text(item, doc) -> str:
+    """A table's text as chunking wrote it into raw_text (its markdown grid), or ""."""
+    for args in ((doc,), ()):
+        try:
+            return (item.export_to_markdown(*args) or "").strip()
+        except Exception:
+            continue
+    return ""
+
+
 def _item_text(item, doc) -> str:
+    """The text of an item as it appears in a chunk's raw_text: its own text, or a table's markdown grid. "" when it has none."""
     text = getattr(item, "text", None)
     if isinstance(text, str):
         return text.strip()
+    if hasattr(item, "export_to_markdown"):
+        return _table_text(item, doc)
     try:  # a generic reference (a merged chunk's item): resolve it to the real item
         from docling_core.types.doc.document import RefItem
         real = RefItem(cref=item.self_ref).resolve(doc)
         text = getattr(real, "text", None)
-        return text.strip() if isinstance(text, str) else ""
+        if isinstance(text, str):
+            return text.strip()
+        return _table_text(real, doc) if hasattr(real, "export_to_markdown") else ""
     except Exception:
         return ""
 
@@ -95,7 +111,8 @@ def _item_text(item, doc) -> str:
 def spans_for_chunk(chunk, doc, raw_text: str, item_references: dict[str, str]) -> list[list]:
     """[[start, end, reference], ...] for the labeled items of a chunk, as offsets into the chunk's `raw_text`.
 
-    Each item's text is found in the raw text in reading order (so a sentence repeated in one chunk is matched to the right item). A span starts at the beginning of the item's line, so a
+    Each item's text is found in the raw text in reading order (so a sentence repeated in one chunk is matched to the right item; a table's grid is stepped over, so a paragraph that repeats
+    a table cell's words is not matched inside the table). A span starts at the beginning of the item's line, so a
     clause that opens with the list marker ("- b.  Develop ...") falls inside it. Items that are headings (left out of raw_text), have no text, or are not found are skipped."""
     spans: list[list] = []
     cursor = 0
@@ -147,9 +164,12 @@ def merge_spans(old_chunks: list[dict], new_chunks: list[dict]) -> tuple[list[di
 
     The stored chunks and the fresh ones are lined up by their text (not their ids, which move when a section is skipped); a stored chunk whose text has no identical fresh chunk (the
     PDF is read slightly differently today, or the stored run kept a section that is skipped now) is left exactly as it is, and its rows keep the citation they have. Spans are only
-    ever attached to identical text, so their offsets are exact. Raises ValueError when no chunk matches at all."""
+    ever attached to identical text, so their offsets are exact. Identical text alone is not trusted: the same sentence can sit in two places (two enclosures), so a pair must also agree on its
+    pages and its section path (they are part of the alignment key), otherwise that stored chunk is left unstamped. Raises ValueError when no chunk matches at all."""
     import difflib
-    matcher = difflib.SequenceMatcher(None, [c.get("raw_text") for c in old_chunks], [c.get("raw_text") for c in new_chunks], autojunk=False)
+    def key(c):   # text AND place: the same sentence under two enclosures is two different chunks
+        return (c.get("raw_text"), *(repr(c.get(f)) for f in _PLACE_FIELDS))
+    matcher = difflib.SequenceMatcher(None, [key(c) for c in old_chunks], [key(c) for c in new_chunks], autojunk=False)
     merged = [dict(c) for c in old_chunks]
     matched = 0
     for block in matcher.get_matching_blocks():
@@ -191,6 +211,10 @@ def add_references(pdf_path: Path, run_dir: Path, style_name: str, doc_key: str 
     for p in (chunks_path, extracted_path, norm_path):
         if not p.exists():
             raise FileNotFoundError(p)
+    higher = [run_dir / f"{stem}_requirements_{tier}.jsonl" for tier in ("gated", "enriched")]
+    if any(p.exists() for p in higher):
+        # readers pick the freshest of gated > enriched > normalized (core/artifact_resolver.py); a rewritten normalized file would become the freshest and silently drop the enrichment
+        raise ValueError(f"{run_dir.name} has an enriched or gated requirements file; adding references to it needs a normal re-run of normalizing and the later steps, not this shortcut")
     old_chunks, old_rows = _load(chunks_path), _load(norm_path)
 
     from core.profiles import load_profile

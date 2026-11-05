@@ -117,12 +117,15 @@ def test_chunking_accepts_item_references_and_leaves_the_default_alone():
 
 # --- adding references to an ingested document ---------------------------------------------------
 
-OLD_CHUNKS = [{"chunk_id": 0, "raw_text": "- a.  one"}, {"chunk_id": 1, "raw_text": "- b.  two"}, {"chunk_id": 2, "raw_text": "- c.  three"}]
+def place(chunk_id, text, page=1, section="S", **extra):
+    return {"chunk_id": chunk_id, "raw_text": text, "page_start": page, "page_end": page, "section_ref_path": [section], "section_title_path": [section], **extra}
+
+
+OLD_CHUNKS = [place(0, "- a.  one"), place(1, "- b.  two"), place(2, "- c.  three")]
 
 
 def test_merge_adds_spans_where_the_text_matches_and_keeps_everything_else():
-    new = [{"chunk_id": 0, "raw_text": "- a.  one", "reference_spans": [[0, 9, "5.a"]]}, {"chunk_id": 1, "raw_text": "- b.  two"},
-           {"chunk_id": 2, "raw_text": "- c.  three", "reference_spans": [[0, 11, "5.c"]]}]
+    new = [place(0, "- a.  one", reference_spans=[[0, 9, "5.a"]]), place(1, "- b.  two"), place(2, "- c.  three", reference_spans=[[0, 11, "5.c"]])]
     merged, report = RLB.merge_spans(OLD_CHUNKS, new)
     assert merged[0]["reference_spans"] == [[0, 9, "5.a"]] and "reference_spans" not in merged[1] and merged[2]["reference_spans"] == [[0, 11, "5.c"]]
     assert [c["raw_text"] for c in merged] == [c["raw_text"] for c in OLD_CHUNKS]
@@ -131,28 +134,27 @@ def test_merge_adds_spans_where_the_text_matches_and_keeps_everything_else():
 
 def test_chunks_are_lined_up_by_text_not_by_id():
     """A skipped section in the middle shifts the fresh ids; the spans still land on the right stored chunk."""
-    new = [{"chunk_id": 0, "raw_text": "- a.  one", "reference_spans": [[0, 9, "5.a"]]}, {"chunk_id": 1, "raw_text": "- c.  three", "reference_spans": [[0, 11, "5.c"]]}]
+    new = [place(0, "- a.  one", reference_spans=[[0, 9, "5.a"]]), place(1, "- c.  three", reference_spans=[[0, 11, "5.c"]])]
     merged, report = RLB.merge_spans(OLD_CHUNKS, new)
     assert merged[2]["reference_spans"] == [[0, 11, "5.c"]] and "reference_spans" not in merged[1]
     assert report["unmatched_stored"] == 1
 
 
 def test_a_stored_chunk_whose_text_moved_gets_no_spans_instead_of_wrong_ones():
-    new = [{"chunk_id": 0, "raw_text": "- a.  one", "reference_spans": [[0, 9, "5.a"]]}, {"chunk_id": 1, "raw_text": "- b.  TWO", "reference_spans": [[0, 9, "9.z"]]},
-           {"chunk_id": 2, "raw_text": "- c.  three"}]
+    new = [place(0, "- a.  one", reference_spans=[[0, 9, "5.a"]]), place(1, "- b.  TWO", reference_spans=[[0, 9, "9.z"]]), place(2, "- c.  three")]
     merged, report = RLB.merge_spans(OLD_CHUNKS, new)
     assert "reference_spans" not in merged[1] and merged[1]["raw_text"] == "- b.  two"
     assert report["matched"] == 2
 
 
 def test_extra_stored_chunks_at_the_end_are_left_alone():
-    merged, report = RLB.merge_spans(OLD_CHUNKS, [{"chunk_id": 0, "raw_text": "- a.  one", "reference_spans": [[0, 9, "5.a"]]}])
+    merged, report = RLB.merge_spans(OLD_CHUNKS, [place(0, "- a.  one", reference_spans=[[0, 9, "5.a"]])])
     assert merged[0]["reference_spans"] == [[0, 9, "5.a"]] and report["unmatched_stored"] == 2
 
 
 def test_merge_refuses_when_nothing_matches():
     with pytest.raises(ValueError, match="full re-run"):
-        RLB.merge_spans(OLD_CHUNKS, [{"chunk_id": 0, "raw_text": "entirely different"}])
+        RLB.merge_spans(OLD_CHUNKS, [place(0, "entirely different")])
 
 
 def test_only_the_reference_may_change():
@@ -164,3 +166,63 @@ def test_only_the_reference_may_change():
                 [{"requirement_id": "R1", "source_quote": "q"}, {"requirement_id": "R3"}]):
         with pytest.raises(ValueError):
             RLB.assert_only_reference_added(old, bad)
+
+
+def test_the_same_sentence_in_two_places_is_not_stamped_with_the_other_ones_reference():
+    """Codex, PR 393: two stored chunks with identical text under different enclosures, only the second kept today."""
+    sentence = "- a.  The PO will submit the request."
+    stored = [place(0, sentence, page=7, section="ENCLOSURE A"), place(1, sentence, page=13, section="ENCLOSURE B")]
+    fresh = [place(0, sentence, page=13, section="ENCLOSURE B", reference_spans=[[0, 37, "Encl B, 3.a"]])]
+    merged, report = RLB.merge_spans(stored, fresh)
+    assert "reference_spans" not in merged[0]                       # enclosure A must not get enclosure B's reference
+    assert merged[1]["reference_spans"] == [[0, 37, "Encl B, 3.a"]]
+    assert report["matched"] == 1 and report["unmatched_stored"] == 1
+
+
+@pytest.mark.parametrize("field,value", [("page_start", 9), ("page_end", 9), ("section_ref_path", ["X"]), ("section_title_path", ["X"])])
+def test_a_chunk_that_moved_pages_or_sections_is_left_unstamped(field, value):
+    fresh = place(0, "- a.  one", reference_spans=[[0, 9, "5.a"]])
+    fresh[field] = value
+    with pytest.raises(ValueError):          # nothing else matches, so the whole document is refused rather than guessed at
+        RLB.merge_spans([place(0, "- a.  one")], [fresh])
+
+
+# --- tables: step over the grid ------------------------------------------------------------------
+
+class FakeTable:
+    label = "DocItemLabel.TABLE"
+    self_ref = "#/tables/0"
+
+    def export_to_markdown(self, doc=None):
+        return "| Action | Owner |\n| --- | --- |\n| Units shall report incidents. | Unit |"
+
+
+def test_a_paragraph_that_repeats_a_table_cell_is_matched_after_the_table():
+    """Codex, PR 393: the table has no text of its own, so the cursor used to stay before the grid."""
+    sentence = "Units shall report incidents."
+    para = item("DocItemLabel.LIST_ITEM", sentence, marker="a.", ref="#/texts/40")
+    raw = FakeTable().export_to_markdown() + "\n- a.  " + sentence
+    spans = RLB.spans_for_chunk(chunk_of(FakeTable(), para), None, raw, {"#/texts/40": "Encl 2, 2.a"})
+    assert len(spans) == 1
+    assert raw[spans[0][0]:spans[0][1]] == "- a.  " + sentence          # the paragraph, not the table cell
+    assert spans[0][0] > raw.index("Unit |")
+
+
+def test_tables_and_pictures_carry_no_reference_of_their_own():
+    doc = FakeDoc([item("DocItemLabel.LIST_ITEM", "DIRECTOR.", marker="2.", ref="#/texts/1"), item("DocItemLabel.TABLE", "", ref="#/tables/0"),
+                   item("DocItemLabel.PICTURE", "", ref="#/pictures/0")])
+    refs = RLB.label_document(doc, load_style("outline-dod"))
+    assert "#/tables/0" not in refs and "#/pictures/0" not in refs and refs["#/texts/1"] == "2"
+
+
+def test_a_document_with_an_enriched_or_gated_file_is_refused(tmp_path):
+    """Codex, PR 393: rewriting only the normalized file would make it the freshest and silently drop the enrichment."""
+    from pathlib import Path
+    for tier in ("enriched", "gated"):
+        run = tmp_path / tier
+        run.mkdir()
+        for name in ("chunks", "extracted_requirements", "requirements_normalized"):
+            (run / f"doc_{name}.jsonl").write_text("{}\n", encoding="utf-8")
+        (run / f"doc_requirements_{tier}.jsonl").write_text("{}\n", encoding="utf-8")
+        with pytest.raises(ValueError, match="enriched or gated"):
+            RLB.add_references(Path("doc.pdf"), run, "outline-dod", "doc")
