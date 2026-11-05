@@ -134,6 +134,27 @@ def test_integer_list_markers_are_ignored_inside_a_dotted_document():
     assert refs(items)[-1] == "2.4.a"
 
 
+def test_a_lettered_paragraph_filed_as_a_heading_still_counts():
+    """The reader sometimes files "a.  Component heads" as a heading, not a list item (Codex, PR 391)."""
+    items = [H("2.10.  DUTIES"), H("a.  Component heads"), L("(1)")]
+    assert refs(items) == ["2.10", "2.10.a", "2.10.a(1)"]
+
+
+def test_a_parenthesized_paragraph_filed_as_a_heading_counts():
+    items = [L("4."), L("c."), H("(1)  Services and Defense Agencies must comply."), H("(2)  The PO will submit.")]
+    assert refs(items)[-2:] == ["4.c(1)", "4.c(2)"]
+
+
+def test_a_heading_marker_given_separately_is_read():
+    items = [L("4."), Item("heading", "Services will:", marker="b.")]
+    assert refs(items)[-1] == "4.b"
+
+
+def test_a_stray_lettered_heading_is_ignored_like_any_stray_marker():
+    items = [L("4."), L("c."), H("a.  A stray earlier letter")]
+    assert refs(items)[-1] == "4.c"
+
+
 # --- what must never become a marker -----------------------------------------------------------
 
 @pytest.mark.parametrize("item", [

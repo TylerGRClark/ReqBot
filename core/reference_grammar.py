@@ -24,6 +24,8 @@ Rules (each one is there because a real document needed it):
   * A dotted heading ("2.10.  TITLE") names its number outright, so it needs no sequence check.
   * Table-of-contents lines (dot leaders and a page number) are never markers.
   * Only heading, list_item and text items carry markers; tables, captions and the rest are ignored.
+    A heading may be a top-level number ("2.10.  TITLE", "4.  TITLE") or, like any other item, a
+    lettered or parenthesized paragraph the reader happened to file as a heading ("a.  Component heads").
 
 Known limit: numbering that restarts without an enclosure heading (a second numbered list under
 the same top level) is read as a stray list and ignored.
@@ -153,8 +155,15 @@ def label_items(items: Sequence[Item], grammar: Grammar) -> list[Ref]:
                 integer = _INT_HEADING.match(text) if grammar.integer_headings and not dotted else None
                 if dotted:
                     top, top_dotted, letter, number, sub = dotted.group(1), True, None, None, None
-                elif integer and not top_dotted and _forward(top, integer.group(1), gap, False):
-                    top, letter, number, sub = integer.group(1), None, None, None
+                elif integer:
+                    if not top_dotted and _forward(top, integer.group(1), gap, False):
+                        top, letter, number, sub = integer.group(1), None, None, None
+                elif marker:
+                    kind_marker = marker
+                else:
+                    # a lettered or parenthesized paragraph the reader filed as a heading ("a.  Component heads")
+                    m = _TEXT_MARKER.match(text)
+                    kind_marker = m.group(1) if m else ""
             else:
                 if marker:
                     kind_marker = marker
