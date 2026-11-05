@@ -122,6 +122,33 @@ def test_a_damaged_or_unknown_file_is_ignored_not_fatal(tmp_path):
     assert RL.load_lookup(tmp_path, "doc") is None
 
 
+@pytest.mark.parametrize("content", [
+    {"format": 1, "items": None},                                          # not a list
+    {"format": 1},                                                         # no items
+    {"format": 1, "items": "oops"},
+    {"format": 1, "items": [{"p": 2, "n": "textofthequote"}]},             # no reference
+    {"format": 1, "items": [{"p": 2, "r": "5.a"}]},                        # no text
+    {"format": 1, "items": [{"p": "2", "n": "text", "r": "5.a"}]},         # page is not a number
+    {"format": 1, "items": [{"p": True, "n": "text", "r": "5.a"}]},
+    {"format": 1, "items": [{"p": 2, "n": 5, "r": "5.a"}]},                # text is not a string
+    {"format": 1, "items": [{"p": 2, "n": "text", "r": None}]},
+    {"format": 1, "items": ["not an item"]},
+    {"format": 1, "items": [{"p": 2, "n": "text", "r": "5.a"}, None]},     # one bad item spoils the file
+])
+def test_a_file_of_the_wrong_shape_is_ignored_not_fatal(tmp_path, content):
+    """Valid JSON with the right format number but the wrong contents must leave citations as before (Codex, PR 393)."""
+    RL.sidecar_path(tmp_path, "doc").write_text(json.dumps(content), encoding="utf-8")
+    assert RL.load_lookup(tmp_path, "doc") is None
+
+
+def test_a_wrong_shaped_file_leaves_the_checklist_and_the_index_citations_alone(tmp_path):
+    run = _doc(tmp_path / "a", labels=False)
+    for content in ({"format": 1, "items": None}, {"format": 1, "items": [{"p": 2, "n": "planprogramandbudgetforthetransformation"}]}):
+        RL.sidecar_path(run, "doc").write_text(json.dumps(content), encoding="utf-8")
+        assert _cites(run) == _cites(_doc(tmp_path / f"b{len(str(content))}", labels=False))
+        generate(tmp_path / "a", "doc", "cybersecurity")   # the checklist builds too
+
+
 def test_the_file_round_trips(tmp_path):
     content = RL.build_sidecar(_items(), load_style("outline-dod"))
     RL.write_sidecar(RL.sidecar_path(tmp_path, "doc"), content)
@@ -150,6 +177,7 @@ REQS = [
 
 
 def _doc(tmp_path: Path, labels: bool) -> Path:
+    tmp_path.mkdir(parents=True, exist_ok=True)
     run = tmp_path / "doc_20260101_120000"
     run.mkdir()
     (run / "doc_requirements_normalized.jsonl").write_text("".join(json.dumps(r) + "\n" for r in REQS), encoding="utf-8")

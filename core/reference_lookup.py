@@ -75,8 +75,17 @@ class ReferenceLookup:
     """Finds the reference a quote sits under, from the sidecar's items."""
 
     def __init__(self, content: dict):
-        self.style = content.get("style") or {}
-        self._items = [i for i in content.get("items", []) if isinstance(i, dict) and i.get("n")]
+        """Raises ValueError unless the whole file has the expected shape: a file that is only partly right is not trusted."""
+        items = content.get("items")
+        if not isinstance(items, list):
+            raise ValueError("items must be a list")
+        for i in items:
+            if not (isinstance(i, dict) and isinstance(i.get("n"), str) and isinstance(i.get("r"), str)
+                    and (i.get("p") is None or (isinstance(i.get("p"), int) and not isinstance(i.get("p"), bool)))):
+                raise ValueError("every item needs text (n), a reference (r) and a page (p) that is a whole number or null")
+        style = content.get("style")
+        self.style = style if isinstance(style, dict) else {}
+        self._items = [i for i in items if i["n"]]
 
     def find(self, quote: str, page_start=None, page_end=None) -> str:
         """The reference for `quote`, or "" when it is not found, too short to trust, or sits under
