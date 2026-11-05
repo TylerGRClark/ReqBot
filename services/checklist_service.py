@@ -13,6 +13,7 @@ pipeline/checklist_export.py (WP-21.4).
 import hashlib
 import json
 import logging
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -119,6 +120,20 @@ def _quotes(req: dict) -> tuple[str, str, str]:
     return root, req.get("explained_text") or root, (sentence_parts[-1] if sentence_parts else root)
 
 
+_PLAIN_NUMBER = re.compile(r"^[A-Z]{0,2}\d+(?:\.\d+)*$")
+_ENCLOSURE_PREFIX = re.compile(r"^Encl [A-Z0-9]+, ")
+
+
+def _label_fits(inferred: str, label: str) -> bool:
+    """True when a reference label may replace this citation. A blank citation has nothing to contradict. An inferred paragraph number ("2.1 (inferred)") may only be made more exact:
+    the label must be that number or sit under it ("2.1.a", "2.1(3)"), so "3.3 (inferred)" is never replaced by "2.2"."""
+    base = inferred.replace("(inferred)", "").strip()
+    if not base or not _PLAIN_NUMBER.match(base):
+        return not base
+    label = _ENCLOSURE_PREFIX.sub("", label)   # "Encl A, 2.1.b" is compared by its paragraph, "2.1.b"
+    return label == base or label.startswith((base + ".", base + "("))
+
+
 def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs, doc_lines=None) -> dict:
     """Where a record sits in its document, read from the document: how it is cited, who it applies to, its hint flags and the passage around its quote. No model.
 
@@ -156,8 +171,15 @@ def _locate_row(req: dict, chunks: dict, hmap: dict, first_numbered, verbs, doc_
         flags = [*flags, "labeled_unsure"]  # the labeler could not decide (or its answer could not be read): the row is kept for a reader to check
     if not cite:  # nothing numbered to cite: where the row sits, read from the document ("Front matter", "Figure A3.1")
         cite = checklist_audit.unnumbered_label(chunks, chunk_id, locate_text, first_numbered)
+    heading_cite = cite  # the section heading column is looked up from the paragraph number as before; a longer label ("2.1.a") would find none
+    reference = req.get("reference") or ""
+    if reference and not table_ref and (not cite or cite.endswith("(inferred)")) and _label_fits(cite, reference):
+        # the record carries the paragraph it sits under in the document's own numbering ("Encl A, 5.k", "2.10.b(3)"; docs/DOCUMENT_STYLES.md). It only replaces a blank or
+        # inferred citation, never one read from the row itself or a "Front matter" / "Figure" one, and an inferred number is only made more exact, never contradicted
+        # (so a wrong style on a document cannot move its rows to other sections).
+        cite = reference
     windows = _prompt_windows(req, chunk, locate_text, span, passage, doc_lines) if found and doc_lines else {}
-    return {"citation": cite, "table_ref": table_ref, "table_heading": table_heading, "applies": applies, "flags": flags, "passage": passage, "found": found, "prompt_windows": windows}
+    return {"citation": cite, "heading_citation": heading_cite, "table_ref": table_ref, "table_heading": table_heading, "applies": applies, "flags": flags, "passage": passage, "found": found, "prompt_windows": windows}
 
 
 def _anchor_matches(req: dict, chunk) -> bool:
@@ -312,7 +334,7 @@ def generate(processed_dir: Path, doc_key: str, profile_name: str) -> dict:
                 "page_refs": page_refs,
                 "section_title_path": section_title_path,
                 "citation": cite,
-                "section_heading": table_heading if table_ref else checklist_audit.section_heading(cite, hmap),
+                "section_heading": table_heading if table_ref else checklist_audit.section_heading(where["heading_citation"], hmap),
                 "applies_to": applies,
                 "parent_ref": parent_ref,
                 "parent_text": parent_text,

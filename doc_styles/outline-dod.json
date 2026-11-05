@@ -1,0 +1,11 @@
+{
+  "name": "outline-dod",
+  "version": "1",
+  "description": "DoD and CJCS instructions numbered 1. > a. > (1) > (a), with or without dotted section headings (2.10.) and with enclosures that restart the numbering.",
+  "reference_grammar": {
+    "gap_tolerance": 6,
+    "enclosure_pattern": "^ENCLOSURE\\s+([A-Z0-9]{1,2})\\s*$",
+    "dotted_headings": true,
+    "integer_headings": true
+  }
+}
