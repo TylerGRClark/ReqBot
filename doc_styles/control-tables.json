@@ -1,0 +1,10 @@
+{
+  "name": "control-tables",
+  "version": "1",
+  "description": "Documents whose controls are rows of tables (CNSSI 1253 control baselines and overlays): a row is cited by the control id in its first cell (IA-5(8)), continuation rows inherit it, and a part marker in the second cell is added (CM-7(1)(b)). Numbered paragraphs elsewhere in the document use the outline rules.",
+  "reference_grammar": {
+    "gap_tolerance": 6,
+    "enclosure_pattern": "^(?:ENCLOSURE|ATTACHMENT|ANNEX)\\s+([A-Z0-9]{1,2})\\s*$",
+    "table_id_pattern": "^[A-Z]{2}-\\d{1,2}(?:\\(\\d{1,2}\\))?$"
+  }
+}

@@ -226,3 +226,63 @@ def test_a_document_with_an_enriched_or_gated_file_is_refused(tmp_path):
         (run / f"doc_requirements_{tier}.jsonl").write_text("{}\n", encoding="utf-8")
         with pytest.raises(ValueError, match="enriched or gated"):
             RLB.add_references(Path("doc.pdf"), run, "outline-dod", "doc")
+
+
+# --- tables of controls in a document ------------------------------------------------------------------------------------------
+
+class ControlTable:
+    label = "DocItemLabel.TABLE"
+
+    def __init__(self, ref, markdown):
+        self.self_ref = ref
+        self._md = markdown
+        self.prov = [SimpleNamespace(page_no=85)]
+
+    def export_to_markdown(self, doc=None):
+        return self._md
+
+
+T1 = "| ID | Control Text |\n|---|---|\n| IA-1 | a. [Assignment: roles] |\n| IA-1 | b. [Assignment: frequency] |"
+T2 = "| ID | Control Text |\n|---|---|\n| | continuation of IA-1 |\n| IA-4 | [Assignment: time period] |"
+
+
+def test_a_table_of_controls_maps_to_one_reference_per_line_with_the_id_carried_across_tables():
+    doc = FakeDoc([ControlTable("#/tables/0", T1), ControlTable("#/tables/1", T2)])
+    refs = RLB.label_document(doc, load_style("control-tables"))
+    assert refs["#/tables/0"] == [None, None, "IA-1 a", "IA-1 b"]
+    assert refs["#/tables/1"] == [None, None, "IA-1", "IA-4"]          # the blank first cell continues the previous page's control
+
+
+def test_tables_get_no_reference_under_a_style_without_a_table_pattern():
+    doc = FakeDoc([ControlTable("#/tables/0", T1)])
+    assert RLB.label_document(doc, load_style("outline-dod")) == {}
+
+
+def test_spans_for_a_table_are_one_per_row_line_at_the_right_offsets():
+    table = ControlTable("#/tables/0", T1)
+    raw = "Intro line.\n" + T1
+    spans = RLB.spans_for_chunk(chunk_of(table), None, raw, {"#/tables/0": [None, None, "IA-1 a", "IA-1 b"]})
+    assert [s[2] for s in spans] == ["IA-1 a", "IA-1 b"]
+    for start, end, _ref in spans:
+        assert raw[start:end].startswith("| IA-1 |")
+    assert RLB.reference_at(spans, raw.index("[Assignment: frequency]")) == "IA-1 b"
+    assert RLB.reference_at(spans, raw.index("Intro")) == ""
+
+
+def test_a_paragraph_after_a_table_of_controls_is_still_matched_after_it():
+    table = ControlTable("#/tables/0", T1)
+    para = item("DocItemLabel.TEXT", "After the table.", ref="#/texts/50")
+    raw = T1 + "\nAfter the table."
+    spans = RLB.spans_for_chunk(chunk_of(table, para), None, raw, {"#/tables/0": [None, None, "IA-1 a", "IA-1 b"], "#/texts/50": "Encl 2, 3"})
+    assert [s[2] for s in spans] == ["IA-1 a", "IA-1 b", "Encl 2, 3"]
+
+
+def test_a_table_item_with_an_empty_text_attribute_still_advances_the_cursor():
+    """Gemini, PR 394: a table item that also carries text="" must be read by its grid, not skipped."""
+    sentence = "Units shall report incidents."
+    table = FakeTable()
+    table.text = ""
+    para = item("DocItemLabel.LIST_ITEM", sentence, marker="a.", ref="#/texts/60")
+    raw = FakeTable().export_to_markdown() + "\n- a.  " + sentence
+    spans = RLB.spans_for_chunk(chunk_of(table, para), None, raw, {"#/texts/60": "Encl 2, 2.a"})
+    assert len(spans) == 1 and spans[0][0] > raw.index("Unit |")

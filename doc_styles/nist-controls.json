@@ -1,0 +1,17 @@
+{
+  "name": "nist-controls",
+  "version": "1",
+  "description": "NIST control documents (SP 800-53, 800-171, 800-53A): a control is a heading (AC-2 ACCOUNT MANAGEMENT, 03.01.01 Account Management); its statement is lettered and numbered items; Discussion, References and Related Controls are parts that are not the statement.",
+  "reference_grammar": {
+    "gap_tolerance": 6,
+    "id_heading_patterns": ["^([A-Z]{2}-\\d{1,2})\\s+[A-Z]", "^(\\d{2}\\.\\d{2}\\.\\d{2})\\s+[A-Z]"],
+    "enhancement_pattern": "^[A-Z][A-Z0-9 ,'/&()-]*\\s?\\|\\s?[A-Z]",
+    "statement_patterns": ["^Control:?$", "^Control Enhancements:?$", "^(?i:statement)$"],
+    "part_patterns": {
+      "Discussion": "^(?i:discussion):?(?:\\s|$)",
+      "Related Controls": "^Related Controls:",
+      "References": "^REFERENCES$|^References:"
+    },
+    "reset_patterns": ["^CHAPTER\\b", "^APPENDIX\\b", "^References$", "^\\d{1,2}\\.\\d{1,2}\\.?\\s+[A-Z]"]
+  }
+}
