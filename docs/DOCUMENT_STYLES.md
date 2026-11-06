@@ -9,8 +9,10 @@ skip). A document has both. Styles live in `doc_styles/<name>.json`; the loader 
 |---|---|
 | `general` | The default. No document-type rules; behaves exactly as ReqBot always has. |
 | `outline-dod` | DoD instructions and CJCS instructions numbered `1.` > `a.` > `(1)` > `(a)`, with or without dotted section headings (`2.10.`), and with enclosures that restart the numbering. |
+| `nist-controls` | NIST control documents (SP 800-53, 800-171, 800-53A): a control is a heading (`AC-2 ACCOUNT MANAGEMENT`, `03.01.01 Account Management`), its statement is lettered and numbered items, and Discussion, References and Related Controls are parts that are not the statement. References read `AC-2 d.1`, `AC-2(3)(a)`, `AC-19(4)(b)(1)`, `AC-2 Discussion`, `03.01.01 f.3`. |
+| `control-tables` | Documents whose controls are rows of tables (CNSSI 1253 baselines and overlays): a row is cited by the control id in its first cell (`IA-5(8)`), a row with a blank first cell inherits it (also across a page break), and a part marker in the second cell is added (`CM-7(1)(b)`, `RA-5 a`). Numbered paragraphs elsewhere use the outline rules. |
 
-## What `outline-dod` adds
+## What a style adds
 
 The checklist and the search index cite each row by the paragraph it sits under. For documents
 numbered in outline form, ReqBot could not cite the row at all (blank) or only the section it was

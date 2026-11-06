@@ -43,7 +43,7 @@ if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
 from core.doc_styles import load_style  # noqa: E402
-from core.reference_grammar import Item, label_items, parse_grammar  # noqa: E402
+from core.reference_grammar import Item, label_items, label_table_lines, parse_grammar  # noqa: E402
 
 log = logging.getLogger(__name__)
 
@@ -59,8 +59,9 @@ def item_kind(docling_label) -> str:
     return _KINDS.get(str(docling_label).split(".")[-1].lower(), "other")
 
 
-def label_document(doc, style: dict) -> dict[str, str]:
-    """{item self_ref: reference} for every item of a Docling document that sits under a numbered paragraph.
+def label_document(doc, style: dict) -> dict[str, "str | list"]:
+    """{item self_ref: reference} for every item of a Docling document that sits under a numbered paragraph. A table of controls (a grammar with `table_id_pattern`) maps to a list
+    with one reference (or None) per line of its markdown grid, the control id carried from table to table in reading order.
 
     Raises ValueError when the style has no reference grammar."""
     if not style.get("reference_grammar"):
@@ -71,11 +72,18 @@ def label_document(doc, style: dict) -> dict[str, str]:
         prov = getattr(item, "prov", None) or []
         items.append(Item(item_kind(getattr(item, "label", "")), getattr(item, "text", "") or "",
                           getattr(item, "marker", None) or "", prov[0].page_no if prov else None))
-        refs_of.append(getattr(item, "self_ref", None))
-    out = {}
-    for self_ref, item, ref in zip(refs_of, items, label_items(items, grammar)):
+        refs_of.append((getattr(item, "self_ref", None), item))
+    out: dict = {}
+    carry = None
+    for (self_ref, original), item, ref in zip(refs_of, items, label_items(items, grammar)):
+        if item.kind == "other":   # tables, pictures and captions are not paragraphs: no reference of their own ...
+            if grammar.table_id_pattern and self_ref and hasattr(original, "export_to_markdown"):   # ... except the rows of a table of controls
+                lines, carry = label_table_lines(_table_text(original, doc), grammar, carry)
+                if any(lines):
+                    out[self_ref] = lines
+            continue
         text = ref.text()
-        if self_ref and text and item.kind != "other":   # tables, pictures and captions are not paragraphs: they carry no reference of their own
+        if self_ref and text:
             out[self_ref] = text
     return out
 
@@ -108,7 +116,7 @@ def _item_text(item, doc) -> str:
         return ""
 
 
-def spans_for_chunk(chunk, doc, raw_text: str, item_references: dict[str, str]) -> list[list]:
+def spans_for_chunk(chunk, doc, raw_text: str, item_references: dict) -> list[list]:
     """[[start, end, reference], ...] for the labeled items of a chunk, as offsets into the chunk's `raw_text`.
 
     Each item's text is found in the raw text in reading order (so a sentence repeated in one chunk is matched to the right item; a table's grid is stepped over, so a paragraph that repeats
@@ -129,6 +137,13 @@ def spans_for_chunk(chunk, doc, raw_text: str, item_references: dict[str, str]) 
         cursor = end
         ref = item_references.get(getattr(item, "self_ref", None))
         if not ref:
+            continue
+        if isinstance(ref, list):   # a table of controls: one span per row line, offset into the grid as it was written into raw_text
+            offset = pos
+            for line, line_ref in zip(text.split("\n"), ref):
+                if line_ref:
+                    spans.append([offset, offset + len(line), line_ref])
+                offset += len(line) + 1
             continue
         start = max(raw_text.rfind("\n", 0, pos) + 1, spans[-1][1] if spans else 0)
         spans.append([start, end, ref])
