@@ -101,10 +101,12 @@ def _table_text(item, doc) -> str:
 def _item_text(item, doc) -> str:
     """The text of an item as it appears in a chunk's raw_text: its own text, or a table's markdown grid. "" when it has none."""
     text = getattr(item, "text", None)
-    if isinstance(text, str):
+    if isinstance(text, str) and text.strip():
         return text.strip()
-    if hasattr(item, "export_to_markdown"):
+    if hasattr(item, "export_to_markdown"):   # a table: its grid, even if the item also carries an empty `text` attribute (Gemini, PR 394)
         return _table_text(item, doc)
+    if isinstance(text, str):
+        return ""
     try:  # a generic reference (a merged chunk's item): resolve it to the real item
         from docling_core.types.doc.document import RefItem
         real = RefItem(cref=item.self_ref).resolve(doc)

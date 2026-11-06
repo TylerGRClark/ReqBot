@@ -275,3 +275,14 @@ def test_a_paragraph_after_a_table_of_controls_is_still_matched_after_it():
     raw = T1 + "\nAfter the table."
     spans = RLB.spans_for_chunk(chunk_of(table, para), None, raw, {"#/tables/0": [None, None, "IA-1 a", "IA-1 b"], "#/texts/50": "Encl 2, 3"})
     assert [s[2] for s in spans] == ["IA-1 a", "IA-1 b", "Encl 2, 3"]
+
+
+def test_a_table_item_with_an_empty_text_attribute_still_advances_the_cursor():
+    """Gemini, PR 394: a table item that also carries text="" must be read by its grid, not skipped."""
+    sentence = "Units shall report incidents."
+    table = FakeTable()
+    table.text = ""
+    para = item("DocItemLabel.LIST_ITEM", sentence, marker="a.", ref="#/texts/60")
+    raw = FakeTable().export_to_markdown() + "\n- a.  " + sentence
+    spans = RLB.spans_for_chunk(chunk_of(table, para), None, raw, {"#/texts/60": "Encl 2, 2.a"})
+    assert len(spans) == 1 and spans[0][0] > raw.index("Unit |")
