@@ -22,6 +22,9 @@ _STYLES_DIR = Path(__file__).resolve().parent.parent / "doc_styles"
 
 DEFAULT_STYLE = "general"
 
+# Files in doc_styles/ that are data about styles, not styles: not listed, and not loadable by name.
+_NOT_STYLES = frozenset({"detection"})
+
 REQUIRED_FIELDS = frozenset({"name", "version", "reference_grammar"})
 OPTIONAL_FIELDS = frozenset({"description"})
 _ALL_KNOWN_FIELDS = REQUIRED_FIELDS | OPTIONAL_FIELDS
@@ -56,6 +59,8 @@ def load_style(name: str = DEFAULT_STYLE) -> dict:
         raise ValueError("Style name must be a non-empty string")
     if "/" in name or "\\" in name or name.startswith("."):
         raise ValueError(f"Style name must not contain path separators: '{name}'")
+    if name in _NOT_STYLES:
+        raise FileNotFoundError(f"Document style not found: '{name}' (that file holds the rules for choosing a style, not a style)")
 
     path = _STYLES_DIR / f"{name}.json"
     if not path.exists():
@@ -90,9 +95,17 @@ def default_style() -> dict:
 
 def list_styles() -> list[str]:
     """Sorted names of every style found in doc_styles/."""
-    return sorted(p.stem for p in _STYLES_DIR.glob("*.json") if p.is_file())
+    return sorted(p.stem for p in _STYLES_DIR.glob("*.json") if p.is_file() and p.stem not in _NOT_STYLES)
 
 
-def style_record(style: dict) -> dict:
-    """The small description of a style written into a run's stats: which style and which version."""
-    return {"name": style["name"], "version": style["version"]}
+def style_record(style: dict, requested: str | None = None, detection=None) -> dict:
+    """The description of a style written into a run's stats: which style and which version.
+
+    When the style was chosen automatically, `requested` is "auto" and `detection` is the core.style_detection.Detection that chose it, so the run records what was asked for,
+    what was chosen, and why. A style named by the user records requested = its name and no detection."""
+    rec = {"name": style["name"], "version": style["version"]}
+    if requested is not None:
+        rec["requested"] = requested
+    if detection is not None:
+        rec.update(detection.as_record())
+    return rec

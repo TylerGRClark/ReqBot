@@ -43,13 +43,26 @@ Rules that protect existing behavior:
 - An inferred number is only made more exact: `2.1 (inferred)` can become `2.1.a`, but never `2.2`.
 - The section-heading column still uses the old citation.
 
-## Using a style
+## Choosing a style
 
-For a new document, choose the style at ingest:
+`reqbot ingest` takes `--style`, and its default is **`auto`**. The order of priority is:
+
+1. **A style you name always wins.** `--style outline-dod` (or `general`, or any style in `doc_styles/`) is used as given; detection is not consulted.
+2. **Otherwise ReqBot detects it.** Once the PDF has been read, it compares the text at the top of the first page and the PDF's file name with the families listed in `doc_styles/detection.json`. The rules, in order: if the file name and the first page name different families, the answer is `general` (a wrong style does more harm than none); if both name the same family, that one; if only the first page names families, the one that appears *earliest* wins, because a document identifies itself before it cites others; if only the file name names one family, that one.
+3. **If it cannot tell, it uses `general`**, which changes nothing.
+
+What was asked for, what was chosen and why are written into the run's stats (`pipeline.doc_style`: `name`, `version`, `requested`, `family`, `confidence`, `reason`), so nothing is silent. The families are data, not code: adding a style adds its own entry to `detection.json`, and a test checks that every shipped style has one.
 
 ```bash
-python3 cli/reqbot.py ingest "DODI 8410.03.pdf" --style outline-dod
+python3 cli/reqbot.py ingest "DODI 8410.03.pdf"                      # auto: chooses outline-dod
+python3 cli/reqbot.py ingest "DODI 8410.03.pdf" --style general      # your choice wins
 ```
+
+Tested on the 23 documents of the library (title and file name together, the title alone, the file name alone: 23 of 23 each), on the PDF reader's real first pages with the file name hidden (8 of 8), and on cases built to fool it (an Air Force cover that cites a DoD instruction, a DoD instruction that mentions the Chairman of the Joint Chiefs, a file name that contradicts the page).
+
+A resumed run (`--skip-to` past chunking) keeps the style its folder was chunked under; naming a different style then is refused, because the style only acts while chunking. Start again from PDF reading to change it.
+
+Known limits: only the first page and the file name are read, so a scanned first page with no text relies on the file name; NIST SP 800-171A (the assessment companion) is not recognized and gets `general`; documents of types not listed get `general`.
 
 For a document that is already ingested, add the references without a model run (needs the PDF and
 an environment with Docling):

@@ -18,6 +18,7 @@ Individual steps can also be run standalone for debugging or reruns.
 """
 
 import argparse
+import json
 import logging
 import sys
 import time
@@ -109,6 +110,64 @@ def _detect_layout_mode_from_chunks(chunks_path: Path) -> str:
     return "pymupdf"
 
 
+def _valid_style_record(rec) -> dict | None:
+    return rec if isinstance(rec, dict) and rec.get("name") else None
+
+
+def _saved_style_record(out_dir: Path, stem: str) -> dict | None:
+    """The document style the chunks in this folder were made under, or None.
+
+    Chunking saves the record in the PDF-reading artifact (`<doc>_ancestry.json`, rewritten with the chunks, so it always describes them). Only a folder without that record (made before the
+    style was saved there) falls back to the stats of an earlier finished run."""
+    out_dir = Path(out_dir)
+    try:
+        data = json.loads((out_dir / f"{stem}_ancestry.json").read_text(encoding="utf-8"))
+        if isinstance(data, dict) and "doc_style" in data:
+            return _valid_style_record(data["doc_style"])
+    except (OSError, ValueError):
+        pass
+    try:
+        return _valid_style_record(json.loads((out_dir / f"{stem}_stats.json").read_text(encoding="utf-8"))["pipeline"]["doc_style"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
+def _persist_style_record(ancestry_path, record: dict) -> bool:
+    """Save the chosen style in the PDF-reading artifact as soon as chunking is done, so a run that fails later (requirement finding takes hours) and is resumed still knows it.
+    False, with a warning, if the file cannot be updated: that never stops a run."""
+    try:
+        path = Path(ancestry_path)
+        data = json.loads(path.read_text(encoding="utf-8"))
+        data["doc_style"] = record
+        path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        return True
+    except (OSError, ValueError, TypeError) as e:
+        log.warning("Could not save the document style beside the chunks (%s); a resumed run will record it from its stats", e)
+        return False
+
+
+def _style_record_for_run(doc_style: dict, requested: str, detection, saved: dict | None, chunked_now: bool) -> dict:
+    """What the run's stats record about its document style.
+
+    When chunking ran in this invocation, the style used. When the run resumed past chunking, the style only matters for what chunking did, so keep what the earlier run recorded; an
+    explicit --style that names a different style than the one the folder was chunked under is refused (start again from PDF reading to change it). With nothing saved and `auto`,
+    say plainly that no style could be chosen because the PDF was not read."""
+    from core import style_detection
+    from core.doc_styles import style_record
+    if chunked_now:
+        return style_record(doc_style, requested=requested, detection=detection)
+    if saved and (requested == style_detection.AUTO or saved.get("name") == requested):
+        return saved
+    if saved:
+        raise RuntimeError(
+            f"This run was chunked under the document style '{saved.get('name')}', so --style {requested} cannot be applied by resuming; "
+            "start again from PDF reading (without --skip-to) to change the style.")
+    if requested == style_detection.AUTO:
+        return style_record(doc_style, requested=requested, detection=style_detection.Detection(
+            "general", None, "none", "the PDF was not read in this run, so no style could be chosen"))
+    return style_record(doc_style, requested=requested)
+
+
 def run(
     pdf_path: str,
     output_dir: str,
@@ -119,7 +178,7 @@ def run(
     timeout: int = 120,
     skip_to: str = "A",
     profile_name: str = "cybersecurity",
-    doc_style_name: str = "general",
+    doc_style_name: str = "auto",
 ) -> str:
     """Run the full extraction pipeline in-process (PDF reading to totals).
 
@@ -139,9 +198,12 @@ def run(
                            Default 'cybersecurity'. Loaded once and used by chunking (skip
                            sections) and normalizing.
         doc_style_name:    Document style name from doc_styles/<name>.json (how this kind of
-                           document is laid out and numbered). Default 'general' = today's
-                           behavior. Loaded here so a bad name fails before any work starts, and
-                           recorded in the run's stats. It does not change any output yet.
+                           document is laid out and numbered), or 'auto' (the default): the style
+                           is chosen from the first page and the file name once the PDF has been
+                           read (core/style_detection.py), and falls back to 'general' when the
+                           type is not recognized. A name given here always wins over detection.
+                           A bad name fails before any work starts. What was asked for, what was
+                           chosen and why are recorded in the run's stats.
 
     Returns:
         Path to requirements_normalized.jsonl (str).
@@ -158,9 +220,12 @@ def run(
     except (FileNotFoundError, ValueError) as e:
         raise RuntimeError(f"Failed to load profile '{profile_name}': {e}") from e
 
-    from core.doc_styles import load_style as _load_style, style_record as _style_record
+    from core import style_detection as _style_detection
+    from core.doc_styles import load_style as _load_style
+    auto_style = doc_style_name == _style_detection.AUTO
+    detection = None
     try:
-        doc_style = _load_style(doc_style_name)
+        doc_style = _load_style("general" if auto_style else doc_style_name)
     except (FileNotFoundError, ValueError) as e:
         raise RuntimeError(f"Failed to load document style '{doc_style_name}': {e}") from e
 
@@ -194,6 +259,7 @@ def run(
     norm_path = out_dir / f"{stem}_requirements_normalized.jsonl"
 
     pipeline_start = time.time()
+    saved_style = _saved_style_record(out_dir, pdf.stem)   # a resumed run has already been chunked under some style; the style only matters while chunking
 
     # Steps A and B: PDF → chunks, via Docling.
     #   Step A = section_parser.run() → DoclingDocument + *_ancestry.json
@@ -226,6 +292,15 @@ def run(
                 log.info("Step A was skipped — running section_parser to obtain DoclingDocument")
                 from pipeline import section_parser as _section_parser
                 ancestry_result = _section_parser.run(str(pdf), str(out_dir))
+            if auto_style:
+                # no style was named: choose one from the first page and the file name (core/style_detection.py); a style the user names is never overridden
+                try:
+                    first_page_items = [item for item, _level in ancestry_result.doc.iterate_items()]
+                except Exception as e:   # choosing a style must never stop an ingest: fall back to the file name alone
+                    log.warning("Could not read the first page to choose a document style (%s); using the file name only", e)
+                    first_page_items = []
+                doc_style, detection = _style_detection.resolve(doc_style_name, first_page_items, pdf.name)
+                log.info("Document style (auto): %s (%s; confidence %s)", doc_style["name"], detection.reason, detection.confidence)
             if doc_style.get("reference_grammar"):
                 # label the reader's items now, while they still carry the document's own numbering; chunking records where each sits in the chunk text
                 from pipeline import reference_labels as _reference_labels
@@ -238,6 +313,10 @@ def run(
             )
     except Exception as e:
         raise RuntimeError(f"Step {docling_step} (Docling) failed: {e}") from e
+
+    style_record_for_stats = _style_record_for_run(doc_style, doc_style_name, detection, saved_style, chunked_now="B" in steps_to_run)
+    if "B" in steps_to_run and ancestry_result is not None and getattr(ancestry_result, "ancestry_path", ""):
+        _persist_style_record(ancestry_result.ancestry_path, style_record_for_stats)
 
     if "C" in steps_to_run:
         log.info("=" * 60)
@@ -290,7 +369,7 @@ def run(
                 str(index_path), str(out_dir), source_pdf=pdf.name,
                 layout_mode_used=layout_mode_for_stats,
                 skip_sections_configured=profile.get("skip_sections", []),
-                doc_style=_style_record(doc_style),
+                doc_style=style_record_for_stats,
             )
         except Exception as e:
             raise RuntimeError(f"Totals and final file (Step E) failed: {e}") from e

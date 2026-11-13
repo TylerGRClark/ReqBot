@@ -129,7 +129,7 @@ def cmd_ingest(args: argparse.Namespace) -> int:
             extraction_model=extraction_model,
             max_chunks=args.max_chunks,
             profile_name=args.profile,
-            doc_style_name=getattr(args, "style", "general"),
+            doc_style_name=getattr(args, "style", "auto"),
         )
     except RuntimeError as e:
         log.error("%s", e)
@@ -1964,9 +1964,10 @@ def main() -> None:
     p_ingest.add_argument(
         "--style",
         type=str,
-        default="general",
-        help="Document style: how this kind of document is laid out and numbered (default: general = no "
-             "document-type rules, today's behavior). Style must exist in doc_styles/<name>.json.",
+        default="auto",
+        help="Document style: how this kind of document is laid out and numbered. Default: auto = choose from the first "
+             "page and the file name, and use general (no document-type rules) when the type is not recognized. "
+             "A style you name always wins. Or any name in doc_styles/<name>.json.",
     )
     p_ingest.add_argument(
         "--replace", action="store_true",

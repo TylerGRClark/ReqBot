@@ -1,0 +1,81 @@
+{
+  "comment": "How ReqBot recognizes a document type from its first page and its file name, for `--style auto`. A family is a kind of publication; `style` is the document style used for it (`general` for a family whose layout needs no special rules, listed so that its title is not mistaken for another family's). Title patterns are searched in the first page's text; file name patterns are matched at the start of the file name, ignoring case. Every shipped style except `general` must have a family here (a test checks it).",
+  "families": [
+    {
+      "family": "cjcsi",
+      "style": "outline-dod",
+      "title_patterns": [
+        "\\bCJCSI\\s*\\d{4}",
+        "CHAIRMAN OF THE JOINT CHIEFS OF STAFF\\s+INSTRUCTION"
+      ],
+      "title_ignore_case": false,
+      "filename_patterns": [
+        "^cjcsi"
+      ]
+    },
+    {
+      "family": "dodi",
+      "style": "outline-dod",
+      "title_patterns": [
+        "\\bDoD[IDM]?\\s*\\d{4}\\.\\d{2}",
+        "\\bNUMBER\\s+\\d{4}\\.\\d{2}",
+        "DEPARTMENT OF DEFENSE\\s+(INSTRUCTION|DIRECTIVE|MANUAL)",
+        "\\bDoD\\s+(Instruction|Directive|Manual)\\s+\\d{4}"
+      ],
+      "title_ignore_case": false,
+      "filename_patterns": [
+        "^dod[idm][\\s_]?\\d{4}"
+      ]
+    },
+    {
+      "family": "air-force",
+      "style": "general",
+      "title_patterns": [
+        "(DEPARTMENT OF THE )?AIR FORCE\\s+(INSTRUCTION|MANUAL|PAMPHLET|POLICY DIRECTIVE)",
+        "\\b(DAF|AF)(I|MAN|PAM|PD)\\s*\\d{2}-\\d{2,4}"
+      ],
+      "title_ignore_case": true,
+      "filename_patterns": [
+        "^(d?af)(i|man|pam|pd)[\\s_-]?\\d"
+      ]
+    },
+    {
+      "family": "cnssi",
+      "style": "control-tables",
+      "title_patterns": [
+        "CNSSI\\s*No\\.?\\s*\\d+",
+        "COMMITTEE ON NATIONAL SECURITY SYSTEMS"
+      ],
+      "title_ignore_case": false,
+      "filename_patterns": [
+        "^cnssi"
+      ]
+    },
+    {
+      "family": "nist-controls",
+      "style": "nist-controls",
+      "title_patterns": [
+        "NIST\\s+(Special\\s+Publication|SP)\\s*800-(53[AB]?|171|172)(?:r\\d+)?(?![0-9A-Za-z])",
+        "Security and Privacy Controls for (Information Systems|Federal)",
+        "Protecting Controlled Unclassified Information in Nonfederal",
+        "Assessing Security and Privacy Controls",
+        "Control Baselines for Information Systems"
+      ],
+      "title_ignore_case": true,
+      "filename_patterns": [
+        "^nist\\.sp\\.800-(53[AB]?|171|172)(?:r\\d+)?(?![0-9A-Za-z])"
+      ]
+    },
+    {
+      "family": "nist-other",
+      "style": "general",
+      "title_patterns": [
+        "NIST\\s+(Special\\s+Publication|SP)\\s*800-\\d+"
+      ],
+      "title_ignore_case": true,
+      "filename_patterns": [
+        "^nist\\.sp\\.800-\\d+"
+      ]
+    }
+  ]
+}

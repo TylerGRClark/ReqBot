@@ -34,6 +34,12 @@ def test_general_is_the_default_and_means_no_rules():
     assert load_style() == style
 
 
+def test_the_detection_data_file_is_not_a_style():
+    assert "detection" not in list_styles()
+    with pytest.raises(FileNotFoundError, match="not a style"):
+        load_style("detection")
+
+
 def test_shipped_styles_all_load():
     assert "general" in list_styles()
     for name in list_styles():
@@ -157,7 +163,7 @@ def test_pipeline_fails_before_any_work_on_an_unknown_style(tmp_path):
         run_pipeline.run(str(tmp_path / "doc.pdf"), str(tmp_path), doc_style_name="nope")
 
 
-def test_ingest_command_defaults_to_the_general_style(monkeypatch):
+def test_ingest_command_defaults_to_auto_style(monkeypatch):
     import cli.reqbot as reqbot
 
     parser_help = []
@@ -167,4 +173,4 @@ def test_ingest_command_defaults_to_the_general_style(monkeypatch):
             reqbot.main()
         except SystemExit:
             pass
-    assert parser_help and parser_help[0].style == "general"
+    assert parser_help and parser_help[0].style == "auto"
