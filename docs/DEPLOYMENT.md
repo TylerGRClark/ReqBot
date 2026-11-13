@@ -26,6 +26,8 @@ ollama pull llama3.1:8b-instruct-q4_K_M
 ollama list
 ```
 
+By default requirement finding uses the same model (`extraction_model` falls back to `default_model`). A larger model finds cleaner rows: see [Measured quality](QUALITY.md) and the `extraction_model` setting in [Configuration](CONFIGURATION.md).
+
 For local generated answers, also pull `qwen2.5:14b`, or configure a synthesis
 model that fits your hardware. You can begin with synthesis disabled.
 

@@ -85,3 +85,7 @@ tracked as Phase 32's WP-32.7). Revisit once that's actually fixed, not before.
    (no cache) per the operational note above.
 5. `checklist_guidance` can be included for forward-compatibility but has no effect today — don't
    spend design time on it expecting a behavior change.
+
+## Domain profiles and document styles
+
+A **domain profile** (this page) says what a document is *about*: duty wording, sections to skip, checklist guidance. A [**document style**](DOCUMENT_STYLES.md) says how a document *type* is laid out and numbered (an outline of `1.` `a.` `(1)`, control IDs such as `AC-2`, tables of controls). They are independent and a document has both: for example the `cybersecurity` profile with the `outline-dod` style. Styles live in `doc_styles/`, separate from `profiles/`, because the profile loader rejects unknown keys and the two answer different questions.

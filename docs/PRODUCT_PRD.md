@@ -2,6 +2,7 @@
 ## General Requirements + Audit Checklist Capability
 
 **Status:** Draft  
+**Where the product is today (2026-11-13):** this document states longer-term direction. Built so far: extraction by clause labeling, with the verbatim quote and exact location kept; hybrid search with an optional GPU re-ranker; trace, compare, evidence packs; audit checklists with citations, passages, review hints, and draft questions; document styles giving exact paragraph and control references; CLI, web interface, HTTP API, local and network MCP; admin upload and background jobs. See [Measured quality](QUALITY.md) for what has been tested and what has not, and the [documentation index](README.md) for the guides. Requirements below that are not in that list are still goals.  
 **Purpose:** Define ReqBot’s longer-term product direction as a domain-configurable requirements extraction, retrieval, traceability, and audit-planning platform.
 
 ---

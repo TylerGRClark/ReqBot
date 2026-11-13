@@ -32,6 +32,7 @@ Unless listed otherwise, service URL flags default to the effective
 | `evidence` | Export a grouped evidence pack. |
 | `checklist` | Export a checklist from processed requirement artifacts. |
 | `questions` | Write draft audit questions for a document's checklist rows (local model; shown by `checklist`). |
+| `bundle` | One workbook with a tab per publication, from a named bundle (a starter list you can edit) or a list of documents. |
 | `reindex` | Rebuild indexes from processed artifacts without extraction. |
 | `index` | Index one requirement JSONL file directly. |
 | `index-context` | Index one source-chunk JSONL file directly. |
@@ -243,6 +244,16 @@ Check column). The sheet is one list in document order with a Status dropdown
 column. The Excel sheet opens with the document's name and a line of facts (profile, when it was made, how many items, how many are shaded for a second look), then the column groups, each in its own color, in reading order: Ask (a narrow Review column that holds a "!" in an amber cell on a row worth a second look, then Requirement and Audit Question), Record (Status, Notes, Check), Context (Passage), Locate (Ref, Pages) and Trace (Item ID and Req IDs, kept small; Conf. and Tags, hidden unless some row has a value). Section, Applies to, Parent para. and Reasons are left off the sheet and stay in the CSV, JSON and Markdown exports. A row is only as tall as its requirement, question and hints need: a long passage is cut off at that height and read in full by clicking its cell (the whole text is in the cell, and Excel's formula bar shows it). Rows alternate in color by a conditional-format rule, so the stripes stay even after sorting or filtering. The Status cell is colored by what is chosen, and the sheet prints landscape with its headers repeated and the document's name and the page number in the footer.
 Assessor fields begin empty; generation does
 not complete an assessment.
+
+## bundle
+
+```bash
+reqbot bundle --list
+reqbot bundle --name <bundle> --output bundle.xlsx
+reqbot bundle --docs afi17-203 afi10-2402 --output two.xlsx
+```
+
+Builds one XLSX workbook: a Contents sheet first, then one checklist sheet per publication that is loaded. A bundle is only a list of document keys. `--list` shows the known bundles (starters plus your own in `~/.config/reqbot/bundles.json`, yours winning by name). `--name` picks one; `--add` and `--remove` change it for this run; `--save NAME` stores the result in your own bundles file; `--docs` skips named bundles and takes document keys directly. `--output FILE` (.xlsx) is where the workbook goes. `--profile` works as for `checklist`. Nothing here decides which publications apply to a unit; the starters are a place to begin.
 
 ## reindex
 

@@ -18,8 +18,9 @@
 | Readers show the explained text (Ask, Evidence, Trace, Compare, cards, CLI) | done (#289) |
 | 8 to 10 Faithfulness check, repair, re-check | not built; own plan and the owner's rating first |
 | Model-picks (resolver) for prose documents | not built; waits for rebuilt test groups |
-| Data | the 13 reference documents were re-run with the new code, the Qdrant index rebuilt from them, draft questions regenerated. Not yet re-run with clause labeling |
-| Requirement kind (section 10) | **proposed, 2026-10-11**; the owner settled the list of kinds the same day. Stage 1 (write the kind, no behavior change) is next; nothing else is built |
+| Data | the library (23 documents, 6,773 rows) was re-run with clause labeling and promoted 2026-10-24, the Qdrant index rebuilt, draft questions regenerated. The five outline-numbered DoD and CJCS documents were given exact paragraph references on 2026-11-05 (see the next row) |
+| Document styles and paragraph references | **built** (#390, #392, #393, #394): a document style says how a document type is numbered; the shared numbering rules label each item of the PDF reader's output; chunking records where each labeled item sits; normalizing stamps an optional `reference` field on each record (never part of `source_ref`, so IDs do not change). Styles: `general`, `outline-dod`, `nist-controls`, `control-tables`. See [Document styles](DOCUMENT_STYLES.md). Automatic style choice is next |
+| Requirement kind (section 10) | stage 1 **built** as rules (`services/requirement_kind.py`), computed when the checklist is built and used to decide which rows get a draft question; the later model-assisted stages are not built |
 
 ## 1. Principles (the owner's)
 

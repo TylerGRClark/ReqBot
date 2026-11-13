@@ -14,12 +14,16 @@ This page maps implementation ownership and change dependencies for contributors
 | `cli/reqbot.py` | argparse entry point; command handlers, CLI formatting, ingest/index/reindex orchestration. |
 | `cli/console.py` | Interactive shell and session settings over command handlers. |
 | `core/config.py` | stdlib configuration loader and authority registry. |
-| `core/profiles.py` | Profile discovery and schema validation. |
+| `core/profiles.py` | Domain profile discovery and schema validation. |
+| `core/doc_styles.py` | Document styles (`doc_styles/*.json`): loader and validation. A style says how one kind of document is laid out and numbered; see [Document styles](docs/DOCUMENT_STYLES.md). |
+| `core/reference_grammar.py` | The shared numbering rules (pure, no model): labels each item of a document with the paragraph or control reference it sits under (`Encl A, 5.k`, `AC-2(1)`, `IA-5(8)`), for the outline, control-ID, and table-of-controls families. |
+| `core/access.py` | The admin access code: who may start jobs from the browser or the CLI. |
+| `core/mcp_codes.py` | Access codes for the network MCP door. |
 | `core/artifact_resolver.py` | Anchored artifact suffix parsing and latest-run/fresh-tier selection. |
 | `core/constants.py` | Shared context UUID namespace. |
 | `core/ask.py` | Query rewriting, dense/sparse/HyDE retrieval, filtering, RRF, context lookup, and optional synthesis. |
 | `core/synthesis.py` | Local/remote/disabled synthesis abstraction and prompts. |
-| `core/reranker.py` | Optional FlashRank cross-encoder wrapper for the reranker experiment. |
+| `core/reranker.py` | The FlashRank cross-encoder wrapper from the WP-43 experiment (not used by search). Search re-ranking calls the re-ranker service (`rerank_server/`) when `rerank_url` is set; see [Deployment](docs/DEPLOYMENT.md). |
 | `services/ask_service.py` | Canonical structured search envelope over core retrieval. |
 | `services/docs_service.py` | Normalized-artifact inventory and source-PDF resolution. |
 | `services/status_service.py` | Service health, model availability, and artifact inventory. |
@@ -29,12 +33,26 @@ This page maps implementation ownership and change dependencies for contributors
 | `services/checklist_service.py` | Artifact-backed checklist envelope, stable item IDs, and review flags. |
 | `services/checklist_audit.py` | Audit-sheet fields derived from the document's own text: citation, section heading, parent paragraph, applies-to, passage, hint flags. |
 | `services/audit_questions.py` | Draft audit questions (Ollama) written to a sidecar file and read back by the checklist. |
+| `services/heading_repair.py` | Repairs a chunk's stale heading path at read time from its own paragraph numbers (rules, no model). |
+| `services/requirement_kind.py` | Rule-based kind of each checklist row (duty, prohibition, description, ...); gates which rows get a draft question. |
+| `services/criticality.py` | Rough criticality hint for checklist rows, never a rating. |
+| `services/tier_tag.py` | Reads the compliance tier a document assigns to a requirement ("(T-0)" to "(T-3)"). |
+| `services/bundles.py` | Named lists of publications that make up one checklist workbook. |
+| `services/intake_service.py` | Admin intake: uploads, the inbox folder, and the same-file rules. |
+| `services/job_service.py` | Background jobs (ingest, draft questions, rebuild): one at a time, state under `<processed_dir>/.jobs/`. |
+| `services/library_service.py` | Removing a document from the library (never a delete: moved to a trash folder). |
+| `services/setup_service.py` | First-run setup checks shared by `reqbot setup` and the setup screen. |
 | `services/config_service.py` | Shared configuration read/write path for init and settings API. |
 | `api/app.py` | FastAPI assembly, CORS, route registration, and SPA static-file serving. |
-| `api/routes/` | Request models, interface validation, service calls, HTTP error mapping. |
+| `api/deps.py` | Shared request checks (admin access) for the API routes. |
+| `api/routes/` | Request models, interface validation, service calls, HTTP error mapping. Includes the admin routes for access, intake, jobs, library removal, and first-run setup. |
 | `mcp_server/server.py` | FastMCP stdio tools over the services, with interface input validation. |
+| `mcp_server/network.py` | The network door: the same read-only tools over HTTP for AI tools on other machines, with access codes. |
+| `mcp_server/request_log.py` | One JSON line per network tool call. |
 | `models/` | Reserved package; currently no populated shared schema implementation. |
 | `profiles/` | Packaged domain profile JSON files; test fixtures are excluded from package data. |
+| `doc_styles/` | Packaged document style JSON files (`general`, `outline-dod`, `nist-controls`, `control-tables`); test fixtures are excluded from package data. |
+| `rerank_server/` | The optional re-ranker service (a cross-encoder over HTTP, loaded on demand and released when idle) and its Dockerfile. |
 
 ### Pipeline modules
 
@@ -42,12 +60,16 @@ This page maps implementation ownership and change dependencies for contributors
 |---|---|
 | `pipeline/run_pipeline.py` | In-process stage sequencing, resume boundaries, stage failure/fallback behavior. |
 | `pipeline/section_parser.py` | PDF reading: Docling PDF conversion and ancestry/page/parent metadata. |
-| `pipeline/chunk_text.py` | Chunking: HybridChunker, breadcrumbs, section exclusions, and chunk artifacts. |
+| `pipeline/chunk_text.py` | Chunking: HybridChunker, breadcrumbs, section exclusions, and chunk artifacts. Under a document style with a reference grammar it also records `reference_spans` on each chunk. |
+| `pipeline/reference_labels.py` | Paragraph references under a document style: labels the reader's items, records where each sits in a chunk, and (as a command) adds references to an already-ingested document without a model run. |
 | `pipeline/clauses.py` | Requirement finding, part 1: cuts a chunk's raw text into clauses (sentences, list and table lines) with exact offsets, by rule. |
 | `pipeline/clause_labeling.py` | Requirement finding, part 2: the frozen labeling prompt (`pipeline/prompts/clause_label_v3.txt`), four clauses per Ollama call, resume ledger, one row per clause not labeled NOT_REQUIREMENT, source reference by rule. |
 | `pipeline/parse_and_normalize.py` | Normalizing and checking: refuses an old-format extraction file, checks each clause against its offsets, junk filters, deduplication, the explained layer, document/requirement identity. |
 | `pipeline/sentence_expand.py` | Sentence helpers (tidy, sentence split, completeness) and the explained layer: the clause without its list marker, with its lead-in from `pipeline/lead_in.py`, or for a table row its caption and column headers from `pipeline/table_header.py`. |
-| `pipeline/aggregate_and_export.py` | Totals and final file. |
+| `pipeline/aggregate_and_export.py` | Totals and final file; records the document style used in the stats. |
+| `pipeline/progress.py` | Machine-readable progress lines for long commands (used by the job service). |
+| `pipeline/index_replace.py` | Replaces a document in the index without a gap. |
+| `pipeline/bundle_export.py` | One workbook per bundle: a Contents sheet, then one checklist sheet per publication. |
 | `pipeline/embed_and_index.py` | Search indexing: dense/sparse requirement vectors, Qdrant schema and payloads. |
 | `pipeline/embed_context_index.py` | Search indexing: dense/sparse context vectors and linked chunk identity. |
 | `pipeline/checklist_export.py` | CSV/JSON/Markdown/XLSX serialization and spreadsheet formula handling. |

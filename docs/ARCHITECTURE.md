@@ -11,7 +11,7 @@ API, and MCP server expose those workflows.
 | Component | Responsibility |
 |---|---|
 | `pipeline/` | Parse PDFs, chunk source text, extract/validate requirements, export artifacts, and build indexes. |
-| `core/` | Configuration, profiles, artifact selection, retrieval, synthesis, and shared utilities. |
+| `core/` | Configuration, domain profiles, document styles and the shared numbering rules, artifact selection, retrieval, synthesis, and shared utilities. |
 | `services/` | Return structured search, trace, comparison, evidence, checklist, status, and configuration results; `job_service.py` queues long commands and runs them one at a time as child processes (state under `<processed_dir>/.jobs/`). |
 | `cli/` | CLI and interactive-shell command parsing and presentation. |
 | `api/` | HTTP request validation, error mapping, and frontend serving. |
@@ -19,6 +19,7 @@ API, and MCP server expose those workflows.
 | `frontend/` | Browser screens and presentation; calls the HTTP API. |
 | Ollama | Dense embeddings and local extraction, query, and synthesis model calls. |
 | Qdrant | Rebuildable dense/sparse requirements and source-context indexes. |
+| Re-ranker service (optional) | A cross-encoder over HTTP (`rerank_server/`) that re-orders search results when `rerank_url` is set. |
 
 Interfaces own presentation and request validation. Retrieval belongs in
 `core/ask.py`; pipeline sequencing belongs in `pipeline/run_pipeline.py`.
@@ -28,8 +29,8 @@ The [developer reference](../ARCHITECTURE.md) contains the module/import map.
 
 | Stage | Work | Main output |
 |---|---|---|
-| PDF reading | Docling reads layout, headings, tables, and page provenance. | `*_ancestry.json` and an in-memory parsed document. |
-| Chunking | Structure-aware chunking adds section paths and parent context; the profile can exclude sections. | `*_chunks.jsonl` |
+| PDF reading | Docling reads layout, headings, tables, and page provenance. Under a document style with a reference grammar, each item is also labeled with the paragraph or control it sits under. | `*_ancestry.json` and an in-memory parsed document. |
+| Chunking | Structure-aware chunking adds section paths and parent context; the profile can exclude sections. Under a document style, each chunk also records where its labeled items sit in its text (`reference_spans`). | `*_chunks.jsonl` |
 | Requirement finding | Clause labeling: rules cut each chunk's raw text into clauses (sentences, list lines, table lines) with their exact offsets; a local model (the configured extraction model; measured with `ornith:35b`) gives each clause one label, four per call: DUTY, PROHIBITION, PERMISSION, NOT_REQUIREMENT or UNSURE. Every clause not labeled NOT_REQUIREMENT becomes a row whose quote is the clause itself, the **root**, never edited. The source reference is found by rule and says how (`source_ref_origin`). The batch ledger (raw responses) makes a re-run resume. It replaced, in October 2026, the step that asked the model to write a list of requirements. | `*_extracted_requirements.jsonl` |
 | Normalizing and checking | One step, doing several jobs: refuse an extraction file from the old step, check each clause against its offsets (`clause_offset_mismatch`), drop junk (a repeated heading, a definitional pointer; a lead-in that ends in a colon is kept as a row; there is no working change-log rejection yet), attach page and section metadata, deduplicate, build the explained text (the clause without its list marker, with its list's lead-in in front), and assign IDs (hashed from the root). | `*_requirements_normalized.jsonl` |
 | Totals and final file | Aggregate the selected output and record statistics. | `*_final_output.json`, `*_stats.json` |
@@ -104,6 +105,10 @@ flowchart TD
     class N7,N8,N9,N10 planned;
     class FAIL side;
 ```
+
+### Document styles and paragraph references
+
+A **document style** (`doc_styles/*.json`) says how one kind of document is numbered; a domain profile says what it is about. The default, `general`, changes nothing. Under a style with a reference grammar (`outline-dod` for DoD and CJCS instructions, `nist-controls` for NIST 800-53 and 800-171, `control-tables` for CNSSI 1253) the PDF reading step labels every item with its paragraph or control, chunking records where each labeled item sits in a chunk's text, and normalizing gives each requirement record an optional `reference` field (`Encl A, 5.k`, `AC-2(1)`, `IA-5(8)`), read from the span that holds the clause's own offset. The field is separate from `source_ref`, so requirement IDs, quotes, and embedded text do not change. See [Document styles](DOCUMENT_STYLES.md).
 
 ### How one requirement is treated, by kind
 
@@ -180,7 +185,7 @@ The [pipeline redesign plan](PIPELINE_REDESIGN_PLAN.md) describes where the pipe
 going. Built so far: clause labeling as requirement finding (so every root is the document's own
 line and exactly located), the root kept untouched with the explained text beside it, enrichment
 and the description check removed, `confidence` dropped, and readers showing the explained
-text. Still to come: the normalizing module split into separate steps and screening on the
+text. Also built since: rule-based requirement kinds (which rows get a draft question) and document styles with paragraph references. Still to come: the normalizing module split into separate steps and screening on the
 explained text.
 
 The CLI `ingest` command runs indexing by default. The direct pipeline script
@@ -214,7 +219,7 @@ and failure artifacts when assessing a run. Human review of source quotes remain
 
 A checklist is built on demand from the newest processed run of a document; building it
 never calls a model. Each row is one requirement with its citation, section heading,
-the paragraph it sits under (read from the document's own numbering), who it applies to,
+the paragraph it sits under (the number read from the row, else one worked out from the numbered text before the quote and marked "(inferred)", else, for a document ingested under a document style, the record's exact `reference`), who it applies to,
 the surrounding passage with the quote marked, and hint flags (for example "starts
 mid-sentence" or "table fragment"). Draft audit questions
 come from `reqbot questions`, which writes a sidecar file (`*_audit_questions.jsonl`) that
@@ -284,8 +289,10 @@ help comparison; matching `source_ref` values are not proof of equivalent scope.
 Answer synthesis is a separate, optional step over retrieved records. It can
 use local Ollama, an explicitly configured remote provider, or be disabled.
 Local retrieval still requires Ollama when remote synthesis is selected.
-The experimental cross-encoder reranker is opt-in programmatically and has not
-become a default retrieval step.
+When `rerank_url` is set, search sends the fused top candidates to the re-ranker service
+(a cross-encoder in `rerank_server/`) and orders them by its scores. If the setting is empty
+or the service is down, results keep their fusion order and the response carries a warning.
+The service loads its model on the first request and frees GPU memory after a quiet period.
 
 ## Indexes and identity
 

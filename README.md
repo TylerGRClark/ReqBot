@@ -14,12 +14,21 @@ is a rebuildable index. Cloud answer synthesis is an optional integration.
 - Validates extracted quotes and checks generated descriptions before indexing.
 - Searches with dense and keyword retrieval, with optional source context.
 - Compares requirements across documents and builds evidence packs.
-- Exports compliance checklists as CSV, JSON, Markdown, or XLSX.
+- Builds audit checklists, exported as CSV, JSON, Markdown, or XLSX. Each row carries the
+  verbatim quote, its page, the paragraph it sits under (marked "(inferred)" when the document
+  does not number that sentence), the surrounding passage, review hints, and optional draft
+  audit questions.
+- Reads each document type's numbering with [document styles](docs/DOCUMENT_STYLES.md), so
+  DoD, CJCS, NIST, and CNSSI documents get exact citations such as `Encl A, 5.k`, `AC-2(1)`,
+  or `IA-5(8)`.
+- Optionally re-ranks search results with a GPU service, and lets an administrator upload PDFs
+  and run long jobs from the browser or serve read-only tools to AI clients on other machines.
 - Provides a CLI, interactive shell, web GUI, HTTP API, and local MCP server.
 
 Extraction and generated answers still need human review. A matching citation
 across documents helps navigation; it does not establish equivalent obligations
-or prove compliance.
+or prove compliance. [Measured quality](docs/QUALITY.md) lists what has and has not
+been tested.
 
 ## Requirements
 
@@ -71,6 +80,8 @@ one exists.
 | [API reference](docs/API.md) | Build an integration using HTTP requests and responses. |
 | [Operations](docs/OPERATIONS.md) | Resume ingestion, back up artifacts, or rebuild indexes. |
 | [Profiles](docs/PROFILES.md) | Understand domain configuration and checklist profiles. |
+| [Document styles](docs/DOCUMENT_STYLES.md) | See how numbering and layout rules give each document type exact citations. |
+| [Measured quality](docs/QUALITY.md) | Read the recall, precision, and citation figures, their sources, and their limits. |
 
 The [documentation index](docs/README.md) also links to development notes,
 planning documents, and the backlog.

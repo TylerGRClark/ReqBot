@@ -105,6 +105,17 @@ swapped first and the context collection second; if the second fails, the job
 fails and its log says the new requirements are already live beside the old
 context. Run the rebuild again to bring the context up to date.
 
+## Add paragraph references to an ingested document
+
+A document ingested without a [document style](DOCUMENT_STYLES.md) can be given exact paragraph or control references later, with no model run:
+
+```bash
+python3 pipeline/reference_labels.py --pdf raw_pdfs/"DODI 8410.03.pdf" \
+    --run-dir ~/documents/processed/"DODI 8410.03_<timestamp>" --style outline-dod
+```
+
+It re-reads the PDF (Docling needed), adds the references to the stored chunks and records, and replaces the files only when every record is otherwise identical (same IDs, order, and fields); the old files stay beside them as `*.before-references`. It refuses a run that has an enriched or gated requirements file, or one made before a later normalizing improvement (then run normalizing again first). Afterwards rebuild the checklist and refresh the index's citation field (payload only, no re-embedding). To undo, restore the `*.before-references` files.
+
 ## Resume an interrupted run
 
 Resume in the **same run directory** to keep the requirement-finding step's (Step C) clause labels (its resume ledger, `<doc>_raw_responses.jsonl`).
