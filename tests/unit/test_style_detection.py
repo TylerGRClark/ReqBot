@@ -219,10 +219,37 @@ def test_a_resumed_run_with_nothing_saved_says_no_style_could_be_chosen():
     assert _style_record_for_run(OUTLINE, "outline-dod", None, saved=None, chunked_now=False) == {"name": "outline-dod", "version": "1", "requested": "outline-dod"}
 
 
-def test_the_saved_style_is_read_from_the_runs_stats(tmp_path):
-    (tmp_path / "doc_stats.json").write_text(json.dumps({"pipeline": {"doc_style": {"name": "outline-dod", "version": "1"}}}), encoding="utf-8")
-    assert _saved_style_record(tmp_path, "doc") == {"name": "outline-dod", "version": "1"}
+def test_the_saved_style_is_read_from_beside_the_chunks_first_then_from_stats(tmp_path):
+    from pipeline.run_pipeline import _persist_style_record
+    stats = {"pipeline": {"doc_style": {"name": "general", "version": "1"}}}
+    (tmp_path / "doc_stats.json").write_text(json.dumps(stats), encoding="utf-8")
+    assert _saved_style_record(tmp_path, "doc") == {"name": "general", "version": "1"}          # an older finished run: stats only
+    (tmp_path / "doc_ancestry.json").write_text(json.dumps({"sections": [], "item_ancestry": {}}), encoding="utf-8")
+    assert _saved_style_record(tmp_path, "doc") == {"name": "general", "version": "1"}          # ancestry has no record yet: stats still answer
+    assert _persist_style_record(tmp_path / "doc_ancestry.json", {"name": "outline-dod", "version": "1", "requested": "auto"})
+    assert _saved_style_record(tmp_path, "doc")["name"] == "outline-dod"                         # the record beside the chunks outranks stale stats
+    assert json.loads((tmp_path / "doc_ancestry.json").read_text(encoding="utf-8"))["sections"] == []   # and nothing else in the file changed
     assert _saved_style_record(tmp_path, "other") is None
+
+
+def test_a_failure_after_chunking_leaves_the_style_for_the_resume(tmp_path):
+    """Codex, PR 396: the record was only in memory until the stats were written at the end, so a resume lost it or read an older ingest's."""
+    from pipeline.run_pipeline import _persist_style_record
+    (tmp_path / "doc_stats.json").write_text(json.dumps({"pipeline": {"doc_style": {"name": "general", "version": "1"}}}), encoding="utf-8")   # an OLDER ingest of this folder
+    (tmp_path / "doc_ancestry.json").write_text("{}", encoding="utf-8")
+    det = detect_style(DODI, "DODI 8410.03.pdf")
+    _persist_style_record(tmp_path / "doc_ancestry.json", _style_record_for_run(OUTLINE, "auto", det, saved=None, chunked_now=True))
+    saved = _saved_style_record(tmp_path, "doc")                      # the run died during requirement finding; now resume with --skip-to C
+    assert saved["name"] == "outline-dod" and saved["family"] == "dodi"
+    assert _style_record_for_run(GENERAL, "auto", None, saved, chunked_now=False) == saved
+    assert _style_record_for_run(OUTLINE, "outline-dod", None, saved, chunked_now=False) == saved   # the style actually used is accepted, not the old stats'
+
+
+def test_saving_the_style_never_stops_a_run(tmp_path):
+    from pipeline.run_pipeline import _persist_style_record
+    assert _persist_style_record(tmp_path / "missing_ancestry.json", {"name": "general"}) is False
+    (tmp_path / "bad_ancestry.json").write_text("{broken", encoding="utf-8")
+    assert _persist_style_record(tmp_path / "bad_ancestry.json", {"name": "general"}) is False
     for bad in ("{broken", json.dumps({}), json.dumps({"pipeline": {"doc_style": None}}), json.dumps({"pipeline": {"doc_style": {"version": "1"}}})):
         (tmp_path / "bad_stats.json").write_text(bad, encoding="utf-8")
         assert _saved_style_record(tmp_path, "bad") is None

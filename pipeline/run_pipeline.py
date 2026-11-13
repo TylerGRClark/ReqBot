@@ -110,13 +110,40 @@ def _detect_layout_mode_from_chunks(chunks_path: Path) -> str:
     return "pymupdf"
 
 
+def _valid_style_record(rec) -> dict | None:
+    return rec if isinstance(rec, dict) and rec.get("name") else None
+
+
 def _saved_style_record(out_dir: Path, stem: str) -> dict | None:
-    """The document style an earlier run in this folder recorded in its stats, or None."""
+    """The document style the chunks in this folder were made under, or None.
+
+    Chunking saves the record in the PDF-reading artifact (`<doc>_ancestry.json`, rewritten with the chunks, so it always describes them). Only a folder without that record (made before the
+    style was saved there) falls back to the stats of an earlier finished run."""
+    out_dir = Path(out_dir)
     try:
-        rec = json.loads((Path(out_dir) / f"{stem}_stats.json").read_text(encoding="utf-8"))["pipeline"]["doc_style"]
-        return rec if isinstance(rec, dict) and rec.get("name") else None
+        data = json.loads((out_dir / f"{stem}_ancestry.json").read_text(encoding="utf-8"))
+        if isinstance(data, dict) and "doc_style" in data:
+            return _valid_style_record(data["doc_style"])
+    except (OSError, ValueError):
+        pass
+    try:
+        return _valid_style_record(json.loads((out_dir / f"{stem}_stats.json").read_text(encoding="utf-8"))["pipeline"]["doc_style"])
     except (OSError, ValueError, KeyError, TypeError):
         return None
+
+
+def _persist_style_record(ancestry_path, record: dict) -> bool:
+    """Save the chosen style in the PDF-reading artifact as soon as chunking is done, so a run that fails later (requirement finding takes hours) and is resumed still knows it.
+    False, with a warning, if the file cannot be updated: that never stops a run."""
+    try:
+        path = Path(ancestry_path)
+        data = json.loads(path.read_text(encoding="utf-8"))
+        data["doc_style"] = record
+        path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        return True
+    except (OSError, ValueError, TypeError) as e:
+        log.warning("Could not save the document style beside the chunks (%s); a resumed run will record it from its stats", e)
+        return False
 
 
 def _style_record_for_run(doc_style: dict, requested: str, detection, saved: dict | None, chunked_now: bool) -> dict:
@@ -288,6 +315,8 @@ def run(
         raise RuntimeError(f"Step {docling_step} (Docling) failed: {e}") from e
 
     style_record_for_stats = _style_record_for_run(doc_style, doc_style_name, detection, saved_style, chunked_now="B" in steps_to_run)
+    if "B" in steps_to_run and ancestry_result is not None and getattr(ancestry_result, "ancestry_path", ""):
+        _persist_style_record(ancestry_result.ancestry_path, style_record_for_stats)
 
     if "C" in steps_to_run:
         log.info("=" * 60)
