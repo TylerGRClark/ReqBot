@@ -70,6 +70,8 @@ ollama list
 **Check:** `ollama list` shows both names. The downloads are large (the second
 is about 4.6 GB), so this step can take a while.
 
+These two are enough to begin. By default ReqBot also uses the second one to find requirements. That works, but it adds more rows that are not requirements than a larger model does (about 73% of its rows are real requirements, against about 91% for a 35B-class model; see [Measured quality](QUALITY.md)). When your hardware allows, set `extraction_model` to a larger model later; `reqbot init` suggests one.
+
 You can skip a third, optional model for now. `qwen2.5:14b` (about 8.4 GB)
 writes summary answers; search, trace, compare, and checklists work without it.
 

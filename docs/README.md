@@ -13,7 +13,7 @@ differ.
 | [Deployment](DEPLOYMENT.md) | Every install variant: Docker, source, extras, networking, and offline preparation. |
 | [Architecture](ARCHITECTURE.md) | Document-to-requirement flow, retrieval, validation, and component ownership. |
 | [Logic diagrams](diagrams/README.md) | What the pipeline and the checklist do today, one diagram per stage, with the real rejection labels and thresholds. |
-| [Pipeline redesign plan](PIPELINE_REDESIGN_PLAN.md) | Where the pipeline is going: root, anchor and explained layers, steps named by job. A plan; none of it is built. |
+| [Pipeline redesign plan](PIPELINE_REDESIGN_PLAN.md) | Where the pipeline is going: root, anchor and explained layers, steps named by job. Partly built; its status table says which steps. |
 | [Web UI parity plan](WEB_UI_PARITY_PLAN.md) | Who sees what (reader and admin), a network MCP service, and running ingest, draft questions and rebuild from the browser: roles, the job service, admin uploads, a runner on another machine. A plan; none of it is built. |
 | [Configuration](CONFIGURATION.md) | Defaults, precedence, environment variables, and model changes. |
 | [Connecting AI tools](AI_TOOLS.md) | MCP setup, subprocess configuration, tools, and troubleshooting. |
@@ -21,6 +21,8 @@ differ.
 | [API reference](API.md) | HTTP endpoints, request fields, response envelopes, exports, and errors. |
 | [Operations](OPERATIONS.md) | Health checks, resume, backup/restore, reindex, and troubleshooting. |
 | [Profiles](PROFILES.md) | Domain profile schema and current limitations. |
+| [Document styles](DOCUMENT_STYLES.md) | Per-document-type numbering rules: what each style does, how one is chosen automatically, how it is recorded, how to apply it. |
+| [Measured quality](QUALITY.md) | Recall, precision, and citation figures with their sources and limits, and what has not been measured. |
 
 ## Development and planning
 
