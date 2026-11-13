@@ -21,7 +21,7 @@ differ.
 | [API reference](API.md) | HTTP endpoints, request fields, response envelopes, exports, and errors. |
 | [Operations](OPERATIONS.md) | Health checks, resume, backup/restore, reindex, and troubleshooting. |
 | [Profiles](PROFILES.md) | Domain profile schema and current limitations. |
-| [Document styles](DOCUMENT_STYLES.md) | Per-document-type numbering rules: what each style does, how it is recorded, how to apply it. |
+| [Document styles](DOCUMENT_STYLES.md) | Per-document-type numbering rules: what each style does, how one is chosen automatically, how it is recorded, how to apply it. |
 | [Measured quality](QUALITY.md) | Recall, precision, and citation figures with their sources and limits, and what has not been measured. |
 
 ## Development and planning

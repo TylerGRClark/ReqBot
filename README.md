@@ -20,7 +20,8 @@ is a rebuildable index. Cloud answer synthesis is an optional integration.
   audit questions.
 - Reads each document type's numbering with [document styles](docs/DOCUMENT_STYLES.md), so
   DoD, CJCS, NIST, and CNSSI documents get exact citations such as `Encl A, 5.k`, `AC-2(1)`,
-  or `IA-5(8)`.
+  or `IA-5(8)`. The style is chosen automatically from the first page and the file name unless
+  you name one.
 - Optionally re-ranks search results with a GPU service, and lets an administrator upload PDFs
   and run long jobs from the browser or serve read-only tools to AI clients on other machines.
 - Provides a CLI, interactive shell, web GUI, HTTP API, and local MCP server.

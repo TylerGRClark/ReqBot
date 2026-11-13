@@ -16,6 +16,7 @@ This page maps implementation ownership and change dependencies for contributors
 | `core/config.py` | stdlib configuration loader and authority registry. |
 | `core/profiles.py` | Domain profile discovery and schema validation. |
 | `core/doc_styles.py` | Document styles (`doc_styles/*.json`): loader and validation. A style says how one kind of document is laid out and numbered; see [Document styles](docs/DOCUMENT_STYLES.md). |
+| `core/style_detection.py` | Chooses a document style automatically (`--style auto`, the default) from the first page's text and the file name, using the families in `doc_styles/detection.json`; a style you name is never overridden, and an unrecognized type gets `general`. |
 | `core/reference_grammar.py` | The shared numbering rules (pure, no model): labels each item of a document with the paragraph or control reference it sits under (`Encl A, 5.k`, `AC-2(1)`, `IA-5(8)`), for the outline, control-ID, and table-of-controls families. |
 | `core/access.py` | The admin access code: who may start jobs from the browser or the CLI. |
 | `core/mcp_codes.py` | Access codes for the network MCP door. |
